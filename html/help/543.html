@@ -1,0 +1,29 @@
+<div class="DCChaptersHelpTitle">
+    <button type="button" class="help-button" style="margin-left:5px; width:100px;" onclick="displayhelp(500)">Clear</button>
+    <button type="button" class="help-button" style="margin-left:5px; width:100px;" onclick="displayhelp(502)">Back</button>
+    <input type="hidden" id='SystemHelphelpbackid' value='101'></input>
+    <br></br>
+</div>
+<div class="DCChaptersHelpText">
+    <p>The 'lambda fn flag' indicates a simple function (lamda) to apply against each value in the column.</p>
+    <p>Use colval in your lambda code as the identifier for each column value.</p>
+    <p>To apply a more complicated (non lamda) function against the column follow the guidelines below.</p>
+    <p>Set 'lambda fn flag' to False indicating a complex function.</p>
+    <p>Be sure to include all imports plus code to run the function.</p>
+    <p>Use the dfcleanser.common.cfg get_dc_dataframe() to get the dataframe for your function.</p>
+    <p>Use the dfcleanser.common.cfg get_current_col_name() to get the column name inside your function.</p>
+    <p>To save the function in the Generic Functions Repository for later usage enter a function_name. </p>
+    <p>If function_name is blank code is run as is and not stored for later usage. </p>
+    <p>If you select a function from Generic Functions Repository you can update and it is always saved back. </p>
+</div>
+<div class="help_images">
+    <img id="ApplyfnToColumnId" class="help-image-left" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ApplyfnToColumn.png"></img>
+</div>
+<br></br>
+<div class="DCChaptersHelpText">
+    <p>'column_to_apply_fn_to' defines the column to apply the fn to.</p>
+    <p>'lamda_fn_flag' defines if the function is an inline lamda function.</p>
+    <p>'function_name' defines the name to call the function that is stored.</p>
+    <p>'function_to_apply' defines the code that defines the function.</p>
+
+</div>
