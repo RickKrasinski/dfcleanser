@@ -24,4 +24,3 @@ setup(
     ],
     include_package_data=True,
 )
-https://github.com/RickKrasinski/dfcleanser
