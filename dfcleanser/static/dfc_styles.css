@@ -1,0 +1,952 @@
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans');
+
+/* DataframeCleanser css */
+
+.output_png img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Jupyter output cell size defs                     */
+
+.output_wrapper,
+.output {
+    height: auto !important;
+    max-height: 8000px;
+    /* your desired max-height here */
+}
+
+.output_scroll {
+    box-shadow: none !important;
+    webkit-box-shadow: none !important;
+}
+
+body {
+    overflow-x: hidden !important;
+}
+
+.dc-container {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.dc-sm-container {
+    width: 30%;
+    margin-left: 35%;
+    border: 1px;
+    border-color: #428bca;
+}
+
+
+/* Bootstrap check box component style dependencies  */
+
+
+/* Hiding the checkbox, but allowing it to be focused */
+
+.badgebox {
+    opacity: 0;
+}
+
+.badgebox+.badge {
+    /* Move the check mark away when unchecked */
+    text-indent: -999999px;
+    /* Makes the badge's width stay the same checked and unchecked */
+    width: 27px;
+}
+
+.badgebox:focus+.badge {
+    /* Set something to make the badge looks focused */
+    /* This really depends on the application, in my case it was: */
+    /* Adding a light border */
+    box-shadow: inset 0px 0px 5px;
+    /* Taking the difference out of the padding */
+}
+
+.badgebox:checked+.badge {
+    /* Move the check mark back when checked */
+    text-indent: 0;
+}
+
+
+/* Data Cleanser table component style dependencies  */
+
+.table td {
+    text-align: center;
+}
+
+.table th {
+    text-align: center;
+}
+
+td.dccolleft {
+    text-align: left;
+}
+
+td.dccolwrap {
+    word-wrap: break-word;
+    text-decoration: none;
+}
+
+th.dccolleft {
+    text-align: left;
+}
+
+table.dcsearchtable th {
+    font-size: 10px;
+}
+
+table.dcsearchtable td {
+    font-size: 9px;
+}
+
+
+/* 
+--------------------------------------------------- 
+------------------- Table Styles ------------------ 
+---------------------------------------------------
+*/
+
+.dc-table {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+table.dc-table td {
+    font-size: 12px;
+    font-family: Arial;
+}
+
+.dc-table13 {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+table.dc-table13 td {
+    font-size: 13px;
+    font-family: Arial;
+}
+
+table.dc-table13 a {
+    text-decoration: none;
+}
+
+div.panel-heading {
+    height: 50px;
+    font-size: 14px;
+}
+
+.dc-table-panel-heading {
+    font-size: 12px;
+    height: 40px;
+}
+
+.dc-table-row {
+    font-size: 12px;
+    font-family: Arial;
+}
+
+.dc-small-table-panel-heading {
+    font-size: 14px;
+    height: 40px;
+}
+
+.dc-small-table-noheader-panel-heading {
+    height: 0px;
+    background-color: white;
+}
+
+.dc-table-title {
+    font-size: 14px;
+    padding-top: 1.0px;
+    padding-bottom: 11.0px;
+}
+
+.dc-search-table-panel-body {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #428bca;
+}
+
+button.dc-table-button {
+    padding-top: 2.0px;
+    height: 20px;
+    width: 60px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.panel-title {
+    font-size: 16px;
+}
+
+
+/* 
+--------------------------------------------------- 
+---------------- Input Form Styles ---------------- 
+---------------------------------------------------
+*/
+
+.dc-form-input {
+    font-size: 12px;
+    height: 30px;
+    margin-left: 74%;
+    width: 80px;
+}
+
+input.dc-form-search-more-input {
+    font-size: 12px;
+    height: 30px;
+    width: 120px;
+    size: 14;
+    margin-left: 5%;
+}
+
+.glyphicon-search {
+    width: 40px;
+}
+
+.dc-btn-primary {
+    width: 80px;
+}
+
+.dc-btn-search {
+    height: 30px;
+    width: 30px;
+    background: #ABABAA;
+    color: #0F2D58;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    margin-right: 5px;
+    padding-right: 5px;
+}
+
+.dc-btn-search:hover {
+    background: #9FA99C;
+}
+
+.dc-form-more-input {
+    font-size: 12px;
+    height: 30px;
+    margin-left: 68%;
+    width: 80px;
+}
+
+.panel.noborder {
+    border: none;
+    box-shadow: none;
+}
+
+.panel.noborder>.panel-heading {
+    border: 1px solid #dddddd;
+    border-radius: 0;
+}
+
+.dc-doc-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.form-group-sm {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 0px;
+    /*color: white;
+    background-color: #428bca;*/
+}
+
+.dc-scroll-div {
+    padding-top: 1.0px;
+    padding-bottom: 11.0px;
+}
+
+sm-form-control {
+    font-size: 12px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+div.fullparms {
+    background: white;
+}
+
+button.fullparms-custom {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    font-family: Fira Sans;
+    font-size: 12px;
+    height: 30px;
+    width: 140px;
+    margin-left: 5px;
+}
+
+button.fullparms {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    font-family: Fira Sans;
+    font-size: 12px;
+    height: 30px;
+    width: 140px;
+    margin-left: 5px;
+}
+
+
+/* 
+--------------------------------------------------- 
+------------ Dataframe Schema styles -------------
+--------------------------------------------------- 
+*/
+
+dc-schema-col-container {
+    margin-left: 10%;
+}
+
+dc-schema-button {
+    font-size: 11px;
+    height: 25px;
+    background-color: #67a1f3;
+}
+
+dc-schema-input-form {
+    font-size: 10px;
+    height: 20px;
+    width: 60%;
+}
+
+dc-schema-input-div {
+    text-align: left;
+}
+
+dc-schema-dlist {
+    text-align: center;
+}
+
+dc-schema-dlist-div {
+    background-color: #67a1f3;
+    color: white;
+    height: 20px;
+    margin-top: 5px;
+}
+
+dc-schema-dlist-label {
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+dc-schema-radio-div {
+    margin-top: 2px;
+    margin-left: 5px;
+    text-align: left;
+}
+
+dc-schema-radio-label {
+    text-align: left;
+}
+
+
+/* 
+--------------------------------------------------- 
+------------ Search and Scroll styles -------------
+--------------------------------------------------- 
+*/
+
+button.moreNext {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    height: 30px;
+    width: 80px;
+    margin-left: 50%;
+}
+
+button.morePrev {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    height: 30px;
+    width: 80px;
+    margin-right: 10%;
+}
+
+button.shortmoreNext {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    padding-top: 0px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    height: 20px;
+    width: 22px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 2px;
+    margin-right: 8px;
+}
+
+button.shortmorePrev {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    height: 20px;
+    width: 20px;
+    margin-right: 5%;
+}
+
+button.search-moreNext {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    height: 30px;
+    width: 80px;
+    margin-left: 80%;
+}
+
+button.search-morePrev {
+    color: black;
+    background: #D3D2C4;
+    text-align: center;
+    height: 30px;
+    width: 80px;
+    margin-right: 1%;
+}
+
+.dc-search-panel-title {
+    font-size: 18px;
+    padding-top: 1.0px;
+}
+
+.dc-search-table-input-group-btn {
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+}
+
+.dc-tbl-container {
+    width: 92%;
+    margin-left: 32px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.dc-form-div {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.dchdr h6 {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.dchdr h5 {
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.dccolhead {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.table-note {
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Fira Sans;
+}
+
+p.DCTitleChapterstext {
+    width: 80%;
+    margin-left: 12%;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+}
+
+h2.DCTitleChaptersh2 {
+    margin-left: 2%;
+}
+
+
+/* 
+--------------------------------------------------- 
+---------------- exception styles -----------------
+--------------------------------------------------- 
+*/
+
+div.exception-outer {
+    width: 820px;
+    border: 2px solid #428bca;
+    margin-left: 50px;
+    overflow-y: hidden;
+}
+
+div.exception-status {
+    font-size: 13px;
+    width: 790px;
+    margin-left: 10px;
+    margin-top: 2px;
+    font-weight: normal;
+    font-style: normal;
+    border: 1px solid #428bca;
+}
+
+div.exception-status-detail {
+    font-size: 13px;
+    width: 790px;
+    margin-left: 10px;
+    margin-top: 2px;
+    font-weight: normal;
+    font-style: normal;
+    border: 0px solid #428bca;
+}
+
+div.exception-trace-title {
+    font-size: 12px;
+    width: 790px;
+    margin-left: 10px;
+    margin-top: 2px;
+    font-weight: normal;
+    font-style: normal;
+    border: 1px solid #428bca;
+}
+
+div.exception-trace {
+    font-size: 12px;
+    width: 770px;
+    border: 0px solid #428bca;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* 
+--------------------------------------------------- 
+----------------- status styles ------------------- 
+--------------------------------------------------- 
+*/
+
+div.status-header {
+    font-size: 13px;
+    background-color: #428bca;
+    height: 30px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+div.status-line {
+    font-size: 13px;
+    height: 30px;
+    margin-left: 10px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+
+/* note styles */
+
+div.note-line {
+    font-size: 13px;
+    margin-left: 10px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+
+/*span.note-line {
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+}*/
+
+th.a:link {
+    color: #262729;
+    ;
+}
+
+.help-details {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    margin-left: 30px;
+}
+
+
+/* 
+--------------------------------------------------- 
+---------------- Dataframe Cleanser --------------- 
+------------------- Grid Wrappers ----------------- 
+---------------------------------------------------
+*/
+
+.grid_title {
+    margin-left: 2px;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    color: #444;
+}
+
+
+/* 
+------------------ Geocoding Grid -----------------                 
+*/
+
+.acconv_wrapper {
+    margin-left: 40px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 220px 640px 20px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+--------------- Composite Addr Grid ---------------                 
+*/
+
+.compaddr_wrapper {
+    margin-left: 40px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 240px 620px 20px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+---------------- SQL Connector Grid ---------------                 
+*/
+
+.sql_connector_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 160px 820px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+-------------- Import SQL Table Grid --------------                 
+*/
+
+.import_sql_table_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 240px 740px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+-------------- Export SQL Table Grid --------------                 
+*/
+
+.export_sql_table_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 240px 740px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+----------------- List Table Grid -----------------                 
+*/
+
+.list_table_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px 10px;
+    grid-template-columns: 200px 760px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+-------------- Generic Transform Grid --------------                 
+*/
+
+.generic_transform_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 240px 740px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+
+/* 
+----------------- Dict Table Grid -----------------                 
+*/
+
+.dict_table_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px 10px;
+    grid-template-columns: 200px 760px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    overflow-y: hidden;
+    color: #444;
+}
+
+
+/* 
+------------- datetime Format Grid ----------------                 
+*/
+
+.dtformat_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px 10px;
+    grid-template-columns: 280px 680px 10px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    overflow-y: hidden;
+    color: #444;
+}
+
+
+/* 
+--------------- Dataframe Subset Grid --------------                 
+*/
+
+.dfsubset_wrapper {
+    margin-left: 20px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 290px 590px 20px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+.dfsubset1_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 260px 70px 590px 5px;
+    grid-template-areas: "header header header header" "sidebar sidebar1 content content" "footer  footer  footer  footer";
+    background-color: #fff;
+    color: #444;
+}
+
+.tableids {
+    border: 1px solid #428bca;
+    padding-left: 0;
+    margin-left: 0;
+    text-align: center;
+}
+
+.sqlList-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+}
+
+.sqlList-row {
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+    list-style-type: none;
+}
+
+.sqlList {
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+    list-style-type: none;
+    text-align: left;
+}
+
+
+/* 
+--------------------------------------------------- 
+---------------- Common Help Settings -------------                 
+---------------------------------------------------
+*/
+
+div.DCChaptersHelpTitle {
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    margin-left: 10px;
+}
+
+table.DCChaptersHelpTOC {
+    font-size: 11px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    margin-left: 20px;
+}
+
+div.DCChaptersHelpText {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    margin-left: 15px;
+}
+
+button.help-button {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    height: 25px;
+    background: #428bca;
+    color: white;
+}
+
+button.help-taskbar-button {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Fira Sans;
+    background: #428bca;
+    color: white;
+}
+
+td.dchelpbutton {
+    width: 30%;
+    margin-left: 1px;
+    text-align: left;
+}
+
+td.dchelpitemtext {
+    width: 70%;
+    text-align: left;
+}
+
+img.help-image-center {
+    display: block;
+    margin: 0 auto;
+}
+
+img.help-image-left {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 15px;
+}
+
+
+/* 
+--------------------------------------------------- 
+--------------- Common Grid Components ------------                 
+---------------------------------------------------
+*/
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.sidebar1 {
+    grid-area: sidebar1;
+}
+
+.content {
+    grid-area: content;
+}
+
+.header {
+    grid-area: header;
+    color: black;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+.box {
+    background-color: #fff;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 150%;
+}
+
+.header,
+.footer {
+    background-color: #fff;
+}
+
+
+/* 
+   -------------------------------------------------
+   --------------------- Fonts ---------------------
+   -------------------------------------------------
+*/
+
+.arial {
+    font-family: Arial, sans-serif;
+}
+
+.helvetica {
+    font-family: Helvetica, sans-serif;
+}
+
+.timesnewroman {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.couriernew {
+    font-family: 'Courier New', 'Courier New', Courier, monospace;
+}
+
+.verdana {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.georgia {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.arialblack {
+    font-family: 'Arial Black' Arial, sans-serif;
+}
