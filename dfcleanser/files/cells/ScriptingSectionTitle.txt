@@ -1,0 +1,1 @@
+<div align="left" id="ScriptingMode"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ScriptMode.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2 class="DCTitleChaptersh2">&nbsp;&nbsp;&nbsp;Scripting Mode</h2><a name="Script"></a></div></div></div><br>

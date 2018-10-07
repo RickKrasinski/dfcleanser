@@ -1,0 +1,1 @@
+{ "EULARead": "false", "importPandasCSVParms": ["datasets/kidney_disease.csv", "", "", "", ""], "customdbconnectorParms": ["mysql+pymysql://PythonTest:Python@localhost/world"] }

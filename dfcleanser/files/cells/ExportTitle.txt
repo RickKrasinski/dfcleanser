@@ -1,0 +1,1 @@
+<div align="left" id="DCDataExport"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataExport.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Data Export</h2><a name="DataExport"></a></div></div>

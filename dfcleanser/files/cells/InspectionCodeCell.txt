@@ -1,0 +1,1 @@
+from dfcleanser.data_inspection.data_inspection_control import display_data_inspection\ndisplay_data_inspection(0)
