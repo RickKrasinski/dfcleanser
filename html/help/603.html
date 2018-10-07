@@ -1,0 +1,66 @@
+<div class="DCChaptersHelpTitle">
+    <button type="button" class="help-button" style="margin-left:5px; width:100px;" onclick="displayhelp(600)">Clear</button>
+    <button type="button" class="help-button" style="margin-left:5px; width:100px;" onclick="displayhelp(602)">Back</button>
+    <input type="hidden" id='ExportHelphelpbackid' value='602'></input>
+    <br></br>
+</div>
+<div class="DCChaptersHelpText">
+    <p>You must initially define the databse, python lib and the connection parms.</p>
+</div>
+<div class="help_images">
+    <img id="ExportSQLTableConnectId" class="help-image-left" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ExportSQLTableConnect.png"></img>
+</div><br></br>
+<div class="DCChaptersHelpText">
+    <p>The Pandas SQLTable import automates connection to a common set of databases and corresponding python libs.</p>
+</div>
+
+<div class="DCChaptersHelpText">
+    <p>You can select which database and lib to connect to and then enter the appropriate connection parms.</p>
+</div>
+
+<div class="DCChaptersHelpText">
+    <p>The pandas export sql makes use of both a native and sqlalchemy connector libraries. The native library provides python connect functionality and the SQLAlchemy library provides a wrapper around the native library. Both are essential to using the
+        pandas sql import functionality. Once you enter the connection parms you should test the connection(s). You should test the Native connection and the SQLAlchemy connection to ensure complete access to the database.</p>
+</div>
+
+<div class="DCChaptersHelpText">
+    <p>To get detailed info on the native libraries click on one of the following : </br>
+    </p>
+</div>
+
+<div style="margin-top:10px;">
+    <div class="container" style="width:95%;">
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://pymysql.readthedocs.io/en/latest/user/index.html')">PYMYSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('https://dev.mysql.com/doc/connector-python/en/')">MYSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('https://docs.microsoft.com/en-us/sql/connect/python/pyodbc/python-sql-driver-pyodbc')">PYODBC</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('https://docs.microsoft.com/en-us/sql/connect/python/pymssql/python-sql-driver-pymssql')">PYMSSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('https://docs.python.org/2/library/sqlite3.html')">SQLITE</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://initd.org/psycopg/docs/')">POSTGRESQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('https://oracle.github.io/python-cx_Oracle/')">ORACLE</button>
+    </div>
+</div><br></br>
+<div class="DCChaptersHelpText">
+    <p>To get detailed info on the SQLAlchemy libraries click on one of the following : </br>
+    </p>
+</div>
+
+<div style="margin-top:10px;">
+    <div class="container" style="width:95%;">
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/mysql.html#module-sqlalchemy.dialects.mysql.pymysql')">PYMYSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/mssql.html#module-sqlalchemy.dialects.mssql.pyodbc')">MYSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/mysql.html#module-sqlalchemy.dialects.mysql.mysqlconnector')">PYODBC</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/mssql.html#module-sqlalchemy.dialects.mssql.pymssql')">PYMSSQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/sqlite.html')">SQLITE</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg2')">POSTGRESQL</button>
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:30px;  " onclick="display_help_url('http://docs.sqlalchemy.org/en/latest/dialects/oracle.html#module-sqlalchemy.dialects.oracle.cx_oracle')">ORACLE</button>
+    </div>
+</div><br></br>
+<div class="DCChaptersHelpText">
+    <p>Once you have determined the connection is good then you can export a table by hitting the 'Export Table' button.</p>
+</div>
+
+<div style="margin-top:10px;">
+    <div class="container" style="width:95%;">
+        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:110px;  height:54px;  " onclick="displayhelp(604)">Export</br>Table</button>
+    </div>
+</div><br></br>
