@@ -60,7 +60,7 @@ def run_javascript(script) :
         display_jupyter_HTML(Javascript(script))
 
     except :
-        display_windows_MessageBox(script,"javascript failure")
+        alert_user("javascript failure" + script)
 
 """
 #--------------------------------------------------------------------------
@@ -544,7 +544,7 @@ def run_jscript(jscript, errmsg, errtitle) :
         display_jupyter_HTML(Javascript(jscript))
 
     except :
-        display_windows_MessageBox(errmsg,errtitle)
+        alert_user(errmsg)
 
 """
 #--------------------------------------------------------------------------

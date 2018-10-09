@@ -8,7 +8,7 @@ Created on Tue Jun 13 22:29:22 2017
 
 @author: Rick
 """
-from dfcleanser.common.common_utils import (single_quote, run_jscript, display_windows_MessageBox, patch_html)
+from dfcleanser.common.common_utils import (single_quote, run_jscript, alert_user, patch_html)
 
 """
 #--------------------------------------------------------------------------
@@ -713,7 +713,7 @@ def get_help(helpid) :
             help_file.close()
 
         except :
-            display_windows_MessageBox("Unable to read help file",helpid)
+            alert_user("Unable to read help file : "+helpid)
         
         if(len(help_html) == 0) :
             #help_html = get_help_html(helpid)
@@ -726,7 +726,7 @@ def get_help(helpid) :
                 help_file.close()
 
             except :
-                display_windows_MessageBox("Unable to open help file",helpid)
+                alert_user("Unable to open help file "+helpid)
     
     new_help_html = patch_html(help_html)
 
