@@ -10,5 +10,5 @@ global-exclude *.sh
 # explicit includes
 include README.md
 include LICENSE
-include static/*
-include files/*
+include ./dfcleanser/static/*
+include ./dfcleanser/files/*
