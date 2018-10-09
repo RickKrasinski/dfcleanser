@@ -1,1 +1,1 @@
-__all__ = ["cfg","common_utils","db_utils","display_utils","help_utils","html_widgets","table_widgets"]
+__all__ = ["cell_utils","cfg","common_utils","db_utils","display_utils","help_utils","html_widgets","table_widgets"]
