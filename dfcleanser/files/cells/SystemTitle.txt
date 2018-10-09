@@ -1,1 +1,0 @@
-<div align="left" id="DCSystem"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/systemEnvironment.png" width="80" align="left"/></div><div><image width="10"></div><div><h2>&nbsp;&nbsp;&nbsp;System Environment : </h2><a name="SystemEnvironment"></a></div></div>
