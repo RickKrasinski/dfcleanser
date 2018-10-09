@@ -375,7 +375,7 @@ def check_if_dc_init() :
 
 
 def get_common_files_path() :
-    common_files_path = os.path.join(get_dfcleanser_location(),"files","common")
+    common_files_path = os.path.join(get_dfcleanser_location(),"files")
     return(common_files_path + "\\")   
 
 def get_notebook_files_path() :
