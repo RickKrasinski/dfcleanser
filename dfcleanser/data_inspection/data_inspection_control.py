@@ -13,6 +13,9 @@ this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
 import dfcleanser.data_inspection.data_inspection_model as dim
+import dfcleanser.data_inspection.data_inspection_widgets as diw
+
+import dfcleanser.common.help_utils as dfchelp
 
 from dfcleanser.common.table_widgets import drop_owner_tables, dcTable
 
@@ -38,12 +41,11 @@ def display_data_inspection(id, parms=None) :
     
     from IPython.display import clear_output
     clear_output()
-    
+
     opstat  =   opStatus()  
       
     # setup the button bar form
-    from dfcleanser.data_inspection.data_inspection_widgets import get_inspection_main_taskbar
-    inspection_tbForm   =   get_inspection_main_taskbar()
+    inspection_tbForm   =   diw.get_inspection_main_taskbar()
 
     # setup the checkbox form 
     current_checkboxes      =  []
@@ -54,10 +56,7 @@ def display_data_inspection(id, parms=None) :
     if(id == dim.MAIN_OPTION) :
         current_checkboxes     =   [False, False, False, False, False] 
         clear_data_inspection_data()
-        
-        from dfcleanser.common.help_utils import clear_help_text, INSPECT_HELP_BASE
-        clear_help_text(INSPECT_HELP_BASE)
-
+        dfchelp.clear_help_text(dfchelp.INSPECT_HELP_BASE)
         
     # refresh the current insoection data     
     elif (id == dim.REFRESH_OPTION) : 
@@ -73,23 +72,17 @@ def display_data_inspection(id, parms=None) :
         # no checkbox parms so read from cfg file
         else :
             parms = []
-            from dfcleanser.data_inspection.data_inspection_widgets import get_inspection_check_form_parms
-            get_inspection_check_form_parms(parms,current_checkboxes)           
+            diw.get_inspection_check_form_parms(parms,current_checkboxes)           
                 
     else :
 
         inparm = parms
         parms = []
-        from dfcleanser.data_inspection.data_inspection_widgets import get_inspection_check_form_parms
-        get_inspection_check_form_parms(parms,current_checkboxes)           
+        diw.get_inspection_check_form_parms(parms,current_checkboxes)           
         
     
-    from dfcleanser.data_inspection.data_inspection_widgets import get_main_checkbox_form
-    inspection_checkboxForm =   get_main_checkbox_form(current_checkboxes) 
-
-    from dfcleanser.data_inspection.data_inspection_widgets import get_inspection_header_form
-    inspection_data_header  =   get_inspection_header_form() 
-
+    inspection_checkboxForm =   diw.get_main_checkbox_form(current_checkboxes) 
+    inspection_data_header  =   diw.get_inspection_header_form() 
     display_composite_form([inspection_tbForm,inspection_checkboxForm,inspection_data_header])
     
     import matplotlib.pyplot as plt
@@ -106,16 +99,13 @@ def display_data_inspection(id, parms=None) :
             thresholdType = inparm[0]
             
             if(id == dim.DROP_ROWS_OPTION) :
-                from dfcleanser.data_inspection.data_inspection_widgets import get_drop_rows_input_parms
-                fparms = get_drop_rows_input_parms(inparm[1])
+                fparms = diw.get_drop_rows_input_parms(inparm[1])
             else :
-                from dfcleanser.data_inspection.data_inspection_widgets import get_drop_cols_input_parms
-                fparms = get_drop_cols_input_parms(inparm[1])
+                fparms = diw.get_drop_cols_input_parms(inparm[1])
                 
             threshold = int(fparms[0])
             
-        from dfcleanser.data_inspection.data_inspection_widgets import get_drop_cbox_flags    
-        parms = get_drop_cbox_flags()
+        parms = diw.get_drop_cbox_flags()
         parms = []
         
         if( id == dim.DISPLAY_ROW_OPTION ) :
@@ -136,8 +126,7 @@ def display_data_inspection(id, parms=None) :
                 display_exception(opstat)   
                 
     if(opstat.get_status()) :
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
+        diw.display_inspection_data()
 
     if( (id == dim.REFRESH_OPTION)   or (id == dim.DISPLAY_ROW_OPTION) or 
         (id == dim.DROP_ROWS_OPTION) or (id == dim.DROP_COLS_OPTION) ) :
@@ -163,8 +152,7 @@ def display_data_inspection(id, parms=None) :
                                            "datatypesTable",
                                            cfg.DataInspection_ID)
 
-                from dfcleanser.data_inspection.data_inspection_widgets import display_df_datatypes 
-                display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2]) 
+                diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2]) 
                 
                 print("\n")
                 
@@ -193,8 +181,7 @@ def display_data_inspection(id, parms=None) :
                 
                 print("\n")
                 
-                from dfcleanser.data_inspection.data_inspection_widgets import get_inspection_dfschema_taskbar
-                display_composite_form([get_inspection_dfschema_taskbar()])
+                display_composite_form([diw.get_inspection_dfschema_taskbar()])
                 print("\n")
                 
             # if display nan data
@@ -207,8 +194,7 @@ def display_data_inspection(id, parms=None) :
                 
                 nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
                 nans_cols_table = dcTable("Columns with most NaNs","nansTable",cfg.DataInspection_ID)
-                from dfcleanser.data_inspection.data_inspection_widgets import display_null_data
-                display_null_data(cfg.get_dc_dataframe(),nans_rows_table,nans_cols_table,120)
+                diw.display_null_data(cfg.get_dc_dataframe(),nans_rows_table,nans_cols_table,120)
             
             # if display sample row data
             if(parms[dim.INSPECT_ROWS] == "True") : 
@@ -221,12 +207,10 @@ def display_data_inspection(id, parms=None) :
                 rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
         
                 if(id == 2) :
-                    from dfcleanser.data_inspection.data_inspection_widgets import display_df_row_data
-                    opstat = display_df_row_data(cfg.get_dc_dataframe(),rows_table,rowid,0)
+                    opstat = diw.display_df_row_data(cfg.get_dc_dataframe(),rows_table,rowid,0)
                 else : 
                     if(newrowId==0) :
-                        from dfcleanser.data_inspection.data_inspection_widgets import display_df_row_data
-                        opstat = display_df_row_data(cfg.get_dc_dataframe(),rows_table,0,0)
+                        opstat = diw.display_df_row_data(cfg.get_dc_dataframe(),rows_table,0,0)
                     else :
                         opstat = display_more_sample_rows(cfg.get_dc_dataframe(),tableId,1,newrowId)
             
@@ -272,8 +256,7 @@ def display_data_inspection(id, parms=None) :
                                             "catcandcolsTable",
                                             cfg.DataInspection_ID)
                 
-                from dfcleanser.data_inspection.data_inspection_widgets import display_df_categories
-                numcats, numcands = display_df_categories(cfg.get_dc_dataframe(),cattable,catcandidatetable)
+                numcats, numcands = diw.display_df_categories(cfg.get_dc_dataframe(),cattable,catcandidatetable)
                 
                 print("\n")
                 clock.stop()
