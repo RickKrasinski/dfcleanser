@@ -1,1 +1,0 @@
-from dfcleanser.scripting.data_scripting_control import display_data_scripting\ndisplay_data_scripting(0)
