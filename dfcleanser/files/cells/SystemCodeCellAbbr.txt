@@ -1,1 +1,0 @@
-from dfcleanser.system.system_control import display_system_environment\ndisplay_system_environment(16)
