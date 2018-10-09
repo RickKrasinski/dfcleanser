@@ -120,7 +120,7 @@ class RunningClock:
     def spinning_clock():
         while 1: 
             #for cursor in '|/-\\': yield cursor
-            clockfaces =    ["https://rickkrasinski.github.io/dfccleanser/graphics/hour1.png",
+            clockfaces =    ["https://rickkrasinski.github.io/dfcleanser/graphics/hour1.png",
                              "https://rickkrasinski.github.io/dfcleanser/graphics/hour2.png",
                              "https://rickkrasinski.github.io/dfcleanser/graphics/hour3.png",
                              "https://rickkrasinski.github.io/dfcleanser/graphics/hour4.png",

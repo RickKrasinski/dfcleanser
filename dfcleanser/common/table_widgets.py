@@ -501,7 +501,7 @@ class dcTable :
         
         # reference attribures
         self.refList         =   None
-        self.refIndentList   =   None
+        self.hhrefList       =   None
 
         self.refIndex        =   -1
         self.refParm         =   None
