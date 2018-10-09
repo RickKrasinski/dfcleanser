@@ -1,1 +1,0 @@
-<div align="left" id="DCGeocodeUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/GetLongLat.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Geocoding</h3></div></div>
