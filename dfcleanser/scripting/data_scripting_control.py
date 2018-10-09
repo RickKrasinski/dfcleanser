@@ -226,8 +226,8 @@ class DCScriptLog :
             
             except :
                 self.scriptlog          =   {}
-                print(self.get_ScriptLog_file_name())
-                print("no scriptlog")
+                #print(self.get_ScriptLog_file_name())
+                #print("no scriptlog")
         
     def save_ScriptLog_file(self,init=False) :
         
@@ -242,7 +242,8 @@ class DCScriptLog :
                 with open(fname, 'w') as scriptlog_file :
                     json.dump(self.scriptlog,scriptlog_file)
             except :
-                print("[save_scriptlog_file]" + str(sys.exc_info()[2]))
+                from dfcleanser.common.common_utils import user_alert
+                user_alert("Unable to save_scriptlog_file " + self.get_ScriptLog_file_name() + str(sys.exc_info()[2]))
                 scriptlog_file.close()
 
     def get_ScriptLog(self) :
