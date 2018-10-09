@@ -340,12 +340,11 @@ class DCDictListLog :
         
 
     def get_Log_file_name(self,id) :
-        import os
         if(id == swum.DICT_ID) :
-            path = os.path.join(cfg.get_common_files_path(),COMMON_DICTS_FILE_NAME)
+            path = cfg.get_common_files_path() + COMMON_DICTS_FILE_NAME
             return(path)
         else :
-            path = os.path.join(cfg.get_common_files_path(),COMMON_LISTS_FILE_NAME)
+            path = cfg.get_common_files_path() + COMMON_LISTS_FILE_NAME
             return(path)
 
     def load_Log_file(self,id) :
@@ -370,7 +369,7 @@ class DCDictListLog :
                 self.listlog          =   {}
 
             opstat = opStatus()
-            opstat.store_exception("Unable to load list_dict logs " + str(id),e)
+            opstat.store_exception("Unable to load common file :  " + self.get_Log_file_name(id),e)
             display_exception(opstat)
     
     def save_Log_file(self,id) :
@@ -386,7 +385,7 @@ class DCDictListLog :
                 
         except Exception as e:
             opstat = opStatus()
-            opstat.store_exception("Unable to save list_dict logs" + str(id),e)
+            opstat.store_exception("Unable to common file " + self.get_Log_file_name(id),e)
             display_exception(opstat)
 
 
