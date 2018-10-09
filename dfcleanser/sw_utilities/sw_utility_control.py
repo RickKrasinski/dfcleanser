@@ -342,10 +342,10 @@ class DCDictListLog :
     def get_Log_file_name(self,id) :
         import os
         if(id == swum.DICT_ID) :
-            path = os.path.join(cfg.get_dfcleanser_location(),"files\\common\\" + COMMON_DICTS_FILE_NAME)
+            path = os.path.join(cfg.get_common_files_path(),COMMON_DICTS_FILE_NAME)
             return(path)
         else :
-            path = os.path.join(cfg.get_dfcleanser_location(),"files\\common\\" + COMMON_LISTS_FILE_NAME)
+            path = os.path.join(cfg.get_common_files_path(),COMMON_LISTS_FILE_NAME)
             return(path)
 
     def load_Log_file(self,id) :
