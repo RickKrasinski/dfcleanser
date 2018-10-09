@@ -20,7 +20,7 @@ from dfcleanser.common.html_widgets import (get_button_tb_form, maketextarea, di
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (display_notes, RunningClock)
+from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML)
 
 
 """
@@ -296,11 +296,10 @@ def display_EULA():
     from dfcleanser.system.system_control import isEULA_read
     
     if(isEULA_read()) : 
-        eula_file_name  =   cfg.get_dfcleanser_location()+"\html\EULARead.html" 
+        eula_file_name  =   cfg.get_common_files_path()+"\EULARead.html" 
     else :
-        eula_file_name  =   cfg.get_dfcleanser_location()+"\html\EULA.html"
+        eula_file_name  =   cfg.get_common_files_path()+"\EULA.html"
 
-    from dfcleanser.common.common_utils import   displayHTML,display_windows_MessageBox      
     try :    
         eula_file = open(eula_file_name, 'r', encoding="utf-8")
         eula_html = (eula_file.read())
@@ -309,14 +308,12 @@ def display_EULA():
         displayHTML(eula_html) 
             
     except :
-        display_windows_MessageBox("Unable to open EULA file" + eula_file_name,"EULA Read Error")
+        alert_user("Unable to open EULA file" + eula_file_name)
 
 def display_README():
     
     readme_file_name  =   cfg.get_notebook_path()+"\dfcleanser\html\README.md"
     
-    from dfcleanser.common.common_utils import display_windows_MessageBox      
-        
     try :    
         readme_file = open(readme_file_name, 'r', encoding="utf-8")# as eula_file :
         readme_md   = (readme_file.read()) #json.load(eula_file)
@@ -326,7 +323,7 @@ def display_README():
         display(Markdown(readme_md))
             
     except :
-        display_windows_MessageBox("Unable to open README file" + readme_file,"README Read Error")
+        alert_user("Unable to open README file" + readme_file)
 
 """ 
 #------------------------------------------------------------------
