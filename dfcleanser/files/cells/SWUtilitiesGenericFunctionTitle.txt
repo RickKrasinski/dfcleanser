@@ -1,1 +1,0 @@
-<div align="left" id="DCGenFunctionUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/GenFunction.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Generic Functions</h3></div></div>
