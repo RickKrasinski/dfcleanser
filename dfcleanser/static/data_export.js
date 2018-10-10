@@ -72,8 +72,8 @@ function pandas_details_export_clear_callback(id) {
     * Parameters:
     *  id - import type
     */
-    window.run_code_in_cell(window.EXPORT_TASK_BAR_ID,window.getJSPCode(window.EXPORT_LIB,"display_import_forms","2" + ", " + id));
-    window.scroll_to('DCDataImport');
+    window.run_code_in_cell(window.EXPORT_TASK_BAR_ID,window.getJSPCode(window.EXPORT_LIB,"display_export_forms","2" + ", " + id));
+    window.scroll_to('DCDataExport');
 }
 
 function pandas_details_export_return_callback() {
