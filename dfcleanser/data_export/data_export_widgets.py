@@ -431,7 +431,7 @@ def display_data_export_notes(s,fname,dbnote=False,custom=False) :
 #------------------------------------------------------------------
 """
 def get_pandas_export_input_form(exid) :
-    
+ 
     if(exid == dem.CSV_EXPORT)      : 
         export_form = InputForm(pandas_export_csv_id,
                                 pandas_export_csv_idList,
@@ -525,7 +525,7 @@ def get_pandas_export_input_title(id,dbid=None) :
 def display_dc_export_forms(id, detid=0, notes=False) :
     
     clear_output()
-    
+
     # add the main import task bar
     if (id == dem.EXPORT_TB_ONLY) :
 
@@ -537,8 +537,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
     
         display_inspection_data() 
         
-        from dfcleanser.common.help_utils import clear_help_text, EXPORT_HELP_BASE
-        clear_help_text(EXPORT_HELP_BASE)
+        dfchelp.clear_help_text(dfchelp.EXPORT_HELP_BASE)
 
     # add the pandas import task bar or pandas details form 
     elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 

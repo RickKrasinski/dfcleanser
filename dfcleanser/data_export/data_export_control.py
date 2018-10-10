@@ -56,12 +56,10 @@ import time
 #--------------------------------------------------------------------------
 """
 def display_export_forms(id, detid=0, notes=False) :
-    from dfcleanser.data_export.data_export_widgets import display_dc_export_forms
-    display_dc_export_forms(id, detid=0, notes=False)
+    dew.display_dc_export_forms(id, detid, notes)
 
 def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
-    from dfcleanser.data_export.data_export_widgets import display_dc_pandas_export_sql_inputs
-    display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None)
+    dew.display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms)
 
 """
 #--------------------------------------------------------------------------
@@ -69,7 +67,7 @@ def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
 #--------------------------------------------------------------------------
 """
 def process_export_form(formid, parms, display=True) :
-    
+
     if( not (cfg.is_dc_dataframe_loaded()) ) :
         print("No Dataframe Currently Loadad")
         return()
@@ -90,7 +88,7 @@ def process_export_form(formid, parms, display=True) :
             displayHeading("Exporting",4)
     
         if (formid == dem.CSV_EXPORT) :
-            fparms      =   dew.get_csv_export_inputs()
+            fparms      =   dew.get_csv_export_inputs(parms)
             opstat      =   export_pandas_csv(fparms,
                                               dew.get_csv_export_form_id(),
                                               dew.get_csv_export_form_labels())
@@ -99,7 +97,7 @@ def process_export_form(formid, parms, display=True) :
             parmslist   =   dew.get_csv_export_form_labels()[:5]
         
         elif (formid == dem.EXCEL_EXPORT) :
-            fparms      =   dew.get_excel_export_inputs()
+            fparms      =   dew.get_excel_export_inputs(parms)
             opstat      =   export_pandas_excel(fparms,
                                                 dew.get_excel_export_form_id(),
                                                 dew.get_excel_export_form_labels())
@@ -108,7 +106,7 @@ def process_export_form(formid, parms, display=True) :
             parmslist   =   dew.get_excel_export_form_labels()[:6]
         
         elif (formid == dem.JSON_EXPORT) : 
-            fparms      =   dew.get_json_export_inputs()
+            fparms      =   dew.get_json_export_inputs(parms)
             opstat      =   export_pandas_json(fparms,
                                                dew.get_json_export_form_id(),
                                                dew.get_json_export_form_labels())
@@ -117,7 +115,7 @@ def process_export_form(formid, parms, display=True) :
             parmslist   =   dew.get_json_export_form_labels()[:2]
         
         elif (formid == dem.HTML_EXPORT) : 
-            fparms      =   dew.get_html_export_inputs()
+            fparms      =   dew.get_html_export_inputs(parms)
             opstat      =   export_pandas_html(fparms,
                                                dew.get_html_export_form_id(),
                                                dew.get_html_export_form_labels())
@@ -270,26 +268,36 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
     
     opstat          =   opStatus()
     
-    csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
-    csvvals         =   [fparms[1],fparms[2],fparms[3]]
-    csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Export parameters defined")
+    else :
+        try :
 
-    csvparms        =   {}
-    csvaddlparms    =   {}
+            csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
+            csvvals         =   [fparms[1],fparms[2],fparms[3]]
+            csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
 
-    try :
+            csvparms        =   {}
+            csvaddlparms    =   {}
+
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
+    if(opstat.get_status()) :
+        try :
             
-        csvparms        =   get_function_parms(csvkeys,csvvals,csvtypes)
-        if(not (fparms[4] == "")) :
-            csvaddlparms    =   json.loads(fparms[4])
+            csvparms        =   get_function_parms(csvkeys,csvvals,csvtypes)
+            if(not (fparms[4] == "")) :
+                csvaddlparms    =   json.loads(fparms[4])
             
-        if (len(csvaddlparms) > 0) :
-            addlparmskeys = csvaddlparms.keys()
-            for i in range(len(addlparmskeys)) : 
-                csvparms.update({addlparmskeys[i]:csvaddlparms.get(addlparmskeys[i])})
+            if (len(csvaddlparms) > 0) :
+                addlparmskeys = csvaddlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    csvparms.update({addlparmskeys[i]:csvaddlparms.get(addlparmskeys[i])})
 
-    except Exception as e:
-        opstat.store_exception("Unable to get additional parms for csv export",e)
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms for csv export",e)
 
     if(opstat.get_status()) :
         
@@ -329,27 +337,38 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 def export_pandas_excel(fparms,exportId,labellist,display=True) : 
     
     opstat          =   opStatus()    
-
-    excelkeys       =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-    excelvals       =   [fparms[1],fparms[2],fparms[3],fparms[4]]
-    exceltypes      =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
     
-    excelparms      =   {}
-    exceladdlparms  =   {}
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Export parameters defined")
+    else :
+        try :
 
-    try :
-            
-        excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
-        if(not (fparms[5] == "")) :
-            exceladdlparms    =   json.loads(fparms[5])
-            
-        if (len(exceladdlparms) > 0) :
-            addlparmskeys = exceladdlparms.keys()
-            for i in range(len(addlparmskeys)) : 
-                excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
+            excelkeys       =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
+            excelvals       =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            exceltypes      =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
+    
+            excelparms      =   {}
+            exceladdlparms  =   {}
 
-    except Exception as e:
-        opstat.store_exception("Unable to get additional parms for excel export",e)
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
+    if(opstat.get_status()) :
+
+        try :
+            
+            excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
+            if(not (fparms[5] == "")) :
+                exceladdlparms    =   json.loads(fparms[5])
+            
+            if (len(exceladdlparms) > 0) :
+                addlparmskeys = exceladdlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
+
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms for excel export",e)
     
     if(opstat.get_status()) : 
         
@@ -390,26 +409,37 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
     
     opstat          =   opStatus()    
 
-    jsonkeys         =   [labellist[1],labellist[2]] 
-    jsonvals         =   [fparms[1],fparms[2]]
-    jsontypes        =   [STRING_PARM,STRING_PARM]
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Export parameters defined")
+    else :
+        try :
 
-    jsonparms        =   {}
-    jsonaddlparms    =   {}
+            jsonkeys         =   [labellist[1],labellist[2]] 
+            jsonvals         =   [fparms[1],fparms[2]]
+            jsontypes        =   [STRING_PARM,STRING_PARM]
 
-    try :
+            jsonparms        =   {}
+            jsonaddlparms    =   {}
+
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
+    if(opstat.get_status()) :
+
+        try :
             
-        jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
-        if(not (fparms[3] == "")) :
-            jsonaddlparms    =   json.loads(fparms[3])
+            jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
+            if(not (fparms[3] == "")) :
+                jsonaddlparms    =   json.loads(fparms[3])
             
-        if (len(jsonaddlparms) > 0) :
-            addlparmskeys = jsonaddlparms.keys()
-            for i in range(len(addlparmskeys)) : 
-                jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
+            if (len(jsonaddlparms) > 0) :
+                addlparmskeys = jsonaddlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
 
-    except Exception as e:
-        opstat.store_exception("Unable to get additional parms for json export",e)
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms for json export",e)
 
     if(opstat.get_status()) :
         
@@ -451,26 +481,37 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
     
     opstat          =   opStatus()    
 
-    htmlkeys        =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-    htmlvals        =   [fparms[1],fparms[2],fparms[3],fparms[4]]
-    htmltypes       =   [INT_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Export parameters defined")
+    else :
+        try :
 
-    htmlparms       =   {}
-    htmladdlparms   =   {}
+            htmlkeys        =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
+            htmlvals        =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            htmltypes       =   [INT_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
 
-    try :
+            htmlparms       =   {}
+            htmladdlparms   =   {}
+
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
+    if(opstat.get_status()) :
+
+        try :
             
-        htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
-        if(not (fparms[5] == "")) :
-            htmladdlparms    =   json.loads(fparms[5])
+            htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
+            if(not (fparms[5] == "")) :
+                htmladdlparms    =   json.loads(fparms[5])
             
-        if (len(htmladdlparms) > 0) :
-            addlparmskeys = htmladdlparms.keys()
-            for i in range(len(addlparmskeys)) : 
-                htmlparms.update({addlparmskeys[i]:htmladdlparms.get(addlparmskeys[i])})
+            if (len(htmladdlparms) > 0) :
+                addlparmskeys = htmladdlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    htmlparms.update({addlparmskeys[i]:htmladdlparms.get(addlparmskeys[i])})
 
-    except Exception as e:
-        opstat.store_exception("Unable to get additional parms",e)
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :
         
