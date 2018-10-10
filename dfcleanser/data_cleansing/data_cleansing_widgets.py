@@ -755,7 +755,7 @@ def display_unique_col_data(df) :
 
     clock.stop()
     
-    if(get_options_flag(ROUNDING_FLAG) == True) : 
+    if(get_options_flag(dcm.ROUNDING_FLAG) == True) : 
         cleansing_text_inputs   =   get_input_form(InputForm(col_round_input_id,
                                                              col_round_input_idList,
                                                              col_round_input_labelList,
@@ -797,7 +797,7 @@ def display_unique_col_data(df) :
     
     blank_line      =   get_blank_line_form()
     
-    if(get_options_flag(ROUNDING_FLAG) == True) :
+    if(get_options_flag(dcm.ROUNDING_FLAG) == True) :
         
         col_uniques_tb  =   get_button_tb_form(ButtonGroupForm(col_uniques_change_tb_id,
                                                                col_uniques_change_tb_keyTitleList,
