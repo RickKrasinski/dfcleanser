@@ -734,13 +734,13 @@ def display_df_categories(df,cattable,catcandidatetable) :
         uniquesCountList.append(get_num_uniques_by_id(df, df_cols[i]))
                     
     uniquesValsList = []
-    import pandas
+    #import pandas
                 
     for i in range(len(df_cols)) :
         if(uniquesCountList[i] < 25) :
             uniquesVals = get_col_uniques_by_id(df,df_cols[i])
             
-            if(not (isinstance(uniquesVals,pandas.core.categorical.Categorical))) :
+            if(not (df[df_cols[i]].dtype.name == "category")) :
                 uniquesValsList.append(uniquesVals.tolist())
             else :
                 uniquesValsList.append(uniquesVals)
@@ -753,7 +753,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
     catcandidatesuniques    =   []
                 
     for i in range(len(uniquesValsList)) :
-        if(isinstance(uniquesValsList[i],pandas.core.categorical.Categorical)) :
+        if(df[df_cols[i]].dtype.name == "category") :
             catcols.append(df_cols[i])
             catcolsuniques.append(uniquesValsList[i])
         else :
