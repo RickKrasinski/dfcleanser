@@ -334,13 +334,23 @@ def import_custom(parms) :
 def import_pandas_csv(fparms,importId,labellist,display=True) : 
     
     opstat          =   opStatus()
-
-    csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
-    csvvals         =   [fparms[1],fparms[2],fparms[3]]
-    csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
     
-    csvparms        =   {}
-    csvaddlparms    =   {}
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+    else :
+        try :
+
+            csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
+            csvvals         =   [fparms[1],fparms[2],fparms[3]]
+            csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
+    
+            csvparms        =   {}
+            csvaddlparms    =   {}
+            
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+
     
     if(len(fparms[2]) > 0) :
         try :
@@ -403,22 +413,33 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
 def import_pandas_fwf(fparms,importId,labellist,display=True) : 
     
     opstat = opStatus()
-
-    fwfkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4],labellist[5]] 
-    fwfvals         =   [fparms[1],fparms[2],fparms[3],fparms[4],fparms[5]]
-    fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
     
-    fwfparms        =   {}
-    fwfaddlparms    =   {}
-    
-    if(len(fparms[3]) > 0) :
-        
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+    else :
         try :
-            with open(fparms[3], 'r') as col_names_file :
-                colNames = json.load(col_names_file)
-                fwfvals[2] = colNames
-        except Exception as e: 
-            opstat.store_exception("Unable to open fwf column names file" + fparms[3],e)
+
+            fwfkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4],labellist[5]] 
+            fwfvals         =   [fparms[1],fparms[2],fparms[3],fparms[4],fparms[5]]
+            fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
+    
+            fwfparms        =   {}
+            fwfaddlparms    =   {}
+            
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+
+    if(opstat.get_status()) :
+    
+        if(len(fparms[3]) > 0) :
+        
+            try :
+                with open(fparms[3], 'r') as col_names_file :
+                    colNames = json.load(col_names_file)
+                    fwfvals[2] = colNames
+            except Exception as e: 
+                opstat.store_exception("Unable to open fwf column names file" + fparms[3],e)
 
     if(opstat.get_status()) :
         
@@ -476,12 +497,20 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
     
     opstat = opStatus()
     
-    excelkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-    excelvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
-    exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+    else :
+        try :
+            excelkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
+            excelvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
 
-    excelparms        =   {}
-    exceladdlparms    =   {}
+            excelparms        =   {}
+            exceladdlparms    =   {}
+            
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
     
     if(opstat.get_status()) :
         
@@ -541,13 +570,22 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
     
     opstat = opStatus()
     
-    jsonkeys         =   [labellist[1],labellist[2],labellist[3]] 
-    jsonvals         =   [fparms[1],fparms[2],fparms[3]]
-    jsontypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
-    
-    jsonparms        =   {}
-    jsonaddlparms    =   {}
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+    else :
+        try :
 
+            jsonkeys         =   [labellist[1],labellist[2],labellist[3]] 
+            jsonvals         =   [fparms[1],fparms[2],fparms[3]]
+            jsontypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
+    
+            jsonparms        =   {}
+            jsonaddlparms    =   {}
+
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
     if(opstat.get_status()) :
         
         try :
@@ -607,12 +645,22 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
     
     opstat = opStatus()
     
-    htmlkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-    htmlvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
-    htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
+    if(len(fparms) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+    else :
+        try :
+
+            htmlkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
+            htmlvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
     
-    htmlparms        =   {}
-    htmladdlparms    =   {}
+            htmlparms        =   {}
+            htmladdlparms    =   {}
+
+        except Exception as e:
+            opstat.store_exception("Error parsing import parms",e)
+    
     
     if(opstat.get_status()) :
         
