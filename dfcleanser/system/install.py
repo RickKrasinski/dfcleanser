@@ -73,9 +73,9 @@ def uninstall_dfcleanser() :
 # components for installing the dfcleanser into Jupyter notebook server 
 # -----------------------------------------------------------------------
 """
-dfc_js_files    =   ["js_utils", "data_cleansing", "data_export", "data_import", "data_inspection", 
-                     "data_scripting", "data_transform", "sw_utilities", "system" ]
-dfc_css_files   =   ["dfc_styles"]
+dfc_js_files    =   ["js_utils.js", "data_cleansing.js", "data_export.js", "data_import.js", "data_inspection.js", 
+                     "data_scripting.js", "data_transform.js", "sw_utilities.js", "system.js" ]
+dfc_css_files   =   ["dfc_styles.css"]
 
 
 js_require_text_preamble = ("\n\n// ---------------------------------------\n" +
@@ -227,6 +227,9 @@ def install_dfc_custom() :
     
     dfcleanser_js       =   ""
     
+    print("install_dfc_custom",custom_js_path)
+    print("install_dfc_custom",dfcleanser_js_path)
+    
     try : 
 
         # remove existing dfcleanser js scripts
@@ -237,6 +240,7 @@ def install_dfc_custom() :
         for i in range(len(dfc_js_files)) :
             
             dfcleanser_js_file_name  =   os.path.join(dfcleanser_js_path, dfc_js_files[i])
+            print("install_dfc_custom",dfcleanser_js_file_name)
             js_file_code = read_text_file(dfcleanser_js_file_name,opstat)
             if(opstat.get_status()) :
                 dfcleanser_js   =   (dfcleanser_js + js_file_code)
@@ -248,7 +252,7 @@ def install_dfc_custom() :
                 jupyter_custom_js_file.write(dfcleanser_js)
             
     except Exception as e:
-        opstat.store_exception("[writng custom js file]["+ custom_js_path +"]",e)
+        opstat.store_exception("Error writng custom js file : " + custom_js_path,e)
         display_exception(opstat)
     
     print("* updated Jupyter common.js with dfcleanser scripts")
@@ -290,10 +294,13 @@ def install_dfc_custom() :
         opstat.store_exception("[writng custom css file]["+ custom_css_path +"]",e)
         display_exception(opstat)
     
-    print("* updated Jupyter common.css with dfcleanser styles")
-    print("* dfcleanser installed to Jupyter - restart Jupyter Server to use dfcleanser ")
-    print("* after restart from dfcleanser.system.install run setup_dfcleanser() ")
-    print("\n")
+    if(opstat.get_status()) :
+        print("* updated Jupyter common.css with dfcleanser styles")
+        print("* dfcleanser installed to Jupyter - restart Jupyter Server to use dfcleanser ")
+        print("* after restart from dfcleanser.system.install run setup_dfcleanser() ")
+        print("\n")
+    else :
+        print("* unable to install dfcleanser")
     
 
 def setup_dfcleanser() :
