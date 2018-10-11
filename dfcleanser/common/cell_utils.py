@@ -62,7 +62,7 @@ SW_UTILS_DB_TITLE_CELL      =   '<div align="left" id="DCDFSubsetUtility"/><div>
 
 SW_UTILS_GF_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_genfunc_control import display_gen_function\\ndisplay_gen_function(0)'
 SW_UTILS_GF_HELP_CELL       =   '<div align="left" id="DCGenFunctionUtilityHelp"><p class="DCTitleChapterstext"></p></div>'
-SW_UTILS_GF_TITLE_CELL      =   '<div align="left" id="DCGenFunctionUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/GenFunction.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Generic Functions</h3></div></div>'
+SW_UTILS_GF_TITLE_CELL      =   '<div align="left" id="DCGenFunctionUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Genfunction.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Generic Functions</h3></div></div>'
 
 SW_UTILS_GC_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_geocode_control import display_geocode_utility\\ndisplay_geocode_utility(0)'
 SW_UTILS_GC_HELP_CELL       =   '<div align="left" id="DCGeocodeUtilityHelp"/><p class="DCTitleChapterstext"></p></div>'
