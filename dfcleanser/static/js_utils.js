@@ -318,15 +318,15 @@ const   CODE        =   1
 //      ctext          -   cell text
 //      dfcid          -   cell metadata id 
 // -------------------------------------------------------
-window.add_dfc_cell = function(ctype,ctext,dfcid,first=false){
+window.add_dfc_cell = function(ctype, ctext, dfcid, afterid = -1) {
+    console.log("\nadd_dfc_cell", ctype, ctext, dfcid, afterid);
        
     // if first cell to load find correct 
     // cell to start loading after
-    if(first) {
-        if(!select_cell_from_text("setup_dfcleanser"))
-            select_cell_from_text("load_dfcleanser")
+    if (afterid != -1) {
+        select_cell(afterid);
     }
-    
+        
     if(ctype == CODE) {IPython.notebook.insert_cell_below('code');}
     else {IPython.notebook.insert_cell_below('markdown');}
 
@@ -387,7 +387,7 @@ window.delete_dfc_chapter = function(chaptertitle) {
     // delete the title cell
     if (cell_to_delete != window.empty_cell_id) {
         select_current_cell(cell_to_delete);
-        next_cell   = IPython.notebook.select_next().get_selected_cell();
+        next_cell = IPython.notebook.select_next().get_selected_cell();
         IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cell_to_delete));
     }
     
@@ -811,7 +811,7 @@ window.getdfCChaptersLoaded = function() {
 
     for (var i = 16; i < dfc_cell_ids.length; i++) {
 
-        found = 0;
+        var found = 0;
         for (var j = 0; j < cellsloaded.length; j++) {
             if (cellsloaded[j] == dfc_cell_ids[i])
                 found = 1;
@@ -819,7 +819,7 @@ window.getdfCChaptersLoaded = function() {
         chaptersloaded.push(found);
     }
 
-    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(chaptersloaded.)));
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(chaptersloaded)));
 };
 
 
