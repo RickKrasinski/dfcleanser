@@ -16,11 +16,10 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as dfsw
 
-from dfcleanser.common.html_widgets import (displayHeading, new_line)
-
 from dfcleanser.common.table_widgets import drop_owner_tables
+from dfcleanser.common.html_widgets import new_line
 
-from dfcleanser.common.common_utils import (display_exception, display_status, opStatus,
+from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, 
                                             is_numeric_col, is_numeric_col_int, single_quote, RunningClock)
 
 DISPLAY_MAIN                    =   0
@@ -54,7 +53,6 @@ def display_dfsubset_utility(optionId,parms=None) :
         if(optionId == DISPLAY_MAIN) :
         
             dfsw.get_dfsubset_main_taskbar()
-            displayHeading("&nbsp;&nbsp;&nbsp;Data",3)
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             
@@ -85,8 +83,8 @@ def display_dfsubset_utility(optionId,parms=None) :
     else :
         dfsw.get_dfsubset_main_taskbar()
         
-        displayHeading("&nbsp;&nbsp;&nbsp;Data",3)
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+        display_inspection_data()
         
         dfchelp.clear_help_text(dfchelp.DFSUBSET_HELP_BASE)
 

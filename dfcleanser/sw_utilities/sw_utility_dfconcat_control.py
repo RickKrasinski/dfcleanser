@@ -19,8 +19,6 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_dfconcat_widgets as dfcw
 import dfcleanser.sw_utilities.sw_utility_dfconcat_model as dfcm
 
-from dfcleanser.common.html_widgets import (displayHeading)
-
 from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (opStatus, display_status, displayParms, display_exception)
@@ -41,7 +39,6 @@ def display_dfconcat_utility(optionId,parms=None) :
     if(optionId == dfcm.DISPLAY_MAIN) :
         
         dfcw.get_concat_main_taskbar()
-        displayHeading("&nbsp;&nbsp;&nbsp;Data",3)
         from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         display_inspection_data()
             
