@@ -227,8 +227,8 @@ def install_dfc_custom() :
     
     dfcleanser_js       =   ""
     
-    print("install_dfc_custom",custom_js_path)
-    print("install_dfc_custom",dfcleanser_js_path)
+    #print("install_dfc_custom",custom_js_path)
+    #print("install_dfc_custom",dfcleanser_js_path)
     
     try : 
 
@@ -240,7 +240,7 @@ def install_dfc_custom() :
         for i in range(len(dfc_js_files)) :
             
             dfcleanser_js_file_name  =   os.path.join(dfcleanser_js_path, dfc_js_files[i])
-            print("install_dfc_custom",dfcleanser_js_file_name)
+            #print("install_dfc_custom",dfcleanser_js_file_name)
             js_file_code = read_text_file(dfcleanser_js_file_name,opstat)
             if(opstat.get_status()) :
                 dfcleanser_js   =   (dfcleanser_js + js_file_code)

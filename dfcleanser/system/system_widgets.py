@@ -481,8 +481,12 @@ def show_setup_notes():
     if(not (nbpath == None)) :
         setupNotes.append("Notebook Path" + get_html_spaces(23) + ":&nbsp;&nbsp;" + str(nbpath))
     import jupyter_core
-    setupNotes.append("Custom JS File Location" + get_html_spaces(9) + ":&nbsp;&nbsp;" + str(jupyter_core.paths.jupyter_config_dir() + '\custom\custom.js'))
+    setupNotes.append("Custom JS File Location" + get_html_spaces(10) + ":&nbsp;&nbsp;" + str(jupyter_core.paths.jupyter_config_dir() + '\custom\custom.js'))
     setupNotes.append("Custom CSS File Location" + get_html_spaces(7) + ":&nbsp;&nbsp;" + str(jupyter_core.paths.jupyter_config_dir() + '\custom\custom.css'))
+    setupNotes.append("Notebook Path" + get_html_spaces(26) + ":&nbsp;&nbsp;" + cfg.get_notebookPath())
+    setupNotes.append("Notebook Name" + get_html_spaces(24) + ":&nbsp;&nbsp;" + cfg.get_notebookName())
+    setupNotes.append("dfcleanser path" + get_html_spaces(26) + ":&nbsp;&nbsp;" + cfg.get_dfcleanser_location())
+    
     setupNotes.append("Please read the README file for dfcleanser install, load and setup")
 
     display_notes(setupNotes)
