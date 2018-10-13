@@ -16,7 +16,8 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 #import dfcleanser.data_inspection.data_inspection_model as dim
 
-from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock, get_parms_for_input, get_col_uniques_by_id)
+from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock, get_parms_for_input, 
+                                            get_col_uniques_by_id, new_line, displayHTML)
 
 from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, InputForm, 
                                             get_header_form, get_checkbox_form, displayHeading,
@@ -244,6 +245,23 @@ def get_drop_cbox_flags() :
 
 
 
+def display_inspection_html(title) :
+
+    status_html = ""
+    status_html = (status_html + '<div class="container status-header" style="width:80%; margin-left:30px; margin-bottom:5px; ">' + new_line)
+    status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
+    status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
+    status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
+    status_html = (status_html + '                <div class="input-group">' + new_line)
+    status_html = (status_html + '                    <p class="dc-table-title">' + title + '</p>' + new_line)
+    status_html = (status_html + '                </div>' + new_line)
+    status_html = (status_html + '            </div>' + new_line)
+    status_html = (status_html + '        </div>' + new_line) 
+    status_html = (status_html + '    </div>' + new_line) 
+    status_html = (status_html + '</div>')
+
+    displayHTML(status_html)
+
 """            
 #------------------------------------------------------------------
 #   display data inspection header
@@ -252,12 +270,17 @@ def get_drop_cbox_flags() :
 def display_inspection_data() :
     
     if(cfg.is_dc_dataframe_loaded()) :
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Imported Data",4)
+
+        
+        
+        display_inspection_html("Imported Data")
+        #displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Imported Data",4)
         print("        [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
         print("        [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
         
     else :
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+        display_inspection_html("No data imported yet")
+        #displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
 
 
 """            
