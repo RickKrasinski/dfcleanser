@@ -33,14 +33,14 @@ the extensions must be enabled via the dfcleanser Jupyter Extension commands def
 
 #### dfcleanser Jupyter Extension Enable
 
-```From a bash or anaconda propmt enter
+From a bash or anaconda propmt enter
 jupyter serverextension enable --py dfcleanser --sys-prefix
 jupyter nbextension install --py dfcleanser --sys-prefix
 jupyter nbextension enable --py dfcleanser --sys-prefix
 
 #### dfcleanser Jupyter Extension Verification
 
-```From a bash or anaconda propmt enter
+From a bash or anaconda propmt enter
 jupyter nbextension list
 jupyter serverextension list
 
