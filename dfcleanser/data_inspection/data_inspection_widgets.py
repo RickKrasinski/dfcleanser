@@ -20,7 +20,7 @@ from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock,
                                             get_col_uniques_by_id, new_line, displayHTML)
 
 from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, InputForm, 
-                                            get_header_form, get_checkbox_form, displayHeading,
+                                            get_checkbox_form, displayHeading,
                                             get_input_form, CheckboxGroupForm, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT)
@@ -223,9 +223,6 @@ def get_main_checkbox_form(current_checkboxes) :
     
     return(inspection_checkboxForm)
 
-def get_inspection_header_form() :
-    return(get_header_form("&nbsp;&nbsp;&nbsp;Data"))
-    
 def get_drop_rows_input_parms(parms) :
     return(get_parms_for_input(parms,drop_rows_input_idList))
 
@@ -248,7 +245,7 @@ def get_drop_cbox_flags() :
 def display_inspection_html(title) :
 
     status_html = ""
-    status_html = (status_html + '<div class="container status-header" style="width:80%; margin-left:30px; margin-bottom:5px; ">' + new_line)
+    status_html = (status_html + '<div class="container status-header" style="width:20%; margin-left:25px; margin-bottom:5px; ">' + new_line)
     status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
     status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
     status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
@@ -270,17 +267,11 @@ def display_inspection_html(title) :
 def display_inspection_data() :
     
     if(cfg.is_dc_dataframe_loaded()) :
-
-        
-        
-        display_inspection_html("Imported Data")
-        #displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Imported Data",4)
-        print("        [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
-        print("        [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
-        
+        display_inspection_html("dataframe Imported")
+        print("   [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
+        print("   [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
     else :
-        display_inspection_html("No data imported yet")
-        #displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+        display_inspection_html("No dataframe imported yet")
 
 
 """            
@@ -419,12 +410,12 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
         display_row_nan_stats(df)
     else : 
         
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row NaNs",5)
+        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row NaNs",4)
         
         clock = RunningClock()
         clock.start()
 
-        print("\n")
+        #print("\n")
         rowswithnulls, rowcounts = display_row_nan_stats(df)
         display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50)
         from dfcleanser.data_inspection.data_inspection_widgets import display_drop_rows
@@ -434,12 +425,12 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
         
         print("\n")
         
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column NaNs",5)
+        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column NaNs",4)
         
         clock = RunningClock()
         clock.start()
 
-        print("\n")
+        #print("\n")
         display_col_nan_stats(df)
         display_df_col_nans(df,colnantable)
         from dfcleanser.data_inspection.data_inspection_widgets import display_drop_cols

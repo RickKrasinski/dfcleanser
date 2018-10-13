@@ -82,8 +82,7 @@ def display_data_inspection(id, parms=None) :
         
     
     inspection_checkboxForm =   diw.get_main_checkbox_form(current_checkboxes) 
-    inspection_data_header  =   diw.get_inspection_header_form() 
-    display_composite_form([inspection_tbForm,inspection_checkboxForm,inspection_data_header])
+    display_composite_form([inspection_tbForm,inspection_checkboxForm])
     
     import matplotlib.pyplot as plt
     
@@ -145,7 +144,7 @@ def display_data_inspection(id, parms=None) :
                 
                 cfg.set_config_value(cfg.DATA_TYPES_CBOX_0_KEY,"True")
                 
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Types",4)
+                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Types",2)
                 print("\n")
                 
                 data_types_table = dcTable("Column Data Types",
@@ -189,7 +188,7 @@ def display_data_inspection(id, parms=None) :
                 
                 cfg.set_config_value(cfg.NANS_CBOX_1_KEY,"True")
                     
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NaNs",4)
+                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NaNs",2)
                 #print("\n")
                 
                 nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
@@ -202,7 +201,8 @@ def display_data_inspection(id, parms=None) :
                 opstat = opStatus
                 
                 cfg.set_config_value(cfg.ROWS_CBOX_2_KEY,"True")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row Data",4)
+                print("\n")
+                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row Data",2)
                 
                 rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
         
@@ -221,12 +221,11 @@ def display_data_inspection(id, parms=None) :
             if(parms[dim.INSPECT_COLS] == "True") : 
                 
                 cfg.set_config_value(cfg.COLS_CBOX_3_KEY,"True")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column Data",4)
+                print("\n")
+                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column Data",2)
                 
                 clock = RunningClock()
                 clock.start()
-
-                print("\n")
                 
                 col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
                 display_column_names(cfg.get_dc_dataframe(),col_names_table,"scol")
@@ -241,12 +240,11 @@ def display_data_inspection(id, parms=None) :
             if(parms[dim.INSPECT_CATS] == "True") : 
                 
                 cfg.set_config_value(cfg.CATS_CBOX_4_KEY,"True")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Categories",4)
+                print("\n")
+                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Categories",2)
                 
                 clock = RunningClock()
                 clock.start()
-
-                print("\n")
 
                 cattable = dcTable("Category Columns",
                                    "catcolsTable",
@@ -258,7 +256,6 @@ def display_data_inspection(id, parms=None) :
                 
                 numcats, numcands = diw.display_df_categories(cfg.get_dc_dataframe(),cattable,catcandidatetable)
                 
-                print("\n")
                 clock.stop()
 
 
