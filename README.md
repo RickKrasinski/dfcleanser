@@ -44,19 +44,21 @@ From a bash or anaconda propmt enter</br>
 jupyter nbextension list</br>
 jupyter serverextension list
 
-#### Automatic Load/Unload
+#### Automatic dfcleanser notebook Load/Unload
 
 A new button will appear on your toolbar that looks like this:  
 ![pizza button](https://github.com/peterskipper/pizzabutton/raw/master/images/button.png "Pizza Delivery Button")
 
 Click the button once to toggle between loading and unloading the dataframe cleanser...
+Double click the button to reset the dataframe cleanser chapters...
+
 
 ### Manual Installation
 If you do not wish to modify the Jupyter server and subsequent notebooks you can manually install the dfcleanser 
 modules for a temporary implementation of dfcleanser. The manual installation modifies the custom.js and 
 custom.css jupyter files.
 
-#### Manual dfcleanser Install/UnInstall
+#### Manual dfcleanser Install
 Once the dfcleanser package is installed via pip or conda you need to manually install the dfcleanser 
 functionality to be available in Jupyter.
 
@@ -70,6 +72,8 @@ code cell:
 
 from dfcleanser.system.install import setup_dfcleanser</br>
 setup_dfcleanser()
+
+#### Manual dfcleanser UnInstall
 
 To remove the dfcleanser module from your Jupyter Server run the following:
 
@@ -92,7 +96,6 @@ To unload dfcleanser from your notebook run the following from a Jupyter code ce
 
 from dfcleanser.system.load import unload_dfcleanser</br>
 unload_dfcleanser()
-
 
 ## dfcleanser Data Files
 
