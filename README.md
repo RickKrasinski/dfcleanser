@@ -53,8 +53,8 @@ Click the button once to toggle between loading and unloading the dataframe clea
 
 ### Manual Installation
 If you do not wish to modify the Jupyter server and subsequent notebooks you can manually install the dfcleanser 
-modules for a temporary implementation of dfcleanser. The manual installation modifies the custom.js and custom.css 
-jupyter files.
+modules for a temporary implementation of dfcleanser. The manual installation modifies the custom.js and 
+custom.css jupyter files.
 
 #### Manual dfcleanser Install/UnInstall
 Once the dfcleanser package is installed via pip or conda you need to manually install the dfcleanser 
