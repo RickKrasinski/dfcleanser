@@ -16,7 +16,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_import.data_import_model as dim
 
-from dfcleanser.common.html_widgets import (maketextarea, get_header_form,  get_button_tb_form, 
+from dfcleanser.common.html_widgets import (maketextarea, get_button_tb_form, 
                                             get_input_form, display_composite_form, get_html_spaces,
                                             opStatus, ButtonGroupForm, InputForm)
 
@@ -598,8 +598,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         display_composite_form([get_button_tb_form(ButtonGroupForm(import_task_bar_id,
                                                                    import_task_bar_keyTitleList,
                                                                    import_task_bar_jsList,
-                                                                   import_task_bar_centered)),
-                                get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                   import_task_bar_centered))])
     
         from dfcleanser.common.help_utils import clear_help_text, IMPORT_HELP_BASE
         clear_help_text(IMPORT_HELP_BASE)
@@ -610,8 +609,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         display_composite_form([get_button_tb_form(ButtonGroupForm(import_task_bar_id,
                                                                    import_task_bar_keyTitleList,
                                                                    import_task_bar_jsList,
-                                                                   import_task_bar_centered)),
-                                get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                   import_task_bar_centered))])
 
         display_status("Please review the EULA in the System Chapter")
         return
@@ -622,8 +620,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         display_composite_form([get_button_tb_form(ButtonGroupForm(import_task_bar_id,
                                                                    import_task_bar_keyTitleList,
                                                                    import_task_bar_jsList,
-                                                                   import_task_bar_centered)),
-                                get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                   import_task_bar_centered))])
     
         display_inspection_data() 
 
