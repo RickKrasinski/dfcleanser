@@ -33,15 +33,15 @@ the extensions must be enabled via the dfcleanser Jupyter Extension commands def
 
 #### dfcleanser Jupyter Extension Enable
 
-From a bash or anaconda propmt enter
-jupyter serverextension enable --py dfcleanser --sys-prefix
-jupyter nbextension install --py dfcleanser --sys-prefix
+From a bash or anaconda prompt enter</br>
+jupyter serverextension enable --py dfcleanser --sys-prefix</br>
+jupyter nbextension install --py dfcleanser --sys-prefix</br>
 jupyter nbextension enable --py dfcleanser --sys-prefix
 
 #### dfcleanser Jupyter Extension Verification
 
-From a bash or anaconda propmt enter
-jupyter nbextension list
+From a bash or anaconda propmt enter</br>
+jupyter nbextension list</br>
 jupyter serverextension list
 
 #### Automatic Load/Unload
@@ -76,7 +76,7 @@ To remove the dfcleanser module from your Jupyter Server run the following:
 from dfcleanser.system.install import uninstall_dfcleanser</br>
 uninstall_dfcleanser()
 
-#### Jupyter Notebook dfcleanser Load/Unload
+#### Manual dfcleanser Load/Unload
 Once you have installed the above components successfully dfcleanser is now available to be dynamically 
 loaded into or unloaded from a Jupyter notebook.
 
