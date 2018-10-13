@@ -62,18 +62,18 @@ functionality to be available in Jupyter.
 
 Open a Jupyter notebook and from a code cell run the following :
 
-from dfcleanser.system.install import install_dfcleanser
+from dfcleanser.system.install import install_dfcleanser</br>
 install_dfcleanser()
 
 Once the above install completes you can check if the install is good via the following run from a Jupyter 
 code cell:
 
-from dfcleanser.system.install import setup_dfcleanser
+from dfcleanser.system.install import setup_dfcleanser</br>
 setup_dfcleanser()
 
 To remove the dfcleanser module from your Jupyter Server run the following:
 
-from dfcleanser.system.install import uninstall_dfcleanser
+from dfcleanser.system.install import uninstall_dfcleanser</br>
 uninstall_dfcleanser()
 
 #### Jupyter Notebook dfcleanser Load/Unload
@@ -82,7 +82,7 @@ loaded into or unloaded from a Jupyter notebook.
 
 To manually load dfcleanser into your notebook run the following from a Jupyter code cell:
 
-from dfcleanser.system.load import load_dfcleanser
+from dfcleanser.system.load import load_dfcleanser</br>
 load_dfcleanser()
 
 The dfcleanser Jupyter cells are now set up in your current notebook for you to use independent of any 
@@ -90,7 +90,7 @@ other cells in the current notebook.
 
 To unload dfcleanser from your notebook run the following from a Jupyter code cell:
 
-from dfcleanser.system.load import unload_dfcleanser
+from dfcleanser.system.load import unload_dfcleanser</br>
 unload_dfcleanser()
 
 
