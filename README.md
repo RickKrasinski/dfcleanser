@@ -52,8 +52,8 @@ A new button will appear on your toolbar that looks like this:
 Click the button once to toggle between loading and unloading the dataframe cleanser...
 
 ### Manual Installation
-If you do not wish to modify the Jupyter server and subsequent notebooks you can manually install the dfcleanser modules for a 
-temporary implementation of dfcleanser. The manual installation modifies the custom.js and custom.css jupyter files.
+If you do not wish to modify the Jupyter server and subsequent notebooks you can manually install the dfcleanser modules 
+for a temporary implementation of dfcleanser. The manual installation modifies the custom.js and custom.css jupyter files.
 
 #### Manual dfcleanser Install/UnInstall
 Once the dfcleanser package is installed via pip or conda you need to manually install the dfcleanser functionality to be 
@@ -83,7 +83,8 @@ To manually load dfcleanser into your notebook run the following from a Jupyter 
 from dfcleanser.system.load import load_dfcleanser
 load_dfcleanser()
 
-The dfcleanser Jupyter cells are now set up in your notebook for you to use independent of any other cells in the notebook.
+The dfcleanser Jupyter cells are now set up in your current notebook for you to use independent of any other cells in 
+the current notebook.
 
 To unload dfcleanser from your notebook run the following from a Jupyter code cell:
 
@@ -101,8 +102,8 @@ The dfcleanser creates and uses two sets of files while running :
 The dfcleanser Common files are files used by the provided utilities to maintain a server wide set of common functions, 
 lists, dicts ... that are available within any dfcleanser loaded notebook.
 
-The Notebook specific files are files that are tied specifically to a Jupyter notebook that has/had dfcleanser loaded into it.  
-For every notebook that loads dfcleanser into it a unique cfg an script file is maintained for that notebook.
+The Notebook specific files are files that are tied specifically to a Jupyter notebook that has/had dfcleanser loaded 
+into it. For every notebook that loads dfcleanser into it a unique cfg an script file is maintained for that notebook.
 
 The notebook specific files are maintained internally by dfcleanser relative to the dfCleasnser package.  The user can 
 manage these files via the System Environment->dfcleanser files button.  If you copy, rename or delete a notebook then 
@@ -110,9 +111,9 @@ use the Environment->dfcleanser files functions to generate proper custom notebo
 
 ## Datasets/DataSources
 
-dfcleanser allows you to browse through datasets for import or export while running dfcleanser.  To be able to automatically 
-browse and identify datasets you must create a Datasets directory in the tree where the notebook is found.  All datasets 
-in this directory can be browsed and worked with automatically.  
+dfcleanser allows you to browse through datasets for import or export while running dfcleanser.  To be able to 
+automatically browse and identify datasets you must create a Datasets directory in the tree where the notebook is found.
+All datasets in this directory can be browsed and worked with automatically.  
 
 If you do not want to browse you can given the absolute path of your dataset and that will be used.
 
