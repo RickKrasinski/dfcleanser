@@ -15,7 +15,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_export.data_export_model as dem
 
-from dfcleanser.common.html_widgets import (display_composite_form, get_header_form, maketextarea,
+from dfcleanser.common.html_widgets import (display_composite_form, maketextarea,
                                             get_button_tb_form, get_input_form, displayHeading,
                                             get_html_spaces, ButtonGroupForm, InputForm)
 
@@ -532,8 +532,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
         display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                    export_task_bar_keyTitleList,
                                                                    export_task_bar_jsList,
-                                                                   export_task_bar_centered)),
-                                get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                   export_task_bar_centered))])
     
         display_inspection_data() 
         
@@ -548,8 +547,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
             display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                        export_task_bar_keyTitleList,
                                                                        export_task_bar_jsList,
-                                                                       export_task_bar_centered)),
-                                    get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                       export_task_bar_centered))])
     
             display_inspection_data() 
 
@@ -617,8 +615,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
             display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                        export_task_bar_keyTitleList,
                                                                        export_task_bar_jsList,
-                                                                       export_task_bar_centered)),
-                                    get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                       export_task_bar_centered))])
     
             display_inspection_data() 
             
