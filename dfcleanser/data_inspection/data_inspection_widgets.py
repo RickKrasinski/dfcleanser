@@ -268,8 +268,8 @@ def display_inspection_data() :
     
     if(cfg.is_dc_dataframe_loaded()) :
         display_inspection_html("dataframe Imported")
-        print("   [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
-        print("   [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
+        print("     [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
+        print("     [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
     else :
         display_inspection_html("No dataframe imported yet")
 
