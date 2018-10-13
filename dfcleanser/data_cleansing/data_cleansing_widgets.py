@@ -16,7 +16,7 @@ this = sys.modules[__name__]
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
-from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, get_header_form,
+from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form,
                                             get_blank_line_form, displayHeading, get_input_form,
                                             get_html_spaces, ButtonGroupForm, InputForm, DEFAULT_PAGE_WIDTH)
 
@@ -369,14 +369,14 @@ outliers_tb_centered                    =   False
 
 def display_no_data_heading() :
     display_data_cleansing_main_taskbar()
-    displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+    display_inspection_data()
 
 def display_data_cleansing_main_taskbar() :
     display_composite_form([get_button_tb_form(ButtonGroupForm(data_cleansing_tb_id,
                                                                data_cleansing_tb_keyTitleList,
                                                                data_cleansing_tb_jsList,
-                                                               data_cleansing_tb_centered)),
-                            get_header_form("&nbsp;&nbsp;&nbsp;Data")]) 
+                                                               data_cleansing_tb_centered))]) 
 
 def get_change_row_values_inputs(parms) :
     return(get_parms_for_input(parms[1],change_row_values_input_idList))

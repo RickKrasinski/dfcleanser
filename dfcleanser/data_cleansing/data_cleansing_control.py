@@ -21,7 +21,6 @@ import dfcleanser.data_cleansing.data_cleansing_model as dcm
 from dfcleanser.common.common_utils import (RunningClock, display_status, display_exception, 
                                             opStatus, single_quote, is_numeric_col, is_numeric_col_int)
 
-from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
 from dfcleanser.common.html_widgets import (displayHeading)
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables)
 from dfcleanser.common.display_utils import (display_df_describe) 
@@ -57,6 +56,7 @@ def display_data_cleansing(option,parms=None) :
         cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
         if(option == dcm.MAIN_OPTION) :
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             clear_data_cleansing_data()
             dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
@@ -351,7 +351,8 @@ def display_data_cleansing(option,parms=None) :
                 
     else :
         
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+        display_inspection_data()
         dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
 
 """
