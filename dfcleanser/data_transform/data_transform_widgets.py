@@ -16,7 +16,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_transform.data_transform_model as dtm
 
 from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, get_html_spaces,
-                                            get_input_form, get_header_form, displayHeading, ButtonGroupForm,
+                                            get_input_form, get_header_form, ButtonGroupForm,
                                             get_radio_button_form, RadioGroupForm, InputForm) 
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, get_table_value,
@@ -369,17 +369,18 @@ def display_no_dataframe() :
     display_composite_form([get_button_tb_form(ButtonGroupForm(data_transform_tb_id,
                                                                data_transform_tb_keyTitleList,
                                                                data_transform_tb_jsList,
-                                                               False)),
-                            get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                               False))])
     
-    displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[No data imported yet]",4)
+    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+    display_inspection_data()
 
 
 def display_transform_columns_taskbar() :
     
     from dfcleanser.data_transform.data_transform_columns_widgets import display_data_transform_columns_taskbar
     display_data_transform_columns_taskbar()
-    display_composite_form([get_header_form("&nbsp;&nbsp;&nbsp;Transform Column")])
+    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+    display_inspection_data()
 
 def display_single_column_taskbar() :
     
@@ -680,8 +681,7 @@ def display_main_option(parms,clear=False) :
         data_transform_forms  =   [get_button_tb_form(ButtonGroupForm(data_transform_tb_id,
                                                                       data_transform_tb_keyTitleList,
                                                                       data_transform_tb_jsList,
-                                                                      False)),
-                                   get_header_form("&nbsp;&nbsp;&nbsp;Data")]
+                                                                      False))]
 
         display_composite_form(data_transform_forms)
 
@@ -696,7 +696,6 @@ def display_main_option(parms,clear=False) :
             
             from dfcleanser.data_transform.data_transform_dataframe_widgets import display_dataframe_transform_taskbar
             display_dataframe_transform_taskbar()
-            display_composite_form([get_header_form("&nbsp;&nbsp;&nbsp;Data")])
 
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
@@ -705,7 +704,6 @@ def display_main_option(parms,clear=False) :
             
             from dfcleanser.data_transform.data_transform_columns_widgets import display_base_data_transform_columns_taskbar
             display_base_data_transform_columns_taskbar()
-            display_composite_form([get_header_form("&nbsp;&nbsp;&nbsp;Data")])
 
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
@@ -742,8 +740,7 @@ def display_main_option(parms,clear=False) :
             display_composite_form([get_button_tb_form(ButtonGroupForm(data_transform_tb_id,
                                                                           data_transform_tb_keyTitleList,
                                                                           data_transform_tb_jsList,
-                                                                          False)),
-                                    get_header_form("&nbsp;&nbsp;&nbsp;Data")])
+                                                                          False))])
 
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
