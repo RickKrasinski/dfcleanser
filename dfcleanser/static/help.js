@@ -59,18 +59,20 @@ window.gethelpinputid = function(helpid) {
 };
 
 window.displayhelp = function(helpid) {
-    console.log("displayhelp", helpid);
-    var help_id = parseInt(helpid, 10);
-    var remainder = help_id % 100;
-    console.log("displayhelp", helpid, remainder);
 
-    if (remainder == 0) {
-        if (gethelpinputid(helpid) == null) {
+    var help_id = parseInt(helpid, 10);
+
+    if ((help_id > 99) & (help_id < 1220)) {
+        var remainder = help_id % 100;
+
+        if (remainder == 0) {
+            if (gethelpinputid(helpid) == null) {
+                var url = "https://rickkrasinski.github.io/dfcleanser/html/help/" + helpid + ".html";
+                window.open(url);
+            } else { self.close(); }
+        } else {
             var url = "https://rickkrasinski.github.io/dfcleanser/html/help/" + helpid + ".html";
-            window.open(url);
-        } else { self.close(); }
-    } else {
-        var url = "https://rickkrasinski.github.io/dfcleanser/html/help/" + helpid + ".html";
-        window.open(url, "_self");
+            window.open(url, "_self");
+        }
     }
 };
