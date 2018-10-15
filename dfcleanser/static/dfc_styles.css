@@ -845,7 +845,7 @@ div.DCChaptersHelpTitle {
     margin-left: 30px;
 }
 
-table.DCChaptersHelpTOC {
+div.DCChaptersHelpTOC {
     font-size: 24px;
     font-weight: bold;
     font-style: normal;
