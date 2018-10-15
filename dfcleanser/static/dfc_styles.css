@@ -836,6 +836,13 @@ th.a:link {
 div.DCHelpDiv {
     overflow-x: hidden !important;
 }
+div.DCSubChaptersHelpTitle {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    margin-left: 30px;
+}
 
 div.DCChaptersHelpTitle {
     font-size: 20px;
