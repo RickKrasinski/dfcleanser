@@ -838,11 +838,11 @@ div.DCHelpDiv {
 }
 
 div.DCChaptersHelpTitle {
-    font-size: 13px;
+    font-size: 20px;
     font-weight: bold;
     font-style: normal;
     font-family: Arial;
-    margin-left: 10px;
+    margin-left: 30px;
 }
 
 table.DCChaptersHelpTOC {
@@ -858,7 +858,7 @@ div.DCChaptersHelpText {
     font-weight: normal;
     font-style: normal;
     font-family: Arial;
-    margin-left: 15px;
+    margin-left: 45px;
 }
 
 button.help-button {
@@ -896,10 +896,10 @@ img.help-image-center {
     margin: 0 auto;
 }
 
-img.help-image-left {
+img.help-images {
     display: inline-block;
     vertical-align: top;
-    margin-left: 15px;
+    margin-left: 45px;
 }
 
 
