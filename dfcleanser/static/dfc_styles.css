@@ -2,7 +2,11 @@
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans');
 
-/* DataframeCleanser css */
+/*
+// --------------------------
+//       dfCleanser css      
+// --------------------------
+*/
 
 .output_png img {
     display: block;
@@ -194,12 +198,44 @@ button.dc-table-button {
 ---------------------------------------------------
 */
 
-.dc-form-input {
-    font-size: 12px;
-    height: 30px;
-    margin-left: 74%;
-    width: 80px;
+
+/*
+*************************************
+* dfCleanser default input forms
+*************************************
+*/
+
+.dc-default-input-div {
+    padding: 5px;
+    margin: auto;
+    width: 80%;
 }
+
+.dc-default-short-input-div {
+    padding: 5px;
+    margin: auto;
+    width: 40%;
+}
+
+.dc-default-input-inner-div {
+    margin-bottom: 10px;
+    overflow-y: hidden;
+}
+
+.dc-default-input-button-container {
+    text-align: center;
+}
+
+.dc-default-input-button-left-container {
+    text-align: left;
+}
+
+
+/*
+*************************************
+* end dfCleanser default input forms
+*************************************
+*/
 
 input.dc-form-search-more-input {
     font-size: 12px;
@@ -268,7 +304,7 @@ input.dc-form-search-more-input {
     padding-bottom: 11.0px;
 }
 
-sm-form-control {
+.sm-form-control {
     font-size: 12px;
     width: 90%;
     margin-left: 5%;
@@ -549,11 +585,7 @@ div.exception-trace {
 */
 
 div.status-header {
-    font-size: 13px;
-    background-color: #428bca;
-    height: 30px;
-    font-weight: bold;
-    font-style: normal;
+    overflow-y: hidden !important;
 }
 
 div.status-line {
@@ -562,7 +594,7 @@ div.status-line {
     margin-left: 10px;
     font-weight: normal;
     font-style: normal;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: Arial;
 }
 
 
@@ -573,16 +605,8 @@ div.note-line {
     margin-left: 10px;
     font-weight: normal;
     font-style: normal;
-    font-family: 'Fira Sans', sans-serif;
+    font-family: Arial;
 }
-
-
-/*span.note-line {
-    font-size: 13px;
-    font-weight: normal;
-    font-style: normal;
-    font-family: Fira Sans;
-}*/
 
 th.a:link {
     color: #262729;
@@ -600,8 +624,7 @@ th.a:link {
 
 /* 
 --------------------------------------------------- 
----------------- Dataframe Cleanser --------------- 
-------------------- Grid Wrappers ----------------- 
+--------- Dataframe Cleanser Grid Wrappers -------- 
 ---------------------------------------------------
 */
 
@@ -622,7 +645,7 @@ th.a:link {
     margin-left: 40px;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: 220px 640px 20px;
+    grid-template-columns: 240px 620px 20px;
     grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
     background-color: #fff;
     color: #444;
@@ -649,10 +672,10 @@ th.a:link {
 */
 
 .sql_connector_wrapper {
-    margin-left: 10px;
+    margin-left: 5px;
     display: grid;
     grid-gap: 2px;
-    grid-template-columns: 160px 820px 10px;
+    grid-template-columns: 160px 680px 5px;
     grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
     background-color: #fff;
     color: #444;
@@ -810,11 +833,15 @@ th.a:link {
 ---------------------------------------------------
 */
 
+div.DCHelpDiv {
+    overflow-x: hidden !important;
+}
+
 div.DCChaptersHelpTitle {
     font-size: 13px;
-    font-weight: normal;
+    font-weight: bold;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     margin-left: 10px;
 }
 
@@ -822,7 +849,7 @@ table.DCChaptersHelpTOC {
     font-size: 11px;
     font-weight: normal;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     margin-left: 20px;
 }
 
@@ -830,7 +857,7 @@ div.DCChaptersHelpText {
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     margin-left: 15px;
 }
 
@@ -838,7 +865,7 @@ button.help-button {
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     height: 25px;
     background: #428bca;
     color: white;
@@ -848,7 +875,7 @@ button.help-taskbar-button {
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     background: #428bca;
     color: white;
 }
@@ -950,3 +977,10 @@ img.help-image-left {
 .arialblack {
     font-family: 'Arial Black' Arial, sans-serif;
 }
+
+
+/*
+// --------------------------
+//      end dfCleanser css      
+// --------------------------
+*/
