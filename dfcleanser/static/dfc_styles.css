@@ -836,13 +836,6 @@ th.a:link {
 div.DCHelpDiv {
     overflow-x: hidden !important;
 }
-div.DCSubChaptersHelpTitle {
-    font-size: 16px;
-    font-weight: bold;
-    font-style: normal;
-    font-family: Arial;
-    margin-left: 30px;
-}
 
 div.DCChaptersHelpTitle {
     font-size: 20px;
@@ -852,12 +845,50 @@ div.DCChaptersHelpTitle {
     margin-left: 30px;
 }
 
+div.DCChaptersParagraph {
+    margin-left: 40px;
+}
+
 div.DCChaptersHelpTOC {
     font-size: 24px;
     font-weight: bold;
     font-style: normal;
     font-family: Arial;
+    color: #377DA5;
     margin-left: 20px;
+    text-align: left;
+}
+
+div.DCHelp_h1 {
+    font-size: 20px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #377DA5;
+}
+
+div.DCHelp_h2 {
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #377DA5;
+}
+
+div.DCHelp_h3 {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #377DA5;
+}
+
+div.DCHelp_h4 {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #377DA5;
 }
 
 div.DCChaptersHelpText {
@@ -865,7 +896,8 @@ div.DCChaptersHelpText {
     font-weight: normal;
     font-style: normal;
     font-family: Arial;
-    margin-left: 45px;
+    margin-left: 20px;
+    width: 80%;
 }
 
 button.help-button {
@@ -885,22 +917,6 @@ button.help-taskbar-button {
     font-family: Arial;
     background: #428bca;
     color: white;
-}
-
-td.dchelpbutton {
-    width: 30%;
-    margin-left: 1px;
-    text-align: left;
-}
-
-td.dchelpitemtext {
-    width: 70%;
-    text-align: left;
-}
-
-img.help-image-center {
-    display: block;
-    margin: 0 auto;
 }
 
 img.help-images {
