@@ -927,6 +927,37 @@ img.help-images {
 
 
 /* 
+--------------- Help Table Of Contents ------------                 
+*/
+
+#toc_container {
+    border: 0px solid #428bca;
+    margin-bottom: 1em;
+    padding: 20px;
+    width: 85%;
+}
+
+.toc_title {
+    font-weight: 700;
+    text-align: center;
+}
+
+#toc_container li,
+#toc_container ul,
+#toc_container ul li {
+    list-style: outside none none !important;
+}
+
+.toc_h1 {
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #428bca;
+}
+
+
+/* 
 --------------------------------------------------- 
 --------------- Common Grid Components ------------                 
 ---------------------------------------------------
