@@ -6,13 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/static/dfc_styles.css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/dfc_styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/help.js"></script>
 </head>
 
 <body>
+    <br></br>
+    <br></br>
     <div class="DCHelpDiv" style="margin-top:20px; width:80%; overflow-x: hidden !important;">
         <div>
             <table align="center">
@@ -31,11 +33,204 @@
             </table>
         </div>
         <br></br>
-        <div class="help-tag">
-            <a id="dfc_101"></a>
-        </div>
         <br></br>
-        <div id="dfc_600">
+        <br></br>
+        <div id="toc_container" style="margin-left:10px;">
+            <ul class="toc_list">
+                <li class="toc_h1"><a href="#dfc_101">1 System Environment</a></li>
+                <ul>
+                    <li><a href="#dfc_102">1.1 Select Chapters</a></li>
+                    <li><a href="#dfc_103">1.2 Reset Chapeters</a></li>
+                    <li><a href="#dfc_104">1.3 Clear Data</a></li>
+                    <li><a href="#dfc_105">1.4 System</a></li>
+                    <li><a href="#dfc_106">1.5 dfcleanser Files</a></li>
+                    <li><a href="#dfc_107">1.6 About</a></li>
+                    <li><a href="#dfc_108">1.7 Eula</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_201">2 Data Import</a></li>
+                <ul>
+                    <li class="toc_h2"><a href="#dfc_202">2.1 Pandas Dataframe Import</a></li>
+                    <ul>
+                        <li class="toc_h3"><a href="#dfc_202">2.1.1 Non SQL Pandas Dataframe Import</a></li>
+                        <li class="toc_h3"><a href="#dfc_203">2.1.2 SQL Pandas Dataframe Import</a></li>
+                        <ul>
+                            <li><a href="#dfc_204">2.1.2.1 SQL Table Import</a></li>
+                            <ul>
+                                <li><a href="#dfc_205">2.1.2.1.1 Get Tables</a></li>
+                                <li><a href="#dfc_206">2.1.2.1.2 Get Columns</a></li>
+                                <li><a href="#dfc_207">2.1.2.1.3 Date Time Formats</a></li>
+                            </ul>
+                            <li><a href="#dfc_208">2.1.2.2 SQL Query Import</a></li>
+                        </ul>
+                    </ul>
+                    <li class="toc_h2"><a href="#dfc_210">2.2 Custom Import</a></li>
+                    <li class="toc_h2"><a href="#dfc_212">2.3 Import Status</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_301">3 Data Inspection</a></li>
+                <div class="toc_h2">
+                    <ul>
+                        <li><a href="#dfc_302">3.1 Data Types</a></li>
+                        <li><a href="#dfc_303">3.2 NaNs</a></li>
+                        <li><a href="#dfc_304">3.3 Rows</a></li>
+                        <li><a href="#dfc_305">3.4 Columns</a></li>
+                        <li><a href="#dfc_306">3.5 Categories</a></li>
+                    </ul>
+                </div>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_401">4 Data Cleansing</a></li>
+                <ul>
+                    <li><a href="#dfc_402">4.1 Cleanse Numeric Columns</a></li>
+                    <ul>
+                        <li><a href="#dfc_403">4.1.1 Show Unique Values</a></li>
+                        <ul>
+                            <li><a href="#dfc_404">4.1.1.1 Drop Column</a></li>
+                            <li><a href="#dfc_405">4.1.1.2 Drop Current Value Rows</a></li>
+                            <li><a href="#dfc_406">4.1.1.3 Drop Column Nan Rows</a></li>
+                            <li><a href="#dfc_407">4.1.1.4 Transform Column</a></li>
+                            <li><a href="#dfc_408">4.1.1.5 Round Column Values</a></li>
+                            <li><a href="#dfc_409">4.1.1.6 Change Data Type</a></li>
+                        </ul>
+                        <li><a href="#dfc_410">4.1.2 Show Column Graphs</a></li>
+                        <li><a href="#dfc_411">4.1.3 Show Outliers</a></li>
+                    </ul>
+                    <li><a href="#dfc_412">4.2 Cleanse Non Numeric Columns</a></li>
+                    <ul>
+                        <li><a href="#dfc_413">4.2.1 Drop Column</a></li>
+                        <li><a href="#dfc_414">4.2.2 Drop Current Value Rows</a></li>
+                        <li><a href="#dfc_415">4.2.3 Drop Column Nan Rows</a></li>
+                        <li><a href="#dfc_416">4.2.4 Transform Column</a></li>
+                        <li><a href="#dfc_417">4.2.5 Remove Whitespace</a></li>
+                    </ul>
+                    <li><a href="#dfc_418">4.3 Cleanse Row</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_501">5 Data Transform</a></li>
+                <ul>
+                    <li><a href="#dfc_502">5.1 Dataframe Transform</a></li>
+                    <ul>
+                        <li><a href="#dfc_503">5.1.1 Save Column Names</a></li>
+                        <li><a href="#dfc_504">5.1.2 Add Column Names</a></li>
+                        <li><a href="#dfc_505">5.1.3 Change Column Names</a></li>
+                        <li><a href="#dfc_506">5.1.4 Reset Index Column</a></li>
+                        <li><a href="#dfc_507">5.1.5 Set Index Column</a></li>
+                        <li><a href="#dfc_508">5.1.6 Drop Index Column</a></li>
+                        <li><a href="#dfc_509">5.1.7 Sort Index Column</a></li>
+                        <li><a href="#dfc_510">5.1.8 Drop Duplicate Rows</a></li>
+                    </ul>
+                    <li><a href="#dfc_511">5.2 Columns Transform</a></li>
+                    <ul>
+                        <li><a href="#dfc_512">5.2.1 Rename Column</a></li>
+                        <li><a href="#dfc_513">5.2.2 Add Column</a></li>
+                        <ul>
+                            <li><a href="#dfc_514">5.2.2.1 Get Column Values From File</a></li>
+                            <li><a href="#dfc_515">5.2.2.2 Get Column Values From User Code</a></li>
+                        </ul>
+                        <li><a href="#dfc_516">5.2.3 Drop Column</a></li>
+                        <li><a href="#dfc_517">5.2.4 Reorder Columns</a></li>
+                        <li><a href="#dfc_518">5.2.5 Save Column</a></li>
+                        <li><a href="#dfc_519">5.2.6 Copy Column</a></li>
+                        <li><a href="#dfc_520">5.2.7 Sort By Column</a></li>
+                        <li><a href="#dfc_521">5.2.8 Apply fn To Column</a></li>
+                        <li><a href="#dfc_522">5.2.8 Map Dummies Categorical</a></li>
+                        <ul>
+                            <li><a href="#dfc_523">5.2.8.1 Map</a></li>
+                            <li><a href="#dfc_524">5.2.8.2 Dummies</a></li>
+                            <li><a href="#dfc_525">5.2.8.3 Categorical</a></li>
+                        </ul>
+                    </ul>
+                    <li><a href="#dfc_526">5.3 Datetime Transform</a></li>
+                    <ul>
+                        <li><a href="#dfc_527">5.3.1 Convert Column Data Type</a></li>
+                        <li><a href="#dfc_528">5.3.2 Calculate timedelta Column</a></li>
+                        <li><a href="#dfc_529">5.3.3 Split Column to date,time Columns</a></li>
+                        <li><a href="#dfc_530">5.3.3 Merge Column from date,time Columns</a></li>
+                    </ul>
+                    <li><a href="#dfc_531">5.4 Dateframe Schema</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_601">6 Data Export</a></li>
+                <ul>
+                    <li><a href="#dfc_602">6.1 Pandas Dataframe Export</a></li>
+                    <ul>
+                        <li><a href="#dfc_603">6.1.1 Non SQL Pandas Dataframe Export</a></li>
+                        <li><a href="#dfc_604">6.1.2 Pandas SQL Dataframe Export</a></li>
+                        <ul>
+                            <li><a href="#dfc_605">6.1.2.1 Get Tables</a></li>
+                            <li><a href="#dfc_606">6.1.2.2 Get Columns</a></li>
+                        </ul>
+                    </ul>
+                    <li><a href="#dfc_607">6.2 Custom Export</a></li>
+                    <li><a href="#dfc_608">6.3 Export Status</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_701">7 Data Scripting</a></li>
+                <ul>
+                    <li><a href="#dfc_702">7.1 Show Current Script</a></li>
+                    <ul>
+                        <li><a href="#dfc_703">7.1.1 Run Current Script</a></li>
+                        <li><a href="#dfc_704">7.1.2 Load Backup Script</a></li>
+                        <li><a href="#dfc_705">7.1.3 Backup Current Script</a></li>
+                    </ul>
+                    <li><a href="#dfc_706">7.2 Add To Current Script</a></li>
+                    <li><a href="#dfc_706">7.3 Clear Current Script</a></li>
+                </ul>
+
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_801">8 Software Utilities</a></li>
+                <ul>
+                    <li><a href="#dfc_801">8.1 Common Data Structures Utility</a></li>
+                    <ul>
+                        <li><a href="#dfc_802">8.1.1 Build List</a></li>
+                        <li><a href="#dfc_803">8.1.2 Build Dict</a></li>
+                    </ul>
+                    <li><a href="#dfc_901">8.2 Generic Functions</a></li>
+                    <ul>
+                        <li><a href="#dfc_902">8.2.1 Open Test Code Cell</a></li>
+                        <li><a href="#dfc_903">8.2.2 Load Test Code</a></li>
+                        <li><a href="#dfc_904">8.2.3 Save Current Function</a></li>
+                        <li><a href="#dfc_905">8.2.4 Delete Current Function</a></li>
+                        <li><a href="#dfc_906">8.2.4 Run Function</a></li>
+                    </ul>
+                    <li><a href="#dfc_1001">8.3 Geocoding</a></li>
+                    <ul>
+                        <li><a href="#dfc_1002">8.3.1 Convert Address To Coords</a></li>
+                        <ul>
+                            <li><a href="#dfc_1003">8.3.1.1 Get Coords</a></li>
+                            <li><a href="#dfc_1004">8.3.1.2 Display Bulk Coords</a></li>
+                        </ul>
+                        <li><a href="#dfc_1005">8.3.2 Convert Coords To Address</a></li>
+                        <ul>
+                            <li><a href="#dfc_1006">8.3.2.1 Get Address</a></li>
+                            <li><a href="#dfc_1007">8.3.2.2 Display Bulk Address</a></li>
+                        </ul>
+                        <li><a href="#dfc_1008">8.3.3 Calculate Distance</a></li>
+                        <ul>
+                            <li><a href="#dfc_1009">8.3.3.1 Get Address</a></li>
+                            <li><a href="#dfc_1010">8.3.3.2 Display Bulk Address</a></li>
+                        </ul>
+                        <li><a href="#dfc_1011">8.3.4 Change Geocoder</a></li>
+                    </ul>
+                    <li><a href="#dfc_1101">8.4 Dataframe Subset</a></li>
+                    <li><a href="#dfc_1201">8.5 Dataframe Concatenation</a></li>
+                </ul>
+            </ul>
+        </div>
+
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+
+
+        <div id="dfc_101">
             <div align="left" id="DCSystemEnvironment" class="DCChaptersHelpTOC">
                 <div>
                     <img src="https://rickkrasinski.github.io/dfcleanser/graphics/systemEnvironment.png" width="80" align="left" />
@@ -48,8 +243,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <br></br>
         <div class="DCChaptersParagraph">
@@ -405,7 +598,7 @@
                 </div>
             </div>
             <br></br>
-            <div class="help-tag DCHelp_h4" id="dfc_206">
+            <div class="help-tag DCHelp_h4" id="dfc_207">
                 <p>Date Time Formats</p>
             </div>
             <div class="DCChaptersHelpText">
@@ -647,6 +840,7 @@
             <div class="help-images ">
                 <img id="DataInspectionStatsId " class="help-images " src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DataInspectionColsStats.png "></img>
             </div>
+            <br></br>
             <div class="DCChaptersHelpText ">
                 <p>The 'Column Nan Stats' table shows the number of nans and number of columns with nans. You can also review the columns with most nans to selectively drop nans.</p>
             </div>
@@ -843,31 +1037,31 @@
             </div>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h3">
+        <div class="help-tag DCHelp_h3" id="dfc_404">
             <p>Drop Column</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Column allows you to drop the column from the dataframe.</p>
         </div>
-        <div class="help-tag DCHelp_h3 ">
+        <div class="help-tag DCHelp_h3 " id="dfc_405">
             <p>Drop Current Value Rows</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Current Value Rows allows you to drop the rows equal to the 'Current Value' specified from the dataframe.</p>
         </div>
-        <div class="help-tag DCHelp_h3">
+        <div class="help-tag DCHelp_h3" id="dfc_406">
             <p>Drop Column Nan Rows</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Column Nan Rows allows you to drop the rows with a nan value in the column.</p>
         </div>
-        <div class="help-tag DCHelp_h3">
+        <div class="help-tag DCHelp_h3" id="dfc_407">
             <p>Transform Column</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Transform Column allows you to transform the column to mapping, dummies or categories as defined in the Data Transform Chapter.</p>
         </div>
-        <div class="help-tag DCHelp_h3" id="dfc_404">
+        <div class="help-tag DCHelp_h3" id="dfc_408">
             <p>Round Column Values</p>
         </div>
         <div class="help-images ">
@@ -877,14 +1071,14 @@
             <p>Enter the number of decimals to round the column to and hit 'Round Column' key.</p>
             <p>To return to the change values screen hit the 'Change Values' button.</p>
         </div>
-        <div class="help-tag DCHelp_h3">
+        <div class="help-tag DCHelp_h3" id="dfc_409">
             <p>Change Data Type</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Change Data Type allows you to change the column data type as defined in the Data Transform Chapter.</p>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_406">
+        <div class="help-tag DCHelp_h2" id="dfc_410">
             <p>Show Column Graphs</p>
         </div>
         <div class="DCChaptersHelpText ">
@@ -894,7 +1088,7 @@
             <img id="ColumnGraphsId " class="help-images " src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ColumnGraphs.png "></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_407">
+        <div class="help-tag DCHelp_h2" id="dfc_411">
             <p>Show Outliers</p>
         </div>
         <div class="DCChaptersHelpText ">
@@ -909,7 +1103,7 @@
 
 
     <div class="DCChaptersParagraph ">
-        <div class="help-tag DCHelp_h1 " id="dfc_408">
+        <div class="help-tag DCHelp_h1 " id="dfc_412">
             <p>Cleanse Non Numeric Columns</p>
         </div>
         <div class="DCChaptersHelpText ">
@@ -921,14 +1115,14 @@
         <div class="DCChaptersHelpText ">
             <p>The 'Unique Values and Counts' table lists the unique values for the specified column. </p>
         </div>
-        <div class=" " help-images ">
-                <img id="CleanseNonNumUniquesId " class=" help-images " src="https://rickkrasinski.github.io/dfcleanser/graphics/help/CleanseNonNumUniques.png "></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText ">
-                <p>You can change all values equal to 'Current Value' to the 'New Value' value by hitting the 'Change Values' key. </p>
-            </div>
-            <div class=" " help-images ">
+        <div class="help-images">
+            <img id="CleanseNonNumUniquesId " class=" help-images " src="https://rickkrasinski.github.io/dfcleanser/graphics/help/CleanseNonNumUniques.png "></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText ">
+            <p>You can change all values equal to 'Current Value' to the 'New Value' value by hitting the 'Change Values' key. </p>
+        </div>
+        <div class="help-images">
             <img id="CleanseNumUniqueChangeId " class=" help-images " src="https://rickkrasinski.github.io/dfcleanser/graphics/help/CleanseNumUniqueChange.png "></img>
         </div>
         <br></br>
@@ -952,38 +1146,38 @@
         </div>
         <div style="margin-top:10px; ">
             <div class="container " style="width:95%; ">
-                <button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop Column</button>
-                <button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop</br>Current Value</br>Rows</button>
-                <button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop</br>Column</br>Nan Rows</button>
-                <button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Transform</br>Column</button>
-                <a href="#dfc_409"></a><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Remove</br>Whitespace</button></a>
+                <a href="#dfc_413"><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop Column</button></a>
+                <a href="#dfc_414"><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop</br>Current Value</br>Rows</button></a>
+                <a href="#dfc_415"><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Drop</br>Column</br>Nan Rows</button></a>
+                <a href="#dfc_416"><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Transform</br>Column</button></a>
+                <a href="#dfc_417"><button type="button " class="help-taskbar-button btn btn-primary " style=" width:120px; height:60px; ">Remove</br>Whitespace</button></a>
             </div>
         </div><br></br>
-        <div class="help-tag DCHelp_h3" id="dfc_404">
+        <div class="help-tag DCHelp_h3" id="dfc_413">
             <p>Drop Column</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Column allows you to drop the column from the dataframe.</p>
         </div>
-        <div class="help-tag DCHelp_h3" id="dfc_404">
+        <div class="help-tag DCHelp_h3" id="dfc_414">
             <p>Drop Current Value Rows</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Current Value Rows allows you to drop the rows equal to the 'Current Value' specified from the dataframe.</p>
         </div>
-        <div class="help-tag DCHelp_h3" id="dfc_404">
+        <div class="help-tag DCHelp_h3" id="dfc_415">
             <p>Drop Column Nan Rows</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Drop Column Nan Rows allows you to drop the rows with a nan value in the column.</p>
         </div>
-        <div class="help-tag DCHelp_h3" id="dfc_404">
+        <div class="help-tag DCHelp_h3" id="dfc_416">
             <p>Transform Column</p>
         </div>
         <div class="DCChaptersHelpText ">
             <p>Transform Column allows you to transform the column to mapping, dummies or categories as defined in the Data Transform Chapter.</p>
         </div>
-        <div class="help-tag DCHelp_h3" id="dfc_409">
+        <div class="help-tag DCHelp_h3" id="dfc_417">
             <p>Remove Whitespace</p>
         </div>
         <div class="DCChaptersHelpText ">
@@ -1001,7 +1195,7 @@
     </div>
 
     <div class="DCChaptersParagraph ">
-        <div class="help-tag DCHelp_h1 " id="dfc_410">
+        <div class="help-tag DCHelp_h1 " id="dfc_418">
             <p>Cleanse Row</p>
         </div>
         <br></br>
@@ -1070,13 +1264,13 @@
         <div style="margin-top:10px;">
             <div class="container" style="width:95%;">
                 <a href="#dfc_503"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Save</br> Column</br> Names</button></a>
-                <a href="#dfc_504"> <button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Add</br> Column</br> Names</button></a>
-                <a href="#dfc_540"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Change</br> Column</br> Names</button></a>
-                <a href="#dfc_505"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Reset</br> Index</br> Column</button></a>
-                <a href="#dfc_506"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Set</br> Index</br> Column</button></a>
-                <a href="#dfc_507"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Drop</br> Index</br> Column</button></a>
-                <a href="#dfc_542"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Sort</br> Index</br> Column</button></a>
-                <a href="#dfc_508"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Drop</br> Duplicate</br> Rows</button></a>
+                <a href="#dfc_504"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Add</br> Column</br> Names</button></a>
+                <a href="#dfc_505"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Change</br> Column</br> Names</button></a>
+                <a href="#dfc_506"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Reset</br> Index</br> Column</button></a>
+                <a href="#dfc_507"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Set</br> Index</br> Column</button></a>
+                <a href="#dfc_508"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Drop</br> Index</br> Column</button></a>
+                <a href="#dfc_509"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Sort</br> Index</br> Column</button></a>
+                <a href="#dfc_510"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:12%;  height:60px;  ">Drop</br> Duplicate</br> Rows</button></a>
             </div>
         </div>
         <br></br>
@@ -1108,7 +1302,7 @@
             <img id="DFAddColNamesRowId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFAddColNamesRow.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_540">
+        <div class="help-tag DCHelp_h2" id="dfc_505">
             <p>Change Column Names</p>
         </div>
         <br></br>
@@ -1122,7 +1316,7 @@
             <img id="DFResetRowIDSId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFChangeColumnNames.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_505">
+        <div class="help-tag DCHelp_h2" id="dfc_506">
             <p>Reset Index Column</p>
         </div>
         <br></br>
@@ -1136,7 +1330,7 @@
             <img id="DFResetRowIDSId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFResetRowIDS.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_506">
+        <div class="help-tag DCHelp_h2" id="dfc_507">
             <p>Set Index Column</p>
         </div>
         <br></br>
@@ -1150,7 +1344,7 @@
             <img id="DFSetRowIdsColId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFSetRowIdsCol.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_507">
+        <div class="help-tag DCHelp_h2" id="dfc_508">
             <p>Drop Index Column</p>
         </div>
         <br></br>
@@ -1164,7 +1358,7 @@
             <img id="DFDropRowIdsColId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFDropRowIdsCol.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_542">
+        <div class="help-tag DCHelp_h2" id="dfc_509">
             <p>Sort Index Column</p>
         </div>
         <br></br>
@@ -1178,7 +1372,7 @@
             <img id="DFResetRowIDSId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFSortIndexColumn.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2" id="dfc_508">
+        <div class="help-tag DCHelp_h2" id="dfc_510">
             <p>Drop Duplicate Rows</p>
         </div>
         <br></br>
@@ -1195,525 +1389,529 @@
             </div>
             <br></br>
         </div>
+    </div>
 
-        <div class="DCChaptersParagraph">
-            <div class="help-tag DCHelp_h1" id="dfc_509">
-                <p>Columns Transform</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>The dataframe columns transform functions provide the ability to modify the format of the dataframe.The user must select a column name from the 'Column Names' table to perform an action on.</p>
-            </div>
-            <div style="margin-top:10px;">
-                <div class="container" style="width:95%;">
-                    <a href="#dfc_510"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Rename</br> Column</button></a>
-                    <a href="#dfc_511"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Add</br> Column</button></a>
-                    <a href="#dfc_515"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Drop</br> Column</button></a>
-                    <a href="#dfc_516"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Reorder</br> Columns</button></a>
-                    <a href="#dfc_517"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Save</br>Column</button></a>
-                    <a href="#dfc_518"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Copy</br>Column</button></a>
-                    <a href="#dfc_541"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Sort</br>By</br>Column</button></a>
-                    <a href="#dfc_543"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Apply</br>fn To</br>Column</button></a>
-                    <a href="#dfc_519"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Map</br>Dummies</br>Categorical</button></a>
-                </div>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_510">
-                <p>Rename Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Rename Column allows you to rename a column name row from the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>Enter the new name that the column is renamed to.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColRenameColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColRenameColumn.png"></img>
-            </div>
-            <br></br>
-
-            <div class="help-tag DCHelp_h2" id="dfc_511">
-                <p>Add Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Add Column allows you to add a column to the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You must select a datatype for the newly added column. </p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You also must enter a column name for the newly added column.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColAddColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumn.png"></img>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you select a datatype and name for the new column you must select how to get the values for the new column from the options above. </p>
-            </div>
-            <div style="margin-top:10px;">
-                <div class="container" style="width:95%;">
-                    <a href="#dfc_512"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:60px;  ">Get Column Values</br>From File</button></a>
-                    <a href="#dfc_513"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:60px;  ">Get Column Values</br>From User Code</button></a>
-                </div>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>You can add new values from a file or from user generated code.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The len of the new column values must match the len of the dataframe.</p>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h3" id="dfc_512">
-                <p>Get Column Values From File</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You have to select a file name from which the column values are read. </p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The len of the new column values must match the len of the dataframe.</p>
-            </div>
-            <div class="help-mages">
-                <img id="DFColAddColumnFileId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnFile.png"></img>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h3" id="dfc_513">
-                <p>Get Column Values From User Code</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You can create user code from which the column values are generated. </p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The len of the new column values must match the len of the dataframe.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColAddColumnUserId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnUser.png"></img>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>To generate a python code cell to test in hit the 'Open Test Code Cell' button.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>To load the code from the test cell into the 'Add Column Code' input hit 'Get Code from Test Cell' button.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>Only code in the 'Add Column Code' field can be run to add code for the column. The test cell is for testing only</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can save the 'Add Column Code' code as a generic function by pressing the 'Save Code as Generic' button.</p>
-            </div>
-            <div style="margin-top:10px;">
-                <div>
-                    <div class="container" style="width:95%;">
-                        <a href="#dfc_514"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Open Test</br>Code Cell</button></a>
-                        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Get Code from</br>Test Cell</button>
-                        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Save Code as</br>Generic</button>
-                        <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Add New Column</br>From Code</button>
-                    </div>
-                </div>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you are happy with the 'Add Column Code' you can execute it to add a new column via pressing the 'Add New Column from Code' key.</p>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h4" id="dfc_514">
-                <p>Open Test Code Cell</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You can create a test code cell to test your code before using it to generate a dataframe column.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColAddColumnUserId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnUser.png"></img>
-            </div>
-            <br></br>
-            <div class="help-images">
-                <img id="DFColAddColumnTCCellId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnTCCell.png"></img>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>To load the code from the test cell to the input form hit the 'Get Code from Test Cell' button.</p>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h4">
-                <p>Get Code from Test Cell</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>To load the code from the test cell to the input form hit the 'Get Code from Test Cell' button.</p>
-            </div>
-            <div class="help-tag DCHelp_h4">
-                <p>Save Code as Generic</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>To save the code as a generic function for later usage hit 'Save Code as Generic'.</p>
-            </div>
-            <div class="help-tag DCHelp_h4">
-                <p>Add New Column from Code</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>Once you are happy with the code hit 'Add New Column from Code'.</p>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_515">
-                <p>Drop Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Drop Column allows you to drop a column from the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can save the column you are about to drop to a file before dropping the column. </p>
-            </div>
-            <div class="help-images">
-                <img id="DFColDropColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColDropColumn.png"></img>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_516">
-                <p>Reorder Columns</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Reorder Columns allows you to reorder the columns in the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can select the 'Column To Move' and 'Column To Move After' values via slecting a column from the 'Column Names' table. </p>
-            </div>
-            <div class="help-images">
-                <img id="DFColReorderColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn.png"></img>
-            </div>
-            <br></br>
-            <div class="help-images">
-                <img id="DFColReorderColumn1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn1.png"></img>
-                <img id="DFColReorderColumn2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn2.png"></img>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you hit the 'Move Column' the 'Column Names' table is displayed reflecting the moved column.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColReorderColumn3Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn3.png"></img>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_517">
-                <p>Save Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Save Column allows you to save a column from the dataframe to a file.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You must enter the file name that the column is written to.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColSaveColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColSaveColumn.png"></img>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_518">
-                <p>Copy Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Copy Column allows you to copy a column in the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can set the 'Column To Copy To' and the 'Column To Copy From' by clicking on column names in the'Column Names' table. The 'Column To Copy To' and the 'Column To Copy From' must be compatible. (datatypes can be converted). </p>
-            </div>
-            <div class="help-images">
-                <img id="DFColCopyColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn.png"></img>
-            </div>
-            <br></br>
-            <div class="help-images">
-                <img id="DFColCopyColumn1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn1.png"></img>
-            </div>
-            <br></br>
-            <div class="help-images">
-                <img id="DFColCopyColumn2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn2.png"></img>
-            </div>
-            <br></br>
-
-            <div class="help-tag DCHelp_h2" id="dfc_541">
-                <p>Sort By Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Sort By Column allows you to sort the datframe by a column(s).</p>
-            </div>
-            <div class="help-images">
-                <img id="SortByColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/SortByColumn.png"></img>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>'column_to_sort_by' defines the column to sort by.</p>
-                <p>'ascending_order' defines to sort by ascending or descending order.</p>
-                <p>'reset_row_ids_flag' defines whether to reorder the rowids according to the new sort.</p>
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_543">
-                <p>Apply fn To Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Apply fn To Column allows you to apply a function to a specific column in the dataframe.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The 'lambda fn flag' indicates a simple function (lamda) to apply against each value in the column.</p>
-                <p>Use colval in your lambda code as the identifier for each column value.</p>
-                <p>To apply a more complicated (non lamda) function against the column follow the guidelines below.</p>
-                <p>Set 'lambda fn flag' to False indicating a complex function.</p>
-                <p>Be sure to include all imports plus code to run the function.</p>
-                <p>Use the dfcleanser.common.cfg get_dc_dataframe() to get the dataframe for your function.</p>
-                <p>Use the dfcleanser.common.cfg get_current_col_name() to get the column name inside your function.</p>
-                <p>To save the function in the Generic Functions Repository for later usage enter a function_name. </p>
-                <p>If function_name is blank code is run as is and not stored for later usage. </p>
-                <p>If you select a function from Generic Functions Repository you can update and it is always saved back. </p>
-            </div>
-            <div class="help-images">
-                <img id="ApplyfnToColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ApplyfnToColumn.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>'column_to_apply_fn_to' defines the column to apply the fn to.</p>
-                <p>'lamda_fn_flag' defines if the function is an inline lamda function.</p>
-                <p>'function_name' defines the name to call the function that is stored.</p>
-                <p>'function_to_apply' defines the code that defines the function.</p>
-
-            </div>
-
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_519">
-                <p>Map Dummies Categorical</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Map Dummies Categorical allows you to transform a colum to a map or dummies or categories.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can select to map column, make dummies for the column or categorize the column. </p>
-            </div>
-
-            <div style="margin-top:10px;">
-                <div>
-                    <div class="container" style="width:95%;">
-                        <a href="#dfc_520"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Map</br>Column</button></a>
-                        <a href="#dfc_521"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Dummies</br>For</br>Column</button></a>
-                        <a href="#dfc_522"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Make</br>Column</br>Categorical</button></a>
-                    </div>
-                </div>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p> The transform functions supported are : </p>
-                <p><button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.map.html')">Map</button>&nbsp;&nbsp;<button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.get_dummies.html')">Dummies</button>&nbsp;&nbsp;
-                    <button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Categorical.html')">Categorical</button>&nbsp;&nbsp;</p>
-                <p> Click on the above to get detailed definitions.</p>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h3" id="dfc_520">
-                <p>Map</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>The unique values for the column are displayed in the 'Mapping Keys' field. </p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You must enter the corresponding map values in the 'Mapping Values'. </p>
-            </div>
-            <div class="help-images">
-                <img id="DFColMappingId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColMapping.png"></img>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h3" id="dfc_521">
-                <p>Dummies</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You can keep or remove the column that dummies are created for.</p>
-            </div>
-            <div class="help-images">
-                <img id="DFColDummiesId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColDummies.png"></img>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h3" id="dfc_522">
-                <p>Categorical</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>To make column categorical and not change data type to category use True False. </br>To make column categorical and change data type to category use True True. </br>To change column data type to category but not categorical use False True.
-                </p>
-            </div>
-            <div class="help-images">
-                <img id="DFColDummiesId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCategories.png"></img>
+    <div class="DCChaptersParagraph">
+        <div class="help-tag DCHelp_h1" id="dfc_511">
+            <p>Columns Transform</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>The dataframe columns transform functions provide the ability to modify the format of the dataframe.The user must select a column name from the 'Column Names' table to perform an action on.</p>
+        </div>
+        <div style="margin-top:10px;">
+            <div class="container" style="width:95%;">
+                <a href="#dfc_512"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Rename</br> Column</button></a>
+                <a href="#dfc_513"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Add</br> Column</button></a>
+                <a href="#dfc_516"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Drop</br> Column</button></a>
+                <a href="#dfc_517"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Reorder</br> Columns</button></a>
+                <a href="#dfc_518"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Save</br>Column</button></a>
+                <a href="#dfc_519"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Copy</br>Column</button></a>
+                <a href="#dfc_520"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Sort</br>By</br>Column</button></a>
+                <a href="#dfc_521"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Apply</br>fn To</br>Column</button></a>
+                <a href="#dfc_522"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:80px;  height:60px;  ">Map</br>Dummies</br>Categorical</button></a>
             </div>
         </div>
 
         <br></br>
-        <div class="DCChaptersParagraph">
-            <div class="help-tag DCHelp_h1" id="dfc_524">
-                <p>Datetime Transform</p>
+        <div class="help-tag DCHelp_h2" id="dfc_512">
+            <p>Rename Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Rename Column allows you to rename a column name row from the dataframe.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>Enter the new name that the column is renamed to.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColRenameColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColRenameColumn.png"></img>
+        </div>
+        <br></br>
+
+        <div class="help-tag DCHelp_h2" id="dfc_513">
+            <p>Add Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Add Column allows you to add a column to the dataframe.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You must select a datatype for the newly added column. </p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You also must enter a column name for the newly added column.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColAddColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumn.png"></img>
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you select a datatype and name for the new column you must select how to get the values for the new column from the options above. </p>
+        </div>
+        <div style="margin-top:10px;">
+            <div class="container" style="width:95%;">
+                <a href="#dfc_514"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:60px;  ">Get Column Values</br>From File</button></a>
+                <a href="#dfc_515"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:60px;  ">Get Column Values</br>From User Code</button></a>
             </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>The Datetime Transform Function allows you to work with datetime columns.</p>
-            </div>
-            <div style="margin-top:10px;">
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>You can add new values from a file or from user generated code.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The len of the new column values must match the len of the dataframe.</p>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h3" id="dfc_514">
+            <p>Get Column Values From File</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You have to select a file name from which the column values are read. </p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The len of the new column values must match the len of the dataframe.</p>
+        </div>
+        <div class="help-mages">
+            <img id="DFColAddColumnFileId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnFile.png"></img>
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h3" id="dfc_515">
+            <p>Get Column Values From User Code</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You can create user code from which the column values are generated. </p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The len of the new column values must match the len of the dataframe.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColAddColumnUserId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnUser.png"></img>
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>To generate a python code cell to test in hit the 'Open Test Code Cell' button.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>To load the code from the test cell into the 'Add Column Code' input hit 'Get Code from Test Cell' button.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>Only code in the 'Add Column Code' field can be run to add code for the column. The test cell is for testing only</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can save the 'Add Column Code' code as a generic function by pressing the 'Save Code as Generic' button.</p>
+        </div>
+        <div style="margin-top:10px;">
+            <div>
                 <div class="container" style="width:95%;">
-                    <a href="#dfc_525"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Convert Column</br>Datatype</button></a>
-                    <a href="#dfc_530"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Calculate timedelta</br>Column</button></a>
-                    <a href="#dfc_532"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Split Column</br>to date,time Columns</button></a>
-                    <a href="#dfc_534"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Merge Column from </br>date,time Columns</button></a>
+                    <a href="#dfc_514"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Open Test</br>Code Cell</button></a>
+                    <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Get Code from</br>Test Cell</button>
+                    <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Save Code as</br>Generic</button>
+                    <button type="button" class="help-taskbar-button btn btn-primary" style="  width:120px;  height:60px;  ">Add New Column</br>From Code</button>
                 </div>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>The 'Convert Column Datatype' button allows you change a column to a specific datetime datatype.</p>
             </div>
-            <div class="DCChaptersHelpText">
-                <p>The 'Calculate timedelta Column' button allows you to calculate the timedelta between two columns.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The 'Split Column to date,time Columns' button allows you to split a datetime column to date and time columns.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>The 'Merge Column from date,time Columns' button allows you to create a datetime column from separate date amd time columns.</p>
-            </div>
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_525">
-                <p>Convert Column Data Type</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You must select a datetime datatype.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You must select a column name from the Column Names table.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can select a fillna value or default to NaT.</p>
-            </div>
-            <br></br>
-            <div class="help-images">
-                <img id="DateTime1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime1.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>For this example we are converting a column to datetime.date.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>Once you select a column name a sample set of values from the column is displayed.</p>
-            </div>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you are happy with the 'Add Column Code' you can execute it to add a new column via pressing the 'Add New Column from Code' key.</p>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h4">
+            <p>Open Test Code Cell</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You can create a test code cell to test your code before using it to generate a dataframe column.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColAddColumnUserId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnUser.png"></img>
+        </div>
+        <br></br>
+        <div class="help-images">
+            <img id="DFColAddColumnTCCellId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColAddColumnTCCell.png"></img>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>To load the code from the test cell to the input form hit the 'Get Code from Test Cell' button.</p>
+        </div>
 
-            <div class="DCChaptersHelpText">
-                <p>The samples are displayed to help you specify a format.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime2.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>You now can select the appropriate format string by selecting it from the strtime format table.</p>
-            </div>
-            <div class="DCChaptersHelpText">
-                <p>You can also enter a format string by hand.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime3Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime3.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you fill out all fields hit the 'Change Datatype' button.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime4Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime4.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once the column is converted a status screen is displayed for you.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime6Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime6.png"></img>
-            </div><br></br>
-            <div class="DCChaptersHelpText">
-                <p>You can also verify the datatype changes via the Data Inspection Data Types data.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime12Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime12.png"></img>
-            </div>
+        <br></br>
+        <div class="help-tag DCHelp_h4">
+            <p>Get Code from Test Cell</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>To load the code from the test cell to the input form hit the 'Get Code from Test Cell' button.</p>
+        </div>
+        <div class="help-tag DCHelp_h4">
+            <p>Save Code as Generic</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>To save the code as a generic function for later usage hit 'Save Code as Generic'.</p>
+        </div>
+        <div class="help-tag DCHelp_h4">
+            <p>Add New Column from Code</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>Once you are happy with the code hit 'Add New Column from Code'.</p>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_516">
+            <p>Drop Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Drop Column allows you to drop a column from the dataframe.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can save the column you are about to drop to a file before dropping the column. </p>
+        </div>
+        <div class="help-images">
+            <img id="DFColDropColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColDropColumn.png"></img>
+        </div>
 
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_530">
-                <p>Calculate timedelta Column</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you select the column names and enter the result column name hit the 'Calculate timedelta' key to calculate the timedelta and create a timedelta column.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime17Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime17.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once the timedelta is calculated a status screen is displayed.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime18Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime18.png"></img>
-            </div>
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_517">
+            <p>Reorder Columns</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Reorder Columns allows you to reorder the columns in the dataframe.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can select the 'Column To Move' and 'Column To Move After' values via slecting a column from the 'Column Names' table. </p>
+        </div>
+        <div class="help-images">
+            <img id="DFColReorderColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn.png"></img>
+        </div>
+        <br></br>
+        <div class="help-images">
+            <img id="DFColReorderColumn1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn1.png"></img>
+            <img id="DFColReorderColumn2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn2.png"></img>
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you hit the 'Move Column' the 'Column Names' table is displayed reflecting the moved column.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColReorderColumn3Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColReorderColumn3.png"></img>
+        </div>
 
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_532">
-                <p>Split Column to date,time Columns</p>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you enter the column names hit the 'Split Column' key to create the date and time columns.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime20Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime20.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once the split is done a status screen is displayed.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime21Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime21.png"></img>
-            </div>
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_518">
+            <p>Save Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Save Column allows you to save a column from the dataframe to a file.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You must enter the file name that the column is written to.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColSaveColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColSaveColumn.png"></img>
+        </div>
 
-            <br></br>
-            <div class="help-tag DCHelp_h2" id="dfc_534">
-                <p>Merge Column from date,time Columns</p>
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_519">
+            <p>Copy Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Copy Column allows you to copy a column in the dataframe.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can set the 'Column To Copy To' and the 'Column To Copy From' by clicking on column names in the'Column Names' table. The 'Column To Copy To' and the 'Column To Copy From' must be compatible. (datatypes can be converted). </p>
+        </div>
+        <div class="help-images">
+            <img id="DFColCopyColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn.png"></img>
+        </div>
+        <br></br>
+        <div class="help-images">
+            <img id="DFColCopyColumn1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn1.png"></img>
+        </div>
+        <br></br>
+        <div class="help-images">
+            <img id="DFColCopyColumn2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCopyColumn2.png"></img>
+        </div>
+        <br></br>
+
+        <div class="help-tag DCHelp_h2" id="dfc_520">
+            <p>Sort By Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Sort By Column allows you to sort the datframe by a column(s).</p>
+        </div>
+        <div class="help-images">
+            <img id="SortByColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/SortByColumn.png"></img>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>'column_to_sort_by' defines the column to sort by.</p>
+            <p>'ascending_order' defines to sort by ascending or descending order.</p>
+            <p>'reset_row_ids_flag' defines whether to reorder the rowids according to the new sort.</p>
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_521">
+            <p>Apply fn To Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Apply fn To Column allows you to apply a function to a specific column in the dataframe.</p>
+        </div>
+        <div class="help-images">
+            <img id="ApplyfnToColumnStatsId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ApplyfnToColumnStats.png"></img>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The 'lambda fn flag' indicates a simple function (lamda) to apply against each value in the column.</p>
+            <p>Use colval in your lambda code as the identifier for each column value.</p>
+            <p>To apply a more complicated (non lamda) function against the column follow the guidelines below.</p>
+            <p>Set 'lambda fn flag' to False indicating a complex function.</p>
+            <p>Be sure to include all imports plus code to run the function.</p>
+            <p>Use the dfcleanser.common.cfg get_dc_dataframe() to get the dataframe for your function.</p>
+            <p>Use the dfcleanser.common.cfg get_current_col_name() to get the column name inside your function.</p>
+            <p>To save the function in the Generic Functions Repository for later usage enter a function_name. </p>
+            <p>If function_name is blank code is run as is and not stored for later usage. </p>
+            <p>If you select a function from Generic Functions Repository you can update and it is always saved back. </p>
+        </div>
+        <div class="help-images">
+            <img id="ApplyfnToColumnId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ApplyfnToColumn.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>'column_to_apply_fn_to' defines the column to apply the fn to.</p>
+            <p>'lamda_fn_flag' defines if the function is an inline lamda function.</p>
+            <p>'function_name' defines the name to call the function that is stored.</p>
+            <p>'function_to_apply' defines the code that defines the function.</p>
+
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_522">
+            <p>Map Dummies Categorical</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Map Dummies Categorical allows you to transform a colum to a map or dummies or categories.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can select to map column, make dummies for the column or categorize the column. </p>
+        </div>
+
+        <div style="margin-top:10px;">
+            <div>
+                <div class="container" style="width:95%;">
+                    <a href="#dfc_523"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Map</br>Column</button></a>
+                    <a href="#dfc_524"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Dummies</br>For</br>Column</button></a>
+                    <a href="#dfc_525"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:200px;  height:40px;  ">Make</br>Column</br>Categorical</button></a>
+                </div>
             </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>The 'Merge Column from date,time Columns' button allows you to create a datetime column from separate date amd time columns.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime13Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime13.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once you select the column names hit the 'Merge Column' key to merge and create a datetime column.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime14Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime14.png"></img>
-            </div>
-            <br></br>
-            <div class="DCChaptersHelpText">
-                <p>Once the merge is complete a status screen is displayed.</p>
-            </div>
-            <div class="help-images">
-                <img id="DateTime15Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime15.png"></img>
-            </div>
-            <br></br>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p> The transform functions supported are : </p>
+            <p><button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.map.html')">Map</button>&nbsp;&nbsp;<button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.get_dummies.html')">Dummies</button>&nbsp;&nbsp;
+                <button class='btn btn-primary' onclick="display_help_url('https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Categorical.html')">Categorical</button>&nbsp;&nbsp;</p>
+            <p> Click on the above to get detailed definitions.</p>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h3" id="dfc_520">
+            <p>Map</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>The unique values for the column are displayed in the 'Mapping Keys' field. </p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You must enter the corresponding map values in the 'Mapping Values'. </p>
+        </div>
+        <div class="help-images">
+            <img id="DFColMappingId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColMapping.png"></img>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h3" id="dfc_521">
+            <p>Dummies</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You can keep or remove the column that dummies are created for.</p>
+        </div>
+        <div class="help-images">
+            <img id="DFColDummiesId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColDummies.png"></img>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h3" id="dfc_522">
+            <p>Categorical</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>To make column categorical and not change data type to category use True False. </br>To make column categorical and change data type to category use True True. </br>To change column data type to category but not categorical use False True.
+            </p>
+        </div>
+        <div class="help-images">
+            <img id="DFColDummiesId" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DFColCategories.png"></img>
         </div>
     </div>
 
+    <br></br>
     <div class="DCChaptersParagraph">
-        <div class="help-tag DCHelp_h2" id="dfc_550">
+        <div class="help-tag DCHelp_h1" id="dfc_526">
+            <p>Datetime Transform</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>The Datetime Transform Function allows you to work with datetime columns.</p>
+        </div>
+        <div style="margin-top:10px;">
+            <div class="container" style="width:95%;">
+                <a href="#dfc_527"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Convert Column</br>Datatype</button></a>
+                <a href="#dfc_528"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Calculate timedelta</br>Column</button></a>
+                <a href="#dfc_529"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Split Column</br>to date,time Columns</button></a>
+                <a href="#dfc_530"><button type="button" class="help-taskbar-button btn btn-primary" style="  width:140px;  height:50px;  ">Merge Column from </br>date,time Columns</button></a>
+            </div>
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>The 'Convert Column Datatype' button allows you change a column to a specific datetime datatype.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The 'Calculate timedelta Column' button allows you to calculate the timedelta between two columns.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The 'Split Column to date,time Columns' button allows you to split a datetime column to date and time columns.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>The 'Merge Column from date,time Columns' button allows you to create a datetime column from separate date amd time columns.</p>
+        </div>
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_527">
+            <p>Convert Column Data Type</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You must select a datetime datatype.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You must select a column name from the Column Names table.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can select a fillna value or default to NaT.</p>
+        </div>
+        <br></br>
+        <div class="help-images">
+            <img id="DateTime1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime1.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>For this example we are converting a column to datetime.date.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>Once you select a column name a sample set of values from the column is displayed.</p>
+        </div>
+
+        <div class="DCChaptersHelpText">
+            <p>The samples are displayed to help you specify a format.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime2Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime2.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>You now can select the appropriate format string by selecting it from the strtime format table.</p>
+        </div>
+        <div class="DCChaptersHelpText">
+            <p>You can also enter a format string by hand.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime3Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime3.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you fill out all fields hit the 'Change Datatype' button.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime4Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime4.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once the column is converted a status screen is displayed for you.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime6Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime6.png"></img>
+        </div><br></br>
+        <div class="DCChaptersHelpText">
+            <p>You can also verify the datatype changes via the Data Inspection Data Types data.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime12Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime12.png"></img>
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_528">
+            <p>Calculate timedelta Column</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you select the column names and enter the result column name hit the 'Calculate timedelta' key to calculate the timedelta and create a timedelta column.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime17Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime17.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once the timedelta is calculated a status screen is displayed.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime18Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime18.png"></img>
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_529">
+            <p>Split Column to date,time Columns</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you enter the column names hit the 'Split Column' key to create the date and time columns.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime20Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime20.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once the split is done a status screen is displayed.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime21Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime21.png"></img>
+        </div>
+
+        <br></br>
+        <div class="help-tag DCHelp_h2" id="dfc_530">
+            <p>Merge Column from date,time Columns</p>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>The 'Merge Column from date,time Columns' button allows you to create a datetime column from separate date amd time columns.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime13Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime13.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once you select the column names hit the 'Merge Column' key to merge and create a datetime column.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime14Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime14.png"></img>
+        </div>
+        <br></br>
+        <div class="DCChaptersHelpText">
+            <p>Once the merge is complete a status screen is displayed.</p>
+        </div>
+        <div class="help-images">
+            <img id="DateTime15Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/DateTime15.png"></img>
+        </div>
+        <br></br>
+    </div>
+    </div>
+
+    <div class="DCChaptersParagraph">
+        <div class="help-tag DCHelp_h2" id="dfc_531">
             <p>Dateframe Schema</p>
         </div>
         <br></br>
@@ -1735,7 +1933,7 @@
 
 
     <br></br>
-    <div id="dfc_600">
+    <div id="dfc_601">
         <div align="left" id="DCExport" class="DCChaptersHelpTOC">
             <div>
                 <img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataExport.png" width="80" align="left" />
@@ -1765,8 +1963,8 @@
     </div>
 
     <div class="DCChaptersParagraph">
-        <div class="help-tag DCHelp_h1">
-            <a id="dfc_602">Pandas Dataframe Export</a>
+        <div class="help-tag DCHelp_h1" id="dfc_602">
+            <a>Pandas Dataframe Export</a>
         </div>
         <br></br>
         <div class="DCChaptersHelpText">
@@ -1796,7 +1994,7 @@
 
     <br></br>
     <div class="DCChaptersParagraph">
-        <div class="DCHelp_h2">
+        <div class="DCHelp_h2" id="dfc_603">
             <p>Non SQL Pandas Dataframe Export</p>
         </div>
         <br></br>
@@ -1816,7 +2014,7 @@
     </div>
 
     <div class="DCChaptersParagraph">
-        <div class="DCHelp_h2">
+        <div class="DCHelp_h2" id="dfc_603">
             <p>Pandas SQL Dataframe Export</p>
         </div>
         <br></br>
@@ -1884,7 +2082,7 @@
             <p>Once you have set all of the parms you can export a table by hitting the 'Export Table' button.</p>
         </div>
         <br></br>
-        <div class="DCHelp_h3">
+        <div class="DCHelp_h3" id="dfc_605">
             <p>Get Tables</p>
         </div>
         <br></br>
@@ -1899,7 +2097,7 @@
             <p>To get a list of columns to set index field with hit the 'Get Columns' button.</p>
         </div>
         <br></br>
-        <div class="DCHelp_h3">
+        <div class="DCHelp_h3" id="dfc_606">
             <p>Get Columns</p>
         </div>
         <br></br>
@@ -1914,7 +2112,7 @@
     <br></br>
 
     <div class="DCChaptersParagraph ">
-        <div class="help-tag DCHelp_h1">
+        <div class="help-tag DCHelp_h1" id="dfc_607">
             <a id="dfc_607 ">Custom Export</a>
         </div>
         <br></br>
@@ -1963,7 +2161,7 @@
     </div>
 
     <div class="DCChaptersParagraph ">
-        <div class="help-tag DCHelp_h1">
+        <div class="help-tag DCHelp_h1" id="dfc_608">
             <a id="dfc_607 ">Export Status</a>
         </div>
         <br></br>
@@ -1977,7 +2175,7 @@
     <br></br>
 
     <br></br>
-    <div id="dfc_700">
+    <div id="dfc_701">
         <div align="left" id="DCScripting" class="DCChaptersHelpTOC">
             <div>
                 <img src="https://rickkrasinski.github.io/dfcleanser/graphics/Script.png" width="80" align="left" />
@@ -2026,7 +2224,7 @@
     </div>
 
     <div class="DCChaptersParagraph ">
-        <div class="help-tag DCHelp_h1">
+        <div class="help-tag DCHelp_h1" id="dfc_702">
             <p>Show Current Script</p>
         </div>
         <br></br>
@@ -2052,7 +2250,7 @@
             <p>To store the current script as a backup hit the 'Backup Current Script' button.</p>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h2">
+        <div class="help-tag DCHelp_h2" id="dfc_703">
             <p>Run Current Script</p>
         </div>
         <br></br>
@@ -2064,7 +2262,7 @@
         </div>
 
         <br></br>
-        <div class="help-tag DCHelp_h2">
+        <div class="help-tag DCHelp_h2" id="dfc_704">
             <p>Load Backup Script</p>
         </div>
         <br></br>
@@ -2076,7 +2274,7 @@
         </div>
 
         <br></br>
-        <div class="help-tag DCHelp_h2">
+        <div class="help-tag DCHelp_h2" id="dfc_705">
             <p>Backup current Script</p>
         </div>
         <br></br>
@@ -2090,7 +2288,7 @@
 
     <br></br>
     <div class="DCChaptersParagraph">
-        <div class="help-tag DCHelp_h1" id="dfc_707">
+        <div class="help-tag DCHelp_h1" id="dfc_706">
             <p>Add To Current Script</p>
         </div>
         <br></br>
@@ -2108,7 +2306,7 @@
 
     <br></br>
     <div class="DCChaptersParagraph">
-        <div class="help-tag DCHelp_h1" id="dfc_703">
+        <div class="help-tag DCHelp_h1" id="dfc_707">
             <a id="dfc_201 ">Clear Current Script</a>
         </div>
         <br></br>
@@ -2225,7 +2423,7 @@
             <img id="BuildList1Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/BuildList1.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_804">
+        <div class="help-tag DCHelp_h1" id="dfc_803">
             <p>Build Dict</p>
         </div>
         <br></br>
@@ -2335,7 +2533,7 @@
             </div>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_903">
+        <div class="help-tag DCHelp_h1" id="dfc_902">
             <p>Open Test Code Cell</p>
         </div>
         <br></br>
@@ -2350,7 +2548,7 @@
             <p>The test code cell allows you to test your function before adding it to the generic functions data store.</p>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_904">
+        <div class="help-tag DCHelp_h1" id="dfc_903">
             <p>Load Test Code</p>
         </div>
         <br></br>
@@ -2365,7 +2563,7 @@
             <p>The test code needs to be loaded to the 'Function Code' field to be run and saved.</p>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_905">
+        <div class="help-tag DCHelp_h1" id="dfc_904">
             <p>Save Current Function</p>
         </div>
         <br></br>
@@ -2376,7 +2574,7 @@
             <img id="GenericFunction4Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/GenericFunction4.png"></img>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_906">
+        <div class="help-tag DCHelp_h1" id="dfc_905">
             <p>Delete Current Function</p>
         </div>
         <br></br>
@@ -2390,8 +2588,8 @@
             <p>The system generic functions highlighted in yellow can not be deleted.</p>
         </div>
         <br></br>
-        <div class="help-tag DCHelp_h1" id="dfc_907">
-            <p>Delete Current Function</p>
+        <div class="help-tag DCHelp_h1" id="dfc_906">
+            <p>Run Function Code</p>
         </div>
         <br></br>
         <div class="DCChaptersHelpText">
@@ -2988,9 +3186,9 @@
 
 
     </div>
-
     <br></br>
-
+    <br></br>
+    <br></br>
 
 
 
