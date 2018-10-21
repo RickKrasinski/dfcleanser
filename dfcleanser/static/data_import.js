@@ -254,7 +254,7 @@ function select_db(dblibid) {
     * Parameters:
     *  dblibid - database library is
     */
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID,window.getJSPCode(window.IMPORT_LIB,"display_sql_details_forms","5," + JSON.stringify(dblibid)));
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID,window.getJSPCode(window.IMPORT_LIB,"display_sql_details_form","5," + JSON.stringify(dblibid)));
     window.scroll_to('DCDataImport');
 }
 
@@ -262,7 +262,7 @@ function select_custom() {
     /**
     * select custom callback.
     */
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID,window.getJSPCode(window.IMPORT_LIB,"display_sql_details_forms","5," + JSON.stringify("custom")));
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID,window.getJSPCode(window.IMPORT_LIB,"display_sql_details_form","5," + JSON.stringify("custom")));
     window.scroll_to('DCDataImport');
 }
 
