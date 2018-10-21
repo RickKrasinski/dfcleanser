@@ -44,7 +44,6 @@ def display_data_cleansing(option,parms=None) :
     
     if(not cfg.check_if_dc_init()) :
         dcw.display_no_data_heading()
-        dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
         
         return
     
@@ -59,7 +58,6 @@ def display_data_cleansing(option,parms=None) :
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             clear_data_cleansing_data()
-            dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
             
         elif(option == dcm.CHANGE_COLUMN_OPTION) :
 
@@ -353,7 +351,6 @@ def display_data_cleansing(option,parms=None) :
         
         from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         display_inspection_data()
-        dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
 
 """
 #--------------------------------------------------------------------------
