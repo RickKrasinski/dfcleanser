@@ -382,6 +382,32 @@ def get_sqltable_export_form_labels() :
     return(pandas_export_sqltable_labelList)
    
 
+def get_export_input_value(parms, exportid, pindex) :
+ 
+    if(exportid     ==  dem.CSV_EXPORT) :
+        fparms  =   get_csv_export_inputs(parms)
+        return(fparms[pindex])
+        
+    if(exportid     ==  dem.EXCEL_EXPORT) :
+        fparms  =   get_excel_export_inputs(parms)
+        return(fparms[pindex])
+        
+    if(exportid     ==  dem.JSON_EXPORT) :
+        fparms  =   get_json_export_inputs(parms)
+        return(fparms[pindex])
+
+    if(exportid     ==  dem.HTML_EXPORT) :
+        fparms  =   get_html_export_inputs(parms)
+        return(fparms[pindex])
+        
+    if(exportid     ==  dem.SQLTABLE_EXPORT) :
+        fparms  =   get_sqltable_export_inputs(parms)
+        return(fparms[pindex])
+        
+    if(exportid     ==  dem.CUSTOM_EXPORT) :
+        fparms  =   get_parms_for_input(parms,custom_export_idList)
+        return(fparms[pindex])
+        
 
 
 """
@@ -395,7 +421,7 @@ def get_sqltable_export_form_labels() :
 """
 def display_data_export_notes(s,fname,dbnote=False,custom=False) :
 
-    displayHeading("Data Exported",4)
+    displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Exported",4)
         
     display_df_sizing_info(cfg.get_dc_dataframe())
     print("\n")
@@ -536,8 +562,6 @@ def display_dc_export_forms(id, detid=0, notes=False) :
     
         display_inspection_data() 
         
-        dfchelp.clear_help_text(dfchelp.EXPORT_HELP_BASE)
-
     # add the pandas import task bar or pandas details form 
     elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 
            (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
