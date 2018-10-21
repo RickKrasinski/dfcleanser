@@ -73,42 +73,36 @@ def load_dfcleanser() :
     
     # insert system cells 
     add_dfc_cell(cells.MARKDOWN,cells.DC_SYSTEM_TITLE)
-    add_dfc_cell(cells.MARKDOWN,dfchelp.SYS_ENVIRONMENT_HELP_ID)
     add_dfc_cell(cells.CODE,cells.DC_SYSTEM)
     add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
 
     # insert import cells
     if(corecbs[0]) :
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_IMPORT_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.IMPORT_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_IMPORT)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
 
     # insert inspection cells
     if(corecbs[1]) :
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_INSPECTION_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.INSPECT_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_INSPECTION)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
 
     # insert cleansing cells
     if(corecbs[2]) :
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_CLEANSING_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.CLEANSE_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_CLEANSING)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
     # insert transform cells
     if(corecbs[3]) :
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_TRANSFORM_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.TRANSFORM_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_TRANSFORM)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
     # insert export cells 
     if(corecbs[4]) :
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_EXPORT_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.EXPORT_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_EXPORT)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
@@ -121,35 +115,30 @@ def load_dfcleanser() :
         # insert list utility cells 
         if(utilcbs[0]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_LIST_UTILITY_TITLE)
-            add_dfc_cell(cells.MARKDOWN,dfchelp.LIST_UTILITY_HELP_ID)
             add_dfc_cell(cells.CODE,cells.DC_LIST_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
         # insert gen function cells 
         if(utilcbs[1]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_GEN_FUNCTION_UTILITY_TITLE)
-            add_dfc_cell(cells.MARKDOWN,dfchelp.GEN_FUNCTION_UTILITY_HELP_ID)
             add_dfc_cell(cells.CODE,cells.DC_GEN_FUNCTION_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
         # insert geocoding utility cells 
         if(utilcbs[2]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_GEOCODE_UTILITY_TITLE)
-            add_dfc_cell(cells.MARKDOWN,dfchelp.GEOCODING_HELP_ID)
             add_dfc_cell(cells.CODE,cells.DC_GEOCODE_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
         # insert dfsubset utility cells 
         if(utilcbs[3]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DFSUBSET_UTILITY_TITLE)
-            add_dfc_cell(cells.MARKDOWN,dfchelp.DFSUBSET_HELP_ID)
             add_dfc_cell(cells.CODE,cells.DC_DFSUBSET_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
         # insert dfsubset utility cells 
         if(utilcbs[4]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DFCONCAT_UTILITY_TITLE)
-            add_dfc_cell(cells.MARKDOWN,dfchelp.DFCONCAT_HELP_ID)
             add_dfc_cell(cells.CODE,cells.DC_DFCONCAT_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
@@ -161,7 +150,6 @@ def load_dfcleanser() :
 
         # insert scripting cells 
         add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_SCRIPTING_TITLE)
-        add_dfc_cell(cells.MARKDOWN,dfchelp.SCRIPTING_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_SCRIPTING)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
 
@@ -218,8 +206,7 @@ def reload_chapter(chapter_to_load_flag,chapter_loaded_flag,chapterTitle,chapter
             run_jscript(jscript,"Error ReLoading dfcleanser Chapter",chapterTitle)
                 
             add_dfc_cell(cells.MARKDOWN,chapterTitle)
-            add_dfc_cell(cells.MARKDOWN,chapterlist[0])
-            add_dfc_cell(cells.CODE,chapterlist[1])
+            add_dfc_cell(cells.CODE,chapterlist[0])
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
 """
@@ -252,11 +239,11 @@ def reload_dfcleanser() :
         # check the core chapters
         for i in range(len(corecbs)) :
         
-            if(i==0)    :  reload_chapter(corecbs[i],cells_loaded[0][0],cells.DC_DATA_IMPORT_TITLE,cells.DC_SYSTEM_TITLE,[dfchelp.IMPORT_HELP_ID,cells.DC_DATA_IMPORT]) 
-            elif(i==1)  :  reload_chapter(corecbs[i],cells_loaded[0][1],cells.DC_DATA_INSPECTION_TITLE,cells.DC_DATA_IMPORT_TITLE,[dfchelp.INSPECT_HELP_ID,cells.DC_DATA_INSPECTION]) 
-            elif(i==2)  :  reload_chapter(corecbs[i],cells_loaded[0][2],cells.DC_DATA_CLEANSING_TITLE,cells.DC_DATA_INSPECTION_TITLE,[dfchelp.CLEANSE_HELP_ID,cells.DC_DATA_CLEANSING]) 
-            elif(i==3)  :  reload_chapter(corecbs[i],cells_loaded[0][3],cells.DC_DATA_TRANSFORM_TITLE,cells.DC_DATA_CLEANSING_TITLE,[dfchelp.TRANSFORM_HELP_ID,cells.DC_DATA_TRANSFORM]) 
-            elif(i==4)  :  reload_chapter(corecbs[i],cells_loaded[0][4],cells.DC_DATA_EXPORT_TITLE,cells.DC_DATA_TRANSFORM_TITLE,[dfchelp.EXPORT_HELP_ID,cells.DC_DATA_EXPORT]) 
+            if(i==0)    :  reload_chapter(corecbs[i],cells_loaded[0][0],cells.DC_DATA_IMPORT_TITLE,cells.DC_SYSTEM_TITLE,[cells.DC_DATA_IMPORT]) 
+            elif(i==1)  :  reload_chapter(corecbs[i],cells_loaded[0][1],cells.DC_DATA_INSPECTION_TITLE,cells.DC_DATA_IMPORT_TITLE,[cells.DC_DATA_INSPECTION]) 
+            elif(i==2)  :  reload_chapter(corecbs[i],cells_loaded[0][2],cells.DC_DATA_CLEANSING_TITLE,cells.DC_DATA_INSPECTION_TITLE,[cells.DC_DATA_CLEANSING]) 
+            elif(i==3)  :  reload_chapter(corecbs[i],cells_loaded[0][3],cells.DC_DATA_TRANSFORM_TITLE,cells.DC_DATA_CLEANSING_TITLE,[cells.DC_DATA_TRANSFORM]) 
+            elif(i==4)  :  reload_chapter(corecbs[i],cells_loaded[0][4],cells.DC_DATA_EXPORT_TITLE,cells.DC_DATA_TRANSFORM_TITLE,[cells.DC_DATA_EXPORT]) 
                     
         # check the if need to load utilities heading
         last_util   =   -1
@@ -283,19 +270,19 @@ def reload_dfcleanser() :
         
             if(i==DF_UTILS_DATA_STRUCTURE)    :  reload_chapter(utilscbs[DF_UTILS_DATA_STRUCTURE],cells_loaded[DF_UTILS][DF_UTILS_DATA_STRUCTURE],
                                                                 cells.DC_LIST_UTILITY_TITLE,
-                                                                cells.DC_SW_UTILITIES,[dfchelp.LIST_UTILITY_HELP_ID,cells.DC_LIST_UTILITY],1)
+                                                                cells.DC_SW_UTILITIES,[cells.DC_LIST_UTILITY],1)
             
             elif(i==DF_UTILS_GEN_FUNCTION)  :  
                 if(utilscbs[DF_UTILS_DATA_STRUCTURE] == LOAD_CHAPTER) :
                     reload_chapter(utilscbs[DF_UTILS_GEN_FUNCTION],
                                    cells_loaded[DF_UTILS][DF_UTILS_GEN_FUNCTION],
                                    cells.DC_GEN_FUNCTION_UTILITY_TITLE,cells.DC_LIST_UTILITY_TITLE,
-                                   [dfchelp.GEN_FUNCTION_UTILITY_HELP_ID,cells.DC_GEN_FUNCTION_UTILITY])
+                                   [cells.DC_GEN_FUNCTION_UTILITY])
                 else :
                     reload_chapter(utilscbs[DF_UTILS_GEN_FUNCTION],
                                    cells_loaded[DF_UTILS][DF_UTILS_GEN_FUNCTION],
                                    cells.DC_GEN_FUNCTION_UTILITY_TITLE,cells.DC_SW_UTILITIES,
-                                   [dfchelp.GEN_FUNCTION_UTILITY_HELP_ID,cells.DC_GEN_FUNCTION_UTILITY],1)
+                                   [cells.DC_GEN_FUNCTION_UTILITY],1)
                     
             elif(i==DF_UTILS_GEOCODING)  :  
                 
@@ -303,18 +290,18 @@ def reload_dfcleanser() :
                     reload_chapter(utilscbs[DF_UTILS_GEOCODING],
                                    cells_loaded[DF_UTILS][DF_UTILS_GEOCODING],
                                    cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_GEN_FUNCTION_UTILITY_TITLE,
-                                   [dfchelp.GEOCODING_HELP_ID,cells.DC_GEOCODE_UTILITY])
+                                   [cells.DC_GEOCODE_UTILITY])
                 else :
                     if(utilscbs[DF_UTILS_DATA_STRUCTURE] == LOAD_CHAPTER) :    
                         reload_chapter(utilscbs[DF_UTILS_GEOCODING],
                                        cells_loaded[DF_UTILS][DF_UTILS_GEOCODING],
                                        cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_LIST_UTILITY_TITLE,
-                                       [dfchelp.GEOCODING_HELP_ID,cells.DC_GEOCODE_UTILITY])
+                                       [cells.DC_GEOCODE_UTILITY])
                     else :
                         reload_chapter(utilscbs[DF_UTILS_GEOCODING],
                                        cells_loaded[DF_UTILS][DF_UTILS_GEOCODING],
                                        cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_SW_UTILITIES,
-                                       [dfchelp.GEOCODING_HELP_ID,cells.DC_GEOCODE_UTILITY],1)
+                                       [cells.DC_GEOCODE_UTILITY],1)
             
             elif(i==DF_UTILS_SUBSET)  :  
                 
@@ -322,24 +309,24 @@ def reload_dfcleanser() :
                     reload_chapter(utilscbs[DF_UTILS_SUBSET],
                                    cells_loaded[DF_UTILS][DF_UTILS_SUBSET],
                                    cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_GEOCODE_UTILITY_TITLE,
-                                   [dfchelp.DFSUBSET_HELP_ID,cells.DC_DFSUBSET_UTILITY])
+                                   [cells.DC_DFSUBSET_UTILITY])
                 else :
                     if(utilscbs[DF_UTILS_GEN_FUNCTION] == LOAD_CHAPTER) :    
                         reload_chapter(utilscbs[DF_UTILS_SUBSET],
                                        cells_loaded[DF_UTILS][DF_UTILS_SUBSET],
                                        cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_GEN_FUNCTION_UTILITY_TITLE,
-                                       [dfchelp.DFSUBSET_HELP_ID,cells.DC_DFSUBSET_UTILITY])
+                                       [cells.DC_DFSUBSET_UTILITY])
                     else :
                         if(utilscbs[DF_UTILS_DATA_STRUCTURE] == LOAD_CHAPTER) :
                             reload_chapter(utilscbs[DF_UTILS_SUBSET],
                                            cells_loaded[DF_UTILS][DF_UTILS_SUBSET],
                                            cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_LIST_UTILITY_TITLE,
-                                           [dfchelp.DFSUBSET_HELP_ID,cells.DC_DFSUBSET_UTILITY])
+                                           [cells.DC_DFSUBSET_UTILITY])
                         else :
                             reload_chapter(utilscbs[DF_UTILS_SUBSET],
                                            cells_loaded[DF_UTILS][DF_UTILS_SUBSET],
                                            cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_SW_UTILITIES,
-                                           [dfchelp.DFSUBSET_HELP_ID,cells.DC_DFSUBSET_UTILITY],1)
+                                           [cells.DC_DFSUBSET_UTILITY],1)
             
             elif(i==DF_UTILS_CONCAT)  :  
                 
@@ -347,30 +334,30 @@ def reload_dfcleanser() :
                     reload_chapter(utilscbs[DF_UTILS_CONCAT],
                                    cells_loaded[DF_UTILS][DF_UTILS_CONCAT],
                                    cells.DC_DFCONCAT_UTILITY_TITLE,cells.DC_DFSUBSET_UTILITY_TITLE,
-                                   [dfchelp.DFCONCAT_HELP_ID,cells.DC_DFCONCAT_UTILITY])
+                                   [cells.DC_DFCONCAT_UTILITY])
                 else :
                     if(utilscbs[DF_UTILS_GEOCODING] == LOAD_CHAPTER) :    
                         reload_chapter(utilscbs[DF_UTILS_CONCAT],
                                        cells_loaded[DF_UTILS][DF_UTILS_CONCAT],
                                        cells.DC_DFCONCAT_UTILITY_TITLE,cells.DC_GEOCODE_UTILITY_TITLE,
-                                       [dfchelp.DFCONCAT_HELP_ID,cells.DC_DFCONCAT_UTILITY])
+                                       [cells.DC_DFCONCAT_UTILITY])
                     else :
                         if(utilscbs[DF_UTILS_GEN_FUNCTION] == LOAD_CHAPTER) :    
                             reload_chapter(utilscbs[DF_UTILS_CONCAT],
                                            cells_loaded[DF_UTILS][DF_UTILS_CONCAT],
                                            cells.DC_DFCONCAT_UTILITY_TITLE,cells.DC_GEN_FUNCTION_UTILITY_TITLE,
-                                           [dfchelp.DFCONCAT_HELP_ID,cells.DC_DFCONCAT_UTILITY])
+                                           [cells.DC_DFCONCAT_UTILITY])
                         else :
                             if(utilscbs[DF_UTILS_DATA_STRUCTURE] == LOAD_CHAPTER) :
                                 reload_chapter(utilscbs[DF_UTILS_CONCAT],
                                                cells_loaded[DF_UTILS][DF_UTILS_CONCAT],
                                                cells.DC_DFCONCAT_UTILITY_TITLE,cells.DC_LIST_UTILITY_TITLE,
-                                               [dfchelp.DFCONCAT_HELP_ID,cells.DC_DFCONCAT_UTILITY])
+                                               [cells.DC_DFCONCAT_UTILITY])
                             else :
                                 reload_chapter(utilscbs[DF_UTILS_CONCAT],
                                                cells_loaded[DF_UTILS][DF_UTILS_CONCAT],
                                                cells.DC_DFCONCAT_UTILITY_TITLE,cells.DC_SW_UTILITIES,
-                                               [dfchelp.DFCONCAT_HELP_ID,cells.DC_DFCONCAT_UTILITY],1)
+                                               [cells.DC_DFCONCAT_UTILITY],1)
                 
         # check the scripting chapters
         if(scriptcbs[0] == LOAD_CHAPTER) :
@@ -395,10 +382,10 @@ def reload_dfcleanser() :
                 # insert sw utilities title 
                 add_dfc_cell(cells.MARKDOWN,cells.DC_SCRIPTING)
                 add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-                reload_chapter(LOAD_CHAPTER,CHAPTER_NOT_LOADED,cells.DC_DATA_SCRIPTING_TITLE,cells.DC_SCRIPTING,[dfchelp.SCRIPTING_HELP_ID,cells.DC_DATA_SCRIPTING],1) 
+                reload_chapter(LOAD_CHAPTER,CHAPTER_NOT_LOADED,cells.DC_DATA_SCRIPTING_TITLE,cells.DC_SCRIPTING,[cells.DC_DATA_SCRIPTING],1) 
        
         else :
-            reload_chapter(DO_NOT_LOAD_CHAPTER,cells_loaded[DF_SCRIPT][0],cells.DC_DATA_SCRIPTING_TITLE,cells.DC_SCRIPTING,[dfchelp.SCRIPTING_HELP_ID,cells.DC_DATA_SCRIPTING],1)
+            reload_chapter(DO_NOT_LOAD_CHAPTER,cells_loaded[DF_SCRIPT][0],cells.DC_DATA_SCRIPTING_TITLE,cells.DC_SCRIPTING,[cells.DC_DATA_SCRIPTING],1)
             reload_chapter(DO_NOT_LOAD_CHAPTER,cells_loaded[DF_SCRIPT][0],cells.DC_SCRIPTING,None,[None,None],-1)     
                 
 
