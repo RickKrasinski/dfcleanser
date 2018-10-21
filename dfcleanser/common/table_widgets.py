@@ -937,7 +937,7 @@ class dcTable :
         
         #debug 
         if(self.get_title() != None)  :  
-            if( (self.get_title() == "#DB Connectors") or ("#Geocoders" in self.get_title()) ) :   
+            if( (self.get_title() == "#DB Connectors") or ("#Parms" in self.get_title()) ) :   
                print(tableHTML)
                
         return(tableHTML)
