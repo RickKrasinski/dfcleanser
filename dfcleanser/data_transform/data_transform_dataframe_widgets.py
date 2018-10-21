@@ -16,7 +16,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_transform.data_transform_model as dtm
 
 from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, get_html_spaces,
-                                            get_input_form, get_header_form, maketextarea, ButtonGroupForm, InputForm) 
+                                            get_input_form, maketextarea, ButtonGroupForm, InputForm) 
 
 from dfcleanser.common.table_widgets import dcTable
 
@@ -324,7 +324,6 @@ def display_save_colnames_row_input() :
 def display_dataframe_transform_main() :
 
     display_dataframe_transform_taskbar()    
-    display_composite_form([get_header_form("&nbsp;&nbsp;&nbsp;Data")])
 
     from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
     display_inspection_data()
