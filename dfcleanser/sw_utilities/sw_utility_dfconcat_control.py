@@ -15,7 +15,6 @@ import json
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
-import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_dfconcat_widgets as dfcw
 import dfcleanser.sw_utilities.sw_utility_dfconcat_model as dfcm
 
@@ -42,7 +41,6 @@ def display_dfconcat_utility(optionId,parms=None) :
         from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         display_inspection_data()
             
-        dfchelp.clear_help_text(dfchelp.DFCONCAT_HELP_BASE)
         clear_sw_utility_dfconcatdata()
     
     elif(optionId == dfcm.DISPLAY_SIMPLE_CONCAT) :

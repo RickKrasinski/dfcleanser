@@ -14,7 +14,6 @@ this = sys.modules[__name__]
 import json 
 
 import dfcleanser.common.cfg as cfg 
-import dfcleanser.common.help_utils as dfchelp
 from   dfcleanser.sw_utilities import sw_utility_genfunc_widgets as gfw
 import dfcleanser.sw_utilities.sw_utility_genfunc_model as gfm
 
@@ -43,12 +42,10 @@ def display_gen_function(optionId,parms=None) :
     if(not check_if_dc_init()) :
         gfw.get_genfunc_main_taskbar()
         clear_gen_function_cfg_values()
-        dfchelp.clear_help_text(dfchelp.GEN_FUNCTION_UTILITY_HELP_BASE)
         return
 
     if(optionId == gfm.DISPLAY_GENERIC_FUNCTION_TB) :
         clear_gen_function_cfg_values()
-        dfchelp.clear_help_text(dfchelp.GEN_FUNCTION_UTILITY_HELP_BASE)
         gfw.get_genfunc_main_taskbar()
 
     elif(optionId == gfm.DISPLAY_GENERIC_FUNCTION) :
