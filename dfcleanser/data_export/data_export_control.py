@@ -139,8 +139,7 @@ def process_export_form(formid, parms, display=True) :
                         dew.display_data_export_notes(s,parms[0])
                 else : 
                     displayParms(parmstitle,parmslist,fparms,cfg.DataExport_ID)
-                    fparm  =   dew.get_export_input_value(parms,formid,0)
-                    dew.display_data_export_notes(s,fparm)
+                    dew.display_data_export_notes(s,parms[0])
         else :
             display_exception(opstat)
 
