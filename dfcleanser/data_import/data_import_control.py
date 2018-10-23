@@ -24,8 +24,6 @@ from dfcleanser.common.common_utils import (get_function_parms, INT_PARM,
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
 
-from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-
 from IPython.display import clear_output
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
@@ -162,9 +160,6 @@ def process_import_form(formid, parms, display=True) :
            
         if(opstat.get_status()) : 
             if(display) :
-                
-                display_inspection_data()
-                
                 if (formid == dim.CUSTOM_IMPORT) :
                     if(dispstats) : 
                         ciparms = parms[0].replace("\n","</br>")

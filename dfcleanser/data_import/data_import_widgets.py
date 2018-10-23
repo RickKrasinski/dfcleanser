@@ -600,6 +600,8 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                                                                    import_task_bar_jsList,
                                                                    import_task_bar_centered))])
     
+        from dfcleanser.common.help_utils import clear_help_text, IMPORT_HELP_BASE
+        clear_help_text(IMPORT_HELP_BASE)
         return
     
     from dfcleanser.system.system_control import isEULA_read       
@@ -627,6 +629,9 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         else :
             cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
             
+        from dfcleanser.common.help_utils import clear_help_text, IMPORT_HELP_BASE
+        clear_help_text(IMPORT_HELP_BASE)
+
 
     # add the pandas import task bar or pandas details form 
     elif ( (id == dim.IMPORT_PANDAS_TB_ONLY) or 
@@ -963,9 +968,9 @@ def display_sql_table_custom_forms(sqlimportid) :
 """
 def display_data_import_notes(s,fname,dbnote=False,custom=False) :
      
-    #display_inspection_data()
+    display_inspection_data()
     
-    #print("\n")
+    print("\n")
     if(custom) :
         display_status("Custom import code Imported successfully as a pandas dataframe ")
         
