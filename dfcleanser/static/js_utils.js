@@ -880,20 +880,16 @@ function getSampleRow(tableid) {
 //
 
 //
-// display help section by dfc help id
+// display help section by dfc hrlp id
 //
 window.displayhelp = function(helpid) {
-
-    var url = "https://rickkrasinski.github.io/dfcleanser/html/help/dfcleanser_help/" + "#dfc_" + String(helpid);    
-    window.run_code_in_cell(window.WORKING_CELL_ID,window.getJSPCode(window.COMMON_LIB,"display_url",JSON.stringify(url)));
-    return true;
+    window.run_code_in_cell(window.WORKING_CELL_ID,window.getJSPCode(window.HELP_LIB,"get_help",helpid));
 }
 
 //
 // display help by url
 //
 window.display_help_url = function(url) {
-
     window.run_code_in_cell(window.WORKING_CELL_ID,window.getJSPCode(window.COMMON_LIB,"display_url",JSON.stringify(url)));
     return true;
 };
