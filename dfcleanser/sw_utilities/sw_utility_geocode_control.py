@@ -55,6 +55,8 @@ def display_geocode_utility(optionId,parms=None) :
 
     if(not cfg.check_if_dc_init()) :
         sugw.display_geocode_main_taskbar()        
+        from dfcleanser.common.help_utils import clear_help_text, GEOCODING_HELP_BASE
+        clear_help_text(GEOCODING_HELP_BASE)
         clear_sw_utility_geocodedata()
         #display_status("DataframeCleanser not fully initialized yet - please wait and try again")
         return
@@ -62,6 +64,8 @@ def display_geocode_utility(optionId,parms=None) :
     if(optionId == sugm.DISPLAY_GEOCODING) :
         sugw.display_geocode_main_taskbar()        
         
+        from dfcleanser.common.help_utils import clear_help_text, GEOCODING_HELP_BASE
+        clear_help_text(GEOCODING_HELP_BASE)
         clear_sw_utility_geocodedata()
         
     elif(optionId == sugm.DISPLAY_GET_COORDS) :

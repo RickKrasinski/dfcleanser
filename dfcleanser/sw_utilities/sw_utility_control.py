@@ -16,6 +16,7 @@ import json
 
 import dfcleanser.common.cfg as cfg
 import dfcleanser.sw_utilities.sw_utility_widgets as suww
+import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_model as swum
 
 from dfcleanser.common.html_widgets import (new_line)
@@ -44,6 +45,7 @@ def process_sw_utilities(optionId,parms=None) :
 
     if(not cfg.check_if_dc_init()) :
         suww.get_sw_utilities_main_taskbar()
+        dfchelp.clear_help_text(dfchelp.LIST_UTILITY_HELP_BASE)
         clear_sw_utility_data()
         return
     
@@ -51,6 +53,7 @@ def process_sw_utilities(optionId,parms=None) :
     
     if (optionId == swum.MAIN_OPTION) :
         suww.get_sw_utilities_main_taskbar()
+        dfchelp.clear_help_text(dfchelp.LIST_UTILITY_HELP_BASE)
         clear_sw_utility_data()
         return
 
