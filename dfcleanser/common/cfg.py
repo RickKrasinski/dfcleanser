@@ -74,13 +74,17 @@ def set_dc_dataframe(df,title=None) :
 def get_dc_dataframe(title=None) :
     return(DCdf.get_dataframe(title))
     
+def rename_default_dc_dataframe(title) :
+    DCdf.name_default_dataframe(title)
+
 def drop_dc_dataframe(title=None) :
     DCdf.drop_dataframe(title)
 
 
 class DCDataframes :
     
-    dcdataframes   =   {}
+    dcdataframes    =   {}
+    default_df      =   ""
 
     def __init__(self):
         self.dcdataframes = {}
@@ -93,6 +97,12 @@ class DCDataframes :
             self.dcdataframes.update({title : df})
         
     def get_dataframe(self,title=None) :
+        if(title == None) :
+            return(self.dcdataframes.get("default"))
+        else :
+            return(self.dcdataframes.get(title))
+    
+    def rename_default_dataframe(self,title) :
         if(title == None) :
             return(self.dcdataframes.get("default"))
         else :

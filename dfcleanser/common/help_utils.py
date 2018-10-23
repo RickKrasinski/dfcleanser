@@ -167,50 +167,52 @@ TRANSFORM_MAIN_TASKBAR_ID           =   TRANSFORM_HELP_BASE + 1
 TRANSFORM_DF_ID                     =   TRANSFORM_HELP_BASE + 2
 TRANSFORM_DF_SAVE_COL_NAME_ID           =   TRANSFORM_HELP_BASE + 3
 TRANSFORM_DF_SET_COL_NAME_ID            =   TRANSFORM_HELP_BASE + 4
-TRANSFORM_DF_CHANGE_COL_NAMES_ID        =   TRANSFORM_HELP_BASE + 5
-TRANSFORM_DF_RESET_ROW_ID_ID            =   TRANSFORM_HELP_BASE + 6
-TRANSFORM_DF_SET_ROW_ID_ID              =   TRANSFORM_HELP_BASE + 7
-TRANSFORM_DF_DROP_ROW_ID_ID             =   TRANSFORM_HELP_BASE + 8
-TRANSFORM_DF_SORT_INDEX_ID              =   TRANSFORM_HELP_BASE + 9
-TRANSFORM_DF_DROP_DUP_ID                =   TRANSFORM_HELP_BASE + 10
+TRANSFORM_DF_RESET_ROW_ID_ID            =   TRANSFORM_HELP_BASE + 5
+TRANSFORM_DF_SET_ROW_ID_ID              =   TRANSFORM_HELP_BASE + 6
+TRANSFORM_DF_DROP_ROW_ID_ID             =   TRANSFORM_HELP_BASE + 7
+TRANSFORM_DF_DROP_DUP_ID                =   TRANSFORM_HELP_BASE + 8
 
-TRANSFORM_COLS_ID                   =   TRANSFORM_HELP_BASE + 11
-TRANSFORM_COLS_RENAME_ID                =   TRANSFORM_HELP_BASE + 12
-TRANSFORM_COLS_ADD_ID                   =   TRANSFORM_HELP_BASE + 13
-TRANSFORM_COLS_ADD_FILE_ID                  =   TRANSFORM_HELP_BASE + 14
-TRANSFORM_COLS_ADD_USER_ID                  =   TRANSFORM_HELP_BASE + 15
-TRANSFORM_COLS_ADD_USER_CELL_ID                 =   TRANSFORM_HELP_BASE + 15
+TRANSFORM_COLS_ID                   =   TRANSFORM_HELP_BASE + 9
+TRANSFORM_COLS_RENAME_ID                =   TRANSFORM_HELP_BASE + 10
+TRANSFORM_COLS_ADD_ID                   =   TRANSFORM_HELP_BASE + 11
+TRANSFORM_COLS_ADD_FILE_ID                  =   TRANSFORM_HELP_BASE + 12
+TRANSFORM_COLS_ADD_USER_ID                  =   TRANSFORM_HELP_BASE + 13
+TRANSFORM_COLS_ADD_USER_CELL_ID                 =   TRANSFORM_HELP_BASE + 14
 
-TRANSFORM_COLS_DROP_ID                  =   TRANSFORM_HELP_BASE + 16
-TRANSFORM_COLS_REORDER_ID               =   TRANSFORM_HELP_BASE + 17
-TRANSFORM_COLS_SAVE_ID                  =   TRANSFORM_HELP_BASE + 18
-TRANSFORM_COLS_COPY_ID                  =   TRANSFORM_HELP_BASE + 19
-TRANSFORM_COLS_SORT_BY_COL_ID           =   TRANSFORM_HELP_BASE + 20
-TRANSFORM_COLS_APPLY_FN_ID              =   TRANSFORM_HELP_BASE + 21
-TRANSFORM_COLS_MDC_ID                   =   TRANSFORM_HELP_BASE + 22
-TRANSFORM_COLS_MAP_ID                       =   TRANSFORM_HELP_BASE + 23
-TRANSFORM_COLS_DUMMY_ID                     =   TRANSFORM_HELP_BASE + 24
-TRANSFORM_COLS_CAT_ID                       =   TRANSFORM_HELP_BASE + 25
-TRANSFORM_COLS_DTYPE_ID                 =   TRANSFORM_HELP_BASE + 16
+TRANSFORM_COLS_DROP_ID                  =   TRANSFORM_HELP_BASE + 15
+TRANSFORM_COLS_REORDER_ID               =   TRANSFORM_HELP_BASE + 16
+TRANSFORM_COLS_SAVE_ID                  =   TRANSFORM_HELP_BASE + 17
+TRANSFORM_COLS_COPY_ID                  =   TRANSFORM_HELP_BASE + 18
+TRANSFORM_COLS_MDC_ID                   =   TRANSFORM_HELP_BASE + 19
+TRANSFORM_COLS_MAP_ID                       =   TRANSFORM_HELP_BASE + 20
+TRANSFORM_COLS_DUMMY_ID                     =   TRANSFORM_HELP_BASE + 21
+TRANSFORM_COLS_CAT_ID                       =   TRANSFORM_HELP_BASE + 22
+TRANSFORM_COLS_DTYPE_ID                 =   TRANSFORM_HELP_BASE + 23
 
-TRANSFORM_DATETIME_ID                   =   TRANSFORM_HELP_BASE + 26
+TRANSFORM_DATETIME_ID                   =   TRANSFORM_HELP_BASE + 24
 TRANSFORM_DATETIME_CONVERT_ID           =   TRANSFORM_HELP_BASE + 25
-TRANSFORM_DATETIME_CONVERT1_ID              =   TRANSFORM_HELP_BASE + 27
+TRANSFORM_DATETIME_CONVERT1_ID              =   TRANSFORM_HELP_BASE + 26
 TRANSFORM_DATETIME_CONVERT2_ID              =   TRANSFORM_HELP_BASE + 27
-TRANSFORM_DATETIME_CONVERT3_ID              =   TRANSFORM_HELP_BASE + 27
-TRANSFORM_DATETIME_CONVERT4_ID              =   TRANSFORM_HELP_BASE + 27
+TRANSFORM_DATETIME_CONVERT3_ID              =   TRANSFORM_HELP_BASE + 28
+TRANSFORM_DATETIME_CONVERT4_ID              =   TRANSFORM_HELP_BASE + 29
 
-TRANSFORM_DATETIME_DELTA_ID             =   TRANSFORM_HELP_BASE + 28
-TRANSFORM_DATETIME_DELTA1_ID                =   TRANSFORM_HELP_BASE + 28
 
-TRANSFORM_DATETIME_SPLIT_ID             =   TRANSFORM_HELP_BASE + 29
-TRANSFORM_DATETIME_SPLIT1_ID                =   TRANSFORM_HELP_BASE + 29
+TRANSFORM_DATETIME_DELTA_ID             =   TRANSFORM_HELP_BASE + 30
+TRANSFORM_DATETIME_DELTA1_ID                =   TRANSFORM_HELP_BASE + 31
 
-TRANSFORM_DATETIME_MERGE_ID             =   TRANSFORM_HELP_BASE + 30
-TRANSFORM_DATETIME_MERGE1_ID                =   TRANSFORM_HELP_BASE + 30
-TRANSFORM_DATETIME_MERGE2_ID                =   TRANSFORM_HELP_BASE + 30
+TRANSFORM_DATETIME_SPLIT_ID             =   TRANSFORM_HELP_BASE + 32
+TRANSFORM_DATETIME_SPLIT1_ID                =   TRANSFORM_HELP_BASE + 33
 
-TRANSFORM_DF_SCHEMA_ID                  =   TRANSFORM_HELP_BASE + 31
+TRANSFORM_DATETIME_MERGE_ID             =   TRANSFORM_HELP_BASE + 34
+TRANSFORM_DATETIME_MERGE1_ID                =   TRANSFORM_HELP_BASE + 35
+TRANSFORM_DATETIME_MERGE2_ID                =   TRANSFORM_HELP_BASE + 36
+
+TRANSFORM_DF_CHANGE_COL_NAMES_ID        =   TRANSFORM_HELP_BASE + 40
+TRANSFORM_COLS_SORT_BY_COL_ID           =   TRANSFORM_HELP_BASE + 41
+TRANSFORM_DF_SORT_INDEX_ID              =   TRANSFORM_HELP_BASE + 42
+TRANSFORM_COLS_APPLY_FN_ID              =   TRANSFORM_HELP_BASE + 43
+
+TRANSFORM_DF_SCHEMA_ID                  =   TRANSFORM_HELP_BASE + 50
 
 """
 #--------------------------------------------------------------------------
@@ -223,24 +225,15 @@ CLEANSE_MAIN_TASKBAR_ID                 =   CLEANSE_HELP_BASE + 1
 
 CLEANSE_NUMERIC_ID                      =   CLEANSE_HELP_BASE + 2
 CLEANSE_NUM_UNIQUE_ID                       =   CLEANSE_HELP_BASE + 3
-CLEANSE_NUM_UNIQUE_DROP_COL_ID                  =   CLEANSE_HELP_BASE + 4
-CLEANSE_NUM_UNIQUE_DROP_ROWS_ID                 =   CLEANSE_HELP_BASE + 5
-CLEANSE_NUM_UNIQUE_DROP_NANS_ID                 =   CLEANSE_HELP_BASE + 6
-CLEANSE_NUM_UNIQUE_TRANSFORM_ID                 =   CLEANSE_HELP_BASE + 7
-CLEANSE_NUM_UNIQUE_ROUND_ID                     =   CLEANSE_HELP_BASE + 8
-CLEANSE_NUM_UNIQUE_DATATYPE_ID                  =   CLEANSE_HELP_BASE + 9
+CLEANSE_NUM_UNIQUE_ROUND_ID                     =   CLEANSE_HELP_BASE + 4
+CLEANSE_NUM_UNIQUE_DATATYPE_ID                  =   CLEANSE_HELP_BASE + 5
+CLEANSE_GRAPH_ID                            =   CLEANSE_HELP_BASE + 6
+CLEANSE_NUM_OUTLIER_ID                      =   CLEANSE_HELP_BASE + 7
 
-CLEANSE_GRAPH_ID                            =   CLEANSE_HELP_BASE + 10
-CLEANSE_NUM_OUTLIER_ID                      =   CLEANSE_HELP_BASE + 11
+CLEANSE_NON_NUMERIC_ID                  =   CLEANSE_HELP_BASE + 8
+CLEANSE_NONNUM_WHITESPACE_ID                =   CLEANSE_HELP_BASE + 9
 
-CLEANSE_NON_NUMERIC_ID                  =   CLEANSE_HELP_BASE + 12
-CLEANSE_NONNUM_DROP_COL_ID                  =   CLEANSE_HELP_BASE + 13
-CLEANSE_NONNUM_DROP_ROWS_ID                 =   CLEANSE_HELP_BASE + 14
-CLEANSE_NONNUM_DROP_NANS_ID                 =   CLEANSE_HELP_BASE + 15
-CLEANSE_NONNUM_TRANSFORM_ID                 =   CLEANSE_HELP_BASE + 16
-CLEANSE_NONNUM_WHITESPACE_ID                =   CLEANSE_HELP_BASE + 17
-
-CLEANSE_ROW_ID                          =   CLEANSE_HELP_BASE + 18
+CLEANSE_ROW_ID                          =   CLEANSE_HELP_BASE + 10
 
 
 """
@@ -259,12 +252,13 @@ SQLTABLE_EXPORT_URL         =   'https://pandas.pydata.org/pandas-docs/stable/ge
 
 EXPORT_MAIN_TASKBAR_ID              =   EXPORT_HELP_BASE + 1
 EXPORT_PANDAS_ID                    =   EXPORT_HELP_BASE + 2
-EXPORT_PANDAS_NON_SQL_ID                =   EXPORT_HELP_BASE + 3
-EXPORT_PANDAS_SQL_ID                    =   EXPORT_HELP_BASE + 4
+EXPORT_PANDAS_SQL_TABLE_ID              =   EXPORT_HELP_BASE + 3
+EXPORT_PANDAS_SQL_TABLE_EXPORT_ID       =   EXPORT_HELP_BASE + 4
 EXPORT_PANDAS_SQLT_TABLES_EXPORT_ID         =   EXPORT_HELP_BASE + 5
 EXPORT_PANDAS_SQLT_COLS_EXPORT_ID           =   EXPORT_HELP_BASE + 6
 
 EXPORT_CUSTOM_ID                    =   EXPORT_HELP_BASE + 7
+EXPORT_CUSTOM_CCELL_ID              =   EXPORT_HELP_BASE + 8
 
 
 """
@@ -277,11 +271,11 @@ EXPORT_CUSTOM_ID                    =   EXPORT_HELP_BASE + 7
 
 SCRIPTING_MAIN_TASKBAR_ID           =   SCRIPTING_HELP_BASE + 1
 SCRIPTING_SHOW_CURRENT_ID           =   SCRIPTING_HELP_BASE + 2
-SCRIPTING_RUN_CURRENT_ID            =   SCRIPTING_HELP_BASE + 3
-SCRIPTING_LOAD_BACKUP_ID            =   SCRIPTING_HELP_BASE + 4
-SCRIPTING_BACKUP_CURRENT_ID         =   SCRIPTING_HELP_BASE + 5
-SCRIPTING_ADD_TO_CURRENT_ID         =   SCRIPTING_HELP_BASE + 6
-SCRIPTING_CLEAR_CURRENT_ID          =   SCRIPTING_HELP_BASE + 7
+SCRIPTING_CLEAR_CURRENT_ID          =   SCRIPTING_HELP_BASE + 3
+SCRIPTING_RUN_CURRENT_ID            =   SCRIPTING_HELP_BASE + 4
+SCRIPTING_LOAD_BACKUP_ID            =   SCRIPTING_HELP_BASE + 5
+SCRIPTING_BACKUP_CURRENT_ID         =   SCRIPTING_HELP_BASE + 6
+SCRIPTING_ADD_TO_CURRENT_ID         =   SCRIPTING_HELP_BASE + 7
 
 
 """
@@ -293,9 +287,9 @@ SCRIPTING_CLEAR_CURRENT_ID          =   SCRIPTING_HELP_BASE + 7
 """
 LIST_UTILITY_MAIN_TASKBAR_ID            =   LIST_UTILITY_HELP_BASE + 1
 LIST_UTILITY_BUILD_LIST_ID              =   LIST_UTILITY_HELP_BASE + 2
-LIST_UTILITY_BUILD_LIST1_ID             =   LIST_UTILITY_HELP_BASE + 2
-LIST_UTILITY_BUILD_DICT_ID              =   LIST_UTILITY_HELP_BASE + 3
-LIST_UTILITY_BUILD_DICT1_ID             =   LIST_UTILITY_HELP_BASE + 3
+LIST_UTILITY_BUILD_LIST1_ID             =   LIST_UTILITY_HELP_BASE + 3
+LIST_UTILITY_BUILD_DICT_ID              =   LIST_UTILITY_HELP_BASE + 4
+LIST_UTILITY_BUILD_DICT1_ID             =   LIST_UTILITY_HELP_BASE + 5
 
 
 """
@@ -306,12 +300,12 @@ LIST_UTILITY_BUILD_DICT1_ID             =   LIST_UTILITY_HELP_BASE + 3
 #--------------------------------------------------------------------------
 """
 GENFUNC_GEN_ID                      =   GEN_FUNCTION_UTILITY_HELP_BASE + 1
-GENFUNC_OPEN_CC_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 2
-GENFUNC_LOAD_CC_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 3
-GENFUNC_SAVE_CODE_ID                =   GEN_FUNCTION_UTILITY_HELP_BASE + 4
-GENFUNC_DEL_FUNC_ID                 =   GEN_FUNCTION_UTILITY_HELP_BASE + 5
-GENFUNC_RUN_CODE_ID                 =   GEN_FUNCTION_UTILITY_HELP_BASE + 6
-GENFUNC_GEN_NEW_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 1
+GENFUNC_GEN_NEW_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 2
+GENFUNC_OPEN_CC_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 3
+GENFUNC_LOAD_CC_ID                  =   GEN_FUNCTION_UTILITY_HELP_BASE + 4
+GENFUNC_SAVE_CODE_ID                =   GEN_FUNCTION_UTILITY_HELP_BASE + 5
+GENFUNC_DEL_FUNC_ID                 =   GEN_FUNCTION_UTILITY_HELP_BASE + 6
+GENFUNC_RUN_CODE_ID                 =   GEN_FUNCTION_UTILITY_HELP_BASE + 7
 
 
 """
@@ -416,6 +410,274 @@ DFCONCAT_SIMPLE_INPUT_ID            =   DFCONCAT_HELP_BASE + 2
 DFCONCAT_FULL_INPUT_ID              =   DFCONCAT_HELP_BASE + 3
 
 
-  
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   common help utility helper functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+def refresh_images(helpid) :
+
+    images = []
+    
+    if(helpid == SYS_ENVIRONMENT_MAIN_TASKBAR_ID)       :   images = ["SystemBase"]
+    elif(helpid == SYS_ENVIRONMENT_SYSTEM_ID)           :   images = ["SystemSystem1","SystemSystem2","SystemSystem3","SystemSystem4"]    
+    elif(helpid == SYS_ENVIRONMENT_COPY_ID)             :   images = ["SystemCopyNotebook"]    
+
+    elif(helpid == IMPORT_MAIN_TASKBAR_ID)              :   images = ["DataImportBase"]    
+    elif(helpid == IMPORT_PANDAS_ID)                    :   images = ["ImportBase","ImportBaseFull"]
+    elif(helpid == IMPORT_PANDAS_SQL_TABLE_ID)          :   images = ["ImportSQLTableConnect"]
+    elif(helpid == IMPORT_PANDAS_SQL_TABLE_IMPORT_ID)   :   images = ["ImportSQLTableImport"]
+    elif(helpid == IMPORT_PANDAS_SQLT_TABLES_IMPORT_ID) :   images = ["ImportSQLTableGetTables"]
+    elif(helpid == IMPORT_PANDAS_SQLT_COLS_IMPORT_ID)   :   images = ["ImportSQLTableGetColumns"]
+    elif(helpid == IMPORT_PANDAS_SQLT_DATES_IMPORT_ID)  :   images = ["ImportSQLTableGetStrftime"]
+    elif(helpid == IMPORT_PANDAS_SQL_QUERY_ID)          :   images = ["ImportSQLQueryConnect"]
+    elif(helpid == IMPORT_PANDAS_SQL_QUERY_RUN_ID)      :   images = ["ImportSQLQueryRunQuery"]
+    elif(helpid == IMPORT_CUSTOM_ID)                    :   images = ["CustomImport"]
+    elif(helpid == IMPORT_CUSTOM_CCELL_ID)              :   images = ["CustomImport","CustomImportCCell"]
+    elif(helpid == IMPORT_FILE_ID)                      :   images = ["ImportFileStats"]
+
+    elif(helpid == INSPECT_MAIN_TASKBAR_ID)             :   images = ["DataInspectionBase"]    
+    elif(helpid == INSPECT_DATA_TYPES_ID)               :   images = ["InspectColumnDataTypes","InspectColumnDataTypesGraph"]
+    elif(helpid == INSPECT_NANS_ID)                     :   images = ["DataInspectionStats","InspectNans","InspectNansCols"]
+    elif(helpid == INSPECT_ROWS_ID)                     :   images = ["InspectRows"]
+    elif(helpid == INSPECT_COLS_ID)                     :   images = ["InspectColumnNames","InspectNumericColumnStats"]
+    elif(helpid == INSPECT_CATS_ID)                     :   images = ["InspectCats"]   
+    
+    elif(helpid == CLEANSE_MAIN_TASKBAR_ID)             :   images = ["DataCleanseBase"]    
+    elif(helpid == CLEANSE_NUMERIC_ID)                  :   images = ["CleanseNumColsStats","CleanseColumnStats"]
+    elif(helpid == CLEANSE_NUM_UNIQUE_ID)               :   images = ["CleanseNumUniqueChange","CleanseNumUniqueFind","UniqueValues"]
+    elif(helpid == CLEANSE_NUM_UNIQUE_ROUND_ID)         :   images = ["CleanseNumUniqueRound"]
+    elif(helpid == CLEANSE_NUM_UNIQUE_DATATYPE_ID)      :   images = ["DataframeSchema"]
+    elif(helpid == CLEANSE_GRAPH_ID)                    :   images = ["ColumnGraphs"] 
+    elif(helpid == CLEANSE_NUM_OUTLIER_ID)              :   images = ["CleanseOutliers"]
+    elif(helpid == CLEANSE_NON_NUMERIC_ID)              :   images = ["CleanseNumUniqueChange","CleanseNonNumColStats","CleanseNonNumUniques"]
+    elif(helpid == CLEANSE_NONNUM_WHITESPACE_ID)        :   images = ["CleanseNonNumUniques","CleanseNonNumUniquesWhitespace"]
+    elif(helpid == CLEANSE_ROW_ID)                      :   images = ["CleanseNumUniqueRound","CleanseRowChange"]
+
+    elif(helpid == TRANSFORM_MAIN_TASKBAR_ID)           :   images = ["DataTransfomrBase"]
+    elif(helpid == TRANSFORM_DF_SAVE_COL_NAME_ID)       :   images = ["DFSaveColNamesRow"]
+    elif(helpid == TRANSFORM_DF_SET_COL_NAME_ID)        :   images = ["DFAddColNamesRow"]
+    elif(helpid == TRANSFORM_DF_RESET_ROW_ID_ID)        :   images = ["DFResetRowIDS"]
+    elif(helpid == TRANSFORM_DF_SET_ROW_ID_ID)          :   images = ["DFSetRowIdsCol"]
+    elif(helpid == TRANSFORM_DF_DROP_ROW_ID_ID)         :   images = ["DFDropRowIdsCol"]
+    elif(helpid == TRANSFORM_DF_DROP_DUP_ID)            :   images = ["DFDropDuplicateRows"]
+
+    elif(helpid == TRANSFORM_COLS_RENAME_ID)            :   images = ["DFColRenameColumn"]
+    elif(helpid == TRANSFORM_COLS_ADD_ID)               :   images = ["DFColAddColumn"]
+    elif(helpid == TRANSFORM_COLS_ADD_FILE_ID)          :   images = ["DFColAddColumnFile"]
+    elif(helpid == TRANSFORM_COLS_ADD_USER_ID)          :   images = ["DFColAddColumnUser"]
+    elif(helpid == TRANSFORM_COLS_ADD_USER_CELL_ID)     :   images = ["DFColAddColumnUser","DFColAddColumnUserTCCell"] 
+    elif(helpid == TRANSFORM_COLS_DROP_ID)              :   images = ["DFColDropColumn"]
+    elif(helpid == TRANSFORM_COLS_REORDER_ID)           :   images = ["DFColReorderColumn","DFColReorderColumn1","DFColReorderColumn2","DFColReorderColumn3"]
+    elif(helpid == TRANSFORM_COLS_SAVE_ID)              :   images = ["DFColSaveColumn"]
+    elif(helpid == TRANSFORM_COLS_COPY_ID)              :   images = ["DFColCopyColumn","DFColCopyColumn1","DFColCopyColumn2"]
+    elif(helpid == TRANSFORM_COLS_MAP_ID)               :   images = ["DFColMapping"]
+    elif(helpid == TRANSFORM_COLS_DUMMY_ID)             :   images = ["DFColDummies"]
+    elif(helpid == TRANSFORM_COLS_CAT_ID)               :   images = ["DFColCategories"]
+    elif(helpid == TRANSFORM_COLS_DTYPE_ID)             :   images = ["DFColDatatype"]
+
+    elif(helpid == TRANSFORM_DATETIME_CONVERT_ID)       :   images = ["datetime_image1"]
+    elif(helpid == TRANSFORM_DATETIME_CONVERT1_ID)      :   images = ["datetime_image2"]
+    elif(helpid == TRANSFORM_DATETIME_CONVERT2_ID)      :   images = ["datetime_image3"]
+    elif(helpid == TRANSFORM_DATETIME_CONVERT3_ID)      :   images = ["datetime_image4"]
+    elif(helpid == TRANSFORM_DATETIME_CONVERT4_ID)      :   images = ["datetime_image6","datetime_image12"]
+    elif(helpid == TRANSFORM_DATETIME_DELTA_ID)         :   images = ["datetime_image17"]
+    elif(helpid == TRANSFORM_DATETIME_DELTA1_ID)        :   images = ["datetime_image18"]
+    elif(helpid == TRANSFORM_DATETIME_SPLIT_ID)         :   images = ["datetime_image20"]
+    elif(helpid == TRANSFORM_DATETIME_SPLIT1_ID)        :   images = ["datetime_image21"]
+    elif(helpid == TRANSFORM_DATETIME_MERGE_ID)         :   images = ["datetime_image13"]
+    elif(helpid == TRANSFORM_DATETIME_MERGE1_ID)        :   images = ["datetime_image14"]
+    elif(helpid == TRANSFORM_DATETIME_MERGE2_ID)        :   images = ["datetime_image15"]
+
+    elif(helpid == TRANSFORM_DF_CHANGE_COL_NAMES_ID)    :   images = ["DFChangeColumnNames"]
+    elif(helpid == TRANSFORM_COLS_SORT_BY_COL_ID)       :   images = ["SortByColumn"]
+    elif(helpid == TRANSFORM_DF_SORT_INDEX_ID)          :   images = ["DFSortIndex"]
+    elif(helpid == TRANSFORM_COLS_APPLY_FN_ID)          :   images = ["ApplyfnToColumn"]
+    elif(helpid == TRANSFORM_DF_SCHEMA_ID)              :   images = ["DataframeSchema"]
+
+    elif(helpid == EXPORT_MAIN_TASKBAR_ID)              :   images = ["DataExportBase"]    
+    elif(helpid == EXPORT_PANDAS_ID)                    :   images = ["ExportBase","ExportBaseFull"]
+    elif(helpid == EXPORT_PANDAS_SQL_TABLE_ID)          :   images = ["ExportSQLTableConnect"]
+    elif(helpid == EXPORT_PANDAS_SQL_TABLE_EXPORT_ID)   :   images = ["ExportSQLTableExport"]
+    elif(helpid == EXPORT_PANDAS_SQLT_TABLES_EXPORT_ID) :   images = ["ExportSQLTableGetTables"]
+    elif(helpid == EXPORT_PANDAS_SQLT_COLS_EXPORT_ID)   :   images = ["ExportSQLTableGetColumns"]
+    elif(helpid == IMPORT_CUSTOM_ID)                    :   images = ["CustomExport"]
+    elif(helpid == IMPORT_CUSTOM_CCELL_ID)              :   images = ["CustomExport","CustomExportCCell"]
+    
+    elif(helpid == SCRIPTING_SHOW_CURRENT_ID)           :   images = ["Scripting1"]
+    elif(helpid == SCRIPTING_CLEAR_CURRENT_ID)          :   images = ["Scripting4"]
+    elif(helpid == SCRIPTING_RUN_CURRENT_ID)            :   images = ["Scripting3"]
+    elif(helpid == SCRIPTING_LOAD_BACKUP_ID)            :   images = ["Scripting5"]
+    elif(helpid == SCRIPTING_BACKUP_CURRENT_ID)         :   images = ["Scripting2"]
+    elif(helpid == SCRIPTING_ADD_TO_CURRENT_ID)         :   images = ["AddCodeToScript"]
+
+    elif(helpid == LIST_UTILITY_MAIN_TASKBAR_ID)        :   images = ["DataUtilityBase"] 
+    elif(helpid == LIST_UTILITY_BUILD_LIST_ID)          :   images = ["BuildList"]
+    elif(helpid == LIST_UTILITY_BUILD_LIST1_ID)         :   images = ["BuildList1"]
+    elif(helpid == LIST_UTILITY_BUILD_DICT_ID)          :   images = ["BuildDict"]
+    elif(helpid == LIST_UTILITY_BUILD_DICT1_ID)         :   images = ["BuildDict1"]
+    
+    elif(helpid == GENFUNC_GEN_ID)                      :   images = ["GenericFunctionBase"]
+    elif(helpid == GENFUNC_GEN_NEW_ID)                  :   images = ["GenericFunction1"]
+    elif(helpid == GENFUNC_OPEN_CC_ID)                  :   images = ["GenericFunction2"]
+    elif(helpid == GENFUNC_LOAD_CC_ID)                  :   images = ["GenericFunction3"]
+    elif(helpid == GENFUNC_SAVE_CODE_ID)                :   images = ["GenericFunction4"]
+    elif(helpid == GENFUNC_DEL_FUNC_ID)                 :   images = ["GenericFunction5"]
+    elif(helpid == GENFUNC_RUN_CODE_ID)                 :   images = ["GenericFunction6"]
+    
+    elif(helpid == GEOCODING_MAIN_TASKBAR_ID)           :   images = ["GeocodingBase"]    
+    elif(helpid == GEOCODING_CALC_SINGLE_DISTANCE_ID)   :   images = ["GeocodingCalculateDistance"]
+    elif(helpid == GEOCODING_CALC_DF_DISTANCE_ID)       :   images = ["GeocodingCalculateDistancedf"]
+    elif(helpid == GEOCODING_GET_COORDS_DETAILS_ID)     :   images = ["GeocodingCalculateDistance"]
+    elif(helpid == GEOCODING_GET_DF_COORDS_DETAILS_ID)  :   images = ["GeocodingCalculateDistancedf"]
+    elif(helpid == GEOCODING_GET_ADDRESS_DETAILS_ID)    :   images = ["GeocodingCalculateDistance"]
+    elif(helpid == GEOCODING_GET_DF_ADDRESS_DETAILS_ID) :   images = ["GeocodingCalculateDistancedf"]
+
+    elif(helpid == DFSUBSET_MAIN_TASKBAR_ID)            :   images = ["DFSubsetBase"]    
+    elif(helpid == DFSUBSET_MAIN_ID)                    :   images = ["DFSubsetMain"] 
+    elif(helpid == DFSUBSET_MAIN_1_ID)                  :   images = ["DFSubsetMainParms"] 
+    elif(helpid == DFSUBSET_MAIN_2_ID)                  :   images = ["DFSubsetMainParmsFalse"] 
+    
+    elif(helpid == DFSUBSET_FILTER_ID)                  :   images = ["DFSFilterMain"] 
+    elif(helpid == DFSUBSET_FILTER_1_ID)                :   images = ["DFSFilterColName"] 
+    elif(helpid == DFSUBSET_FILTER_2_ID)                :   images = ["DFSFilterSample1"] 
+    elif(helpid == DFSUBSET_FILTER_3_ID)                :   images = ["DFSFilterSample2"] 
+    elif(helpid == DFSUBSET_FILTER_4_ID)                :   images = ["DFSFilterSample3"] 
+    elif(helpid == DFSUBSET_FILTER_5_ID)                :   images = ["DFSFilterSample4"] 
+    elif(helpid == DFSUBSET_FILTER_6_ID)                :   images = ["DFSFilterSample5"] 
+    elif(helpid == DFSUBSET_FILTER_7_ID)                :   images = ["DFSFilterSample6"] 
+    elif(helpid == DFSUBSET_FILTER_8_ID)                :   images = ["DFSFilterSample7"] 
+    elif(helpid == DFSUBSET_FILTER_9_ID)                :   images = ["DFSFilterSample8"] 
+    elif(helpid == DFSUBSET_FILTER_10_ID)               :   images = ["DFSFilterSample2_1"] 
+    elif(helpid == DFSUBSET_FILTER_11_ID)               :   images = ["DFSFilterSample2_2"] 
+    elif(helpid == DFSUBSET_FILTER_12_ID)               :   images = ["DFSFilterSample2_3"]    
+
+    elif(helpid == DFSUBSET_GET_SUBSET_ID)              :   images = ["DFSubsetRun"] 
+    elif(helpid == DFSUBSET_GET_SUBSET_NO_FILTERS_ID)   :   images = ["DFSubsetRunNoFilters"] 
+
+    elif(helpid == DFCONCAT_MAIN_TASKBAR_ID)            :   images = ["dataframeConcat"] 
+    elif(helpid == DFCONCAT_SIMPLE_INPUT_ID)            :   images = ["SimpleDataframeConcat"] 
+    elif(helpid == DFCONCAT_FULL_INPUT_ID)              :   images = ["DFSubsetRunNoFilters"] 
+
+    if(len(images) > 0)  :
+        
+        for i in range(len(images)) :
+    
+            import datetime 
+            tstamp = datetime.datetime.now().time()
+
+            change_help_js = ("$('#" + images[i]+"Id" + "').attr('src'," +
+                                 "https://rickkrasinski.github.io/dfcleanser/graphics/help/" + images[i]+".png?timestamp=" + str(tstamp) +"');")
+        
+            #print("refresh_images",change_help_js)
+            run_jscript(change_help_js,
+                        "fail to refresh image help for : " + str(helpid),
+                        "refresh_images")
+        
+    
+def clear_help_text(helpid) :
+    get_help(helpid)    
 
 
+
+"""
+#--------------------------------------------------------------------------
+#   scroll to chapter
+#--------------------------------------------------------------------------
+""" 
+def scroll_to_chapter_help(helpid) :
+
+    loc = ""
+    if( (helpid >= SYS_ENVIRONMENT_HELP_BASE) and (helpid <= SYS_ENVIRONMENT_HELP_END) )                :   loc = "SystemHelp"
+    elif( (helpid >= IMPORT_HELP_BASE) and (helpid <= IMPORT_HELP_END) )                                :   loc = "ImportHelp"
+    elif( (helpid >= INSPECT_HELP_BASE) and (helpid <= INSPECT_HELP_END) )                              :   loc = "InspectionHelp"
+    elif( (helpid >= CLEANSE_HELP_BASE) and (helpid <= CLEANSE_HELP_END) )                              :   loc = "CleansingHelp"
+    elif( (helpid >= TRANSFORM_HELP_BASE) and (helpid <= TRANSFORM_HELP_END) )                          :   loc = "TransformHelp"
+    elif( (helpid >= EXPORT_HELP_BASE) and (helpid <= EXPORT_HELP_END) )                                :   loc = "ExportHelp"
+    elif( (helpid >= SCRIPTING_HELP_BASE) and (helpid <= SCRIPTING_HELP_END) )                          :   loc = "ScriptingHelp"
+    elif( (helpid >= LIST_UTILITY_HELP_BASE) and (helpid <= LIST_UTILITY_HELP_END) )                    :   loc = "DCListUtilityHelp"
+    elif( (helpid >= GEN_FUNCTION_UTILITY_HELP_BASE) and (helpid <= GEN_FUNCTION_UTILITY_HELP_END) )    :   loc = "DCGenFunctionUtilityHelp"
+    elif( (helpid >= GEOCODING_HELP_BASE) and (helpid <= GEOCODING_HELP_END) )                          :   loc = "DCGeocodeUtilityHelp"
+    elif( (helpid >= DFSUBSET_HELP_BASE) and (helpid <= DFSUBSET_HELP_END) )                            :   loc = "DCDFSubsetUtilityHelp"
+
+    if(len(loc) > 0) :
+        
+        scroll_script = "window.scroll_to(" + single_quote(loc) + ")"
+        
+        run_jscript(scroll_script,
+                "fail to scroll for : " + str(helpid),
+                 "scroll_to_chapter_help")
+
+    
+"""
+#--------------------------------------------------------------------------
+#   get full parms for an input
+#
+#       parms    - input id
+# 
+#   update the input form
+#
+#--------------------------------------------------------------------------
+"""  
+
+def get_help_file_name(helpid) :
+    import os
+    import dfcleanser.common.cfg as cfg
+    helppath = os.path.join(cfg.get_dfcleanser_location(),"help",str(helpid) + ".html")
+    print("helppath",helppath)
+    return(helppath)
+         
+def get_help(helpid) :
+
+    if(helpid == NO_HELP_ID) : return()
+    
+    help_html = ""
+    
+    if(isbaseid(helpid))  :
+        help_html = ""
+    else :
+        
+        help_file_name  =   get_help_file_name(helpid)
+        
+        try :    
+            help_file = open(help_file_name, 'r', encoding="utf-8")
+            help_html = help_file.read() 
+            help_file.close()
+
+        except :
+            alert_user("Unable to read help file : "+helpid)
+        
+        if(len(help_html) == 0) :
+            #help_html = get_help_html(helpid)
+    
+            help_file_name  =   get_help_file_name(helpid)
+        
+            try :    
+                help_file = open(help_file_name, 'w', encoding="utf-8")# as eula_file :
+                help_file.write(help_html) 
+                help_file.close()
+
+            except :
+                alert_user("Unable to open help file "+helpid)
+    
+    new_help_html = patch_html(help_html)
+
+    change_help_js = "$('#" + get_help_formid(helpid) + "').html('"
+    change_help_js = change_help_js + new_help_html + "');"
+    
+    run_jscript(change_help_js,
+                "fail to get help for : " + str(helpid),
+                 "get_help")
+
+    #if(contains_image(helpid)) :
+    refresh_images(helpid)
+        
+    if( (helpid != NO_HELP_ID) and (help_html != "") ):
+        scroll_to_chapter_help(helpid)
+
+    
+    
+    
