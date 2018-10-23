@@ -32,6 +32,7 @@ from IPython.display import clear_output
 
 from dfcleanser.data_transform.data_transform_columns_widgets import (display_column_transform_status)
  
+from dfcleanser.common.help_utils import clear_help_text, TRANSFORM_HELP_BASE
 
 """
 #--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ def display_data_transform(option,parms=None) :
         
         dtw.display_no_dataframe()        
         clear_data_transform_data()
+        clear_help_text(TRANSFORM_HELP_BASE)
 
     else :
         
@@ -59,6 +61,7 @@ def display_data_transform(option,parms=None) :
             dtw.display_main_option(parms)
             if(parms==None) :
                 clear_data_transform_data()
+            clear_help_text(TRANSFORM_HELP_BASE)
       
         elif(option == dtm.EXTERNAL_MAP_OPTION) :
             

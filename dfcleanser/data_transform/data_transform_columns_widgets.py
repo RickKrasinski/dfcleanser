@@ -1005,8 +1005,7 @@ def display_apply_fn_inputs(colname) :
     from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
     display_col_stats(cfg.get_dc_dataframe(),colname,is_numeric_col(cfg.get_dc_dataframe(),colname))
     
-    from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_html
-    from dfcleanser.sw_utilities.sw_utility_genfunc_model import FOR_APPLY_FN
+    from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_html, FOR_APPLY_FN
     gtlistHtml = get_genfunc_html(FOR_APPLY_FN)
 
     applyfn_input_form = InputForm(apply_column_input_id,
