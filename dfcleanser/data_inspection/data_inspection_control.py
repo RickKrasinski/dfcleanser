@@ -56,6 +56,7 @@ def display_data_inspection(id, parms=None) :
     if(id == dim.MAIN_OPTION) :
         current_checkboxes     =   [False, False, False, False, False] 
         clear_data_inspection_data()
+        dfchelp.clear_help_text(dfchelp.INSPECT_HELP_BASE)
         
     # refresh the current insoection data     
     elif (id == dim.REFRESH_OPTION) : 
