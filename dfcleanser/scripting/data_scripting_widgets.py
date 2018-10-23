@@ -165,6 +165,8 @@ def display_dc_data_scripting(optionId,parms=None) :
                                                                    False))])
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
         clear_data_scripting_data()
+        from dfcleanser.common.help_utils import clear_help_text, SCRIPTING_HELP_BASE
+        clear_help_text(SCRIPTING_HELP_BASE)
 
         return
     
@@ -176,6 +178,8 @@ def display_dc_data_scripting(optionId,parms=None) :
     if(parms == None ) :
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
         clear_data_scripting_data()
+        from dfcleanser.common.help_utils import clear_help_text, SCRIPTING_HELP_BASE
+        clear_help_text(SCRIPTING_HELP_BASE)
         
     else :
 
