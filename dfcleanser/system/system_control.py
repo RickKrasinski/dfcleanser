@@ -14,6 +14,7 @@ this = sys.modules[__name__]
 import os
 
 import dfcleanser.common.cfg as cfg
+import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.system.system_widgets as sysw
 import dfcleanser.system.system_model as sysm
 
@@ -66,6 +67,7 @@ def display_system_environment(funcId,parms=None) :
         
         if(funcId == sysm.DISPLAY_MAIN) :
             display_main_tb()
+            dfchelp.clear_help_text(dfchelp.SYS_ENVIRONMENT_HELP_BASE)
     
         if( not (funcId == sysm.PROCESS_EULA ) ) :
             if( not isEULA_read()) :
@@ -78,6 +80,7 @@ def display_system_environment(funcId,parms=None) :
         
         if(funcId == sysm.RESET_CHAPTERS) :
             sysw.display_system_main_taskbar()
+            dfchelp.clear_help_text(dfchelp.SYS_ENVIRONMENT_HELP_BASE)
 
             initialize_notebook()
         
@@ -134,6 +137,7 @@ def display_system_environment(funcId,parms=None) :
         
         elif(funcId == sysm.CLEAR_DATA) :
             sysw.display_system_main_taskbar()
+            dfchelp.clear_help_text(dfchelp.SYS_ENVIRONMENT_HELP_BASE)
             clear_data()
             display_status("Data Cleanser Data Cleared Successfully")
             
