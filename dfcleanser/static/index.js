@@ -3,7 +3,7 @@ define([
     'jquery',
     'base/js/utils',
     'base/js/dialog',
-     './js_utils',
+    './js_utils',
     './data_cleansing',
     './data_export',
     './data_import',
