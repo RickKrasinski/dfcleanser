@@ -22,7 +22,7 @@ define([
         Jupyter.toolbar.add_buttons_group([{
             label: 'dfcleanser',
             icon: 'fa-database',
-            callback: dfcleanser.system.toggle_dfcleanser
+            callback: dfcleanser.system_control.toggle_dfcleanser
         }])
     }
 
