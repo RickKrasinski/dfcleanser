@@ -14,6 +14,10 @@ define([
     './system'
 ], function(Jupyter, $, utils, dialog) {
 
+    function toggle_dfcleanser() {
+        window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "toggle_dfcleanser"));
+    }
+
     function load_button() {
         if (!Jupyter.toolbar) {
             $([Jupyter.events]).on("app_initialized.NotebookApp", place_button);
@@ -22,7 +26,7 @@ define([
         Jupyter.toolbar.add_buttons_group([{
             label: 'dfcleanser',
             icon: 'fa-database',
-            callback: dfcleanser.system_control.toggle_dfcleanser
+            callback: toggle_dfcleanser
         }])
     }
 
