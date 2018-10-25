@@ -385,7 +385,7 @@ class DCDictListLog :
                 
         except Exception as e:
             opstat = opStatus()
-            opstat.store_exception("Unable to common file " + self.get_Log_file_name(id),e)
+            opstat.store_exception("Unable to save file " + self.get_Log_file_name(id),e)
             display_exception(opstat)
 
 
