@@ -536,8 +536,6 @@ def display_dc_export_forms(id, detid=0, notes=False) :
     
         display_inspection_data() 
         
-        dfchelp.clear_help_text(dfchelp.EXPORT_HELP_BASE)
-
     # add the pandas import task bar or pandas details form 
     elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 
            (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
