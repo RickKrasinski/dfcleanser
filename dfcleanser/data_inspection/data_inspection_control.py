@@ -15,8 +15,6 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.data_inspection.data_inspection_model as dim
 import dfcleanser.data_inspection.data_inspection_widgets as diw
 
-import dfcleanser.common.help_utils as dfchelp
-
 from dfcleanser.common.table_widgets import drop_owner_tables, dcTable
 
 from dfcleanser.common.html_widgets import displayHeading, display_composite_form
@@ -56,7 +54,6 @@ def display_data_inspection(id, parms=None) :
     if(id == dim.MAIN_OPTION) :
         current_checkboxes     =   [False, False, False, False, False] 
         clear_data_inspection_data()
-        dfchelp.clear_help_text(dfchelp.INSPECT_HELP_BASE)
         
     # refresh the current insoection data     
     elif (id == dim.REFRESH_OPTION) : 
