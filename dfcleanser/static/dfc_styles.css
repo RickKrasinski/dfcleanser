@@ -891,6 +891,14 @@ div.DCHelp_h4 {
     color: #377DA5;
 }
 
+div.DCHelp_h5 {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    color: #377DA5;
+}
+
 div.DCChaptersHelpText {
     font-size: 12px;
     font-weight: normal;
