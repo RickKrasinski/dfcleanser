@@ -14,7 +14,6 @@ this = sys.modules[__name__]
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
 import dfcleanser.common.cfg as cfg 
-import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
@@ -44,8 +43,6 @@ def display_data_cleansing(option,parms=None) :
     
     if(not cfg.check_if_dc_init()) :
         dcw.display_no_data_heading()
-        dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
-        
         return
     
     # setup the button bar form
@@ -59,7 +56,6 @@ def display_data_cleansing(option,parms=None) :
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             clear_data_cleansing_data()
-            dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
             
         elif(option == dcm.CHANGE_COLUMN_OPTION) :
 
@@ -353,7 +349,6 @@ def display_data_cleansing(option,parms=None) :
         
         from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         display_inspection_data()
-        dfchelp.clear_help_text(dfchelp.CLEANSE_HELP_BASE)
 
 """
 #--------------------------------------------------------------------------
