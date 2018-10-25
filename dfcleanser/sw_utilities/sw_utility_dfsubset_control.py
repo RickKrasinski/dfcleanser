@@ -13,7 +13,6 @@ import sys
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
-import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as dfsw
 
 from dfcleanser.common.table_widgets import drop_owner_tables
@@ -56,7 +55,6 @@ def display_dfsubset_utility(optionId,parms=None) :
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             
-            dfchelp.clear_help_text(dfchelp.DFSUBSET_HELP_BASE)
             clear_sw_utility_dfsubsetdata()
     
         if(optionId == DISPLAY_GET_SUBSET) :
@@ -86,7 +84,6 @@ def display_dfsubset_utility(optionId,parms=None) :
         from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         display_inspection_data()
         
-        dfchelp.clear_help_text(dfchelp.DFSUBSET_HELP_BASE)
 
 
 """            
