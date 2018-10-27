@@ -1,0 +1,1 @@
+{"ScriptLog": "\n    # step 1\n    # Import CSV File \n    from dfcleanser.data_import.data_import_controller import import_pandas_csv\n    import_pandas_csv([\"datasets/kidney_disease.csv\", \"\", \"\", \"\", \"\"],importPandasCSV,[\"filepath_or_buffer\", \"header\", \"names\", \"index_col\", \"Additional Parm(s)\", \"Import CSV File\", \"Clear\", \"Return\", \"Help\"],False)"}
