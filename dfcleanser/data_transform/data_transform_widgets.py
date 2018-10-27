@@ -26,6 +26,8 @@ from dfcleanser.common.common_utils import (get_datatype_str, display_grid,
                                             is_datetime_column, is_date_column, is_time_column, 
                                             get_datatype_id, is_numeric_col)
 
+from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+
 """
 * -----------------------------------------------------
 *   configuration variable keys
@@ -371,15 +373,10 @@ def display_no_dataframe() :
                                                                data_transform_tb_jsList,
                                                                False))])
     
-    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-    display_inspection_data()
-
-
 def display_transform_columns_taskbar() :
     
     from dfcleanser.data_transform.data_transform_columns_widgets import display_data_transform_columns_taskbar
     display_data_transform_columns_taskbar()
-    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
     display_inspection_data()
 
 def display_single_column_taskbar() :
@@ -685,9 +682,6 @@ def display_main_option(parms,clear=False) :
 
         display_composite_form(data_transform_forms)
 
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data() 
-                
     else : 
         
         funcid = parms[0][0]
@@ -696,16 +690,12 @@ def display_main_option(parms,clear=False) :
             
             from dfcleanser.data_transform.data_transform_dataframe_widgets import display_dataframe_transform_taskbar
             display_dataframe_transform_taskbar()
-
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
                 
         elif(funcid == dtm.DISPLAY_COLUMNS_TRANSFORM) :
             
             from dfcleanser.data_transform.data_transform_columns_widgets import display_base_data_transform_columns_taskbar
             display_base_data_transform_columns_taskbar()
-
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
             
         elif(funcid == dtm.DISPLAY_DATETIME_TRANSFORM) :
@@ -742,9 +732,6 @@ def display_main_option(parms,clear=False) :
                                                                           data_transform_tb_jsList,
                                                                           False))])
 
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
-                
     if(clear) :
         from dfcleanser.data_transform.data_transform_process import clear_data_transform_cfg_values
         clear_data_transform_cfg_values()

@@ -46,8 +46,11 @@ def display_data_transform(option,parms=None) :
     clear_output()
     
     if(not (cfg.is_dc_dataframe_loaded()) ) :
+        dtw.display_no_dataframe()
+        if(not(parms==None)) :
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            display_inspection_data()
         
-        dtw.display_no_dataframe()        
         clear_data_transform_data()
 
     else :
