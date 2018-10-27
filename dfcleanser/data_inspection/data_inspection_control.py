@@ -121,9 +121,6 @@ def display_data_inspection(id, parms=None) :
             if(not(opstat.get_status())) :
                 display_exception(opstat)   
                 
-    if(opstat.get_status()) :
-        diw.display_inspection_data()
-
     if( (id == dim.REFRESH_OPTION)   or (id == dim.DISPLAY_ROW_OPTION) or 
         (id == dim.DROP_ROWS_OPTION) or (id == dim.DROP_COLS_OPTION) ) :
 
@@ -254,7 +251,8 @@ def display_data_inspection(id, parms=None) :
                 numcats, numcands = diw.display_df_categories(cfg.get_dc_dataframe(),cattable,catcandidatetable)
                 
                 clock.stop()
-
+        else :
+            diw.display_inspection_data()
 
 """            
 #------------------------------------------------------------------
