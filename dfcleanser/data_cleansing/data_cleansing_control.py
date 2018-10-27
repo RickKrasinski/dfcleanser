@@ -53,8 +53,6 @@ def display_data_cleansing(option,parms=None) :
         cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
         if(option == dcm.MAIN_OPTION) :
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
             clear_data_cleansing_data()
             
         elif(option == dcm.CHANGE_COLUMN_OPTION) :
@@ -184,6 +182,7 @@ def display_data_cleansing(option,parms=None) :
             else :
                 display_exception(opstat)                
             
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
 
         elif(option == dcm.DROP_ROWS_OPTION ) : 
@@ -347,8 +346,9 @@ def display_data_cleansing(option,parms=None) :
                 
     else :
         
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
+        if(not(option == dcm.MAIN_OPTION)) :
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            display_inspection_data()
 
 """
 #--------------------------------------------------------------------------
