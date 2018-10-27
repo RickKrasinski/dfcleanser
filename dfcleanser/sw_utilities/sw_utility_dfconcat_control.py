@@ -34,30 +34,40 @@ def display_dfconcat_utility(optionId,parms=None) :
 
     from IPython.display import clear_output
     clear_output()
+
+    if(cfg.is_dc_dataframe_loaded()) :  
+        
+        if(optionId == dfcm.DISPLAY_MAIN) :
+        
+            dfcw.get_concat_main_taskbar()
+            #from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            #display_inspection_data()
+            
+            clear_sw_utility_dfconcatdata()
     
-    if(optionId == dfcm.DISPLAY_MAIN) :
+        elif(optionId == dfcm.DISPLAY_SIMPLE_CONCAT) :
+            parmslist = dfcw.get_simple_concat_input_parms(parms)
+            cfg.set_config_value(dfcw.df_concat_input_id+"Parms",parmslist)
+            dfcw.display_simple_concat() 
+        
+        elif(optionId ==  dfcm.DISPLAY_FULL_CONCAT) :
+            parmslist = dfcw.get_full_concat_input_parms(parms)
+            cfg.set_config_value(dfcw.df_fconcat_input_id+"Parms",parmslist)
+            dfcw.display_full_concat()
+            
+        elif(optionId ==  dfcm.PROCESS_SIMPLE_CONCAT) :
+            process_simple_concat(parms)
+        
+        elif(optionId ==  dfcm.PROCESS_FULL_CONCAT) :
+            print("dfcw.PROCESS_FULL_CONCAT")
+            
+    else :
         
         dfcw.get_concat_main_taskbar()
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
-            
-        clear_sw_utility_dfconcatdata()
-    
-    elif(optionId == dfcm.DISPLAY_SIMPLE_CONCAT) :
-        parmslist = dfcw.get_simple_concat_input_parms(parms)
-        cfg.set_config_value(dfcw.df_concat_input_id+"Parms",parmslist)
-        dfcw.display_simple_concat() 
-        
-    elif(optionId ==  dfcm.DISPLAY_FULL_CONCAT) :
-        parmslist = dfcw.get_full_concat_input_parms(parms)
-        cfg.set_config_value(dfcw.df_fconcat_input_id+"Parms",parmslist)
-        dfcw.display_full_concat()
-            
-    elif(optionId ==  dfcm.PROCESS_SIMPLE_CONCAT) :
-        process_simple_concat(parms)
-        
-    elif(optionId ==  dfcm.PROCESS_FULL_CONCAT) :
-        print("dfcw.PROCESS_FULL_CONCAT")
+        if(not(optionId == dfcm.DISPLAY_MAIN)) :
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            display_inspection_data()
+
 
 def process_simple_concat(parms,display=True) :
 

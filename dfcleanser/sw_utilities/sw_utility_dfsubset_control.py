@@ -52,8 +52,8 @@ def display_dfsubset_utility(optionId,parms=None) :
         if(optionId == DISPLAY_MAIN) :
         
             dfsw.get_dfsubset_main_taskbar()
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
+            #from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            #display_inspection_data()
             
             clear_sw_utility_dfsubsetdata()
     
@@ -80,9 +80,9 @@ def display_dfsubset_utility(optionId,parms=None) :
         
     else :
         dfsw.get_dfsubset_main_taskbar()
-        
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
+        if(not(optionId == DISPLAY_MAIN)) :
+            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+            display_inspection_data()
         
 
 
