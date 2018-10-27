@@ -534,8 +534,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                                                                    export_task_bar_jsList,
                                                                    export_task_bar_centered))])
     
-        display_inspection_data() 
-        
+
     # add the pandas import task bar or pandas details form 
     elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 
            (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
@@ -546,7 +545,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                                                                        export_task_bar_keyTitleList,
                                                                        export_task_bar_jsList,
                                                                        export_task_bar_centered))])
-    
+            
             display_inspection_data() 
 
         else :
@@ -614,7 +613,6 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                                                                        export_task_bar_keyTitleList,
                                                                        export_task_bar_jsList,
                                                                        export_task_bar_centered))])
-    
             display_inspection_data() 
             
         else : 
