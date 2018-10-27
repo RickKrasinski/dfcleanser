@@ -619,9 +619,6 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                                                                    import_task_bar_keyTitleList,
                                                                    import_task_bar_jsList,
                                                                    import_task_bar_centered))])
-    
-        display_inspection_data() 
-
         if(cfg.is_dc_dataframe_loaded()) :
             display_notes([cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) + " imported as dataframe source"])
         else :
