@@ -12,3 +12,4 @@ include README.md
 include LICENSE
 include static/*
 include files/*
+include files/notebooks/*
