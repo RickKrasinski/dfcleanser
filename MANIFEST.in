@@ -12,3 +12,4 @@ include README.md
 include LICENSE
 include ./dfcleanser/static/*
 include ./dfcleanser/files/*
+include ./dfcleanser/files/notebooks/*
