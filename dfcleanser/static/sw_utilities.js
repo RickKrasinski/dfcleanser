@@ -363,10 +363,10 @@ function get_subset_callback(fid) {
     */
     switch (fid) {
         case 0:
-            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB,"display_dfsubset_utility",0));
+        case 1:
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB,"display_dfsubset_utility",fid));
             window.scroll_to('DCDFSubsetUtility');
             break;
-        case 1:
         case 2:
         case 3:
         case 4:
