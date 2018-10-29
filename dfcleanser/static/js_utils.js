@@ -792,7 +792,7 @@ window.is_dfcleanser_loaded = function(){
     // search through the cells 
     for (var i = 0; i < (IPython.notebook.ncells()); i++) {
 
-        cell = cells[i];
+        var cell = cells[i];
         var cmdata = cell.metadata;
         var dfc_mdata = cmdata["dfcleanser_metadata"];
 
