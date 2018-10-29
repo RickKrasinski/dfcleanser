@@ -194,7 +194,58 @@ def remove_existing_dfcleanser_css(custom_css_path) :
         opstat.store_exception("remove dfcleanser css " + custom_css_path,e)
         display_exception(opstat)
 
+"""
+# -----------------------------------------------------------------------
+# install the dfcleanser css from Jupyter custom.css
+# -----------------------------------------------------------------------
+"""
+def install_dfc_custom_css() :
+    
+    opstat  =   opStatus()  
+    
+    # get the custpm.js and custom.css location
+    from jupyter_core.paths import jupyter_config_dir
+    jupyter_dir = jupyter_config_dir()
+    
+    """  
+    # ----------------------------------------------------------------------------          
+    # now find the custom.css file and append the dfc css files
+    # ----------------------------------------------------------------------------          
+    """ 
+    
+    custom_css_path     =   os.path.join(jupyter_dir, 'custom', 'custom.css')
+    dfcleanser_css_path =   os.path.join(cfg.get_dfcleanser_location(),'static')
 
+    dfcleanser_css   =   ""
+    
+    try : 
+
+        # remove existing dfcleanser js scripts
+        remove_existing_dfcleanser_css(custom_css_path)
+        
+        dfcleanser_css   =   (dfcleanser_css + css_require_text_preamble)
+        
+        for i in range(len(dfc_css_files)) :
+            
+            dfcleanser_css_file_name  =   os.path.join(dfcleanser_css_path,dfc_css_files[i])
+            
+            css_file_code = read_text_file(dfcleanser_css_file_name,opstat)
+            if(opstat.get_status()) :
+                dfcleanser_css   =   (dfcleanser_css + css_file_code)
+        
+        dfcleanser_css   =   (dfcleanser_css + css_require_text_postamble)
+
+        if(len(dfcleanser_css) > 0) :
+            with open(custom_css_path,'a') as jupyter_custom_css_file :
+                jupyter_custom_css_file.write(dfcleanser_css)
+            
+    except Exception as e:
+        opstat.store_exception("[writng custom css file]["+ custom_css_path +"]",e)
+        display_exception(opstat)
+    
+    
+    
+    
 
 """
 # -------------------------------------------------------------
@@ -264,36 +315,8 @@ def install_dfc_custom() :
     # ----------------------------------------------------------------------------          
     """ 
     
-    custom_css_path     =   os.path.join(jupyter_dir, 'custom', 'custom.css')
-    dfcleanser_css_path =   os.path.join(cfg.get_dfcleanser_location(),'static')
-
-    dfcleanser_css   =   ""
-    
-    try : 
-
-        # remove existing dfcleanser js scripts
-        remove_existing_dfcleanser_css(custom_css_path)
+    install_dfc_custom_css()
         
-        dfcleanser_css   =   (dfcleanser_css + css_require_text_preamble)
-        
-        for i in range(len(dfc_css_files)) :
-            
-            dfcleanser_css_file_name  =   os.path.join(dfcleanser_css_path,dfc_css_files[i])
-            
-            css_file_code = read_text_file(dfcleanser_css_file_name,opstat)
-            if(opstat.get_status()) :
-                dfcleanser_css   =   (dfcleanser_css + css_file_code)
-        
-        dfcleanser_css   =   (dfcleanser_css + css_require_text_postamble)
-
-        if(len(dfcleanser_css) > 0) :
-            with open(custom_css_path,'a') as jupyter_custom_css_file :
-                jupyter_custom_css_file.write(dfcleanser_css)
-            
-    except Exception as e:
-        opstat.store_exception("[writng custom css file]["+ custom_css_path +"]",e)
-        display_exception(opstat)
-    
     if(opstat.get_status()) :
         print("* updated Jupyter common.css with dfcleanser styles")
         print("* dfcleanser installed to Jupyter - restart Jupyter Server to use dfcleanser ")

@@ -16,11 +16,13 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.system.system_model as sysm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, maketextarea, display_composite_form, ButtonGroupForm, 
-                                            displayHeading, get_input_form, get_checkbox_form, CheckboxGroupForm, InputForm)
+                                            displayHeading, get_input_form, get_checkbox_form, CheckboxGroupForm, InputForm,
+                                            get_html_spaces)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML)
+from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML, opStatus, 
+                                            display_exception, display_grid)
 
 
 """
@@ -266,9 +268,75 @@ def display_system_chapters_taskbar() :
                                                                system_chapters_tb_jsList,
                                                                system_chapters_tb_centered))])
     print("\n")
+
+
+"""
+#------------------------------------------------------------------
+#   get date time formats 
+#------------------------------------------------------------------
+"""
+def get_dfcleanser_notebooks() :
     
+    import os.path
+    
+    dfcnbslistHeader    =   [""]
+    dfcnbslistRows      =   []
+    dfcnbslistWidths    =   [100]
+    dfcnbslistAligns    =   ["left"]
+    dfcnbslistHrefs     =   []
+
+    from dfcleanser.common.common_utils import get_common_dfcleanser_loc
+    dfc_path        =   get_common_dfcleanser_loc()
+    dfc_nbs_path    =   os.path.join(dfc_path, 'files', 'notebooks')
+    os.chdir(dfc_nbs_path)
+    dfc_nb_files    =   os.listdir(dfc_nbs_path)
+    dfc_nbs         =   []
+    print("dfc_nbs_path",dfc_nbs_path) 
+    print("dfc_nb_files",dfc_nb_files)    
+    for i in range(len(dfc_nb_files)) :
+        if(os.path.isfile(dfc_nb_files[i]))  :
+            found =  dfc_nb_files[i].find("_config.json") 
+            if(found > -1) :
+                dfc_nbs.append(dfc_nb_files[i][:found])
+                
+    if(len(dfc_nbs) > 0) :
+        for i in range(len(dfc_nbs)) :
+            dfcnbslistRows.append([dfc_nbs[i]])
+            dfcnbslistHrefs.append(["select_dfc_nb"])
+        
+    print("dfc_nbs",dfc_nbs)
+        
+    dfc_notebooks_table = dcTable("dfcleanser Notebooks","dfcNotebooksTable",
+                                  cfg.System_ID,
+                                  dfcnbslistHeader,dfcnbslistRows,
+                                  dfcnbslistWidths,dfcnbslistAligns)
+    
+    dfc_notebooks_table.set_refList(dfcnbslistHrefs)
+    
+    dfc_notebooks_table.set_rowspertable(10)
+    dfc_notebooks_table.set_small(True)
+    dfc_notebooks_table.set_smallwidth(98)
+    dfc_notebooks_table.set_smallmargin(10)
+
+    dfc_notebooks_table.set_border(True)
+    dfc_notebooks_table.set_checkLength(False)
+    
+    dfc_notebooks_table.set_html_only(True) 
+    
+    listHtml = dfc_notebooks_table.get_html()
+    
+    return(listHtml)
+
+"""
+#------------------------------------------------------------------
+#   display dfcleanser files inputs 
+#------------------------------------------------------------------
+"""
 def display_dfc_files_form() :
     
+    opstat  =   opStatus()
+    
+    # build the input form
     dfc_files_input_form =  InputForm(dfc_files_input_id,
                                       dfc_files_input_idList,
                                       dfc_files_input_labelList,
@@ -279,10 +347,33 @@ def display_dfc_files_form() :
     
     nbname = cfg.get_notebook_name()
     cfg.set_config_value(dfc_files_input_id + "Parms",[nbname,""])
-
-    display_composite_form([get_input_form(dfc_files_input_form,
-                            dfc_files_input_title)])
+        
+    dfc_files_input_form.set_gridwidth(640)
     
+    try :    
+    
+        dfc_files_input_html = ""
+        dfc_files_input_html = dfc_files_input_form.get_html()
+        
+        print("dfc_files_input_html\n",dfc_files_input_html)
+        
+        dfc_files_heading_html = "<h4>" + get_html_spaces(2) + "dfcleanser Notebook Files Parms" + "</h4>"
+
+        list_html   =   get_dfcleanser_notebooks()
+    
+        # display the grid
+        display_grid("import_sql_table_wrapper",
+                     dfc_files_heading_html,
+                     list_html,
+                     dfc_files_input_html,
+                     None)
+        
+    except Exception as e:
+        opstat.store_exception("Unable to display dfc files form ",e)
+    
+    if( not (opstat.get_status())) :
+        display_exception(opstat)
+
 
 """ 
 #------------------------------------------------------------------

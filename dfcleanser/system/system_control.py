@@ -40,8 +40,13 @@ def display_main_tb() :
     else :
         sysw.display_system_main_taskbar()
 
-def toggle_dfcleanser() :
-    print("toggle_dfcleanser") 
+def load_dfCleanser() :
+    from dfcleanser.system.load import load_dfcleanser
+    load_dfcleanser()
+
+def install_common_css() :
+    from dfcleanser.system.install import install_dfc_custom_css
+    install_dfc_custom_css()
     
 """            
 #------------------------------------------------------------------
