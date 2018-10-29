@@ -796,7 +796,7 @@ window.is_dfcleanser_loaded = function(){
         var cmdata = cell.metadata;
         var dfc_mdata = cmdata["dfcleanser_metadata"];
 
-        if (dfc_mdata != undefined) {return(true);)
+        if (dfc_mdata != undefined) {return(true);}
     }
 
     return(false);
