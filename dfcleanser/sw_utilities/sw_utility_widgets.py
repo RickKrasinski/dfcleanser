@@ -182,7 +182,7 @@ def display_list_dict(id) :
                                           list_dict_form[6],
                                           shortForm=False) 
       
-    list_dict_input_form.set_gridwidth(720)
+    list_dict_input_form.set_gridwidth(660)
 
     list_dictcustom_html = ""
     list_dictcustom_html = list_dict_input_form.get_html()
