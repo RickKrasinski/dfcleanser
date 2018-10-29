@@ -26,7 +26,7 @@ define([
     }
 
     function reset_dfcleanser() {
-        window.initialize_dc());
+        window.initialize_dc();
         console.log("reset_dfcleanser");
     }
 
