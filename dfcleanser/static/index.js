@@ -14,6 +14,8 @@ define([
     './system'
 ], function(Jupyter, $, utils, dialog) {
 
+    var log_prefix = '[' + "dfcleanser" + ']';
+
     function toggle_dfcleanser() {
         
         if(window.is_dfcleanser_loaded()){
@@ -83,9 +85,6 @@ define([
                 workingcell.set_text(WORKING_CELL + "- please do not remove");
                 window.delete_output_cell(window.WORKING_CELL_ID);
          }
-        
-        // load common.css if needed
-        window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB,"install_common_css"));
         
         // set the notebook name and path
         window.getNotebookLocation();
