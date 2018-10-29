@@ -785,6 +785,23 @@ window.getNotebookPath = function() {
     }
 };
 
+window.is_dfcleanser_loaded = function(){
+    
+    var cells = IPython.notebook.get_cells();
+
+    // search through the cells 
+    for (var i = 0; i < (IPython.notebook.ncells()); i++) {
+
+        cell = cells[i];
+        var cmdata = cell.metadata;
+        var dfc_mdata = cmdata["dfcleanser_metadata"];
+
+        if (dfc_mdata != undefined) {return(true);)
+    }
+
+    return(false);
+};
+
 //
 // set which dfc cells just got loaded
 // 

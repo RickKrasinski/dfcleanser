@@ -617,7 +617,7 @@ th.a:link {
     font-size: 12px;
     font-weight: normal;
     font-style: normal;
-    font-family: Fira Sans;
+    font-family: Arial;
     margin-left: 30px;
 }
 
@@ -719,8 +719,8 @@ th.a:link {
 .list_table_wrapper {
     margin-left: 10px;
     display: grid;
-    grid-gap: 2px 10px;
-    grid-template-columns: 200px 760px 10px;
+    grid-gap: 2px;
+    grid-template-columns: 260px 700px 5px;
     grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
     background-color: #fff;
     color: #444;
@@ -749,8 +749,8 @@ th.a:link {
 .dict_table_wrapper {
     margin-left: 10px;
     display: grid;
-    grid-gap: 2px 10px;
-    grid-template-columns: 200px 760px 10px;
+    grid-gap: 2px;
+    grid-template-columns: 260px 700px 5px;
     grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
     background-color: #fff;
     overflow-y: hidden;
@@ -824,6 +824,21 @@ th.a:link {
     color: black;
     list-style-type: none;
     text-align: left;
+}
+
+
+/* 
+-------------- dfcleanser Files Grid --------------                 
+*/
+
+.dfcleanser_files_wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 300px 540px 5px;
+    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
+    background-color: #fff;
+    color: #444;
 }
 
 

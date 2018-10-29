@@ -63,3 +63,12 @@ function process_notebook_files_callback(fid) {
     window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "10, " + JSON.stringify(inputs)));
 }
 
+//----------------------------------------------------------------
+// dynamic html functions
+//----------------------------------------------------------------
+function select_dfc_nb(dfcnbname){
+    var currentcolname = $("#nbname");
+    currentcolname.val(dfcnbname);
+
+}
+
