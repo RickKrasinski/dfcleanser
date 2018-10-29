@@ -50,11 +50,11 @@ define([
         
         // setup things to run on loading config/notebook
         Jupyter.notebook.config.loaded
-            .then(function update_options_from_config () {
-                $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
-            }, function (reason) {
-                console.warn(log_prefix, 'error loading config:', reason);
-            })
+            //.then(function update_options_from_config () {
+            //    $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+            //}, function (reason) {
+            //    console.warn(log_prefix, 'error loading config:', reason);
+            //})
             .then(function () {
                 if (Jupyter.notebook._fully_loaded) {
                     callback_notebook_loaded();
