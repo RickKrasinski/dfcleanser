@@ -1479,8 +1479,7 @@ def get_column_names(dbid,tablename,opstat) :
     
 """
 #------------------------------------------------------------------
-#   display date time formats 
-#
+#   get date time formats 
 #------------------------------------------------------------------
 """
 def get_datetime_formats() :
