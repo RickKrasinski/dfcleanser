@@ -1,9 +1,9 @@
 package:
   name: dfcleanser
-  version: "0.0.16"
+  version: "0.0.17"
 
 source:
-  git_rev: 0.0.16
+  git_rev: 0.0.17
   git_url: https://github.com/RickKrasinski/dfcleanser.git
 
 requirements:
