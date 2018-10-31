@@ -464,7 +464,7 @@ window.delete_dfcleanser_cells = function(){
 // unload dfcleanser cells
 // ------------------------------------------------------
 window.unload_dfcleanser = function(){
-    var     max_trys    =   2;
+    var     max_trys    =   3;
     var     ctry        =   0;
     
     while(ctry < max_trys){
@@ -723,20 +723,16 @@ window.onChangefileselect = function(inputid, fileid) {
         console.log("  [fileid ] [", fileid, "] ", fileid.value);
     }
 
-    if (inputid.id == "notebookimageParm")
-        inputid.value = fileid.value.replace("C:\\fakepath\\", "images/");
-    else {
-        if (inputid.id == "csvFileName")
-            inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
-        else
+    if (inputid.id == "csvFileName")
+        inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
+    else
         if ((inputid.id == "startlistfile") || (inputid.id == "listfilename"))
             inputid.value = fileid.value.replace("C:\\fakepath\\", "lists/");
         else
-        if ((inputid.id == "startdictfile") || (inputid.id == "dictfilename"))
-            inputid.value = fileid.value.replace("C:\\fakepath\\", "dicts/");
-        else
-            inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
-    }
+            if ((inputid.id == "startdictfile") || (inputid.id == "dictfilename"))
+                inputid.value = fileid.value.replace("C:\\fakepath\\", "dicts/");
+            else
+                inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
 };
 
 //
