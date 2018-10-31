@@ -65,7 +65,7 @@ define([
             window.unload_dfcleanser();
         }
         else{
-            window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment","2"));
+            window.load_dfcleanser_from_toolbar();
         }
         console.log(log_prefix + "toggle_dfcleanser");
     }

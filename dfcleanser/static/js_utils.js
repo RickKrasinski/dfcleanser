@@ -10,7 +10,7 @@
 // 
 //
 window.debug_flag       = true;
-window.debug_dev_flag   = true;
+window.debug_dev_flag   = false;
 
 window.NEW_LINE = "\n";
 
@@ -364,7 +364,8 @@ const   CODE        =   1
 //      dfcid          -   cell metadata id 
 // -------------------------------------------------------
 window.add_dfc_cell = function(ctype, ctext, dfcid, afterid = -1) {
-    console.log("\nadd_dfc_cell", ctype, ctext, dfcid, afterid);
+    if(window.debug_dev_flag) 
+        console.log("\nadd_dfc_cell", ctype, ctext, dfcid, afterid);
        
     // if first cell to load find correct 
     // cell to start loading after
