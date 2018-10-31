@@ -38,7 +38,7 @@ INSPECT_CODE_CELL           =   'from dfcleanser.data_inspection.data_inspection
 INSPECT_HELP_CELL           =   '<div align="left" id="InspectionHelp"/><p class="DCTitleChapterstext"></p></div>'
 INSPECT_TITLE_CELL          =   '<div align="left" id="DCDataInspection"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataInspection.png" width="80" align="left"/></div><div><image width="10"></div><div><h2>&nbsp;&nbsp;&nbsp;Data Inspection : </h2><a name="DataInspection"></a></div></div>'
 
-PANDAS_TITLE_CELL           =   '<div><table align="center"><tr><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png" style="width: 120px; height:120px;"></td><td style="margin-left: 200px;"><p style="text-align: left;" id="mainTitle"><font size="6">Pandas Dataframe Cleanser</font></p><p id="titleComment"><font size="3">A utility to prepare your pandas dataframe for data analytics.</font></p></td><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png" style="width: 120px;height: 120px;"></td></tr></table></div>'
+PANDAS_TITLE_CELL           =   '<div><table align="center"><tr><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png" style="width: 120px; height: 120px;"></td><td style="margin-left: 200px;"><p style="text-align: left;" id="mainTitle"><font size="6">Pandas Dataframe Cleanser</font></p><p id="titleComment"><font size="3">A utility to prepare your pandas dataframe for data analytics.</font></p></td><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png" style="width: 120px; height: 120px;"></td></tr></table></div>'
 
 SCRIPT_SECTION_TITLE_CELL   =   '<div align="left" id="ScriptingMode"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ScriptMode.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2 class="DCTitleChaptersh2">&nbsp;&nbsp;&nbsp;Scripting Mode</h2><a name="Script"></a></div></div></div><br>'
 
@@ -75,7 +75,7 @@ SYSTEM_TITLE_CELL           =   '<div align="left" id="DCSystem"/><div><img src=
 
 TRANSFORM_CODE_CELL         =   'from dfcleanser.data_transform.data_transform_control import display_data_transform\\ndisplay_data_transform(0)'
 TRANSFORM_HELP_CELL         =   '<div align="left" id="TransformHelp"/><p class="DCTitleChapterstext"></p></div>'
-TRANSFORM_TITLE_CELL        =   '<div align="left" id="DCDataTransform"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataTransform.jpg" width="80" align="left" style="border: 0px;margin-right: 6px;margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Data Transform</h2><a name="DataTransform"></a></div></div>'
+TRANSFORM_TITLE_CELL        =   '<div align="left" id="DCDataTransform"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataTransform.jpg" width="80" align="left" style="border: 0px; margin-right: 6px; margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Data Transform</h2><a name="DataTransform"></a></div></div>'
 
 WORKING_CODE_CELL           =   '# working cell- please do not remove'
 WORKING_TITLE_CELL          =   '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>'
