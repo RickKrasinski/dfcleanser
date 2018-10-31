@@ -1,9 +1,8 @@
 define([
-    'jquery',
-    'base/js/dialog',
-    'base/js/events',
     'base/js/namespace',
+    'jquery',
     'base/js/utils',
+    'base/js/dialog',
     './js_utils',
     './data_cleansing',
     './data_export',
@@ -13,7 +12,7 @@ define([
     './data_transform',
     './sw_utilities',
     './system'
-], function($, Jupyter, utils, dialog, events, celltoolbar, codecell) {
+], function(Jupyter, $, utils, dialog) {
 
     var log_prefix = '[' + "dfcleanser" + ']';
 
@@ -34,11 +33,10 @@ define([
     }
 
     function load_buttons() {
-        //if (!Jupyter.toolbar) {
-        //    $([Jupyter.events]).on("app_initialized.NotebookApp", place_button);
-        //    return;
-        //}
-        
+        if (!Jupyter.toolbar) {
+            $([Jupyter.events]).on("app_initialized.NotebookApp", place_button);
+            return;
+        }
         Jupyter.toolbar.add_buttons_group([{
             label: 'toggle',
             icon: 'fa-database',
