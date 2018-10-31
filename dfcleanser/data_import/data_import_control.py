@@ -358,7 +358,7 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
                 colNames = json.load(col_names_file)
                 csvvals[1] = colNames
         except Exception as e: 
-            opstat.store_exception("Unable to open csv column names file" + fparms[2],e)
+            opstat.store_exception("Unable to open csv column names file " + fparms[2],e)
     
     if(opstat.get_status()) :
         
@@ -374,7 +374,7 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
                     csvparms.update({addlparmskeys[i]:csvaddlparms.get(addlparmskeys[i])})
             
         except Exception as e:
-            opstat.store_exception("Unable to get additional parms",e)
+            opstat.store_exception("Unable to get additional parms ",e)
 
     if(opstat.get_status()) :
     
@@ -390,7 +390,7 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Import CSV File ",
-                             "from dfcleanser.data_import.data_import_controller import import_pandas_csv",
+                             "from dfcleanser.data_import.data_import_control import import_pandas_csv",
                              "import_pandas_csv(" + json.dumps(fparms) + "," +
                              str(importId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -473,7 +473,7 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Import FWF File ",
-                             "from dfcleanser.data_import.data_import_controller import import_pandas_fwf",
+                             "from dfcleanser.data_import.data_import_control import import_pandas_fwf",
                              "import_pandas_fwf(" + json.dumps(fparms) + "," +
                              str(importId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -546,7 +546,7 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Import Excel File ",
-                             "from dfcleanser.data_import.data_import_controller import import_pandas_excel",
+                             "from dfcleanser.data_import.data_import_control import import_pandas_excel",
                              "import_pandas_excel(" + json.dumps(fparms) + "," +
                              str(importId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -621,7 +621,7 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Import JSON File ",
-                             "from dfcleanser.data_import.data_import_controller import import_pandas_json",
+                             "from dfcleanser.data_import.data_import_control import import_pandas_json",
                              "import_pandas_json(" + json.dumps(fparms) + "," +
                              str(importId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -696,7 +696,7 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Import HTML File ",
-                             "from dfcleanser.data_import.data_import_controller import import_pandas_html",
+                             "from dfcleanser.data_import.data_import_control import import_pandas_html",
                              "import_pandas_html(" + json.dumps(fparms) + "," +
                              str(importId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -786,7 +786,7 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
             #make scriptable
             import json 
             add_to_script(["# Import SQL Table ",
-                           "from dfcleanser.data_import.data_import_controller import import_pandas_sqltable",
+                           "from dfcleanser.data_import.data_import_control import import_pandas_sqltable",
                            "import_pandas_sqltable(" + json.dumps(sqltableparms) + 
                            "," + json.dumps(dbcondict) + "," + 
                            str(importid) + ",False)",
@@ -879,7 +879,7 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
             #make scriptable
             import json 
             add_to_script(["# Import SQL Query ",
-                           "from dfcleanser.data_import.data_import_controller import import_pandas_sqlquery",
+                           "from dfcleanser.data_import.data_import_control import import_pandas_sqlquery",
                            "import_pandas_sqlquery(" + json.dumps(sqlqueryparms) +"," + json.dumps(dbcondict) + 
                            "," + str(importid) + ",False)",
                            "from dfcleanser.common.cfg import set_dc_dataframe",
