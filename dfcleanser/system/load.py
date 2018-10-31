@@ -42,6 +42,18 @@ def add_dfc_cell(ctype,cellid,celltext=None,afterid=-1) :
     jscript     =   ("add_dfc_cell(" + str(ctype) + ",'" + celltext + "','" + cellid + "','" + str(afterid) + "')")
     run_jscript(jscript,"Error Loading dfc Cell",cellid) 
 
+
+
+def load_dfcleanser_from_toolbar() :
+
+    # select starting cell
+    from dfcleanser.common.common_utils import run_jscript
+    celltext    =  "<br></br>" 
+    jscript     =   ("select_before_cell(" +  "'" + celltext + "'" + ")")
+    run_jscript(jscript,"Error setting dfc Cell","load_dfcleanser_from_toolbar") 
+
+    load_dfcleanser_cells()
+
 """
 # -------------------------------------------------------------
 # Install the dfcleanser nmotebook cells 
@@ -49,6 +61,20 @@ def add_dfc_cell(ctype,cellid,celltext=None,afterid=-1) :
 """            
 def load_dfcleanser() :
 
+    from dfcleanser.common.common_utils import run_jscript
+    celltext    =  "load_dfcleanser" 
+    jscript     =   ("select_cell_from_text(" +  "'" + celltext + "'" + ")")
+    run_jscript(jscript,"Error setting dfc Cell","setup_dfcleanser") 
+    
+    load_dfcleanser_cells() 
+    
+    # insert working cell 
+    add_dfc_cell(cells.MARKDOWN,cells.DC_WORKING_TITLE)
+    add_dfc_cell(cells.CODE,cells.DC_WORKING)
+    add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+    
+def load_dfcleanser_cells() : 
+    
     showutilities   =   True
     
     corecbs     =   cfg.get_config_value(cfg.CORE_CBS_KEY)
@@ -61,11 +87,6 @@ def load_dfcleanser() :
         showutilities     =   False
     if(scriptcbs == None) :
         scriptcbs   =   [0]
-    
-    from dfcleanser.common.common_utils import run_jscript
-    celltext    =  "load_dfcleanser" 
-    jscript     =   ("select_cell_from_text(" +  "'" + celltext + "'" + ")")
-    run_jscript(jscript,"Error setting dfc Cell","setup_dfcleanser") 
     
     # insert main title 
     add_dfc_cell(cells.MARKDOWN,cells.DC_PANDAS_TITLE)
@@ -164,11 +185,6 @@ def load_dfcleanser() :
         add_dfc_cell(cells.MARKDOWN,dfchelp.SCRIPTING_HELP_ID)
         add_dfc_cell(cells.CODE,cells.DC_DATA_SCRIPTING)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-
-    # insert working cell 
-    add_dfc_cell(cells.MARKDOWN,cells.DC_WORKING_TITLE)
-    add_dfc_cell(cells.CODE,cells.DC_WORKING)
-    add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
 
     cfg.set_config_value(cfg.DFC_CURRENTLY_LOADED_KEY,True)
     cfg.get_loaded_cells()  

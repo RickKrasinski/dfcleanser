@@ -39,7 +39,11 @@ def display_main_tb() :
         sysw.display_system_main_abbr_taskbar()
     else :
         sysw.display_system_main_taskbar()
-
+        
+def load_dfcleanser_from_toolbar() :
+    from dfcleanser.system.load import load_dfcleanser_from_toolbar
+    load_dfcleanser_from_toolbar()
+    
 def load_dfCleanser() :
     from dfcleanser.system.load import load_dfcleanser
     load_dfcleanser()
