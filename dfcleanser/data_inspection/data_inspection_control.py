@@ -1,5 +1,5 @@
 """
-# data_inspection_controller 
+# data_inspection_control
 """
 
 # -*- coding: utf-8 -*-
