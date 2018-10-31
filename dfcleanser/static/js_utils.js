@@ -170,11 +170,56 @@ window.get_cell_for_id = function(cellId) {
 };
 
 // -------------------------------------------------------
+// get notebook cell object before the logical cell id
+// ------------------------------------------------------
+//      cellId - logical cell index
+//      return : notebook cell object for logical id
+// -------------------------------------------------------
+window.get_cell_for_before_id = function(cellId) {
+    // get the current cells 
+    var cells       = IPython.notebook.get_cells();
+    var cell        = null;
+    var prev_cell   = null;
+
+    // search through the cells 
+    for (var i = 0; i < (IPython.notebook.ncells()); i++) {
+        cell = cells[i];
+        var cellIndex = IPython.notebook.find_cell_index(cell);
+
+        // check that cell index is valid
+        if (IPython.notebook.is_valid_cell_index(cellIndex)) {
+            // get the cell metadata 
+            var cell_mdata = cell.metadata;
+
+            if (cell_mdata != undefined) {
+                if ("dfcleanser_metadata" in cell_mdata) {
+                    var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
+                    if ("dfc_cellid" in dfc_cell_mdata) {
+                        var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
+                        if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id)
+                            return (prev_cell);
+                        else {
+                            prev_cell = cell;
+                        }
+                    }
+                }
+            }
+        }
+        cell = null;
+    }
+    return (cell);
+};
+// -------------------------------------------------------
 // set the cell pointed to by logical id 
 // as the currently selected ipyhton cell with focus
 // -------------------------------------------------------
 window.select_cell = function(id) {
     var cell_to_select = window.get_cell_for_id(id);
+    select_current_cell(cell_to_select);
+};
+
+window.select_before_cell = function(id) {
+    var cell_to_select = window.get_cell_for_before_id(id);
     select_current_cell(cell_to_select);
 };
 
@@ -460,6 +505,25 @@ window.delete_dfcleanser_cells = function(){
     }
 };
 
+window.WORKING_CODE_CELL           =   '# working cell- please do not remove';
+window.WORKING_TITLE_CELL          =   '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>';
+window.WORKING_BLANK_LINE          =   '<br></br>';
+
+// -------------------------------------------------------
+// load dfcleanser cells from toolbar
+// ------------------------------------------------------
+window.load_dfcleanser_from_toolbar = function(){
+
+    add_dfc_cell(MARKDOWN,window.WORKING_BLANK_LINE,'DCBlankline',-1);
+    add_dfc_cell(MARKDOWN,window.WORKING_TITLE_CELL,'DCWorkingTitle',-1);
+    add_dfc_cell(CODE,window.WORKING_CODE_CELL,'DCWorking',-1);
+    add_dfc_cell(MARKDOWN,window.WORKING_BLANK_LINE,'DCBlankline',-1);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar"));
+       
+}    
+    
+   
 // -------------------------------------------------------
 // unload dfcleanser cells
 // ------------------------------------------------------

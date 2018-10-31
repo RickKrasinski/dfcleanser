@@ -65,13 +65,15 @@ define([
             window.unload_dfcleanser();
         }
         else{
-            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "load_dfCleanser"));
+            window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment","2"));
         }
         console.log(log_prefix + "toggle_dfcleanser");
     }
 
     function reset_dfcleanser() {
-        window.initialize_dc();
+        if(window.is_dfcleanser_loaded()){
+            window.initialize_dc();
+        }
         console.log(log_prefix + "reset_dfcleanser");
     }
 
