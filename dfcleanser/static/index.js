@@ -1,11 +1,9 @@
 define([
     'jquery',
-    'base/js/namespace',
-    'base/js/utils',
     'base/js/dialog',
     'base/js/events',
-    'notebook/js/celltoolbar',
-    'notebook/js/codecell',    
+    'base/js/namespace',
+    'base/js/utils',
     './js_utils',
     './data_cleansing',
     './data_export',
@@ -15,7 +13,7 @@ define([
     './data_transform',
     './sw_utilities',
     './system'
-], function(Jupyter, $, utils, dialog, events, celltoolbar, codecell) {
+], function($, Jupyter, utils, dialog, events, celltoolbar, codecell) {
 
     var log_prefix = '[' + "dfcleanser" + ']';
 
@@ -36,10 +34,11 @@ define([
     }
 
     function load_buttons() {
-        if (!Jupyter.toolbar) {
-            $([Jupyter.events]).on("app_initialized.NotebookApp", place_button);
-            return;
-        }
+        //if (!Jupyter.toolbar) {
+        //    $([Jupyter.events]).on("app_initialized.NotebookApp", place_button);
+        //    return;
+        //}
+        
         Jupyter.toolbar.add_buttons_group([{
             label: 'toggle',
             help: 'Load - Unload dfcleanser',
