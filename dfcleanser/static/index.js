@@ -41,13 +41,11 @@ define([
         
         Jupyter.toolbar.add_buttons_group([{
             label: 'toggle',
-            help: 'Load - Unload dfcleanser',
             icon: 'fa-database',
             callback: toggle_dfcleanser
         }])
         Jupyter.toolbar.add_buttons_group([{
             label: 'reset',
-            help: 'Reset dfcleanser Chapters',
             icon: 'fa-window-restore',
             callback: reset_dfcleanser
         }])
