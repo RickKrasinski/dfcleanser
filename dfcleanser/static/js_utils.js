@@ -193,7 +193,7 @@ window.get_cell_for_before_id = function(cellId) {
         if (IPython.notebook.is_valid_cell_index(cellIndex)) {
             // get the cell metadata 
             var cell_mdata = cell.metadata;
-            console.log("get_cell_for_before_id["i,"]",cell_mdata);
+            console.log("get_cell_for_before_id[",i,"]",cell_mdata);
             if (cell_mdata != undefined) {
                 if ("dfcleanser_metadata" in cell_mdata) {
                     var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
