@@ -176,6 +176,9 @@ window.get_cell_for_id = function(cellId) {
 //      return : notebook cell object for logical id
 // -------------------------------------------------------
 window.get_cell_for_before_id = function(cellId) {
+
+    console.log("get_cell_for_before_id",cellId);
+    
     // get the current cells 
     var cells       = IPython.notebook.get_cells();
     var cell        = null;
@@ -190,16 +193,18 @@ window.get_cell_for_before_id = function(cellId) {
         if (IPython.notebook.is_valid_cell_index(cellIndex)) {
             // get the cell metadata 
             var cell_mdata = cell.metadata;
-
+            console.log("get_cell_for_before_id",cell_mdata);
             if (cell_mdata != undefined) {
                 if ("dfcleanser_metadata" in cell_mdata) {
                     var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
                     if ("dfc_cellid" in dfc_cell_mdata) {
                         var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
                         if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id)
+                            console.log("found prev_cell",prev_cell.metadata);
                             return (prev_cell);
                         else {
                             prev_cell = cell;
+                            console.log("prev_cell",prev_cell.metadata);
                         }
                     }
                 }
@@ -207,8 +212,11 @@ window.get_cell_for_before_id = function(cellId) {
         }
         cell = null;
     }
+    console.log("end - get_cell_for_before_id",cellId);
+
     return (cell);
 };
+
 // -------------------------------------------------------
 // set the cell pointed to by logical id 
 // as the currently selected ipyhton cell with focus
@@ -425,6 +433,8 @@ window.get_dfc_metadata = function(cell) {
 //   chaptertitle - dfc chapter to delete
 // -------------------------------------------------------
 window.delete_dfc_chapter = function(chaptertitle) {
+
+    console.log("delete_dfc_chapter",chaptertitle);
 
     var cell_to_delete  =   null;
     var next_cell       =   null;
