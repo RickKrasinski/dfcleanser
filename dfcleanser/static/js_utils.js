@@ -193,13 +193,13 @@ window.get_cell_for_before_id = function(cellId) {
         if (IPython.notebook.is_valid_cell_index(cellIndex)) {
             // get the cell metadata 
             var cell_mdata = cell.metadata;
-            console.log("get_cell_for_before_id",cell_mdata);
+            console.log("get_cell_for_before_id["i,"]",cell_mdata);
             if (cell_mdata != undefined) {
                 if ("dfcleanser_metadata" in cell_mdata) {
                     var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
                     if ("dfc_cellid" in dfc_cell_mdata) {
                         var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
-                        if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id){
+                        if (dfc_cell_id == cellId){
                             console.log("found prev_cell",prev_cell.metadata);
                             return (prev_cell);
                         }
@@ -531,6 +531,8 @@ window.load_dfcleanser_from_toolbar = function(){
     add_dfc_cell(CODE,window.WORKING_CODE_CELL,'DCWorking',-1);
     add_dfc_cell(MARKDOWN,window.WORKING_BLANK_LINE,'DCBlankline',-1);
 
+    window.getNotebookLocation();
+    
     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar"));
        
 }    
