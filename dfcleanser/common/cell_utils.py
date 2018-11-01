@@ -38,7 +38,7 @@ INSPECT_CODE_CELL           =   'from dfcleanser.data_inspection.data_inspection
 INSPECT_HELP_CELL           =   '<div align="left" id="InspectionHelp"/><p class="DCTitleChapterstext"></p></div>'
 INSPECT_TITLE_CELL          =   '<div align="left" id="DCDataInspection"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataInspection.png" width="80" align="left"/></div><div><image width="10"></div><div><h2>&nbsp;&nbsp;&nbsp;Data Inspection : </h2><a name="DataInspection"></a></div></div>'
 
-PANDAS_TITLE_CELL           =   '<div><table align="center"><tr><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png" style="width: 120px; height: 120px"></td><td style="margin-left: 200px"><p style="text-align: left" id="mainTitle"><font size="6">Pandas Dataframe Cleanser</font></p><p id="titleComment"><font size="3">A utility to prepare your pandas dataframe for data analytics.</font></p></td><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png" style="width: 120px; height: 120px"></td></tr></table></div>'
+PANDAS_TITLE_CELL           =   '<div><table align="center"><tr><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png" style="width: 120px ; height: 120px"></td><td style="margin-left: 200px"><p style="text-align: left" id="mainTitle"><font size="6">Pandas Dataframe Cleanser</font></p><p id="titleComment"><font size="3">A utility to prepare your pandas dataframe for data analytics.</font></p></td><td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png" style="width: 120px ; height: 120px"></td></tr></table></div>'
 
 SCRIPT_SECTION_TITLE_CELL   =   '<div align="left" id="ScriptingMode"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ScriptMode.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2 class="DCTitleChaptersh2">&nbsp;&nbsp;&nbsp;Scripting Mode</h2><a name="Script"></a></div></div></div><br>'
 
@@ -46,7 +46,7 @@ SCRIPTING_CODE_CELL         =   'from dfcleanser.scripting.data_scripting_contro
 SCRIPTING_HELP_CELL         =   '<div align="left" id="ScriptingHelp"/><p class="DCTitleChapterstext"></p></div>'
 SCRIPTING_TITLE_CELL        =   '<div align="left" id="DCDataScripting"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Script.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;Dataframe Cleanser Scripting</h3><a name="Script"></a></div></div>'
 
-SW_UTILS_SECTION_TITLE_CELL =   '<div align="left" id="SWUtilities"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/SWUtilities.png" width="80" align="left" style="border: 0px ; margin-right: 6px; margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Software Utilities</h2></div></div>'
+SW_UTILS_SECTION_TITLE_CELL =   '<div align="left" id="SWUtilities"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/SWUtilities.png" width="80" align="left" style="border: 0px ; margin-right: 6px ; margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Software Utilities</h2></div></div>'
 
 SW_UTILS_DS_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_control import process_sw_utilities\\nprocess_sw_utilities(0)'
 SW_UTILS_DS_HELP_CELL       =   '<div align="left" id="DCListUtilityHelp"/><p class="DCTitleChapterstext"></p></div>'
