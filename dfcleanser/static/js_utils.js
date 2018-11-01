@@ -199,9 +199,10 @@ window.get_cell_for_before_id = function(cellId) {
                     var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
                     if ("dfc_cellid" in dfc_cell_mdata) {
                         var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
-                        if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id)
+                        if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id){
                             console.log("found prev_cell",prev_cell.metadata);
                             return (prev_cell);
+                        }
                         else {
                             prev_cell = cell;
                             console.log("prev_cell",prev_cell.metadata);
