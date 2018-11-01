@@ -194,24 +194,25 @@ window.get_cell_for_before_id = function(cellId) {
             // get the cell metadata 
             var cell_mdata = cell.metadata;
             console.log("get_cell_for_before_id[",i,"]",cell_mdata);
-            if (cell_mdata != undefined) {
-                if ("dfcleanser_metadata" in cell_mdata) {
-                    var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
-                    if ("dfc_cellid" in dfc_cell_mdata) {
-                        var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
-                        if (dfc_cell_id == cellId){
-                            console.log("found prev_cell",prev_cell.metadata);
-                            return (prev_cell);
-                        }
-                        else {
-                            prev_cell = cell;
-                            console.log("prev_cell",prev_cell.metadata);
-                        }
+            if ((cell_mdata != undefined) && ("dfcleanser_metadata" in cell_mdata)){
+                var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
+                if ("dfc_cellid" in dfc_cell_mdata) {
+                    var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
+                    if (dfc_cell_id == cellId){
+                        console.log("found prev_cell",prev_cell.metadata);
+                        return (prev_cell);
                     }
+                    else
+                        prev_cell = cell;
                 }
+                else
+                    prev_cell = cell;    
             }
+            else
+                prev_cell = cell;    
         }
-        cell = null;
+        else
+            cell = null;
     }
     console.log("end - get_cell_for_before_id",cellId);
 
