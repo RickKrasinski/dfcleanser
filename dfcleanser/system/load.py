@@ -38,6 +38,8 @@ def add_dfc_cell(ctype,cellid,celltext=None,afterid=-1) :
     if(celltext == None) :
         celltext = cells.get_dfc_cells_text(cellid)
         
+    print("add_dfc_cell",ctype,cellid,celltext,afterid)
+        
     from dfcleanser.common.common_utils import run_jscript    
     jscript     =   ("add_dfc_cell(" + str(ctype) + ",'" + celltext + "','" + cellid + "','" + str(afterid) + "')")
     run_jscript(jscript,"Error Loading dfc Cell",cellid) 
