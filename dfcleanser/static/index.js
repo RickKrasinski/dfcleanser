@@ -15,6 +15,10 @@ define([
 ], function(Jupyter, $, utils, dialog) {
 
     var log_prefix = '[' + "dfcleanser" + ']';
+    
+    Jupyter.notebook.events.on('notebook_renamed.Notebook',callback_notebook_renamed);
+    Jupyter.notebook.events.on('app_initialized.NotebookApp',callback_app_initialized);
+    Jupyter.notebook.events.on('notebook_loaded.Notebook',callback_notebook_loaded);
 
     function load_buttons() {
         if (!Jupyter.toolbar) {
@@ -22,7 +26,7 @@ define([
             return;
         }
         Jupyter.toolbar.add_buttons_group([{
-            label: 'toggle',
+            label: 'Load/Unload',
             icon: 'fa-database',
             callback: toggle_dfcleanser
         }])
@@ -33,9 +37,6 @@ define([
             callback: reset_dfcleanser
         }])
         
-        Jupyter.notebook.events.on('notebook_renamed.Notebook',callback_notebook_renamed);
-        Jupyter.notebook.events.on('app_initialized.NotebookApp',callback_app_initialized);
-        Jupyter.notebook.events.on('notebook_loaded.Notebook',callback_notebook_loaded);
         
         // setup things to run on loading config/notebook
         //Jupyter.notebook.config.loaded
