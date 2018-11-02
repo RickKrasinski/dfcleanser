@@ -126,7 +126,7 @@ def addattribute(name,value) :
 def addstyleattribute(name,value) :
     
     styleattribute = ""
-    styleattribute = styleattribute + " " + name + ":" + value + "; "
+    styleattribute = styleattribute + " " + name + ": " + value + "; "
     return(styleattribute)
 
 def addjscript(url) :
