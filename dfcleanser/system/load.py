@@ -38,8 +38,6 @@ def add_dfc_cell(ctype,cellid,celltext=None,afterid=-1) :
     if(celltext == None) :
         celltext = cells.get_dfc_cells_text(cellid)
         
-    print("add_dfc_cell",ctype,cellid,celltext,afterid)
-        
     from dfcleanser.common.common_utils import run_jscript    
     jscript     =   ("add_dfc_cell(" + str(ctype) + ",'" + celltext + "','" + cellid + "','" + str(afterid) + "')")
     run_jscript(jscript,"Error Loading dfc Cell",cellid) 
@@ -50,7 +48,7 @@ def load_dfcleanser_from_toolbar() :
 
     # select starting cell
     from dfcleanser.common.common_utils import run_jscript
-    celltext    =  "<br></br>" 
+    celltext    =  "DCWorkingTitle" 
     jscript     =   ("select_before_cell(" +  "'" + celltext + "'" + ")")
     run_jscript(jscript,"Error setting dfc Cell","load_dfcleanser_from_toolbar") 
 
@@ -74,6 +72,10 @@ def load_dfcleanser() :
     add_dfc_cell(cells.MARKDOWN,cells.DC_WORKING_TITLE)
     add_dfc_cell(cells.CODE,cells.DC_WORKING)
     add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+    
+    print("* dfcleanser successfully loaded below")
+    print("\n")
+    
     
 def load_dfcleanser_cells() : 
     

@@ -26,7 +26,7 @@ from dfcleanser.common.common_utils import (display_status, run_jscript, opStatu
 
 def isEULA_read() :
     
-    if(cfg.get_config_value(cfg.EULA_FLAG_KEY,cfg.GLOBAL) == 'true') :
+    if(cfg.get_config_value(cfg.EULA_FLAG_KEY) == 'true') :
         return(True)
     else :
         return(False)
@@ -80,6 +80,7 @@ def display_system_environment(funcId,parms=None) :
             display_main_tb()
     
         if( not (funcId == sysm.PROCESS_EULA ) ) :
+            
             if( not isEULA_read()) :
                 #display_system_main_taskbar()
                 sysw.display_EULA()
@@ -96,8 +97,6 @@ def display_system_environment(funcId,parms=None) :
         if(funcId == sysm.PROCESS_CHAPTERS) :
             #display_main_tb()
             
-            print("PROCESS_CHAPTERS")
-
             parms[0]    =   parms[0].replace("[","") 
             parms[0]    =   parms[0].replace("]","")
             parms[1]    =   parms[1].replace("[","") 
