@@ -37,6 +37,9 @@
         <br></br>
         <div id="toc_container" style="margin-left:10px;">
             <ul class="toc_list">
+                <li class="toc_h1"><a href="#dfc_001">&nbsp;&nbsp;&nbsp;Introduction</a></li>
+
+                <br></br>
                 <li class="toc_h1"><a href="#dfc_101">1 System Environment</a></li>
                 <ul>
                     <li><a href="#dfc_102">1.1 Select Chapters</a></li>
@@ -221,11 +224,44 @@
                     <li><a href="#dfc_1101">8.4 Dataframe Subset</a></li>
                     <li><a href="#dfc_1201">8.5 Dataframe Concatenation</a></li>
                 </ul>
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_1301">Appendix A : Setup</a></li>
+                <ul>
+                    <li><a href="#dfc_1302">Install//Unistall</a></li>
+                    <li><a href="#dfc_1303">Load//Unload</a></li>
+                </ul>
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_1401">Appendix B : Files</a></li>
+                <ul>
+                    <li><a href="#dfc_1402">Notebook Files</a></li>
+                    <li><a href="#dfc_1403">System Files</a></li>
+                </ul>
+                <br></br>
+                <li class="toc_h1"><a href="#dfc_1501">Appendix C : Dataframes</a></li>
+                <ul>
+                    <li><a href="#dfc_1502">Default Dataframe</a></li>
+                    <li><a href="#dfc_1502">Secondary Dataframes</a></li>
+                </ul>
             </ul>
         </div>
 
+
         <br></br>
         <br></br>
+        <div id="dfc_001">
+            <div align="left" id="DCIntroduction" class="DCChaptersHelpTOC">
+                <div>
+                    <img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png" width="80" align="left" />
+                </div>
+                <div>
+                    <image width="10">
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Introduction</p>
+                </div>
+            </div>
+        </div>
+
         <br></br>
         <br></br>
 
@@ -3180,11 +3216,310 @@
         <div class="help-images">
             <img id="DFSFilterSample2_3Id" class="help-images" src="https://rickkrasinski.github.io/dfcleanser/graphics/help/ConcatFullConcat1.png"></img>
         </div>
-
-
     </div>
+    <br></br>
+    <div>
+        <div id="dfc_1301">
+            <div style="margin-left: 5px " id="DFAppendixA" class="DCChaptersHelpTOC">
+                <div>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Appendix A : Setup</p>
+                </div>
+            </div>
+        </div>
+        <div class="DCChaptersParagraph">
+            <div>
+                <div id="dfc_1302" class="help-tag DCHelp_h1">
+                    <p>Install/Uninstall</p>
+                </div>
+                <div class="DCChaptersHelpText">
+                    <p>You can install or uninstall the dfcleanser product automatically or manually.</p>
+                    <p>Installing the product automatically will update the Jupyter Notebook Server so that all notebooks will have access to the dfcleanser.</p>
+                    <p>Installing the product manually will update the Jupyter Notebook Server common config files directly so that all notebooks will have access to the dfcleanser but does not add extensions and is not visible to the end user. Installing
+                        the product manually has a minimal impact on the Jupyter Notebooks.</p>
+                </div>
+                <br></br>
+                <div class="help-tag DCHelp_h2">
+                    <p>dfcleanser package</p>
+                </div>
+                <div class="DCChaptersHelpText">
+                    <p>dfcleanser is built as a standard python package that can be installed from PIP or Conda. </p>
+                    <p>Whether you install automatically or manually you must fully install the dfcleanser package.</p>
+                </div>
+                <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                    <p>PIP</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Install</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Uninstall</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Status Check</p>
+                </div>
+                <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                    <p>Conda</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Install</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Uninstall</p>
+                </div>
+                <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                    <p>Status Check</p>
+                </div>
 
-
+                <br></br>
+                <div>
+                    <div class="help-tag DCHelp_h2">
+                        <p>Automatic</p>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Jupyter Notebook Extension</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>The Jupyter Notebook portion consists of a Jupyter Notebook extension to install and uninstall dfcleanser as desired.</p>
+                        <p>Jupyter notebook extensions are only used for the automatic install.</p>
+                    </div>
+                    <div>
+                        <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                            <p>PIP</p>
+                        </div>
+                        <div>
+                            <div>
+                                <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                                    <p>Install</p>
+                                </div>
+                            </div>
+                            <div class="DCChaptersHelpText">
+                                <ul>
+                                    <li>jupyter serverextension enable --py dfcleanser</li>
+                                    <li>jupyter nbextension install --py dfcleanser</li>
+                                    <li>jupyter nbextension enable --py dfcleanser</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                                    <p>Uninstall</p>
+                                </div>
+                            </div>
+                            <div class="DCChaptersHelpText">
+                                <ul>
+                                    <li>jupyter nbextension uninstall --py dfcleanser</li>
+                                    <li>jupyter serverextension disenable --py dfcleanser</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                                    <p>Status Check</p>
+                                </div>
+                            </div>
+                            <div class="DCChaptersHelpText">
+                                <ul>
+                                    <li>jupyter nbextension list</li>
+                                    <li>jupyter serverextension list</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-left: 15px " class="help-tag DCHelp_h4">
+                        <p>Conda</p>
+                    </div>
+                    <div>
+                        <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                            <p>Install</p>
+                        </div>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <ul>
+                            <li>jupyter serverextension enable --py dfcleanser --sys-prefix</li>
+                            <li>jupyter nbextension install --py dfcleanser --sys-prefix</li>
+                            <li>jupyter nbextension enable --py dfcleanser --sys-prefix</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                            <p>Uninstall</p>
+                        </div>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <ul>
+                            <li>jupyter nbextension uninstall --py dfcleanser --sys-prefix</li>
+                            <li>jupyter serverextension disenable --py dfcleanser --sys-prefix</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div style="margin-left: 20px " class="help-tag DCHelp_h5">
+                            <p>Status Check</p>
+                        </div>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <ul>
+                            <li>jupyter nbextension list</li>
+                            <li>jupyter serverextension list</li>
+                        </ul>
+                    </div>
+                </div>
+                <br></br>
+                <div>
+                    <div div class="help-tag DCHelp_h2">
+                        <p>Manual</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>Manual install and uninstall requires you to open a jupyter notebook and from a code cell run the appropriate commands.</p>
+                    </div>
+                    <div>
+                        <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                            <p>Install</p>
+                        </div>
+                        <div class="DCChaptersHelpText">
+                            <ul>
+                                <li>from dfcleanser.system.install import install_dfcleanser</li>
+                                <li>install_dfcleanser()</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                            <p>UnInstall</p>
+                        </div>
+                        <div class="DCChaptersHelpText">
+                            <ul>
+                                <li>from dfcleanser.system.install import uninstall_dfcleanser</li>
+                                <li>uninstall_dfcleanser()</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>For either manual install or uninstall you must cycle the Jupyter Notebook Server after running the commands for the changes to take effect.</p>
+                    </div>
+                </div>
+            </div>
+            <br></br>
+            <div>
+                <div id="dfc_1303" class="help-tag DCHelp_h1">
+                    <p>Load/Unload</p>
+                </div>
+                <div class="DCChaptersHelpText">
+                    <p>Load and Unload allows you to load or unload the dfcleanser chapters dynamically into your notebook. You can also define which chapters get loaded as well.</p>
+                </div>
+                <div>
+                    <div class="help-tag DCHelp_h2">
+                        <p>Automatic</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>Load and Unload of the dfcleanser chapters can be toggled from the 'Load/Unload' button on the Jupyter Notebook toolbar. You can also reset the display of the chapters from the 'Reset' button on the Jupyter Notebook toolbar.</p>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Load dfcleanser Chapters</p>
+                        <div style="margin-left: 20px ">
+                            <td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/help/dfcloadbutton.png"></td>
+                        </div>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Unload dfcleanser Chapters</p>
+                        <div style="margin-left: 20px ">
+                            <td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/help/dfcloadbutton.png"></td>
+                        </div>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Reset dfcleanser Chapters</p>
+                        <div style="margin-left: 20px ">
+                            <td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/help/dfcresetbutton.png"></td>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+                <div>
+                    <div class="help-tag DCHelp_h2">
+                        <p>Manual</p>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Load dfcleanser Chapters</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <ul>
+                            <li>from dfcleanser.system.load import load_dfcleanser</li>
+                            <li>load_dfcleanser()</li>
+                        </ul>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Unload dfcleanser Chapters</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <ul>
+                            <li>from dfcleanser.system.load import unload_dfcleanser</li>
+                            <li>unload_dfcleanser()</li>
+                        </ul>
+                    </div>
+                    <div style="margin-left: 10px " class="help-tag DCHelp_h3">
+                        <p>Reset dfcleanser Chapters</p>
+                        <div style="margin-left: 20px ">
+                            <td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/help/dfcmanualresetbutton.png"></td>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br></br>
+        <div id="dfc_1401">
+            <div style="margin-left: 5px " id="DFCAppendixB" class="DCChaptersHelpTOC">
+                <div>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Appendix B : Files</p>
+                </div>
+            </div>
+            <div class="DCChaptersParagraph">
+                <div>
+                    <div class="DCChaptersHelpText">
+                        <p>All dfcleanser files are maintained by dfcleanser and are inrernal to the dfcleanser package.</p>
+                    </div>
+                    <div id="dfc_1402" class="help-tag DCHelp_h1">
+                        <p>Notebook Files</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>The Notebook files consist of unique config and script files that are tied to a specific notebook that dfcleanser runs in.</p>
+                        <p>To monitor and maintain the notebook specific files go to the System chapter and hit 'dfcleanser Files'.</p>
+                        <p>If you delete or rename or copy a notebook with dfcleanser files then run the 'dfcleanser files' functions to delete, rename or copy the corresponding notebook files.</p>
+                    </div>
+                    <div style="margin-left: 20px ">
+                        <td><img src="https://rickkrasinski.github.io/dfcleanser/graphics/help/dfcleanserfilesbutton.png"></td>
+                    </div>
+                </div>
+                <br></br>
+                <div>
+                    <div id="dfc_1403" class="help-tag DCHelp_h1">
+                        <p>System Files</p>
+                    </div>
+                    <div class="DCChaptersHelpText">
+                        <p>The System files consist of the files for lists, dicts, generic functions ... that are common among all notebookes that dfcleanser is run in.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br></br>
+        <div id="dfc_1501">
+            <div style="margin-left: 5px " id="DFCAppendixC" class="DCChaptersHelpTOC">
+                <div>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Appendix C : Dataframes</p>
+                </div>
+            </div>
+            <div class="DCChaptersParagraph">
+                <div class="DCChaptersHelpText">
+                    <p>dfcleanser is a dataframe centric tool to inspect and modify dataframes.</p>
+                </div>
+                <div>
+                    <div id="dfc_1502" class="help-tag DCHelp_h1">
+                        <p>Default Dataframe</p>
+                    </div>
+                </div>
+                <div>
+                    <div id="dfc_1503" class="help-tag DCHelp_h1">
+                        <p>Secondary Dataframes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <br></br>
     <br></br>
