@@ -682,9 +682,8 @@ def get_full_parms_html(inputid) :
                            inputlist[5],inputlist[6],inputlist[7],
                            True).get_html()
 
-    inputidloc      =   input_html.find(inputid)
-    startnewhtml    =   input_html[inputidloc:].find("<div")
-    startnewhtml    =   startnewhtml + inputidloc
+
+    startnewhtml    =   input_html.find("<div class='container dc-container dc-default-input-inner-div'>")
     endnewhtml      =   input_html.find("<form")
     newhtml         =   input_html[startnewhtml:(endnewhtml - (3 + len("</div>")))]
     
@@ -708,13 +707,26 @@ def get_fullparms(parms) :
     
     new_input_html = patch_html(input_html)
     
-    change_input_js = "$('#" + formid + "').html('"
-    change_input_js = change_input_js + new_input_html + "');"
+    import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm  
+    from dfcleanser.sw_utilities.sw_utility_geocode_widgets import display_geocoders  
     
-    run_jscript(change_input_js,
-                "fail to get full parms for : " + formid,
-                 "scroll_table")
-
+    if(formid == "arcgisgeocoder")      :   display_geocoders(sugm.ArcGISId,True)
+    elif(formid == "googlegeocoder")    :   display_geocoders(sugm.GoogleId,True)
+    elif(formid == "binggeocoder")      :   display_geocoders(sugm.BingId,True)
+    elif(formid == "databcgeocoder")    :   display_geocoders(sugm.DataBCId,True)
+    elif(formid == "mapquestgeocoder")  :   display_geocoders(sugm.OpenMapQuestId,True)
+    elif(formid == "nomingeocoder")     :   display_geocoders(sugm.NominatimId,True)
+        
+    else :
+    
+        change_input_js = "$('#" + formid + "').html('"
+        change_input_js = change_input_js + new_input_html + "');"
+    
+        run_jscript(change_input_js,
+                    "fail to get full parms for : " + formid,
+                    "scroll_table")
+    
+    
 """
 #--------------------------------------------------------------------------
 #   scroll the sample table

@@ -719,7 +719,7 @@ input_group_form_div_end = (new_line + tabs(2) + """  </div>""")
 
 input_group_form_label_start = (new_line + tabs(3) + """<label """)
 input_group_form_small_label_start = (new_line + tabs(3) + """<div> """ +
-                                      new_line + tabs(3) + """  <label""")
+                                      new_line + tabs(3) + """  <label """)
 input_group_form_label_end = """</label>"""
 input_group_form_small_label_end = ("""</label>"""  + new_line + 
                                     tabs(3) + """</div>""")
@@ -1134,7 +1134,7 @@ class InputForm :
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
-        if((0)):#self.get_formid() == "dceulaform") or (self.get_formid() == "dropcolsinput") or (self.get_formid() == "addcolcodeInput") ) :   
+        if((self.get_formid() == "##googlequery") or (self.get_formid() == "$$dropcolsinput") or (self.get_formid() == "$$addcolcodeInput") ) :   
             print(input_group_form_html)
 
         return(input_group_form_html)
