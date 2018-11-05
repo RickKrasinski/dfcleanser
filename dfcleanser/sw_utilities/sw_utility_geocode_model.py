@@ -56,6 +56,13 @@ PROCESS_DF_GET_ADDRESS      =    14
 ADDRESS_CONVERSION          =    0
 COORDS_CONVERSION           =    1
 
+DISPLAY_FULL_GEOCODING      =    15
+DISPLAY_FULL_QUERY          =    16
+DISPLAY_FULL_REVERSE        =    17
+
+
+
+
 INITPARMS                   =   0
 QUERYPARMS                  =   1
 QUERYDFPARMS                =   2

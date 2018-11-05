@@ -173,6 +173,15 @@ def display_geocode_utility(optionId,parms=None) :
         elif(fid == 3) :
             sugw.display_geocoders(geocid) 
 
+    elif(optionId == sugm.DISPLAY_FULL_GEOCODING) :
+        sugw.display_geocoders(None,True)
+        
+    elif(optionId == sugm.DISPLAY_FULL_QUERY) :
+        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS,False,True)
+
+    elif(optionId == sugm.DISPLAY_FULL_REVERSE) :
+        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS,False,True)
+
 
 """
 #--------------------------------------------------------------------------

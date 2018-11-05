@@ -429,10 +429,11 @@ nomin_geocoder_form                 =   [nomin_geocoder_id,
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   get coords forms
+#   geocoder get coords forms
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
 """
 #--------------------------------------------------------------------------
 #   arcGIS get coords forms
@@ -485,11 +486,7 @@ arcgis_query_form                   =   [arcgis_query_id,
                                          arcgis_query_jsList,
                                          arcgis_query_reqList]
 
-"""
-#--------------------------------------------------------------------------
-#   geocoder get coords forms
-#--------------------------------------------------------------------------
-"""
+
 
 """
 #--------------------------------------------------------------------------
@@ -1593,7 +1590,7 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
 #   display input froms for query and reverse
 #------------------------------------------------------------------
 """
-def display_geocode_inputs(formid,parms,ptype,fulldf=False) :
+def display_geocode_inputs(formid,parms,ptype,fulldf=False,showfull=False) :
 
     if(parms == None) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
@@ -1649,20 +1646,22 @@ def display_geocode_inputs(formid,parms,ptype,fulldf=False) :
                                    shortForm=False)
     
     geofunc_input_form.set_gridwidth(600)
+    if(showfull) :
+        geofunc_input_form.set_fullparms(True)    
     
     geofunc_input_html = ""
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (formid == sugm.ADDRESS_CONVERSION) :
         if(fulldf) :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convert Dataframe Address(s) To Coordinates</h4>" 
+            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Dataframe Address(s) To Coordinates</h4>" 
         else :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convert Address To Coordinates</h4>"
+            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Address To Coordinates</h4>"
     else :
         if(fulldf) :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convert Dataframe Coordinates To Address</h4>"
+            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Dataframe Coordinates To Address</h4>"
         else :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Convert Coordinates To Address</h4>"
+            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Coordinates To Address</h4>"
         
     display_grid("acconv_wrapper",
                  geofunc_heading_html,
@@ -1956,7 +1955,7 @@ def get_geocoder_parms(geocid)  :
 #   display geocoder inputs form
 #------------------------------------------------------------------
 """     
-def display_geocoders(geocodeid) :
+def display_geocoders(geocodeid,showfull=False) :
     
     listHtml = get_geocoder_table()
     
@@ -2034,7 +2033,7 @@ def display_geocoders(geocodeid) :
                                    arcgis_geocoder_jsList,
                                    arcgis_geocoder_reqList]
     
-    geocode_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</h4>"
+    geocode_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</h4>"
 
     parmsList = get_geocoder_parms(geocodeid)
     
@@ -2052,6 +2051,9 @@ def display_geocoders(geocodeid) :
                                    shortForm=False)
     
     geocode_input_form.set_gridwidth(640)
+    
+    if(showfull) :
+        geocode_input_form.set_fullparms(True)
     
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
