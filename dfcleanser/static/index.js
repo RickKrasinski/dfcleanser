@@ -68,30 +68,30 @@ define([
         else{
             window.load_dfcleanser_from_toolbar();
         }
-        console.log(log_prefix + "toggle_dfcleanser");
+        console.log(log_prefix + "\n" + "toggle_dfcleanser");
     }
 
     function reset_dfcleanser() {
         if(window.is_dfcleanser_loaded()){
             window.initialize_dc();
         }
-        console.log(log_prefix + "reset_dfcleanser");
+        console.log(log_prefix +  "\n" + "reset_dfcleanser");
     }
 
     function callback_notebook_renamed(){
-        console.log(log_prefix + "callback_notebook_renamed");
+        console.log(log_prefix +  "\n" + "callback_notebook_renamed");
             
         // rename the config files
         window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID,window.getJSPCode(window.SYSTEM_LIB,"display_system_environment","12"));
     }
        
     function callback_notebook_loaded() {
-        console.log(log_prefix + "callback_notebook_loaded");
+        console.log(log_prefix +  "\n" + "callback_notebook_loaded");
     }
     
     function callback_app_initialized() {
         
-        console.log(log_prefix + "callback_app_initialized");    
+        console.log(log_prefix +  "\n" + "callback_app_initialized");    
         if(window.is_dfcleanser_loaded()){
         
             // reset the system chapter

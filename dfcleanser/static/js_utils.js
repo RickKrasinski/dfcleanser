@@ -535,7 +535,7 @@ window.load_dfcleanser_from_toolbar = function(){
 // unload dfcleanser cells
 // ------------------------------------------------------
 window.unload_dfcleanser = function(){
-    var     max_trys    =   3;
+    var     max_trys    =   5;
     var     ctry        =   0;
     
     while(ctry < max_trys){
@@ -777,9 +777,40 @@ window.get_input_form_labels = function(id) {
 // functions to request a full list of parms for an inout form
 //
 window.getfullparms = function(inputid) {
-    var inputs = new Array();
-    inputs.push(String(inputid));
-    window.run_code_in_cell(window.WORKING_CELL_ID,window.getJSPCode(window.COMMON_LIB,"get_fullparms",JSON.stringify(inputs)));
+
+    switch(inputid) :
+    
+        case "arcgisgeocoder" :
+        case "googlegeocoder" :
+        case "binggeocoder" :
+        case "databcgeocoder" :
+        case "mapquestgeocoder" :
+        case "nomingeocoder" :
+            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility","15"));        
+            break;            
+        
+        case "arcgisquery" :
+        case "googlequery" :
+        case "bingquery" :
+        case "databcquery" :
+        case "mapquestquery" :
+        case "nominquery" :
+            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility","16"));        
+            break;            
+        
+        case "arcgisreverse" :
+        case "bingreverse" :
+        case "nominreverse" :
+        case "googlereverse" :
+            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility","17"));        
+            break;            
+        
+        default :
+            var inputs = new Array();
+            inputs.push(String(inputid));
+            window.run_code_in_cell(window.WORKING_CELL_ID,window.getJSPCode(window.COMMON_LIB,"get_fullparms",JSON.stringify(inputs)));
+            break;
+    }
 }
 
 //
