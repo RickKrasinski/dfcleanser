@@ -765,13 +765,19 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
     if (geotype == sugm.ADDRESS_CONVERSION) :
         from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
         if(tabletype==sugm.COLNAMES_TABLE) :
-            geo_parms_html = get_df_col_names_table("gedfcolnamesTable",cfg.SWGeocodeUtility_ID,"add_df_column")
+            if(geocid == sugm.GoogleId) :
+                geo_parms_html = get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"gb_google_add_df_column")
+            else :
+                geo_parms_html = get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"gb_arcgis_add_df_column")
         elif(tabletype==sugm.LANGUAGE_TABLE) :
-            geo_parms_html = get_languages_table("gedflanguagesTable",cfg.SWGeocodeUtility_ID,"select_language")
+            geo_parms_html = get_languages_table("gedflanguagesTable",cfg.SWGeocodeUtility_ID,"gb_select_language")
         elif(tabletype==sugm.REGION_TABLE) :
-            geo_parms_html = get_regions_table("gedfregionsTable",cfg.SWGeocodeUtility_ID,"select_region")
+            if(geocid == sugm.GoogleId) :
+                geo_parms_html = get_regions_table("gegdfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_region")
+            else :
+                geo_parms_html = get_regions_table("geadfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_country")
         elif(tabletype==sugm.CATEGORIES_TABLE) :
-            geo_parms_html = get_categories_table("gedfregionsTable",cfg.SWGeocodeUtility_ID,"select_category")
+            geo_parms_html = get_categories_table("gedfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_category")
             
         if(geocid == sugm.GoogleId) :
             form    =   bulk_google_query_input_form
