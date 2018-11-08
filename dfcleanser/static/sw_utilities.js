@@ -348,6 +348,30 @@ function process_addr_dist(fid) {
     }
 }
 
+function process_bulk_query(fid,gcid) {
+    /**
+    * geocoder bulk query processing.
+    *
+    * Parameters:
+    *  fid- function id
+    *  gcid - geocoder id
+    */
+    
+    var inputs = new Array();
+    inputs.append(fid);
+    inputs.append(gcid);
+    
+    switch (gcid) {
+        case 0: var fparms = get_input_form_parms("geocoderconnectorbulk"); break;
+        case 7: var fparms = get_input_form_parms("arcgisbatchquery");      break;
+    }    
+    
+    inputs.append(fparms);
+    
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + inputs)));
+
+}
+
 // 
 // ------------------------------------------------------
 // Dataframe Subset Utility functions 

@@ -32,7 +32,7 @@ define([
         }])
         
         Jupyter.toolbar.add_buttons_group([{
-            label: 'reset',
+            label: 'Reset',
             icon: 'fa-window-restore',
             callback: reset_dfcleanser
         }])
