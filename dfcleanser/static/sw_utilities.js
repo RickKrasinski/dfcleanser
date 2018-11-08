@@ -368,7 +368,7 @@ function process_bulk_query(fid,gcid) {
     
     inputs.append(fparms);
     
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + inputs)));
 
 }
 
