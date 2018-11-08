@@ -18,7 +18,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
-                                            get_html_spaces, get_input_form, ButtonGroupForm, InputForm)
+                                            get_input_form, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
@@ -1369,13 +1369,6 @@ def validate_cmd_parms(ptype,geocid,gqparms) :
             labelList       =   arcgis_query_labelList 
             reqList         =   arcgis_query_reqList 
             
-    elif(ptype == sugm.QUERYDFPARMS) :
-        comp_form = get_comp_addr_conv_form(geocid)
-
-        idList          =   comp_form[1] 
-        labelList       =   comp_form[2] 
-        reqList         =   comp_form[6] 
-
     elif(ptype == sugm.REVERSEPARMS) :
         if(geocid == sugm.GoogleId) :
             idList          =   google_reverse_idList 
@@ -1531,6 +1524,11 @@ def get_geocoder_cmd_parms(ptype,geocid) :
     else :
         return(geocparms)
 
+"""
+#--------------------------------------------------------------------------
+#  get datafrane column names table
+#--------------------------------------------------------------------------
+"""
 def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=False) :
 
     if(not (colsList == None)) :
@@ -1590,7 +1588,7 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
 #   display input froms for query and reverse
 #------------------------------------------------------------------
 """
-def display_geocode_inputs(formid,parms,ptype,fulldf=False,showfull=False) :
+def display_geocode_inputs(formid,parms,ptype,showfull=False) :
 
     if(parms == None) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
@@ -1602,28 +1600,20 @@ def display_geocode_inputs(formid,parms,ptype,fulldf=False,showfull=False) :
         geocid  =    parms[1]
         inparms =    parms[2]
     
-    if(fulldf) :
-        if (formid == sugm.ADDRESS_CONVERSION) :
-            geo_parms_html = get_df_col_names_table("gedfcolnamesTable",cfg.SWGeocodeUtility_ID,"add_df_column")
-            form = get_comp_addr_conv_form(geocid)
-        else :
-            geo_parms_html = get_geocoder_parms_table(geocid)
-            form = get_df_coords_conv_form(geocid)
-    else :
-        geo_parms_html = get_geocoder_parms_table(geocid)
+    geo_parms_html = get_geocoder_parms_table(geocid)
         
-        if(formid == sugm.ADDRESS_CONVERSION) :
-            if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
-            elif(geocid == sugm.BingId)              : form    =   bing_query_form
-            elif(geocid == sugm.DataBCId)            : form    =   databc_query_form
-            elif(geocid == sugm.GoogleId)            : form    =   google_query_form
-            elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_query_form
-            elif(geocid == sugm.NominatimId)         : form    =   nomin_query_form
-        else :
-            if(geocid == sugm.ArcGISId)              : form    =   arcgis_reverse_form
-            elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
-            elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
-            elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
+    if(formid == sugm.ADDRESS_CONVERSION) :
+        if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
+        elif(geocid == sugm.BingId)              : form    =   bing_query_form
+        elif(geocid == sugm.DataBCId)            : form    =   databc_query_form
+        elif(geocid == sugm.GoogleId)            : form    =   google_query_form
+        elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_query_form
+        elif(geocid == sugm.NominatimId)         : form    =   nomin_query_form
+    else :
+        if(geocid == sugm.ArcGISId)              : form    =   arcgis_reverse_form
+        elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
+        elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
+        elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
  
     
     if(inparms != None) :
@@ -1653,15 +1643,9 @@ def display_geocode_inputs(formid,parms,ptype,fulldf=False,showfull=False) :
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (formid == sugm.ADDRESS_CONVERSION) :
-        if(fulldf) :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Dataframe Address(s) To Coordinates</h4>" 
-        else :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Address To Coordinates</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Address To Coordinates</h4>"
     else :
-        if(fulldf) :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Dataframe Coordinates To Address</h4>"
-        else :
-            geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Coordinates To Address</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Coordinates To Address</h4>"
         
     display_grid("acconv_wrapper",
                  geofunc_heading_html,
@@ -1669,65 +1653,6 @@ def display_geocode_inputs(formid,parms,ptype,fulldf=False,showfull=False) :
                  geofunc_input_html,
                  None)
 
-
-"""
-#------------------------------------------------------------------
-#   get the composite address input form
-#------------------------------------------------------------------
-"""
-def get_comp_addr_conv_form(geocid) :
-
-    if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
-    elif(geocid == sugm.BingId)              : form    =   bing_query_form
-    elif(geocid == sugm.DataBCId)            : form    =   databc_query_form
-    elif(geocid == sugm.GoogleId)            : form    =   google_query_form
-    elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_query_form
-    elif(geocid == sugm.NominatimId)         : form    =   nomin_query_form
-
-
-    comp_addr_form                  =   []
-    comp_addr_form_idList           =   []
-    comp_addr_form_labelList        =   []
-    comp_addr_form_typeList         =   []
-    comp_addr_form_placeholderList  =   []
-    comp_addr_form_jsList           =   []
-    
-    comp_addr_form_idList = []
-    for i in range (3) :
-        comp_addr_form_idList.append(comp_addr_utility_input_idList[i])
-        comp_addr_form_labelList.append(comp_addr_utility_input_labelList[i])
-        comp_addr_form_typeList.append(comp_addr_utility_input_typeList[i])
-        comp_addr_form_placeholderList.append(comp_addr_utility_input_placeholderList[i])
-        comp_addr_form_jsList.append(comp_addr_utility_input_jsList[i])
-        
-    for i in range (1,len(form[1])) :
-        comp_addr_form_idList.append(form[1][i])
-        comp_addr_form_labelList.append(form[2][i])
-        comp_addr_form_typeList.append(form[3][i])
-        comp_addr_form_placeholderList.append(form[4][i])
-        comp_addr_form_jsList.append(form[5][i])
-    
-
-    for i in range(len(comp_addr_form_labelList)) :
-        if(comp_addr_form_labelList[i] == "Get</br>Coords") : comp_addr_form_labelList[i] = "Display</br>Get</br>Coords"
-        if(comp_addr_form_labelList[i] == "Display</br>Bulk</br>Coords") : comp_addr_form_labelList[i] = "Get</br>Bulk</br>Coords"
-        
-    for i in range(len(comp_addr_form_jsList)) :
-        if(not (comp_addr_form_jsList[i] == None)) :
-            if(comp_addr_form_jsList[i].find("process_query_callback(0,") > -1)   :   
-                comp_addr_form_jsList[i] = comp_addr_form_jsList[i].replace("process_query_callback(0,","process_query_callback(6,")
-            if(comp_addr_form_jsList[i].find("process_query_callback(1,") > -1)   :   
-                comp_addr_form_jsList[i] = comp_addr_form_jsList[i].replace("process_query_callback(1,","process_query_callback(7,")
-        
-    comp_addr_form          =   [form[0]+"DF",
-                                 comp_addr_form_idList,
-                                 comp_addr_form_labelList,
-                                 comp_addr_form_typeList,
-                                 comp_addr_form_placeholderList,
-                                 comp_addr_form_jsList,
-                                 comp_addr_utility_input_reqList]
-    
-    return(comp_addr_form)
 
 
 """
@@ -1791,6 +1716,7 @@ def get_df_coords_conv_form(geocid) :
 #------------------------------------------------------------------
 #   display composite address form
 #------------------------------------------------------------------
+"""
 """
 def display_comp_addr_geocode_inputs(parms) :
     #return()
@@ -1861,7 +1787,7 @@ def display_comp_addr_geocode_inputs(parms) :
                  acconv_table_html,
                  acconv_input_html,
                  None)
-
+"""
 
 
 """

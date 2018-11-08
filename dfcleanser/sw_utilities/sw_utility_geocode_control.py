@@ -87,7 +87,8 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId == sugm.DISPLAY_DF_GET_COORDS) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
         if( (geocid == sugm.GoogleId) or (geocid == sugm.ArcGISId) or (geocid == sugm.NominatimId) ) :
-            sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS,True)
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION)
         else :
             sugw.display_geocode_main_taskbar() 
             display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))
@@ -95,7 +96,8 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId == sugm.DISPLAY_DF_GET_ADDRESS) : 
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
         if( (geocid == sugm.GoogleId) or (geocid == sugm.ArcGISId) or (geocid == sugm.NominatimId) ) :
-            sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.QUERYPARMS,True)
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
+            display_bulk_geocode_inputs(geocid,sugm.COORDS_CONVERSION)
         else :
             sugw.display_geocode_main_taskbar() 
             display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))

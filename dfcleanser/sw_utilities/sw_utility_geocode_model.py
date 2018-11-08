@@ -60,9 +60,6 @@ DISPLAY_FULL_GEOCODING      =    15
 DISPLAY_FULL_QUERY          =    16
 DISPLAY_FULL_REVERSE        =    17
 
-
-
-
 INITPARMS                   =   0
 QUERYPARMS                  =   1
 QUERYDFPARMS                =   2
@@ -72,11 +69,11 @@ REVERSEDFPARMS              =   4
 DISTANCE_HELP               =   8
 DISTANCE_DF_HELP            =   8
 
-INITPARMS       =   0
-QUERYPARMS      =   1
-QUERYDFPARMS    =   2
-REVERSEPARMS    =   3
-REVERSEDFPARMS  =   4
+COLNAMES_TABLE              =   0
+LANGUAGE_TABLE              =   1
+REGION_TABLE                =   2
+CATEGORIES_TABLE            =   3
+
 
 
 def get_geocoder_title(geoid) :
