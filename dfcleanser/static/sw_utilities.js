@@ -357,19 +357,49 @@ function process_bulk_query(fid,gcid) {
     *  gcid - geocoder id
     */
     
-    var inputs = new Array();
-    inputs.append(fid);
-    inputs.append(gcid);
-    
     switch (gcid) {
         case 0: var fparms = get_input_form_parms("geocoderconnectorbulk"); break;
         case 7: var fparms = get_input_form_parms("arcgisbatchquery");      break;
     }    
     
-    inputs.append(fparms);
+    var inputs = [fid, gcid, fparms];
     
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + JSON.stringify(inputs))));
 
+}
+
+// ------------------------------------------------------
+// dynamic html functions 
+// ------------------------------------------------------
+function gb_google_add_df_column(colid){
+    var addr = $("#bgqaddress");
+    var addrtext = "";
+    if (addr.val().length > 0) {addrtext = inputId.val() + " + " + colid;} 
+    else {addrtext = colid;}
+    addr.val(addrtext);
+}
+function gb_arcgis_add_df_column(colid){
+    var addr = $("#baqaddress");
+    var addrtext = "";
+    if (addr.val().length > 0) {addrtext = inputId.val() + " + " + colid;} 
+    else {addrtext = colid;}
+    addr.val(addrtext);
+}
+function gb_select_language(lang){
+    var language = $("#bgqlanguage");
+    language.val(lang);
+}
+function gb_select_region(region){
+    var reg = $("#bgqregion");
+    reg.val(region);
+}
+function gb_select_country(region){
+    var reg = $("#baqsourcecountry");
+    reg.val(region);
+}
+function gb_select_category(category){
+    var cat = $("#baqcategory");
+    cat.val(category);
 }
 
 // 
