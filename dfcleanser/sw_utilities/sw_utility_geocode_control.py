@@ -12,6 +12,8 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
+import json
+
 import dfcleanser.common.cfg as cfg
 import dfcleanser.sw_utilities.sw_utility_geocode_widgets as sugw
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
@@ -103,9 +105,59 @@ def display_geocode_utility(optionId,parms=None) :
             display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))
     
     elif(optionId ==  sugm.PROCESS_DF_GET_COORDS) :
+        
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
         sugw.display_geocode_main_taskbar() 
-        print("PROCESS_DF_GET_COORDS",parms)        
-
+        fid     =   int(parms[0])
+        geocid  =   int(parms[1])
+        inputs  =   parms[2]
+        inputs  =   json.loads(inputs)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import get_bulk_input_parms
+        inputs = get_bulk_input_parms(geocid,inputs)            
+        print("PROCESS_DF_GET_COORDS",fid,geocid,inputs) 
+        
+        if(fid == sugm.BULK_GET_COORDS) :
+            print("BULK_GET_COORDS")           
+        elif(fid == sugm.BULK_GET_ADDRESS_COLS) :
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+        elif(fid == sugm.BULK_GET_LANGUAGES) :
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.LANGUAGE_TABLE)
+        elif(fid == sugm.BULK_GET_REGIONS) :
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.REGION_TABLE)
+        elif(fid == sugm.BULK_GET_COUNTRIES) :
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.REGION_TABLE)
+        elif(fid == sugm.BULK_GET_CATEGORIES) :
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.CATEGORIES_TABLE)
+        elif(fid == sugm.BULK_CLEAR) :
+            if(geocid == sugm.GoogleId) :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import bulk_google_query_input_id
+                bparms = cfg.get_config_value(bulk_google_query_input_id+"Parms")
+            else :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import batch_arcgis_query_id
+                bparms = cfg.get_config_value(batch_arcgis_query_id+"Parms")
+                print("BULK_CLEAR",bparms)                
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+        elif(fid == sugm.BULK_RETURN) :
+            if(geocid == sugm.GoogleId) :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import bulk_google_query_input_id
+                bparms = cfg.get_config_value(bulk_google_query_input_id+"Parms")
+            else :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import batch_arcgis_query_id
+                bparms = cfg.get_config_value(batch_arcgis_query_id+"Parms")
+            print("BULK_RETURN",bparms)
+                
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+        elif(fid == sugm.BULK_HELP) :
+            if(geocid == sugm.GoogleId) :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import bulk_google_query_input_id
+                bparms = cfg.get_config_value(bulk_google_query_input_id+"Parms")
+            else :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import batch_arcgis_query_id
+                bparms = cfg.get_config_value(batch_arcgis_query_id+"Parms")
+            
+            print("BULK_HELP",bparms)
+            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+            
     elif(optionId == sugm.PROCESS_GET_ADDRESS) :
         
         sugw.display_geocode_main_taskbar()        

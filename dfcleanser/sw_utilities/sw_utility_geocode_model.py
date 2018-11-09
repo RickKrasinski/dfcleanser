@@ -12,6 +12,13 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   Geocoder Ids
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 ArcGISId                    =   0
 BaiduId                     =   1
 BingId                      =   2
@@ -29,6 +36,14 @@ YahooPlaceFinderId          =   12
 supported_Geocoders         =   [ArcGISId,BingId,DataBCId,GoogleId,OpenMapQuestId,NominatimId]
 supported_Reverses          =   [ArcGISId,BingId,GoogleId,NominatimId]
 
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   Geocoder Function Ids
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 DISPLAY_GEOCODING           =    0
 
 DISPLAY_GET_COORDS          =    1
@@ -56,9 +71,20 @@ PROCESS_DF_GET_ADDRESS      =    14
 ADDRESS_CONVERSION          =    0
 COORDS_CONVERSION           =    1
 
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   Geocoder Full Parameters Flags
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 DISPLAY_FULL_GEOCODING      =    15
 DISPLAY_FULL_QUERY          =    16
 DISPLAY_FULL_REVERSE        =    17
+
+
+
 
 INITPARMS                   =   0
 QUERYPARMS                  =   1
@@ -69,10 +95,30 @@ REVERSEDFPARMS              =   4
 DISTANCE_HELP               =   8
 DISTANCE_DF_HELP            =   8
 
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   bulk geocoding constants
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
 COLNAMES_TABLE              =   0
 LANGUAGE_TABLE              =   1
 REGION_TABLE                =   2
 CATEGORIES_TABLE            =   3
+
+BULK_GET_COORDS             =   0
+BULK_GET_ADDRESS_COLS       =   1
+BULK_GET_LANGUAGES          =   2
+BULK_GET_REGIONS            =   3
+BULK_CLEAR                  =   4
+BULK_RETURN                 =   5
+BULK_HELP                   =   6
+BULK_GET_COUNTRIES          =   7
+BULK_GET_CATEGORIES         =   8
+
 
 
 

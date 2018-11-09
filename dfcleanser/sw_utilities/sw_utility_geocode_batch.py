@@ -23,7 +23,7 @@ from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROL
 #--------------------------------------------------------------------------
 """
 bulk_google_query_input_title             =   "Google Bulk Geoocoding Parameters"
-bulk_google_query_input_id                =   "geocoderconnectorbulk"
+bulk_google_query_input_id                =   "googlebulkquery"
 bulk_google_query_input_idList            =   ["bgqapikey",
                                                "bgqaddress",
                                                "bgqcolumnname",
@@ -39,9 +39,9 @@ bulk_google_query_input_idList            =   ["bgqapikey",
 
 bulk_google_query_input_labelList         =   ["google_api_key",
                                                "dataframe_composite_address",
-                                               "new_column_name",
-                                               "drop_Address_column_flag",
-                                               "save_Address_column_name",
+                                               "new_lat_long_column_name",
+                                               "drop_address_column(s)_flag",
+                                               "returned_single_address_column_name",
                                                "max_geocode_runs",
                                                "max_geocode_rate",
                                                "checkpoint_size",
@@ -68,16 +68,16 @@ bulk_google_query_input_placeholderList   =  ["google api key",
                                               "failure rate in percent (default - 5%)",
                                               "language (default - english)",
                                               "region (default - None)",
-                                              None,None,None,None,None,None,None]
+                                               None,None,None,None,None,None,None]
 
-bulk_google_query_input_jsList            =    [None,None,None,None,None,None,None,None,None,None,None,
-                                                "process_bulk_query(0,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(1,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(2,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(3,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(4,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(5,"+str(sugm.GoogleId)+")",
-                                                "process_bulk_query(6,"+str(sugm.GoogleId)+")"]
+bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,
+                                               "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_GET_LANGUAGES)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_GET_REGIONS)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_CLEAR)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_RETURN)+","+str(sugm.GoogleId)+")",
+                                               "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.GoogleId)+")"]
 
 bulk_google_query_input_reqList           =   [0,1]
 
@@ -154,13 +154,13 @@ batch_arcgis_query_placeholderList  =   ["arcgis username",
 
 batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,
                                          None,None,None,None,None,None,
-                                         "process_bulk_query(0,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(1,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(2,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(3,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(4,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(5,"+str(sugm.ArcGISId)+")",
-                                         "process_bulk_query(6,"+str(sugm.ArcGISId)+")"]
+                                         "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_GET_COUNTRIES)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_GET_CATEGORIES)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_CLEAR)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_RETURN)+","+str(sugm.ArcGISId)+")",
+                                         "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.ArcGISId)+")"]
 
 
 batch_arcgis_query_reqList          =   [0,1,2]
@@ -202,6 +202,13 @@ addresses1= [{
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+def get_bulk_input_parms(geocid,inputs) :
+    
+    from dfcleanser.common.common_utils import get_parms_for_input
+    if(geocid == sugm.GoogleId) :
+        return(get_parms_for_input(inputs,bulk_google_query_input_idList))
+    else :
+        return(get_parms_for_input(inputs,batch_arcgis_query_idList))
 
 
 """
@@ -609,7 +616,7 @@ def get_languages_table(tableid,owner,callback) :
     from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
     dicts       =   get_Dictlog()
     langdict    =   dicts.get("Language_Codes",None)
-    languages   =   langdict.keys()
+    languages   =   list(langdict.keys())
     languages.sort()
     
     for i in range(len(languages)) :
@@ -638,7 +645,7 @@ def get_languages_table(tableid,owner,callback) :
     languages_table.set_html_only(True) 
     
     languages_table.set_tabletype(ROW_MAJOR)
-    languages_table.set_rowspertable(14)
+    languages_table.set_rowspertable(20)
 
     listHtml = get_row_major_table(languages_table,SCROLL_NEXT,False)
         
@@ -649,7 +656,7 @@ def get_languages_table(tableid,owner,callback) :
 #  get regions table
 #--------------------------------------------------------------------------
 """
-def get_regions_table(tableid,owner,callback) :
+def get_regions_table(tableid,owner,callback,countriesFlag=False) :
 
     regionsHeader      =   [""]
     regionsRows        =   []
@@ -660,8 +667,8 @@ def get_regions_table(tableid,owner,callback) :
 
     from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
     dicts           =   get_Dictlog()
-    regionsdict     =   dicts.get("Language_Codes",None)
-    regions         =   regionsdict.keys()
+    regionsdict     =   dicts.get("Country_Codes",None)
+    regions         =   list(regionsdict.keys())
     regions.sort()
     
     for i in range(len(regions)) :
@@ -671,8 +678,13 @@ def get_regions_table(tableid,owner,callback) :
         regionsHrefs.append([callback])
         
     regions_table = None
-                
-    regions_table = dcTable("Regions",tableid,owner,
+    
+    if(countriesFlag) :
+        ttitle  =   "Countries" 
+    else :
+        ttitle  =   "Regions" 
+          
+    regions_table = dcTable(ttitle,tableid,owner,
                              regionsHeader,regionsRows,
                              regionsWidths,regionsAligns)
             
@@ -690,7 +702,7 @@ def get_regions_table(tableid,owner,callback) :
     regions_table.set_html_only(True) 
     
     regions_table.set_tabletype(ROW_MAJOR)
-    regions_table.set_rowspertable(14)
+    regions_table.set_rowspertable(20)
 
     listHtml = get_row_major_table(regions_table,SCROLL_NEXT,False)
         
@@ -713,7 +725,7 @@ def get_categories_table(tableid,owner,callback) :
     from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
     dicts           =   get_Dictlog()
     regionsdict     =   dicts.get("Language_Codes",None)
-    categories         =   regionsdict.keys()
+    categories      =   list(regionsdict.keys())
     categories.sort()
     
     for i in range(len(categories)) :
@@ -742,7 +754,7 @@ def get_categories_table(tableid,owner,callback) :
     categories_table.set_html_only(True) 
     
     categories_table.set_tabletype(ROW_MAJOR)
-    categories_table.set_rowspertable(14)
+    categories_table.set_rowspertable(20)
 
     listHtml = get_row_major_table(categories_table,SCROLL_NEXT,False)
         
@@ -775,7 +787,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             if(geocid == sugm.GoogleId) :
                 geo_parms_html = get_regions_table("gegdfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_region")
             else :
-                geo_parms_html = get_regions_table("geadfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_country")
+                geo_parms_html = get_regions_table("geadfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_country",True)
         elif(tabletype==sugm.CATEGORIES_TABLE) :
             geo_parms_html = get_categories_table("gedfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_category")
             
