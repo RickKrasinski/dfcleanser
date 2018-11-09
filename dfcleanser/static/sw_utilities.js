@@ -359,8 +359,8 @@ function process_bulk_query(fid,gcid) {
     
     var formid = "";
     switch (gcid) {
-        case 0: formid = "googlebulkquery";       break;
-        case 7: formid = "arcgisbatchquery";      break;
+        case 0: formid = "arcgisbatchquery";       break;
+        case 7: formid = "googlebulkquery";      break;
     }
     var fparms = get_input_form_parms(formid);     
     console.log("process_bulk_query",formid,fparms);
