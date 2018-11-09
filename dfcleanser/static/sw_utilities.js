@@ -357,11 +357,13 @@ function process_bulk_query(fid,gcid) {
     *  gcid - geocoder id
     */
     
+    var formid = "";
     switch (gcid) {
-        case 0: var fparms = get_input_form_parms("geocoderconnectorbulk"); break;
-        case 7: var fparms = get_input_form_parms("arcgisbatchquery");      break;
-    }    
-    
+        case 0: formid = "googlebulkquery";       break;
+        case 7: formid = "arcgisbatchquery";      break;
+    }
+    var fparms = get_input_form_parms(formid);     
+    console.log("process_bulk_query",formid,fparms);
     var inputs = [fid, gcid, fparms];
     
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + JSON.stringify(inputs))));
@@ -374,14 +376,14 @@ function process_bulk_query(fid,gcid) {
 function gb_google_add_df_column(colid){
     var addr = $("#bgqaddress");
     var addrtext = "";
-    if (addr.val().length > 0) {addrtext = inputId.val() + " + " + colid;} 
+    if (addr.val().length > 0) {addrtext = addr.val() + " + " + colid;} 
     else {addrtext = colid;}
     addr.val(addrtext);
 }
 function gb_arcgis_add_df_column(colid){
     var addr = $("#baqaddress");
     var addrtext = "";
-    if (addr.val().length > 0) {addrtext = inputId.val() + " + " + colid;} 
+    if (addr.val().length > 0) {addrtext = addr.val() + " + " + colid;} 
     else {addrtext = colid;}
     addr.val(addrtext);
 }
