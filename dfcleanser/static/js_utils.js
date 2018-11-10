@@ -794,6 +794,14 @@
          case "googlereverse":
              window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "17"));
              break;
+         
+         case "googlebulkquery":
+             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "18"));
+             break;
+
+         case "arcgisbatchquery":
+             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "19"));
+             break;
 
          default:
              var inputs = new Array();
