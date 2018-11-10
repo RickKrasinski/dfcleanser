@@ -79,9 +79,11 @@ COORDS_CONVERSION           =    1
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-DISPLAY_FULL_GEOCODING      =    15
-DISPLAY_FULL_QUERY          =    16
-DISPLAY_FULL_REVERSE        =    17
+DISPLAY_FULL_GEOCODING          =    15
+DISPLAY_FULL_QUERY              =    16
+DISPLAY_FULL_REVERSE            =    17
+DISPLAY_FULL_BULK_GOOGLE_QUERY  =    18
+DISPLAY_FULL_BATCH_ARCGIS_QUERY =    19
 
 
 
