@@ -760,12 +760,20 @@ def get_num_inputs(idList) :
     
     return(pcount)
 
-def should_display(idList,i,parmslist) :
+def should_display(idList,reqList,i,parmslist) :
     
     if( (parmslist == None) or (len(parmslist) == 0) )      :   return(True)
-    elif(idList[i] == None)                                 :   return(True)
-    elif(len(parmslist[i]) > 0)                             :   return(True)
-    else                                                    :   return(False)
+    else :
+        requireds = []
+        for j in range(len(idList)) :
+            requireds.append(0)
+        for j in range(len(reqList)) :
+            requireds[reqList[j]] = 1
+            
+        if(requireds[i])                                    :   return(True)
+        elif(idList[i] == None)                             :   return(True)
+        elif(len(parmslist[i]) > 0)                         :   return(True)
+        else                                                :   return(False)
     
 def display_full_parms(formid,idList,reqList) :
 
@@ -980,7 +988,7 @@ class InputForm :
         # for each input in form
         for i in range(len(self.get_idList())) : 
         
-            if((display_all_flag) or (should_display(self.get_idList(),i,formParms))) :
+            if((display_all_flag) or (should_display(self.get_idList(),self.get_reqList(),i,formParms))) :
         
                 if( (self.get_typeList()[i] == "text") or 
                     (self.get_typeList()[i] == "textarea") or 
