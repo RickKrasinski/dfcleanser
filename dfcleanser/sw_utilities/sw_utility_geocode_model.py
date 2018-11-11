@@ -33,7 +33,7 @@ PickPointId                 =   10
 NominatimId                 =   11
 YahooPlaceFinderId          =   12
 
-supported_Geocoders         =   [ArcGISId,BingId,DataBCId,GoogleId,OpenMapQuestId,NominatimId]
+supported_Geocoders         =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,NominatimId]
 supported_Reverses          =   [ArcGISId,BingId,GoogleId,NominatimId]
 
 

@@ -27,27 +27,27 @@ bulk_google_query_input_id                =   "googlebulkquery"
 bulk_google_query_input_idList            =   ["bgqapikey",
                                                "bgqaddress",
                                                "bgqcolumnname",
+                                               "bgqlanguage",
+                                               "bgqregion",
                                                "bgqdropaddress",
                                                "bgqsaveaddress",
                                                "bgqbulknumberlimit",
                                                "bgqbulkrunrate",
                                                "bgqbulkcheclpointsize",
                                                "bgqbulkfailurelimit",
-                                               "bgqlanguage",
-                                               "bgqregion",
                                                None,None,None,None,None,None,None]
 
 bulk_google_query_input_labelList         =   ["google_api_key",
                                                "dataframe_composite_address",
                                                "new_lat_long_column_name",
+                                               "language",
+                                               "region",
                                                "drop_address_column(s)_flag",
                                                "returned_single_address_column_name",
                                                "max_geocode_runs",
                                                "max_geocode_rate",
                                                "checkpoint_size",
                                                "failure_limit",
-                                               "language",
-                                               "region",
                                                "Get</br> Bulk </br>Coords",
                                                "Get</br> Address</br>Columns",
                                                "Get</br> Languages",
@@ -60,14 +60,15 @@ bulk_google_query_input_typeList          =   ["text",maketextarea(4),"text","te
 bulk_google_query_input_placeholderList   =  ["google api key",
                                               "select from 'Column Names' for constant value use 'val' ie.. 'Buffalo'",
                                               "single name : [lat,long] - two cols enter list [latname,longname]",
+                                              "language (default - english)",
+                                              "region (default - None)",
                                               "drop address fields used in composite address (default = False)",
                                               "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
                                               "number of addresses to get coords for (default - len(dataframe))",
                                               "max geocode get rate in geoocodes per second (default - 1/second)",
                                               "number of geocode results before checkpoint taken (default - 500) ",
                                               "failure rate in percent (default - 5%)",
-                                              "language (default - english)",
-                                              "region (default - None)",
+                                              
                                                None,None,None,None,None,None,None]
 
 bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,
@@ -79,7 +80,7 @@ bulk_google_query_input_jsList            =   [None,None,None,None,None,None,Non
                                                "process_bulk_query("+str(sugm.BULK_RETURN)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.GoogleId)+")"]
 
-bulk_google_query_input_reqList           =   [0,1]
+bulk_google_query_input_reqList           =   [0,1,2,3,4]
 
 bulk_google_query_input_form              =   [bulk_google_query_input_id,
                                                bulk_google_query_input_idList,
@@ -102,30 +103,30 @@ batch_arcgis_query_idList           =    ["baqusername",
                                           "baqpw",
                                           "baqaddress",
                                           "baqcolumnname",
+                                          "baqsourcecountry",
+                                          "baqcategory",
+                                          "baqoutsr",
                                           "baqdropaddress",
                                           "baqsaveaddress",
                                           "baqbatchsize",
                                           "baqbulknumberlimit",
                                           "baqbulkcheclpointsize",
                                           "baqbulkfailurelimit",
-                                          "baqsourcecountry",
-                                          "baqcategory",
-                                          "baqoutsr",
                                           None,None,None,None,None,None,None]
 
 batch_arcgis_query_labelList        =   ["arcgis_username",
                                          "arcgis_pw",
                                          "dataframe_composite_address",
                                          "new_column_name",
+                                         "source_country",
+                                         "category",
+                                         "out_sr",
                                          "drop_Address_column_flag",
                                          "save_Address_column_name",
                                          "batch_size",
                                          "max_geocode_runs",
                                          "checkpoint_size",
                                          "failure_limit",
-                                         "source_country",
-                                         "category",
-                                         "out_sr",
                                          "Get</br> Bulk </br>Coords",
                                          "Get</br> Column </br>Names",
                                          "Get</br> Countries",
@@ -141,15 +142,15 @@ batch_arcgis_query_placeholderList  =   ["arcgis username",
                                          "arcgis password",
                                          "select from 'Column Names' for constant value use 'val' ie.. 'Buffalo'",
                                          "single name : [lat,long] - two cols enter list [latname,longname]",
+                                         "source country (defailt - US)",
+                                         "category (defailt - None)",
+                                         "out_sr (defailt - None)",
                                          "drop address fields used in composite address (default = False)",
                                          "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
                                          "batch size (default - geocoder recommended value",
                                          "max number of dataframe rows (default - len(datframe) )",
                                          "checkpoint size (default - batch size)",
                                          "failure limit (default - 5%)",
-                                         "source country (defailt - US)",
-                                         "category (defailt - None)",
-                                         "out_sr (defailt - None)",
                                          None,None,None,None,None,None,None]
 
 batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,
@@ -163,7 +164,7 @@ batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,
                                          "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.ArcGISId)+")"]
 
 
-batch_arcgis_query_reqList          =   [0,1,2]
+batch_arcgis_query_reqList          =   [0,1,2,3,4,5,6]
 
 batch_arcgis_query_form             =   [batch_arcgis_query_id,
                                          batch_arcgis_query_idList,
@@ -768,6 +769,7 @@ def get_categories_table(tableid,owner,callback) :
 """
 def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,showfull=False) :
 
+    print("display_bulk_geocode_inputs",geocid,geotype,tabletype,showfull)
     if(geocid == None) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
         if(geocid == None) :

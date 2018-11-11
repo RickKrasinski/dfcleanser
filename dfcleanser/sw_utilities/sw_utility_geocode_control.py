@@ -158,7 +158,6 @@ def display_geocode_utility(optionId,parms=None) :
             sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
             print("BULK_RETURN")
                 
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
         elif(fid == sugm.BULK_HELP) :
             if(geocid == sugm.GoogleId) :
                 from dfcleanser.sw_utilities.sw_utility_geocode_batch import bulk_google_query_input_id
@@ -249,10 +248,12 @@ def display_geocode_utility(optionId,parms=None) :
         sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS,False,True)
 
     elif(optionId == sugm.DISPLAY_FULL_BULK_GOOGLE_QUERY) :
-        sugw.display_bulk_geocode_inputs(sugm.GoogleId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
+        display_bulk_geocode_inputs(sugm.GoogleId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
     
     elif(optionId == sugm.DISPLAY_FULL_BATCH_ARCGIS_QUERY) :
-        sugw.display_bulk_geocode_inputs(sugm.ArcGISId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
+        display_bulk_geocode_inputs(sugm.ArcGISId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
 
 
 """

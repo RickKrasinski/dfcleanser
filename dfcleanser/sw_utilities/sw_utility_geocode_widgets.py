@@ -74,44 +74,38 @@ geocode_utility_tb_centered             =   False
 arcgis_geocoder_title               =   "arcGIS Geocoder"
 arcgis_geocoder_id                  =   "arcgisgeocoder"
 
-arcgis_geocoder_idList              =    ["aguser",
+arcgis_geocoder_idList              =    ["agagent",
+                                          "aguser",
                                           "agpw",
-                                          "agreferer",
-                                          "agtoken",
                                           "agscheme",
                                           "agtimeout",
                                           "agproxies",
-                                          "agagent",
                                           None,None,None,None,None,None]
 
-arcgis_geocoder_labelList           =   ["username",
+arcgis_geocoder_labelList           =   ["user_agent",
+                                         "username",
                                          "password",
-                                         "referer",
-                                         "token_lifetime",
                                          "scheme",
                                          "timeout",
                                          "proxies",
-                                         "user_agent",
                                          "Test</br>Geocoder",
                                          "Get</br>Coords",
                                          "Get</br>Address",
                                          "Clear","Return","Help"]
 
 
-arcgis_geocoder_typeList            =   ["text","text","text","text","text","text","text","text",
+arcgis_geocoder_typeList            =   ["text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
-arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
+arcgis_geocoder_placeholderList     =   ["enter custom User-Agent header (default : my-application)",
+                                         "ArcGIS username (default : None)",
                                          "ArcGIS password (default : None)",
-                                         "‘Referer’ HTTP header to send with each request (default : None)",
-                                         "Desired lifetime, in minutes, of an ArcGIS-issued token (default : 60)",
                                          "Desired scheme (default : https)",
                                          "Time, in seconds (default : 1)",
                                          "enter proxies dict (default : None)",
-                                         "enter custom User-Agent header (default : None)",
                                          None,None,None,None,None,None]
 
-arcgis_geocoder_jsList              =   [None,None,None,None,None,None,None,None,
+arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
                                          "process_geocoder_callback(0," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(1," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(2," + str(sugm.ArcGISId) + ")",
@@ -120,7 +114,7 @@ arcgis_geocoder_jsList              =   [None,None,None,None,None,None,None,None
                                          "display_help_url('" + str(dfchelp.ArcGISInitHelp) + "')"]
 
 
-arcgis_geocoder_reqList             =   []
+arcgis_geocoder_reqList             =   [0]
 
 arcgis_geocoder_form                =   [arcgis_geocoder_id,
                                          arcgis_geocoder_idList,
@@ -129,6 +123,8 @@ arcgis_geocoder_form                =   [arcgis_geocoder_id,
                                          arcgis_geocoder_placeholderList,
                                          arcgis_geocoder_jsList,
                                          arcgis_geocoder_reqList]
+
+arcgis_user_agent	= "my-application"
 
 """
 #--------------------------------------------------------------------------
@@ -145,6 +141,8 @@ google_geocoder_idList              =    ["ggapikey",
                                           "ggsecretkey",
                                           "ggproxies",
                                           "ggagent",
+                                          "ggformatstr",
+                                          "ggsslcontext",
                                           "ggchannel",
                                           None,None,None,None,None,None]
 
@@ -155,6 +153,8 @@ google_geocoder_labelList           =   ["api_key",
                                          "secret_key",
                                          "proxies",
                                          "user_agent",
+                                         "format_string",
+                                         "ssl_context",
                                          "channel",
                                          "Test</br>Geocoder",
                                          "Get</br>Coords",
@@ -162,20 +162,22 @@ google_geocoder_labelList           =   ["api_key",
                                          "Clear","Return","Help"]
 
 
-google_geocoder_typeList            =   ["text","text","text","text","text","text","text","text",
+google_geocoder_typeList            =   ["text","text","text","text","text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
 google_geocoder_placeholderList     =   ["google API key",
-                                         "localized Google Maps domain default(‘maps.googleapis.com’)",
+                                         "localized Google Maps domain (default - ‘maps.googleapis.com’)",
                                          "enter scheme (default https)",
-                                         "enter account client id.",
-                                         "enter account secret key",
-                                         "enter proxies dict)",
-                                         "enter custom User-Agent header",
-                                         "enter channel identifier",
+                                         "enter account client id. (default - None) required for premier",
+                                         "enter account secret key (default - None) required for premier",
+                                         "enter proxies dict (default - None)",
+                                         "enter custom User-Agent header (default - my-application)",
+                                         "format string (default - '%s')",
+                                         "ssl_context (default - None)",
+                                         "enter channel identifier (default - None)",
                                          None,None,None,None,None,None]
 
-google_geocoder_jsList              =   [None,None,None,None,None,None,None,None,
+google_geocoder_jsList              =   [None,None,None,None,None,None,None,None,None,None,
                                          "process_geocoder_callback(0," + str(sugm.GoogleId) + ")",
                                          "process_geocoder_callback(1," + str(sugm.GoogleId) + ")",
                                          "process_geocoder_callback(2," + str(sugm.GoogleId) + ")",
@@ -193,6 +195,9 @@ google_geocoder_form                =   [google_geocoder_id,
                                          google_geocoder_placeholderList,
                                          google_geocoder_jsList,
                                          google_geocoder_reqList]
+
+google_API_Key    =   "AIzaSyCAJESZO5xlryhuG_scxZ9ryaqj7140fTc"
+
 
 """
 #--------------------------------------------------------------------------
@@ -226,7 +231,7 @@ bing_geocoder_typeList              =   ["text","text","text","text","text","tex
                                          "button","button","button","button","button","button"]
 
 bing_geocoder_placeholderList       =   ["enter Bing Maps API key",
-                                         "enter formar string",
+                                         "enter format string (default %s)",
                                          "enter scheme (default https)",
                                          "enter timeout in seconds (default 1)",
                                          "proxies dict (default None)",
@@ -251,6 +256,8 @@ bing_geocoder_form                  =   [bing_geocoder_id,
                                          bing_geocoder_placeholderList,
                                          bing_geocoder_jsList,
                                          bing_geocoder_reqList]
+
+bing_API_Key    =   "AhwVfAKfw8CF4K2cwNgfj61-jYzQll4N92sjC6d3Hz-9O4HdCB34MwGObvhoJwB4"
 
 """
 #--------------------------------------------------------------------------
@@ -281,7 +288,7 @@ databc_geocoder_typeList              =   ["text","text","text","text",
 databc_geocoder_placeholderList       =   ["enter scheme (default https)",
                                            "enter timeout in seconds (default 1)",
                                            "proxies dict (default None)",
-                                           "user agent)",
+                                           "user agent (default 'geopy/1.17.0'",
                                             None,None,None,None,None]
 
 
@@ -331,18 +338,16 @@ mapquest_geocoder_labelList             =   ["api_key",
                                              "Get</br>Address",
                                              "Clear","Return","Help"]
 
-
 mapquest_geocoder_typeList              =   ["text","text","text","text","text","text",
                                              "button","button","button","button","button","button"]
 
 mapquest_geocoder_placeholderList       =   ["enter MapQuest API Key",
-                                             "enter format string",
-                                             "enter scheme (default https)",
+                                             "enter format string (default '%s'",
+                                             "enter scheme (default 'https')",
                                              "enter timeout in seconds (default 1)",
                                              "enter proxies dict (default None)",
-                                             "enter user agent",
+                                             "enter user agent (default 'my-application'",
                                              None,None,None,None,None,None]
-
 
 mapquest_geocoder_jsList                =   [None,None,None,None,None,None,
                                              "process_geocoder_callback(0," + str(sugm.OpenMapQuestId) + ")",
@@ -363,6 +368,10 @@ mapquest_geocoder_form                  =   [mapquest_geocoder_id,
                                              mapquest_geocoder_jsList,
                                              mapquest_geocoder_reqList]
 
+
+Consumer_Key	= "o9GNTP0ut9TNSutr6oDBCk78YWbl4feJ"
+Consumer_Secret	= "X88Lt57EztVhijrs"
+
 """
 #--------------------------------------------------------------------------
 #   Nominatim geocoder parms
@@ -371,24 +380,24 @@ mapquest_geocoder_form                  =   [mapquest_geocoder_id,
 nomin_geocoder_title                =   "Nominatim Geocoder"
 nomin_geocoder_id                   =   "nomingeocoder"
 
-nomin_geocoder_idList               =    ["nominformat",
+nomin_geocoder_idList               =    ["nominagent",
+                                          "nominformat",
                                           "nominview",
                                           "nominbias",
                                           "nomintimeout",
                                           "nominproxies",
                                           "nomindomain",
                                           "nominscheme",
-                                          "nominagent",
                                            None,None,None,None,None]
 
-nomin_geocoder_labelList            =   ["format_string",
+nomin_geocoder_labelList            =   ["user_agent",
+                                         "format_string",
                                          "view_box",
                                          "country_bias",
                                          "timeout",
                                          "proxies",
                                          "domain",
                                          "scheme",
-                                         "user_agent",
                                          "Test</br>Geocoder",
                                          "Get</br>Coords",
                                          "Clear","Return","Help"]
@@ -397,14 +406,14 @@ nomin_geocoder_labelList            =   ["format_string",
 nomin_geocoder_typeList             =   ["text","text","text","text","text","text","text","text",
                                          "button","button","button","button","button"]
 
-nomin_geocoder_placeholderList      =   ["enter format string (default %s)",
+nomin_geocoder_placeholderList      =   ["enter custom User-Agent (default - my-application)",
+                                         "enter format string (default %s)",
                                          "Coordinates to restrict search within. (default None)",
-                                         "enter country to bias results",
+                                         "enter country to bias results (default - United States)",
                                          "enter timeout in secs (default 1)",
                                          "enter proxies dict)",
-                                         "enter domain)",
-                                         "enter scheme (default https))",
-                                         "enter custom User-Agent",
+                                         "enter domain (default None)",
+                                         "enter scheme (default https)",
                                          None,None,None,None,None]
 
 nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,None,
@@ -415,7 +424,7 @@ nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,None
                                          "display_help_url('" + str(dfchelp.NominatimInitHelp) + "')"]
 
 
-nomin_geocoder_reqList              =   []
+nomin_geocoder_reqList              =   [0]
 
 nomin_geocoder_form                 =   [nomin_geocoder_id,
                                          nomin_geocoder_idList,
@@ -425,6 +434,7 @@ nomin_geocoder_form                 =   [nomin_geocoder_id,
                                          nomin_geocoder_jsList,
                                          nomin_geocoder_reqList]
 
+nomin_user_agent	= "my-application"
 
 """
 #--------------------------------------------------------------------------
@@ -453,7 +463,7 @@ arcgis_query_labelList              =   ["query",
                                          "timeout",
                                          "out_fields",
                                          "Get</br>Coords",
-                                         "Display</br>Bulk</br>Coords",
+                                         "Get</br>Bulk</br>Coords",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -464,7 +474,7 @@ arcgis_query_typeList               =   ["text","text","text","text",
 arcgis_query_placeholderList        =   ["address string",
                                          "max number of results (default 1) ",
                                          "enter timeout in seconds (default 1)",
-                                         "a list or tuple of out fields",
+                                         "a list or tuple of out fields (default None)",
                                          None,None,None,None,None,None]
 
 arcgis_query_jsList                 =   [None,None,None,None,
@@ -515,7 +525,7 @@ google_query_labelList              =   ["query",
                                          "language",
                                          "sensor",
                                          "Get</br>Coords",
-                                         "Display</br>Bulk</br>Coords",
+                                         "Get</br>Bulk</br>Coords",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -576,7 +586,7 @@ bing_query_labelList                =   ["query",
                                          "include_neighborhood",
                                          "include_country_code",
                                          "Get</br>Coords",
-                                         "Display</br>Bulk</br>Coords",
+                                         "Get</br>Bulk</br>Coords",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -636,7 +646,7 @@ databc_query_labelList                =  ["query",
                                           "exactly_one",
                                           "timeout",
                                           "Get</br>Coords",
-                                          "Display</br>Bulk</br>Coords",
+                                          "Get</br>Bulk</br>Coords",
                                           "Change</br> Geocoder",
                                           "Clear","Return","Help"]
 
@@ -688,7 +698,7 @@ mapquest_query_labelList                 =  ["query",
                                              "number_of_results",
                                              "timeout",
                                              "Get</br>Coords",
-                                             "Display</br>Bulk</br>Coords",
+                                             "Get</br>Bulk</br>Coords",
                                              "Change</br> Geocoder",
                                              "Clear","Return","Help"]
 
@@ -745,7 +755,7 @@ nomin_query_labelList                    =  ["query",
                                              "language",
                                              "geometry",
                                              "Get</br>Coords",
-                                             "Display</br>Bulk</br>Coords",
+                                             "Get</br>Bulk</br>Coords",
                                              "Change</br> Geocoder",
                                              "Clear","Return","Help"]
 
@@ -808,7 +818,7 @@ google_reverse_labelList               =   ["query",
                                             "language",
                                             "sensor",
                                             "Get</br>Address",
-                                            "Display</br>Bulk</br>Address",
+                                            "Get</br>Bulk</br>Address",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
@@ -863,7 +873,7 @@ arcgis_reverse_labelList               =   ["query",
                                             "distance",
                                             "wkid",
                                             "Get</br>Address",
-                                            "Display</br>Bulk</br>Address",
+                                            "Get</br>Bulk</br>Address",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
@@ -918,7 +928,7 @@ bing_reverse_labelList                 =   ["query",
                                             "culture",
                                             "include_country_code",
                                             "Get</br>Address",
-                                            "Display</br>Bulk</br>Address",
+                                            "Get</br>Bulk</br>Address",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
