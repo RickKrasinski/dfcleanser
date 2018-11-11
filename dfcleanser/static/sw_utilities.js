@@ -207,6 +207,7 @@ function process_geocoder_callback(fid, gcid) {
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",cmd + ", " + JSON.stringify(inputs)));
             break;
         case 3:
+            var inputs = [gcid];
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility", "6, " + JSON.stringify(inputs)));
             break;
         case 4:
@@ -367,7 +368,7 @@ function process_bulk_query(fid,gcid) {
     var inputs = [fid, gcid, fparms];
     
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + JSON.stringify(inputs))));
-
+    window.scroll_to('DCGeocodeUtility');
 }
 
 // ------------------------------------------------------
