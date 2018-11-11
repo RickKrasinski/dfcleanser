@@ -141,6 +141,28 @@ batch_arcgis_geocoder_form             =   [batch_arcgis_geocoder_id,
                                             batch_arcgis_geocoder_reqList]
 
 
+
+batch_arcgis_address_geocoder_labelList        =   ["arcgis_username",
+                                                    "arcgis_pw",
+                                                    "Test</br>Geocoder",
+                                                    "Get</br> Bulk </br>Addresses",
+                                                    "Clear","Return","Help"]
+
+batch_arcgis_address_geocoder_jsList           =   [None,None,
+                                                    "process_batch_geocoder(" + str(sugm.BATCH_TEST_CONNECTOR) + ")",
+                                                    "process_batch_geocoder(" + str(sugm.BULK_GET_ADDRESS) + ")",
+                                                    "process_batch_geocoder(" + str(sugm.BATCH_CLEAR) + ")",
+                                                    "process_batch_geocoder(" + str(sugm.BATCH_RETURN) + ")",
+                                                    "process_batch_geocoder(" + str(sugm.BATCH_HELP) + ")"]
+
+
+
+
+
+create_user_url = "https://www.arcgis.com/home/createaccount.html#"
+user = "RickKrasinski"
+pw = "Password2018"
+
 """
 #--------------------------------------------------------------------------
 #   arcGIS get batch coords forms
@@ -314,17 +336,30 @@ def test_arcgis_connection(user,pw) :
     
     from arcgis.gis import GIS
     from arcgis.geocoding import get_geocoders
+    
+    from dfcleanser.common.common_utils import opStatus, display_exception
+
+    opstat  =   opStatus()
 
     gis = GIS("http://www.arcgis.com", user, pw)
 
-    # use the first of GIS's configured geocoders
-    geocoder = get_geocoders(gis)[0]
+    try :
+        # use the first of GIS's configured geocoders
+        geocoder = get_geocoders(gis)[0]
 
-    arcgis_MaxBatchSize         =   geocoder.properties.locatorProperties.MaxBatchSize
-    arcgis_SuggestedBatchSize   =   geocoder.properties.locatorProperties.SuggestedBatchSize
+        arcgis_MaxBatchSize         =   geocoder.properties.locatorProperties.MaxBatchSize
+        arcgis_SuggestedBatchSize   =   geocoder.properties.locatorProperties.SuggestedBatchSize
     
-    cfg.set_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,arcgis_MaxBatchSize)
-    cfg.set_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY,arcgis_SuggestedBatchSize)
+        cfg.set_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,arcgis_MaxBatchSize)
+        cfg.set_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY,arcgis_SuggestedBatchSize)
+        
+    except Exception as e:
+        opstat.store_exception("Unable to connect to arcgis ",e)
+
+    if(opstat.get_status() ) :
+        return(True) 
+    else :
+        display_exception(opstat)
     
 
 
@@ -880,8 +915,69 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
 
 
 
+"""
+#------------------------------------------------------------------
+#   display arcgis batch connector
+#------------------------------------------------------------------
+"""
+def display_arcgis_connector_inputs(geotype) :
 
+    print("display_arcgis_connector_inputs",geotype)
+    
+    from dfcleanser.common.html_widgets import display_composite_form,get_input_form,InputForm
+    if (geotype == sugm.ADDRESS_CONVERSION) :
+        display_composite_form([get_input_form(InputForm(batch_arcgis_geocoder_id,
+                                                         batch_arcgis_geocoder_idList,
+                                                         batch_arcgis_geocoder_labelList,
+                                                         batch_arcgis_geocoder_typeList,
+                                                         batch_arcgis_geocoder_placeholderList,
+                                                         batch_arcgis_geocoder_jsList,
+                                                         batch_arcgis_geocoder_reqList))])
 
+    else :
+        display_composite_form([get_input_form(InputForm(batch_arcgis_geocoder_id,
+                                                         batch_arcgis_geocoder_idList,
+                                                         batch_arcgis_address_geocoder_labelList,
+                                                         batch_arcgis_geocoder_typeList,
+                                                         batch_arcgis_geocoder_placeholderList,
+                                                         batch_arcgis_address_geocoder_jsList,
+                                                         batch_arcgis_geocoder_reqList))])
+    
+
+"""
+#------------------------------------------------------------------
+#   test arcgis batch connector
+#------------------------------------------------------------------
+"""
+def test_arcgis_connector(parms) :
+
+    print("test_arcgis_connector",parms)
+    
+    from dfcleanser.common.common_utils import get_parms_for_input
+    geotype     =   parms[1]
+    fparms      =   get_parms_for_input(parms,batch_arcgis_geocoder_idList)   
+    
+    from dfcleanser.common.html_widgets import display_composite_form,get_input_form,InputForm
+    if (geotype == sugm.ADDRESS_CONVERSION) :
+        display_composite_form([get_input_form(InputForm(batch_arcgis_geocoder_id,
+                                                         batch_arcgis_geocoder_idList,
+                                                         batch_arcgis_geocoder_labelList,
+                                                         batch_arcgis_geocoder_typeList,
+                                                         batch_arcgis_geocoder_placeholderList,
+                                                         batch_arcgis_geocoder_jsList,
+                                                         batch_arcgis_geocoder_reqList))])
+
+    else :
+        display_composite_form([get_input_form(InputForm(batch_arcgis_geocoder_id,
+                                                         batch_arcgis_geocoder_idList,
+                                                         batch_arcgis_address_geocoder_labelList,
+                                                         batch_arcgis_geocoder_typeList,
+                                                         batch_arcgis_geocoder_placeholderList,
+                                                         batch_arcgis_address_geocoder_jsList,
+                                                         batch_arcgis_geocoder_reqList))])
+    
+
+    test_arcgis_connection(fparms[0],fparms[1])
 
 
 

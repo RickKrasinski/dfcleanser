@@ -88,9 +88,12 @@ def display_geocode_utility(optionId,parms=None) :
     
     elif(optionId == sugm.DISPLAY_DF_GET_COORDS) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
-        if( (geocid == sugm.GoogleId) or (geocid == sugm.ArcGISId) or (geocid == sugm.NominatimId) ) :
+        if( (geocid == sugm.GoogleId) or (geocid == sugm.NominatimId) ) :
             from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
             display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION)
+        elif(geocid == sugm.ArcGISId) : 
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_arcgis_connector_inputs
+            display_arcgis_connector_inputs(sugm.ADDRESS_CONVERSION)
         else :
             sugw.display_geocode_main_taskbar() 
             display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))
@@ -256,7 +259,30 @@ def display_geocode_utility(optionId,parms=None) :
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
         display_bulk_geocode_inputs(sugm.ArcGISId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
 
-
+    elif(optionId == sugm.PROCESS_BATCH_TEST_CONNECTOR) :
+        fid     =   int(parms[0]) 
+        
+        if(fid == sugm.BATCH_TEST_CONNECTOR) :
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import test_arcgis_connector
+            test_arcgis_connector(parms)
+            
+        if(fid == sugm.BULK_GET_COORDS) :
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import test_arcgis_connector
+            test_arcgis_connector(parms)
+            
+        if(fid == sugm.BATCH_CLEAR)     :
+            cfg.drop_cfg_value("arcgisbatchgeocoder"+"Parms")
+            geotype = int(parms[1])
+            display_arcgis_connector_inputs(geotype)
+            
+        if(fid == sugm.BATCH_RETURN)    :
+            geotype = int(parms[1])
+            if(geotype == sugm.DISPLAY_GET_COORDS) :
+                sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS)
+            else :
+                sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.REVERSEPARMS)
+           
+            
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
