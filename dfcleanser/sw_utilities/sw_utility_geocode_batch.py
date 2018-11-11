@@ -39,7 +39,7 @@ bulk_google_query_input_idList            =   ["bgqapikey",
 
 bulk_google_query_input_labelList         =   ["google_api_key",
                                                "dataframe_composite_address",
-                                               "new_lat_long_column_name",
+                                               "new_lat_long_column_name(s)",
                                                "language",
                                                "region",
                                                "drop_address_column(s)_flag",
@@ -96,12 +96,60 @@ bulk_google_query_input_form              =   [bulk_google_query_input_id,
 #   arcGIS get batch coords forms
 #--------------------------------------------------------------------------
 """
+"""
+#--------------------------------------------------------------------------
+#   arcGIS batch geocoder form
+#--------------------------------------------------------------------------
+"""
+batch_arcgis_geocoder_title            =   "arcGIS Batch Geocoder Parms"
+batch_arcgis_geocoder_id               =   "arcgisbatchgeocoder"
+
+batch_arcgis_geocoder_idList           =    ["bagusername",
+                                             "bagpw",
+                                             None,None,None,None,None]
+
+batch_arcgis_geocoder_labelList        =   ["arcgis_username",
+                                            "arcgis_pw",
+                                            "Test</br>Geocoder",
+                                            "Get</br> Bulk </br>Coords",
+                                            "Clear","Return","Help"]
+
+
+batch_arcgis_geocoder_typeList         =   ["text","text",
+                                            "button","button","button","button","button"]
+
+batch_arcgis_geocoder_placeholderList  =   ["arcgis username",
+                                            "arcgis password",
+                                            None,None,None,None,None]
+
+batch_arcgis_geocoder_jsList           =   [None,None,
+                                            "process_batch_geocoder(" + str(sugm.BATCH_TEST_CONNECTOR) + ")",
+                                            "process_batch_geocoder(" + str(sugm.BULK_GET_COORDS) + ")",
+                                            "process_batch_geocoder(" + str(sugm.BATCH_CLEAR) + ")",
+                                            "process_batch_geocoder(" + str(sugm.BATCH_RETURN) + ")",
+                                            "process_batch_geocoder(" + str(sugm.BATCH_HELP) + ")"]
+
+
+batch_arcgis_geocoder_reqList          =   [0,1]
+
+batch_arcgis_geocoder_form             =   [batch_arcgis_geocoder_id,
+                                            batch_arcgis_geocoder_idList,
+                                            batch_arcgis_geocoder_labelList,
+                                            batch_arcgis_geocoder_typeList,
+                                            batch_arcgis_geocoder_placeholderList,
+                                            batch_arcgis_geocoder_jsList,
+                                            batch_arcgis_geocoder_reqList]
+
+
+"""
+#--------------------------------------------------------------------------
+#   arcGIS get batch coords forms
+#--------------------------------------------------------------------------
+"""
 batch_arcgis_query_title            =   "arcGIS Geocoder Get Batch Coordinates"
 batch_arcgis_query_id               =   "arcgisbatchquery"
 
-batch_arcgis_query_idList           =    ["baqusername",
-                                          "baqpw",
-                                          "baqaddress",
+batch_arcgis_query_idList           =    ["baqaddress",
                                           "baqcolumnname",
                                           "baqsourcecountry",
                                           "baqcategory",
@@ -114,10 +162,8 @@ batch_arcgis_query_idList           =    ["baqusername",
                                           "baqbulkfailurelimit",
                                           None,None,None,None,None,None,None]
 
-batch_arcgis_query_labelList        =   ["arcgis_username",
-                                         "arcgis_pw",
-                                         "dataframe_composite_address",
-                                         "new_column_name",
+batch_arcgis_query_labelList        =   ["dataframe_composite_address",
+                                         "new_lat_long_column_name(s)",
                                          "source_country",
                                          "category",
                                          "out_sr",
@@ -134,13 +180,11 @@ batch_arcgis_query_labelList        =   ["arcgis_username",
                                          "Clear","Return","Help"]
 
 
-batch_arcgis_query_typeList         =   ["text","text",maketextarea(4),"text","text","text","text",
+batch_arcgis_query_typeList         =   [maketextarea(4),"text","text","text","text",
                                          "text","text","text","text","text","text",
                                          "button","button","button","button","button","button","button"]
 
-batch_arcgis_query_placeholderList  =   ["arcgis username",
-                                         "arcgis password",
-                                         "select from 'Column Names' for constant value use 'val' ie.. 'Buffalo'",
+batch_arcgis_query_placeholderList  =   ["select from 'Column Names' for constant value use 'val' ie.. 'Buffalo'",
                                          "single name : [lat,long] - two cols enter list [latname,longname]",
                                          "source country (defailt - US)",
                                          "category (defailt - None)",
@@ -153,8 +197,7 @@ batch_arcgis_query_placeholderList  =   ["arcgis username",
                                          "failure limit (default - 5%)",
                                          None,None,None,None,None,None,None]
 
-batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,
-                                         None,None,None,None,None,None,
+batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,None,None,None,None,
                                          "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.ArcGISId)+")",
                                          "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.ArcGISId)+")",
                                          "process_bulk_query("+str(sugm.BULK_GET_COUNTRIES)+","+str(sugm.ArcGISId)+")",
@@ -164,7 +207,7 @@ batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,
                                          "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.ArcGISId)+")"]
 
 
-batch_arcgis_query_reqList          =   [0,1,2,3,4,5,6]
+batch_arcgis_query_reqList          =   [0,1,2,3]
 
 batch_arcgis_query_form             =   [batch_arcgis_query_id,
                                          batch_arcgis_query_idList,

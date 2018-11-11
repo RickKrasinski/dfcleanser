@@ -458,7 +458,7 @@ arcgis_query_idList                 =    ["aqquery",
                                           "aqoutfields",
                                           None,None,None,None,None,None]
 
-arcgis_query_labelList              =   ["query",
+arcgis_query_labelList              =   ["address(s)",
                                          "number_of_results",
                                          "timeout",
                                          "out_fields",
@@ -468,7 +468,7 @@ arcgis_query_labelList              =   ["query",
                                          "Clear","Return","Help"]
 
 
-arcgis_query_typeList               =   ["text","text","text","text",
+arcgis_query_typeList               =   [maketextarea(6),"text","text","text",
                                          "button","button","button","button","button","button"]
 
 arcgis_query_placeholderList        =   ["address string",
@@ -516,7 +516,7 @@ google_query_idList                 =    ["gqquery",
                                           "gqsensor",
                                           None,None,None,None,None,None]
 
-google_query_labelList              =   ["query",
+google_query_labelList              =   ["address(s)",
                                          "number_of_results",
                                          "timeout",
                                          "bounds",
@@ -530,7 +530,7 @@ google_query_labelList              =   ["query",
                                          "Clear","Return","Help"]
 
 
-google_query_typeList               =   ["text","text","text","text","text","text","text","text",
+google_query_typeList               =   [maketextarea(6),"text","text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
 google_query_placeholderList        =   ["address string",
@@ -578,7 +578,7 @@ bing_query_idList                   =    ["bqquery",
                                           "bqcc",
                                           None,None,None,None,None,None]
 
-bing_query_labelList                =   ["query",
+bing_query_labelList                =   ["address(s)",
                                          "number_of_results",
                                          "user_location",
                                          "timeout",
@@ -591,7 +591,7 @@ bing_query_labelList                =   ["query",
                                          "Clear","Return","Help"]
 
 
-bing_query_typeList                 =   ["text","text","text","text","text","text","text",
+bing_query_typeList                 =   [maketextarea(6),"text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
 bing_query_placeholderList          =   ["address string",
@@ -694,7 +694,7 @@ mapquest_query_idList                    =  ["mqquery",
                                              "mqtimeout",
                                              None,None,None,None,None,None]
 
-mapquest_query_labelList                 =  ["query",
+mapquest_query_labelList                 =  ["address(s)",
                                              "number_of_results",
                                              "timeout",
                                              "Get</br>Coords",
@@ -703,7 +703,7 @@ mapquest_query_labelList                 =  ["query",
                                              "Clear","Return","Help"]
 
 
-mapquest_query_typeList                  =   ["text","text","text",
+mapquest_query_typeList                  =   [maketextarea(6),"text","text",
                                               "button","button","button","button","button","button"]
 
 mapquest_query_placeholderList           =   ["address string",
@@ -747,7 +747,7 @@ nomin_query_idList                       =  ["nqquery",
                                              "nqgeom",
                                              None,None,None,None,None,None]
 
-nomin_query_labelList                    =  ["query",
+nomin_query_labelList                    =  ["address(s)",
                                              "number_of_results",
                                              "timeout",
                                              "limit",
@@ -760,7 +760,7 @@ nomin_query_labelList                    =  ["query",
                                              "Clear","Return","Help"]
 
 
-nomin_query_typeList                     =   ["text","text","text","text","text","text","text",
+nomin_query_typeList                     =   [maketextarea(6),"text","text","text","text","text","text",
                                               "button","button","button","button","button","button"]
 
 nomin_query_placeholderList              =   ["address string",

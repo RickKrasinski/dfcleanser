@@ -224,7 +224,8 @@ def display_geocode_utility(optionId,parms=None) :
         if(parms != None) :
             fid     =   parms[0]
             geocid  =   parms[1]
-            inputs  =   parms[2]
+            if(fid < 3) :
+                inputs  =   parms[2]
             
         if(fid == 0) :
             test_geocoder(geocid,inputs)

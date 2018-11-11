@@ -85,6 +85,7 @@ DISPLAY_FULL_REVERSE            =    17
 DISPLAY_FULL_BULK_GOOGLE_QUERY  =    18
 DISPLAY_FULL_BATCH_ARCGIS_QUERY =    19
 
+PROCESS_BATCH_TEST_CONNECTOR    =    20
 
 
 
@@ -121,6 +122,10 @@ BULK_HELP                   =   6
 BULK_GET_COUNTRIES          =   7
 BULK_GET_CATEGORIES         =   8
 
+BATCH_TEST_CONNECTOR        =   9
+BATCH_CLEAR                 =   10
+BATCH_RETURN                =   11
+BATCH_HELP                  =   12
 
 
 
