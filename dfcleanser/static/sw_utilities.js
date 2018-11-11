@@ -207,7 +207,7 @@ function process_geocoder_callback(fid, gcid) {
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",cmd + ", " + JSON.stringify(inputs)));
             break;
         case 3:
-            var inputs = [gcid];
+            var inputs = [fid,gcid];
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility", "6, " + JSON.stringify(inputs)));
             break;
         case 4:
@@ -347,6 +347,24 @@ function process_addr_dist(fid) {
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",fid));
             break;
     }
+    window.scroll_to('DCGeocodeUtility');
+}
+
+function process_batch_geocoder(fid) {
+    /**
+    * geocoder bulk query processing.
+    *
+    * Parameters:
+    *  fid- function id
+    *  gcid - geocoder id
+    */
+    
+    var fparms = get_input_form_parms("arcgisbatchgeocoder");     
+    console.log("process_batch_geocoder",fid,fparms);
+    var inputs = [fid, fparms];
+    
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("20, " + JSON.stringify(inputs))));
+    window.scroll_to('DCGeocodeUtility');
 }
 
 function process_bulk_query(fid,gcid) {
