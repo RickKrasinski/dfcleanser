@@ -350,7 +350,7 @@ function process_addr_dist(fid) {
     window.scroll_to('DCGeocodeUtility');
 }
 
-function process_batch_geocoder(fid) {
+function process_batch_geocoder(fid,geotype) {
     /**
     * geocoder bulk query processing.
     *
@@ -361,7 +361,7 @@ function process_batch_geocoder(fid) {
     
     var fparms = get_input_form_parms("arcgisbatchgeocoder");     
     console.log("process_batch_geocoder",fid,fparms);
-    var inputs = [fid, fparms];
+    var inputs = [fid, geotype, fparms];
     
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("20, " + JSON.stringify(inputs))));
     window.scroll_to('DCGeocodeUtility');
