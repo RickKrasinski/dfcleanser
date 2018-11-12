@@ -383,7 +383,7 @@ function process_bulk_query(fid,gcid) {
     }
     var fparms = get_input_form_parms(formid);     
     console.log("process_bulk_query",formid,fparms);
-    var inputs = [fid, gcid, fparms];
+    var inputs = [fid, gcid, 0, fparms];
     
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",("13, " + JSON.stringify(inputs))));
     window.scroll_to('DCGeocodeUtility');
