@@ -113,7 +113,8 @@ def display_geocode_utility(optionId,parms=None) :
         sugw.display_geocode_main_taskbar() 
         fid     =   int(parms[0])
         geocid  =   int(parms[1])
-        inputs  =   parms[2]
+        geotype =   int(parms[2])
+        inputs  =   parms[3]
         inputs  =   json.loads(inputs)
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import get_bulk_input_parms
         inputs = get_bulk_input_parms(geocid,inputs) 
@@ -130,15 +131,15 @@ def display_geocode_utility(optionId,parms=None) :
         if(fid == sugm.BULK_GET_COORDS) :
             print("BULK_GET_COORDS")           
         elif(fid == sugm.BULK_GET_ADDRESS_COLS) :
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.COLNAMES_TABLE)
         elif(fid == sugm.BULK_GET_LANGUAGES) :
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.LANGUAGE_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.LANGUAGE_TABLE)
         elif(fid == sugm.BULK_GET_REGIONS) :
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.REGION_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.REGION_TABLE)
         elif(fid == sugm.BULK_GET_COUNTRIES) :
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.REGION_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.REGION_TABLE)
         elif(fid == sugm.BULK_GET_CATEGORIES) :
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.CATEGORIES_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.CATEGORIES_TABLE)
         
         elif(fid == sugm.BULK_CLEAR) :
             if(geocid == sugm.GoogleId) :
@@ -151,14 +152,13 @@ def display_geocode_utility(optionId,parms=None) :
                 from dfcleanser.sw_utilities.sw_utility_geocode_batch import batch_arcgis_query_id
                 bparms = cfg.get_config_value(batch_arcgis_query_id+"Parms")
                 for i in range(len(bparms)) :
-                    if(i>1) : bparms[i] = ""
+                    if(i>0) : bparms[i] = ""
                 cfg.set_config_value(batch_arcgis_query_id+"Parms",bparms)
 
-            print("BULK_CLEAR",bparms)                
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.COLNAMES_TABLE)
         
         elif(fid == sugm.BULK_RETURN) :
-            sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
+            sugw.display_geocode_inputs(geotype,None,sugm.QUERYPARMS)
             print("BULK_RETURN")
                 
         elif(fid == sugm.BULK_HELP) :
@@ -170,7 +170,7 @@ def display_geocode_utility(optionId,parms=None) :
                 bparms = cfg.get_config_value(batch_arcgis_query_id+"Parms")
             
             print("BULK_HELP",bparms)
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE)
+            display_bulk_geocode_inputs(geocid,geotype,sugm.COLNAMES_TABLE)
             
     elif(optionId == sugm.PROCESS_GET_ADDRESS) :
         
@@ -267,12 +267,18 @@ def display_geocode_utility(optionId,parms=None) :
             test_arcgis_connector(parms)
             
         if(fid == sugm.BULK_GET_COORDS) :
-            from dfcleanser.sw_utilities.sw_utility_geocode_batch import test_arcgis_connector
-            test_arcgis_connector(parms)
+            geocid  = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
+            geotype = int(parms[1])
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs            
+            display_bulk_geocode_inputs(geocid,geotype)            
             
         if(fid == sugm.BATCH_CLEAR)     :
-            cfg.drop_cfg_value("arcgisbatchgeocoder"+"Parms")
+            cfg.drop_config_value("arcgisbatchgeocoder"+"Parms")
+            cfg.drop_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY)
+            cfg.drop_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY)            
+            
             geotype = int(parms[1])
+            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_arcgis_connector_inputs
             display_arcgis_connector_inputs(geotype)
             
         if(fid == sugm.BATCH_RETURN)    :

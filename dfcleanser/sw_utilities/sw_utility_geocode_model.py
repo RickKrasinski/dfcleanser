@@ -119,13 +119,14 @@ BULK_GET_REGIONS            =   3
 BULK_CLEAR                  =   4
 BULK_RETURN                 =   5
 BULK_HELP                   =   6
-BULK_GET_COUNTRIES          =   7
-BULK_GET_CATEGORIES         =   8
+BULK_GET_ADDRESS            =   7
+BULK_GET_COUNTRIES          =   8
+BULK_GET_CATEGORIES         =   9
 
-BATCH_TEST_CONNECTOR        =   9
-BATCH_CLEAR                 =   10
-BATCH_RETURN                =   11
-BATCH_HELP                  =   12
+BATCH_TEST_CONNECTOR        =   10
+BATCH_CLEAR                 =   11
+BATCH_RETURN                =   12
+BATCH_HELP                  =   13
 
 
 
