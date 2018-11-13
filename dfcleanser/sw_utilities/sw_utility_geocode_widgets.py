@@ -46,18 +46,18 @@ geocode_utility_tb_doc_title            =   "Address Conversion Options"
 geocode_utility_tb_title                =   "Address Conversion"
 geocode_utility_tb_id                   =   "addrconverttb"
 
-geocode_utility_tb_keyTitleList         =   ["Convert Address</br>to Coords",
-                                              "Convert Coords</br>to Address",
-                                              "Calculate</br>Distance",
-                                              "Select</br>Geocoder",
-                                              "Clear","Help"]
+geocode_utility_tb_keyTitleList         =   ["Interactive</br>Geocoding",
+                                             "Bulk</br>Geocoding",
+                                             "Calculate</br>Distance",
+                                             "Select</br>Geocoder",
+                                             "Clear","Help"]
 
 geocode_utility_tb_jsList               =   ["process_geomain_callback(" + str(sugm.DISPLAY_GET_COORDS) + ")",
-                                              "process_geomain_callback(" + str(sugm.DISPLAY_GET_ADDRESS) + ")",
-                                              "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
-                                              "process_geomain_callback(" + str(sugm.DISPLAY_GEOCODER) + ")",
-                                              "process_geomain_callback(0)",
-                                              "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
+                                             "process_geomain_callback(" + str(sugm.DISPLAY_DF_GET_COORDS) + ")",
+                                             "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
+                                             "process_geomain_callback(" + str(sugm.DISPLAY_GEOCODER) + ")",
+                                             "process_geomain_callback(0)",
+                                             "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
 
 geocode_utility_tb_centered             =   False
 
@@ -463,7 +463,7 @@ arcgis_query_labelList              =   ["address(s)",
                                          "timeout",
                                          "out_fields",
                                          "Get</br>Coords",
-                                         "Get</br>Bulk</br>Coords",
+                                         "Get</br>Address",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -525,7 +525,7 @@ google_query_labelList              =   ["address(s)",
                                          "language",
                                          "sensor",
                                          "Get</br>Coords",
-                                         "Get</br>Bulk</br>Coords",
+                                         "Get</br>Address",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -534,13 +534,13 @@ google_query_typeList               =   [maketextarea(6),"text","text","text","t
                                          "button","button","button","button","button","button"]
 
 google_query_placeholderList        =   ["address string",
-                                         "max number of results (default 1) ",
-                                         "enter timeout in seconds (default 1)",
-                                         "enter bounding box of the viewport (default None)",
-                                         "enter the ccTLD region code (default None)",
-                                         "enter components dict) (default None)",
-                                         "enter the language (default None)",
-                                         "enter sensor flag (default False)",
+                                         "max number of results (default - 1) ",
+                                         "enter timeout in seconds (default - 1)",
+                                         "enter bounding box of the viewport (default - None)",
+                                         "enter the ccTLD region code (default - None)",
+                                         "enter components dict) (default - None)",
+                                         "enter the language (default - None)",
+                                         "enter sensor flag (default - False)",
                                          None,None,None,None,None,None]
 
 google_query_jsList                 =   [None,None,None,None,None,None,None,None,
@@ -586,7 +586,7 @@ bing_query_labelList                =   ["address(s)",
                                          "include_neighborhood",
                                          "include_country_code",
                                          "Get</br>Coords",
-                                         "Get</br>Bulk</br>Coords",
+                                         "Get</br>Address",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
@@ -595,12 +595,12 @@ bing_query_typeList                 =   [maketextarea(6),"text","text","text","t
                                          "button","button","button","button","button","button"]
 
 bing_query_placeholderList          =   ["address string",
-                                         "max number of results (default 1) ",
-                                         "enter coords to prioritize to (default None)",
-                                         "enter timeout in seconds (default 1)",
-                                         "enter two-letter country code (default None) ",
-                                         "return neighborhood field (default False)",
-                                         "return 2 digit country code (default False)",
+                                         "max number of results (default - 1) ",
+                                         "enter coords to prioritize to (default - None)",
+                                         "enter timeout in seconds (default - 1)",
+                                         "enter two-letter country code (default - None) ",
+                                         "return neighborhood field (default - False)",
+                                         "return 2 digit country code (default - False)",
                                          None,None,None,None,None,None]
 
 bing_query_jsList                   =   [None,None,None,None,None,None,None,
@@ -646,7 +646,7 @@ databc_query_labelList                =  ["query",
                                           "exactly_one",
                                           "timeout",
                                           "Get</br>Coords",
-                                          "Get</br>Bulk</br>Coords",
+                                          "Get</br>Address",
                                           "Change</br> Geocoder",
                                           "Clear","Return","Help"]
 
@@ -655,11 +655,11 @@ databc_query_typeList                 =   ["text","text","text","text","text","t
                                            "button","button","button","button","button","button"]
 
 databc_query_placeholderList          =   ["address string",
-                                           "max number of results (default 1) ",
-                                           "The distance to move the accessPoint (default None)",
-                                           "the type of point requested (default 1)",
-                                           "number of results (default 1) ",
-                                           "timeout in secs (default 1)",
+                                           "max number of results (default - 1) ",
+                                           "The distance to move the accessPoint (default - None)",
+                                           "the type of point requested (default - 1)",
+                                           "number of results (default - 1) ",
+                                           "timeout in secs (default - 1)",
                                             None,None,None,None,None,None]
 
 databc_query_jsList                   =   [None,None,None,None,None,None,
@@ -698,7 +698,7 @@ mapquest_query_labelList                 =  ["address(s)",
                                              "number_of_results",
                                              "timeout",
                                              "Get</br>Coords",
-                                             "Get</br>Bulk</br>Coords",
+                                             "Get</br>Address",
                                              "Change</br> Geocoder",
                                              "Clear","Return","Help"]
 
@@ -707,8 +707,8 @@ mapquest_query_typeList                  =   [maketextarea(6),"text","text",
                                               "button","button","button","button","button","button"]
 
 mapquest_query_placeholderList           =   ["address string",
-                                              "max number of results (default 1) ",
-                                              "timeout in secs (default 1)",
+                                              "max number of results (default - 1) ",
+                                              "timeout in secs (default - 1)",
                                               None,None,None,None,None,None]
 
 mapquest_query_jsList                    =    [None,None,None,
@@ -755,7 +755,7 @@ nomin_query_labelList                    =  ["address(s)",
                                              "language",
                                              "geometry",
                                              "Get</br>Coords",
-                                             "Get</br>Bulk</br>Coords",
+                                             "Get</br>Address",
                                              "Change</br> Geocoder",
                                              "Clear","Return","Help"]
 
@@ -764,12 +764,12 @@ nomin_query_typeList                     =   [maketextarea(6),"text","text","tex
                                               "button","button","button","button","button","button"]
 
 nomin_query_placeholderList              =   ["address string",
-                                              "max number of results (default 1) ",
-                                              "timeout in secs (default None)",
-                                              "limit Maximum amount of results to return (default None)",
-                                              "Location.raw to include addressdetails  (default False)",
-                                              "language in which to return results  (default False)",
-                                              "return the result’s geometry in wkt, svg, kml, or geojson formats (default None)",
+                                              "max number of results (default - 1) ",
+                                              "timeout in secs (default - None)",
+                                              "limit Maximum amount of results to return (default - None)",
+                                              "Location.raw to include addressdetails  (default - False)",
+                                              "language in which to return results  (default - False)",
+                                              "return the result’s geometry in wkt, svg, kml, or geojson formats (default - None)",
                                               None,None,None,None,None,None]
 
 nomin_query_jsList                       =    [None,None,None,None,None,None,None,
@@ -818,7 +818,7 @@ google_reverse_labelList               =   ["query",
                                             "language",
                                             "sensor",
                                             "Get</br>Address",
-                                            "Get</br>Bulk</br>Address",
+                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
@@ -827,10 +827,10 @@ google_reverse_typeList                =   ["text","text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 google_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default 1) ",
-                                            "enter timeout in seconds (default 1)",
-                                             "enter the language (default None)",
-                                             "enter sensor flag (default False)",
+                                            "max number of results (default - 1) ",
+                                            "enter timeout in seconds (default - 1)",
+                                             "enter the language (default - None)",
+                                             "enter sensor flag (default - False)",
                                              None,None,None,None,None,None]
 
 google_reverse_jsList                  =   [None,None,None,None,None,
@@ -873,7 +873,7 @@ arcgis_reverse_labelList               =   ["query",
                                             "distance",
                                             "wkid",
                                             "Get</br>Address",
-                                            "Get</br>Bulk</br>Address",
+                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
@@ -882,10 +882,10 @@ arcgis_reverse_typeList                =   ["text","text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 arcgis_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default 1) ",
-                                            "enter timeout in seconds (default None)",
-                                            "Distance from the query location (default None)",
-                                            "WKID to use for both input and output coordinates (default 4236)",
+                                            "max number of results (default - 1) ",
+                                            "enter timeout in seconds (default - None)",
+                                            "Distance from the query location (default - None)",
+                                            "WKID to use for both input and output coordinates (default - 4236)",
                                             None,None,None,None,None,None]
 
 arcgis_reverse_jsList                  =   [None,None,None,None,None,
@@ -928,7 +928,7 @@ bing_reverse_labelList                 =   ["query",
                                             "culture",
                                             "include_country_code",
                                             "Get</br>Address",
-                                            "Get</br>Bulk</br>Address",
+                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
                                             "Clear","Return","Help"]
 
@@ -937,10 +937,10 @@ bing_reverse_typeList                  =   ["text","text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default 1) ",
-                                            "enter timeout in seconds (default None)",
-                                            "two-letter country code (default None)",
-                                            "whether to include the two-letter ISO code of the country (default False)",
+                                            "max number of results (default - 1) ",
+                                            "enter timeout in seconds (default - None)",
+                                            "two-letter country code (default - None)",
+                                            "whether to include the two-letter ISO code of the country (default - False)",
                                             None,None,None,None,None,None]
 
 bing_reverse_jsList                    =   [None,None,None,None,None,
@@ -981,7 +981,7 @@ nomin_reverse_labelList                    =   ["query",
                                                 "timeout",
                                                 "language",
                                                 "Get</br>Address",
-                                                "Get</br>Bulk</br>Address",
+                                                "Get</br>Coordinates",
                                                 "Change</br> Geocoder",
                                                 "Clear","Return","Help"]
 
@@ -990,9 +990,9 @@ nomin_reverse_typeList                     =   ["text","text","text","text",
                                                 "button","button","button","button","button","button"]
 
 nomin_reverse_placeholderList              =   ["list or tuple of (latitude, longitude)",
-                                                "max number of results (default 1) ",
-                                                "enter timeout in seconds (default None)",
-                                                "Preferred language in which to return results (default False)",
+                                                "max number of results (default - 1) ",
+                                                "enter timeout in seconds (default - None)",
+                                                "Preferred language in which to return results (default - False)",
                                                 None,None,None,None,None,None]
 
 nomin_reverse_jsList                       =   [None,None,None,None,
@@ -1013,6 +1013,10 @@ nomin_reverse_form                         =   [nomin_reverse_id,
                                                 nomin_reverse_placeholderList,
                                                 nomin_reverse_jsList,
                                                 nomin_reverse_reqList]
+
+
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -1067,8 +1071,8 @@ df_reverse_input_title             =   "Coordinate Conversion Columns"
 df_reverse_input_id                =   "dfcoordcols"
 df_reverse_input_idList            =   ["dfcoordscols","dfaddresscol"]
 
-df_reverse_input_labelList         =   ["coords_columns",
-                                        "new_column_name"]
+df_reverse_input_labelList         =   ["coordinates_columns",
+                                        "new_address_column_name"]
 
 df_reverse_input_typeList          =   ["text","text"]
 
@@ -1118,9 +1122,9 @@ addr_dist_utility_input_typeList          =   ["text","text","text","text","text
 
 addr_dist_utility_input_placeholderList   =  ["enter From location : as string for address or [list] or (tuple) of floats for coords",
                                               "enter to location : as string for address or [list] or (tuple) of floats for coords",
-                                              "result in km - True : km, False : miles (default = True) ",
-                                              "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default = 0) ",
-                                              "select elipsoid (default = 'WGS-84') ",
+                                              "result in km - True : km, False : miles (default - True) ",
+                                              "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default - 0) ",
+                                              "select elipsoid (default - 'WGS-84') ",
                                               None,None,None,None,None]
 
 addr_dist_utility_input_jsList            =    [None,None,None,None,None,
@@ -1624,7 +1628,6 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
         elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
         elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
- 
     
     if(inparms != None) :
         parmslist = get_parms_for_input(inparms,form[1]) 
@@ -1653,9 +1656,9 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (formid == sugm.ADDRESS_CONVERSION) :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Address To Coordinates</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Interactive Geocoding Parameters</h4>"
     else :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Convert Coordinates To Address</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Interactive Reverse Geocoding Parameters</h4>"
         
     display_grid("acconv_wrapper",
                  geofunc_heading_html,

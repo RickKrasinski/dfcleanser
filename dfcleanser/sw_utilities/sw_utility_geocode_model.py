@@ -67,7 +67,6 @@ DISPLAY_DF_GET_ADDRESS      =    12
 PROCESS_DF_GET_COORDS       =    13
 PROCESS_DF_GET_ADDRESS      =    14
 
-
 ADDRESS_CONVERSION          =    0
 COORDS_CONVERSION           =    1
 

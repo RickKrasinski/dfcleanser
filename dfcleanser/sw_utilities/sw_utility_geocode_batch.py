@@ -17,6 +17,11 @@ from dfcleanser.common.html_widgets import (maketextarea)
 from dfcleanser.common.common_utils import (display_grid)
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
+import time
+import googlemaps
+import arcgis
+
+
 """
 #--------------------------------------------------------------------------
 #    arcgis bulk parameters 
@@ -24,7 +29,8 @@ from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROL
 """
 bulk_google_query_input_title             =   "Google Bulk Geoocoding Parameters"
 bulk_google_query_input_id                =   "googlebulkquery"
-bulk_google_query_input_idList            =   ["bgqapikey",
+bulk_google_query_input_idList            =   ["bgqclientid",
+                                               "bgqclientsecret",
                                                "bgqaddress",
                                                "bgqcolumnname",
                                                "bgqlanguage",
@@ -37,7 +43,8 @@ bulk_google_query_input_idList            =   ["bgqapikey",
                                                "bgqbulkfailurelimit",
                                                None,None,None,None,None,None,None]
 
-bulk_google_query_input_labelList         =   ["google_api_key",
+bulk_google_query_input_labelList         =   ["google_maps_client_id",
+                                               "google_maps_client_secret",
                                                "dataframe_address_columns",
                                                "new_lat_long_column_name(s)",
                                                "language",
@@ -54,24 +61,24 @@ bulk_google_query_input_labelList         =   ["google_api_key",
                                                "Get</br> Regions",
                                                "Clear","Return","Help"]
 
-bulk_google_query_input_typeList          =   ["text",maketextarea(4),"text","text","text","text","text","text","text","text","text",
+bulk_google_query_input_typeList          =   ["text","text",maketextarea(4),"text","text","text","text","text","text","text","text","text",
                                                "button","button","button","button","button","button","button"]
 
-bulk_google_query_input_placeholderList   =  ["google api key",
-                                              "select from 'Column Names' for aggregate address : constant value use '+ Buffalo'",
+bulk_google_query_input_placeholderList   =  ["google_maps client id (premium) - google api key (standard)",
+                                              "google_maps client secret (premium)",
+                                              "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
                                               "'colname' stored as [lat,long] - ['latcolname','longcolname'] stored as two cols",
                                               "language (default - english)",
                                               "region (default - None)",
-                                              "drop address columns used in aggregate address (default = False)",
-                                              "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
+                                              "drop address columns used in aggregate address (default - False)",
+                                              "retrieve aggregate address and store in column name (default - None - don't retrieve and save)",
                                               "number of addresses to get coords for (default - len(dataframe))",
-                                              "max geocode get rate in geoocodes per second (default - 5/second)",
+                                              "geocode rate in geoocodes per second (default - 5/second - max 5/sec)",
                                               "number of geocode results before checkpoint taken (default - 2000) ",
                                               "failure rate in percent (default - 5%)",
-                                              
                                                None,None,None,None,None,None,None]
 
-bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,
+bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,None,
                                                "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_LANGUAGES)+","+str(sugm.GoogleId)+")",
@@ -80,7 +87,7 @@ bulk_google_query_input_jsList            =   [None,None,None,None,None,None,Non
                                                "process_bulk_query("+str(sugm.BULK_RETURN)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.GoogleId)+")"]
 
-bulk_google_query_input_reqList           =   [0,1,2,3,4]
+bulk_google_query_input_reqList           =   [0,1,2,3,4,5]
 
 bulk_google_query_input_form              =   [bulk_google_query_input_id,
                                                bulk_google_query_input_idList,
@@ -101,7 +108,7 @@ bulk_google_query_input_form              =   [bulk_google_query_input_id,
 #   arcGIS batch geocoder form
 #--------------------------------------------------------------------------
 """
-batch_arcgis_geocoder_title            =   "arcGIS Batch Geocoder Parms"
+batch_arcgis_geocoder_title            =   "arcGIS Batch Geocoder Connector Parms"
 batch_arcgis_geocoder_id               =   "arcgisbatchgeocoder"
 
 batch_arcgis_geocoder_idList           =    ["bagusername",
@@ -176,8 +183,8 @@ batch_arcgis_query_idList           =    ["bagusername",
                                           "baqaddress",
                                           "baqcolumnname",
                                           "baqsourcecountry",
+                                          "baqsearchextent",
                                           "baqcategory",
-                                          "baqoutsr",
                                           "baqdropaddress",
                                           "baqsaveaddress",
                                           "baqbatchsize",
@@ -191,8 +198,8 @@ batch_arcgis_query_labelList        =   ["arcgis_username",
                                          "dataframe_address_columns",
                                          "new_lat_long_column_name(s)",
                                          "source_country",
+                                         "search_extent",
                                          "category",
-                                         "out_sr",
                                          "drop_df_address_columns_flag",
                                          "save_geocoder_address_column_name",
                                          "batch_size",
@@ -215,8 +222,8 @@ batch_arcgis_query_placeholderList  =   ["arcgis username",
                                          "select from 'Column Names' for aggregate address : constant value use '+ Buffalo'",
                                          "'colname' stored as [lat,long] - ['latcolname','longcolname'] stored as two cols",
                                          "source country (default - US)",
+                                         "A set of bounding box coords that limit the search area (default - None)",
                                          "category (defailt - None)",
-                                         "out_sr (defailt - None)",
                                          "drop address fields used in composite address (default = False)",
                                          "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
                                          "batch size (default - geocoder recommended value)",
@@ -315,7 +322,7 @@ ARCGIS_BULK_GEOCODER        =   1
 
 
 
-import googlemaps
+
 
 def run_google_geocode(address) :
 
@@ -339,7 +346,18 @@ def run_google_reverse(lat_long) :
 
 
 def test_arcgis_connection(user,pw,opstat) :
-
+    """
+    * -------------------------------------------------------------------------- 
+    * function : test the arcgis batch connection and retrieve the batch parms
+    * 
+    * parms :
+    *  user   - arcgis user id
+    *  pw     - arcgis passowrd
+    *  opstat - opStatus object to return status and error message
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     from arcgis.gis import GIS
     from arcgis.geocoding import get_geocoders
     
@@ -358,14 +376,10 @@ def test_arcgis_connection(user,pw,opstat) :
     except Exception as e:
         opstat.store_exception("Unable to connect to arcgis ",e)
         
-    return(opstat) 
-    
-
 
 def run_arcgis_geocode(geocoder,addresslist) :
 
     from arcgis.geocoding import batch_geocode
-    
     results = batch_geocode(addresslist)
 
     coord_fields = results[0].keys()
@@ -374,6 +388,12 @@ def run_arcgis_geocode(geocoder,addresslist) :
 
     category = "Address"
     
+"""
+batch_geocode(addresses, source_country=None, category=None, out_sr=None, geocoder=None) 
+
+categories
+https://developers.arcgis.com/rest/geocode/api-reference/geocoding-category-filtering.htm#ESRI_SECTION1_502B3FE2028145D7B189C25B1A00E17B   
+"""
     
 def run_arcgis_reverse(lat_long) :
 
@@ -560,6 +580,8 @@ class BulkGeocodingFactory :
     total_geocode_runs      =   0
     total_elapsed_run_time  =   0
     halt_all_geocoding      =   False
+    bulkgeocodeparms        =   []
+    starttime               =   0
     
     # stsic class methods
     @staticmethod
@@ -597,6 +619,33 @@ class BulkGeocodingFactory :
     def set_halt_flag(halt_state) :
         BulkGeocodingFactory.halt_all_geocoding  =   halt_state       
  
+    def __init__(self):
+        BulkGeocodingFactory.total_geocode_runs      =   0
+        BulkGeocodingFactory.total_elapsed_run_time  =   0
+        BulkGeocodingFactory.halt_all_geocoding      =   False
+        BulkGeocodingFactory.bulkgeocodeparms        =   []
+        BulkGeocodingFactory.starttime               =   0
+    
+    def bulk_geocoder_controller_task(self):
+        while (not(BulkGeocodingFactory.halt_all_geocoding)) :
+            
+            # check geocoder task stats 
+            # and update control as needed
+            # and display the run statistics
+            
+            # clean up any tasks and start new ones
+            
+            # delay 1/10 second
+            time.sleep(0.1)
+            
+            
+    def start_bulk_geocoder_controller(self,bulkgeocodeparms) :
+        self.bulkgeocodeparms   =   bulkgeocodeparms
+        threading.Thread(target=self.bulk_geocoder_controller_task).start()
+        self.starttime = time.time()
+
+    def stop_bulk_geocoder_controller(self):
+        self.runGeocoder = False
 
 
 """
@@ -912,8 +961,6 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
 """
 def display_arcgis_connector_inputs(geotype) :
 
-    print("\n")
-    
     from dfcleanser.common.html_widgets import display_composite_form,get_input_form,InputForm,displayHeading,get_html_spaces
     displayHeading(get_html_spaces(30) + batch_arcgis_geocoder_title,4)
     
@@ -982,15 +1029,13 @@ def test_arcgis_connector(parms) :
     display_arcgis_connector_inputs(geotype)    
     
     if(opstat.get_status()) :
-        from dfcleanser.common.common_utils import display_status
-        print("\n")
-        display_status("arcGIS batch geocoder connected to successfully")
-        from dfcleanser.common.common_utils import displayParms
+        from dfcleanser.common.common_utils import display_status, displayParms
         displayParms("arcGIS Batch Size Settings",
                      ["MaxBatchSize","SuggestedBatchSize"],
                      [str(cfg.get_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY)),
                       str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))],
                      cfg.SWUtilities_ID)
+        display_status("arcGIS batch geocoder connected to successfully")
     else :
         from dfcleanser.common.common_utils import display_exception
         display_exception(opstat) 

@@ -111,11 +111,13 @@ def display_geocode_utility(optionId,parms=None) :
         
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
         sugw.display_geocode_main_taskbar() 
+        
         fid     =   int(parms[0])
         geocid  =   int(parms[1])
         geotype =   int(parms[2])
         inputs  =   parms[3]
         inputs  =   json.loads(inputs)
+        
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import get_bulk_input_parms
         inputs = get_bulk_input_parms(geocid,inputs) 
             
