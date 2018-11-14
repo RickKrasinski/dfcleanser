@@ -247,9 +247,9 @@ function process_query_callback(fid, gcid) {
             var cmd = fid;
             switch (fid) {
                 case 0: cmd = 3;    break;
-                case 1: cmd = 11;   break;
+                case 1: cmd = 2;    break;
                 case 2: cmd = 5;    break;
-                case 3: cmd = 1;    break;
+                case 3: cmd = 21;   break;
                 case 6: cmd = 1;    break;
                 case 7: cmd = 13;   break;
             }
@@ -262,7 +262,11 @@ function process_query_callback(fid, gcid) {
                     fparms = get_input_form_parms(id + "DF");
             }
 
-            var inputs = [fid, gcid, fparms];
+            if(fid == 3)
+                var inputs = [0, gcid];
+            else
+                var inputs = [fid, gcid, fparms];
+                
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",cmd + ", " + JSON.stringify(inputs)));
             break;
         case 4:
