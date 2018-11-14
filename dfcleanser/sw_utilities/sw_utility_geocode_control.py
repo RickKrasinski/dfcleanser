@@ -248,10 +248,10 @@ def display_geocode_utility(optionId,parms=None) :
         sugw.display_geocoders(None,True)
         
     elif(optionId == sugm.DISPLAY_FULL_QUERY) :
-        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS,False,True)
+        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS,True)
 
     elif(optionId == sugm.DISPLAY_FULL_REVERSE) :
-        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS,False,True)
+        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS,True)
 
     elif(optionId == sugm.DISPLAY_FULL_BULK_GOOGLE_QUERY) :
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
@@ -290,6 +290,28 @@ def display_geocode_utility(optionId,parms=None) :
             else :
                 sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.REVERSEPARMS)
            
+    elif(optionId == sugm.CLEAR_GEOCODE_PARMS) :
+        
+        gtype   =   int(parms[0])
+        geocid  =   int(parms[1])
+        
+        if(gtype == sugm.ADDRESS_CONVERSION) :
+            if(geocid == sugm.ArcGISId)         : cfg.drop_config_value(sugw.arcgis_query_id + "Parms") 
+            elif(geocid == sugm.GoogleId)       : cfg.drop_config_value(sugw.google_query_id + "Parms") 
+            elif(geocid == sugm.BingId)         : cfg.drop_config_value(sugw.bing_query_id + "Parms") 
+            elif(geocid == sugm.OpenMapQuestId) : cfg.drop_config_value(sugw.mapquest_query_id + "Parms") 
+            elif(geocid == sugm.NominatimId)    : cfg.drop_config_value(sugw.nomin_query_id + "Parms") 
+        
+            sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
+            
+        else :
+            if(geocid == sugm.ArcGISId)         : cfg.drop_config_value(sugw.arcgis_reverse_id + "Parms") 
+            elif(geocid == sugm.GoogleId)       : cfg.drop_config_value(sugw.google_reverse_id + "Parms") 
+            elif(geocid == sugm.BingId)         : cfg.drop_config_value(sugw.bing_reverse_id + "Parms") 
+            elif(geocid == sugm.NominatimId)    : cfg.drop_config_value(sugw.nomin_reverse_id + "Parms") 
+            
+            sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS)
+        
             
 """
 #--------------------------------------------------------------------------

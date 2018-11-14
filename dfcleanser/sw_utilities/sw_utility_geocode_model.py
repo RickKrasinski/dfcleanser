@@ -86,6 +86,7 @@ DISPLAY_FULL_BATCH_ARCGIS_QUERY =    19
 
 PROCESS_BATCH_TEST_CONNECTOR    =    20
 
+CLEAR_GEOCODE_PARMS             =    21
 
 
 INITPARMS                   =   0

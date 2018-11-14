@@ -471,10 +471,10 @@ arcgis_query_labelList              =   ["address(s)",
 arcgis_query_typeList               =   [maketextarea(6),"text","text","text",
                                          "button","button","button","button","button","button"]
 
-arcgis_query_placeholderList        =   ["address string",
-                                         "max number of results (default 1) ",
-                                         "enter timeout in seconds (default 1)",
-                                         "a list or tuple of out fields (default None)",
+arcgis_query_placeholderList        =   ["single address string or [] list of address strings",
+                                         "max number of results per address (default - 1) ",
+                                         "enter timeout in seconds (default - 5)",
+                                         "a list or tuple of out fields (default - None)",
                                          None,None,None,None,None,None]
 
 arcgis_query_jsList                 =   [None,None,None,None,
@@ -533,9 +533,9 @@ google_query_labelList              =   ["address(s)",
 google_query_typeList               =   [maketextarea(6),"text","text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
-google_query_placeholderList        =   ["address string",
-                                         "max number of results (default - 1) ",
-                                         "enter timeout in seconds (default - 1)",
+google_query_placeholderList        =   ["single address string or [] list of address strings",
+                                         "max number of results per address (default - 1) ",
+                                         "enter timeout in seconds (default - 5)",
                                          "enter bounding box of the viewport (default - None)",
                                          "enter the ccTLD region code (default - None)",
                                          "enter components dict) (default - None)",
@@ -594,10 +594,10 @@ bing_query_labelList                =   ["address(s)",
 bing_query_typeList                 =   [maketextarea(6),"text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
-bing_query_placeholderList          =   ["address string",
-                                         "max number of results (default - 1) ",
+bing_query_placeholderList          =   ["single address string or [] list of address strings",
+                                         "max number of results per address (default - 1) ",
                                          "enter coords to prioritize to (default - None)",
-                                         "enter timeout in seconds (default - 1)",
+                                         "enter timeout in seconds (default - 5)",
                                          "enter two-letter country code (default - None) ",
                                          "return neighborhood field (default - False)",
                                          "return 2 digit country code (default - False)",
@@ -654,12 +654,12 @@ databc_query_labelList                =  ["query",
 databc_query_typeList                 =   ["text","text","text","text","text","text",
                                            "button","button","button","button","button","button"]
 
-databc_query_placeholderList          =   ["address string",
+databc_query_placeholderList          =   ["single address string or [] list of address strings",
                                            "max number of results (default - 1) ",
                                            "The distance to move the accessPoint (default - None)",
                                            "the type of point requested (default - 1)",
-                                           "number of results (default - 1) ",
-                                           "timeout in secs (default - 1)",
+                                           "number of results per address (default - 1) ",
+                                           "timeout in secs (default - 5)",
                                             None,None,None,None,None,None]
 
 databc_query_jsList                   =   [None,None,None,None,None,None,
@@ -706,8 +706,8 @@ mapquest_query_labelList                 =  ["address(s)",
 mapquest_query_typeList                  =   [maketextarea(6),"text","text",
                                               "button","button","button","button","button","button"]
 
-mapquest_query_placeholderList           =   ["address string",
-                                              "max number of results (default - 1) ",
+mapquest_query_placeholderList           =   ["single address string or [] list of address strings",
+                                              "max number of results per address (default - 1) ",
                                               "timeout in secs (default - 1)",
                                               None,None,None,None,None,None]
 
@@ -763,11 +763,11 @@ nomin_query_labelList                    =  ["address(s)",
 nomin_query_typeList                     =   [maketextarea(6),"text","text","text","text","text","text",
                                               "button","button","button","button","button","button"]
 
-nomin_query_placeholderList              =   ["address string",
-                                              "max number of results (default - 1) ",
+nomin_query_placeholderList              =   ["single address string or [] list of address strings",
+                                              "max number of results per address (default - 1) ",
                                               "timeout in secs (default - None)",
                                               "limit Maximum amount of results to return (default - None)",
-                                              "Location.raw to include addressdetails  (default - False)",
+                                              "Location.raw to include address details  (default - False)",
                                               "language in which to return results  (default - False)",
                                               "return the result’s geometry in wkt, svg, kml, or geojson formats (default - None)",
                                               None,None,None,None,None,None]
