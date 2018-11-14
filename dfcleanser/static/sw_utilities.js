@@ -295,20 +295,16 @@ function process_reverse_callback(fid, gcid) {
             switch (gcid) {
                 case 0:     id = "arcgisreverse";   break;
                 case 2:     id = "bingreverse";     break;
-                case 3:     id = "databcreverse";   break;
-                case 4:     id = "dotusreverse";    break;
                 case 7:     id = "googlereverse";   break;
-                case 9:     id = "mapquestreverse"; break;
                 case 11:    id = "nominreverse";    break;
-                case 12:    id = "yahooreverse";    break;
             }
 
             var cmd = fid;
             switch (fid) {
                 case 0: cmd = 4;    break;
-                case 1: cmd = 12;   break;
+                case 1: cmd = 1;    break;
                 case 2: cmd = 5;    break;
-                case 3: cmd = 2;    break;
+                case 3: cmd = 21;   break;
                 case 8: cmd = 2;    break;
                 case 9: cmd = 14;   break;
             }
@@ -320,8 +316,11 @@ function process_reverse_callback(fid, gcid) {
                 if (fid == 9)
                     fparms = get_input_form_parms(id + "DF");
             }
-
-            var inputs = [fid, gcid, fparms];
+            if(fid == 3)
+                var inputs = [1, gcid];
+            else
+                var inputs = [fid, gcid, fparms];
+                
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",cmd + ", " + JSON.stringify(inputs)));
             break;
         case 4:
