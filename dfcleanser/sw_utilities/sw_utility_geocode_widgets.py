@@ -812,7 +812,7 @@ google_reverse_idList                  =    ["grquery",
                                              "grsensor",
                                              None,None,None,None,None,None]
 
-google_reverse_labelList               =   ["query",
+google_reverse_labelList               =   ["latitude_longitude(s)",
                                             "number_of_results",
                                             "timeout",
                                             "language",
@@ -823,15 +823,15 @@ google_reverse_labelList               =   ["query",
                                             "Clear","Return","Help"]
 
 
-google_reverse_typeList                =   ["text","text","text","text","text",
+google_reverse_typeList                =   [maketextarea(6),"text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 google_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
                                             "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - 1)",
-                                             "enter the language (default - None)",
-                                             "enter sensor flag (default - False)",
-                                             None,None,None,None,None,None]
+                                            "enter timeout in seconds (default - 5)",
+                                            "enter the language (default - English)",
+                                            "enter sensor flag (default - False)",
+                                            None,None,None,None,None,None]
 
 google_reverse_jsList                  =   [None,None,None,None,None,
                                             "process_reverse_callback(0," + str(sugm.GoogleId) + ")",
@@ -867,7 +867,7 @@ arcgis_reverse_idList                  =    ["arquery",
                                              "arwkid",
                                              None,None,None,None,None,None]
 
-arcgis_reverse_labelList               =   ["query",
+arcgis_reverse_labelList               =   ["latitude_longitude(s)",
                                             "number_of_results",
                                             "timeout",
                                             "distance",
@@ -878,12 +878,12 @@ arcgis_reverse_labelList               =   ["query",
                                             "Clear","Return","Help"]
 
 
-arcgis_reverse_typeList                =   ["text","text","text","text","text",
+arcgis_reverse_typeList                =   [maketextarea(6),"text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 arcgis_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
                                             "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - None)",
+                                            "enter timeout in seconds (default - 5)",
                                             "Distance from the query location (default - None)",
                                             "WKID to use for both input and output coordinates (default - 4236)",
                                             None,None,None,None,None,None]
@@ -922,7 +922,7 @@ bing_reverse_idList                    =    ["brquery",
                                              "brcc",
                                              None,None,None,None,None,None]
 
-bing_reverse_labelList                 =   ["query",
+bing_reverse_labelList                 =   ["latitude_longitude(s)",
                                             "number_of_results",
                                             "timeout",
                                             "culture",
@@ -933,12 +933,12 @@ bing_reverse_labelList                 =   ["query",
                                             "Clear","Return","Help"]
 
 
-bing_reverse_typeList                  =   ["text","text","text","text","text",
+bing_reverse_typeList                  =   [maketextarea(6),"text","text","text","text",
                                             "button","button","button","button","button","button"]
 
 bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
                                             "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - None)",
+                                            "enter timeout in seconds (default - 5)",
                                             "two-letter country code (default - None)",
                                             "whether to include the two-letter ISO code of the country (default - False)",
                                             None,None,None,None,None,None]
@@ -976,7 +976,7 @@ nomin_reverse_idList                       =    ["nrquery",
                                                  "nrlanguage",
                                                  None,None,None,None,None,None]
 
-nomin_reverse_labelList                    =   ["query",
+nomin_reverse_labelList                    =   ["latitude_longitude(s)",
                                                 "number_of_results",
                                                 "timeout",
                                                 "language",
@@ -986,13 +986,13 @@ nomin_reverse_labelList                    =   ["query",
                                                 "Clear","Return","Help"]
 
 
-nomin_reverse_typeList                     =   ["text","text","text","text",
+nomin_reverse_typeList                     =   [maketextarea(6),"text","text","text",
                                                 "button","button","button","button","button","button"]
 
 nomin_reverse_placeholderList              =   ["list or tuple of (latitude, longitude)",
                                                 "max number of results (default - 1) ",
-                                                "enter timeout in seconds (default - None)",
-                                                "Preferred language in which to return results (default - False)",
+                                                "enter timeout in seconds (default - 5)",
+                                                "Preferred language in which to return results (default - English)",
                                                 None,None,None,None,None,None]
 
 nomin_reverse_jsList                       =   [None,None,None,None,
@@ -1013,8 +1013,6 @@ nomin_reverse_form                         =   [nomin_reverse_id,
                                                 nomin_reverse_placeholderList,
                                                 nomin_reverse_jsList,
                                                 nomin_reverse_reqList]
-
-
 
 
 

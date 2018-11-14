@@ -618,6 +618,9 @@ def get_geocoder_coords(inparms) :
     parms   =   inparms[2]
     opstat  =   opStatus()
     
+    addresses   =   []
+    coords      =   []
+    
     opstat = sugw.validate_cmd_parms(sugm.QUERYPARMS,geocid,parms)
     
     if(not opstat.get_status()) :
@@ -644,8 +647,40 @@ def get_geocoder_coords(inparms) :
             try :
                 
                 queryparms = get_geocoder_cmd_parms(sugm.QUERYPARMS,geocid)
-                query = queryparms.get("query")
-                queryparms.pop("query")
+                query = queryparms.get("address(s)")
+                queryparms.pop("address(s)")
+                
+                if(len(query) > 2) :
+                    
+                    query = query.replace("\n","")
+                    
+                    # only 1 coord pair
+                    if(query.find("],") == -1) :
+                        addresses.append(query)
+                        
+                    # multiple addresses
+                    else :
+                
+                        # find out how lat longs in query
+                        nextaddr      =   0
+                        startaddr     =   0
+                
+                        while nextaddr < len(query) :
+                            nextaddr = query[startaddr:].find("],")
+                            if(nextaddr == -1) :
+                                addresses.append(query[startaddr:len(query)])
+                                nextaddr = len(query)
+                            else :
+                                addresses.append(query[startaddr:(nextaddr+1)])
+                                startaddr     =   nextaddr + 2
+                        
+                        for i in range(len(addresses)) :
+                            addresses[i]    =  addresses[i].replace("[","") 
+                            addresses[i]    =  addresses[i].replace("]","")
+
+                else :
+                    opstat.get_status(False)
+                    opstat.set_errorMsg("address(s) parm is invalid")    
                 
                 if(queryparms.get("number_of_results") != None) :
                     numresults = int(queryparms.get("number_of_results"))
@@ -655,10 +690,14 @@ def get_geocoder_coords(inparms) :
                     else :
                         queryparms.update({"exactly_one":False})
                 
-                if(len(queryparms) > 0) :
-                    location = geolocator.geocode(query, **queryparms) 
-                else :
-                    location = geolocator.geocode(query) 
+                for i in range(len(addresses)) :
+                
+                    if(len(queryparms) > 0) :
+                        location = geolocator.geocode(addresses[i], **queryparms) 
+                    else :
+                        location = geolocator.geocode(addresses[i]) 
+                    
+                    coords.append(location)
                     
             except Exception as e:
                 opstat.store_exception("Error getting geocoder coords",e)
@@ -673,19 +712,26 @@ def get_geocoder_coords(inparms) :
             display_status("coordinates retrieved successfully")
             
             notes = []
-            notes.append("Starting Address   : " + query)
-            notes.append("  ")
-            notes.append("Returned Coords(s)   : ")
-            if(type(location) == list) :
-                for i in range(len(location)) :
-                    if(i<numresults) :
-                        notes.append("&nbsp;&nbsp;Address&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;" + location[i].address) 
-                        notes.append("&nbsp;&nbsp;Latitude&nbsp;&nbsp;:&nbsp;&nbsp;" + str(location[i].latitude))
-                        notes.append("&nbsp;&nbsp;Longitude&nbsp;&nbsp; :&nbsp;&nbsp;" + str(location[i].longitude))
-            else :
-                notes.append("&nbsp;&nbsp;Address   : " + location.address) 
-                notes.append("&nbsp;&nbsp;Latitude  : " + str(location.latitude))
-                notes.append("&nbsp;&nbsp;Longitude : " + str(location.longitude))
+            
+            for j in range(len(coords)) : 
+                
+                if(len(addresses) > 1) :
+                    notes.append("Starting Address " + str(j) + " : " + addresses[j])
+                else :
+                    notes.append("Starting Address : " + addresses[j])
+                    
+                notes.append("  ")
+                notes.append("&nbsp;&nbsp;Returned Coords   : ")
+                if(type(coords[j]) == list) :
+                    for i in range(len(location)) :
+                        if(i<numresults) :
+                            notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Address&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;" + coords[j][i].address) 
+                            notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Latitude&nbsp;&nbsp;:&nbsp;&nbsp;" + str(coords[j][i].latitude))
+                            notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Longitude&nbsp;&nbsp; :&nbsp;&nbsp;" + str(coords[j][i].longitude))
+                else :
+                    notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Address   : " + coords[j].address) 
+                    notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Latitude  : " + str(coords[j].latitude))
+                    notes.append("&nbsp;&nbsp;&nbsp;&nbsp;Longitude : " + str(coords[j].longitude))
 
             display_notes(notes)
             
@@ -944,6 +990,9 @@ def get_geocoder_address(inparms) :
     parms   =   inparms[2]
     opstat  =   opStatus()
     
+    coords      =   []
+    locations   =   []
+    
     opstat = sugw.validate_cmd_parms(sugm.REVERSEPARMS,geocid,parms)
     
     if(not opstat.get_status()) :
@@ -966,18 +1015,50 @@ def get_geocoder_address(inparms) :
                 
                 queryparms = get_geocoder_cmd_parms(sugm.REVERSEPARMS,geocid)
                 #print("queryparms",queryparms)
-                query = queryparms.get("query")
-                queryparms.pop("query")
+                query = queryparms.get("latitude_longitude(s)")
+                queryparms.pop("latitude_longitude(s)")
+                
+                if(len(query) > 2) :
+                    
+                    query = query.replace(" ","")
+                    query = query.replace("\n","")
+                    
+                    # only 1 coord pair
+                    if(query.find("],") == -1) :
+                        coords.append(query)
+                        
+                    # multiple coord pairs
+                    else :
+                
+                        # find out how lat longs in query
+                        nextcoords      =   0
+                        startcoords     =   0
+                
+                        while nextcoords < len(query) :
+                            nextcoords = query[startcoords:].find("],")
+                            if(nextcoords == -1) :
+                                coords.append(query[startcoords:len(query)])
+                                nextcoords = len(query)
+                            else :
+                                coords.append(query[startcoords:(nextcoords+1)])
+                                startcoords     =   nextcoords + 2
+                                
+                else :
+                    opstat.get_status(False)
+                    opstat.set_errorMsg("latitude_longitudes(s) parm is invalid")    
                 
                 if(queryparms.get("number_of_results") != None) :
                     numresults = int(queryparms.get("number_of_results"))
                     queryparms.pop("number_of_results")
                     queryparms.update({"exactly_one":False})
                 
-                if(len(queryparms) > 0) :
-                    location = geolocator.reverse(query, **queryparms) 
-                else :
-                    location = geolocator.reverse(query) 
+                for i in range(len(coords)) :
+                    if(len(queryparms) > 0) :
+                        location = geolocator.reverse(coords[i], **queryparms) 
+                    else :
+                        location = geolocator.reverse(coords[i]) 
+                    
+                    locations.append(location)
                     
             except Exception as e:
                 opstat.store_exception("Error getting geocoder coords",e)
@@ -988,21 +1069,30 @@ def get_geocoder_address(inparms) :
         
         if(opstat.get_status()) :
             
-            print("\n")
-            display_status("address retrieved successfully")
-            
-            notes = []
-            notes.append("Address Coordinates   : " + query)
-            notes.append("  ")
-            notes.append("Returned Address(s)   : ")
-            if(type(location) == list) :
-                for i in range(len(location)) :
-                    if(i<numresults) :
-                        notes.append("&nbsp;&nbsp;" + location[i].address)    
+            if(location == None) :
+                display_status("no address retrieved check coordinates")
             else :
-                notes.append("&nbsp;&nbsp;" + location.address)
+                print("\n")
+                if(len(locations) > 1) :
+                    display_status("addresses retrieved successfully")
+                else :
+                    display_status("address retrieved successfully")
                 
-            display_notes(notes)
+                notes = []
+                for i in range(len(locations)) :
+                    if(len(locations) > 1) :
+                        notes.append("Address " + str(i) + " : ")   
+                    notes.append("&nbsp;&nbsp;Address Coordinates   : " + coords[i])
+                    notes.append("  ")
+                    notes.append("&nbsp;&nbsp;Returned Address : ")
+                    if(type(locations[i]) == list) :
+                        for j in range(len(locations[i])) :
+                            if(i<numresults) :
+                                notes.append("&nbsp;&nbsp;&nbsp;&nbsp;" + locations[i][j].address)    
+                    else :
+                        notes.append("&nbsp;&nbsp;&nbsp;&nbsp;" + locations[i].address)
+                
+                display_notes(notes)
         else :
             display_exception(opstat)
 
