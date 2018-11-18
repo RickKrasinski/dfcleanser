@@ -76,7 +76,18 @@ body {
 }
 
 
-/* Data Cleanser table component style dependencies  */
+/* 
+--------------------------------------------------- 
+------------------- Table Styles ------------------ 
+---------------------------------------------------
+*/
+
+
+/* 
+------------------------------------------------------
+Dataframe Cleanser table component style dependencies  
+------------------------------------------------------
+*/
 
 .table td {
     text-align: center;
@@ -107,13 +118,6 @@ table.dcsearchtable th {
 table.dcsearchtable td {
     font-size: 9px;
 }
-
-
-/* 
---------------------------------------------------- 
-------------------- Table Styles ------------------ 
----------------------------------------------------
-*/
 
 .dc-table {
     margin-bottom: 0px;
@@ -479,10 +483,14 @@ button.search-morePrev {
 }
 
 .dc-form-div {
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 0px;
-    padding-top: 0px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding-bottom: 1px;
+    padding-top: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
 .dchdr h6 {
@@ -530,21 +538,14 @@ h2.DCTitleChaptersh2 {
 --------------------------------------------------- 
 */
 
-div.exception-outer {
-    width: 820px;
-    border: 2px solid #428bca;
-    margin-left: 50px;
-    overflow-y: hidden;
-}
-
 div.exception-status {
     font-size: 13px;
-    width: 790px;
-    margin-left: 10px;
-    margin-top: 2px;
+    width: 95%;
+    margin-left: 20px;
+    margin-top: 8px;
     font-weight: normal;
     font-style: normal;
-    border: 1px solid #428bca;
+    border: 0px solid #428bca;
 }
 
 div.exception-status-detail {
@@ -555,27 +556,6 @@ div.exception-status-detail {
     font-weight: normal;
     font-style: normal;
     border: 0px solid #428bca;
-}
-
-div.exception-trace-title {
-    font-size: 12px;
-    width: 790px;
-    margin-left: 10px;
-    margin-top: 2px;
-    font-weight: normal;
-    font-style: normal;
-    border: 1px solid #428bca;
-}
-
-div.exception-trace {
-    font-size: 12px;
-    width: 770px;
-    border: 0px solid #428bca;
-    margin-left: 20px;
-    margin-top: 5px;
-    margin-bottom: 2px;
-    font-weight: normal;
-    font-style: normal;
 }
 
 
@@ -643,21 +623,6 @@ th.a:link {
 */
 
 .acconv_wrapper {
-    margin-left: 40px;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 240px 620px 20px;
-    grid-template-areas: "....... header header" "sidebar content content" "footer  footer  footer";
-    background-color: #fff;
-    color: #444;
-}
-
-
-/* 
---------------- Composite Addr Grid ---------------                 
-*/
-
-.compaddr_wrapper {
     margin-left: 40px;
     display: grid;
     grid-gap: 10px;
@@ -776,7 +741,7 @@ th.a:link {
 
 
 /* 
---------------- Dataframe Subset Grid --------------                 
+--------------- Dataframe Subset Grids --------------                 
 */
 
 .dfsubset_wrapper {
@@ -799,34 +764,6 @@ th.a:link {
     color: #444;
 }
 
-.tableids {
-    border: 1px solid #428bca;
-    padding-left: 0;
-    margin-left: 0;
-    text-align: center;
-}
-
-.sqlList-title {
-    font-size: 14px;
-    font-weight: bold;
-    color: black;
-}
-
-.sqlList-row {
-    font-size: 13px;
-    font-weight: bold;
-    color: black;
-    list-style-type: none;
-}
-
-.sqlList {
-    font-size: 12px;
-    font-weight: bold;
-    color: black;
-    list-style-type: none;
-    text-align: left;
-}
-
 
 /* 
 -------------- dfcleanser Files Grid --------------                 
@@ -841,6 +778,52 @@ th.a:link {
     background-color: #fff;
     color: #444;
 }
+
+
+/* 
+--------------- Common Grid Components ------------                 
+*/
+
+.sidebar {
+    grid-area: sidebar;
+}
+
+.sidebar1 {
+    grid-area: sidebar1;
+}
+
+.content {
+    grid-area: content;
+}
+
+.header {
+    grid-area: header;
+    color: black;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+.box {
+    background-color: #fff;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 150%;
+}
+
+.header,
+.footer {
+    background-color: #fff;
+}
+
+
+/* 
+--------------------------------------------------- 
+------ end Dataframe Cleanser Grid Wrappers -------                 
+---------------------------------------------------
+*/
 
 
 /* 
@@ -978,47 +961,6 @@ img.help-images {
     font-style: normal;
     font-family: Arial;
     color: #428bca;
-}
-
-
-/* 
---------------------------------------------------- 
---------------- Common Grid Components ------------                 
----------------------------------------------------
-*/
-
-.sidebar {
-    grid-area: sidebar;
-}
-
-.sidebar1 {
-    grid-area: sidebar1;
-}
-
-.content {
-    grid-area: content;
-}
-
-.header {
-    grid-area: header;
-    color: black;
-}
-
-.footer {
-    grid-area: footer;
-}
-
-.box {
-    background-color: #fff;
-    color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 150%;
-}
-
-.header,
-.footer {
-    background-color: #fff;
 }
 
 
