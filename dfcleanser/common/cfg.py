@@ -143,6 +143,8 @@ DCdf = DCDataframes()
 GLOBAL      =   False
 LOCAL       =   True
 
+
+
 """
 #--------------------------------------------------------------------------
 #   DBUtils config value keys
@@ -156,78 +158,78 @@ CURRENT_DBLIB_ID_KEY        =   "currentDBLIBID"
 #   Cleansing config value keys
 #--------------------------------------------------------------------------
 """
-UNIQUES_FLAG_KEY            =   "columnUniquesDisplay"
-UNIQUES_RANGE_KEY           =   "columnUniquesRange"
+UNIQUES_FLAG_KEY                        =   "columnUniquesDisplay"
+UNIQUES_RANGE_KEY                       =   "columnUniquesRange"
 
-OUTLIERS_FLAG_KEY           =   "columnOutliersDisplay"
-DATA_TYPES_FLAG_KEY         =   "columnDataTypeChange"
-ROUNDING_FLAG_KEY           =   "roundcolumn"
+OUTLIERS_FLAG_KEY                       =   "columnOutliersDisplay"
+DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
+ROUNDING_FLAG_KEY                       =   "roundcolumn"
 
-CLEANSING_COL_KEY           =   "datacleansingcolumn"
-CLEANSING_ROW_KEY           =   "datacleansingrow"
+CLEANSING_COL_KEY                       =   "datacleansingcolumn"
+CLEANSING_ROW_KEY                       =   "datacleansingrow"
 
-OBJ_TYPE_PARM_KEY           =   "objtypeparm"
-OBJ_DATA_TYPES_FLAG_KEY     =   "colsDataTypeChange"
-OBJ_ROUNDING_FLAG_KEY       =   "colsroundcolumn"
+OBJ_TYPE_PARM_KEY                       =   "objtypeparm"
+OBJ_DATA_TYPES_FLAG_KEY                 =   "colsDataTypeChange"
+OBJ_ROUNDING_FLAG_KEY                   =   "colsroundcolumn"
 
-GRAPHS_FLAG_KEY             =   "graphcolumn"
+GRAPHS_FLAG_KEY                         =   "graphcolumn"
 
 """
 #--------------------------------------------------------------------------
 #   Export config value keys
 #--------------------------------------------------------------------------
 """
-CURRENT_EXPORTED_FILE_NAME_KEY    =   "currentEXportedFileName"
+CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentEXportedFileName"
 
 """
 #--------------------------------------------------------------------------
 #   Import config value keys
 #--------------------------------------------------------------------------
 """
-CURRENT_IMPORTED_DATA_SOURCE_KEY  =   "currentImportedDataSource"
-CURRENT_SQL_IMPORT_ID_KEY         =   "currentSQLImportID"
+CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
+CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
 
-MYSQL_IMPORT_PARMS_KEY            =   "MySqlImportParms"
-MSSQL_IMPORT_PARMS_KEY            =   "MSSqlServerImportParms"
-SQLITE_IMPORT_PARMS_KEY           =   "SqliteImportParms"
-POSTGRESQL_IMPORT_PARMS_KEY       =   "PostgresqlImportParms"
-ORACLE_IMPORT_PARMS_KEY           =   "OracleImportParms"
-CUSTOM_IMPORT_PARMS_KEY           =   "CustomImportParms"
+MYSQL_IMPORT_PARMS_KEY                  =   "MySqlImportParms"
+MSSQL_IMPORT_PARMS_KEY                  =   "MSSqlServerImportParms"
+SQLITE_IMPORT_PARMS_KEY                 =   "SqliteImportParms"
+POSTGRESQL_IMPORT_PARMS_KEY             =   "PostgresqlImportParms"
+ORACLE_IMPORT_PARMS_KEY                 =   "OracleImportParms"
+CUSTOM_IMPORT_PARMS_KEY                 =   "CustomImportParms"
 
 """
 #--------------------------------------------------------------------------
 #   Inspection config value keys
 #--------------------------------------------------------------------------
 """
-DATA_TYPES_CBOX_0_KEY           =   "data_inspection_cb0"
-NANS_CBOX_1_KEY                 =   "data_inspection_cb1"
-ROWS_CBOX_2_KEY                 =   "data_inspection_cb2"
-COLS_CBOX_3_KEY                 =   "data_inspection_cb3"
-CATS_CBOX_4_KEY                 =   "data_inspection_cb4"
+DATA_TYPES_CBOX_0_KEY                   =   "data_inspection_cb0"
+NANS_CBOX_1_KEY                         =   "data_inspection_cb1"
+ROWS_CBOX_2_KEY                         =   "data_inspection_cb2"
+COLS_CBOX_3_KEY                         =   "data_inspection_cb3"
+CATS_CBOX_4_KEY                         =   "data_inspection_cb4"
 
 """
 #--------------------------------------------------------------------------
 #   Transform config value keys
 #--------------------------------------------------------------------------
 """
-DATA_TRANSFORM_COL_SELECTED_KEY =   "DT_ColumnsSelected"
-MAP_TRANSFORM_COL_NAME_KEY      =   "DT_MapColumnName"
-MOVE_COL_ID_KEY                 =   "MoveColumnId"
-MOVE_AFTER_COL_ID_KEY           =   "MoveAfterColumnId"
-ADD_COL_COL_NAME_KEY            =   "AddColumnColName"
-ADD_COL_DATATYPE_ID_KEY         =   "AddColumnDataType"
-ADD_COL_CODE_KEY                =   "AddColumnCode"
-COPY_COL_TO_KEY                 =   "CopyColumnTo"
-COPY_COL_FROM_KEY               =   "CopyColumnFrom"
+DATA_TRANSFORM_COL_SELECTED_KEY         =   "DT_ColumnsSelected"
+MAP_TRANSFORM_COL_NAME_KEY              =   "DT_MapColumnName"
+MOVE_COL_ID_KEY                         =   "MoveColumnId"
+MOVE_AFTER_COL_ID_KEY                   =   "MoveAfterColumnId"
+ADD_COL_COL_NAME_KEY                    =   "AddColumnColName"
+ADD_COL_DATATYPE_ID_KEY                 =   "AddColumnDataType"
+ADD_COL_CODE_KEY                        =   "AddColumnCode"
+COPY_COL_TO_KEY                         =   "CopyColumnTo"
+COPY_COL_FROM_KEY                       =   "CopyColumnFrom"
 
 """
 #--------------------------------------------------------------------------
 #   Scripting config value keys
 #--------------------------------------------------------------------------
 """
-SCRIPT_LOG_KEY                  =   "ScriptLog"
-BACKUP_SCRIPT_LOG_KEY           =   "BackupScriptLog"
-SCRIPTING_FLAG_KEY              =   "ScriptingFlag"
+SCRIPT_LOG_KEY                          =   "ScriptLog"
+BACKUP_SCRIPT_LOG_KEY                   =   "BackupScriptLog"
+SCRIPTING_FLAG_KEY                      =   "ScriptingFlag"
 
 """
 #--------------------------------------------------------------------------
@@ -238,21 +240,19 @@ CURRENT_GEOCODER_KEY                    =   "currentGeocoder"
 ARCGIS_BATCH_MAX_BATCH_SIZE_KEY         =   "arcgisMaxBatchSize"
 ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY   =   "arcgisSuggestedBatchSize"
 
-
-
 """
 #--------------------------------------------------------------------------
 #   System config value keys
 #--------------------------------------------------------------------------
 """
-CORE_CBS_KEY                    =   "dfc_core_cbs"
-UTILITIES_CBS_KEY               =   "dfc_utilities_cbs"
-SCRIPTING_CBS_KEY               =   "dfc_scripting_cbs"
-LAST_TASK_BAR_ID_KEY            =   "lastsystemtaskbarid"
-EULA_FLAG_KEY                   =   "EULARead"
-SAVED_FILE_NAME_KEY             =   "DCS_savedfilenname"
-DFC_CURRENTLY_LOADED_KEY        =   "dfcleanserCurrentlyLoaded"
-DFC_CHAPTERS_LOADED_KEY         =   "dfcCurrentlyLoadedChapters"
+CORE_CBS_KEY                            =   "dfc_core_cbs"
+UTILITIES_CBS_KEY                       =   "dfc_utilities_cbs"
+SCRIPTING_CBS_KEY                       =   "dfc_scripting_cbs"
+LAST_TASK_BAR_ID_KEY                    =   "lastsystemtaskbarid"
+EULA_FLAG_KEY                           =   "EULARead"
+SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
+DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
+DFC_CHAPTERS_LOADED_KEY                 =   "dfcCurrentlyLoadedChapters"
 
 """
 #--------------------------------------------------------------------------
@@ -263,6 +263,13 @@ CURRENT_COL_NAME    =   "currentColumnName"
 
 def get_current_col_name() :
     return(get_config_value(CURRENT_COL_NAME))
+
+
+GlobalKeys          =   [EULA_FLAG_KEY,ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY]
+GlobalParmsKeys     =   ["geocoder"]
+
+
+
 
 
 """

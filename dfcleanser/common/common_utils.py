@@ -1568,7 +1568,7 @@ def display_exception(opstat,display=True) :
     
     #print("\n")
     exception_html = ""
-    exception_html = (exception_html + '<div class="container" style="border: 1px solid #428bca; width:82%; margin-left:100px;">' + new_line)
+    exception_html = (exception_html + '<div class="container" style="border: 0px solid #428bca; width:82%; margin-left:100px;">' + new_line)
     exception_html = (exception_html + '    <div class="row">' + new_line)
     exception_html = (exception_html + '        <div class="panel panel-primary" style="border: 0px">' + new_line)
     exception_html = (exception_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
@@ -1577,7 +1577,7 @@ def display_exception(opstat,display=True) :
     exception_html = (exception_html + '                </div>' + new_line) 
     exception_html = (exception_html + '            </div>' + new_line)
     exception_html = (exception_html + '            <div></br></div>' + new_line)
-    exception_html = (exception_html + '            <div class="exception-status" style="height:30px;">' + new_line)
+    exception_html = (exception_html + '            <div class="exception-status">' + new_line)
     exception_html = (exception_html + '                <p>' + "&nbsp;" + str(opstat.get_errorMsg()) + '</p>' + new_line)
     exception_html = (exception_html + '            </div>' + new_line)
 
@@ -1594,7 +1594,7 @@ def display_exception(opstat,display=True) :
         exception_html = (exception_html + '                <p>' + "&nbsp;&nbsp;&nbsp;" + rcstring + '</p>' + new_line)
         exception_html = (exception_html + '            </div>' + new_line)
         
-    exception_html = (exception_html + '        <div><br></div>' + new_line) 
+    #exception_html = (exception_html + '        <div><br></div>' + new_line) 
         
     exception_html = (exception_html + '        </div>' + new_line) 
     exception_html = (exception_html + '    </div>' + new_line) 
@@ -1662,11 +1662,15 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False) :
             notes_html = (notes_html + '        <div class="panel panel-primary" style="border:1px; background-color:#FAFB95;">' + new_line)
     else :
         notes_html = (notes_html + '        <div class="panel panel-primary" style="border:0px;  ">' + new_line)
-    notes_html = (notes_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
-    notes_html = (notes_html + '                <div class="input-group">' + new_line)
-    notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px;">' + text +'</p>' + new_line)
-    notes_html = (notes_html + '                </div>' + new_line) 
-    notes_html = (notes_html + '            </div>' + new_line) 
+    
+    if(not (text == None)) :   
+        notes_html = (notes_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
+        notes_html = (notes_html + '                <div class="input-group">' + new_line)
+        notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px;">' + text +'</p>' + new_line)
+        notes_html = (notes_html + '                </div>' + new_line) 
+        notes_html = (notes_html + '            </div>' + new_line)
+    
+    
     notes_html = (notes_html + "        <div class='note-line'>" + new_line)
     notes_html = (notes_html + "            <p><span class='note-line'></span></p>" + new_line)
     notes_html = (notes_html + "        </div>" + new_line)

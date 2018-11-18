@@ -342,6 +342,7 @@ NominatimQueryHelp               =   "https://geopy.readthedocs.io/en/stable/#ge
 ArcGISReverseHelp                =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.ArcGIS.reverse"
 BingReverseHelp                  =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.Bing.reverse"
 GoogleReverseHelp                =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.GoogleV3.reverse"
+OpenMapQuestReverseHelp          =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.OpenMapQuest.reverse"
 NominatimReverseHelp             =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.Nominatim.reverse"
 
 ArcGISInitHelp                   =   "https://geopy.readthedocs.io/en/stable/#geopy.geocoders.ArcGIS"

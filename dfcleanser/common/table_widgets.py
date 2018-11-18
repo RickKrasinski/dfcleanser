@@ -936,8 +936,8 @@ class dcTable :
         """
         
         #debug 
-        if(0):#self.get_title() != None)  :  
-            if( (self.get_title() == "Geocoder Parms") or ("#Parms" in self.get_title()) ) :   
+        if(self.get_title() != None)  :  
+            if( (self.get_title() == "@Geocoders") or ("#Geocoder Parms" in self.get_title()) ) :   
                print(tableHTML)
                
         return(tableHTML)
