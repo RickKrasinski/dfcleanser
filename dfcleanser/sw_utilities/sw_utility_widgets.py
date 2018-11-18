@@ -37,7 +37,7 @@ build_utility_tb_doc_title        =   "Build Utility Options"
 build_utility_tb_title            =   "Build Options"
 build_utility_tb_id               =   "buildutilityoptionstb"
 
-build_utility_tb_keyTitleList     =   ["Build List","Build Dict","Clear","Help"]
+build_utility_tb_keyTitleList     =   ["Lists","Dicts","Clear","Help"]
 
 build_utility_tb_jsList           =   ["build_utility_callback("+str(swum.LIST_OPTION)+")",
                                        "build_utility_callback("+str(swum.DICT_OPTION)+")",
@@ -59,8 +59,8 @@ build_list_utility_input_idList         =   ["startlistfile","listname","listite
 build_list_utility_input_labelList      =   ["list_file_to_start_With",
                                              "list_name",
                                              "list_value(s)",
-                                             "Delete</br>From</br>Notebook</br>Lists",
-                                             "Save</br> To </br>Notebook</br>Lists",
+                                             "Delete</br>From</br>Lists",
+                                             "Save</br> To </br>Lists",
                                              "Clear","Return","Help"]
 
 build_list_utility_input_typeList       =   ["file","text",maketextarea(10),
@@ -105,8 +105,8 @@ build_dict_utility_input_idList         =   ["startdictfile",
 build_dict_utility_input_labelList      =   ["dict_file_to_start_With",
                                              "dict_name",
                                              "dict_values",
-                                             "Delete</br>From</br>Notebook</br>Dicts",
-                                             "Save</br> To </br>Notebook</br>Dicts",
+                                             "Delete</br>From</br>Dicts",
+                                             "Save</br> To </br>Dicts",
                                              "Clear","Return","Help"]
 
 build_dict_utility_input_typeList       =   ["file","text",maketextarea(10),

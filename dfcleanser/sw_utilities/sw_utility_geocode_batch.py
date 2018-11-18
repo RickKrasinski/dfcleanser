@@ -117,7 +117,7 @@ batch_arcgis_geocoder_idList           =    ["bagusername",
 
 batch_arcgis_geocoder_labelList        =   ["arcgis_username",
                                             "arcgis_pw",
-                                            "Test</br>Geocoder",
+                                            "Get</br>Geocoder</br>Parms",
                                             "Get</br> Bulk </br>Coords",
                                             "Clear","Return","Help"]
 
@@ -1040,6 +1040,117 @@ def test_arcgis_connector(parms) :
         from dfcleanser.common.common_utils import display_exception
         display_exception(opstat) 
 
+
+
+"""
+def process_address_conversion(formid,parms) :
+    
+    print("process_address_conversion",formid,parms)
+    
+    opstat = opStatus()
+    
+    from geopy.geocoders import Nominatim
+    geolocator = Nominatim()
+    
+    if(formid == ADDRESS_CONVERSION) :
+        
+
+        if(len(parms[7]) > 0) :
+            if(parms[7].find("[") > -1) :
+                
+                inlist = parms[7].lstrip("[")
+                inlist = inlist.rstrip("]")
+                new_column_names =  inlist.split(",")
+            else :
+                new_column_names =  [parms[7]]
+                
+        else :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No GPS Coords column name(s) defined")
+
+        if(len(parms[8]) > 0) :
+            delete_flag = True
+        else :
+            delete_flag = False
+        
+        if(opstat.get_status()) :
+            
+            try :
+                for i in range(len(new_column_names)) :
+                    set_dc_dataframe(get_dc_dataframe().assign(newcolname = new_column_names[i]))
+            except Exception as e:
+                opstat.store_exception("Add New GPS Coords Column(s) Error",e)
+                
+            if(opstat.get_status()) :
+                
+                for i in range(len(get_dc_dataframe())) :
+                    address     =   ""
+                    for j in range(len(parms) - 2) :
+                        if(len(parms[j]) > 0) :
+                            address =   (address + get_dc_dataframe().iloc[i:parms[j]] + " ")
+            
+                    if(len(address) > 0) :
+                        location = geolocator.geocode(address)
+                    else :
+                        location = None
+                        
+                    if(len(new_column_names) == 1) :
+                        get_dc_dataframe().iloc[i:new_column_names[0]] = [location.latitude, location.longitude]
+                    else :
+                        get_dc_dataframe().iloc[i:new_column_names[0]] = location.latitude
+                        get_dc_dataframe().iloc[i:new_column_names[1]] = location.longitude
+                        
+                if(delete_flag) :
+                    for i in range(len(parms) - 2) :
+                        if(len(parms[i]) > 0) :
+                            try :
+                                set_dc_dataframe(get_dc_dataframe().drop([parms[i]],axis=1))
+                            except Exception as e:
+                                opstat.store_exception("Drop Column(s) Error" + parms[i],e)
+                                display_exception(opstat)
+                        
+        else :
+            display_exception(opstat)
+            
+    else : 
+        
+        if(len(parms[2]) > 0) :
+            addr_column_name =  [parms[7]]
+                
+        else :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No Address column name defined")
+
+        if(len(parms[3]) > 0) :
+            delete_flag = True
+        else :
+            delete_flag = False
+        
+        if(opstat.get_status()) :
+            
+            try :
+                set_dc_dataframe(get_dc_dataframe().assign(newcolname = addr_column_name))
+            except Exception as e:
+                opstat.store_exception("Add New GPS Coords Column(s) Error",e)
+                
+            if(opstat.get_status()) :
+                
+                for i in range(len(get_dc_dataframe())) :
+                    address = geolocator.reverse(parms[0] + ", " + parms[1])
+                    get_dc_dataframe().iloc[i:addr_column_name] = address
+                        
+                if(delete_flag) :
+                    for i in range(2) :
+                        if(len(parms[i]) > 0) :
+                            try :
+                                set_dc_dataframe(get_dc_dataframe().drop([parms[i]],axis=1))
+                            except Exception as e:
+                                opstat.store_exception("Drop Column(s) Error" + parms[i],e)
+                                display_exception(opstat)
+                        
+        else :
+            display_exception(opstat)
+"""        
 
 
 

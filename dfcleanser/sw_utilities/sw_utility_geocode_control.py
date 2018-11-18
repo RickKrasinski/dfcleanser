@@ -87,16 +87,28 @@ def display_geocode_utility(optionId,parms=None) :
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     elif(optionId == sugm.DISPLAY_DF_GET_COORDS) :
+        
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
-        if( (geocid == sugm.GoogleId) or (geocid == sugm.NominatimId) ) :
-            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
-            display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION)
-        elif(geocid == sugm.ArcGISId) : 
-            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_arcgis_connector_inputs
-            display_arcgis_connector_inputs(sugm.ADDRESS_CONVERSION)
-        else :
+        
+        if(not (cfg.is_dc_dataframe_loaded())) :
+            
             sugw.display_geocode_main_taskbar() 
-            display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))
+            opstat = opStatus()
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe is imported which is required for bulk geoocoding  ")
+            display_exception(opstat)
+            
+        else :
+            
+            if( (geocid == sugm.GoogleId) or (geocid == sugm.NominatimId)) :
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
+                display_bulk_geocode_inputs(geocid,sugm.ADDRESS_CONVERSION)
+            elif(geocid == sugm.ArcGISId) : 
+                from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_arcgis_connector_inputs
+                display_arcgis_connector_inputs(sugm.ADDRESS_CONVERSION)
+            else :
+                sugw.display_geocode_main_taskbar() 
+                display_status("Bulk Geocoding not supported for Current Geocoder : "+ sugm.get_geocoder_title(geocid))
     
     elif(optionId == sugm.DISPLAY_DF_GET_ADDRESS) : 
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
@@ -223,7 +235,6 @@ def display_geocode_utility(optionId,parms=None) :
  
         print("PROCESS_GEOCODER",parms)
         geocid  =   None
-        fid     =   -1
         fid     =   None
         
         if(parms != None) :
@@ -242,6 +253,7 @@ def display_geocode_utility(optionId,parms=None) :
             sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.REVERSEPARMS)
 
         elif(fid == 3) :
+            cfg.drop_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms")
             sugw.display_geocoders(geocid) 
 
     elif(optionId == sugm.DISPLAY_FULL_GEOCODING) :
@@ -295,21 +307,14 @@ def display_geocode_utility(optionId,parms=None) :
         gtype   =   int(parms[0])
         geocid  =   int(parms[1])
         
-        if(gtype == sugm.ADDRESS_CONVERSION) :
-            if(geocid == sugm.ArcGISId)         : cfg.drop_config_value(sugw.arcgis_query_id + "Parms") 
-            elif(geocid == sugm.GoogleId)       : cfg.drop_config_value(sugw.google_query_id + "Parms") 
-            elif(geocid == sugm.BingId)         : cfg.drop_config_value(sugw.bing_query_id + "Parms") 
-            elif(geocid == sugm.OpenMapQuestId) : cfg.drop_config_value(sugw.mapquest_query_id + "Parms") 
-            elif(geocid == sugm.NominatimId)    : cfg.drop_config_value(sugw.nomin_query_id + "Parms") 
+        print("CLEAR_GEOCODE_PARMS",gtype,geocid)
         
+        if(gtype == sugm.ADDRESS_CONVERSION) :
+            cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
             sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
-            
+
         else :
-            if(geocid == sugm.ArcGISId)         : cfg.drop_config_value(sugw.arcgis_reverse_id + "Parms") 
-            elif(geocid == sugm.GoogleId)       : cfg.drop_config_value(sugw.google_reverse_id + "Parms") 
-            elif(geocid == sugm.BingId)         : cfg.drop_config_value(sugw.bing_reverse_id + "Parms") 
-            elif(geocid == sugm.NominatimId)    : cfg.drop_config_value(sugw.nomin_reverse_id + "Parms") 
-            
+            cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
             sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS)
         
             
@@ -328,14 +333,14 @@ def display_geocode_utility(optionId,parms=None) :
 #--------------------------------------------------------------------------
 """
 def get_geocoder_engine(geocid,opstat) :
-    
+    print("get_geocoder_engine",geocid) 
     geolocator  =   None
     
     try :
             
-        geocinitparms = get_geocoder_cmd_parms(sugm.INITPARMS,geocid)
+        geocinitparms = sugw.get_geocoder_cmd_kwargs(sugm.GEOCODERPARMS,geocid)
+        print("\nget_geocoder_engine \n", geocinitparms)
         
-        #print("get_geocoder_engine",geocinitparms)
         if(geocid == sugm.GoogleId) :
             from geopy.geocoders import GoogleV3
             if(geocinitparms == None) :
@@ -397,38 +402,7 @@ def get_geocoder_engine(geocid,opstat) :
     
     return(geolocator)    
   
-"""
-#--------------------------------------------------------------------------
-#  get command kwargs stored in config
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_cmd_parms(ptype,geocid) :
 
-        
-    if(ptype == sugm.INITPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_geocoderkwargs",cfg.GLOBAL)
-    elif(ptype == sugm.QUERYPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_querykwargs")
-    elif(ptype == sugm.QUERYDFPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_df_querykwargs")
-    elif(ptype == sugm.REVERSEPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_reversekwargs")
- 
-    #print("get_geocoder_cmd_parms",geokwargs)
-    geocparms = {}
-
-    if(geokwargs != None) :
-        for i in range(len(geokwargs)) : 
-            geoparm = geokwargs[i]
-        
-            if( (geoparm.get("value") != None) and (geoparm.get("value") != "" )) :
-                geocparms.update({geoparm.get("key"):geoparm.get("value")})
-
-    if(len(geocparms) == 0) :
-        return(None)
-    else :
-        return(geocparms)
-    
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -436,117 +410,6 @@ def get_geocoder_cmd_parms(ptype,geocid) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-"""
-def process_address_conversion(formid,parms) :
-    
-    print("process_address_conversion",formid,parms)
-    
-    opstat = opStatus()
-    
-    from geopy.geocoders import Nominatim
-    geolocator = Nominatim()
-    
-    if(formid == ADDRESS_CONVERSION) :
-        
-
-        if(len(parms[7]) > 0) :
-            if(parms[7].find("[") > -1) :
-                
-                inlist = parms[7].lstrip("[")
-                inlist = inlist.rstrip("]")
-                new_column_names =  inlist.split(",")
-            else :
-                new_column_names =  [parms[7]]
-                
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("No GPS Coords column name(s) defined")
-
-        if(len(parms[8]) > 0) :
-            delete_flag = True
-        else :
-            delete_flag = False
-        
-        if(opstat.get_status()) :
-            
-            try :
-                for i in range(len(new_column_names)) :
-                    set_dc_dataframe(get_dc_dataframe().assign(newcolname = new_column_names[i]))
-            except Exception as e:
-                opstat.store_exception("Add New GPS Coords Column(s) Error",e)
-                
-            if(opstat.get_status()) :
-                
-                for i in range(len(get_dc_dataframe())) :
-                    address     =   ""
-                    for j in range(len(parms) - 2) :
-                        if(len(parms[j]) > 0) :
-                            address =   (address + get_dc_dataframe().iloc[i:parms[j]] + " ")
-            
-                    if(len(address) > 0) :
-                        location = geolocator.geocode(address)
-                    else :
-                        location = None
-                        
-                    if(len(new_column_names) == 1) :
-                        get_dc_dataframe().iloc[i:new_column_names[0]] = [location.latitude, location.longitude]
-                    else :
-                        get_dc_dataframe().iloc[i:new_column_names[0]] = location.latitude
-                        get_dc_dataframe().iloc[i:new_column_names[1]] = location.longitude
-                        
-                if(delete_flag) :
-                    for i in range(len(parms) - 2) :
-                        if(len(parms[i]) > 0) :
-                            try :
-                                set_dc_dataframe(get_dc_dataframe().drop([parms[i]],axis=1))
-                            except Exception as e:
-                                opstat.store_exception("Drop Column(s) Error" + parms[i],e)
-                                display_exception(opstat)
-                        
-        else :
-            display_exception(opstat)
-            
-    else : 
-        
-        if(len(parms[2]) > 0) :
-            addr_column_name =  [parms[7]]
-                
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("No Address column name defined")
-
-        if(len(parms[3]) > 0) :
-            delete_flag = True
-        else :
-            delete_flag = False
-        
-        if(opstat.get_status()) :
-            
-            try :
-                set_dc_dataframe(get_dc_dataframe().assign(newcolname = addr_column_name))
-            except Exception as e:
-                opstat.store_exception("Add New GPS Coords Column(s) Error",e)
-                
-            if(opstat.get_status()) :
-                
-                for i in range(len(get_dc_dataframe())) :
-                    address = geolocator.reverse(parms[0] + ", " + parms[1])
-                    get_dc_dataframe().iloc[i:addr_column_name] = address
-                        
-                if(delete_flag) :
-                    for i in range(2) :
-                        if(len(parms[i]) > 0) :
-                            try :
-                                set_dc_dataframe(get_dc_dataframe().drop([parms[i]],axis=1))
-                            except Exception as e:
-                                opstat.store_exception("Drop Column(s) Error" + parms[i],e)
-                                display_exception(opstat)
-                        
-        else :
-            display_exception(opstat)
-"""        
-
-
 
 """
 #--------------------------------------------------------------------------
@@ -557,10 +420,10 @@ def test_geocoder(geocid,gcparms) :
 
     opstat      =   opStatus()
     
-    opstat = sugw.validate_cmd_parms(sugm.INITPARMS,geocid,gcparms) 
+    sugw.validate_cmd_parms(sugm.GEOCODERPARMS,geocid,gcparms,opstat) 
     
     if( not (opstat.get_status()) ) :
-    
+
         sugw.display_geocoders(geocid) 
         display_exception(opstat)
         
@@ -590,7 +453,6 @@ def test_geocoder(geocid,gcparms) :
         
         if(opstat.get_status()) :
             
-            print("\n")
             display_status("geocoder ran successfully")
             
             notes = []
@@ -621,7 +483,7 @@ def get_geocoder_coords(inparms) :
     addresses   =   []
     coords      =   []
     
-    opstat = sugw.validate_cmd_parms(sugm.QUERYPARMS,geocid,parms)
+    sugw.validate_cmd_parms(sugm.QUERYPARMS,geocid,parms,opstat)
     
     if(not opstat.get_status()) :
         
@@ -646,7 +508,7 @@ def get_geocoder_coords(inparms) :
             
             try :
                 
-                queryparms = get_geocoder_cmd_parms(sugm.QUERYPARMS,geocid)
+                queryparms = sugw.get_geocoder_cmd_kwargs(sugm.QUERYPARMS,geocid)
                 query = queryparms.get("address(s)")
                 queryparms.pop("address(s)")
                 
@@ -820,7 +682,7 @@ def get_geocoder_df_coords(inparms) :
                 else :
                     deloldcols  =   False
                 
-                qparms  =   get_geocoder_cmd_parms(sugm.QUERYDFPARMS,geocid)
+                qparms  =   sugw.get_geocoder_cmd_kwargs(sugm.QUERYDFPARMS,geocid)
                 
                 if(len(qparms) > 3) :
                     qparms  =   qparms[3:]
@@ -1013,7 +875,7 @@ def get_geocoder_address(inparms) :
             
             try :
                 
-                queryparms = get_geocoder_cmd_parms(sugm.REVERSEPARMS,geocid)
+                queryparms = sugw.get_geocoder_cmd_kwargs(sugm.REVERSEPARMS,geocid)
                 #print("queryparms",queryparms)
                 query = queryparms.get("latitude_longitude(s)")
                 queryparms.pop("latitude_longitude(s)")

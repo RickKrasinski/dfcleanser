@@ -22,7 +22,7 @@ from dfcleanser.common.html_widgets import (get_button_tb_form, display_composit
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_grid, opStatus, is_numeric_col)
+from dfcleanser.common.common_utils import (get_parms_for_input, display_grid, is_numeric_col, display_notes)
 
 
 """
@@ -46,7 +46,7 @@ geocode_utility_tb_doc_title            =   "Address Conversion Options"
 geocode_utility_tb_title                =   "Address Conversion"
 geocode_utility_tb_id                   =   "addrconverttb"
 
-geocode_utility_tb_keyTitleList         =   ["Interactive</br>Geocoding",
+geocode_utility_tb_keyTitleList         =   ["Simple</br>Geocoding",
                                              "Bulk</br>Geocoding",
                                              "Calculate</br>Distance",
                                              "Select</br>Geocoder",
@@ -74,17 +74,17 @@ geocode_utility_tb_centered             =   False
 arcgis_geocoder_title               =   "arcGIS Geocoder"
 arcgis_geocoder_id                  =   "arcgisgeocoder"
 
-arcgis_geocoder_idList              =    ["agagent",
-                                          "aguser",
+arcgis_geocoder_idList              =    ["aguser",
                                           "agpw",
+                                          "agagent",
                                           "agscheme",
                                           "agtimeout",
                                           "agproxies",
                                           None,None,None,None,None,None]
 
-arcgis_geocoder_labelList           =   ["user_agent",
-                                         "username",
+arcgis_geocoder_labelList           =   ["username",
                                          "password",
+                                         "user_agent",
                                          "scheme",
                                          "timeout",
                                          "proxies",
@@ -97,11 +97,11 @@ arcgis_geocoder_labelList           =   ["user_agent",
 arcgis_geocoder_typeList            =   ["text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
-arcgis_geocoder_placeholderList     =   ["enter custom User-Agent header (default : my-application)",
-                                         "ArcGIS username (default : None)",
+arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
                                          "ArcGIS password (default : None)",
+                                         "enter custom User-Agent header (default : my-application)",
                                          "Desired scheme (default : https)",
-                                         "Time, in seconds (default : 1)",
+                                         "Time, in seconds (default : 20)",
                                          "enter proxies dict (default : None)",
                                          None,None,None,None,None,None]
 
@@ -114,7 +114,7 @@ arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
                                          "display_help_url('" + str(dfchelp.ArcGISInitHelp) + "')"]
 
 
-arcgis_geocoder_reqList             =   [0]
+arcgis_geocoder_reqList             =   [0,1]
 
 arcgis_geocoder_form                =   [arcgis_geocoder_id,
                                          arcgis_geocoder_idList,
@@ -135,24 +135,24 @@ google_geocoder_title               =   "Google V3 Geocoder"
 google_geocoder_id                  =   "googlegeocoder"
 
 google_geocoder_idList              =    ["ggapikey",
-                                          "ggdomain",
-                                          "ggscheme",
                                           "ggclient",
                                           "ggsecretkey",
-                                          "ggproxies",
                                           "ggagent",
+                                          "ggdomain",
+                                          "ggscheme",
+                                          "ggproxies",
                                           "ggformatstr",
                                           "ggsslcontext",
                                           "ggchannel",
                                           None,None,None,None,None,None]
 
 google_geocoder_labelList           =   ["api_key",
-                                         "domain",
-                                         "scheme",
                                          "client_id",
                                          "secret_key",
-                                         "proxies",
                                          "user_agent",
+                                         "domain",
+                                         "scheme",
+                                         "proxies",
                                          "format_string",
                                          "ssl_context",
                                          "channel",
@@ -166,14 +166,14 @@ google_geocoder_typeList            =   ["text","text","text","text","text","tex
                                          "button","button","button","button","button","button"]
 
 google_geocoder_placeholderList     =   ["google API key",
-                                         "localized Google Maps domain (default - ‘maps.googleapis.com’)",
-                                         "enter scheme (default https)",
                                          "enter account client id. (default - None) required for premier",
                                          "enter account secret key (default - None) required for premier",
-                                         "enter proxies dict (default - None)",
-                                         "enter custom User-Agent header (default - my-application)",
+                                         "enter custom User-Agent header (default - None)",
+                                         "localized Google Maps domain (default - ‘maps.googleapis.com’)",
+                                         "enter scheme (default https)",
+                                         "enter proxies dict (default - DEFAULT_SENTINEL)",
                                          "format string (default - '%s')",
-                                         "ssl_context (default - None)",
+                                         "ssl_context (default - DEFAULT_SENTINEL)",
                                          "enter channel identifier (default - None)",
                                          None,None,None,None,None,None]
 
@@ -186,7 +186,7 @@ google_geocoder_jsList              =   [None,None,None,None,None,None,None,None
                                          "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
 
 
-google_geocoder_reqList             =   [0]
+google_geocoder_reqList             =   [0,1,2]
 
 google_geocoder_form                =   [google_geocoder_id,
                                          google_geocoder_idList,
@@ -208,19 +208,19 @@ bing_geocoder_title                 =   "Bing Geocoder"
 bing_geocoder_id                    =   "binggeocoder"
 
 bing_geocoder_idList                =    ["bingapikey",
+                                          "bingagent",
+                                          "bingtimeout",
                                           "bingfstring",
                                           "bingscheme",
-                                          "bingtimeout",
                                           "bingproxies",
-                                          "bingagent",
                                           None,None,None,None,None,None]
 
 bing_geocoder_labelList             =   ["api_key",
+                                         "user_agent",
+                                         "timeout",
                                          "format_string",
                                          "scheme",
-                                         "timeout",
                                          "proxies",
-                                         "user_agent",
                                          "Test</br>Geocoder",
                                          "Get</br>Coords",
                                          "Get</br>Address",
@@ -231,11 +231,11 @@ bing_geocoder_typeList              =   ["text","text","text","text","text","tex
                                          "button","button","button","button","button","button"]
 
 bing_geocoder_placeholderList       =   ["enter Bing Maps API key",
+                                         "user agent (default - my-application)",
+                                         "enter timeout in seconds (default 20)",
                                          "enter format string (default %s)",
                                          "enter scheme (default https)",
-                                         "enter timeout in seconds (default 1)",
                                          "proxies dict (default None)",
-                                         "user agent)",
                                          None,None,None,None,None,None]
 
 bing_geocoder_jsList                =   [None,None,None,None,None,None,
@@ -245,7 +245,6 @@ bing_geocoder_jsList                =   [None,None,None,None,None,None,
                                          "process_geocoder_callback(3," + str(sugm.BingId) + ")",
                                          "process_geocoder_callback(4," + str(sugm.BingId) + ")",
                                          "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
-
 
 bing_geocoder_reqList               =   [0]
 
@@ -259,56 +258,6 @@ bing_geocoder_form                  =   [bing_geocoder_id,
 
 bing_API_Key    =   "AhwVfAKfw8CF4K2cwNgfj61-jYzQll4N92sjC6d3Hz-9O4HdCB34MwGObvhoJwB4"
 
-"""
-#--------------------------------------------------------------------------
-#   DataBC geocoder parms
-#--------------------------------------------------------------------------
-"""
-databc_geocoder_title                 =   "DataBC Geocoder"
-databc_geocoder_id                    =   "databcgeocoder"
-
-databc_geocoder_idList                =    ["databcscheme",
-                                            "databctimeout",
-                                            "databcproxies",
-                                            "databcagent",
-                                            None,None,None,None,None]
-
-databc_geocoder_labelList             =   ["scheme",
-                                           "timeout",
-                                           "proxies",
-                                           "user_agent",
-                                           "Test</br>Geocoder",
-                                           "Get</br>Coords",
-                                           "Clear","Return","Help"]
-
-
-databc_geocoder_typeList              =   ["text","text","text","text",
-                                           "button","button","button","button","button"]
-
-databc_geocoder_placeholderList       =   ["enter scheme (default https)",
-                                           "enter timeout in seconds (default 1)",
-                                           "proxies dict (default None)",
-                                           "user agent (default 'geopy/1.17.0'",
-                                            None,None,None,None,None]
-
-
-databc_geocoder_jsList                =   [None,None,None,None,
-                                           "process_geocoder_callback(0," + str(sugm.DataBCId) + ")",
-                                           "process_geocoder_callback(1," + str(sugm.DataBCId) + ")",
-                                           "process_geocoder_callback(2," + str(sugm.DataBCId) + ")",
-                                           "process_geocoder_callback(3," + str(sugm.DataBCId) + ")",
-                                           "display_help_url('" + str(dfchelp.DataBCInitHelp) + "')"]
-
-
-databc_geocoder_reqList               =   []
-
-databc_geocoder_form                  =   [databc_geocoder_id,
-                                           databc_geocoder_idList,
-                                           databc_geocoder_labelList,
-                                           databc_geocoder_typeList,
-                                           databc_geocoder_placeholderList,
-                                           databc_geocoder_jsList,
-                                           databc_geocoder_reqList]
 
 
 """
@@ -320,17 +269,18 @@ mapquest_geocoder_title                 =   "OpenMapQuest Geocoder"
 mapquest_geocoder_id                    =   "mapquestgeocoder"
 
 mapquest_geocoder_idList                =    ["mapquestapikey",
+                                              "mapquestagent",
+                                              "mapquesttimeout",
                                               "mapquestfstring",
                                               "mapquestscheme",
-                                              "mapquesttimeout",
                                               "mapquestproxies",
-                                              "mapquestagent",
                                               None,None,None,None,None,None]
 
 mapquest_geocoder_labelList             =   ["api_key",
+                                             "user_agent",
+                                             "timeout",
                                              "format_string",
                                              "scheme ",
-                                             "timeout",
                                              "proxies",
                                              "user_agent",
                                              "Test</br>Geocoder",
@@ -342,11 +292,12 @@ mapquest_geocoder_typeList              =   ["text","text","text","text","text",
                                              "button","button","button","button","button","button"]
 
 mapquest_geocoder_placeholderList       =   ["enter MapQuest API Key",
+                                             "enter user agent (default 'my-application'",
+                                             "enter timeout in seconds (default 20)",
                                              "enter format string (default '%s'",
                                              "enter scheme (default 'https')",
-                                             "enter timeout in seconds (default 1)",
                                              "enter proxies dict (default None)",
-                                             "enter user agent (default 'my-application'",
+                                             
                                              None,None,None,None,None,None]
 
 mapquest_geocoder_jsList                =   [None,None,None,None,None,None,
@@ -381,43 +332,45 @@ nomin_geocoder_title                =   "Nominatim Geocoder"
 nomin_geocoder_id                   =   "nomingeocoder"
 
 nomin_geocoder_idList               =    ["nominagent",
+                                          "nomintimeout",
                                           "nominformat",
                                           "nominview",
                                           "nominbias",
-                                          "nomintimeout",
                                           "nominproxies",
                                           "nomindomain",
                                           "nominscheme",
-                                           None,None,None,None,None]
+                                           None,None,None,None,None,None]
 
 nomin_geocoder_labelList            =   ["user_agent",
+                                         "timeout",
                                          "format_string",
                                          "view_box",
                                          "country_bias",
-                                         "timeout",
                                          "proxies",
                                          "domain",
                                          "scheme",
                                          "Test</br>Geocoder",
                                          "Get</br>Coords",
+                                         "Get</br>Address",
                                          "Clear","Return","Help"]
 
 
 nomin_geocoder_typeList             =   ["text","text","text","text","text","text","text","text",
-                                         "button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 nomin_geocoder_placeholderList      =   ["enter custom User-Agent (default - my-application)",
+                                         "enter timeout in secs (default 20)",
                                          "enter format string (default %s)",
                                          "Coordinates to restrict search within. (default None)",
                                          "enter country to bias results (default - United States)",
-                                         "enter timeout in secs (default 1)",
                                          "enter proxies dict)",
                                          "enter domain (default None)",
                                          "enter scheme (default https)",
-                                         None,None,None,None,None]
+                                         None,None,None,None,None,None]
 
 nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,None,
                                          "process_geocoder_callback(0," + str(sugm.NominatimId) + ")",
+                                         "process_geocoder_callback(1," + str(sugm.NominatimId) + ")",
                                          "process_geocoder_callback(2," + str(sugm.NominatimId) + ")",
                                          "process_geocoder_callback(3," + str(sugm.NominatimId) + ")",
                                          "process_geocoder_callback(4," + str(sugm.NominatimId) + ")",
@@ -455,29 +408,26 @@ arcgis_query_id                     =   "arcgisquery"
 arcgis_query_idList                 =    ["aqquery",
                                           "aqcount",
                                           "aqtimeout",
-                                          "aqoutfields",
                                           None,None,None,None,None,None]
 
 arcgis_query_labelList              =   ["address(s)",
                                          "number_of_results",
                                          "timeout",
-                                         "out_fields",
                                          "Get</br>Coords",
                                          "Get</br>Address",
                                          "Change</br> Geocoder",
                                          "Clear","Return","Help"]
 
 
-arcgis_query_typeList               =   [maketextarea(6),"text","text","text",
+arcgis_query_typeList               =   [maketextarea(6),"text","text",
                                          "button","button","button","button","button","button"]
 
 arcgis_query_placeholderList        =   ["single address string or [] list of address strings",
                                          "max number of results per address (default - 1) ",
-                                         "enter timeout in seconds (default - 5)",
-                                         "a list or tuple of out fields (default - None)",
+                                         "enter timeout in seconds (default - 10 seconds)",
                                          None,None,None,None,None,None]
 
-arcgis_query_jsList                 =   [None,None,None,None,
+arcgis_query_jsList                 =   [None,None,None,
                                          "process_query_callback(0," + str(sugm.ArcGISId) + ")",
                                          "process_query_callback(1," + str(sugm.ArcGISId) + ")",
                                          "process_query_callback(2," + str(sugm.ArcGISId) + ")",
@@ -535,7 +485,7 @@ google_query_typeList               =   [maketextarea(6),"text","text","text","t
 
 google_query_placeholderList        =   ["single address string or [] list of address strings",
                                          "max number of results per address (default - 1) ",
-                                         "enter timeout in seconds (default - 5)",
+                                         "enter timeout in seconds (default - 20)",
                                          "enter bounding box of the viewport (default - None)",
                                          "enter the ccTLD region code (default - None)",
                                          "enter components dict) (default - None)",
@@ -571,8 +521,8 @@ bing_query_id                       =   "bingquery"
 
 bing_query_idList                   =    ["bqquery",
                                           "bqcount",
-                                          "bqloc",
                                           "bqtimeout",
+                                          "bqloc",
                                           "bqculture",
                                           "bqnbc",
                                           "bqcc",
@@ -580,8 +530,8 @@ bing_query_idList                   =    ["bqquery",
 
 bing_query_labelList                =   ["address(s)",
                                          "number_of_results",
-                                         "user_location",
                                          "timeout",
+                                         "user_location",
                                          "culture ",
                                          "include_neighborhood",
                                          "include_country_code",
@@ -596,8 +546,8 @@ bing_query_typeList                 =   [maketextarea(6),"text","text","text","t
 
 bing_query_placeholderList          =   ["single address string or [] list of address strings",
                                          "max number of results per address (default - 1) ",
+                                         "enter timeout in seconds (default - 20)",
                                          "enter coords to prioritize to (default - None)",
-                                         "enter timeout in seconds (default - 5)",
                                          "enter two-letter country code (default - None) ",
                                          "return neighborhood field (default - False)",
                                          "return 2 digit country code (default - False)",
@@ -622,64 +572,6 @@ bing_query_form                     =   [bing_query_id,
                                          bing_query_jsList,
                                          bing_query_reqList]
 
-
-"""
-#--------------------------------------------------------------------------
-#   databc get coords form
-#--------------------------------------------------------------------------
-"""
-databc_query_title                    =   "DataBC Geocoder Get Coordinates"
-databc_query_id                       =   "databcquery"
-
-databc_query_idList                   =  ["dbqquery",
-                                          "dbqmax",
-                                          "dbqsetback",
-                                          "dbqloc",
-                                          "dbqcount",
-                                          "dbqtimeout",
-                                          None,None,None,None,None,None]
-
-databc_query_labelList                =  ["query",
-                                          "number_of_results",
-                                          "set_back",
-                                          "location_descriptor",
-                                          "exactly_one",
-                                          "timeout",
-                                          "Get</br>Coords",
-                                          "Get</br>Address",
-                                          "Change</br> Geocoder",
-                                          "Clear","Return","Help"]
-
-
-databc_query_typeList                 =   ["text","text","text","text","text","text",
-                                           "button","button","button","button","button","button"]
-
-databc_query_placeholderList          =   ["single address string or [] list of address strings",
-                                           "max number of results (default - 1) ",
-                                           "The distance to move the accessPoint (default - None)",
-                                           "the type of point requested (default - 1)",
-                                           "number of results per address (default - 1) ",
-                                           "timeout in secs (default - 5)",
-                                            None,None,None,None,None,None]
-
-databc_query_jsList                   =   [None,None,None,None,None,None,
-                                           "process_query_callback(0," + str(sugm.DataBCId) + ")",
-                                           "process_query_callback(1," + str(sugm.DataBCId) + ")",
-                                           "process_query_callback(2," + str(sugm.DataBCId) + ")",
-                                           "process_query_callback(3," + str(sugm.DataBCId) + ")",
-                                           "process_query_callback(4," + str(sugm.DataBCId) + ")",
-                                           "display_help_url('" + str(dfchelp.DataBCQueryHelp) + "')"]
-
-
-databc_query_reqList                  =   [0]
-
-databc_query_form                     =   [databc_query_id,
-                                           databc_query_idList,
-                                           databc_query_labelList,
-                                           databc_query_typeList,
-                                           databc_query_placeholderList,
-                                           databc_query_jsList,
-                                           databc_query_reqList]
 
 """
 #--------------------------------------------------------------------------
@@ -741,7 +633,6 @@ nomin_query_id                           =   "nominquery"
 nomin_query_idList                       =  ["nqquery",
                                              "nqcount",
                                              "nqtimeout",
-                                             "nqlimit",
                                              "nqaddr",
                                              "nqlang",
                                              "nqgeom",
@@ -750,7 +641,6 @@ nomin_query_idList                       =  ["nqquery",
 nomin_query_labelList                    =  ["address(s)",
                                              "number_of_results",
                                              "timeout",
-                                             "limit",
                                              "addressdetails",
                                              "language",
                                              "geometry",
@@ -760,19 +650,18 @@ nomin_query_labelList                    =  ["address(s)",
                                              "Clear","Return","Help"]
 
 
-nomin_query_typeList                     =   [maketextarea(6),"text","text","text","text","text","text",
+nomin_query_typeList                     =   [maketextarea(6),"text","text","text","text","text",
                                               "button","button","button","button","button","button"]
 
 nomin_query_placeholderList              =   ["single address string or [] list of address strings",
                                               "max number of results per address (default - 1) ",
-                                              "timeout in secs (default - None)",
-                                              "limit Maximum amount of results to return (default - None)",
+                                              "timeout in secs (default - 20)",
                                               "Location.raw to include address details  (default - False)",
-                                              "language in which to return results  (default - False)",
+                                              "language in which to return results  (default - English)",
                                               "return the result’s geometry in wkt, svg, kml, or geojson formats (default - None)",
                                               None,None,None,None,None,None]
 
-nomin_query_jsList                       =    [None,None,None,None,None,None,None,
+nomin_query_jsList                       =    [None,None,None,None,None,None,
                                                "process_query_callback(0," + str(sugm.NominatimId) + ")",
                                                "process_query_callback(1," + str(sugm.NominatimId) + ")",
                                                "process_query_callback(2," + str(sugm.NominatimId) + ")",
@@ -964,6 +853,61 @@ bing_reverse_form                      =   [bing_reverse_id,
 
 """
 #--------------------------------------------------------------------------
+#   OpenMapQuest get address forms
+#--------------------------------------------------------------------------
+"""
+mapquest_reverse_title                     =   "OpenMapQuest Geocoder Get Address"
+mapquest_reverse_id                        =   "nominreverse"
+
+mapquest_reverse_idList                    =    ["mrquery",
+                                                 "mrcount",
+                                                 "mrtimeout",
+                                                 "mrlanguage",
+                                                 "mradetails",
+                                                 None,None,None,None,None,None]
+
+mapquest_reverse_labelList                 =   ["latitude_longitude(s)",
+                                                "number_of_results",
+                                                "timeout",
+                                                "language",
+                                                "addressdetails",
+                                                "Get</br>Address",
+                                                "Get</br>Coordinates",
+                                                "Change</br> Geocoder",
+                                                "Clear","Return","Help"]
+
+
+mapquest_reverse_typeList                  =   [maketextarea(6),"text","text","text","text",
+                                                "button","button","button","button","button","button"]
+
+mapquest_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
+                                                "max number of results (default - 1) ",
+                                                "enter timeout in seconds (default - 5)",
+                                                "Preferred language in which to return results (default - English)",
+                                                "include address details such as city, county ... (default - True)",
+                                                None,None,None,None,None,None]
+
+mapquest_reverse_jsList                    =   [None,None,None,None,None,
+                                                "process_reverse_callback(0," + str(sugm.OpenMapQuestId) + ")",
+                                                "process_reverse_callback(1," + str(sugm.OpenMapQuestId) + ")",
+                                                "process_reverse_callback(2," + str(sugm.OpenMapQuestId) + ")",
+                                                "process_reverse_callback(3," + str(sugm.OpenMapQuestId) + ")",
+                                                "process_reverse_callback(4," + str(sugm.OpenMapQuestId) + ")",
+                                                "display_help_url('" + str(dfchelp.OpenMapQuestReverseHelp) + "')"]
+
+
+mapquest_reverse_reqList                   =   [0]
+
+mapquest_reverse_form                      =   [mapquest_reverse_id,
+                                                mapquest_reverse_idList,
+                                                mapquest_reverse_labelList,
+                                                mapquest_reverse_typeList,
+                                                mapquest_reverse_placeholderList,
+                                                mapquest_reverse_jsList,
+                                                mapquest_reverse_reqList]
+
+"""
+#--------------------------------------------------------------------------
 #   Nominatim get address forms
 #--------------------------------------------------------------------------
 """
@@ -1013,82 +957,6 @@ nomin_reverse_form                         =   [nomin_reverse_id,
                                                 nomin_reverse_placeholderList,
                                                 nomin_reverse_jsList,
                                                 nomin_reverse_reqList]
-
-
-
-"""
-#--------------------------------------------------------------------------
-#    composite address input 
-#--------------------------------------------------------------------------
-"""
-comp_addr_utility_input_title             =   "Address Conversion Columns"
-comp_addr_utility_input_id                =   "dfaddresscols"
-comp_addr_utility_input_idList            =   ["dfaddress",
-                                               "newaddrcol",
-                                               "deladdrcol",
-                                               None,None,None,None,None]
-
-comp_addr_utility_input_labelList         =   ["composite_address",
-                                               "new_column_name",
-                                               "drop_Address_column_flag",
-                                               "Convert</br> Composite </br>Address",
-                                               "Change</br> Geocoder",
-                                               "Clear","Return","Help"]
-
-comp_addr_utility_input_typeList          =   [maketextarea(4),"text","text",
-                                               "button","button","button","button","button"]
-
-comp_addr_utility_input_placeholderList   =  ["select from 'Column Names' for constant value use 'val' ie.. 'Buffalo'",
-                                              "single name : [lat,long] - two cols enter list [latname,longname]",
-                                              "drop address fileds used in composite address (default = False)",
-                                              None,None,None,None,None]
-
-comp_addr_utility_input_jsList            =    [None,None,None,
-                                                "process_comp_addr(0)",
-                                                "process_comp_addr(1)",
-                                                "process_comp_addr(2)",
-                                                "process_comp_addr(3)",
-                                                "process_comp_addr(4)"]
-
-comp_addr_utility_input_reqList           =   [0,1]
-
-comp_addr_utility_input_form              =   [comp_addr_utility_input_id,
-                                               comp_addr_utility_input_idList,
-                                               comp_addr_utility_input_labelList,
-                                               comp_addr_utility_input_typeList,
-                                               comp_addr_utility_input_placeholderList,
-                                               comp_addr_utility_input_jsList,
-                                               comp_addr_utility_input_reqList]  
-
-"""
-#--------------------------------------------------------------------------
-#    get df address input 
-#--------------------------------------------------------------------------
-"""
-df_reverse_input_title             =   "Coordinate Conversion Columns"
-df_reverse_input_id                =   "dfcoordcols"
-df_reverse_input_idList            =   ["dfcoordscols","dfaddresscol"]
-
-df_reverse_input_labelList         =   ["coordinates_columns",
-                                        "new_address_column_name"]
-
-df_reverse_input_typeList          =   ["text","text"]
-
-df_reverse_input_placeholderList   =   ["enter Latitude and Longitude Column Names : if one lat long column enter single col name",
-                                        "enter the column name the address is stored in"]
-
-df_reverse_input_jsList            =   [None,None]
-
-df_reverse_input_reqList           =   [0,1]
-
-df_reverse_input_form              =   [df_reverse_input_id,
-                                        df_reverse_input_idList,
-                                        df_reverse_input_labelList,
-                                        df_reverse_input_typeList,
-                                        df_reverse_input_placeholderList,
-                                        df_reverse_input_jsList,
-                                        df_reverse_input_reqList]  
-
 
 """
 #--------------------------------------------------------------------------
@@ -1189,7 +1057,27 @@ def get_num_input_ids(idList) :
             
     return(count)
 
-
+def get_form_id(geocid,gtype) :
+     
+    if(gtype == sugm.GEOCODERPARMS)  :
+         if(geocid == sugm.ArcGISId)            : return(arcgis_geocoder_id)   
+         elif(geocid == sugm.GoogleId)          : return(google_geocoder_id)
+         elif(geocid == sugm.BingId)            : return(bing_geocoder_id)
+         elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_geocoder_id)
+         elif(geocid == sugm.NominatimId)       : return(nomin_geocoder_id)
+    elif(gtype == sugm.QUERYPARMS)  :
+         if(geocid == sugm.ArcGISId)            : return(arcgis_query_id)   
+         elif(geocid == sugm.GoogleId)          : return(google_query_id)
+         elif(geocid == sugm.BingId)            : return(bing_query_id)
+         elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_query_id)
+         elif(geocid == sugm.NominatimId)       : return(nomin_query_id)
+    elif(gtype == sugm.REVERSEPARMS)  :
+         if(geocid == sugm.ArcGISId)            : return(arcgis_reverse_id)   
+         elif(geocid == sugm.GoogleId)          : return(google_reverse_id)
+         elif(geocid == sugm.BingId)            : return(bing_reverse_id)
+         elif(geocid == sugm.NominatimId)       : return(nomin_reverse_id)
+         
+ 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1243,6 +1131,7 @@ def display_calc_df_distance_input_form() :
 """
 def get_geocoder_parms_table(geocid) :
 
+    print("get_geocoder_parms_table",geocid)
     geoHeader    =   [""]
     geoRows      =   []
     geoWidths    =   [100]
@@ -1251,13 +1140,13 @@ def get_geocoder_parms_table(geocid) :
 
     if(geocid == sugm.ArcGISId)              : labelList  =   arcgis_geocoder_labelList
     elif(geocid == sugm.BingId)              : labelList  =   bing_geocoder_labelList
-    elif(geocid == sugm.DataBCId)            : labelList  =   databc_geocoder_labelList
     elif(geocid == sugm.GoogleId)            : labelList  =   google_geocoder_labelList
     elif(geocid == sugm.OpenMapQuestId)      : labelList  =   mapquest_geocoder_labelList
     elif(geocid == sugm.NominatimId)         : labelList  =   nomin_geocoder_labelList
     
-    geocparms = get_geocoder_parms(geocid)
-
+    #geocparms = get_geocoder_parms(geocid)
+    geocparms = get_geocoder_form_parms_list(sugm.GEOCODERPARMS,geocid)
+    
     row_added = 2
     
     georow = ["Geocoder"]
@@ -1308,158 +1197,197 @@ def get_geocoder_parms_table(geocid) :
     
     return(geo_parms_table_html)    
 
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#  Geocoding Validation methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+""" 
 
 """
 #--------------------------------------------------------------------------
-#  validate geocoder kwargs
+#  arcgis geocoding valiudation method
+#--------------------------------------------------------------------------
+"""  
+def validate_arcgis_geocoder_parms(gparms,opstat) :
+    
+    fparms  =   get_parms_for_input(gparms,arcgis_geocoder_idList)
+    
+    if(len(fparms) > 0) :
+        # if autheticated user,pw and agent must be defined
+        # else all need to be blank
+        if( (len(fparms[0]) > 0) or (len(fparms[1]) > 0) or (len(fparms[2]) > 0) ) :
+            if(len(fparms[2]) == 0) :
+                fparms[2] = "my-application"
+            
+            if( (len(fparms[0]) == 0) or (len(fparms[1]) == 0) ) :
+                opstat.set_status(False)
+                opstat.set_error_msg("Missing authentication parameter")
+            
+            cfg.set_config_value(arcgis_geocoder_id + "Parms",fparms)
+            
+    else :
+        cfg.drop_config_value(arcgis_geocoder_id + "Parms")    
+
+"""
+#--------------------------------------------------------------------------
+#  google geocoding valiudation method
 #--------------------------------------------------------------------------
 """    
-def validate_cmd_parms(ptype,geocid,gqparms) :
+def validate_google_geocoder_parms(gparms,opstat) :
     
-    kwargs      =   []
-    opstat      =   opStatus()
+    fparms  =   get_parms_for_input(gparms,google_geocoder_idList)
     
-    if(ptype == sugm.INITPARMS) :
-        if(geocid == sugm.GoogleId) :
-            idList          =   google_geocoder_idList 
-            labelList       =   google_geocoder_labelList 
-            reqList         =   google_geocoder_reqList 
-        
-        if(geocid == sugm.BingId) :
-            idList          =   bing_geocoder_idList 
-            labelList       =   bing_geocoder_labelList 
-            reqList         =   bing_geocoder_reqList 
+    if(len(fparms) > 0) :
+        if(len(fparms[0]) > 0) :
+            if( (len(fparms[1]) > 0) or (len(fparms[2]) > 0) ) :
+                opstat.set_status(False)
+                opstat.set_errormsg("API Key defined and client_id or secret_key defined")
+                
+        else :
+            if( (len(fparms[1]) == 0) or (len(fparms[2]) == 0) ) :
+                opstat.set_status(False)
+                opstat.set_errormsg("if no API Key then both client_id and secret_key must be defined for premier")
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errormsg("No API Key or client_id and secret_key defined")
+        cfg.drop_config_value(arcgis_geocoder_id + "Parms")    
 
-        elif(geocid == sugm.DataBCId) :
-            idList          =   databc_geocoder_idList 
-            labelList       =   databc_geocoder_labelList 
-            reqList         =   databc_geocoder_reqList 
+"""
+#--------------------------------------------------------------------------
+#  nominatim geocoding valiudation method
+#--------------------------------------------------------------------------
+"""
+def validate_nominatim_geocoder_parms(gparms,opstat) :
+    
+    fparms  =   get_parms_for_input(gparms,google_geocoder_idList)
+    
+    if(len(fparms[0]) == 0) :
+        fparms[0] = "my-application"
+        cfg.set_config_value(nomin_geocoder_id + "Parms",fparms)
         
-        elif(geocid == sugm.OpenMapQuestId) :
-            idList          =   mapquest_geocoder_idList 
-            labelList       =   mapquest_geocoder_labelList 
-            reqList         =   mapquest_geocoder_reqList 
+    if(len(fparms) > 0) :
+        if(len(fparms[0]) > 0) :
+            if( (len(fparms[1]) > 0) or (len(fparms[2]) > 0) ) :
+                opstat.set_status(False)
+                opstat.set_errormsg("API Key defined and client_id or secret_key defined")
+                
+        else :
+            if( (len(fparms[1]) == 0) or (len(fparms[2]) == 0) ) :
+                opstat.set_status(False)
+                opstat.set_errormsg("if no API Key then both client_id and secret_key must be defined for premier")
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errormsg("No API Key or client_id and secret_key defined")
+        cfg.drop_config_value(arcgis_geocoder_id + "Parms")    
+
+"""
+#--------------------------------------------------------------------------
+#  generic geocoding valiudation method
+#--------------------------------------------------------------------------
+""" 
+def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
+    
+    if(ptype == sugm.GEOCODERPARMS) :
+    
+        if(geocid == sugm.ArcGISId) :
+            return(validate_arcgis_geocoder_parms(gqparms,opstat))
+        
+        elif(geocid == sugm.GoogleId) :
+            return(validate_google_geocoder_parms(gqparms,opstat))
         
         elif(geocid == sugm.NominatimId) :
-            idList          =   nomin_geocoder_idList 
-            labelList       =   nomin_geocoder_labelList 
-            reqList         =   nomin_geocoder_reqList 
+            return(validate_nominatim_geocoder_parms(gqparms,opstat))
         
-        elif(geocid == sugm.ArcGISId) :
-            idList          =   arcgis_geocoder_idList 
-            labelList       =   arcgis_geocoder_labelList 
-            reqList         =   arcgis_geocoder_reqList 
+        elif(geocid == sugm.BingId) :
+            idList          =   bing_geocoder_idList 
+            reqList         =   bing_geocoder_reqList 
+
+        elif(geocid == sugm.OpenMapQuestId) :
+            idList          =   mapquest_geocoder_idList 
+            reqList         =   mapquest_geocoder_reqList 
         
     elif(ptype == sugm.QUERYPARMS) :
         if(geocid == sugm.GoogleId) :
             idList          =   google_query_idList 
-            labelList       =   google_query_labelList 
             reqList         =   google_query_reqList 
         
         elif(geocid == sugm.BingId) :
             idList          =   bing_query_idList 
-            labelList       =   bing_query_labelList 
             reqList         =   bing_query_reqList 
 
-        elif(geocid == sugm.DataBCId) :
-            idList          =   databc_query_idList 
-            labelList       =   databc_query_labelList 
-            reqList         =   databc_query_reqList 
-        
         elif(geocid == sugm.OpenMapQuestId) :
             idList          =   mapquest_query_idList 
-            labelList       =   mapquest_query_labelList 
             reqList         =   mapquest_query_reqList 
         
         elif(geocid == sugm.NominatimId) :
             idList          =   nomin_query_idList 
-            labelList       =   nomin_query_labelList 
             reqList         =   nomin_query_reqList 
         
         elif(geocid == sugm.ArcGISId) :
             idList          =   arcgis_query_idList 
-            labelList       =   arcgis_query_labelList 
             reqList         =   arcgis_query_reqList 
             
     elif(ptype == sugm.REVERSEPARMS) :
         if(geocid == sugm.GoogleId) :
             idList          =   google_reverse_idList 
-            labelList       =   google_reverse_labelList 
             reqList         =   google_reverse_reqList 
         
         elif(geocid == sugm.BingId) :
             idList          =   bing_reverse_idList 
-            labelList       =   bing_reverse_labelList 
             reqList         =   bing_reverse_reqList 
 
         elif(geocid == sugm.ArcGISId) :
             idList          =   arcgis_reverse_idList 
-            labelList       =   arcgis_reverse_labelList 
             reqList         =   arcgis_reverse_reqList 
         
         elif(geocid == sugm.NominatimId) :
             idList          =   nomin_reverse_idList 
-            labelList       =   nomin_reverse_labelList 
             reqList         =   nomin_reverse_reqList 
             
         else :
             opstat.set_status(False)
             opstat.set_errorMsg("Reverse not supportd")
         
-    missingParm     =   False
-    
     if(not opstat.get_status()) :
         return(opstat)
         
-    inparms = get_parms_for_input(gqparms,idList)
+    fparms = get_parms_for_input(gqparms,idList)
+    #print("validate_cmd_parms",fparms)
+    missingParm     =   False
+        
+    if(ptype == sugm.GEOCODERPARMS)      : cfg_key = get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms"
+    elif(ptype == sugm.QUERYPARMS)       : cfg_key = get_form_id(geocid,sugm.QUERYPARMS) + "Parms"
+    elif(ptype == sugm.REVERSEPARMS)     : cfg_key = get_form_id(geocid,sugm.REVERSEPARMS) + "Parms"
     
-    if(len(inparms) > 0) :
+    if(len(fparms) > 0) :
     
         for i in range(len(reqList)) :
             if(not missingParm) :
-                if(len(inparms[i]) == 0) :
+                if(len(fparms[i]) == 0) :
                     opstat.set_status(False)
                     opstat.set_errorMsg("Required parm not defined")
                     missingParm = True
-                else : 
-                    kwargs.append({"key":labelList[0], "value":inparms[0]})
-        
-        if(opstat.get_status()) :
-            
-            for i in range(len(reqList),get_num_input_ids(idList)) :
-                if(i < len(inparms)) :
-                    if(len(inparms[i]) > 0) :
-                        kwargs.append({"key":labelList[i], "value":inparms[i]})
+
     else :
         opstat.set_status(False)
         opstat.set_errorMsg("No query parms defined")
         
-        if(ptype == sugm.INITPARMS)          : cfg_key = sugm.get_geocoder_title(geocid) + "_geocoderkwargs"
-        elif(ptype == sugm.QUERYPARMS)       : cfg_key = sugm.get_geocoder_title(geocid) + "_querykwargs"
-        elif(ptype == sugm.QUERYDFPARMS)     : cfg_key = sugm.get_geocoder_title(geocid) + "_df_querykwargs"
-        elif(ptype == sugm.REVERSEPARMS)     : cfg_key = sugm.get_geocoder_title(geocid) + "_reversekwargs"
         cfg.drop_config_value(cfg_key)
         
-    if(opstat.get_status()) :   
-        if(ptype == sugm.INITPARMS)          : cfg_key = sugm.get_geocoder_title(geocid) + "_geocoderkwargs"
-        elif(ptype == sugm.QUERYPARMS)       : cfg_key = sugm.get_geocoder_title(geocid) + "_querykwargs"
-        elif(ptype == sugm.QUERYDFPARMS)     : cfg_key = sugm.get_geocoder_title(geocid) + "_df_querykwargs"
-        elif(ptype == sugm.REVERSEPARMS)     : cfg_key = sugm.get_geocoder_title(geocid) + "_reversekwargs"
-    
-        if(ptype == sugm.INITPARMS) :
-            cfgvaltype =    cfg.GLOBAL
+    if(opstat.get_status()) :
+        
+        if(len(fparms) > 0) :
+            cfg.set_config_value(cfg_key,fparms)
         else :
-            cfgvaltype =    cfg.LOCAL
-        
-        if(opstat.get_status()) :
-            if(len(kwargs) > 0) :
-                cfg.set_config_value(cfg_key,kwargs,cfgvaltype)
-            else :
-                cfg.drop_config_value(cfg_key)
-        else :    
             cfg.drop_config_value(cfg_key)
+                
+    else :    
+        cfg.drop_config_value(cfg_key)
         
-    return(opstat)   
 
 """
 #--------------------------------------------------------------------------
@@ -1468,16 +1396,38 @@ def validate_cmd_parms(ptype,geocid,gqparms) :
 """
 def get_geocoder_form_parms_list(ptype,geocid) :
     
-    if(ptype == sugm.INITPARMS)          : geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_geocoderkwargs",cfg.GLOBAL)    
-    elif(ptype == sugm.QUERYPARMS)       : geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_querykwargs")    
-    elif(ptype == sugm.QUERYDFPARMS)     : geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_df_querykwargs")    
-    elif(ptype == sugm.REVERSEPARMS)     : geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_reversekwargs")    
-    elif(ptype == sugm.REVERSEDFPARMS)   : geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_df_reversekwargs")    
+    #print("get_geocoder_form_parms_list",ptype,geocid)
     
-    if(ptype == sugm.QUERYPARMS) :
+    if(ptype == sugm.GEOCODERPARMS)      : plist = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms")    
+    elif(ptype == sugm.QUERYPARMS)       : plist = cfg.get_config_value(get_form_id(geocid,sugm.QUERYPARMS) + "Parms")    
+    elif(ptype == sugm.REVERSEPARMS)     : plist = cfg.get_config_value(get_form_id(geocid,sugm.REVERSEPARMS) + "Parms") 
+
+    #print("get_geocoder_form_parms_list\n",plist)
+
+    return(plist)
+        
+  
+"""
+#--------------------------------------------------------------------------
+#  get command kwargs stored in config
+#--------------------------------------------------------------------------
+"""
+def get_geocoder_cmd_kwargs(ptype,geocid) :
+    #print("get_geocoder_cmd_kwargs",ptype,geocid)
+        
+    if(ptype == sugm.GEOCODERPARMS)     : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms")
+    elif(ptype == sugm.QUERYPARMS)      : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.QUERYPARMS) + "Parms")
+    elif(ptype == sugm.REVERSEPARMS)    : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.REVERSEPARMS) + "Parms")
+    
+    if(ptype == sugm.GEOCODERPARMS) :
+        if(geocid == sugm.GoogleId)              : labelList       =   google_geocoder_labelList 
+        elif(geocid == sugm.BingId)              : labelList       =   bing_geocoder_labelList 
+        elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_geocoder_labelList 
+        elif(geocid == sugm.NominatimId)         : labelList       =   nomin_geocoder_labelList 
+        elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_geocoder_labelList 
+    elif(ptype == sugm.QUERYPARMS) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_query_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_query_labelList 
-        elif(geocid == sugm.DataBCId)            : labelList       =   databc_query_labelList 
         elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_query_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_query_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_query_labelList 
@@ -1486,55 +1436,53 @@ def get_geocoder_form_parms_list(ptype,geocid) :
         elif(geocid == sugm.BingId)              : labelList       =   bing_reverse_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_reverse_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_reverse_labelList 
-
-    geoplist = []
-
-    if(geokwargs == None) :
-        return(geoplist)
-    else :
-        for i in range(len(labelList)) :
-            found = False
-            for j in range(len(geokwargs)) :
-                if(geokwargs[j].get("key") == labelList[i]) :
-                    geoplist.append(geokwargs[j].get("value"))
-                    found = True
-            if(not found) :
-                geoplist.append("")
-        
-        return(geoplist)
-
-  
-"""
-#--------------------------------------------------------------------------
-#  get command kwargs stored in config
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_cmd_parms(ptype,geocid) :
-
-        
-    if(ptype == sugm.INITPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_geocoderkwargs",cfg.GLOBAL)
-    elif(ptype == sugm.QUERYPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_querykwargs")
-    elif(ptype == sugm.QUERYDFPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_df_querykwargs")
-    elif(ptype == sugm.REVERSEPARMS) :
-        geokwargs = cfg.get_config_value(sugm.get_geocoder_title(geocid) + "_reversekwargs")
  
-    #print("get_geocoder_cmd_parms",geokwargs)
-    geocparms = {}
+    #print("get_geocoder_cmd_kwargs\n",geoparms,"\n",labelList)
 
-    if(geokwargs != None) :
-        for i in range(len(geokwargs)) : 
-            geoparm = geokwargs[i]
-        
-            if( (geoparm.get("value") != None) and (geoparm.get("value") != "" )) :
-                geocparms.update({geoparm.get("key"):geoparm.get("value")})
+    geokwargs = {}
 
-    if(len(geocparms) == 0) :
+    if(geoparms != None) :
+        for i in range(len(geoparms)) : 
+            if(len(geoparms[i]) > 0) :
+                geokwargs.update({labelList[i]:geoparms[i]})
+
+    #print("get_geocoder_cmd_kwargs : geokwargs\n",geokwargs)
+    if(len(geokwargs) == 0) :
         return(None)
     else :
-        return(geocparms)
+        
+        if(ptype == sugm.QUERYPARMS) :
+            return(customize_query_kwargs(geocid,geokwargs)) 
+        else :
+            return(geokwargs)
+
+"""
+#--------------------------------------------------------------------------
+#  override kwargs stored in config
+#--------------------------------------------------------------------------
+"""
+def customize_query_kwargs(geocid,geokwargs) :
+
+    cfg.drop_config_value(sugm.get_geocoder_title(geocid)+"max_geocode_results")
+    if(not(geokwargs.get("number_of_results") == None)) :
+        max_geocode_results     =   int(geokwargs.get("number_of_results"))
+        geokwargs.pop("number_of_results")
+        geokwargs.update({"exactly_one":False})
+        cfg.set_config_value(sugm.get_geocoder_title(geocid)+"max_geocode_results",max_geocode_results)
+
+    if(geokwargs.get("timeout") == None) :
+        geokwargs.update({"timeout":20})
+        
+    return(geokwargs)
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#  quer and reverse display methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -1597,10 +1545,12 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
 
 """
 #------------------------------------------------------------------
-#   display input froms for query and reverse
+#   display input forms for query and reverse
 #------------------------------------------------------------------
 """
 def display_geocode_inputs(formid,parms,ptype,showfull=False) :
+    
+    #print("display_geocode_inputs",formid,parms,ptype)
 
     if(parms == None) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
@@ -1617,7 +1567,6 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     if(formid == sugm.ADDRESS_CONVERSION) :
         if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
         elif(geocid == sugm.BingId)              : form    =   bing_query_form
-        elif(geocid == sugm.DataBCId)            : form    =   databc_query_form
         elif(geocid == sugm.GoogleId)            : form    =   google_query_form
         elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_query_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_query_form
@@ -1625,16 +1574,21 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
         if(geocid == sugm.ArcGISId)              : form    =   arcgis_reverse_form
         elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
         elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
+        elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_reverse_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
     
     if(inparms != None) :
         parmslist = get_parms_for_input(inparms,form[1]) 
     else :
         parmslist = get_geocoder_form_parms_list(ptype,geocid)
+
+    #print("display_geocode_inputs parmslist",parmslist)
     
-    if(len(parmslist) > 0) : 
-        if(len(parmslist[0]) > 0) :   
-            cfg.set_config_value(form[0]+"Parms",parmslist)
+    if(not(parmslist == None)) :
+        cfg.set_config_value(form[0]+"Parms",parmslist)
+
+    #print("parms",cfg.get_config_value(form[0]+"Parms"))
+
     
     from dfcleanser.common.html_widgets import InputForm
     geofunc_input_form = InputForm(form[0],
@@ -1654,152 +1608,38 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (formid == sugm.ADDRESS_CONVERSION) :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Interactive Geocoding Parameters</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Geocoding Parameters</h4>"
     else :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Interactive Reverse Geocoding Parameters</h4>"
+        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Reverse Geocoding Parameters</h4>"
         
     display_grid("acconv_wrapper",
                  geofunc_heading_html,
                  geo_parms_html,
                  geofunc_input_html,
                  None)
-
-
-
-"""
-#------------------------------------------------------------------
-#   get the cf coordinates input form
-#------------------------------------------------------------------
-"""
-def get_df_coords_conv_form(geocid) :
-
-    if(geocid == sugm.ArcGISId)              : form    =   arcgis_reverse_form
-    elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
-    elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
-    elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
-
-
-    df_coords_form                  =   []
-    df_coords_form_idList           =   []
-    df_coords_form_labelList        =   []
-    df_coords_form_typeList         =   []
-    df_coords_form_placeholderList  =   []
-    df_coords_form_jsList           =   []
     
-    df_coords_form_idList = []
-    for i in range (2) :
-        df_coords_form_idList.append(df_reverse_input_idList[i])
-        df_coords_form_labelList.append(df_reverse_input_labelList[i])
-        df_coords_form_typeList.append(df_reverse_input_typeList[i])
-        df_coords_form_placeholderList.append(df_reverse_input_placeholderList[i])
-        df_coords_form_jsList.append(None)
-        
-    for i in range (1,len(form[1])) :
-        df_coords_form_idList.append(form[1][i])
-        df_coords_form_labelList.append(form[2][i])
-        df_coords_form_typeList.append(form[3][i])
-        df_coords_form_placeholderList.append(form[4][i])
-        df_coords_form_jsList.append(form[5][i])
+    notes = [] 
     
-
-    for i in range(len(df_coords_form_labelList)) :
-        if(df_coords_form_labelList[i] == "Get</br>Address") : df_coords_form_labelList[i] = "Display</br>Get</br>Address"
-        if(df_coords_form_labelList[i] == "Display</br>Bulk</br>Address") : df_coords_form_labelList[i] = "Get</br>Bulk</br>Address"
-        
-    for i in range(len(df_coords_form_jsList)) :
-        if(not (df_coords_form_jsList[i] == None)) :
-            if(df_coords_form_jsList[i].find("process_reverse_callback(0,") > -1)   :   
-                df_coords_form_jsList[i] = df_coords_form_jsList[i].replace("process_reverse_callback(0,","process_reverse_callback(8,")
-            if(df_coords_form_jsList[i].find("process_reverse_callback(1,") > -1)   :   
-                df_coords_form_jsList[i] = df_coords_form_jsList[i].replace("process_reverse_callback(1,","process_reverse_callback(9,")
-        
-    df_coords_form          =   [form[0]+"DF",
-                                 df_coords_form_idList,
-                                 df_coords_form_labelList,
-                                 df_coords_form_typeList,
-                                 df_coords_form_placeholderList,
-                                 df_coords_form_jsList,
-                                 df_reverse_input_reqList]
-    
-    return(df_coords_form)
-    
-"""
-#------------------------------------------------------------------
-#   display composite address form
-#------------------------------------------------------------------
-"""
-"""
-def display_comp_addr_geocode_inputs(parms) :
-    #return()
-    print("display_comp_addr_geocode_inputs",parms)
-    df_cols         =   cfg.get_dc_dataframe().columns
-    
-    if(parms == None) :
-        geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
+    if(formid == sugm.ADDRESS_CONVERSION) :
+        notes.append("To retrieve coords for a single address just enter address as single string.  Example : 1600 Pennsylvania Ave Washington, DC")
+        notes.append("To retrieve coords for multiple addresses enter each address enclosed in [ ] separated by a comma.  Example : [addr],[addr1], ...[addrn]")
     else :
-        geocid = parms[1]
-    
-    collistHeader    =   [""]
-    collistRows      =   []
-    collistWidths    =   [100]
-    collistAligns    =   ["left"]
-    collistHrefs     =   []
+        notes.append("To retrieve an address for a single set of coords just enter coords as single list of coords. Example : [lat,long] ")
+        notes.append("To retrieve addresses for multiple coords enter each coords enclosed in [] separated by a comma.  Example : [lat,long],[lat1,long1], ...[latn,longn]")
+        notes.append("Example : [lat,long],[lat1,long1], ...[latn,longn]")
 
-    reflist          =   ["acselcol"]
-        
-    for i in range(len(df_cols)) :
-        collistrow = [df_cols[i]]
-        collistRows.append(collistrow)
-        collistHrefs.append(reflist)
-        
-    col_names_table = dcTable("Column Names","accolnamesTable",
-                              cfg.SWGeocodeUtility_ID,
-                              collistHeader,collistRows,
-                              collistWidths,collistAligns)
-    
-    col_names_table.set_refList(collistHrefs)
-    
-    col_names_table.set_rowspertable(len(df_cols))
-    col_names_table.set_small(True)
-    col_names_table.set_smallwidth(98)
-    col_names_table.set_smallmargin(10)
-    #col_names_table.set_smallfsize(12)
-    col_names_table.set_border(True)
-    col_names_table.set_checkLength(False)
-    col_names_table.set_html_only(True) 
-    
-    acconv_table_html = ""
-    col_names_table.set_tabletype(ROW_MAJOR)
-    col_names_table.set_rowspertable(9)
+    #display_notes(notes)
+    from dfcleanser.common.common_utils import display_msgs
+    display_msgs(notes,None)
 
-    acconv_table_html = get_row_major_table(col_names_table,SCROLL_NEXT,False)
 
-    comp_addr_form  =   get_comp_addr_conv_form(geocid)
-    
-    from dfcleanser.common.html_widgets import InputForm
-    acconv_input_form = InputForm(comp_addr_form[0],
-                                  comp_addr_form[1],
-                                  comp_addr_form[2],
-                                  comp_addr_form[3],
-                                  comp_addr_form[4],
-                                  comp_addr_form[5],
-                                  comp_addr_form[6],
-                                  shortForm=False)
-    
-    acconv_input_form.set_gridwidth(580)
-    
-    acconv_input_html = ""
-    acconv_input_html = acconv_input_form.get_html() 
-        
-    acconv_heading_html = "<h4>" + get_html_spaces(6) + "Get Address Coords (dataframe) : "+ sugm.get_geocoder_title(geocid) + "</h4>"
-
-    display_grid("compaddr_wrapper",
-                 acconv_heading_html,
-                 acconv_table_html,
-                 acconv_input_html,
-                 None)
 """
-
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+#   Geocoder display methods
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+""" 
 
 """
 #------------------------------------------------------------------
@@ -1841,52 +1681,10 @@ def get_geocoder_table() :
     geocs_names_table.set_checkLength(False)
     geocs_names_table.set_html_only(True) 
     
-    #table_names_table.dump()
-     
     listHtml = geocs_names_table.get_html()
     
     return(listHtml)
 
-
-"""
-#--------------------------------------------------------------------------
-#  get geocoder input parms from geocoder kwargs
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_parms(geocid)  :
-
-    #print("get_geocoder_parms",geocid)    
-    parmsList = []
-    
-    if(geocid == None)                       : geocid          =   sugm.GoogleId 
-    elif(geocid == sugm.GoogleId)            : labelList       =   google_geocoder_labelList 
-    elif(geocid == sugm.BingId)              : labelList       =   bing_geocoder_labelList 
-    elif(geocid == sugm.DataBCId)            : labelList       =   databc_geocoder_labelList 
-    elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_geocoder_labelList 
-    elif(geocid == sugm.NominatimId)         : labelList       =   nomin_geocoder_labelList 
-    elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_geocoder_labelList 
-    
-    cfg_key = sugm.get_geocoder_title(geocid) + "_geocoderkwargs"   
-    kwargs = cfg.get_config_value(cfg_key,cfg.GLOBAL)
-
-    if(kwargs == None) :
-        parmsList = None
-    else : 
-        kwdict = {}
-        for i in range(len(kwargs)) :
-            kwdict.update({kwargs[i].get("key"):kwargs[i].get("value")})
-
-        for i in range(len(labelList)) :
-            if(labelList[i] != None) :
-                pval = kwdict.get(labelList[i])
-                if(pval == None) :
-                    parmsList.append("")
-                else :    
-                    parmsList.append(pval)
-
-    return(parmsList)
-    
-    
 """
 #------------------------------------------------------------------
 #   display geocoder inputs form
@@ -1926,17 +1724,6 @@ def display_geocoders(geocodeid,showfull=False) :
                                    bing_geocoder_jsList,
                                    bing_geocoder_reqList]
 
-    elif(geocodeid == sugm.DataBCId) :
-        
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.DataBCId)
-        geocoder_input_form   =   [databc_geocoder_id,
-                                   databc_geocoder_idList,
-                                   databc_geocoder_labelList,
-                                   databc_geocoder_typeList,
-                                   databc_geocoder_placeholderList,
-                                   databc_geocoder_jsList,
-                                   databc_geocoder_reqList]
-
     elif(geocodeid == sugm.OpenMapQuestId) :
         
         cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.OpenMapQuestId)
@@ -1972,10 +1759,15 @@ def display_geocoders(geocodeid,showfull=False) :
     
     geocode_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</h4>"
 
-    parmsList = get_geocoder_parms(geocodeid)
+    #parmsList = get_geocoder_parms(geocodeid)
+    #parmsList = get_geocoder_form_parms_list(sugm.GEOCODERPARMS,geocodeid) 
     
-    if(parmsList != None) :
-        cfg.set_config_value(geocoder_input_form[0]+"Parms",parmsList)    
+    #if(parmsList != None) :
+    #    cfg.set_config_value(geocoder_input_form[0]+"Parms",parmsList) 
+
+    #print("display_geocoders parmsList",parmsList)    
+    #print("cfg",cfg.get_config_value(geocoder_input_form[0]+"Parms"))    
+        
     
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
@@ -1999,4 +1791,47 @@ def display_geocoders(geocodeid,showfull=False) :
                  geocode_heading_html,
                  listHtml,
                  geocode_input_html,None)
+    
+    notes = [] 
+    
+    if(geocodeid == sugm.ArcGISId) :
+        notes.append("For ArcGis enter values for username, password and user_agent or enter no values for all three.")
+        notes.append("Leaving first three values blank uses the free limited ArcGIS capability. For simple geocoding this is most applicable")
+        notes.append("Entering values corresponds to the ArcGIS signon account you have set up. You must use an ArcGIS account to do ArcGIS bulk geocoding.")
+        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+    elif(geocodeid == sugm.GoogleId) :
+        notes.append("For Google enter values for client_id and secret_key or enter a value for the api_key.")
+        notes.append("Entering values for client_id and secret_key correspond to Googles user accounts including premier. You must use a client_id and secret_key to do ArcGIS bulk geocoding.")
+        notes.append("Entering just an api_key is for simple geocoding")
+        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+    elif(geocodeid == sugm.BingId) :        
+        notes.append("Bing geoocoding requires an api_key for all Bing geocoding including bulk geocoding.")
+        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+    elif(geocodeid == sugm.OpenMapQuestId) :
+        notes.append("OpenMapQuest geoocoding requires an api_key for all OpenMapQuest geocoding including bulk geocoding.")
+        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+    elif(geocodeid == sugm.NominatimId) :        
+        notes.append("Nominatim geoocoding requires a user-agent for all Nominatim geocoding including bulk geocoding.")
+        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+
+    from dfcleanser.common.common_utils import display_msgs
+    display_msgs(notes,None)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

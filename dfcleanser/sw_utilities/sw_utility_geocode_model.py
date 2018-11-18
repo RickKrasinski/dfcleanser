@@ -70,6 +70,9 @@ PROCESS_DF_GET_ADDRESS      =    14
 ADDRESS_CONVERSION          =    0
 COORDS_CONVERSION           =    1
 
+GEOCODER                    =    0
+QUERY                       =    1
+REVERSE                     =    2
 
 """
 #--------------------------------------------------------------------------
@@ -89,10 +92,11 @@ PROCESS_BATCH_TEST_CONNECTOR    =    20
 CLEAR_GEOCODE_PARMS             =    21
 
 
-INITPARMS                   =   0
+GEOCODERPARMS               =   0
 QUERYPARMS                  =   1
-QUERYDFPARMS                =   2
-REVERSEPARMS                =   3
+REVERSEPARMS                =   2
+
+QUERYDFPARMS                =   3
 REVERSEDFPARMS              =   4
 
 DISTANCE_HELP               =   8
