@@ -201,9 +201,8 @@ function process_geocoder_callback(fid, gcid) {
 
             var fparms = get_input_form_parms(id);
             var inputs = [fid, gcid, fparms];
-            var cmd = 0;
-            if (fid == 0) cmd = 6;
-            else cmd = fid;
+            
+            var cmd = 6;
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",cmd + ", " + JSON.stringify(inputs)));
             break;
         case 3:
