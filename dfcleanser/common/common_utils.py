@@ -456,7 +456,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
         width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100))
         parms_table.set_smallwidth(width+6)
 
-    parms_table.set_smallmargin(32)
+    parms_table.set_smallmargin(23)
     parms_table.set_smallfsize(12)
     parms_table.set_border(False)
     parms_table.set_checkLength(False)

@@ -239,6 +239,7 @@ SCRIPTING_FLAG_KEY                      =   "ScriptingFlag"
 CURRENT_GEOCODER_KEY                    =   "currentGeocoder"
 ARCGIS_BATCH_MAX_BATCH_SIZE_KEY         =   "arcgisMaxBatchSize"
 ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY   =   "arcgisSuggestedBatchSize"
+BULK_GEOCODE_MODE_KEY                   =   "bulkGeocodeMode"
 
 """
 #--------------------------------------------------------------------------
