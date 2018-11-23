@@ -289,71 +289,6 @@ datetime_radio_jslist                   =   ["select_datetime_dt(0)",
 
 """
 #--------------------------------------------------------------------------
-#   dataframe concat format input 
-#--------------------------------------------------------------------------
-"""
-
-"""
-concat_help_url                         =   "https://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html"
-
-df_concat_input_title                   =   "dataframe Concat Parameters"
-df_concat_input_id                      =   "concatinput"
-df_concat_input_idList                  =   ["dflist",
-                                             "caxis",
-                                             "cjoin",
-                                             "cresult",
-                                             "cresrow",
-                                             None,None,None,None,None]
-
-df_concat_input_labelList              =   ["dataframes_to_concatenate",
-                                             "axis_to_concatenate_over",
-                                             "join_value",
-                                             "dataframe_to_store_result_in",
-                                             "reset_row_index_flag",
-                                             "Concat</br>Dataframes",
-                                             "Clear",
-                                             "Return",
-                                             "Pandas</br>Help","Help"]
-
-df_concat_input_typeList                =   ["text","text","text","text","text",
-                                             "button","button","button","button","button"]
-
-df_concat_input_placeholderList         =   ["dataframes to concatenate",
-                                             "axis to concatenate ( 0-rows : 1-columns default eows )",
-                                             "('inner' or 'outer' default : 'outer')",
-                                             "dataframe to store concatentaion result in",
-                                             "reset row index after concatentaion (default : False)",
-                                             None,None,None,None,None]
-
-df_concat_input_jsList                  =   [None,None,None,None,None,
-                                             "process_concat_transform_callback(0)",
-                                             "process_concat_transform_callback(1)",
-                                             "process_concat_transform_callback(2)",
-                                             "display_help_url(" + "'" + concat_help_url + "'" + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
-
-df_concat_input_reqList                 =   [0,1,2,3,4]
-"""
-
-"""
-#--------------------------------------------------------------------------
-#    concat example button
-#--------------------------------------------------------------------------
-"""
-"""
-df_concat_example_tb_doc_title          =   ""
-df_concat_example_tb_title              =   ""
-df_concat_example_tb_id                 =   "concatexampletb"
-
-df_concat_example_tb_keyTitleList       =   ["Show Concatenation Example"]
-
-df_concat_example_tb_jsList             =   ["displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
-
-df_concat_example_tb_centered           =   True
-"""
-
-"""
-#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 #    data transform display functions
 #--------------------------------------------------------------------------
@@ -690,13 +625,13 @@ def display_main_option(parms,clear=False) :
             
             from dfcleanser.data_transform.data_transform_dataframe_widgets import display_dataframe_transform_taskbar
             display_dataframe_transform_taskbar()
-            display_inspection_data()
+            #display_inspection_data()
                 
         elif(funcid == dtm.DISPLAY_COLUMNS_TRANSFORM) :
             
             from dfcleanser.data_transform.data_transform_columns_widgets import display_base_data_transform_columns_taskbar
             display_base_data_transform_columns_taskbar()
-            display_inspection_data()
+            #display_inspection_data()
             
         elif(funcid == dtm.DISPLAY_DATETIME_TRANSFORM) :
 
