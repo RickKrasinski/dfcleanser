@@ -61,11 +61,11 @@ PROCESS_DISTANCE            =    8
 DISPLAY_DF_DISTANCE         =    9
 PROCESS_DF_DISTANCE         =    10
 
-DISPLAY_DF_GET_COORDS       =    11
-DISPLAY_DF_GET_ADDRESS      =    12
+DISPLAY_BULK_GET_COORDS     =    11
+DISPLAY_BULK_GET_ADDRESS    =    12
 
-PROCESS_DF_GET_COORDS       =    13
-PROCESS_DF_GET_ADDRESS      =    14
+PROCESS_BULK_GET_COORDS     =    13
+PROCESS_BULK_GET_ADDRESS    =    14
 
 ADDRESS_CONVERSION          =    0
 COORDS_CONVERSION           =    1
@@ -85,9 +85,9 @@ DISPLAY_FULL_GEOCODING          =    15
 DISPLAY_FULL_QUERY              =    16
 DISPLAY_FULL_REVERSE            =    17
 DISPLAY_FULL_BULK_GOOGLE_QUERY  =    18
-DISPLAY_FULL_BATCH_ARCGIS_QUERY =    19
+DISPLAY_FULL_BULK_ARCGIS_QUERY  =    19
 
-PROCESS_BATCH_TEST_CONNECTOR    =    20
+PROCESS_TEST_BULK_CONNECTOR     =    20
 
 CLEAR_GEOCODE_PARMS             =    21
 
@@ -110,6 +110,7 @@ DISTANCE_DF_HELP            =   8
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+GEOCODERS_TABLE             =   -1
 
 COLNAMES_TABLE              =   0
 LANGUAGE_TABLE              =   1

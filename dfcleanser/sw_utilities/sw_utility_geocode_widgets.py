@@ -53,7 +53,7 @@ geocode_utility_tb_keyTitleList         =   ["Simple</br>Geocoding",
                                              "Clear","Help"]
 
 geocode_utility_tb_jsList               =   ["process_geomain_callback(" + str(sugm.DISPLAY_GET_COORDS) + ")",
-                                             "process_geomain_callback(" + str(sugm.DISPLAY_DF_GET_COORDS) + ")",
+                                             "process_geomain_callback(" + str(sugm.DISPLAY_BULK_GET_COORDS) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_GEOCODER) + ")",
                                              "process_geomain_callback(0)",
@@ -76,7 +76,6 @@ arcgis_geocoder_id                  =   "arcgisgeocoder"
 
 arcgis_geocoder_idList              =    ["aguser",
                                           "agpw",
-                                          "agagent",
                                           "agscheme",
                                           "agtimeout",
                                           "agproxies",
@@ -84,28 +83,26 @@ arcgis_geocoder_idList              =    ["aguser",
 
 arcgis_geocoder_labelList           =   ["username",
                                          "password",
-                                         "user_agent",
                                          "scheme",
                                          "timeout",
                                          "proxies",
                                          "Test</br>Geocoder",
-                                         "Get</br>Coords",
-                                         "Get</br>Address",
+                                         "Simple</br>Geocoding",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
-arcgis_geocoder_typeList            =   ["text","text","text","text","text","text",
+arcgis_geocoder_typeList            =   ["text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
 arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
                                          "ArcGIS password (default : None)",
-                                         "enter custom User-Agent header (default : my-application)",
                                          "Desired scheme (default : https)",
                                          "Time, in seconds (default : 20)",
                                          "enter proxies dict (default : None)",
                                          None,None,None,None,None,None]
 
-arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
+arcgis_geocoder_jsList              =   [None,None,None,None,None,
                                          "process_geocoder_callback(0," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(1," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(2," + str(sugm.ArcGISId) + ")",
@@ -157,8 +154,8 @@ google_geocoder_labelList           =   ["api_key",
                                          "ssl_context",
                                          "channel",
                                          "Test</br>Geocoder",
-                                         "Get</br>Coords",
-                                         "Get</br>Address",
+                                         "Simple</br>Geocoding",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -222,8 +219,8 @@ bing_geocoder_labelList             =   ["api_key",
                                          "scheme",
                                          "proxies",
                                          "Test</br>Geocoder",
-                                         "Get</br>Coords",
-                                         "Get</br>Address",
+                                         "Simple</br>Geocoding",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -284,8 +281,8 @@ mapquest_geocoder_labelList             =   ["api_key",
                                              "proxies",
                                              "user_agent",
                                              "Test</br>Geocoder",
-                                             "Get</br>Coords",
-                                             "Get</br>Address",
+                                             "Simple</br>Geocoding",
+                                             "Bulk</br>Geocoding",
                                              "Clear","Return","Help"]
 
 mapquest_geocoder_typeList              =   ["text","text","text","text","text","text",
@@ -350,8 +347,8 @@ nomin_geocoder_labelList            =   ["user_agent",
                                          "domain",
                                          "scheme",
                                          "Test</br>Geocoder",
-                                         "Get</br>Coords",
-                                         "Get</br>Address",
+                                         "Simple</br>Geocoding",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -1131,7 +1128,6 @@ def display_calc_df_distance_input_form() :
 """
 def get_geocoder_parms_table(geocid) :
 
-    print("get_geocoder_parms_table",geocid)
     geoHeader    =   [""]
     geoRows      =   []
     geoWidths    =   [100]
@@ -1625,8 +1621,7 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
         notes.append("To retrieve coords for multiple addresses enter each address enclosed in [ ] separated by a comma.  Example : [addr],[addr1], ...[addrn]")
     else :
         notes.append("To retrieve an address for a single set of coords just enter coords as single list of coords. Example : [lat,long] ")
-        notes.append("To retrieve addresses for multiple coords enter each coords enclosed in [] separated by a comma.  Example : [lat,long],[lat1,long1], ...[latn,longn]")
-        notes.append("Example : [lat,long],[lat1,long1], ...[latn,longn]")
+        notes.append("To retrieve multiple addresses enter each coords enclosed in [] separated by a comma.  Example : [lat,long],[lat1,long1], ...[latn,longn]")
 
     #display_notes(notes)
     from dfcleanser.common.common_utils import display_msgs
@@ -1690,7 +1685,7 @@ def get_geocoder_table() :
 #   display geocoder inputs form
 #------------------------------------------------------------------
 """     
-def display_geocoders(geocodeid,showfull=False) :
+def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     
     listHtml = get_geocoder_table()
     
@@ -1792,30 +1787,31 @@ def display_geocoders(geocodeid,showfull=False) :
                  listHtml,
                  geocode_input_html,None)
     
-    notes = [] 
+    if(showNotes) :
+        notes = [] 
     
-    if(geocodeid == sugm.ArcGISId) :
-        notes.append("For ArcGis enter values for username, password and user_agent or enter no values for all three.")
-        notes.append("Leaving first three values blank uses the free limited ArcGIS capability. For simple geocoding this is most applicable")
-        notes.append("Entering values corresponds to the ArcGIS signon account you have set up. You must use an ArcGIS account to do ArcGIS bulk geocoding.")
-        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
-    elif(geocodeid == sugm.GoogleId) :
-        notes.append("For Google enter values for client_id and secret_key or enter a value for the api_key.")
-        notes.append("Entering values for client_id and secret_key correspond to Googles user accounts including premier. You must use a client_id and secret_key to do ArcGIS bulk geocoding.")
-        notes.append("Entering just an api_key is for simple geocoding")
-        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
-    elif(geocodeid == sugm.BingId) :        
-        notes.append("Bing geoocoding requires an api_key for all Bing geocoding including bulk geocoding.")
-        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
-    elif(geocodeid == sugm.OpenMapQuestId) :
-        notes.append("OpenMapQuest geoocoding requires an api_key for all OpenMapQuest geocoding including bulk geocoding.")
-        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
-    elif(geocodeid == sugm.NominatimId) :        
-        notes.append("Nominatim geoocoding requires a user-agent for all Nominatim geocoding including bulk geocoding.")
-        notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        if(geocodeid == sugm.ArcGISId) :
+            notes.append("For ArcGis enter values for username, and password or enter no values for simple geocoding.")
+            notes.append("Entering values corresponds to the ArcGIS signon account you have set up.")
+            notes.append("You must use an ArcGIS account to do ArcGIS bulk geocoding.")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        elif(geocodeid == sugm.GoogleId) :
+            notes.append("For Google enter values for client_id and secret_key or enter a value for the api_key.")
+            notes.append("You must use a client_id and secret_key to do Google bulk geocoding.")
+            notes.append("Entering just an api_key is for simple geocoding")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        elif(geocodeid == sugm.BingId) :        
+            notes.append("Bing geoocoding requires an api_key for all Bing geocoding including bulk geocoding.")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        elif(geocodeid == sugm.OpenMapQuestId) :
+            notes.append("OpenMapQuest geoocoding requires an api_key for all OpenMapQuest geocoding including bulk geocoding.")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        elif(geocodeid == sugm.NominatimId) :        
+            notes.append("Nominatim geoocoding requires a user-agent for all Nominatim geocoding including bulk geocoding.")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
 
-    from dfcleanser.common.common_utils import display_msgs
-    display_msgs(notes,None)
+        from dfcleanser.common.common_utils import display_msgs
+        display_msgs(notes,None)
 
 
 
