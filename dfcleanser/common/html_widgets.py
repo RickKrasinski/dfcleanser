@@ -761,7 +761,7 @@ def get_num_inputs(idList) :
     return(pcount)
 
 def should_display(idList,reqList,i,parmslist) :
-    
+
     if( (parmslist == None) or (len(parmslist) == 0) )      :   return(True)
     else :
         requireds = []

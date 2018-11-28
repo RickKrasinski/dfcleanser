@@ -367,20 +367,22 @@ def get_parms_for_input(parms,ids) :
     return(outparms)
 
 
-"""
-#--------------------------------------------------------------------------
-#   display a list of parms as a table
-#
-#       title  - parms title 
-#       labels - parm labels
-#       values - parm values
-#
-#   return table of parms
-#
-#--------------------------------------------------------------------------
-"""  
+ 
 def displayParms(title,labels,values,id,width=None,printBlank=False) :
-
+    """
+    #--------------------------------------------------------------------------
+    #   display a list of parms as a table
+    #
+    #       title  - parms title 
+    #       labels - parm labels
+    #       values - parm values
+    #       id     - table id
+    #       width  - fixed table width in pixels
+    #
+    #   return table of parms
+    #
+    #--------------------------------------------------------------------------
+    """ 
     maxllabels      =   0
     maxlvalues      =   0
 
@@ -463,6 +465,25 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
     
     parms_table.display_table()
 
+
+def get_parms_list_from_dict(labels,parmsdict) :
+    """
+    #--------------------------------------------------------------------------
+    #   display a list of parms as a table
+    #
+    #       labels    - parm labels
+    #       parmsdict - parm dict
+    #
+    #   return list of parms values
+    #
+    #--------------------------------------------------------------------------
+    """
+    parmsValues     =   []
+    
+    for i in range(len(labels)) :
+        parmsValues.append(parmsdict.get(labels[i],""))
+
+    return(parmsValues)
 
 """
 #--------------------------------------------------------------------------
