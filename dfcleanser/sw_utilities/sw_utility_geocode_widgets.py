@@ -76,6 +76,7 @@ arcgis_geocoder_id                  =   "arcgisgeocoder"
 
 arcgis_geocoder_idList              =    ["aguser",
                                           "agpw",
+                                          "agagent",
                                           "agscheme",
                                           "agtimeout",
                                           "agproxies",
@@ -83,6 +84,7 @@ arcgis_geocoder_idList              =    ["aguser",
 
 arcgis_geocoder_labelList           =   ["username",
                                          "password",
+                                         "referer",
                                          "scheme",
                                          "timeout",
                                          "proxies",
@@ -92,17 +94,18 @@ arcgis_geocoder_labelList           =   ["username",
                                          "Clear","Return","Help"]
 
 
-arcgis_geocoder_typeList            =   ["text","text","text","text","text",
+arcgis_geocoder_typeList            =   ["text","text","text","text","text","text",
                                          "button","button","button","button","button","button"]
 
 arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
                                          "ArcGIS password (default : None)",
+                                         "ArcGIS referer (default : my-application)",
                                          "Desired scheme (default : https)",
                                          "Time, in seconds (default : 20)",
                                          "enter proxies dict (default : None)",
                                          None,None,None,None,None,None]
 
-arcgis_geocoder_jsList              =   [None,None,None,None,None,
+arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
                                          "process_geocoder_callback(0," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(1," + str(sugm.ArcGISId) + ")",
                                          "process_geocoder_callback(2," + str(sugm.ArcGISId) + ")",
@@ -111,7 +114,7 @@ arcgis_geocoder_jsList              =   [None,None,None,None,None,
                                          "display_help_url('" + str(dfchelp.ArcGISInitHelp) + "')"]
 
 
-arcgis_geocoder_reqList             =   [0,1]
+arcgis_geocoder_reqList             =   [0,1,2]
 
 arcgis_geocoder_form                =   [arcgis_geocoder_id,
                                          arcgis_geocoder_idList,
@@ -1154,6 +1157,9 @@ def get_geocoder_parms_table(geocid) :
     geoHrefs.append([None])
     
     row_added = 2
+
+
+    print("get_geocoder_parms_table",geocparms)
     
     if(geocparms != None) :
         
@@ -1686,6 +1692,8 @@ def get_geocoder_table() :
 #------------------------------------------------------------------
 """     
 def display_geocoders(geocodeid,showfull=False,showNotes=True) :
+
+    print("display_geocoders",geocodeid,showfull,showNotes) 
     
     listHtml = get_geocoder_table()
     
@@ -1762,7 +1770,8 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
 
     #print("display_geocoders parmsList",parmsList)    
     #print("cfg",cfg.get_config_value(geocoder_input_form[0]+"Parms"))    
-        
+    #print("display_geocoders",geocoder_input_form) 
+    
     
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
@@ -1791,10 +1800,10 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
         notes = [] 
     
         if(geocodeid == sugm.ArcGISId) :
-            notes.append("For ArcGis enter values for username, and password or enter no values for simple geocoding.")
-            notes.append("Entering values corresponds to the ArcGIS signon account you have set up.")
-            notes.append("You must use an ArcGIS account to do ArcGIS bulk geocoding.")
-            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+            notes.append("For ArcGis simple geocoding authenticated mode enter values for username, password and referer.")
+            notes.append("For ArcGis simple geocoding non-authenticated mode leave username, password and referer blank.")
+            notes.append("For ArcGis bulk geocoding enter values for username and password.")
+            notes.append("The rest of the parameters are used as default values for any subsequent simple geocoding calls of this connector.")
         elif(geocodeid == sugm.GoogleId) :
             notes.append("For Google enter values for client_id and secret_key or enter a value for the api_key.")
             notes.append("You must use a client_id and secret_key to do Google bulk geocoding.")

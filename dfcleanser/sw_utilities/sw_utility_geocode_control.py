@@ -152,16 +152,24 @@ def display_geocode_utility(optionId,parms=None) :
         if(parms != None) :
             fid     =   parms[0]
             geocid  =   parms[1]
+            
+            print("PROCESS_GEOCODER",fid,geocid)
             if(fid < 3) :
-                inputs  =   parms[2]
+
+                if(geocid == sugm.ArcGISId) : 
+                    ids =   sugw.arcgis_geocoder_idList
+                elif(geocid == sugm.GoogleId) :
+                    ids =   sugw.google_geocoder_idList
+                    
+                inputs  =   get_parms_for_input(parms[2],ids)
+                if(len(inputs) > 0) :
+                    cfg.set_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)    
             
         if(fid == 0)    :   test_geocoder(geocid,inputs)
         elif(fid == 1)  :   
-            cfg.set_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)
             sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS)
         elif(fid == 2)  : 
-            print("fid = 2")
-            cfg.set_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)
+            print("fid",fid)
             from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocoding
             display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS) 
         elif(fid == 3)  :
@@ -197,7 +205,7 @@ def display_geocode_utility(optionId,parms=None) :
     # process testing of the bulk geocode connector
     elif(optionId == sugm.PROCESS_TEST_BULK_CONNECTOR) :
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_test_bulk_connector
-        process_test_bulk_connector(optionId,parms)           
+        process_test_bulk_connector(parms)           
     
     elif(optionId == sugm.CLEAR_GEOCODE_PARMS) :
         
