@@ -430,7 +430,7 @@ function set_bulk_progress_status(text,color){
     var statusbar     =   $("#bulkstatus");
     console.log("set_bulk_progress_status",statusbar);
     statusbar.attr('background-color', color);
-    statusbar.value(text);
+    statusbar.val(text);
 
 }
 
