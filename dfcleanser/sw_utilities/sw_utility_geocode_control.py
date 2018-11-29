@@ -53,7 +53,11 @@ def get_num_input_ids(idList) :
 def display_geocode_utility(optionId,parms=None) :
 
     from IPython.display import clear_output
-    clear_output()
+    
+    if(not((optionId == sugm.BULK_GEOCODE_RUN ) or 
+           (optionId == sugm.BULK_GEOCODE_PAUSE) or
+           (optionId == sugm.BULK_GEOCODE_STOP))) :
+        clear_output()
 
     if(not cfg.check_if_dc_init()) :
         sugw.display_geocode_main_taskbar()        
@@ -224,13 +228,19 @@ def display_geocode_utility(optionId,parms=None) :
         
     elif(optionId == sugm.BULK_GEOCODE_RUN) :
         print("BULK_GEOCODE_RUN")
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
+        set_status_bar(sugm.RUNNING)
         
     elif(optionId == sugm.BULK_GEOCODE_PAUSE) :
         print("BULK_GEOCODE_PAUSE")
-        
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
+
+        set_status_bar(sugm.PAUSED)
     elif(optionId == sugm.BULK_GEOCODE_STOP) :
         print("BULK_GEOCODE_STOP")
-            
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
+
+        set_status_bar(sugm.STOPPED)    
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------

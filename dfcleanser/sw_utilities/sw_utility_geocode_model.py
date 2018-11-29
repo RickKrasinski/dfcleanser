@@ -91,6 +91,9 @@ PROCESS_TEST_BULK_CONNECTOR     =    20
 
 CLEAR_GEOCODE_PARMS             =    21
 
+BULK_GEOCODE_RUN                =    22
+BULK_GEOCODE_PAUSE              =    23
+BULK_GEOCODE_STOP               =    24
 
 GEOCODERPARMS               =   0
 QUERYPARMS                  =   1
@@ -132,10 +135,6 @@ BATCH_TEST_CONNECTOR        =   10
 BATCH_CLEAR                 =   11
 BATCH_RETURN                =   12
 BATCH_HELP                  =   13
-
-BULK_GEOCODE_RUN            =   14
-BULK_GEOCODE_PAUSE          =   15
-BULK_GEOCODE_STOP           =   16
 
 RUNNING                     =   0
 STOPPED                     =   1

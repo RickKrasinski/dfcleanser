@@ -1475,9 +1475,9 @@ bulk_console_container_end = """            </tbody>
 
 bulk_console_commands = """        <div style="margin-top:10px; margin-bottom:20px; width:100%;">
             <div class="container" style="margin-top:20px; width:95%; overflow-x: hidden !important;">
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(14)">Run</button>
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(15)">Pause</button>
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(16)">Stop</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(22)">Run</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(23)">Pause</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(24)">Stop</button>
             </div>
         </div>
 """
@@ -1795,7 +1795,7 @@ class GeocodeTask:
 #--------------------------------------------------------------------------
 """
 def load_geocode_runner(geocoderId,runParms,address_set) :
-    dfc_Geocode_Runner.load_run(geocoderId,runParms)    
+    dfc_Geocode_Runner.load_run(geocoderId,runParms,address_set)    
 
 def start_geocode_runner() :
     dfc_Geocode_Runner.start_run() 
@@ -1824,7 +1824,7 @@ class BulkGeocodeRunner:
     addressParms        =   None
     rowindex            =   0
     errors              =   0
-    state               =   STOPPED
+    state               =   sugm.STOPPED
     checkpoint_file     =   None
     halt_all_geocoding  =   True
  
@@ -1835,7 +1835,7 @@ class BulkGeocodeRunner:
         self.addressParms       =   None
         self.rowindex           =   0
         self.errors             =   0
-        self.state              =   STOPPED
+        self.state              =   sugm.STOPPED
         self.checkpoint_file    =   None
         self.halt_all_geocoding =   True
         
@@ -1845,20 +1845,20 @@ class BulkGeocodeRunner:
         self.addressParms       =   addressParms
         
     def start_run(self):
-        self.state              =   RUNNING
+        self.state              =   sugm.RUNNING
         BulkGeocodeRunner.halt_all_geocoding = False
         self.rowindex           =   0
 
     def stop_run(self):
-        self.state              =   STOPPED
+        self.state              =   sugm.STOPPED
         BulkGeocodeRunner.halt_all_geocoding = True
             
     def pause_run(self):
-        self.state              =   PAUSED
+        self.state              =   sugm.PAUSED
         BulkGeocodeRunner.halt_all_geocoding = True
     
     def resume_run(self):
-        self.state              =   RUNNING
+        self.state              =   sugm.RUNNING
         BulkGeocodeRunner.halt_all_geocoding = False
         
     def get_run_state(self):
