@@ -391,6 +391,47 @@ function process_bulk_query(fid,gcid) {
     window.scroll_to('DCGeocodeUtility');
 }
 
+function controlbulkrun(fid) {
+    /**
+    * geocoder bulk run control.
+    *
+    * Parameters:
+    *  fid- function id
+    */
+    
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",fid));
+    window.scroll_to('DCGeocodeUtility');
+}
+
+function set_bulk_progress_bar(barid,barvalue){
+    /**
+    * set progress value
+    *
+    * Parameters:
+    *  barid    - progress bar id
+    *  barvalue - progress bar value
+    */
+
+    var progressbar     =   $("#"+barid);
+    progressbar.attr('aria-valuenow', barvalue).css('width', barvalue+"%");
+
+}
+
+function set_bulk_progress_status(text,color){
+    /**
+    * set progress value
+    *
+    * Parameters:
+    *  barid    - progress bar id
+    *  barvalue - progress bar value
+    */
+
+    var statusbar     =   $("#bulkstatus");
+    statusbar.attr('background-color', color);
+    statusbar.value(text);
+
+}
+
 // ------------------------------------------------------
 // dynamic html functions 
 // ------------------------------------------------------
