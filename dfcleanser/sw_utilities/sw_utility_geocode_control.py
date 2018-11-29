@@ -222,6 +222,14 @@ def display_geocode_utility(optionId,parms=None) :
             cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
             sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS)
         
+    elif(optionId == sugm.BULK_GEOCODE_RUN) :
+        print("BULK_GEOCODE_RUN")
+        
+    elif(optionId == sugm.BULK_GEOCODE_PAUSE) :
+        print("BULK_GEOCODE_PAUSE")
+        
+    elif(optionId == sugm.BULK_GEOCODE_STOP) :
+        print("BULK_GEOCODE_STOP")
             
 """
 #--------------------------------------------------------------------------

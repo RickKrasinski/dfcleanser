@@ -133,6 +133,18 @@ BATCH_CLEAR                 =   11
 BATCH_RETURN                =   12
 BATCH_HELP                  =   13
 
+BULK_GEOCODE_RUN            =   14
+BULK_GEOCODE_PAUSE          =   15
+BULK_GEOCODE_STOP           =   16
+
+RUNNING                     =   0
+STOPPED                     =   1
+PAUSED                      =   2
+
+START                       =   0
+STOP                        =   1
+PAUSE                       =   2
+RESUME                      =   3
 
 
 def get_geocoder_title(geoid) :

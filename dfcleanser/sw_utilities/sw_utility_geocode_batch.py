@@ -1475,21 +1475,64 @@ bulk_console_container_end = """            </tbody>
 
 bulk_console_commands = """        <div style="margin-top:10px; margin-bottom:20px; width:100%;">
             <div class="container" style="margin-top:20px; width:95%; overflow-x: hidden !important;">
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(0)">Run</button>
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(1)">Pause</button>
-                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(2)">Stop</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(14)">Run</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(15)">Pause</button>
+                <button type="button" class="btn btn-primary" style="  width:100px;  height:54px;  height:40px;" onclick="controlbulkrun(16)">Stop</button>
             </div>
         </div>
 """
 
 bulk_console_status = """        <div style=' width: 30%; text-align: center; height: 30px; margin: auto;'>
-            <p style='height: 30px; padding-top: 5px; text-align: center; font-size: 14px; font-family: Arial; color: white; font-weight: bold; background-color: red; margin: auto;'>Stopped</p>
+            <p id='bulkstatus' style='height: 30px; padding-top: 5px; text-align: center; font-size: 14px; font-family: Arial; color: white; font-weight: bold; background-color: red; margin: auto;'>Stopped</p>
         </div>
         <br>
 """
 
 bulk_console_end = """</div>
 """
+
+def set_progress_bar_value(geocid,barid,barvalue) :
+    
+    if(geocid == sugm.ArcGISId) :
+        
+        if(barid == 0)  :   bid = "arcgistotaladdrs"
+        else            :   bid = "arcgiserrorrate"
+        
+    elif(geocid == sugm.GoogleId) :
+
+        if(barid == 0)  :   bid = "googletotaladdrs"
+        else            :   bid = "googleerrorrate"
+
+    set_progress_bar_js = "set_bulk_progress_bar(" + str(bid) + ", " + str(barvalue) + ")"
+    
+    from dfcleanser.common.common_utils import run_jscript
+    run_jscript(set_progress_bar_js,
+                "fail to set progress bar : ",
+                 str(bid))
+
+def set_status_bar(status) :
+    
+    btext   =   ""
+    
+    from dfcleanser.system.system_model import Green,Red,Yellow
+    if(status == sugm.RUNNING) : 
+        bcolor  =   Green
+        btext   =   "Running"
+    elif(status == sugm.STOPPED) :
+        bcolor  =   Red
+        btext   =   "Stopped"
+    elif(status == sugm.PAUSED) :
+        bcolor  =   Yellow
+        btext   =   "Paused"
+
+    if(len(btext) > 0) :
+        set_status_bar_js = "set_bulk_progress_status(" + str(btext) + ", " + str(bcolor) + ")"
+    
+        from dfcleanser.common.common_utils import run_jscript
+        run_jscript(set_status_bar_js,
+                    "fail to set progress status color : ",
+                    str(btext))
+
 
 
 def get_progress_bar_html(barParms) :
@@ -1702,6 +1745,9 @@ class GeocodeTask:
             self.run_geocode_method()
             # check error code
             GeocodeTask.set_halt_flag(GeocodeTask.process_error_code(self.geocoderid,self.results))
+            
+            # delay 2/10 second
+            time.sleep(0.2)
 
     def run_geocoder(self,geocode_method,geoparms):
         self.geocode_method     =   geocode_method
@@ -1740,14 +1786,7 @@ class GeocodeTask:
 #--------------------------------------------------------------------------
 """
 
-RUNNING     =   0
-STOPPED     =   1
-PAUSED      =   2
 
-START       =   0
-STOP        =   1
-PAUSE       =   2
-RESUME      =   3
 
 
 """
@@ -1756,7 +1795,7 @@ RESUME      =   3
 #--------------------------------------------------------------------------
 """
 def load_geocode_runner(geocoderId,runParms,address_set) :
-    dfc_Geocode_Runner.load(geocoderId,runParms)    
+    dfc_Geocode_Runner.load_run(geocoderId,runParms)    
 
 def start_geocode_runner() :
     dfc_Geocode_Runner.start_run() 
