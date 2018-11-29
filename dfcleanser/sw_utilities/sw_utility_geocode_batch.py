@@ -1503,7 +1503,7 @@ def set_progress_bar_value(geocid,barid,barvalue) :
         if(barid == 0)  :   bid = "googletotaladdrs"
         else            :   bid = "googleerrorrate"
 
-    set_progress_bar_js = "set_bulk_progress_bar(" + str(bid) + ", " + str(barvalue) + ")"
+    set_progress_bar_js = "set_bulk_progress_bar('" + bid + "', " + str(barvalue) + ");"
     
     from dfcleanser.common.common_utils import run_jscript
     run_jscript(set_progress_bar_js,
@@ -1526,8 +1526,9 @@ def set_status_bar(status) :
         btext   =   "Paused"
 
     if(len(btext) > 0) :
-        set_status_bar_js = "set_bulk_progress_status(" + str(btext) + ", " + str(bcolor) + ")"
+        set_status_bar_js = "set_bulk_progress_status('" + str(btext) + "', '" + str(bcolor) + "');"
     
+        print("set_status_bar_js",set_status_bar_js)
         from dfcleanser.common.common_utils import run_jscript
         run_jscript(set_status_bar_js,
                     "fail to set progress status color : ",
