@@ -1055,7 +1055,7 @@ def get_geocode_address_string(address_vector,rowIndex) :
     return(geocode_address)
 
 
-def get_address_vector(address_cols) : 
+def get_address_map(address_cols) : 
     """
     * -------------------------------------------------------------------------- 
     * function : get address object from address cols input parms
@@ -1161,7 +1161,7 @@ def validate_bulk_parms(geocid,inputs,opstat) :
         
         fparms = inputs#get_parms_for_input(inputs,batch_arcgis_query_idList)
 
-        #print("validate_bulk_parms",fparms)
+        #print("\nvalidate_bulk_parms\n",fparms)
         # check the required parms 
         if(len(fparms[0]) == 0) :
             opstat.set_status(False)
@@ -1243,7 +1243,7 @@ def validate_bulk_parms(geocid,inputs,opstat) :
 #   run google bulk geocoding
 #--------------------------------------------------------------------------
 """
-def run_google_bulk_geocode(runParms,opstat) :
+def run_google_bulk_geocode(runParms,opstat,state) :
     
     print("run_google_bulk_geocode",runParms) 
     
@@ -1253,7 +1253,7 @@ def run_google_bulk_geocode(runParms,opstat) :
 #   run google bulk geocoding
 #--------------------------------------------------------------------------
 """
-def run_arcgis_bulk_geocode(runParms,opstat) :
+def run_arcgis_bulk_geocode(runParms,opstat,state) :
     """
     * -------------------------------------------------------------------------- 
     * function : run the arcgis bulk geocoder
@@ -1265,25 +1265,30 @@ def run_arcgis_bulk_geocode(runParms,opstat) :
     * returns : N/A
     * --------------------------------------------------------
     """
-
-    #print("\nrun_arcgis_bulk_geocode",runParms) 
-    address_set     =   get_address_vector(runParms.get(bulk_google_query_input_labelList[2]))
-    #print("run_arcgis_bulk_geocode",address_set) 
-    #from dfcleanser.common.common_utils import RunningClock
-    #clock = RunningClock()
-    #clock.start()
-    #print("getting arcGIS bulk geocoder connector")
-    #cparms          =   get_arcgis_batch_geocode_connection(user,pw,opstat)
-    #clock.start()
-    #from IPython.display import clear_output
-    #clear_output()
     
-    if(opstat.get_status()) :
-        display_geocoder_console(sugm.ArcGISId,runParms,opstat)
-        load_geocode_runner(sugm.ArcGISId,runParms,address_set)
+    #print("\nrun_arcgis_bulk_geocode :",state,"\n",runParms) 
 
+    if(state == sugm.LOAD) :
+        #print("\nrun_arcgis_bulk_geocode : LOAD\n",runParms) 
+        address_map     =   get_address_map(runParms.get(batch_arcgis_query_labelList[2]))
     
-def get_bulk_coords(geocid,inputs) :
+        if(opstat.get_status()) :
+            display_geocoder_console(sugm.ArcGISId,runParms,opstat)
+            load_geocode_runner(sugm.ArcGISId,runParms,address_map)
+    
+    elif(state == sugm.BULK_START_GEOCODER) :
+        #print("\nrun_arcgis_bulk_geocode : START\n",runParms)
+        display_geocoder_console(sugm.ArcGISId,runParms,opstat,sugm.RUNNING)
+    
+    elif(state == sugm.BULK_STOP_GEOCODER) :
+        #print("\nrun_arcgis_bulk_geocode : STOP\n",runParms)
+        display_geocoder_console(sugm.ArcGISId,runParms,opstat,sugm.STOPPED)
+
+    elif(state == sugm.BULK_PAUSE_GEOCODER) :
+        #print("\nrun_arcgis_bulk_geocode : PAUSE\n",runParms)
+        display_geocoder_console(sugm.ArcGISId,runParms,opstat,sugm.PAUSED)
+    
+def get_bulk_coords(geocid,inputs,state=sugm.LOAD) :
     """
     * -------------------------------------------------------------------------- 
     * function : get the bulk coords - validate parms and load job runner
@@ -1295,17 +1300,28 @@ def get_bulk_coords(geocid,inputs) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    #print("get_bulk_coords",geocid,state,"\n",inputs)
+    
     opstat      =   opStatus()
-    runParms    =   validate_bulk_parms(geocid,inputs,opstat) 
-
-    #print("get_bulk_coords",geocid,inputs)
+    if(not (inputs == None)) :
+        runParms    =   validate_bulk_parms(geocid,inputs,opstat) 
+    else :
+        if(geocid == sugm.ArcGISId) :
+            parms   =   cfg.get_config_value(batch_arcgis_query_id+"Parms")
+        elif(geocid == sugm.GoogleId) :
+            parms   =   cfg.get_config_value(bulk_google_query_input_id+"Parms")
+        
+        runParms    =   validate_bulk_parms(geocid,parms,opstat) 
+            
+    #print("\nget_bulk_coords \n",runParms)
     
     if(opstat.get_status()) :
         
         if(geocid == sugm.GoogleId) :
-            run_google_bulk_geocode(runParms,opstat)
+            run_google_bulk_geocode(runParms,opstat,state)
         else :
-            run_arcgis_bulk_geocode(runParms,opstat)
+            run_arcgis_bulk_geocode(runParms,opstat,state)
         
     else :
         display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS)
@@ -1325,6 +1341,7 @@ def process_bulk_geocoding(optionId,parms) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    #print("\nprocess_bulk_geocoding",optionId,parms)
     
     from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
     sugw.display_geocode_main_taskbar() 
@@ -1333,10 +1350,13 @@ def process_bulk_geocoding(optionId,parms) :
     geocid  =   int(parms[1])
     geotype =   int(parms[2])
     inputs  =   parms[3]
-    inputs  =   json.loads(inputs)
-        
-    from dfcleanser.sw_utilities.sw_utility_geocode_batch import get_bulk_input_parms
-    inputs = get_bulk_input_parms(geocid,inputs) 
+    
+    if(not (inputs == None)) :
+        inputs  =   json.loads(inputs)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import get_bulk_input_parms
+        inputs  =   get_bulk_input_parms(geocid,inputs)
+    else :
+        inputs  =   cfg.get_config_value("arcgisbatchquery"+"Parms")
             
     if(geocid == sugm.GoogleId) :
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import bulk_google_query_input_id
@@ -1345,7 +1365,7 @@ def process_bulk_geocoding(optionId,parms) :
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import batch_arcgis_query_id
         cfg.set_config_value(batch_arcgis_query_id+"Parms",inputs)
            
-    print("PROCESS_BULK_GET_COORDS",fid,geocid,inputs) 
+    #print("process_bulk_geocoding",fid,geocid,inputs) 
         
     if(fid == sugm.BULK_GET_COORDS) :
         get_bulk_coords(geocid,inputs)           
@@ -1391,6 +1411,14 @@ def process_bulk_geocoding(optionId,parms) :
         print("BULK_HELP",bparms)
         display_bulk_geocode_inputs(geocid,geotype,sugm.COLNAMES_TABLE)
 
+    elif(fid == sugm.BULK_START_GEOCODER) :
+        get_bulk_coords(geocid,inputs,fid)
+
+    elif(fid == sugm.BULK_PAUSE_GEOCODER) :
+        get_bulk_coords(geocid,inputs,fid)
+        
+    elif(fid == sugm.BULK_STOP_GEOCODER) :
+        get_bulk_coords(geocid,inputs,fid)
 
 
 
@@ -1455,10 +1483,10 @@ bulk_console_container = """<div class="dfc-console-container" style=' width: 60
 """
                 
 bulk_console_progress_row = """                    <tr class='dfc-progress-row' style='height: 30px;'>
-                        <td class='dfc-progress-title' style='width: 40%; font-size: 14px; font-family: Arial; text-align: left; padding-right: 20px;  padding-bottom: 20px;'>"""
+                        <td class='dfc-progress-title' style='width: 45%; font-size: 14px; font-family: Arial; text-align: left; padding-right: 20px;  padding-bottom: 20px;'>"""
 
-bulk_console_progress_col = """                        <td class='dfc-progress-col'>
-                            <div class='progress md-progress dfc-progress-div' style='height: 20px; width: 60%;'>
+bulk_console_progress_col = """                        <td class='dfc-progress-col' style='width: 55%;'>
+                            <div class='progress md-progress dfc-progress-div' style='height: 20px; '>
                                 <div """
 
 bulk_console_progress_col1 = """ class='progress-bar dfc-progress-bar' role='progressbar' style='height: 20px;'"""
@@ -1483,7 +1511,9 @@ bulk_console_commands = """        <div style="margin-top:10px; margin-bottom:20
 """
 
 bulk_console_status = """        <div style=' width: 30%; text-align: center; height: 30px; margin: auto;'>
-            <p id='bulkstatus' style='height: 30px; padding-top: 5px; text-align: center; font-size: 14px; font-family: Arial; color: white; font-weight: bold; background-color: red; margin: auto;'>Stopped</p>
+            <p id='bulkstatus' style='height: 30px; padding-top: 5px; text-align: center; font-size: 14px; font-family: Arial; color: #474747; font-weight: bold; """
+bulk_console_status1 = """ : margin: auto;'>"""
+bulk_console_status2 = """</p>
         </div>
         <br>
 """
@@ -1556,7 +1586,7 @@ def get_progress_bar_html(barParms) :
     
     return(bar_html)
 
-def get_bulk_geocode_console_html(progressbarList) :
+def get_bulk_geocode_console_html(progressbarList,state) :
     
     console_html = ""
     console_html = (console_html + bulk_console_title)
@@ -1566,14 +1596,31 @@ def get_bulk_geocode_console_html(progressbarList) :
         console_html = (console_html + get_progress_bar_html(progressbarList[i]))    
     
     console_html = (console_html + bulk_console_container_end)  
-    console_html = (console_html + bulk_console_commands)  
+    console_html = (console_html + bulk_console_commands)
+    
+    from dfcleanser.system.system_model import Green,Red,Yellow    
+    if(state == sugm.RUNNING) : 
+        bcolor  =   Green
+        btext   =   "Running"
+    elif(state == sugm.STOPPED) :
+        bcolor  =   Red
+        btext   =   "Stopped"
+    elif(state == sugm.PAUSED) :
+        bcolor  =   Yellow
+        btext   =   "Paused"
+    
     console_html = (console_html + bulk_console_status)
+    from dfcleanser.common.html_widgets import addstyleattribute
+    console_html = (console_html + addstyleattribute("background-color",str(bcolor)))
+    console_html = (console_html + bulk_console_status1 + btext)
+    console_html = (console_html + bulk_console_status2)
+    
     console_html = (console_html + bulk_console_end)  
         
     return(console_html)     
         
         
-def display_geocoder_console(geocid,runParms,opstat) :
+def display_geocoder_console(geocid,runParms,opstat,state=sugm.STOPPED) :
     """
     * -------------------------------------------------------------------------- 
     * function : display the bulk geocoding console
@@ -1588,24 +1635,27 @@ def display_geocoder_console(geocid,runParms,opstat) :
     * --------------------------------------------------------
     """
 
-    sugw.display_geocode_main_taskbar()
+    #print("display_geocoder_console",geocid,"\n",runParms)
+    
+    #sugw.display_geocode_main_taskbar()
     
     if(geocid == sugm.ArcGISId) :
         
-        from dfcleanser.common.common_utils import displayParms, get_parms_list_from_dict 
-        parms   =   get_parms_list_from_dict(batch_arcgis_query_labelList,runParms) 
-        
-        displayParms("arcGIS Bulk Geocoding Parms",batch_arcgis_query_labelList,parms,"arcgisbulkparms")
+        if(not(runParms == None)) :
+            from dfcleanser.common.common_utils import displayParms, get_parms_list_from_dict 
+            parms   =   get_parms_list_from_dict(batch_arcgis_query_labelList,runParms) 
+            displayParms("arcGIS Bulk Geocoding Parms",batch_arcgis_query_labelList,parms,"arcgisbulkparms")
 
         bar0 = ["Total Addresses Geocoded","arcgistotaladdrs",0,100,0]
         bar1 = ["Geocode Error Rate","arcgiserrorrate",0,100,0]
         
         progressBars    =   [bar0,bar1]
         
-        console_html    =   get_bulk_geocode_console_html(progressBars)
+        console_html    =   get_bulk_geocode_console_html(progressBars,state)
         
         from dfcleanser.common.common_utils import displayHTML
         
+        #print(console_html)
         displayHTML(console_html)
         
     elif(geocid == sugm.GoogleId) :

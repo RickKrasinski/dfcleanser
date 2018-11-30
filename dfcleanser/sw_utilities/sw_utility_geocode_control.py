@@ -53,11 +53,7 @@ def get_num_input_ids(idList) :
 def display_geocode_utility(optionId,parms=None) :
 
     from IPython.display import clear_output
-    
-    if(not((optionId == sugm.BULK_GEOCODE_RUN ) or 
-           (optionId == sugm.BULK_GEOCODE_PAUSE) or
-           (optionId == sugm.BULK_GEOCODE_STOP))) :
-        clear_output()
+    clear_output()
 
     if(not cfg.check_if_dc_init()) :
         sugw.display_geocode_main_taskbar()        
@@ -114,6 +110,7 @@ def display_geocode_utility(optionId,parms=None) :
         
     # process bulk geocoding op;tions
     elif( (optionId ==  sugm.PROCESS_BULK_GET_COORDS)  or (optionId ==  sugm.PROCESS_BULK_GET_ADDRESS) ):
+        print("PROCESS_BULK_GET_COORDS",optionId)
         from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
         process_bulk_geocoding(optionId,parms)            
     
@@ -228,19 +225,37 @@ def display_geocode_utility(optionId,parms=None) :
         
     elif(optionId == sugm.BULK_GEOCODE_RUN) :
         print("BULK_GEOCODE_RUN")
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
-        set_status_bar(sugm.RUNNING)
+        
+        parms   =   []
+        parms.append(sugm.BULK_START_GEOCODER)
+        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
+        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(None)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
+        process_bulk_geocoding(optionId,parms)
         
     elif(optionId == sugm.BULK_GEOCODE_PAUSE) :
         print("BULK_GEOCODE_PAUSE")
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
-
-        set_status_bar(sugm.PAUSED)
+        
+        parms   =   []
+        parms.append(sugm.BULK_PAUSE_GEOCODER)
+        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
+        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(None)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
+        process_bulk_geocoding(optionId,parms)
+        
     elif(optionId == sugm.BULK_GEOCODE_STOP) :
         print("BULK_GEOCODE_STOP")
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import set_status_bar
-
-        set_status_bar(sugm.STOPPED)    
+        
+        parms   =   []
+        parms.append(sugm.BULK_STOP_GEOCODER)
+        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
+        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(None)
+        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
+        process_bulk_geocoding(optionId,parms)
+        
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------

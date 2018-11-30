@@ -67,18 +67,9 @@ DISPLAY_BULK_GET_ADDRESS    =    12
 PROCESS_BULK_GET_COORDS     =    13
 PROCESS_BULK_GET_ADDRESS    =    14
 
-ADDRESS_CONVERSION          =    0
-COORDS_CONVERSION           =    1
-
-GEOCODER                    =    0
-QUERY                       =    1
-REVERSE                     =    2
-
 """
 #--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
 #   Geocoder Full Parameters Flags
-#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 DISPLAY_FULL_GEOCODING          =    15
@@ -94,6 +85,16 @@ CLEAR_GEOCODE_PARMS             =    21
 BULK_GEOCODE_RUN                =    22
 BULK_GEOCODE_PAUSE              =    23
 BULK_GEOCODE_STOP               =    24
+
+
+
+
+ADDRESS_CONVERSION          =    0
+COORDS_CONVERSION           =    1
+
+GEOCODER                    =    0
+QUERY                       =    1
+REVERSE                     =    2
 
 GEOCODERPARMS               =   0
 QUERYPARMS                  =   1
@@ -113,13 +114,24 @@ DISTANCE_DF_HELP            =   8
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-GEOCODERS_TABLE             =   -1
 
+"""
+#--------------------------------------------------------------------------
+#   bulk geocoding input form table ids - tables loaded in grid
+#--------------------------------------------------------------------------
+"""
+GEOCODERS_TABLE             =   -1
 COLNAMES_TABLE              =   0
 LANGUAGE_TABLE              =   1
 REGION_TABLE                =   2
 CATEGORIES_TABLE            =   3
 
+
+"""
+#--------------------------------------------------------------------------
+#   bulk geocoder running commands 
+#--------------------------------------------------------------------------
+"""
 BULK_GET_COORDS             =   0
 BULK_GET_ADDRESS_COLS       =   1
 BULK_GET_LANGUAGES          =   2
@@ -130,20 +142,31 @@ BULK_HELP                   =   6
 BULK_GET_ADDRESS            =   7
 BULK_GET_COUNTRIES          =   8
 BULK_GET_CATEGORIES         =   9
+BULK_LOAD_GEOCODER          =   10
+BULK_START_GEOCODER         =   11
+BULK_STOP_GEOCODER          =   12
+BULK_PAUSE_GEOCODER         =   13
 
-BATCH_TEST_CONNECTOR        =   10
-BATCH_CLEAR                 =   11
-BATCH_RETURN                =   12
-BATCH_HELP                  =   13
+BATCH_TEST_CONNECTOR        =   14
+BATCH_CLEAR                 =   15
+BATCH_RETURN                =   16
+BATCH_HELP                  =   17
 
+
+"""
+#--------------------------------------------------------------------------
+#   bulk geocoder currebt state
+#--------------------------------------------------------------------------
+"""
 RUNNING                     =   0
 STOPPED                     =   1
 PAUSED                      =   2
 
-START                       =   0
-STOP                        =   1
-PAUSE                       =   2
-RESUME                      =   3
+LOAD                        =   0
+START                       =   1
+STOP                        =   2
+PAUSE                       =   3
+RESUME                      =   4
 
 
 def get_geocoder_title(geoid) :
