@@ -377,7 +377,7 @@
      // add the cellid metadata
      var dfcellDict = { "dfc_cellid": dfcid };
      var dfcleanserDict = { "dfcleanser_metadata": dfcellDict };
-     var newcellDict = { "trusted": true, "dfcleanser_metadata": dfcellDict };
+     var newcellDict = { "trusted": true, "scrolled": false, "dfcleanser_metadata": dfcellDict };
      cell_to_add.metadata = newcellDict; //dfcleanserDict;
 
      if (ctype == MARKDOWN) { cell_to_add.execute(); } else { cell_to_add.execute(); }
