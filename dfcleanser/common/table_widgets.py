@@ -159,7 +159,7 @@ table_container_start = """
 
 table_container_middle = """
     <div class="row">
-        <div class="panel panel-primary">"""
+        <div class="panel panel-primary" """
         
 table_container_end = """
         </div>
@@ -179,11 +179,9 @@ table_header_start = """
             <div class="panel-heading dc-table-panel-heading">
 """
 small_table_header_start = """
-            <div class="panel-heading clearfix dc-small-table-panel-heading" height="30px" style=" margin-bottom:0px;">
-"""
+            <div class="panel-heading clearfix dc-small-table-panel-heading" height="30px" style=" margin-bottom:0px;" """
 small_table_no_header_start = """
-            <div class="panel-heading clearfix dc-small-table-noheader-panel-heading" style=" margin-bottom:0px; background-color:white;">
-"""
+            <div class="panel-heading clearfix dc-small-table-noheader-panel-heading" style=" margin-bottom:0px; background-color:white;" """
 
 table_header_end = """            </div>
             <div>"""
@@ -392,8 +390,6 @@ def get_row_major_table(table,direction,displayTable=True) :
 """
 def get_col_major_table(table,direction,displayTable=True) :
 
-    print("get_col_major_table")
-    table.dump()
     if(not(displayTable)) :
         
         if(direction == SCROLL_PREVIOUS) :
@@ -552,7 +548,6 @@ class dcTable :
         self.shortrow        =   True
 
         self.note            =   ""
-        self.ownerId         =   0
         
         self.checkLength     =   True
         self.textLength      =   maxRowElement
@@ -663,8 +658,6 @@ class dcTable :
      
     def set_note(self,noteParm) :
         self.note           =   noteParm
-    def set_ownerId(self,ownerIdParm) :
-        self.ownerId        =   ownerIdParm
 
     def set_checkLength(self,checkLengthParm) :
         self.checkLength    =   checkLengthParm
@@ -769,8 +762,6 @@ class dcTable :
         
     def get_note(self) :
         return(self.note)
-    def get_ownerId(self) :
-        return(self.ownerId)
     
     def get_checkLength(self) :
         return(self.checkLength)
@@ -1035,8 +1026,6 @@ class dcTable :
         if(not(self.get_note() == "")) :
             print("\nnote           : ",self.get_note())
             
-        print(" ownerid        : ",self.get_ownerId())
-        
         print(" textlength     : ",self.get_textLength())
 
 
@@ -1340,15 +1329,15 @@ def get_table_container_start(table,tableDisplay=True) :
                                  ' margin-left:' + str(table.get_smallmargin()) + 'px;">' + new_line)
         tableHTML = (tableHTML  + '    <div class="row">' + new_line)
         if(table.get_border()) :
-            tableHTML = (tableHTML  + '        <div class="panel panel-primary">')
+            tableHTML = (tableHTML  + '        <div class="panel panel-primary" ' + ">")
         else :
-            tableHTML = (tableHTML  + '        <div class="panel panel-primary" style="border:0px;">')
+            tableHTML = (tableHTML  + '        <div class="panel panel-primary" style="border:0px;"' + ">")
     else :
         if(tableDisplay) :
             tableHTML = (tableHTML + table_container_start)
-            tableHTML = (tableHTML + addattribute("id",table.get_tableid()+"container") + ">")
+            tableHTML = (tableHTML + addattribute("id",table.get_tableid()+"container")  + ">")
         
-        tableHTML = (tableHTML + table_container_middle)
+        tableHTML = (tableHTML + table_container_middle + ">")
     
     return(tableHTML)
 
@@ -1546,7 +1535,7 @@ def get_search_table_header(table,fulltable) :
 def get_non_search_table_header(table,more,prev,fulltable) : 
 
     tableHTML = ""
-    
+
     if(fulltable) :
         tableHTML = (tableHTML + table_form_start)
         tableHTML = (tableHTML + addattribute("id",table.get_tableid()+"form") + ">")
@@ -1558,9 +1547,9 @@ def get_non_search_table_header(table,more,prev,fulltable) :
         
     if(table.get_small()) :
         if(table.get_smallheader()) :
-            tableHTML = (tableHTML + small_table_header_start) 
+            tableHTML = (tableHTML + small_table_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line) 
         else :
-            tableHTML = (tableHTML + small_table_no_header_start)
+            tableHTML = (tableHTML + small_table_no_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line)
     else :
         tableHTML = (tableHTML + table_header_start)
 
@@ -1575,7 +1564,7 @@ def get_non_search_table_header(table,more,prev,fulltable) :
             tableHTML = (tableHTML + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" +table.get_title() + table_title_end)
 
     if( (more) or (prev) ) :  
-        
+
         if(table.get_small()) :
             # for small tables auto both buttons
             tableHTML = (tableHTML + table_short_more_div_start)
@@ -1619,7 +1608,7 @@ def get_non_search_table_header(table,more,prev,fulltable) :
         
     tableHTML = (tableHTML + table_input_group_end)
     tableHTML = (tableHTML + table_header_end) 
-    
+
     return(tableHTML)
 
 
@@ -1655,7 +1644,7 @@ def get_table_scrolls(table) :
                     prev=True
                     
     elif(table.get_tabletype() == ROW_MAJOR) :
-        
+
         if( not (len(table.get_rowList()) == table.get_rowspertable())) : 
             if(len(table.get_rowList()) >  (table.get_lastrowdisplayed() + table.get_rowspertable())) : 
                 more = True

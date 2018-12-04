@@ -774,10 +774,24 @@ def should_display(idList,reqList,i,parmslist) :
         elif(idList[i] == None)                             :   return(True)
         elif(len(parmslist[i]) > 0)                         :   return(True)
         else                                                :   return(False)
+
+
+def get_form_parms(formid,idList) :
+    
+    formParms = cfg.get_config_value(formid + "Parms")
+
+    if(formParms == None) :
+        return(None)
+    else :
+        if(len(formParms) == len(idList)) :
+            return(formParms)
+        else :
+            cfg.drop_config_value(formid + "Parms")
+            return(None)
     
 def display_full_parms(formid,idList,reqList) :
 
-    formParms = cfg.get_config_value(formid + "Parms")
+    formParms = get_form_parms(formid,idList)
 
     # if no previous parms defined display all parms
     if(formParms == None) :
@@ -976,7 +990,7 @@ class InputForm :
         input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_div_top)
 
         # check if input form has saved values
-        formParms = cfg.get_config_value(self.get_formid() + "Parms")
+        formParms = get_form_parms(self.get_formid(),self.get_idList())
     
         if(formParms != None) : 
             if(len(formParms) == 0) : formParms = None

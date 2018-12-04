@@ -55,9 +55,12 @@ def run_javascript(script) :
     #from IPython.core.display import Javascript
     
     #display_jupyter_HTML(Javascript(script))
-    try :            
-        from IPython.core.magics.display import Javascript
-        display_jupyter_HTML(Javascript(script))
+    try : 
+
+        from IPython.display import display, Javascript
+        display(Javascript(script))
+        #from IPython.core.magics.display import Javascript
+        #display_jupyter_HTML(Javascript(script))
 
     except :
         alert_user("javascript failure" + script)
@@ -138,8 +141,8 @@ class RunningClock:
     def __init__(self, delay=None):
         self.clock_generator = self.spinning_clock()
         
-        self.image_html = (self.image_html + '<div class="container" id="clockcontainer" style=" width:60px; height:60px; margin-left:20px; ">' + new_line)
-        self.image_html = (self.image_html + '    <img id="clockrunner" src="https://rickkrasinski.github.io/dfcleanser/graphics/hour12.png" height="60" width="60"></img>' + new_line + "</div>")
+        self.image_html = (self.image_html + '<div class="container" id="clockcontainer" style=" width:60px; height:60px; margin-left:20px; ">')
+        self.image_html = (self.image_html + '    <img id="clockrunner" src="https://rickkrasinski.github.io/dfcleanser/graphics/hour12.png" height="60" width="60"></img>' + "</div>")
         
         displayHTML(self.image_html)
         
@@ -929,15 +932,22 @@ def select_generic_function(parms) :
 """           
 def get_dfsubset_vals_html(filters,colname) :
 
-    #print("get_dfsubset_vals_html",colname)
-    
     from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_dfsubset_table
     cols_html = get_dfsubset_table(filters,colname)
+
+    startinner  =   cols_html.find('<div class="input-group">')
+    endinner    =   cols_html.find('<table class="table dc-table"')
+
+    title_html  =   cols_html[startinner:endinner]
+    endinner    =   title_html.rfind("</div>")
+    title_html  =   "\t\t" + title_html[:endinner]
+    
     
     startinner  =   cols_html.find('<tbody>')
     endinner    =   cols_html.find('</tbody>') + len('</tbody>')
+    table_html  =   cols_html[startinner:endinner]
     
-    return(cols_html[startinner:endinner])
+    return([title_html,table_html])
 
 """
 #--------------------------------------------------------------------------
@@ -951,7 +961,6 @@ def get_dfsubset_vals_html(filters,colname) :
 """           
 def get_dfsubset_vals(parms) :
 
-    print("get_dfsubset_vals",parms)
 
     filters     =   parms[0]
     colname     =   parms[1]
@@ -959,10 +968,21 @@ def get_dfsubset_vals(parms) :
     if( (colname == -1) or (len(colname) == 0) ):
         colname = None
         
-    cols_html   =   get_dfsubset_vals_html(filters,colname) 
-    #print("get_dfsubset_vals\n",cols_html)
+    fetched_html    =   get_dfsubset_vals_html(filters,colname) 
+    panel_html      =   fetched_html[0]
+    cols_html       =   fetched_html[1]
+    
+    panel_html   =   panel_html.replace("&","&amp;")
+    new_panel_html = patch_html(panel_html)
+    
+    change_table_js = "$('#dcsubsetcolnamesTablePanelHeading').html('"
+    change_table_js = change_table_js + new_panel_html + "');"
+            
+    run_jscript(change_table_js,
+                "fail to get unique vals for : ",
+                 "get_gs_uniques")
+    
     cols_html   =   cols_html.replace("&","&amp;")
-    #print("cols_html",cols_html)
     new_cols_html = patch_html(cols_html)
     
     change_table_js = "$('#dcsubsetcolnamesTable').html('"
@@ -979,9 +999,8 @@ def get_dfsubset_vals(parms) :
         tstamp = datetime.datetime.now().time()
 
         change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
-                                 "'./graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
+                                 "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) +"');")
         
-        #print("refresh_images",change_help_js)
         run_jscript(change_cols_js,
                     "fail to refresh sroll table : ",
                     "get_dfsubset_vals")
