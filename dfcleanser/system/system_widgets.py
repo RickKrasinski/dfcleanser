@@ -16,8 +16,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.system.system_model as sysm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, maketextarea, display_composite_form, ButtonGroupForm, 
-                                            displayHeading, get_input_form, get_checkbox_form, CheckboxGroupForm, InputForm,
-                                            get_html_spaces)
+                                            displayHeading, get_checkbox_form, CheckboxGroupForm, InputForm, get_html_spaces)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
@@ -425,16 +424,10 @@ def display_README():
 """
 def show_sys_info():
     
-    import sys
-    sysver = sys.version
-    
-    cindex = sysver.index("|")
-    vermaj = sysver[0:(cindex-1)]
-    vermaj.strip()
     print("\n")
     displayHeading("Installed Python Info",4)
     
-    print("\n    Version  : ",vermaj)
+    print("\n    Version  : ",get_python_version())
     print("    API      : ",sys.api_version)    
     print("    Info     : ",sys.version_info,"\n",flush=True)
 
@@ -468,52 +461,143 @@ def show_libs_info():
     libsAligns    =   ["left","center","center"]
 
 
-    testedModules               =   ["Python","pandas","IPython","sklearn","matplotlib","numpy",
+    testedModules               =   ["Python","IPython","ipywidgets","ipykernel",
+                                     "notebook",
+                                     "pandas","sklearn","matplotlib","numpy",
                                      "json","SQLAlchemy","pymysql","mysql-connector-python",
-                                     "pyodbc","pymssql","SQLite3","psycopg2","cx-oracle","geopy"]
-    testedmoduleVersions        =   ["3.5.5","0.22.0", "6.2.1","0.19.1", "2.1.2","1.14.2",
+                                     "pyodbc","pymssql","SQLite3","psycopg2","cx-oracle",
+                                     "geopy","googlemaps","arcgis"]
+    """testedmoduleVersions        =   ["3.5.5","0.22.0", "7.4.2", "6.2.1","0.19.1", "2.1.2","1.14.2",
                                      "2.0.9","1.2.5","0.8.0","2.0.4",
                                      "4.0.22","2.1.3","3.8.6","2.7.3.1","6.1","1.12.0"]
+    """
+    testedmoduleVersions        =   ["3.7.0","7.2.0","7.4.2","5.1.0",
+                                     "5.7.2",
+                                     "0.23.4","0.20.1","3.0.2","1.15.4",
+                                     "2.0.9","1.2.14","0.9.2","8.0.12",
+                                     "4.0.22","2.1.4","3.8.6","2.7.5","6.4.1",
+                                     "1.17.0","2.5.1","1.5.1"]
+
     installedmoduleVersions     =   []
 
     installedmoduleVersions.append(str(get_python_version()))
-    import pandas
-    installedmoduleVersions.append(str(pandas.__version__))
     import IPython
     installedmoduleVersions.append(str(IPython.__version__))
-    import sklearn
-    installedmoduleVersions.append(str(sklearn.__version__))
-    import matplotlib
-    installedmoduleVersions.append(str(matplotlib.__version__))
-    import numpy
-    installedmoduleVersions.append(str(numpy.__version__))
-    import json
-    installedmoduleVersions.append(str(json.__version__))
-    import sqlalchemy
-    installedmoduleVersions.append(str(sqlalchemy.__version__))
-    import pymysql
-    installedmoduleVersions.append(str(pymysql.__version__))
-    import mysql.connector    
-    installedmoduleVersions.append(str(mysql.connector.__version__))
+    
+    try :
+        import ipywidgets
+        installedmoduleVersions.append(str(ipywidgets.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+        
+    try :
+        import ipykernel
+        installedmoduleVersions.append(str(ipykernel.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import notebook
+        installedmoduleVersions.append(str(notebook.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import pandas
+        installedmoduleVersions.append(str(pandas.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import sklearn
+        installedmoduleVersions.append(str(sklearn.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import matplotlib
+        installedmoduleVersions.append(str(matplotlib.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import numpy
+        installedmoduleVersions.append(str(numpy.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import json
+        installedmoduleVersions.append(str(json.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import sqlalchemy
+        installedmoduleVersions.append(str(sqlalchemy.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import pymysql
+        installedmoduleVersions.append(str(pymysql.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import mysql.connector    
+        installedmoduleVersions.append(str(mysql.connector.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+        
     #import pyodbc    
     installedmoduleVersions.append(str("unknown"))
-    import pymssql    
-    installedmoduleVersions.append(str(pymssql.__version__))
+    
+    try :
+        import pymssql    
+        installedmoduleVersions.append(str(pymssql.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+        
     #import sqlite3    
     installedmoduleVersions.append(str("unknown"))
-    import psycopg2
     
-    pgversion =  str(psycopg2.__version__)
-    found = pgversion.find("(")
-    if(found > 0)  :
-        installedmoduleVersions.append(pgversion[0:found-1])
-    else :
-        installedmoduleVersions.append(pgversion)
+    try :
+        import psycopg2
     
-    import cx_Oracle    
-    installedmoduleVersions.append(str(cx_Oracle.__version__))
-    import geopy    
-    installedmoduleVersions.append(str(geopy.__version__))
+        pgversion =  str(psycopg2.__version__)
+        found = pgversion.find("(")
+        if(found > 0)  :
+            installedmoduleVersions.append(pgversion[0:found-1])
+        else :
+            installedmoduleVersions.append(pgversion)
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import cx_Oracle    
+        installedmoduleVersions.append(str(cx_Oracle.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import geopy    
+        installedmoduleVersions.append(str(geopy.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
+    try :
+        import googlemaps    
+        installedmoduleVersions.append(str(googlemaps.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+    
+    try :
+        import arcgis    
+        installedmoduleVersions.append(str(arcgis.__version__))
+    except :
+        installedmoduleVersions.append(str("-1"))
+
     
     for i in range(len(testedModules)) :
         libsrow = []
@@ -526,7 +610,10 @@ def show_libs_info():
     colorList = []    
     for i in range(len(testedModules)) :
         colorRow = []
-        if(installedmoduleVersions[i] == "unknown") :
+        if(installedmoduleVersions[i] == "-1") :
+            installedmoduleVersions[i] == "not installed"
+            colorRow = [sysm.Yellow,sysm.Yellow,sysm.Yellow]
+        elif(installedmoduleVersions[i] == "unknown") :
             colorRow = [sysm.Green,sysm.Green,sysm.Yellow]
         elif(testedmoduleVersions[i] > installedmoduleVersions[i]) :
             colorRow = [sysm.Red,sysm.Red,sysm.Red]
@@ -593,8 +680,12 @@ def get_python_version() :
     import sys
     sysver = sys.version
     
-    cindex = sysver.index("|")
-    vermaj = sysver[0:(cindex-1)]
+    try :
+        cindex = sysver.index("(")
+        vermaj = sysver[0:(cindex-1)]
+    except :
+        vermaj =  sysver
+        
     vermaj.strip()
     
     return(vermaj)
