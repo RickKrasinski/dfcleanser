@@ -65,7 +65,7 @@ def display_dfsubset_utility(optionId,parms=None) :
         elif(optionId ==  PROCESS_GET_SUBSET) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            dfsw.get_df_subset(cfg.get_dc_dataframe(),parms)
+            get_df_subset(cfg.get_dc_dataframe(),parms)
             
         elif(optionId ==  DISPLAY_GET_SUBSET_FILTER) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
@@ -76,7 +76,7 @@ def display_dfsubset_utility(optionId,parms=None) :
             dfsw.display_df_subset(cfg.get_dc_dataframe(),True,parms) 
 
         elif(optionId ==  PROCESS_GET_SUBSET_FILTERED) :
-            dfsw.get_df_subset(cfg.get_dc_dataframe(),parms,True)
+            get_df_subset(cfg.get_dc_dataframe(),parms,True)
         
     else :
         dfsw.get_dfsubset_main_taskbar()

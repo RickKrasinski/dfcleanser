@@ -3,6 +3,7 @@
 """
 
 # -*- coding: utf-8 -*-
+
 """
 Created on Tue Sept 13 22:29:22 2017
 
@@ -12,11 +13,11 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-import json
-
 import dfcleanser.common.cfg as cfg
 import dfcleanser.sw_utilities.sw_utility_geocode_widgets as sugw
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
+import dfcleanser.sw_utilities.sw_utility_bulk_geocode_control as subgc
+import dfcleanser.sw_utilities.sw_utility_bulk_geocode_widgets as subgw
 
 from dfcleanser.common.table_widgets import drop_owner_tables
 
@@ -67,10 +68,10 @@ def display_geocode_utility(optionId,parms=None) :
         clear_sw_utility_geocodedata()
         
     elif(optionId == sugm.DISPLAY_GET_COORDS) :
-        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS)
+        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
 
     elif(optionId == sugm.DISPLAY_GET_ADDRESS) :
-        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.REVERSEPARMS)
+        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
     
     # get simple coordinates for an address        
     elif(optionId == sugm.PROCESS_GET_COORDS) :
@@ -84,7 +85,7 @@ def display_geocode_utility(optionId,parms=None) :
             if(cfg.is_dc_dataframe_loaded()) :
                 get_geocoder_df_coords(parms)
             else :
-                sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS)
+                sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     # get address for simple coords       
@@ -100,19 +101,17 @@ def display_geocode_utility(optionId,parms=None) :
             if(cfg.is_dc_dataframe_loaded()) :
                 get_df_geocoder_address(parms)
             else :
-                sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,parms,sugm.REVERSEPARMS)
+                sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     # display bulk geocoding op;tions
     elif( (optionId == sugm.DISPLAY_BULK_GET_COORDS) or (optionId == sugm.DISPLAY_BULK_GET_ADDRESS) ) :
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocoding
-        display_bulk_geocoding(optionId) 
+        subgw.display_bulk_geocoding(optionId) 
         
     # process bulk geocoding op;tions
     elif( (optionId ==  sugm.PROCESS_BULK_GET_COORDS)  or (optionId ==  sugm.PROCESS_BULK_GET_ADDRESS) ):
         print("PROCESS_BULK_GET_COORDS",optionId)
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
-        process_bulk_geocoding(optionId,parms)            
+        subgc.process_bulk_geocoding(optionId,parms)            
     
     elif(optionId ==  sugm.DISPLAY_DISTANCE) :
         clear_output() 
@@ -168,11 +167,10 @@ def display_geocode_utility(optionId,parms=None) :
             
         if(fid == 0)    :   test_geocoder(geocid,inputs)
         elif(fid == 1)  :   
-            sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,parms,sugm.QUERYPARMS)
+            sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
         elif(fid == 2)  : 
             print("fid",fid)
-            from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocoding
-            display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS) 
+            subgc.display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS) 
         elif(fid == 3)  :
             cfg.drop_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms")
             if(cfg.get_config_value(cfg.BULK_GEOCODE_MODE_KEY) == None) :
@@ -190,23 +188,20 @@ def display_geocode_utility(optionId,parms=None) :
             sugw.display_geocoders(geocid,True,False)
         
     elif(optionId == sugm.DISPLAY_FULL_QUERY) :
-        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS,True)
+        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS,True)
 
     elif(optionId == sugm.DISPLAY_FULL_REVERSE) :
-        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS,True)
+        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS,True)
 
     elif(optionId == sugm.DISPLAY_FULL_BULK_GOOGLE_QUERY) :
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
-        display_bulk_geocode_inputs(sugm.GoogleId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
+        subgc.display_bulk_geocode_inputs(sugm.GoogleId,sugm.GEOCODE_QUERY,sugm.COLNAMES_TABLE,True)
     
     elif(optionId == sugm.DISPLAY_FULL_BULK_ARCGIS_QUERY) :
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import display_bulk_geocode_inputs
-        display_bulk_geocode_inputs(sugm.ArcGISId,sugm.ADDRESS_CONVERSION,sugm.COLNAMES_TABLE,True)
+        subgc.display_bulk_geocode_inputs(sugm.ArcGISId,sugm.GEOCODE_QUERY,sugm.COLNAMES_TABLE,True)
 
     # process testing of the bulk geocode connector
     elif(optionId == sugm.PROCESS_TEST_BULK_CONNECTOR) :
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_test_bulk_connector
-        process_test_bulk_connector(parms)           
+        subgc.process_test_bulk_connector(parms)           
     
     elif(optionId == sugm.CLEAR_GEOCODE_PARMS) :
         
@@ -215,13 +210,13 @@ def display_geocode_utility(optionId,parms=None) :
         
         print("CLEAR_GEOCODE_PARMS",gtype,geocid)
         
-        if(gtype == sugm.ADDRESS_CONVERSION) :
+        if(gtype == sugm.GEOCODE_QUERY) :
             cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
-            sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
+            sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS)
 
         else :
             cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
-            sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS)
+            sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS)
         
     elif(optionId == sugm.BULK_GEOCODE_RUN) :
         print("BULK_GEOCODE_RUN")
@@ -229,10 +224,9 @@ def display_geocode_utility(optionId,parms=None) :
         parms   =   []
         parms.append(sugm.BULK_START_GEOCODER)
         parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(sugm.GEOCODE_QUERY)
         parms.append(None)
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
-        process_bulk_geocoding(optionId,parms)
+        subgc.process_bulk_geocoding(optionId,parms)
         
     elif(optionId == sugm.BULK_GEOCODE_PAUSE) :
         print("BULK_GEOCODE_PAUSE")
@@ -240,10 +234,9 @@ def display_geocode_utility(optionId,parms=None) :
         parms   =   []
         parms.append(sugm.BULK_PAUSE_GEOCODER)
         parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(sugm.GEOCODE_QUERY)
         parms.append(None)
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
-        process_bulk_geocoding(optionId,parms)
+        subgc.process_bulk_geocoding(optionId,parms)
         
     elif(optionId == sugm.BULK_GEOCODE_STOP) :
         print("BULK_GEOCODE_STOP")
@@ -251,10 +244,9 @@ def display_geocode_utility(optionId,parms=None) :
         parms   =   []
         parms.append(sugm.BULK_STOP_GEOCODER)
         parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.ADDRESS_CONVERSION)
+        parms.append(sugm.GEOCODE_QUERY)
         parms.append(None)
-        from dfcleanser.sw_utilities.sw_utility_geocode_batch import process_bulk_geocoding
-        process_bulk_geocoding(optionId,parms)
+        subgc.process_bulk_geocoding(optionId,parms)
         
 """
 #--------------------------------------------------------------------------
@@ -424,7 +416,7 @@ def get_geocoder_coords(inparms) :
     
     if(not opstat.get_status()) :
         
-        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,None,sugm.QUERYPARMS)
+        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS)
         
         if(opstat.get_errorMsg() != "No Parms") :
             display_exception(opstat)
@@ -503,7 +495,7 @@ def get_geocoder_coords(inparms) :
             
         clock.stop()
         
-        sugw.display_geocode_inputs(sugm.ADDRESS_CONVERSION,inparms,sugm.QUERYPARMS) 
+        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,inparms,sugm.QUERYPARMS) 
         
         if(opstat.get_status()) :
             
@@ -795,7 +787,7 @@ def get_geocoder_address(inparms) :
     sugw.validate_cmd_parms(sugm.REVERSEPARMS,geocid,parms,opstat)
     
     if(not opstat.get_status()) :
-        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,None,sugm.REVERSEPARMS)
+        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS)
         
         if(opstat.get_errorMsg() != "No Parms") :
             display_exception(opstat)
@@ -866,7 +858,7 @@ def get_geocoder_address(inparms) :
             
         clock.stop()
 
-        sugw.display_geocode_inputs(sugm.COORDS_CONVERSION,inparms,sugm.REVERSEPARMS) 
+        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,inparms,sugm.REVERSEPARMS) 
         
         if(opstat.get_status()) :
             

@@ -395,6 +395,9 @@ def get_dfsubset_table(filters=False,colname=None) :
         if( (not(dfsparms == None)) and (len(dfsparms) > 0) ):
             collist = dfsparms[1]
             collist = collist.split(",")
+            for i in range(len(collist)) :
+                collist[i]  =   collist[i].rstrip(" ")    
+            
             if(len(collist) > 0) :
                 keepcols = True
                 keepflag = dfsparms[2]

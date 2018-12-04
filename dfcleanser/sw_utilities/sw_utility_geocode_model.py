@@ -37,6 +37,10 @@ supported_Geocoders         =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,Nominat
 supported_Reverses          =   [ArcGISId,BingId,GoogleId,NominatimId]
 
 
+MAX_GOOGLE_TASKS            =   10
+
+GOOGLE_DELAY                =   0.2
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -86,11 +90,8 @@ BULK_GEOCODE_RUN                =    22
 BULK_GEOCODE_PAUSE              =    23
 BULK_GEOCODE_STOP               =    24
 
-
-
-
-ADDRESS_CONVERSION          =    0
-COORDS_CONVERSION           =    1
+GEOCODE_QUERY               =   0
+GEOCODE_REVERSE             =   1
 
 GEOCODER                    =    0
 QUERY                       =    1
@@ -161,6 +162,8 @@ BATCH_HELP                  =   17
 RUNNING                     =   0
 STOPPED                     =   1
 PAUSED                      =   2
+STOPPING                    =   3
+PAUSING                     =   4
 
 LOAD                        =   0
 START                       =   1

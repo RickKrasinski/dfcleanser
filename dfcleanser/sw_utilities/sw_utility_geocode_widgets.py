@@ -1507,13 +1507,12 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     for i in range(len(colnames)) :
         
         if( (nonnumericOnly)  and (colsList == None) ): 
-
             if( not (is_numeric_col(cfg.get_dc_dataframe(),colnames[i])) ) :
                 colnamesrow = [colnames[i]]
                 colnamesRows.append(colnamesrow)
                 colnamesHrefs.append([callback])
                 
-        else :        
+        else : 
             colnamesrow = [colnames[i]]
             colnamesRows.append(colnamesrow)
             colnamesHrefs.append([callback])
@@ -1566,7 +1565,7 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     
     geo_parms_html = get_geocoder_parms_table(geocid)
         
-    if(formid == sugm.ADDRESS_CONVERSION) :
+    if(formid == sugm.GEOCODE_QUERY) :
         if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
         elif(geocid == sugm.BingId)              : form    =   bing_query_form
         elif(geocid == sugm.GoogleId)            : form    =   google_query_form
@@ -1609,7 +1608,7 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     geofunc_input_html = ""
     geofunc_input_html = geofunc_input_form.get_html()
     
-    if (formid == sugm.ADDRESS_CONVERSION) :
+    if (formid == sugm.GEOCODE_QUERY) :
         geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Geocoding Parameters</h4>"
     else :
         geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Reverse Geocoding Parameters</h4>"
@@ -1622,7 +1621,7 @@ def display_geocode_inputs(formid,parms,ptype,showfull=False) :
     
     notes = [] 
     
-    if(formid == sugm.ADDRESS_CONVERSION) :
+    if(formid == sugm.GEOCODE_QUERY) :
         notes.append("To retrieve coords for a single address just enter address as single string.  Example : 1600 Pennsylvania Ave Washington, DC")
         notes.append("To retrieve coords for multiple addresses enter each address enclosed in [ ] separated by a comma.  Example : [addr],[addr1], ...[addrn]")
     else :
