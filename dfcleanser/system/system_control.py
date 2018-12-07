@@ -143,10 +143,15 @@ def display_system_environment(funcId,parms=None) :
             
             clear_cell()
         
-        elif(funcId == sysm.CLEAR_DATA) :
+        elif(funcId == sysm.DISPLAY_DATAFRAMES) :
+            
+            if(not(parms is None)) :
+                title = parms[0]
+            else :
+                title = None
+                
             sysw.display_system_main_taskbar()
-            clear_data()
-            display_status("Data Cleanser Data Cleared Successfully")
+            sysw.display_df_dataframes()
             
         elif(funcId == sysm.DISPLAY_SYSTEM) :
             display_main_tb()
@@ -229,7 +234,7 @@ def initialize_notebook() :
 """
 def clear_data() :
     
-    cfg.drop_dc_dataframe()
+    cfg.drop_dfc_dataframe()
     from dfcleanser.scripting.data_scripting_widgets import drop_current_script, set_script_logging 
     
     set_script_logging()

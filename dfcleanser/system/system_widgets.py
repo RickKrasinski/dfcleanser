@@ -34,6 +34,56 @@ from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_u
 
 """
 #--------------------------------------------------------------------------
+#    dataframe manager inputs
+#--------------------------------------------------------------------------
+"""
+dfmgr_input_title                 =   "Dataframes Manager"
+dfmgr_input_id                    =   "dfmgrform"
+dfmgr_input_idList                =   ["dftitle",
+                                       "dfnumrows",
+                                       "dfnumcols",
+                                       "dfnotes",
+                                       None,None,None,None,None]
+
+dfmgr_input_labelList             =   ["df_title",
+                                       "df_num_rows",
+                                       "df_num_cols",
+                                       "df_notes",
+                                       "Drop",
+                                       "Set</br>Current",
+                                       "Update</br>Values",
+                                       "Return",
+                                       "Help"]
+
+dfmgr_input_typeList              =   ["text","text","text",maketextarea(20),
+                                       "button","button","button","button","button"]
+
+dfmgr_input_placeholderList       =   ["dataframe title",
+                                       "number of rows",
+                                       "number of columns",
+                                       "dataframe notes",
+                                       None,None,None,None,None]
+
+dfmgr_input_jsList                =   [None,None,None,None,
+                                       "process_dfmgr_callback("+str(sysm.DROP_DATAFRAME)+")",
+                                       "process_dfmgr_callback("+str(sysm.SET_DATAFRAME)+")",
+                                       "process_dfmgr_callback("+str(sysm.UPDATE_DATAFRAME)+")",
+                                       "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
+                                       "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
+
+dfmgr_input_reqList               =   [0]
+
+dfmgr_input_form                  =   [dfmgr_input_id,
+                                       dfmgr_input_idList,
+                                       dfmgr_input_labelList,
+                                       dfmgr_input_typeList,
+                                       dfmgr_input_placeholderList,
+                                       dfmgr_input_jsList,
+                                       dfmgr_input_reqList]  
+
+
+"""
+#--------------------------------------------------------------------------
 #    notebook README inputs
 #--------------------------------------------------------------------------
 """
@@ -71,13 +121,13 @@ system_environment_title                =   None
 
 system_environment_keyTitleList         =   ["Select</br>Chapters",
                                              "Reset</br>Chapters",
-                                             "Clear</br>Data",
-                                             "System","dfcleanser</br>files","About",
+                                             "Dataframe</br>Manager",
+                                             "System","dfcleanser</br>Files","About",
                                              "EULA","Clear","Help"]
 
 system_environment_jsList               =   ["process_system_tb_callback("+str(sysm.DISPLAY_CHAPTERS)+")",
                                              "process_system_tb_callback("+str(sysm.RESET_CHAPTERS)+")",
-                                             "process_system_tb_callback("+str(sysm.CLEAR_DATA)+")",
+                                             "process_system_tb_callback("+str(sysm.DISPLAY_DATAFRAMES)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_SYSTEM)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_DFC_FILES)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_ABOUT)+")",
@@ -204,7 +254,18 @@ def get_dcf_files_parms(parms) :
     from dfcleanser.common.common_utils import get_parms_for_input
     return(get_parms_for_input(parms,dfc_files_input_idList))
 
+
 def get_current_checkboxes(cbtype) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get currently displayed module checkboxes
+    * 
+    * parms :
+    *  cbtype       - checkbox type
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     if(cbtype == sysm.CORE) :
         if(cfg.get_config_value(cfg.CORE_CBS_KEY) == None) :
@@ -226,8 +287,19 @@ def get_current_checkboxes(cbtype) :
         
     return(None)
 
-def display_system_chapters_taskbar() :
 
+def display_system_chapters_taskbar() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display system taskbar
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
     dfc_core_modules_checkbox   =  CheckboxGroupForm(dfc_core_modules_checkbox_id,
                                                      dfc_core_modules_checkbox_idList,
                                                      dfc_core_modules_checkbox_labelList,
@@ -269,12 +341,17 @@ def display_system_chapters_taskbar() :
     print("\n")
 
 
-"""
-#------------------------------------------------------------------
-#   get date time formats 
-#------------------------------------------------------------------
-"""
 def get_dfcleanser_notebooks() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get list of dfcleanser notebooks
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     import os.path
     
@@ -326,12 +403,158 @@ def get_dfcleanser_notebooks() :
     
     return(listHtml)
 
-"""
-#------------------------------------------------------------------
-#   display dfcleanser files inputs 
-#------------------------------------------------------------------
-"""
+
+
+def get_df_dataframes_table() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get a table of the current dataframes
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    dfsHeader   =   [""]
+    dfsRows     =   []
+    dfsWidths   =   [100]
+    dfsAligns   =   ["left"]
+    dfsHrefs    =   []
+    colorList   =   []
+    
+    from dfcleanser.common.cfg import get_dfc_dataframe_titles_list
+    df_titles   =   get_dfc_dataframe_titles_list()
+
+    if(df_titles != None) :
+        
+        for i in range(len(df_titles)) :
+            if(len(df_titles[i]) > 0) :
+                dfsRows.append(["&nbsp;" + df_titles[i]])
+                dfsHrefs.append(["select_datframe"])
+       
+            from dfcleanser.common.cfg import get_current_dfc_dataframe_title
+            if(df_titles[i] == get_current_dfc_dataframe_title()) :
+                colorList.append([sysm.Yellow])
+            else :
+                colorList.append([None])
+    
+    else :
+        dfsRows.append(["&nbsp;No Dataframes"])
+        dfsHrefs.append([None])
+            
+    df_titles_table = dcTable("dfcleanser Dataframes","dfcdfsTable",
+                              cfg.System_ID,
+                              dfsHeader,dfsRows,
+                              dfsWidths,dfsAligns)
+    
+    df_titles_table.set_refList(dfsHrefs)
+    
+    if(df_titles != None) :
+        df_titles_table.set_color(True)
+        df_titles_table.set_colorList(colorList)
+        df_titles_table.set_rowspertable(len(df_titles))
+        
+    else :
+        df_titles_table.set_rowspertable(1)        
+    
+    df_titles_table.set_small(True)
+    df_titles_table.set_smallwidth(98)
+    df_titles_table.set_smallmargin(10)
+    df_titles_table.set_border(True)
+    df_titles_table.set_checkLength(True)
+    df_titles_table.set_textLength(22)
+    df_titles_table.set_html_only(True) 
+
+    #geo_parms_table.dump()
+    df_titles_table_html = ""
+    df_titles_table_html = df_titles_table.get_html()
+    
+    return(df_titles_table_html)    
+    
+ 
+
+def display_df_dataframes(title=None) :  
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dataframe manager form
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    df_names_html  =   get_df_dataframes_table()
+    
+    fparms  =   []
+
+    if(title == None) :
+        current_df  =   cfg.get_current_dfc_dataframe_title()
+    else :
+        current_df  =   title
+
+    cfg.set_config_value(cfg.CURRENT_DF_DISPLAYED_KEY,current_df)
+    
+    if(not(current_df == None)) :
+        cdf     =   cfg.get_dfc_dataframe(current_df)
+        cdfn    =   cfg.get_dfc_dataframe_notes(current_df)
+        
+        fparms.append(current_df)
+        
+        if(not(cdf is None)) :
+            fparms.append(str(len(cdf)))
+            fparms.append(str(len(cdf.columns)))
+        else :
+            fparms.append("")
+            fparms.append("")
+            
+        if(not(cdfn == None)) :
+            fparms.append(cdfn)
+        else :
+            fparms.append("")
+    else :
+        fparms  =   ["","","",""]
+        
+    parmsProtect = [False,True,True,False]
+        
+    cfg.set_config_value(dfmgr_input_id+"Parms",fparms)
+    cfg.set_config_value(dfmgr_input_id+"ParmsProtect",parmsProtect)
+            
+    from dfcleanser.common.html_widgets import InputForm
+    dfmanager_input_form = InputForm(dfmgr_input_form[0],dfmgr_input_form[1],
+                                     dfmgr_input_form[2],dfmgr_input_form[3],
+                                     dfmgr_input_form[4],dfmgr_input_form[5],
+                                     dfmgr_input_form[6])
+        
+    dfmanager_input_form.set_shortForm(False)
+    dfmanager_input_form.set_gridwidth(550)
+    dfmanager_input_form.set_fullparms(True)
+        
+    dfmgr_input_html = dfmanager_input_form.get_html() 
+            
+    dfmgr_input_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current dfcleanser Dataframes</h4>"
+    
+    display_grid("dfsubset_wrapper",
+                 dfmgr_input_heading_html,
+                 df_names_html,
+                 dfmgr_input_html,
+                 None)
+
+
 def display_dfc_files_form() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser files form
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     
@@ -374,14 +597,17 @@ def display_dfc_files_form() :
         display_exception(opstat)
 
 
-""" 
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-#   display the EULA
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-"""
 def display_EULA():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser EULA
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     from dfcleanser.system.system_control import isEULA_read
     
@@ -401,6 +627,16 @@ def display_EULA():
         alert_user("Unable to open EULA file" + eula_file_name)
 
 def display_README():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser README
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     readme_file_name  =   cfg.get_notebook_path()+"\dfcleanser\html\README.md"
     
@@ -415,14 +651,18 @@ def display_README():
     except :
         alert_user("Unable to open README file" + readme_file)
 
-""" 
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-#   show info functions
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-"""
+
 def show_sys_info():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser system info
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     print("\n")
     displayHeading("Installed Python Info",4)
@@ -437,11 +677,32 @@ def show_sys_info():
 
 
 def show_about_info():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser about info
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     print("\nAuthor : Rick Krasinski")
     print("Dataframe Cleanser Version : 1.0.0")
 
+
 def show_libs_info():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser libs info
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     displayHeading("dfcleanser Dependencies",4)
     print("\n")
@@ -644,8 +905,19 @@ def show_libs_info():
     libs_table.display_table()
 
     clock.stop()  
+
     
 def show_setup_notes():
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display dfcleanser setup notes
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     displayHeading("dfcleanser Notes",4)
     print("\n")
