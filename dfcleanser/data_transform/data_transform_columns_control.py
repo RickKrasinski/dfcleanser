@@ -103,7 +103,7 @@ def process_rename_column(colname,parms,display=True) :
     opstat = opStatus()
     
     try :
-        cfg.set_dc_dataframe(cfg.get_dc_dataframe().rename(columns=namesdict))
+        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().rename(columns=namesdict))
         
         if(display) :
             #make scriptable
@@ -130,7 +130,7 @@ def process_rename_column(colname,parms,display=True) :
 """
 def add_column(colname,colList,opstat,display=True) :
     
-    if(is_existing_column(cfg.get_dc_dataframe(),colname)) :
+    if(is_existing_column(cfg.get_dfc_dataframe(),colname)) :
         opstat.set_status(False)
         opstat.set_errorMsg("Column to Add : "+colname + " already exists")
         return()
@@ -139,8 +139,8 @@ def add_column(colname,colList,opstat,display=True) :
         namesdict = {}
         namesdict.update({"newcolname" : colname})
 
-        cfg.set_dc_dataframe(cfg.get_dc_dataframe().assign(newcolname=colList))
-        cfg.set_dc_dataframe(cfg.get_dc_dataframe().rename(columns=namesdict))
+        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().assign(newcolname=colList))
+        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().rename(columns=namesdict))
         
     except Exception as e:
         opstat.store_exception("Add New Column Error",e)
@@ -191,7 +191,7 @@ def process_add_column(parms,display=True) :
                     opstat.store_exception("Unable to load col list file",e)
                     display_exception(opstat)
 
-                if( not (len(colList) == len(cfg.get_dc_dataframe())) ) :
+                if( not (len(colList) == len(cfg.get_dfc_dataframe())) ) :
                     opstat.set_status(False)
                     opstat.set_errorMsg("Unable to add column : column list values not equal df column length")
                     display_exception(opstat)
@@ -237,7 +237,7 @@ def process_add_column(parms,display=True) :
             display_status("New Column " + newcolname + " Added Successfully")
             
             from dfcleanser.data_transform.data_transform_widgets import display_col_data
-            display_col_data(cfg.get_dc_dataframe(),newcolname)
+            display_col_data(cfg.get_dfc_dataframe(),newcolname)
 
 """
 #--------------------------------------------------------------------------
@@ -249,7 +249,7 @@ def save_deleted_column(colname,fname,df) :
     opstat = opStatus()
     
     try :
-        collist = cfg.get_dc_dataframe()[colname].tolist()
+        collist = cfg.get_dfc_dataframe()[colname].tolist()
         with open(fname, 'w') as col_list_file :
             json.dump(collist,col_list_file)
                     
@@ -275,7 +275,7 @@ def process_drop_column(colname,parms,display=True) :
         
     if(not (fname == None))  :
         
-        opstat = save_deleted_column(colname,fname,cfg.get_dc_dataframe)
+        opstat = save_deleted_column(colname,fname,cfg.get_dfc_dataframe())
         
         if(not opstat.get_status()) :
             display_exception(opstat)
@@ -283,7 +283,7 @@ def process_drop_column(colname,parms,display=True) :
     if(opstat.get_status()) :
         
         try :
-            cfg.set_dc_dataframe(cfg.get_dc_dataframe().drop([colname],axis=1))
+            cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().drop([colname],axis=1))
             
             if(display) :
                 #make scriptable
@@ -319,7 +319,7 @@ def process_save_column(colname,parms,display=True) :
     if(not (fname == None))  :
     
         try :
-            collist = cfg.get_dc_dataframe()[colname].tolist()
+            collist = cfg.get_dfc_dataframe()[colname].tolist()
             with open(fname, 'w') as col_list_file :
                 json.dump(collist,col_list_file)
                     
@@ -355,7 +355,7 @@ def process_reorder_columns(parms,display=True) :
     movecol         = fparms[0]
     moveaftercol    = fparms[1]
 
-    df_cols     = cfg.get_dc_dataframe().columns.tolist() 
+    df_cols     = cfg.get_dfc_dataframe().columns.tolist() 
     
     new_cols = []
     
@@ -371,7 +371,7 @@ def process_reorder_columns(parms,display=True) :
             final_cols.append(movecol) 
     
     try :        
-        cfg.set_dc_dataframe(cfg.get_dc_dataframe()[final_cols])       
+        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe()[final_cols])       
         
         if(display) :
             #make scriptable
@@ -403,9 +403,9 @@ def process_copy_column(parms,display=True) :
     copyfromcol    = fparms[1]
 
     try : 
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
         df[copytocol] = df[copyfromcol]
-        cfg.set_dc_dataframe(df)       
+        cfg.set_current_dfc_dataframe(df)       
         
         if(display) :
             #make scriptable
@@ -438,7 +438,7 @@ def process_sort_by_column(parms,display=True) :
     print(coltosort,sortorder,resetrowids)
 
     try : 
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
         df.sort_values(coltosort,sortorder)
         
         if(resetrowids) :
@@ -491,7 +491,7 @@ def process_apply_fn_to_column(parms,display=True) :
             
             fncode = fncode.lstrip("\n")
             
-            code    =   "get_dc_dataframe().loc[:,[" + coltoapply + "]].apply(lambda colval : " + fncode + ", axis = 0)"
+            code    =   "get_dfc_dataframe().loc[:,[" + coltoapply + "]].apply(lambda colval : " + fncode + ", axis = 0)"
             exec(code)
         else :
             cfg.set_config_value(cfg.CURRENT_COL_NAME,coltoapply)
@@ -585,7 +585,7 @@ def process_map_transform(colname,parms,display=True) :
         else :
             handlenan = 'ignore'
     
-        opstat = make_col_categorical_from_map(cfg.get_dc_dataframe(), colname, mapDict, handlenan)
+        opstat = make_col_categorical_from_map(cfg.get_dfc_dataframe(), colname, mapDict, handlenan)
         
         if(opstat.get_status()) :
             
@@ -601,8 +601,8 @@ def process_map_transform(colname,parms,display=True) :
                 #make scriptable
                 add_to_script(["# Make col map for " + colname,
                                "from dfcleanser.data_transform.data_transform_columns_widgets import process_map_transform",
-                               "from dfcleanser.common.cfg import get_dc_dataframe",
-                               "process_map_transform(get_dc_dataframe()," + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+                               "from dfcleanser.common.cfg import get_dfc_dataframe",
+                               "process_map_transform(get_dfc_dataframe()," + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
         else :
             display_exception(opstat)
@@ -614,7 +614,7 @@ def process_map_transform(colname,parms,display=True) :
         
     if(opstat.get_status()) :
         if(display) :
-            dtcw.display_column_transform_status(cfg.get_dc_dataframe(),colname)
+            dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
 
 """
 #--------------------------------------------------------------------------
@@ -631,7 +631,7 @@ def process_dummy_transform(colname,parms,display=True) :
         if(fparms[0] == "False") :
             removecol = False
     
-    opstat = make_col_categorical_from_dummies(cfg.get_dc_dataframe(), colname, removecol) 
+    opstat = make_col_categorical_from_dummies(cfg.get_dfc_dataframe(), colname, removecol) 
 
     if(opstat.get_status()) :
         
@@ -639,8 +639,8 @@ def process_dummy_transform(colname,parms,display=True) :
             #make scriptable
             add_to_script(["# Make dummies for " + colname,
                            "from dfcleanser.data_transform.data_transform_column_widgets import process_dummy_transform",
-                           "from dfcleanser.common.cfg import get_dc_dataframe",
-                           "process_dummy_transform(get_dc_dataframe()," + single_quote(colname) + "," + json.dumps(parms)  + ",False)"],opstat)
+                           "from dfcleanser.common.cfg import get_dfc_dataframe",
+                           "process_dummy_transform(get_dfc_dataframe()," + single_quote(colname) + "," + json.dumps(parms)  + ",False)"],opstat)
         
         if(display) :
             display_status("Column [" + colname + "] dummies created successfully")
@@ -659,13 +659,13 @@ def process_dummy_transform(colname,parms,display=True) :
         display_exception(opstat)
     
     if(display) :
-        display_df_sizing_info(cfg.get_dc_dataframe())
+        display_df_sizing_info(cfg.get_dfc_dataframe())
         print("\n")        
 
     if(opstat.get_status()) :
         if(display) :
             if(not removecol) :
-                dtcw.display_column_transform_status(cfg.get_dc_dataframe(),colname)
+                dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
 
     if(not opstat.get_status()) : 
         if(display) :
@@ -698,13 +698,13 @@ def process_cat_transform(colname,parms,display=True) :
     
     else :
         if(makecat) :       
-            opstat = make_col_categorical(cfg.get_dc_dataframe(), colname) 
+            opstat = make_col_categorical(cfg.get_dfc_dataframe(), colname) 
     
     if(opstat.get_status()) :
         
         if(changedatatype) :
             try :
-                cfg.get_dc_dataframe()[colname] = cfg.get_dc_dataframe()[colname].astype('category')
+                cfg.get_dfc_dataframe()[colname] = cfg.get_dfc_dataframe()[colname].astype('category')
             except Exception as e:
                 opstat.store_exception("Change to category datatype",e)
                 display_exception(opstat)
@@ -728,7 +728,7 @@ def process_cat_transform(colname,parms,display=True) :
         #make scriptable
         add_to_script(["# Make categories for " + colname,
                        "from dfcleanser.data_transform.data_transform_columns_widgets import process_cat_transform",
-                       "from dfcleanser.common.cfg import get_dc_dataframe",
+                       "from dfcleanser.common.cfg import get_dfc_dataframe",
                        "process_cat_transform(" +  single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
 
         labellist = [dtcw.transform_category_input_labelList[0],dtcw.transform_category_input_labelList[1]]
@@ -736,7 +736,7 @@ def process_cat_transform(colname,parms,display=True) :
     
         displayParms("Column " + colname + " Category Transform Parms",labellist,valuelist,cfg.DataTransform_ID)
         
-        dtcw.display_column_transform_status(cfg.get_dc_dataframe(),colname)
+        dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
 
     if(not opstat.get_status()) : 
         if(display) :
@@ -836,7 +836,7 @@ def make_col_categorical_from_dummies(df, columnName, removeCol)  :
             opstat.store_exception("column drop error : " + columnName,e)
             
     if(opstat.get_status()) :
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
     
     return(opstat)
 

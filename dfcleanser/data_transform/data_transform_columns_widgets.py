@@ -691,9 +691,9 @@ def display_col_transform_columns(refparm,note,status,displaycollist=True,callba
         col_names_table.set_refParm(str(refparm))
     
         if(callbacks) :
-            display_column_names(cfg.get_dc_dataframe(),col_names_table,"dtctcol")
+            display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dtctcol")
         else :
-            display_column_names(cfg.get_dc_dataframe(),col_names_table,None)    
+            display_column_names(cfg.get_dfc_dataframe(),col_names_table,None)    
     else :
         displayHeading("  " + note,4)
  
@@ -709,7 +709,7 @@ def display_mapping_col(df,colname) :
     counts  =   df[colname].value_counts().to_dict()
     uniques =   list(counts.keys())
 
-    if(is_numeric_col(cfg.get_dc_dataframe(),colname)) :
+    if(is_numeric_col(cfg.get_dfc_dataframe(),colname)) :
         uniques.sort()
 
     keyslist = ""
@@ -797,7 +797,7 @@ def parse_add_cols_option_inputs(parms,opstat=None) :
     if(len(newcolname) > 0) :
         
         # check if new column name already exists
-        collist = cfg.get_dc_dataframe().columns.tolist()
+        collist = cfg.get_dfc_dataframe().columns.tolist()
         found = False
         for i in range(len(collist)) :
             if(collist[i] == newcolname) :
@@ -922,7 +922,7 @@ def display_add_cols_option(parms) :
         if(cfg.get_config_value(cfg.ADD_COL_CODE_KEY) == None) :
             cfg.set_config_value(add_column_code_input_id+"Parms",
                              [newcolname,"# function title\n" + 
-                                         "from dfcleanser.common.cfg import get_dc_dataframe\n" + 
+                                         "from dfcleanser.common.cfg import get_dfc_dataframe\n" + 
                                          "from dfcleanser.data_transform.data_transform_columns_widgets import set_NewColumnValues\n" +
                                          "# add new column code\n" +
                                          "NewColumnValues = []\n\n\n" + 
@@ -960,7 +960,7 @@ def display_add_cols_option(parms) :
         fparms = get_parms_for_input(parms[2],add_column_code_input_idList)
         newcode = fparms[1]
         
-        startcode = newcode.find("from dfcleanser.common.cfg import get_dc_dataframe")
+        startcode = newcode.find("from dfcleanser.common.cfg import get_dfc_dataframe")
         title = newcode[2:startcode-1]
         newcode = newcode[startcode:len(newcode)]
         from dfcleanser.data_transform.data_transform_widgets import add_generic_function
@@ -1003,7 +1003,7 @@ def display_apply_fn_inputs(colname) :
     
     from dfcleanser.common.common_utils import is_numeric_col
     from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    display_col_stats(cfg.get_dc_dataframe(),colname,is_numeric_col(cfg.get_dc_dataframe(),colname))
+    display_col_stats(cfg.get_dfc_dataframe(),colname,is_numeric_col(cfg.get_dfc_dataframe(),colname))
     
     from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_html, FOR_APPLY_FN
     gtlistHtml = get_genfunc_html(FOR_APPLY_FN)
@@ -1178,7 +1178,7 @@ def display_transform_cols_option(parms) :
 
     elif(funcid == dtm.MAPPING_DETAILS) :
         display_col_options_header("&nbsp;&nbsp;&nbsp;&nbsp;Map Column",colid,True) 
-        display_mapping_col(cfg.get_dc_dataframe(),colid) 
+        display_mapping_col(cfg.get_dfc_dataframe(),colid) 
 
     elif(funcid == dtm.DUMMIES_DETAILS) :
         display_col_options_header("&nbsp;&nbsp;&nbsp;&nbsp;Dummies For Column",colid,True) 
@@ -1213,17 +1213,17 @@ def display_transform_cols_option(parms) :
         
         print("\n") 
         
-        display_column_transform_status(cfg.get_dc_dataframe(),colid)
-        display_column_uniques(cfg.get_dc_dataframe(),colid)        
+        display_column_transform_status(cfg.get_dfc_dataframe(),colid)
+        display_column_uniques(cfg.get_dfc_dataframe(),colid)        
         
         data_type_radio     =   RadioGroupForm(dt_data_type_radio_id,
                                                dt_data_type_radio_idList,
                                                dt_data_type_radio_labelList)
         
-        data_type_radio.set_checked(get_datatype_id(cfg.get_dc_dataframe()[colid].dtype))
+        data_type_radio.set_checked(get_datatype_id(cfg.get_dfc_dataframe()[colid].dtype))
         display_composite_form([get_radio_button_form(data_type_radio)])
         
-        nans      =     cfg.get_dc_dataframe()[colid].isnull().sum()
+        nans      =     cfg.get_dfc_dataframe()[colid].isnull().sum()
         if(nans > 0) :
             print("\n")
             display_composite_form([get_input_form(InputForm(dt_data_type_input_id,
@@ -1349,7 +1349,7 @@ def display_col_options_header(title,colid,displayStats=True) :
                             get_blank_line_form()])
     
     if(displayStats) :           
-        display_column_transform_status(cfg.get_dc_dataframe(),colid)
+        display_column_transform_status(cfg.get_dfc_dataframe(),colid)
 
 
 """            

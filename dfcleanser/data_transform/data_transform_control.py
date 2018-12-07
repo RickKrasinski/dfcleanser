@@ -45,7 +45,7 @@ def display_data_transform(option,parms=None) :
     from IPython.display import clear_output
     clear_output()
     
-    if(not (cfg.is_dc_dataframe_loaded()) ) :
+    if(not (cfg.is_a_dfc_dataframe_loaded()) ) :
         dtw.display_no_dataframe()
         if(not(parms==None)) :
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
@@ -75,7 +75,7 @@ def display_data_transform(option,parms=None) :
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
 
-            display_df_unique_column(cfg.get_dc_dataframe(),uniques_table,colname)
+            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
            
             dtw.display_single_column_taskbar() 
             
@@ -93,10 +93,10 @@ def display_data_transform(option,parms=None) :
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
             
-            display_df_unique_column(cfg.get_dc_dataframe(),uniques_table,colname)
+            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
             
             from dfcleanser.data_transform.data_transform_columns_widgets import display_mapping_col
-            display_mapping_col(cfg.get_dc_dataframe(),colname) 
+            display_mapping_col(cfg.get_dfc_dataframe(),colname) 
 
         elif(option == dtm.DISPLAY_DUMMY_OPTION) :
 
@@ -112,7 +112,7 @@ def display_data_transform(option,parms=None) :
                 uniques_table = dcTable("Unique Values and Counts for Column " + colname,
                                         colname+"uvalsTable",
                                         cfg.DataTransform_ID)
-                display_df_unique_column(cfg.get_dc_dataframe(),uniques_table,colname)
+                display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
                 
             dtw.display_dummies_column_input()
 
@@ -129,7 +129,7 @@ def display_data_transform(option,parms=None) :
             uniques_table = dcTable("Unique Values and Counts for Column " + colname,
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
-            display_df_unique_column(cfg.get_dc_dataframe(),uniques_table,colname)
+            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
 
             dtw.display_cats_column_input()
 
@@ -211,7 +211,7 @@ def process_datetime_datatype_transform(parms,display=True) :
     else :
         dtype = fparms[1]
         
-    df          =   cfg.get_dc_dataframe()
+    df          =   cfg.get_dfc_dataframe()
     df_cols     =   df.columns.tolist()
     
     import pandas as pd
@@ -252,7 +252,7 @@ def process_datetime_datatype_transform(parms,display=True) :
             namesdict.update({colname:colname+"temp"})
             
             try :
-                cfg.set_dc_dataframe(df.rename(columns=namesdict))
+                cfg.set_current_dfc_dataframe(df.rename(columns=namesdict))
             except Exception as e:
                 opstat.store_exception("Error renaming " + colname + " to " + colname+"temp",e)
             
@@ -260,7 +260,7 @@ def process_datetime_datatype_transform(parms,display=True) :
                 from dfcleanser.data_transform.data_transform_columns_widgets import add_column
                 add_column(colname,dtcomps,opstat)
                 
-                df = cfg.get_dc_dataframe()
+                df = cfg.get_dfc_dataframe()
                 if(opstat.get_status()) :
                     try :
                         
@@ -269,12 +269,12 @@ def process_datetime_datatype_transform(parms,display=True) :
                         else :
                             df[colname] =df[colname].astype(datetime.time)
                                                 
-                        cfg.set_dc_dataframe(df.drop([colname+"temp"],axis=1))
+                        cfg.set_current_dfc_dataframe(df.drop([colname+"temp"],axis=1))
                     except Exception as e:
                         opstat.store_exception("Error dropping " + colname+"temp",e)
         
         # restore the original cols order  
-        cfg.set_dc_dataframe(cfg.get_dc_dataframe()[df_cols])       
+        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe()[df_cols])       
 
     except Exception as e:
         opstat.store_exception("Error changing "  + colname + " to datetime datatype ",e)
@@ -295,7 +295,7 @@ def process_datetime_datatype_transform(parms,display=True) :
             dtw.display_main_taskbar()
             print("\n")
             display_status("Column " + colname +" data type changed successfully to " + dtype)
-            dtw.display_col_data(cfg.get_dc_dataframe(),colname)
+            dtw.display_col_data(cfg.get_dfc_dataframe(),colname)
         
     else :
         
@@ -321,7 +321,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
     colname1    =   fparms[1]
     tdcolname   =   fparms[2] 
     
-    df          =   cfg.get_dc_dataframe()
+    df          =   cfg.get_dfc_dataframe()
     found       =   False
     found1      =   False
     
@@ -335,7 +335,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
     elif(len(tdcolname) == 0) :
         opstat.set_errorMsg(tdcolname + " is not a valid column name")
         opstat.set_status(False)
-    elif(is_existing_column(cfg.get_dc_dataframe(),tdcolname)) :
+    elif(is_existing_column(cfg.get_dfc_dataframe(),tdcolname)) :
         opstat.set_errorMsg(tdcolname + " is already defined")
         opstat.set_status(False)
     else :
@@ -373,13 +373,13 @@ def process_datetime_timedelta_transform(parms,display=True) :
             timedeltacol = df[colname] - df[colname1]
             add_column(tdcolname,timedeltacol,opstat)
 
-            df = cfg.get_dc_dataframe()
+            df = cfg.get_dfc_dataframe()
             
             if(opstat.get_status()) :
 
                 if(units == SECONDS) :
                     df[tdcolname] = df[tdcolname].apply(lambda x: round(pd.Timedelta(x).total_seconds()))
-                    cfg.set_dc_dataframe(df)
+                    cfg.set_current_dfc_dataframe(df)
                 else :
                     
                     if(units == YEARS) :  
@@ -396,7 +396,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
                     if(not (units == TIMEDELTA)) :
                         opstat = convert_df_cols(df,[tdcolname],7)
                     
-                    cfg.set_dc_dataframe(df)
+                    cfg.set_current_dfc_dataframe(df)
   
         # convert to .date or .time         
         except Exception as e:
@@ -417,7 +417,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
             dtw.display_main_taskbar()
             print("\n")
             display_status("Timedelta values stored successfully in " + tdcolname)
-            display_column_transform_status(cfg.get_dc_dataframe(),tdcolname)
+            display_column_transform_status(cfg.get_dfc_dataframe(),tdcolname)
         
     else :
         
@@ -448,7 +448,7 @@ def process_datetime_merge_split_transform(parms,display=True) :
     
     colname = fparms[0]
 
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     
     if(display) :
         clock = RunningClock()
@@ -462,10 +462,10 @@ def process_datetime_merge_split_transform(parms,display=True) :
         
         #TODO check that datetimecolumn is a datetime type
         
-        if(is_existing_column(cfg.get_dc_dataframe(),datecolumn)) :
+        if(is_existing_column(cfg.get_dfc_dataframe(),datecolumn)) :
             opstat.set_errorMsg(datecolumn + " is already defined")
             opstat.set_status(False)
-        elif(is_existing_column(cfg.get_dc_dataframe(),timecolumn)) :
+        elif(is_existing_column(cfg.get_dfc_dataframe(),timecolumn)) :
             opstat.set_errorMsg(timecolumn + " is already defined")
             opstat.set_status(False)
         
@@ -502,9 +502,9 @@ def process_datetime_merge_split_transform(parms,display=True) :
                     dtw.display_main_taskbar()
                     print("\n")
                     display_status("Column " + datetimecolumn + " split successfully to " + datecolumn +" : " + timecolumn)
-                    dtw.display_col_data(cfg.get_dc_dataframe(),datetimecolumn)
-                    dtw.display_col_data(cfg.get_dc_dataframe(),datecolumn)
-                    dtw.display_col_data(cfg.get_dc_dataframe(),timecolumn)
+                    dtw.display_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
+                    dtw.display_col_data(cfg.get_dfc_dataframe(),datecolumn)
+                    dtw.display_col_data(cfg.get_dfc_dataframe(),timecolumn)
 
             else :
         
@@ -526,7 +526,7 @@ def process_datetime_merge_split_transform(parms,display=True) :
         timecolumn      =   fparms[1]
         datetimecolumn  =   fparms[2]
         
-        if(is_existing_column(cfg.get_dc_dataframe(),datetimecolumn)) :
+        if(is_existing_column(cfg.get_dfc_dataframe(),datetimecolumn)) :
             opstat.set_errorMsg(datetimecolumn + " is already defined")
             opstat.set_status(False)
         
@@ -561,7 +561,7 @@ def process_datetime_merge_split_transform(parms,display=True) :
                     dtw.display_main_taskbar()
                     print("\n")
                     display_status("Columns " + datecolumn + ":" + timecolumn +" merged successfully to " + datetimecolumn)
-                    dtw.display_col_data(cfg.get_dc_dataframe(),datetimecolumn)
+                    dtw.display_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
         
             else :
         
@@ -593,7 +593,7 @@ def process_datatype_transform(parms,display=True) :
     dropflag    =   int(parms[2])
     nanvalue    =   float(parms[3])
 
-    col_nans     =   cfg.get_dc_dataframe()[colname].isnull().sum() 
+    col_nans     =   cfg.get_dfc_dataframe()[colname].isnull().sum() 
 
     if(col_nans > 0) :
         if(not(dropflag)) :
@@ -611,7 +611,7 @@ def process_datatype_transform(parms,display=True) :
             nanvalue = None
             
     if(opstat.get_status())  :          
-        currentdtype = cfg.get_dc_dataframe()[colname].dtype
+        currentdtype = cfg.get_dfc_dataframe()[colname].dtype
     
         if( (dtid == -1) or (get_datatype(dtid) == get_datatype_id(currentdtype)) ) :
             opstat.set_status(False)
@@ -631,7 +631,7 @@ def process_datatype_transform(parms,display=True) :
             if(dtid > 11) :
                 dtid = dtid + 3
                 
-            opstat = convert_df_cols(cfg.get_dc_dataframe(),[colname],dtid,nanvalue)
+            opstat = convert_df_cols(cfg.get_dfc_dataframe(),[colname],dtid,nanvalue)
     
     if(display) :
     
@@ -650,7 +650,7 @@ def process_datatype_transform(parms,display=True) :
             dfschema_table.set_lastcoldisplayed(-1)
     
         from dfcleanser.data_transform.data_transform_widgets import display_df_schema
-        display_df_schema(cfg.get_dc_dataframe(),dfschema_table)    
+        display_df_schema(cfg.get_dfc_dataframe(),dfschema_table)    
         
         if(opstat.get_status()) : 
         
@@ -660,7 +660,7 @@ def process_datatype_transform(parms,display=True) :
                            "process_datatype_transform(" + json.dumps(parms) + ",False)"],opstat)
         
             display_status("Column " + colname +" data type changed successfully to " + get_datatype_str(dtid))
-            display_column_transform_status(cfg.get_dc_dataframe(),colname)
+            display_column_transform_status(cfg.get_dfc_dataframe(),colname)
         
         else :
         

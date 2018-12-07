@@ -402,7 +402,7 @@ def display_dataframe_options(parms) :
                                                                    dataframe_transform_tb_jsList,
                                                                    False))])
     
-        colslist    =   cfg.get_dc_dataframe().columns.tolist()
+        colslist    =   cfg.get_dfc_dataframe().columns.tolist()
         cliststr    =   str(colslist)
         cliststr    =   cliststr.replace(","," , ")
         
@@ -441,7 +441,7 @@ def display_dataframe_options(parms) :
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> Select a Column to use for Row Ids by clicking on Column Name above.")
         col_names_table.set_refParm(str(30))
             
-        display_column_names(cfg.get_dc_dataframe(),col_names_table,"dfsnriccol")
+        display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dfsnriccol")
 
     elif(funcid == dtm.SET_NEW_ROW_IDS_COL_SEL) :
 
@@ -502,7 +502,7 @@ def display_dataframe_options(parms) :
         print("\n")
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
-        display_column_names(cfg.get_dc_dataframe(),col_names_table,"dtdcrcol")
+        display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dtdcrcol")
         
         display_composite_form([get_input_form(InputForm(df_drop_dups_transform_input_id,
                                                          df_drop_dups_transform_input_idList,

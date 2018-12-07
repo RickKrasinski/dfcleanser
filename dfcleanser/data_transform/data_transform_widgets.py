@@ -658,7 +658,7 @@ def display_main_option(parms,clear=False) :
                 dfschema_table = dcTable("Dataframe Schema","dfschemaTable",cfg.DataTransform_ID)
                 dfschema_table.set_colsperrow(6)
             
-            display_df_schema(cfg.get_dc_dataframe(),dfschema_table,direction)
+            display_df_schema(cfg.get_dfc_dataframe(),dfschema_table,direction)
 
         elif(funcid == dtm.DFC_TRANSFORM_RETURN) :
                     
