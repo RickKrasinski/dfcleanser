@@ -397,15 +397,15 @@ def display_data_export_notes(s,fname,dbnote=False,custom=False) :
 
     displayHeading("Data Exported",4)
         
-    display_df_sizing_info(cfg.get_dc_dataframe())
+    display_df_sizing_info(cfg.get_dfc_dataframe())
     print("\n")
     
     if(custom) :
         display_status("Custom export code Exported successfully")
         
         importnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( set dataframe via dfcleanser.common.cfg.set_dc_dataframe(df) )",
-                       "( check if df exists via dfcleanser.common.cfg.is_dc_dataframe_loaded() )"]
+                       "( set dataframe via dfcleanser.common.cfg.set_current_dfc_dataframe(df) )",
+                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
         
     else :
         
@@ -415,9 +415,9 @@ def display_data_export_notes(s,fname,dbnote=False,custom=False) :
             display_status(" Dataframe Exported successfully to File " + fname)
 
         importnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dc_dataframe() )",
-                       "( set dataframe via dfcleanser.common.cfg.set_dc_dataframe(df) )",
-                       "( check if df exists via dfcleanser.common.cfg.is_dc_dataframe_loaded() )"]
+                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
+                       "( set dataframe via dfcleanser.common.cfg.set_current_dfc_dataframe(df) )",
+                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
     
     display_notes(importnotes)
 
@@ -539,7 +539,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
     elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 
            (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
         
-        if(not (cfg.is_dc_dataframe_loaded())) :
+        if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
             display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                        export_task_bar_keyTitleList,
@@ -607,7 +607,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                 
     else :
         
-        if(not (cfg.is_dc_dataframe_loaded())) :
+        if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
             display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                        export_task_bar_keyTitleList,
@@ -630,7 +630,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                 customNotes =  ["To create custom export code in the code cell below hit 'New Custom Export'",
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(enter and test export in the code cell below)",
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(leave the '# custom export' comment line in the code cell",
-                                "&nbsp;&nbsp;&nbsp;&nbsp;(call dfcleanser.common.cfg.get_dc_dataframe() to get the current dataframe)",
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(call dfcleanser.common.cfg.get_dfc_dataframe() to get the current dataframe)",
                                 "To run the export code in the Custom Export Code box hit 'Run Custom Export' button",
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(only the code in the Custom Export Code box is run and stored for scripting)",                        "Once import successful hit 'Save Custom Import' button to store import code for future retrieval",
                                 "To drop the custom export code and clear the Custom Export Code box hit 'Drop Custom Export' button"]

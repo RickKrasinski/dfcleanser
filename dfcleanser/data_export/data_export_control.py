@@ -68,7 +68,7 @@ def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
 """
 def process_export_form(formid, parms, display=True) :
 
-    if( not (cfg.is_dc_dataframe_loaded()) ) :
+    if( not (cfg.is_a_dfc_dataframe_loaded()) ) :
         print("No Dataframe Currently Loadad")
         return()
     
@@ -136,10 +136,10 @@ def process_export_form(formid, parms, display=True) :
                     if(dispstats) : 
                         ciparms = parms[0].replace("\n","</br>")
                         displayParms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID)
-                        dew.display_data_export_notes(s,parms[0])
+                        dew.display_data_export_notes(s,fparms[0])
                 else : 
                     displayParms(parmstitle,parmslist,fparms,cfg.DataExport_ID)
-                    dew.display_data_export_notes(s,parms[0])
+                    dew.display_data_export_notes(s,fparms[0])
         else :
             display_exception(opstat)
 
@@ -301,7 +301,7 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
         
         try :
             if(len(csvparms) > 0) :
@@ -372,7 +372,7 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
     
     if(opstat.get_status()) : 
         
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
     
         try :
             if(len(excelparms) > 0) :
@@ -443,7 +443,7 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
     
         try :
             if(len(jsonparms) > 0) :
@@ -515,7 +515,7 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dc_dataframe()
+        df = cfg.get_dfc_dataframe()
     
         try :
             if(len(htmlparms) > 0) :
@@ -589,7 +589,7 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
     
     opstat = opStatus()
     
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
 
     import dfcleanser.common.db_utils as dbu
     dbcon = dbu.dbConnector()
@@ -656,8 +656,8 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
                            "from dfcleanser.data_export.data_export_widgets export export_pandas_sqltable",
                            "export_pandas_sqltable(" + json.dumps(sqltableparms) + "," + 
                            + json.dumps(dbcondict) + "," + str(exportid) + ",False)",
-                           "from dfcleanser.common.cfg import set_dc_dataframe",
-                           "set_dc_dataframe(df)"],opstat)
+                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
+                           "set_current_dfc_dataframe(df)"],opstat)
        
         export_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms)
         
