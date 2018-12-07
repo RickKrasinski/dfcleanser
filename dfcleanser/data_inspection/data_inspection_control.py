@@ -109,14 +109,14 @@ def display_data_inspection(id, parms=None) :
         
         if (id == dim.DROP_ROWS_OPTION) :
             
-            drop_nan_rows(cfg.get_dc_dataframe(),threshold,thresholdType,opstat)
+            drop_nan_rows(cfg.get_dfc_dataframe(),threshold,thresholdType,opstat)
             
             if(not(opstat.get_status())) :
                 display_exception(opstat)    
             
         if (id == dim.DROP_COLS_OPTION) :
             
-            drop_nan_cols(cfg.get_dc_dataframe(),threshold,thresholdType,opstat) 
+            drop_nan_cols(cfg.get_dfc_dataframe(),threshold,thresholdType,opstat) 
             
             if(not(opstat.get_status())) :
                 display_exception(opstat)   
@@ -124,12 +124,12 @@ def display_data_inspection(id, parms=None) :
     if( (id == dim.REFRESH_OPTION)   or (id == dim.DISPLAY_ROW_OPTION) or 
         (id == dim.DROP_ROWS_OPTION) or (id == dim.DROP_COLS_OPTION) ) :
 
-        if(cfg.is_dc_dataframe_loaded()) :
+        if(cfg.is_a_dfc_dataframe_loaded()) :
 
             clock = RunningClock()
             clock.start()
 
-            df_data_info = get_df_datatypes_data(cfg.get_dc_dataframe())
+            df_data_info = get_df_datatypes_data(cfg.get_dfc_dataframe())
 
             clock.stop() 
             
@@ -187,7 +187,7 @@ def display_data_inspection(id, parms=None) :
                 
                 nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
                 nans_cols_table = dcTable("Columns with most NaNs","nansTable",cfg.DataInspection_ID)
-                diw.display_null_data(cfg.get_dc_dataframe(),nans_rows_table,nans_cols_table,120)
+                diw.display_null_data(cfg.get_dfc_dataframe(),nans_rows_table,nans_cols_table,120)
             
             # if display sample row data
             if(parms[dim.INSPECT_ROWS] == "True") : 
@@ -201,12 +201,12 @@ def display_data_inspection(id, parms=None) :
                 rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
         
                 if(id == 2) :
-                    opstat = diw.display_df_row_data(cfg.get_dc_dataframe(),rows_table,rowid,0)
+                    opstat = diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,rowid,0)
                 else : 
                     if(newrowId==0) :
-                        opstat = diw.display_df_row_data(cfg.get_dc_dataframe(),rows_table,0,0)
+                        opstat = diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,0,0)
                     else :
-                        opstat = display_more_sample_rows(cfg.get_dc_dataframe(),tableId,1,newrowId)
+                        opstat = display_more_sample_rows(cfg.get_dfc_dataframe(),tableId,1,newrowId)
             
                 if(not opstat.get_status()) :
                     display_exception(opstat)
@@ -222,11 +222,11 @@ def display_data_inspection(id, parms=None) :
                 clock.start()
                 
                 col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
-                display_column_names(cfg.get_dc_dataframe(),col_names_table,"scol")
+                display_column_names(cfg.get_dfc_dataframe(),col_names_table,"scol")
                 
                 print("\n")
                 num_col_names_table = dcTable("Numeric Column Names ","gendfdesc",cfg.DataInspection_ID)
-                display_df_describe(cfg.get_dc_dataframe(),num_col_names_table)
+                display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table)
                 
                 clock.stop()
 
@@ -248,7 +248,7 @@ def display_data_inspection(id, parms=None) :
                                             "catcandcolsTable",
                                             cfg.DataInspection_ID)
                 
-                numcats, numcands = diw.display_df_categories(cfg.get_dc_dataframe(),cattable,catcandidatetable)
+                numcats, numcands = diw.display_df_categories(cfg.get_dfc_dataframe(),cattable,catcandidatetable)
                 
                 clock.stop()
         else :
@@ -280,7 +280,7 @@ def drop_nan_rows(df,threshold,ttype,opstat,display=True) :
         criteria = df.isnull().sum(axis=1) < thold
 
         df = df[criteria]
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
 
     except Exception as e:
         opstat.store_exception("Error droppint nan rows\n ",e)

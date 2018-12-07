@@ -266,10 +266,10 @@ def display_inspection_html(title) :
 """           
 def display_inspection_data() :
     
-    if(cfg.is_dc_dataframe_loaded()) :
+    if(cfg.is_a_dfc_dataframe_loaded()) :
         display_inspection_html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataframe Imported")
-        print("     [NUMBER OF ROWS] :",len(cfg.get_dc_dataframe()),flush=True)
-        print("     [NUMBER OF COLS] :",len(cfg.get_dc_dataframe().columns))
+        print("     [NUMBER OF ROWS] :",len(cfg.get_dfc_dataframe()),flush=True)
+        print("     [NUMBER OF COLS] :",len(cfg.get_dfc_dataframe().columns))
     else :
         display_inspection_html("&nbsp;&nbsp;&nbsp;&nbsp;No dataframe selected")
 
