@@ -48,7 +48,7 @@ def display_data_cleansing(option,parms=None) :
     # setup the button bar form
     dcw.display_data_cleansing_main_taskbar()
     
-    if(cfg.is_dc_dataframe_loaded()) :
+    if(cfg.is_a_dfc_dataframe_loaded()) :
         
         cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
@@ -61,7 +61,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = change_unique_col_data(cfg.get_dc_dataframe(),parms)
+            opstat = change_unique_col_data(cfg.get_dfc_dataframe(),parms)
             cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
             
             clock.stop()
@@ -101,7 +101,7 @@ def display_data_cleansing(option,parms=None) :
                                                   "dcgendfdesc",
                                                   cfg.DataCleansing_ID)
                     
-                    display_df_describe(cfg.get_dc_dataframe(),num_col_names_table)
+                    display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table)
                 
                 except Exception as e: 
                     opstat = opStatus()
@@ -122,9 +122,9 @@ def display_data_cleansing(option,parms=None) :
                                                   "dcnngendfdesc",
                                                   cfg.DataCleansing_ID)
                     
-                    df_cols             =   cfg.get_dc_dataframe().columns.tolist()
+                    df_cols             =   cfg.get_dfc_dataframe().columns.tolist()
                     df_cols.sort()
-                    dcw.display_non_numeric_df_describe(cfg.get_dc_dataframe(),
+                    dcw.display_non_numeric_df_describe(cfg.get_dfc_dataframe(),
                                                         nn_col_names_table,None,None) 
                     
                 except Exception as e:
@@ -136,7 +136,7 @@ def display_data_cleansing(option,parms=None) :
                     
             elif(funcid == 2) :
                 cfg.set_config_value(cfg.CLEANSING_ROW_KEY,0)
-                dcw.display_row_data(cfg.get_dc_dataframe(),0,0)
+                dcw.display_row_data(cfg.get_dfc_dataframe(),0,0)
     
             elif(funcid == 3) :
                 return()
@@ -148,7 +148,7 @@ def display_data_cleansing(option,parms=None) :
             
             rowid = int(parms)
             cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
-            dcw.display_row_data(cfg.get_dc_dataframe(),rowid,0)
+            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
             
         elif(option == dcm.GENERIC_COL_OPTION) :
             
@@ -165,7 +165,7 @@ def display_data_cleansing(option,parms=None) :
             
             cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
             cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
 
         elif(option == dcm.DROP_COL_OPTION ) : 
             
@@ -192,7 +192,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = drop_value_rows(cfg.get_dc_dataframe(),
+            opstat = drop_value_rows(cfg.get_dfc_dataframe(),
                                      cfg.get_config_value(cfg.CLEANSING_COL_KEY),
                                      parms[1])
             
@@ -212,7 +212,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = drop_col_nans(cfg.get_dc_dataframe(),cfg.get_config_value(cfg.CLEANSING_COL_KEY))
+            opstat = drop_col_nans(cfg.get_dfc_dataframe(),cfg.get_config_value(cfg.CLEANSING_COL_KEY))
             
             clock.stop()
             
@@ -226,7 +226,7 @@ def display_data_cleansing(option,parms=None) :
         elif(option == dcm.DISPLAY_OUTLIERS_OPTION ) : 
             
             cfg.set_config_value(cfg.OUTLIERS_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
             
         elif(option ==  dcm.DISPLAY_ROUND_COLUMN_OPTION  ) : 
             
@@ -240,7 +240,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = round_column_data(cfg.get_dc_dataframe(),parms)
+            opstat = round_column_data(cfg.get_dfc_dataframe(),parms)
             
             clock.stop()
             
@@ -268,7 +268,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = remove_whitespace(cfg.get_dc_dataframe(),parms)
+            opstat = remove_whitespace(cfg.get_dfc_dataframe(),parms)
             
             clock.stop()
             
@@ -282,26 +282,26 @@ def display_data_cleansing(option,parms=None) :
         elif(option ==  dcm.DISPLAY_GRAPHS_OPTION  ) :
             
             cfg.set_config_value(cfg.GRAPHS_FLAG_KEY,True)
-            dcw.display_numeric_col_data(cfg.get_dc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
             
         elif(option ==  dcm.DISPLAY_UNIQUES_OPTION  ) :
             
             cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
             
         elif(option ==  dcm.DISPLAY_NEW_ROW) :
 
             rowid = int(parms)
             cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
             cfg.set_config_value(cfg.CLEANSING_COL_KEY,0)
-            dcw.display_row_data(cfg.get_dc_dataframe(),rowid,0)
+            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
 
         elif(option ==  dcm.UPDATE_ROW_COL) :
             
             colname     =   parms
             rowid       =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
             
-            column_names = list(cfg.get_dc_dataframe().columns.values)
+            column_names = list(cfg.get_dfc_dataframe().columns.values)
             found = -1
             for i in range(len(column_names)) :
                 if(column_names[i] == colname) :
@@ -310,10 +310,10 @@ def display_data_cleansing(option,parms=None) :
                 colid = found
             cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
             
-            chval = cfg.get_dc_dataframe().iloc[rowid,colid]
+            chval = cfg.get_dfc_dataframe().iloc[rowid,colid]
 
             cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[chval,""])           
-            dcw.display_row_data(cfg.get_dc_dataframe(),rowid,0)
+            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
 
         elif(option ==  dcm.PROCESS_ROW_COL) :
             
@@ -329,20 +329,20 @@ def display_data_cleansing(option,parms=None) :
                 
                 col_id      =   int(cfg.get_config_value(cfg.CLEANSING_COL_KEY))
                 
-                if(is_numeric_col(cfg.get_dc_dataframe(), col_id)) :
-                    if(is_numeric_col_int(cfg.get_dc_dataframe(), col_id)) :
+                if(is_numeric_col(cfg.get_dfc_dataframe(), col_id)) :
+                    if(is_numeric_col_int(cfg.get_dfc_dataframe(), col_id)) :
                         new_value       =   int(new_value)
                     else :
                         new_value       =   float(new_value)
                 
                 if(len(new_value) > 0) :
-                    cfg.get_dc_dataframe().iloc[row_id,col_id] = new_value
+                    cfg.get_dfc_dataframe().iloc[row_id,col_id] = new_value
 
-                dcw.display_row_data(cfg.get_dc_dataframe(),row_id,0)
+                dcw.display_row_data(cfg.get_dfc_dataframe(),row_id,0)
                 
             elif(func_id == 1) :
-                drop_row(cfg.get_dc_dataframe(),row_id)
-                dcw.display_row_data(cfg.get_dc_dataframe(),0,0)
+                drop_row(cfg.get_dfc_dataframe(),row_id)
+                dcw.display_row_data(cfg.get_dfc_dataframe(),0,0)
                 
     else :
         
@@ -372,7 +372,7 @@ def     drop_column(colname,display=True) :
     droplist    =   []
     droplist.append(colname)
     
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     
     opstat = opStatus()
     
@@ -438,7 +438,7 @@ def     drop_value_rows(df,colname,value,display=True) :
                     #make scriptable
                     add_to_script(["# Drop Values ",
                                    "from dfcleanser.data_cleansing.data_cleansing_widgets import drop_value_rows",
-                                   "drop_value_rows(get_dc_dataframe()," + single_quote(colname) + "," + str(value) +")"],opstat)
+                                   "drop_value_rows(get_dfc_dataframe()," + single_quote(colname) + "," + str(value) +")"],opstat)
 
             except Exception as e:
                 opstat.store_exception("Unable to drop row values ",e)
@@ -484,7 +484,7 @@ def     drop_row(df,rowid,display=True) :
             #make scriptable
             add_to_script(["# Drop Row " + str(rowid),
                            "from data_cleansing_widgets drop_row",
-                           "drop_row(get_dc_dataframe()," + str(rowid) +")"],opstat)
+                           "drop_row(get_dfc_dataframe()," + str(rowid) +")"],opstat)
         
     except Exception as e:
         opstat.store_exception("Unable to drop rowid  " + str(rowid),e)
@@ -516,14 +516,14 @@ def round_column_data(df,parms,display=True) :
     try :     
 
         df = df.round(rounds)
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
         
         if(display) :
             #make scriptable
             import json
             add_to_script(["# Round Column ",
                            "from data_cleansing_widgets round_column_data",
-                           "round_column_data(get_dc_dataframe()," + json.dumps(parms) +")"],opstat)
+                           "round_column_data(get_dfc_dataframe()," + json.dumps(parms) +")"],opstat)
 
     except Exception as e:
         opstat.store_exception("Unable to round  " + colname,e)
@@ -565,7 +565,7 @@ def remove_whitespace(df,colname,display=True) :
             #make scriptable
             add_to_script(["# Remove Whitespace for " + colname,
                            "from data_cleansing_widgets remove_whitespace",
-                           "remove_whitespace(get_dc_dataframe()," + single_quote(colname) +",False)"],opstat)
+                           "remove_whitespace(get_dfc_dataframe()," + single_quote(colname) +",False)"],opstat)
                 
     except Exception as e:
         opstat.store_exception("Unable to remove whitespace from  " + colname,e)
@@ -604,7 +604,7 @@ def change_unique_col_data(df,parms,display=True) :
                     toval       =   changeto
                     
                 df = df.fillna({colname : toval})
-                cfg.set_dc_dataframe(df)
+                cfg.set_current_dfc_dataframe(df)
                 
             except Exception as e :
                 opstat.store_exception("Unable to change value for " + colname,e) 
@@ -624,7 +624,7 @@ def change_unique_col_data(df,parms,display=True) :
 
                 criteria        =   df[colname] == fromval    
                 df[criteria]    =   toval
-                cfg.set_dc_dataframe(df)
+                cfg.set_current_dfc_dataframe(df)
             except Exception as e :
                 opstat.store_exception("Unable to change value for " + colname,e)            
         
@@ -634,8 +634,8 @@ def change_unique_col_data(df,parms,display=True) :
             #make scriptable
             add_to_script(["# Change Unique Column Data ",
                            "from dfcleanser.data_cleansing.data_cleansing_widgets import change_unique_col_data",
-                           "from dfcleanser.common.cfg import get_dc_dataframe",
-                           "change_unique_col_data(get_dc_dataframe()," + str(parms) +",False)"],opstat)
+                           "from dfcleanser.common.cfg import get_dfc_dataframe",
+                           "change_unique_col_data(get_dfc_dataframe()," + str(parms) +",False)"],opstat)
 
     return(opstat)  
    

@@ -404,7 +404,7 @@ def     display_column_header_data(df,colname) :
 """
 def display_col_data() :
     
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
 
     colname = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
     
