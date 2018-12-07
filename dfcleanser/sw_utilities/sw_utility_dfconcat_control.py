@@ -35,7 +35,7 @@ def display_dfconcat_utility(optionId,parms=None) :
     from IPython.display import clear_output
     clear_output()
 
-    if(cfg.is_dc_dataframe_loaded()) :  
+    if(cfg.is_a_dfc_dataframe_loaded()) :  
         
         if(optionId == dfcm.DISPLAY_MAIN) :
         
@@ -124,7 +124,7 @@ def process_simple_concat(parms,display=True) :
         try :
             cdflist     =   []
             for i in range(len(dflist)) :
-                cdflist.append(cfg.get_dc_dataframe(dflist[i]))
+                cdflist.append(cfg.get_dfc_dataframe(dflist[i]))
 
             import pandas as pd
             tmp = pd.concat(cdflist,axis=caxis,join=cjoin)
@@ -132,7 +132,7 @@ def process_simple_concat(parms,display=True) :
             if(creset) :
                 print("reset row index")
                 
-            cfg.set_dc_dataframe(tmp,fparms[3])
+            cfg.set_current_dfc_dataframe(tmp,fparms[3])
         except Exception as e:
             opstat.store_exception("Error concatenating dataframes : ",e)
                 
@@ -222,7 +222,7 @@ def process_full_concat(parms,display=True) :
             cdf     =   pd.concat(json.loads(fparms[0]),axis,join,joinaxes,ignoreindex,
                                              keys,levels,names,vintegrity,sort,copy)
             
-            cfg.set_dc_dataframe(dfname,cdf) 
+            cfg.set_current_dfc_dataframe(dfname,cdf) 
             
         except Exception as e:
             opstat.store_exception("Error concatenating dataframes : ",e)

@@ -17,7 +17,7 @@ import dfcleanser.sw_utilities.sw_utility_bulk_geocode_widgets as subgw
 import dfcleanser.common.help_utils as dfchelp
 
 from dfcleanser.common.common_utils import (opStatus, get_parms_for_input, display_exception, 
-                                            get_dc_dataframe, display_status, displayParms)
+                                            get_dfc_dataframe, display_status, displayParms)
 
 import time
 import googlemaps
@@ -1118,7 +1118,7 @@ def get_geocode_address_string(address_map,rowIndex) :
     
     geocode_address     =   ""
     
-    df  =   get_dc_dataframe()
+    df  =   get_dfc_dataframe()
     
     for i in range(len(address_map.colsIndices)) :
         
@@ -1150,7 +1150,7 @@ def get_address_map(address_cols) :
     address_cols        =   address_cols.replace(",","")
     address_components  =   address_cols.split("+")
     
-    colnames            =   cfg.get_dc_dataframe().columns.values.tolist() 
+    colnames            =   cfg.get_dfc_dataframe().columns.values.tolist() 
    
     for i in range(len(address_components)) :
 

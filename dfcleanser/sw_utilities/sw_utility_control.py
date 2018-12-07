@@ -69,8 +69,8 @@ def process_sw_utilities(optionId,parms=None) :
         opstat = opStatus()
         
         if(parms == swum.ReservedLists[0]) :
-            if(cfg.is_dc_dataframe_loaded()) :
-                sellist = cfg.get_dc_dataframe().columns.tolist()
+            if(cfg.is_a_dfc_dataframe_loaded()) :
+                sellist = cfg.get_dfc_dataframe().columns.tolist()
             else :
                 opstat.set_status(False)
                 opstat.set_errorMsg("No Dataframe loaded")

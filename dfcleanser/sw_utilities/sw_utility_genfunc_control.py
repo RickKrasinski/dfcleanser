@@ -122,8 +122,8 @@ def process_generic_function(parms) :
         
         newcode = ("# generic function" + new_line + 
                    '# function title' + new_line +
-                   "from dfcleanser.common.cfg import get_dc_dataframe" + new_line + 
-                   "df = get_dc_dataframe()" + new_line + new_line)
+                   "from dfcleanser.common.cfg import get_dfc_dataframe" + new_line + 
+                   "df = get_dfc_dataframe()" + new_line + new_line)
         
         cfg.set_config_value(gfw.gen_function_input_id+"Parms",["",newcode])
         gfw.display_generic_function_inputs()
@@ -146,7 +146,7 @@ def process_generic_function(parms) :
 
 def convert_hhmm_to_HH_MM_format(colname) :
     
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     newraws = []
 
     for i in range(len(df)) :
@@ -161,7 +161,7 @@ def convert_hhmm_to_HH_MM_format(colname) :
             newraws.append(raw[0] + raw[1] + ":" + raw[2] + raw[3])
 
     df[colname] = newraws
-    cfg.set_dc_dataframe(df)    
+    cfg.set_current_dfc_dataframe(df)    
     
     
     

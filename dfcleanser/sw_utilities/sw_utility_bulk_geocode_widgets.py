@@ -17,7 +17,7 @@ import dfcleanser.common.help_utils as dfchelp
 
 from dfcleanser.common.html_widgets import (maketextarea) 
 from dfcleanser.common.common_utils import (display_grid, opStatus, get_parms_for_input, display_exception, 
-                                            get_dc_dataframe, display_status)
+                                            get_dfc_dataframe, display_status)
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
 
@@ -495,7 +495,7 @@ def display_bulk_geocoding(optionId) :
     
     geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
         
-    if(not (cfg.is_dc_dataframe_loaded())) :
+    if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
         sugw.display_geocode_main_taskbar() 
         opstat.set_status(False)
@@ -668,10 +668,10 @@ def validate_bulk_parms(geocid,inputs,opstat) :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[4] : fparms[4]})  
 
             if(len(fparms[6]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : str(len(get_dc_dataframe()))})
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : str(len(get_dfc_dataframe()))})
             else :
-                if(int(fparms[6]) > len(get_dc_dataframe())) :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : str(len(get_dc_dataframe()))})
+                if(int(fparms[6]) > len(get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : str(len(get_dfc_dataframe()))})
                 else :
                     bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : fparms[6]})
 
@@ -739,10 +739,10 @@ def validate_bulk_parms(geocid,inputs,opstat) :
                     bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : fparms[6]})    
                     
             if(len(fparms[7]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dc_dataframe()))})
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dfc_dataframe()))})
             else :
-                if(int(fparms[7]) > len(get_dc_dataframe())) :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dc_dataframe()))})
+                if(int(fparms[7]) > len(get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dfc_dataframe()))})
                 else :
                     bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : fparms[7]})
             

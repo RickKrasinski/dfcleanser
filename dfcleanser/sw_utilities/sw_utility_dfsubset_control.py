@@ -44,7 +44,7 @@ DISPLAY_GET_COL_VALUES          =   8
 """
 def display_dfsubset_utility(optionId,parms=None) :
 
-    if(cfg.is_dc_dataframe_loaded()) :
+    if(cfg.is_a_dfc_dataframe_loaded()) :
         
         from IPython.display import clear_output
         clear_output()
@@ -60,23 +60,23 @@ def display_dfsubset_utility(optionId,parms=None) :
         if(optionId == DISPLAY_GET_SUBSET) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            dfsw.display_df_subset(cfg.get_dc_dataframe(),False) 
+            dfsw.display_df_subset(cfg.get_dfc_dataframe(),False) 
         
         elif(optionId ==  PROCESS_GET_SUBSET) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            get_df_subset(cfg.get_dc_dataframe(),parms)
+            get_df_subset(cfg.get_dfc_dataframe(),parms)
             
         elif(optionId ==  DISPLAY_GET_SUBSET_FILTER) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            dfsw.display_df_subset(cfg.get_dc_dataframe(),True) 
+            dfsw.display_df_subset(cfg.get_dfc_dataframe(),True) 
 
         elif(optionId ==  DISPLAY_GET_COL_VALUES) :
-            dfsw.display_df_subset(cfg.get_dc_dataframe(),True,parms) 
+            dfsw.display_df_subset(cfg.get_dfc_dataframe(),True,parms) 
 
         elif(optionId ==  PROCESS_GET_SUBSET_FILTERED) :
-            get_df_subset(cfg.get_dc_dataframe(),parms,True)
+            get_df_subset(cfg.get_dfc_dataframe(),parms,True)
         
     else :
         dfsw.get_dfsubset_main_taskbar()
@@ -243,7 +243,7 @@ def build_and_validate_search_criteria(colslist,keepflag,filters,inneropers,oute
 
     filtersList     =   []
 
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     
     try :
         
@@ -408,8 +408,8 @@ dfCriteria = DataframeCriteria()
 """           
 def get_df_criteria(criteria,opstat) :
     
-    ccode   =   "from dfcleanser.common.cfg import get_dc_dataframe" + new_line
-    ccode   =   (ccode + "df = get_dc_dataframe()" + new_line)
+    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe" + new_line
+    ccode   =   (ccode + "df = get_dfc_dataframe()" + new_line)
     ccode   =   (ccode + "from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import set_criteria" + new_line)
     ccode   =   (ccode + "new_criteria = " + criteria + new_line)
     ccode   =   (ccode + "set_criteria(new_criteria)" + new_line)
@@ -477,7 +477,7 @@ def dump_indexer(indexer,display_all=False) :
 def build_boolean_criteria(filters,inneropers,outeropers,opstat) :
 
     filterscriteriaList     =   []
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     
     import pandas as pd
     
@@ -604,12 +604,12 @@ def build_boolean_criteria(filters,inneropers,outeropers,opstat) :
 """
 def get_subset_from_criteria(criteria,csv_file_name,opstat) :
 
-    df = cfg.get_dc_dataframe()
+    df = cfg.get_dfc_dataframe()
     
     try :
         
         df = df[criteria]
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
 
         if(not (csv_file_name == None)) :
             df.to_csv(csv_file_name)
@@ -707,8 +707,8 @@ def get_df_subset(df,parms,filtered=False,display=True) :
                     opstat.set_errorMsg("Row Range Drop Parm is invalid : " + subsetparms[0])
                 else :
                     df.drop(df.index[int(row_range[0]):int(row_range[1])],inplace=True)
-                    cfg.set_dc_dataframe(df)
-                    df = cfg.get_dc_dataframe()
+                    cfg.set_current_dfc_dataframe(df)
+                    df = cfg.get_dfc_dataframe()
             
             if(opstat.get_status()) :
 
@@ -734,8 +734,8 @@ def get_df_subset(df,parms,filtered=False,display=True) :
                         for i in range(len(drop_columns)) :
                             df = df.drop([drop_columns[i]],axis=1)
                     
-                        cfg.set_dc_dataframe(df)
-                        df = cfg.get_dc_dataframe()
+                        cfg.set_current_dfc_dataframe(df)
+                        df = cfg.get_dfc_dataframe()
                 
                 if(not (no_filters)) :
                     #print("getting df subset - build_and_validate_search_criteria")
@@ -757,7 +757,7 @@ def get_df_subset(df,parms,filtered=False,display=True) :
                 
                     if(opstat.get_status()) :
                         get_subset_from_criteria(criteria,csv_file_name,opstat)
-                        df = cfg.get_dc_dataframe()
+                        df = cfg.get_dfc_dataframe()
 
         except Exception as e:
             opstat.store_exception("Error processing dataframe subset ",e)
@@ -788,7 +788,7 @@ def get_df_subset(df,parms,filtered=False,display=True) :
             clear_output()
         
             cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
-            dfsw.display_df_subset(cfg.get_dc_dataframe(),False) 
+            dfsw.display_df_subset(cfg.get_dfc_dataframe(),False) 
             display_exception(opstat)
 
 """

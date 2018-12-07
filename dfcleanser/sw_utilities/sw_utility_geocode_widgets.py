@@ -1496,7 +1496,7 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     if(not (colsList == None)) :
         colnames = colsList
     else :
-        colnames            =   cfg.get_dc_dataframe().columns.values.tolist() 
+        colnames            =   cfg.get_dfc_dataframe().columns.values.tolist() 
     
     colnamesHeader      =   [""]
     colnamesRows        =   []
@@ -1507,7 +1507,7 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     for i in range(len(colnames)) :
         
         if( (nonnumericOnly)  and (colsList == None) ): 
-            if( not (is_numeric_col(cfg.get_dc_dataframe(),colnames[i])) ) :
+            if( not (is_numeric_col(cfg.get_dfc_dataframe(),colnames[i])) ) :
                 colnamesrow = [colnames[i]]
                 colnamesRows.append(colnamesrow)
                 colnamesHrefs.append([callback])

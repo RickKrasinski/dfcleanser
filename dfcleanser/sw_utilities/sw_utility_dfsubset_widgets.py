@@ -307,16 +307,16 @@ def get_col_uniques_table(df,colname) :
     uniques =   [] 
         
     #check if the object is string
-    if (is_str_column(cfg.get_dc_dataframe(),colname)) :
+    if (is_str_column(cfg.get_dfc_dataframe(),colname)) :
         
-        uniques =   cfg.get_dc_dataframe()[colname].unique().tolist()
+        uniques =   cfg.get_dfc_dataframe()[colname].unique().tolist()
         for i in range(len(uniques)) :
             uniques[i]  =   str(uniques[i])
         uniques.sort()
     else :
         
         if(is_numeric_col(df,colname)) :           
-            uniques =   cfg.get_dc_dataframe()[colname].unique().tolist()
+            uniques =   cfg.get_dfc_dataframe()[colname].unique().tolist()
             uniques.sort()
 
     if(len(uniques) > 0) :
@@ -409,7 +409,7 @@ def get_dfsubset_table(filters=False,colname=None) :
                     colnames = collist
                 else :
                     colnames = []
-                    allcols = cfg.get_dc_dataframe().columns.tolist()
+                    allcols = cfg.get_dfc_dataframe().columns.tolist()
                     for i in range(len(allcols)) :
                         matched = False
                         for j in range(len(collist)) : 
@@ -434,19 +434,24 @@ def get_dfsubset_table(filters=False,colname=None) :
                                                     cfg.SWDFSubsetUtility_ID,callback)
              
     else :
-        col_names_html  =  get_col_uniques_table(cfg.get_dc_dataframe(),colname) 
+        col_names_html  =  get_col_uniques_table(cfg.get_dfc_dataframe(),colname) 
 
     return(col_names_html) 
 
-"""            
-#------------------------------------------------------------------
-#   display dataframe subset
-#
-#   df          -   dataframe
-#
-#------------------------------------------------------------------
-"""
+
 def display_df_subset(df,filters=False,colname=None) :  
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display current df subset form
+    * 
+    * parms :
+    *  df      -   dataframe to subset from
+    *  filters -   filters form 
+    *  colname -   filters column name 
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     if(not colname==None) :
         cfg.set_config_value(get_subset_filter_input_id+"Parms",[colname,"","","","",""])

@@ -82,7 +82,7 @@ def display_geocode_utility(optionId,parms=None) :
         if(fid == 0) :
             get_geocoder_coords(parms)
         else :
-            if(cfg.is_dc_dataframe_loaded()) :
+            if(cfg.is_a_dfc_dataframe_loaded()) :
                 get_geocoder_df_coords(parms)
             else :
                 sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
@@ -98,7 +98,7 @@ def display_geocode_utility(optionId,parms=None) :
         if(fid == 0) :
             get_geocoder_address(parms)
         else :
-            if(cfg.is_dc_dataframe_loaded()) :
+            if(cfg.is_a_dfc_dataframe_loaded()) :
                 get_df_geocoder_address(parms)
             else :
                 sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
@@ -634,16 +634,16 @@ def get_geocoder_df_coords(inparms) :
                 latlongs        =   []
                 
                 # for each row in the dataframe
-                for i in range(len(cfg.get_dc_dataframe())) :
+                for i in range(len(cfg.get_dfc_dataframe())) :
                     
                     if(stopRun) :  
-                        i = len(cfg.get_dc_dataframe()) + 1
+                        i = len(cfg.get_dfc_dataframe()) + 1
                     else :
                         
                         query = ""
                         for j in range(len(cols[0])) :
                             if(cols[1][j]) :
-                                val = cfg.get_dc_dataframe().iloc[i][cols[0][j]]
+                                val = cfg.get_dfc_dataframe().iloc[i][cols[0][j]]
                                 import pandas as pd
                                 if(not pd.isnull(val)) :
                                     query = query + " " + str(val) 
@@ -750,7 +750,7 @@ def get_geocoder_df_coords(inparms) :
                 if(deloldcols) :
                     for i in range(len(queryparms[1])) :
                         if(queryparms[1][i]) :
-                            cfg.set_dc_dataframe(cfg.get_dc_dataframe().drop([queryparms[0][i]],axis=1))
+                            cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().drop([queryparms[0][i]],axis=1))
                 
             except Exception as e:
                 opstat.store_exception("Unable to save coors columns",e)
@@ -759,7 +759,7 @@ def get_geocoder_df_coords(inparms) :
             display_status("dataframe coordinates loaded successfully")
             
             notes = []
-            notes.append("Total Coords Loaded   : " + str(len(cfg.get_dc_dataframe())))
+            notes.append("Total Coords Loaded   : " + str(len(cfg.get_dfc_dataframe())))
             notes.append("  ")
             notes.append("Total Timeouts        : " + str(len(timeoutaddr)))
             notes.append("Total Parse Errors    : " + str(len(parseerror)))
