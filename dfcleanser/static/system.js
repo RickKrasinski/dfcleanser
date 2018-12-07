@@ -72,3 +72,24 @@ function select_dfc_nb(dfcnbname){
 
 }
 
+function dfmgr_callback(fid) {
+    /**
+     * process dataframe manager callback.
+     */
+    var inputs = new Array();
+    inputs.push(fid);
+    var inputparms = window.get_input_form_parms("dfmgrform");
+    if (inputparms != null) {
+        inputs.push(inputparms);
+    }
+    window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "18, " + JSON.stringify(inputs)));
+}
+
+//----------------------------------------------------------------
+// dynamic html functions
+//----------------------------------------------------------------
+function select_datframe(dfcdftitle){
+    var inputs = new Array();
+    inputs.push(dfcdftitle);
+    window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "3, " + JSON.stringify(inputs)));
+}

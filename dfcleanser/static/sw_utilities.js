@@ -736,8 +736,8 @@ function generic_function_callback(fid) {
 
             var code = "# generic function" + NEW_LINE +
                 '# function title' + NEW_LINE +
-                "from dfcleanser.common.cfg import get_dc_dataframe" + NEW_LINE +
-                "df = get_dc_dataframe()" + NEW_LINE + NEW_LINE;
+                "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
+                "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
 
             window.run_code(cell, code);
             break;
@@ -782,8 +782,8 @@ function generic_function_callback(fid) {
             var code = $('#gtcode');
             var newcode = "# generic function" + NEW_LINE +
                 '# function title' + NEW_LINE +
-                "from dfcleanser.common.cfg import get_dc_dataframe" + NEW_LINE +
-                "df = get_dc_dataframe()" + NEW_LINE + NEW_LINE;
+                "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
+                "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
             code.val(newcode);
 
             window.delete_output_cell(window.DC_GEN_FUNCTION_ID);

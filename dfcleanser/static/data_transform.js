@@ -220,8 +220,8 @@ function data_transform_add_cols_callback(optionId) {
             IPython.notebook.insert_cell_below('code');
             var cell = IPython.notebook.select_next().get_selected_cell();
             var celltext = "# add column code" + window.NEW_LINE;
-            celltext = celltext + "from dfcleanser.common.cfg import get_dc_dataframe" + window.NEW_LINE;
-            celltext = celltext + "df = get_dc_dataframe()" + window.NEW_LINE;
+            celltext = celltext + "from dfcleanser.common.cfg import get_dfc_dataframe" + window.NEW_LINE;
+            celltext = celltext + "df = get_dfc_dataframe()" + window.NEW_LINE;
             celltext = celltext + "from dfcleanser.data_transform.data_transform_columns_widgets import set_NewColumnValues" + window.NEW_LINE;
             celltext = celltext + "NewColumnValues = []" + window.NEW_LINE;
             celltext = celltext + "# Add your custom code here" + window.NEW_LINE + window.NEW_LINE + window.NEW_LINE;

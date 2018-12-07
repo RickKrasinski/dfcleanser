@@ -129,8 +129,8 @@ function custom_import_callback(fid) {
 
             var code = "# custom import" + NEW_LINE +
                        "df = None" + NEW_LINE + NEW_LINE +
-                       "from dfcleanser.common.cfg import set_dc_dataframe" + NEW_LINE +
-                       "set_dc_dataframe(df)";
+                       "from dfcleanser.common.cfg import set_current_dfc_dataframe" + NEW_LINE +
+                       "set_current_dfc_dataframe(df)";
 
             window.run_code(cell, code);
             break;

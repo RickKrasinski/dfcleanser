@@ -117,8 +117,8 @@ function custom_export_callback(fid) {
             IPython.notebook.insert_cell_below('code');
             var cell = IPython.notebook.select_next().get_selected_cell();
             var code =  "# custom export" + NEW_LINE +
-                        "from dfcleanser.common.cfg import get_dc_dataframe" + NEW_LINE +
-                        "df = get_dc_dataframe()" + NEW_LINE + NEW_LINE;
+                        "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
+                        "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
             window.run_code(cell, code);
             break;
         case 1:
