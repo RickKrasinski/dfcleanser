@@ -33,14 +33,13 @@ def run_javascript(jscript, errmsg, errtitle) :
         print(errmsg,jscript)
         
         
-        
-
-NOTEBOOK_TITLE          =   "NoteBookName"
-NOTEBOOK_PATH           =   "NoteBookPath"
-DFC_CELLS_LOADED        =   "dfCcellsLoaded"
-DFC_CELLS_CBS           =   "dfCcellcbs"
-
-
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser component Ids
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 DataCleansing_ID        =   "DataCleansing"
 DataExport_ID           =   "DataExport"
 DataImport_ID           =   "DataImport"
@@ -61,87 +60,219 @@ SWDFConcatUtility_ID    =   "SWDFConcatUtility"
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   DC Dataframe helper methods
+#   dfcleanser Dataframe objects
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-def is_dc_dataframe_loaded(title=None) :
-    return(DCdf.is_dataframe_set(title)) 
-   
-def set_dc_dataframe(df,title=None) :
-    DCdf.set_dataframe(df,title)
-    
-def get_dc_dataframe(title=None) :
-    return(DCdf.get_dataframe(title))
-    
-def rename_default_dc_dataframe(title) :
-    DCdf.name_default_dataframe(title)
 
-def drop_dc_dataframe(title=None) :
+"""
+#--------------------------------------------------------------------------
+#   dfcleanser Dataframe helper methods
+#--------------------------------------------------------------------------
+"""
+def is_a_dfc_dataframe_loaded() :
+    return(DCdf.is_current_dataframe_set()) 
+def get_dfc_dataframe_titles_list() :
+    return(DCdf.get_dataframe_titles())
+   
+
+"""
+* --------------------------------------
+* dfcleanser dataframe methods
+* --------------------------------------
+"""    
+def add_dfc_dataframe(dfcdf) :
+    DCdf.add_dataframe(dfcdf)
+def get_dfc_dataframe(title=None) :
+    return(DCdf.get_dataframe(title))
+def get_dfc_dataframe_notes(title=None) :
+    return(DCdf.get_dataframe_notes(title))
+def drop_dfc_dataframe(title=None) :
     DCdf.drop_dataframe(title)
 
+"""
+* --------------------------------------
+* current dfcleanser dataframe methods
+* --------------------------------------
+"""
+def set_current_dfc_dataframe(df) :
+    DCdf.update_current_dataframe(df)
+def set_current_dfc_dataframe_title(title) :
+    DCdf.set_current_dataframe(title)
+def get_current_dfc_dataframe_title() :
+    return(DCdf.get_current_dataframe())
 
+
+
+"""
+#--------------------------------------------------------------------------
+#  dfcleanser Dataframe object
+#--------------------------------------------------------------------------
+"""
+class dfc_dataframe :
+    
+    dfc_df    =   []
+    
+    def __init__(self,titleparm,dfparm,notesparm=""):
+        self.dfc_df     =   [titleparm,dfparm,notesparm]
+        
+    def get_title(self)     : return(self.dfc_df[0])       
+    def get_df(self)        : return(self.dfc_df[1])       
+    def get_notes(self)     : return(self.dfc_df[2])       
+
+    def set_title(self,title)   : self.dfc_df[0] = title       
+    def set_df(self,df)         : self.dfc_df[1] = df     
+    def set_notes(self,notes)   : self.dfc_df[2] = notes   
+
+"""
+#--------------------------------------------------------------------------
+#   dfcleanser Dataframe factory
+#--------------------------------------------------------------------------
+"""
 class DCDataframes :
     
-    dcdataframes    =   {}
-    default_df      =   ""
+    dcdataframes    =   []
+    current_df      =   None
 
     def __init__(self):
-        self.dcdataframes = {}
-        #print("dc dataframe init")
-        
-    def set_dataframe(self,df,title=None) :
-        if(title == None) :
-            self.dcdataframes.update({"default" : df})
-        else :
-            self.dcdataframes.update({title : df})
-        
-    def get_dataframe(self,title=None) :
-        if(title == None) :
-            return(self.dcdataframes.get("default"))
-        else :
-            return(self.dcdataframes.get(title))
+        self.dcdataframes   =   []
+        self.current_df     =   None
     
-    def rename_default_dataframe(self,title) :
-        if(title == None) :
-            return(self.dcdataframes.get("default"))
+    """
+    * --------------------------------------
+    * current dfcleanser dataframes methods
+    * --------------------------------------
+    """
+    def set_current_dataframe(self,title) :
+        self.current_df     =  title 
+    def get_current_dataframe(self) :
+        return(self.current_df)
+    def update_current_dataframe(self,df) :
+        dfindex     =   self.get_df_index(self,self.current_df)
+        if(dfindex > -1) :
+            self.dcdataframes[dfindex].set_df(df)    
+    def update_current_dataframe_notes(self,notes) :
+        dfindex     =   self.get_df_index(self,self.current_df)
+        if(dfindex > -1) :
+            self.dcdataframes[dfindex].set_notes(notes)    
+    def is_current_dataframe_set(self) :
+        if(self.current_df == None) :
+            return(False)
         else :
-            return(self.dcdataframes.get(title))
-        
+            dfindex     =   self.get_df_index(self.current_df)
+            if(dfindex > -1) :
+                return(True)
+            else :
+                self.current_df = None
+                return(False)
+    
+    """
+    * ------------------------------------
+    * add or drop dfcleanser dataframes 
+    * ------------------------------------
+    """        
+    def add_dataframe(self,dfcdf) :
+        self.dcdataframes.append(dfcdf)
     def drop_dataframe(self,title=None) :
         if(title == None) :
-            if(self.get_dataframe("default") is not None) :
-                self.dcdataframes.pop("default")
+            if(self.current_df == None) :
+                return()
+            else :
+                dfindex     =   self.get_df_index(self,self.current_df)
+                if(dfindex > -1) :
+                    del self.dcdataframes[dfindex]    
         else :
-            if(self.get_dataframe(title) is not None) :
-                self.dcdataframes.pop(title)
+            dfindex     =   self.get_df_index(self,title)
+            if(dfindex > -1) :
+                del self.dcdataframes[dfindex]    
 
-    def is_dataframe_set(self,title=None) :
+    """
+    * ------------------------------------
+    * get dfcleanser dataframe components
+    * ------------------------------------
+    """        
+    def get_dataframe(self,title=None) :
         if(title == None) :
-            tdf = self.get_dataframe("default")
-            if(type(tdf) != type(None)) :
-                return(True)
+            dfindex     =   self.get_df_index(self.current_df)
+            if(dfindex > -1) :            
+                return(self.dcdataframes[dfindex].get_df())
             else :
-                return(False)
+                return(None)
         else :
-            if(self.get_dataframe(title) == None) :
-                return(False)
+            dfindex     =   self.get_df_index(title)
+            if(dfindex > -1) :            
+                return(self.dcdataframes[dfindex].get_df())
             else :
-                return(True)
+                return(None)
+                
+    def get_dataframe_notes(self,title=None) :
+        if(title == None) :
+            dfindex     =   self.get_df_index(self.current_df)
+            if(dfindex > -1) :            
+                return(self.dcdataframes[dfindex].get_notes())
+            else :
+                return(None)
+        else :
+            dfindex     =   self.get_df_index(title)
+            if(dfindex > -1) :            
+                return(self.dcdataframes[dfindex].get_notes())
+            else :
+                return(None)
+    
 
+                
+    def get_dataframe_titles(self) :
+        
+        if(len(self.dcdataframes) > 0) :
+            titles  =   []
+            for i in range(len(self.dcdataframes)) :
+                titles.append(self.dcdataframes[i].get_title())
+                
+            return(titles)
+        else :
+            return(None)
+            
+    def get_df_index(self,title) :
+        
+        for i in range(len(self.dcdataframes)) :
+            if(self.dcdataframes[i].get_title() == title) :
+                return(i)
+                
+        return(-1)
+
+        
+        
+"""
+#--------------------------------------------------------------------------
+#   global DC Dataframe factory object
+#--------------------------------------------------------------------------
+"""
 DCdf = DCDataframes()
 
 
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   dfcleanser config value keys
+#   dfcleanser config objects
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
 GLOBAL      =   False
 LOCAL       =   True
+
+        
+"""
+#--------------------------------------------------------------------------
+#   Generic System config value keys
+#--------------------------------------------------------------------------
+"""
+NOTEBOOK_TITLE          =   "NoteBookName"
+NOTEBOOK_PATH           =   "NoteBookPath"
+DFC_CELLS_LOADED        =   "dfCcellsLoaded"
+DFC_CELLS_CBS           =   "dfCcellcbs"
 
 
 
@@ -254,6 +385,7 @@ EULA_FLAG_KEY                           =   "EULARead"
 SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
 DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
 DFC_CHAPTERS_LOADED_KEY                 =   "dfcCurrentlyLoadedChapters"
+CURRENT_DF_DISPLAYED_KEY                =   "dfcCurrentSelecteddf"
 
 """
 #--------------------------------------------------------------------------
@@ -657,9 +789,9 @@ def check_notebook_dir_and_cfg_files(notebookname) :
                     win32api.MessageBox(None,"remove cfg dir file","remove",1)
 
                     create_notebook_dir_and_cfg_files(notebookname,nbpath)
-                except FileNotFoundError as e:
+                except FileNotFoundError :
                     print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
-                except Exception as e:
+                except Exception :
                     print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
                 
                 
@@ -668,9 +800,9 @@ def check_notebook_dir_and_cfg_files(notebookname) :
             # notebook path and name not found so create them
             try :
                 create_notebook_dir_and_cfg_files(notebookname,nbpath)
-            except FileNotFoundError as e:
+            except FileNotFoundError :
                 print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
-            except Exception as e:
+            except Exception :
                 print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
 
 

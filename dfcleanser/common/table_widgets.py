@@ -410,10 +410,10 @@ def get_col_major_table(table,direction,displayTable=True) :
             else :
                 table.set_lastcoldisplayed(table.get_lastcoldisplayed() + table.get_colsperrow()) 
         
-        from dfcleanser.common.cfg import get_dc_dataframe 
+        from dfcleanser.common.cfg import get_dfc_dataframe 
         from dfcleanser.common.display_utils import get_df_schema_table
         if(table.get_tableid() == "dfschemaTable") :
-            get_df_schema_table(get_dc_dataframe(),table,direction)    
+            get_df_schema_table(get_dfc_dataframe(),table,direction)    
             
         table_HTML = table.get_html(False)
         

@@ -783,9 +783,16 @@ def get_form_parms(formid,idList) :
     if(formParms == None) :
         return(None)
     else :
-        if(len(formParms) == len(idList)) :
+        
+        totalids = 0
+        # strip Nones 
+        for i in range(len(idList)) :
+            if(not(idList[i] == None)) : totalids = totalids + 1
+            
+        if(len(formParms) == totalids) :
             return(formParms)
         else :
+            #return(formParms)
             cfg.drop_config_value(formid + "Parms")
             return(None)
     

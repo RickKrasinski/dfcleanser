@@ -10,7 +10,7 @@ Created on Tue Jun 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.common.cfg import (DataTransform_ID, get_dc_dataframe)
+from dfcleanser.common.cfg import (DataTransform_ID, get_dfc_dataframe)
 
 import dfcleanser.common.table_widgets as tblw         
 new_line =   """
@@ -768,7 +768,7 @@ def scroll_sample_rows(parms) :
     direction   =   int(parms[1])
     
     from dfcleanser.common.display_utils import display_more_sample_rows
-    table_html = display_more_sample_rows(get_dc_dataframe(),tableid,direction)
+    table_html = display_more_sample_rows(get_dfc_dataframe(),tableid,direction)
     
     thead = table_html.find("<thead>")
     tend  = table_html.find("</table>")
@@ -803,7 +803,7 @@ def get_sample_row(parms) :
     newrowId    =   int(parms[0][1])
         
     from dfcleanser.common.display_utils import display_more_sample_rows
-    new_rows_html = display_more_sample_rows(get_dc_dataframe(),
+    new_rows_html = display_more_sample_rows(get_dfc_dataframe(),
                                              tableId,1,newrowId)
 
     table_html = patch_html(new_rows_html)
@@ -841,7 +841,7 @@ def scroll_single_row(parms) :
     direction   =   int(parms[1])
     
     from dfcleanser.common.display_utils import display_more_single_row
-    table_html = display_more_single_row(get_dc_dataframe(),tableid,direction)
+    table_html = display_more_single_row(get_dfc_dataframe(),tableid,direction)
     
     thead = table_html.find("<tbody>")
     tend  = table_html.find("</tbody>")
@@ -1044,15 +1044,15 @@ def get_column_samples_html(colname) :
     uniques =   [] 
         
     #check if the object is string
-    if (isinstance(get_dc_dataframe()[colname][0], str)) :
+    if (isinstance(get_dfc_dataframe()[colname][0], str)) :
         
-        uniques =   get_dc_dataframe()[colname].unique().tolist()
+        uniques =   get_dfc_dataframe()[colname].unique().tolist()
         for i in range(len(uniques)) :
             uniques[i]  =   str(uniques[i])
         uniques.sort()
     else :
-        if(is_numeric_col(get_dc_dataframe(),colname)) :           
-            uniques =   get_dc_dataframe()[colname].unique().tolist()
+        if(is_numeric_col(get_dfc_dataframe(),colname)) :           
+            uniques =   get_dfc_dataframe()[colname].unique().tolist()
             uniques.sort()
 
     if(len(uniques) > 0) :
@@ -1330,9 +1330,9 @@ def is_datetime_value(val) :
     try :
         import datetime
         if( (type(val) == datetime.datetime) ) :#or 
-        #(get_dc_dataframe()[colname].dtype == 'datetime64[ns]') or 
-        #(get_dc_dataframe()[colname].dtype == '<M8[ns]') or 
-        #(get_dc_dataframe()[colname].dtype == '>M8[ns]') ):
+        #(get_dfc_dataframe()[colname].dtype == 'datetime64[ns]') or 
+        #(get_dfc_dataframe()[colname].dtype == '<M8[ns]') or 
+        #(get_dfc_dataframe()[colname].dtype == '>M8[ns]') ):
             return(True)
         else :
             return(False)
@@ -1390,9 +1390,9 @@ def is_datetime_column(df,colname) :
     try :
         import datetime
         if( (type(val) == datetime.datetime) ) :#or 
-        #(get_dc_dataframe()[colname].dtype == 'datetime64[ns]') or 
-        #(get_dc_dataframe()[colname].dtype == '<M8[ns]') or 
-        #(get_dc_dataframe()[colname].dtype == '>M8[ns]') ):
+        #(get_dfc_dataframe()[colname].dtype == 'datetime64[ns]') or 
+        #(get_dfc_dataframe()[colname].dtype == '<M8[ns]') or 
+        #(get_dfc_dataframe()[colname].dtype == '>M8[ns]') ):
             return(True)
         else :
             return(False)
