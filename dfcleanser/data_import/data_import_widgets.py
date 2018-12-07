@@ -99,35 +99,42 @@ pandas_import_task_bar_centered      =   False
 """
 pandas_import_csv_title         =   "Pandas CSV Import Parameters"
 pandas_import_csv_id            =   "importPandasCSV"
-pandas_import_csv_idList        =   ["csvFileName","csvcolNamesRow",
-                                     "csvcolNamesList","csvcolRowIds",
+pandas_import_csv_idList        =   ["csvFileName",
+                                     "csvdftitle",
+                                     "csvcolNamesRow",
+                                     "csvcolNamesList",
+                                     "csvcolRowIds",
                                      "csvaddlParms",
                                      None,None,None,None]
 
-pandas_import_csv_labelList     =   ["filepath_or_buffer","header",
-                                     "names","index_col",
+pandas_import_csv_labelList     =   ["filepath_or_buffer",
+                                     "dataframe_title",
+                                     "header",
+                                     "names",
+                                     "index_col",
                                      "Additional Parm(s)",
                                      "Import CSV File","Clear",
                                      "Return","Help"]
 
-pandas_import_csv_typeList      =   ["file","text","file",
+pandas_import_csv_typeList      =   ["file","text","text","file",
                                      "text",maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_csv_placeholderList = ["enter CSV File name or browse to file below",
+                                     "dataframe title (default 'CurrentImportedDataSource')",
                                      "enter row number containing column names (default infer)",
                                      "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
                                      "enter column number to use for row ids (default None)",
                                      "enter additional parms { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
-pandas_import_csv_jsList       =    [None,None,None,None,None,
+pandas_import_csv_jsList       =    [None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.CSV_IMPORT)+")",
                                      "pandas_details_clear_callback("+str(dim.CSV_IMPORT)+")",
                                      "pandas_details_return_callback()",
                                      "display_help_url('"+str(dfchelp.CSV_IMPORT_URL)+"')"]
 
-pandas_import_csv_reqList       =   [0]
+pandas_import_csv_reqList       =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -137,13 +144,16 @@ pandas_import_csv_reqList       =   [0]
 
 pandas_import_fwf_title         =   "Pandas Fixed With File Import Parameters"
 pandas_import_fwf_id            =   "importPandasFWF"
-pandas_import_fwf_idList        =   ["fwfFileName","fwfFileDelimiter",
+pandas_import_fwf_idList        =   ["fwfFileName",
+                                     "fwfdftitle",
+                                     "fwfFileDelimiter",
                                      "fwfcolNamesRow",
                                      "fwfcolNamesList","fwfcolRowIds","fwfdtypes",
                                      "fwfaddlParms",
                                      None,None,None,None]
 
 pandas_import_fwf_labelList     =   ["filepath_or_buffer ",
+                                     "dataframe_title",
                                      "delimiter",
                                      "header",
                                      "names","index_col",
@@ -152,11 +162,12 @@ pandas_import_fwf_labelList     =   ["filepath_or_buffer ",
                                      "Import FWF File",
                                      "Clear","Return","Help"]
 
-pandas_import_fwf_typeList      =   ["file","text","text","file",
+pandas_import_fwf_typeList      =   ["file","text","text","text","file",
                                      "text","file",maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_fwf_placeholderList = ["enter Fixed Width File name or browse to file below",
+                                     "dataframe title (default 'CurrentImportedDataSource')",
                                      "enter file delimeter (default , (comma)) ",
                                      "enter row number containing column names (default infer)",
                                      "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
@@ -165,7 +176,7 @@ pandas_import_fwf_placeholderList = ["enter Fixed Width File name or browse to f
                                      "enter additional parms { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
-pandas_import_fwf_jsList        =   [None,None,None,None,None,None,None,
+pandas_import_fwf_jsList        =   [None,None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.FWF_IMPORT)+")",
                                      "pandas_details_clear_callback("+str(dim.FWF_IMPORT)+")",
                                      "pandas_details_return_callback()",
@@ -181,14 +192,18 @@ pandas_import_fwf_reqList       =   [0]
 pandas_import_excel_title       =   "Pandas Excel Import Parameters"
 pandas_import_excel_id          =   "importPandasExcel"
 
-pandas_import_excel_idList      =   ["excelIO","excelSheetName",
+pandas_import_excel_idList      =   ["excelIO",
+                                     "exceldftitle",
+                                     "excelSheetName",
                                      "excelcolNamesRow",
                                      "excelcolNamesList",
                                      "excelcolRowIds",
                                      "exceladdlParms",
                                      None,None,None,None]
 
-pandas_import_excel_labelList   =   ["io","sheetname",
+pandas_import_excel_labelList   =   ["io",
+                                     "dataframe_title",
+                                     "sheetname",
                                      "header","names",
                                      "index_col",
                                      "Additional Parm(s)",
@@ -199,6 +214,7 @@ pandas_import_excel_typeList    =   ["file","text","text","file","text",
                                      "button","button","button","button"]
 
 pandas_import_excel_placeholderList = ["enter Excel IO path",
+                                       "dataframe title (default 'CurrentImportedDataSource')",
                                        "enter sheet name",
                                        "enter row number containing column names (default infer)",
                                        "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
@@ -206,7 +222,7 @@ pandas_import_excel_placeholderList = ["enter Excel IO path",
                                        "enter additional parms { Key :  Value} ... (default None)",
                                        None,None,None,None]
 
-pandas_import_excel_jsList      =   [None,None,None,None,None,None,
+pandas_import_excel_jsList      =   [None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.EXCEL_IMPORT)+")",
                                      "pandas_details_clear_callback("+str(dim.EXCEL_IMPORT)+")",
                                      "pandas_details_return_callback()",
@@ -222,12 +238,15 @@ pandas_import_excel_reqList     =   [0]
 pandas_import_json_title        =   "Pandas JSON Import Parameters"
 pandas_import_json_id           =   "importPandasJSON"
 
-pandas_import_json_idList       =   ["jsonPath","jsonOrient",
+pandas_import_json_idList       =   ["jsonPath",
+                                     "jsondftitle",
+                                     "jsonOrient",
                                      "jsonimportType","jsondataTypes",
                                      "jsonaddlParms",
                                      None,None,None,None]
 
 pandas_import_json_labelList    =   ["path_or_buf",
+                                     "dataframe_title",
                                      "orient",
                                      "type","dtype",
                                      "Additional Parm(s)",
@@ -238,13 +257,14 @@ pandas_import_json_typeList     =   ["file","text","text","file",
                                      "button","button","button","button"]
 
 pandas_import_json_placeholderList = ["enter JSON path or browse to file (can be url)",
+                                      "dataframe title (default 'CurrentImportedDataSource')",
                                       "enter JSON orientation",
                                       "series or dataframe (default dataframe)",
                                       "enter data types file name or browse to a json file or as a List (List format - [value, value ...] (default infer)",
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
-pandas_import_json_jsList       =   [None,None,None,None,None,
+pandas_import_json_jsList       =   [None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.JSON_IMPORT)+")",
                                      "pandas_details_clear_callback("+str(dim.JSON_IMPORT)+")",
                                      "pandas_details_return_callback()",
@@ -261,6 +281,7 @@ pandas_import_html_title        =   "Pandas HTML Import Parameters"
 pandas_import_html_id           =   "importPandasHTML"
 
 pandas_import_html_idList       =   ["htmlPath",
+                                     "htmldftitle",
                                      "htmlMatch",
                                      "htmlFlavor",
                                      "htmlColNamesRow",
@@ -269,19 +290,22 @@ pandas_import_html_idList       =   ["htmlPath",
                                      "htmladdlParms",
                                      None,None,None,None]
 
-pandas_import_html_labelList    =   ["io","match",
+pandas_import_html_labelList    =   ["io",
+                                     "dataframe_title",
+                                     "match",
                                      "flavor",
                                      "header","names",
                                      "index_col",
                                      "Additional Parm(s)",
                                      "Import HTML File","Clear","Return","Help"]
 
-pandas_import_html_typeList     =   ["file","text","text",
+pandas_import_html_typeList     =   ["file","text","text","text",
                                      "text","file","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_html_placeholderList = ["enter HTML path or browse to file (can be url)",
+                                      "dataframe title (default 'CurrentImportedDataSource')",
                                       "enter match string (default None)",
                                       "parsing flavor (default None bs4-html5)",
                                       "enter row id containing column names or as List [value, value ...] (default None)",
@@ -290,7 +314,7 @@ pandas_import_html_placeholderList = ["enter HTML path or browse to file (can be
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
-pandas_import_html_jsList       =   [None,None,None,None,None,None,None,
+pandas_import_html_jsList       =   [None,None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.HTML_IMPORT)+")",
                                      "pandas_details_clear_callback("+str(dim.HTML_IMPORT)+")",
                                      "pandas_details_return_callback()",
@@ -619,7 +643,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                                                                    import_task_bar_keyTitleList,
                                                                    import_task_bar_jsList,
                                                                    import_task_bar_centered))])
-        if(cfg.is_dc_dataframe_loaded()) :
+        if(cfg.is_a_dfc_dataframe_loaded()) :
             display_notes([cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) + " imported as dataframe source"])
         else :
             cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
@@ -702,9 +726,10 @@ def display_dc_import_forms(id, detid=0, notes=False) :
             customNotes =  ["To create custom import code in the code cell below hit 'New Custom Import'",
                             "&nbsp;&nbsp;&nbsp;&nbsp;(enter and test import in the code cell below)",
                             "&nbsp;&nbsp;&nbsp;&nbsp;(leave the '# custom import' comment line in the code cell",
-                            "&nbsp;&nbsp;&nbsp;&nbsp;(call dfcleanser.common.cfg.set_dc_dataframe(df) to store your dataframe for later usage)",
+                            "&nbsp;&nbsp;&nbsp;&nbsp;(call dfcleanser.common.cfg.set_current_dfc_dataframe(df) to store your dataframe for later usage)",
                             "To run the import code in the Custom Import Code box hit 'Run Custom Import' button",
-                            "&nbsp;&nbsp;&nbsp;&nbsp;(only the code in the Custom Import Code box is run and stored for scripting)",                        "Once import successful hit 'Save Custom Import' button to store import code for future retrieval",
+                            "&nbsp;&nbsp;&nbsp;&nbsp;(only the code in the Custom Import Code box is run and stored for scripting)",
+                            "Once import successful hit 'Save Custom Import' button to store import code for future retrieval",
                             "To drop the custom import and clear the Custom Import Code box hit 'Drop Custom Import' button"]
         
             print("\n")
@@ -967,8 +992,8 @@ def display_data_import_notes(s,fname,dbnote=False,custom=False) :
         display_status("Custom import code Imported successfully as a pandas dataframe ")
         
         importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dc_dataframe() )",
-                       "( check if df exists via dfcleanser.common.cfg.is_dc_dataframe_loaded() )"]
+                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
+                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
         
     else :
         
@@ -978,9 +1003,9 @@ def display_data_import_notes(s,fname,dbnote=False,custom=False) :
             display_status("File " + fname + " Imported successfully as a pandas dataframe ")
 
         importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dc_dataframe() )",
-                       "( set dataframe via dfcleanser.common.cfg.set_dc_dataframe(df) )",
-                       "( check if df exists via dfcleanser.common.cfg.is_dc_dataframe_loaded() )"]
+                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
+                       "( set dataframe via dfcleanser.common.cfg.set_current_dfc_dataframe(df) )",
+                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
     
     display_notes(importnotes)
 

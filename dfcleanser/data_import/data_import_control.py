@@ -97,7 +97,6 @@ def process_import_form(formid, parms, display=True) :
     
         s       =   time.time()
         opstat  =   opStatus()
-        cfg.drop_dc_dataframe()  
     
         if(display) :
             clear_output()
@@ -341,8 +340,8 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
     else :
         try :
 
-            csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
-            csvvals         =   [fparms[1],fparms[2],fparms[3]]
+            csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
+            csvvals         =   [fparms[2],fparms[3],fparms[4]]
             csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
     
             csvparms        =   {}
@@ -352,21 +351,21 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
             opstat.store_exception("Error parsing import parms",e)
 
     
-    if(len(fparms[2]) > 0) :
+    if(len(fparms[3]) > 0) :
         try :
-            with open(fparms[2], 'r') as col_names_file :
+            with open(fparms[3], 'r') as col_names_file :
                 colNames = json.load(col_names_file)
                 csvvals[1] = colNames
         except Exception as e: 
-            opstat.store_exception("Unable to open csv column names file " + fparms[2],e)
+            opstat.store_exception("Unable to open csv column names file " + fparms[3],e)
     
     if(opstat.get_status()) :
         
         try :
             
             csvparms        =   get_function_parms(csvkeys,csvvals,csvtypes)
-            if(not (fparms[4] == "")) :
-                csvaddlparms    =   json.loads(fparms[4])
+            if(not (fparms[5] == "")) :
+                csvaddlparms    =   json.loads(fparms[5])
             
             if (len(csvaddlparms) > 0) :
                 addlparmskeys = csvaddlparms.keys()
@@ -385,7 +384,15 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
 
     if(opstat.get_status()) : 
         
-        cfg.set_dc_dataframe(df)
+        if(len(fparms[1]) == 0) :
+            csv_title   =   "CurrentImportedData"
+            fparms[1]   =   csv_title
+        else :
+            csv_title   =   fparms[1]
+        
+        csv_df  =   cfg.dfc_dataframe(csv_title,df,fparms[0])
+        cfg.add_dfc_dataframe(csv_df)
+        cfg.set_current_dfc_dataframe_title(csv_title)
         
         if(display) :
             #make scriptable
@@ -420,8 +427,8 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
     else :
         try :
 
-            fwfkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4],labellist[5]] 
-            fwfvals         =   [fparms[1],fparms[2],fparms[3],fparms[4],fparms[5]]
+            fwfkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5],labellist[6]] 
+            fwfvals         =   [fparms[2],fparms[3],fparms[4],fparms[5],fparms[6]]
             fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
     
             fwfparms        =   {}
@@ -432,14 +439,14 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
 
     if(opstat.get_status()) :
     
-        if(len(fparms[3]) > 0) :
+        if(len(fparms[4]) > 0) :
         
             try :
-                with open(fparms[3], 'r') as col_names_file :
+                with open(fparms[4], 'r') as col_names_file :
                     colNames = json.load(col_names_file)
-                    fwfvals[2] = colNames
+                    fwfvals[3] = colNames
             except Exception as e: 
-                opstat.store_exception("Unable to open fwf column names file" + fparms[3],e)
+                opstat.store_exception("Unable to open fwf column names file" + fparms[4],e)
 
     if(opstat.get_status()) :
         
@@ -447,8 +454,8 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
             
             fwfparms        =   get_function_parms(fwfkeys,fwfvals,fwftypes)
             
-            if(not (fparms[6] == "")) :
-                fwfaddlparms    =   json.loads(fparms[6])
+            if(not (fparms[7] == "")) :
+                fwfaddlparms    =   json.loads(fparms[7])
             
             if (len(fwfaddlparms) > 0) :
                 addlparmskeys = fwfaddlparms.keys()
@@ -468,7 +475,15 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
     
     if(opstat.get_status()) : 
         
-        cfg.set_dc_dataframe(df)
+        if(len(fparms[1]) == 0) :
+            fwf_title   =   "CurrentImportedData"
+            fparms[1]   =   fwf_title
+        else :
+            fwf_title   =   fparms[1]
+        
+        fwf_df  =   cfg.dfc_dataframe(fwf_title,df,fparms[0])
+        cfg.add_dfc_dataframe(fwf_df)
+        cfg.set_current_dfc_dataframe_title(fwf_title)
         
         if(display) :
             #make scriptable
@@ -502,8 +517,8 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
         opstat.set_errorMsg("No Import parameters defined")
     else :
         try :
-            excelkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-            excelvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            excelkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+            excelvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
             exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
 
             excelparms        =   {}
@@ -518,8 +533,8 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
             
             excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
             
-            if(not (fparms[5] == "")) :
-                exceladdlparms    =   json.loads(fparms[5])
+            if(not (fparms[6] == "")) :
+                exceladdlparms    =   json.loads(fparms[6])
             
             if (len(exceladdlparms) > 0) :
                 addlparmskeys = exceladdlparms.keys()
@@ -541,7 +556,15 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
     
     if(opstat.get_status()) : 
         
-        cfg.set_dc_dataframe(df)
+        if(len(fparms[1]) == 0) :
+            excel_title     =   "CurrentImportedData"
+            fparms[1]       =   excel_title
+        else :
+            excel_title     =   fparms[1]
+        
+        excel_df  =   cfg.dfc_dataframe(excel_title,df,fparms[0])
+        cfg.add_dfc_dataframe(excel_df)
+        cfg.set_current_dfc_dataframe_title(excel_title)
         
         if(display) :
             #make scriptable
@@ -576,8 +599,8 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
     else :
         try :
 
-            jsonkeys         =   [labellist[1],labellist[2],labellist[3]] 
-            jsonvals         =   [fparms[1],fparms[2],fparms[3]]
+            jsonkeys         =   [labellist[2],labellist[3],labellist[4]] 
+            jsonvals         =   [fparms[2],fparms[3],fparms[4]]
             jsontypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
     
             jsonparms        =   {}
@@ -592,8 +615,8 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
             
             jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
             
-            if(not (fparms[4] == "")) :
-                jsonaddlparms    =   json.loads(fparms[4])
+            if(not (fparms[5] == "")) :
+                jsonaddlparms    =   json.loads(fparms[5])
             
             if (len(jsonaddlparms) > 0) :
                 addlparmskeys = jsonaddlparms.keys()
@@ -616,7 +639,15 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
 
     if(opstat.get_status()) : 
         
-        cfg.set_dc_dataframe(df)
+        if(len(fparms[1]) == 0) :
+            json_title     =   "CurrentImportedData"
+            fparms[1]      =   json_title
+        else :
+            json_title     =   fparms[1]
+        
+        json_df  =   cfg.dfc_dataframe(json_title,df,fparms[0])
+        cfg.add_dfc_dataframe(json_df)
+        cfg.set_current_dfc_dataframe_title(json_title)
         
         if(display) :
             #make scriptable
@@ -651,8 +682,8 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
     else :
         try :
 
-            htmlkeys         =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-            htmlvals         =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            htmlkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+            htmlvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
             htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
     
             htmlparms        =   {}
@@ -668,8 +699,8 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
             
             htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
             
-            if(not (fparms[5] == "")) :
-                htmladdlparms    =   json.loads(fparms[5])
+            if(not (fparms[6] == "")) :
+                htmladdlparms    =   json.loads(fparms[6])
             
             if (len(htmladdlparms) > 0) :
                 addlparmskeys = htmladdlparms.keys()
@@ -691,7 +722,15 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
 
     if(opstat.get_status()) : 
         
-        cfg.set_dc_dataframe(df)
+        if(len(fparms[1]) == 0) :
+            html_title     =   "CurrentImportedData"
+            fparms[1]      =   html_title
+        else :
+            html_title     =   fparms[1]
+        
+        html_df  =   cfg.dfc_dataframe(html_title,df,fparms[0])
+        cfg.add_dfc_dataframe(html_df)
+        cfg.set_current_dfc_dataframe_title(html_title)
         
         if(display) :
             #make scriptable
@@ -790,8 +829,8 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
                            "import_pandas_sqltable(" + json.dumps(sqltableparms) + 
                            "," + json.dumps(dbcondict) + "," + 
                            str(importid) + ",False)",
-                           "from dfcleanser.common.cfg import set_dc_dataframe",
-                           "set_dc_dataframe(df)"],opstat)
+                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
+                           "set_current_dfc_dataframe(df)"],opstat)
        
         import_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms) 
         
@@ -799,7 +838,7 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
             cfg.set_config_value(importid + "Parms",sqltableparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[0])
 
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
 
     return(import_notes, opstat)    
 
@@ -882,8 +921,8 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
                            "from dfcleanser.data_import.data_import_control import import_pandas_sqlquery",
                            "import_pandas_sqlquery(" + json.dumps(sqlqueryparms) +"," + json.dumps(dbcondict) + 
                            "," + str(importid) + ",False)",
-                           "from dfcleanser.common.cfg import set_dc_dataframe",
-                           "set_dc_dataframe(df)"],opstat)
+                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
+                           "set_current_dfc_dataframe(df)"],opstat)
        
         import_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms) 
         
@@ -892,7 +931,7 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
             cfg.set_config_value(importid + "Parms",sqlqueryparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[0])
 
-        cfg.set_dc_dataframe(df)
+        cfg.set_current_dfc_dataframe(df)
 
     return(import_notes, opstat)    
 
