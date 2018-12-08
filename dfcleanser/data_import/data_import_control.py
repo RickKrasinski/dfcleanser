@@ -378,19 +378,19 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) :
     
         try :
-            df = pd.read_csv(fparms[0], **csvparms)
+            df = pd.read_csv(fparms[1], **csvparms)
         except Exception as e:
-            opstat.store_exception("Unable to import csv file" + fparms[0],e)
+            opstat.store_exception("Unable to import csv file" + fparms[1],e)
 
     if(opstat.get_status()) : 
         
-        if(len(fparms[1]) == 0) :
+        if(len(fparms[0]) == 0) :
             csv_title   =   "CurrentImportedData"
-            fparms[1]   =   csv_title
+            fparms[0]   =   csv_title
         else :
-            csv_title   =   fparms[1]
+            csv_title   =   fparms[0]
         
-        csv_df  =   cfg.dfc_dataframe(csv_title,df,fparms[0])
+        csv_df  =   cfg.dfc_dataframe(csv_title,df,fparms[1])
         cfg.add_dfc_dataframe(csv_df)
         cfg.set_current_dfc_dataframe_title(csv_title)
         
@@ -405,7 +405,7 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
     return(opstat)
     
@@ -469,19 +469,19 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) :
     
         try :
-            df = pd.read_fwf(fparms[0], **fwfparms)
+            df = pd.read_fwf(fparms[1], **fwfparms)
         except Exception as e:
-            opstat.store_exception("Unable to import fwf file" + fparms[0],e)
+            opstat.store_exception("Unable to import fwf file" + fparms[1],e)
     
     if(opstat.get_status()) : 
         
-        if(len(fparms[1]) == 0) :
+        if(len(fparms[0]) == 0) :
             fwf_title   =   "CurrentImportedData"
-            fparms[1]   =   fwf_title
+            fparms[0]   =   fwf_title
         else :
-            fwf_title   =   fparms[1]
+            fwf_title   =   fparms[0]
         
-        fwf_df  =   cfg.dfc_dataframe(fwf_title,df,fparms[0])
+        fwf_df  =   cfg.dfc_dataframe(fwf_title,df,fparms[1])
         cfg.add_dfc_dataframe(fwf_df)
         cfg.set_current_dfc_dataframe_title(fwf_title)
         
@@ -496,7 +496,7 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
     return(opstat)
     
@@ -548,21 +548,21 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
     
         try :
             if(len(excelparms) == 0) :
-                df = pd.read_excel(fparms[0])
+                df = pd.read_excel(fparms[1])
             else :
-                df = pd.read_excel(fparms[0], **excelparms)
+                df = pd.read_excel(fparms[1], **excelparms)
         except Exception as e: 
-            opstat.store_exception("Unable to import excel file" + fparms[0],e)
+            opstat.store_exception("Unable to import excel file" + fparms[1],e)
     
     if(opstat.get_status()) : 
         
-        if(len(fparms[1]) == 0) :
+        if(len(fparms[0]) == 0) :
             excel_title     =   "CurrentImportedData"
-            fparms[1]       =   excel_title
+            fparms[0]       =   excel_title
         else :
-            excel_title     =   fparms[1]
+            excel_title     =   fparms[0]
         
-        excel_df  =   cfg.dfc_dataframe(excel_title,df,fparms[0])
+        excel_df  =   cfg.dfc_dataframe(excel_title,df,fparms[1])
         cfg.add_dfc_dataframe(excel_df)
         cfg.set_current_dfc_dataframe_title(excel_title)
         
@@ -577,7 +577,7 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
     return(opstat)
 
@@ -630,22 +630,22 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
     
         try :
             if(len(jsonparms) == 0) :
-                df = pd.read_json(fparms[0])
+                df = pd.read_json(fparms[1])
             else :
-                df = pd.read_json(fparms[0], **jsonparms)
+                df = pd.read_json(fparms[1], **jsonparms)
             
         except Exception as e:
-            opstat.store_exception("Unable to import json file" + fparms[0],e)
+            opstat.store_exception("Unable to import json file" + fparms[1],e)
 
     if(opstat.get_status()) : 
         
-        if(len(fparms[1]) == 0) :
+        if(len(fparms[0]) == 0) :
             json_title     =   "CurrentImportedData"
-            fparms[1]      =   json_title
+            fparms[0]      =   json_title
         else :
-            json_title     =   fparms[1]
+            json_title     =   fparms[0]
         
-        json_df  =   cfg.dfc_dataframe(json_title,df,fparms[0])
+        json_df  =   cfg.dfc_dataframe(json_title,df,fparms[1])
         cfg.add_dfc_dataframe(json_df)
         cfg.set_current_dfc_dataframe_title(json_title)
         
@@ -660,7 +660,7 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
     return(opstat)
 
@@ -714,21 +714,21 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
     
         try :
             if(len(htmlparms) == 0) :
-                df = pd.read_html(fparms[0])
+                df = pd.read_html(fparms[1])
             else :
-                df = pd.read_html(fparms[0], **htmlparms)
+                df = pd.read_html(fparms[1], **htmlparms)
         except Exception as e:
-            opstat.store_exception("Unable to import html file" + fparms[0],e)
+            opstat.store_exception("Unable to import html file" + fparms[1],e)
 
     if(opstat.get_status()) : 
         
-        if(len(fparms[1]) == 0) :
+        if(len(fparms[0]) == 0) :
             html_title     =   "CurrentImportedData"
-            fparms[1]      =   html_title
+            fparms[0]      =   html_title
         else :
-            html_title     =   fparms[1]
+            html_title     =   fparms[0]
         
-        html_df  =   cfg.dfc_dataframe(html_title,df,fparms[0])
+        html_df  =   cfg.dfc_dataframe(html_title,df,fparms[1])
         cfg.add_dfc_dataframe(html_df)
         cfg.set_current_dfc_dataframe_title(html_title)
         
@@ -743,7 +743,7 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
     return(opstat)
 
@@ -775,50 +775,60 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
     
     if(opstat.get_status()) :
         
-        if(sqltableparms[0] == "") :
+        if(sqltableparms[1] == "") :
             opstat.set_status(False)
             opstat.set_errorMsg("Invalid Table Name")
         
-        if(sqltableparms[1] == "") :
-            sqltableparms[1] = None
-        
         if(sqltableparms[2] == "") :
             sqltableparms[2] = None
-        else :
-            sqltableparms[2] = sqltableparms[2].split(",")
         
         if(sqltableparms[3] == "") :
-            sqltableparms[3] = True
+            sqltableparms[3] = None
         else :
-            sqltableparms[3] = False
+            sqltableparms[3] = sqltableparms[3].split(",")
         
         if(sqltableparms[4] == "") :
-            sqltableparms[4] = None
-         
+            sqltableparms[4] = True
+        else :
+            sqltableparms[4] = False
+        
         if(sqltableparms[5] == "") :
             sqltableparms[5] = None
-        else :
-            sqltableparms[5] = sqltableparms[5].split(",")
-        
+         
         if(sqltableparms[6] == "") :
             sqltableparms[6] = None
         else :
-            sqltableparms[6] = int(sqltableparms[6])
+            sqltableparms[6] = sqltableparms[6].split(",")
+        
+        if(sqltableparms[7] == "") :
+            sqltableparms[7] = None
+        else :
+            sqltableparms[7] = int(sqltableparms[7])
     
         if(opstat.get_status()) :  
     
             try :
                 if(dbcondict.get("dbid") == dbu.Oracle) :
-                    df = pd.read_sql("select * from " + sqltableparms[0],dbconnector)
+                    df = pd.read_sql("select * from " + sqltableparms[1],dbconnector)
                 else :
-                    df = pd.read_sql_table(sqltableparms[0],dbconnector,sqltableparms[1],sqltableparms[2],
-                                           sqltableparms[3],sqltableparms[4],sqltableparms[5],sqltableparms[6])
+                    df = pd.read_sql_table(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
+                                           sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7])
             except Exception as e:
-                opstat.store_exception("Unable to import sql table",e)
+                opstat.store_exception("Unable to import sql table " + sqltableparms[1],e)
                 
     import_notes    =   ""
 
     if(opstat.get_status()) : 
+        
+        if(len(sqltableparms[0]) == 0) :
+            sql_title           =   "CurrentImportedData"
+            sqltableparms[0]    =   sql_title
+        else :
+            sql_title           =   sqltableparms[0]
+        
+        sql_df  =   cfg.dfc_dataframe(sql_title,df,sqltableparms[1])
+        cfg.add_dfc_dataframe(sql_df)
+        cfg.set_current_dfc_dataframe_title(sql_title)
         
         if(display) :
             
@@ -836,9 +846,7 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
         
         if(len(sqltableparms) > 0) :
             cfg.set_config_value(importid + "Parms",sqltableparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[0])
-
-        cfg.set_current_dfc_dataframe(df)
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[1])
 
     return(import_notes, opstat)    
 
@@ -872,46 +880,56 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
     
     if(opstat.get_status()) :
         
-        if(sqlqueryparms[0] == "") :
+        if(sqlqueryparms[1] == "") :
             opstat.set_status(False)
             opstat.set_errorMsg("No SQL String Defined")
         
-        if(sqlqueryparms[1] == "") :
-            sqlqueryparms[1] = None
-        else :
-            sqlqueryparms[1] = sqlqueryparms[1].split(",")
-        
         if(sqlqueryparms[2] == "") :
-            sqlqueryparms[2] = True
+            sqlqueryparms[2] = None
         else :
-            sqlqueryparms[2] = False
+            sqlqueryparms[2] = sqlqueryparms[2].split(",")
         
         if(sqlqueryparms[3] == "") :
-            sqlqueryparms[3] = None
+            sqlqueryparms[3] = True
         else :
-            sqlqueryparms[3] = sqlqueryparms[3].split(",")
-         
+            sqlqueryparms[3] = False
+        
         if(sqlqueryparms[4] == "") :
             sqlqueryparms[4] = None
         else :
-            sqlqueryparms[4] = sqlqueryparms[5].split(",")
-        
+            sqlqueryparms[4] = sqlqueryparms[4].split(",")
+         
         if(sqlqueryparms[5] == "") :
             sqlqueryparms[5] = None
         else :
-            sqlqueryparms[5] = int(sqlqueryparms[6])
+            sqlqueryparms[5] = sqlqueryparms[5].split(",")
+        
+        if(sqlqueryparms[6] == "") :
+            sqlqueryparms[6] = None
+        else :
+            sqlqueryparms[6] = int(sqlqueryparms[6])
     
         if(opstat.get_status()) :  
     
             try :
-                df = pd.read_sql_query(sqlqueryparms[0],dbconnector,sqlqueryparms[1],sqlqueryparms[2],
-                                       sqlqueryparms[3],sqlqueryparms[4],sqlqueryparms[5])
+                df = pd.read_sql_query(sqlqueryparms[1],dbconnector,sqlqueryparms[2],sqlqueryparms[3],
+                                       sqlqueryparms[4],sqlqueryparms[5],sqlqueryparms[6])
             except Exception as e:
-                opstat.store_exception("Unable to run sql query",e)
+                opstat.store_exception("Unable to run sql query " + sqlqueryparms[1],e)
 
     import_notes    =   ""
 
     if(opstat.get_status()) : 
+        
+        if(len(sqlqueryparms[0]) == 0) :
+            sql_title           =   "CurrentImportedData"
+            sqlqueryparms[0]    =   sql_title
+        else :
+            sql_title           =   sqlqueryparms[0]
+        
+        sql_df  =   cfg.dfc_dataframe(sql_title,df,sqlqueryparms[1])
+        cfg.add_dfc_dataframe(sql_df)
+        cfg.set_current_dfc_dataframe_title(sql_title)
         
         if(display) :
         
@@ -929,9 +947,7 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
         
         if(len(sqlqueryparms) > 0) :
             cfg.set_config_value(importid + "Parms",sqlqueryparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[0])
-
-        cfg.set_current_dfc_dataframe(df)
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[1])
 
     return(import_notes, opstat)    
 
@@ -949,11 +965,21 @@ def process_custom_import(fparms,import_id,display=True) :
     opstat = opStatus() 
        
     try :
-        exec(fparms[0])
+        df = exec(fparms[1])
     except Exception as e:
-            opstat.store_exception("Unable to import custom" + fparms[0],e)
+            opstat.store_exception("Unable to import custom" + fparms[1],e)
 
     if(opstat.get_status()) : 
+        
+        if(len(fparms[0]) == 0) :
+            custom_title    =   "CurrentImportedData"
+            fparms[0]       =   custom_title
+        else :
+            custom_title    =   fparms[0]
+        
+        custom_df  =   cfg.dfc_dataframe(custom_title,df,fparms[1])
+        cfg.add_dfc_dataframe(custom_df)
+        cfg.set_current_dfc_dataframe_title(custom_title)
         
         if(display) :
             #make scriptable
