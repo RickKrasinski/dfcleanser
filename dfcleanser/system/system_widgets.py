@@ -43,31 +43,33 @@ dfmgr_input_idList                =   ["dftitle",
                                        "dfnumrows",
                                        "dfnumcols",
                                        "dfnotes",
-                                       None,None,None,None,None]
+                                       None,None,None,None,None,None]
 
 dfmgr_input_labelList             =   ["df_title",
                                        "df_num_rows",
                                        "df_num_cols",
                                        "df_notes",
+                                       "Rename</br>Dataframe",
                                        "Drop",
                                        "Set</br>Current",
-                                       "Update</br>Values",
+                                       "Update</br>Notes",
                                        "Return",
                                        "Help"]
 
-dfmgr_input_typeList              =   ["text","text","text",maketextarea(20),
-                                       "button","button","button","button","button"]
+dfmgr_input_typeList              =   ["text","text","text",maketextarea(10),
+                                       "button","button","button","button","button","button"]
 
 dfmgr_input_placeholderList       =   ["dataframe title",
                                        "number of rows",
                                        "number of columns",
                                        "dataframe notes",
-                                       None,None,None,None,None]
+                                       None,None,None,None,None,None]
 
 dfmgr_input_jsList                =   [None,None,None,None,
-                                       "process_dfmgr_callback("+str(sysm.DROP_DATAFRAME)+")",
-                                       "process_dfmgr_callback("+str(sysm.SET_DATAFRAME)+")",
-                                       "process_dfmgr_callback("+str(sysm.UPDATE_DATAFRAME)+")",
+                                       "dfmgr_callback("+str(sysm.RENAME_DATAFRAME)+")",
+                                       "dfmgr_callback("+str(sysm.DROP_DATAFRAME)+")",
+                                       "dfmgr_callback("+str(sysm.SET_DATAFRAME)+")",
+                                       "dfmgr_callback("+str(sysm.UPDATE_DATAFRAME)+")",
                                        "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
                                        "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
 
@@ -431,7 +433,7 @@ def get_df_dataframes_table() :
         
         for i in range(len(df_titles)) :
             if(len(df_titles[i]) > 0) :
-                dfsRows.append(["&nbsp;" + df_titles[i]])
+                dfsRows.append([df_titles[i]])
                 dfsHrefs.append(["select_datframe"])
        
             from dfcleanser.common.cfg import get_current_dfc_dataframe_title
@@ -486,7 +488,7 @@ def display_df_dataframes(title=None) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    
+ 
     df_names_html  =   get_df_dataframes_table()
     
     fparms  =   []

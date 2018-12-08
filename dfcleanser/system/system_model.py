@@ -53,5 +53,6 @@ DELETE_FILES                =   2
 DROP_DATAFRAME              =   0
 SET_DATAFRAME               =   1
 UPDATE_DATAFRAME            =   2
+RENAME_DATAFRAME            =   3
 
 

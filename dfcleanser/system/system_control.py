@@ -144,14 +144,38 @@ def display_system_environment(funcId,parms=None) :
             clear_cell()
         
         elif(funcId == sysm.DISPLAY_DATAFRAMES) :
-            
             if(not(parms is None)) :
                 title = parms[0]
             else :
                 title = None
                 
             sysw.display_system_main_taskbar()
-            sysw.display_df_dataframes()
+            sysw.display_df_dataframes(title)
+            
+        elif(funcId == sysm.PROCESS_DATAFRAME) :
+            
+            fid     =   parms[0]
+            from dfcleanser.common.common_utils import get_parms_for_input
+            fparms  =   get_parms_for_input(parms[1],sysw.dfmgr_input_idList)
+            
+            dftitle     =   None
+            
+            if(fid == sysm.DROP_DATAFRAME) :
+                cfg.drop_dfc_dataframe(fparms[0])
+                
+            elif(fid == sysm.SET_DATAFRAME) :    
+                cfg.set_current_dfc_dataframe_title(fparms[0]) 
+                
+            elif(fid == sysm.UPDATE_DATAFRAME) :    
+                cfg.set_dfc_dataframe_notes(fparms[3],fparms[0])
+                dftitle     =   fparms[0]
+            
+            elif(fid == sysm.RENAME_DATAFRAME) :    
+                cfg.rename_dfc_dataframe(cfg.get_config_value(cfg.CURRENT_DF_DISPLAYED_KEY),fparms[0])
+                dftitle     =   fparms[0]
+                
+            sysw.display_system_main_taskbar()
+            sysw.display_df_dataframes(dftitle)
             
         elif(funcId == sysm.DISPLAY_SYSTEM) :
             display_main_tb()
