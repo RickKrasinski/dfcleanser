@@ -245,7 +245,7 @@ def get_drop_cbox_flags() :
 def display_inspection_html(title) :
 
     status_html = ""
-    status_html = (status_html + '<div class="container status-header" style="width:20%; margin-left:25px; margin-bottom:5px; ">' + new_line)
+    status_html = (status_html + '<div class="container status-header" style="width:30%; margin-left:25px; margin-bottom:5px; ">' + new_line)
     status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
     status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
     status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
