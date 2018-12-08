@@ -1198,7 +1198,8 @@ class InputForm :
 * -----------------------------------------------------------------------*
 """
 checkbox_group_form_start   = new_line + ("""  <form class="container dc-container" style='""" + 
-                                          addstyleattribute("width",str(DEFAULT_PAGE_WIDTH-20)+"px") + 
+                                          #addstyleattribute("width",str(DEFAULT_PAGE_WIDTH-20)+"px") + 
+                                          addstyleattribute("width","90%") + 
                                           """ border: 0px solid #428bca; margin: 20px 2px 20px 20px;'""")
 checkbox_group_form_end     = new_line + """  </form>"""
 

@@ -87,6 +87,11 @@ def get_dfc_dataframe(title=None) :
     return(DCdf.get_dataframe(title))
 def get_dfc_dataframe_notes(title=None) :
     return(DCdf.get_dataframe_notes(title))
+def set_dfc_dataframe_notes(notes,title=None) :
+     DCdf.set_dataframe_notes(notes,title)
+def rename_dfc_dataframe(oldname,newname) :
+     DCdf.rename_dataframe(oldname,newname)
+    
 def drop_dfc_dataframe(title=None) :
     DCdf.drop_dataframe(title)
 
@@ -172,19 +177,27 @@ class DCDataframes :
     * ------------------------------------
     """        
     def add_dataframe(self,dfcdf) :
+        for i in range(len(self.dcdataframes)) :
+            if(self.dcdataframes[i].get_title() == dfcdf.get_title()) :
+                self.drop_dataframe(dfcdf.get_title())    
+        
         self.dcdataframes.append(dfcdf)
+        
     def drop_dataframe(self,title=None) :
         if(title == None) :
             if(self.current_df == None) :
                 return()
             else :
-                dfindex     =   self.get_df_index(self,self.current_df)
+                dfindex     =   self.get_df_index(self.current_df)
                 if(dfindex > -1) :
-                    del self.dcdataframes[dfindex]    
+                    del self.dcdataframes[dfindex]
+                    self.current_df == None
         else :
-            dfindex     =   self.get_df_index(self,title)
+            dfindex     =   self.get_df_index(title)
             if(dfindex > -1) :
-                del self.dcdataframes[dfindex]    
+                del self.dcdataframes[dfindex]
+                if(self.current_df == title) :
+                    self.current_df == None    
 
     """
     * ------------------------------------
@@ -219,6 +232,23 @@ class DCDataframes :
             else :
                 return(None)
     
+    def set_dataframe_notes(self,notes,title=None) :
+        if(title == None) :
+            dfindex     =   self.get_df_index(self.current_df)
+            if(dfindex > -1) :            
+                self.dcdataframes[dfindex].set_notes(notes)
+        else :
+            dfindex     =   self.get_df_index(title)
+            if(dfindex > -1) :            
+                self.dcdataframes[dfindex].set_notes(notes)
+
+    def rename_dataframe(self,oldName,newName) :
+        dfindex     =   self.get_df_index(oldName)
+        if(dfindex > -1) :            
+            self.dcdataframes[dfindex].set_title(newName)
+            
+            if(oldName == self.current_df) :
+                self.current_df     =   newName
 
                 
     def get_dataframe_titles(self) :
