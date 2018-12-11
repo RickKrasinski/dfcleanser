@@ -242,7 +242,6 @@ def display_system_main_taskbar() :
                                                                system_environment_jsList,
                                                                False))])
     
-    cfg.set_config_value(cfg.LAST_TASK_BAR_ID_KEY,sysm.DISPLAY_MAIN)
 
 def display_system_main_abbr_taskbar() :
     display_composite_form([get_button_tb_form(ButtonGroupForm(system_environment_abbr_doc_id,
@@ -250,8 +249,6 @@ def display_system_main_abbr_taskbar() :
                                                                system_environment_abbr_jsList,
                                                                False))])
     
-    cfg.set_config_value(cfg.LAST_TASK_BAR_ID_KEY,sysm.DISPLAY_ABBR_MAIN)
-
 def get_dcf_files_parms(parms) :
     from dfcleanser.common.common_utils import get_parms_for_input
     return(get_parms_for_input(parms,dfc_files_input_idList))

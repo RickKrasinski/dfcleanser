@@ -33,12 +33,7 @@ def isEULA_read() :
 
 def display_main_tb() :
 
-    lasttb = cfg.get_config_value(cfg.LAST_TASK_BAR_ID_KEY)
-    
-    if(lasttb == sysm.DISPLAY_ABBR_MAIN) :
-        sysw.display_system_main_abbr_taskbar()
-    else :
-        sysw.display_system_main_taskbar()
+    sysw.display_system_main_taskbar()
         
 def load_dfcleanser_from_toolbar() :
     from dfcleanser.system.load import load_dfcleanser_from_toolbar
@@ -134,12 +129,8 @@ def display_system_environment(funcId,parms=None) :
             cfg.set_config_value(cfg.UTILITIES_CBS_KEY,utilscbs)
             cfg.set_config_value(cfg.SCRIPTING_CBS_KEY,scriptcbs)
             
-            # check if need to load new chapters
-            lasttb = cfg.get_config_value(cfg.LAST_TASK_BAR_ID_KEY)
-    
-            if(not (lasttb == sysm.DISPLAY_ABBR_MAIN)) :
-                from dfcleanser.system.load import reload_dfcleanser
-                reload_dfcleanser()
+            from dfcleanser.system.load import reload_dfcleanser
+            reload_dfcleanser()
             
             clear_cell()
         
@@ -502,7 +493,7 @@ def clear_system_data() :
     
 def clear_system_cfg_values() :
     
-    cfg.drop_config_value(cfg.LAST_TASK_BAR_ID_KEY)    
+    cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
     return(True)
     
     
