@@ -291,6 +291,15 @@ def is_datatype_numeric(datatype) :
 #--------------------------------------------------------------------------
 """
 
+def get_num_input_ids(idList) :
+    
+    count = 0
+    for i in range(len(idList)) :
+        if(idList[i] != None) :
+            count = count + 1
+            
+    return(count)
+
 def getmaxlength(list) : 
     maxlen = 0;
     for i in range(len(list)) :
