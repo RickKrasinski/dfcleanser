@@ -260,8 +260,7 @@ def clear_sw_utility_dfconcatdata() :
 
 def clear_sw_utility_dfconcat_cfg_values() :
  
-    #drop_config_value(ADDR_CONV_COL_LIST_PARM)
-    return
+    cfg.drop_config_value(dfcw.df_fconcat_input_id+"Parms")
 
 
 

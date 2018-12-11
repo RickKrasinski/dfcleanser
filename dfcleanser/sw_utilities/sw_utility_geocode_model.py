@@ -36,6 +36,8 @@ YahooPlaceFinderId          =   12
 supported_Geocoders         =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,NominatimId]
 supported_Reverses          =   [ArcGISId,BingId,GoogleId,NominatimId]
 
+supported_Bulk_Geocoders    =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,NominatimId]
+supported_Bulk_Reverses     =   [GoogleId]
 
 MAX_GOOGLE_TASKS            =   10
 
@@ -50,11 +52,11 @@ GOOGLE_DELAY                =   0.2
 """
 DISPLAY_GEOCODING           =    0
 
-DISPLAY_GET_COORDS          =    1
-DISPLAY_GET_ADDRESS         =    2
+DISPLAY_GEOCODE_QUERY       =    1
+DISPLAY_GEOCODE_REVERSE     =    2
 
-PROCESS_GET_COORDS          =    3
-PROCESS_GET_ADDRESS         =    4
+PROCESS_GEOCODE_QUERY       =    3
+PROCESS_GEOCODE_REVERSE     =    4
 
 DISPLAY_GEOCODER            =    5
 PROCESS_GEOCODER            =    6
@@ -65,11 +67,11 @@ PROCESS_DISTANCE            =    8
 DISPLAY_DF_DISTANCE         =    9
 PROCESS_DF_DISTANCE         =    10
 
-DISPLAY_BULK_GET_COORDS     =    11
-DISPLAY_BULK_GET_ADDRESS    =    12
+DISPLAY_BULK_GEOCODE_QUERY    =    11
+DISPLAY_BULK_GEOCODE_REVERSE  =    12
 
-PROCESS_BULK_GET_COORDS     =    13
-PROCESS_BULK_GET_ADDRESS    =    14
+PROCESS_BULK_GEOCODE_QUERY    =    13
+PROCESS_BULK_GEOCODE_REVERSE  =    14
 
 """
 #--------------------------------------------------------------------------
@@ -89,6 +91,8 @@ CLEAR_GEOCODE_PARMS             =    21
 BULK_GEOCODE_RUN                =    22
 BULK_GEOCODE_PAUSE              =    23
 BULK_GEOCODE_STOP               =    24
+
+CHANGE_BULK_GEOCODER            =    25
 
 GEOCODE_QUERY               =   0
 GEOCODE_REVERSE             =   1

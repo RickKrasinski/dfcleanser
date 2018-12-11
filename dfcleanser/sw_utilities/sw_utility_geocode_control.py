@@ -34,16 +34,6 @@ from dfcleanser.common.common_utils import (get_parms_for_input, display_excepti
 """
 
             
-def get_num_input_ids(idList) :
-    
-    count = 0
-    for i in range(len(idList)) :
-        if(idList[i] != None) :
-            count = count + 1
-            
-    return(count)
-
-    
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -51,7 +41,21 @@ def get_num_input_ids(idList) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
+
 def display_geocode_utility(optionId,parms=None) :
+    """
+    * ---------------------------------------------------------
+    * function : main geocode process function
+    * 
+    * parms :
+    *  optionId  - geocoder option to process
+    *  parms     - option parms
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
 
     from IPython.display import clear_output
     clear_output()
@@ -67,50 +71,50 @@ def display_geocode_utility(optionId,parms=None) :
         
         clear_sw_utility_geocodedata()
         
-    elif(optionId == sugm.DISPLAY_GET_COORDS) :
-        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
+    elif(optionId == sugm.DISPLAY_GEOCODE_QUERY) :
+        sugw.display_geocode_inputs(parms,sugm.GEOCODE_QUERY)
 
-    elif(optionId == sugm.DISPLAY_GET_ADDRESS) :
-        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
+    elif(optionId == sugm.DISPLAY_GEOCODE_REVERSE) :
+        sugw.display_geocode_inputs(parms,sugm.GEOCODE_REVERSE)
     
     # get simple coordinates for an address        
-    elif(optionId == sugm.PROCESS_GET_COORDS) :
+    elif(optionId == sugm.PROCESS_GEOCODE_QUERY) :
         sugw.display_geocode_main_taskbar()        
         
         fid = parms[0]
         
         if(fid == 0) :
-            get_geocoder_coords(parms)
+            run_geocoder_query(parms)
         else :
             if(cfg.is_a_dfc_dataframe_loaded()) :
-                get_geocoder_df_coords(parms)
+                run_bulk_geocoder_query(parms)
             else :
-                sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
+                sugw.display_geocode_inputs(parms,sugm.GEOCODE_QUERY)
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     # get address for simple coords       
-    elif(optionId == sugm.PROCESS_GET_ADDRESS) :
+    elif(optionId == sugm.PROCESS_GEOCODE_REVERSE) :
         
         sugw.display_geocode_main_taskbar()        
         
         fid = parms[0]
         
         if(fid == 0) :
-            get_geocoder_address(parms)
+            run_geocoder_reverse(parms)
         else :
             if(cfg.is_a_dfc_dataframe_loaded()) :
-                get_df_geocoder_address(parms)
+                run_bulk_geocoder_reverse(parms)
             else :
-                sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
+                sugw.display_geocode_inputs(parms,sugm.GEOCODE_REVERSE)
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     # display bulk geocoding op;tions
-    elif( (optionId == sugm.DISPLAY_BULK_GET_COORDS) or (optionId == sugm.DISPLAY_BULK_GET_ADDRESS) ) :
+    elif( (optionId == sugm.DISPLAY_BULK_GEOCODE_QUERY) or (optionId == sugm.DISPLAY_BULK_GEOCODE_REVERSE) ) :
         subgw.display_bulk_geocoding(optionId) 
         
     # process bulk geocoding op;tions
-    elif( (optionId ==  sugm.PROCESS_BULK_GET_COORDS)  or (optionId ==  sugm.PROCESS_BULK_GET_ADDRESS) ):
-        print("PROCESS_BULK_GET_COORDS",optionId)
+    elif( (optionId ==  sugm.PROCESS_BULK_GEOCODE_QUERY)  or (optionId ==  sugm.PROCESS_BULK_GEOCODE_REVERSE) ):
+        print("PROCESS_BULK_GEOCODE_QUERY",optionId)
         subgc.process_bulk_geocoding(optionId,parms)            
     
     elif(optionId ==  sugm.DISPLAY_DISTANCE) :
@@ -138,10 +142,7 @@ def display_geocode_utility(optionId,parms=None) :
                 if(sugm.get_geocoder_title(sugm.supported_Geocoders[i]) == parms) :
                     geocid = sugm.supported_Geocoders[i]
                     
-        if(cfg.get_config_value(cfg.BULK_GEOCODE_MODE_KEY) == None) :
-            sugw.display_geocoders(geocid)
-        else :
-            sugw.display_geocoders(geocid,False,False)
+        sugw.display_geocoders(geocid,False,False)
     
     elif(optionId == sugm.PROCESS_GEOCODER) :
  
@@ -153,45 +154,46 @@ def display_geocode_utility(optionId,parms=None) :
             fid     =   parms[0]
             geocid  =   parms[1]
             
-            print("PROCESS_GEOCODER",fid,geocid)
-            if(fid < 3) :
-
-                if(geocid == sugm.ArcGISId) : 
-                    ids =   sugw.arcgis_geocoder_idList
-                elif(geocid == sugm.GoogleId) :
-                    ids =   sugw.google_geocoder_idList
-                    
-                inputs  =   get_parms_for_input(parms[2],ids)
-                if(len(inputs) > 0) :
-                    cfg.set_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)    
+        if(fid == 0)    :  
             
-        if(fid == 0)    :   test_geocoder(geocid,inputs)
+            if(geocid == sugm.ArcGISId)         :   ids =   sugw.arcgis_geocoder_idList
+            elif(geocid == sugm.BingId)         :   ids =   sugw.bing_geocoder_idList
+            elif(geocid == sugm.GoogleId)       :   ids =   sugw.google_geocoder_idList
+            elif(geocid == sugm.OpenMapQuestId) :   ids =   sugw.mapquest_geocoder_idList
+            elif(geocid == sugm.NominatimId)    :   ids =   sugw.nomin_geocoder_idList
+                    
+            inputs  =   get_parms_for_input(parms[2],ids)
+                
+            print("PROCESS_GEOCODER TEST",inputs)
+            if(len(inputs) > 0) :
+                cfg.set_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)    
+
+            test_geocoder(geocid,inputs)
+        
         elif(fid == 1)  :   
-            sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
+            sugw.display_geocode_inputs(parms,sugm.GEOCODE_QUERY)
+            
         elif(fid == 2)  : 
             print("fid",fid)
-            subgc.display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS) 
+            subgw.display_bulk_geocoding(sugm.DISPLAY_BULK_GEOCODE_QUERY)
+            
         elif(fid == 3)  :
             cfg.drop_config_value(sugw.get_form_id(geocid,sugm.GEOCODER) + "Parms")
-            if(cfg.get_config_value(cfg.BULK_GEOCODE_MODE_KEY) == None) :
-                sugw.display_geocoders(geocid)
-            else :
-                sugw.display_geocoders(geocid,False,False)
+            
+            sugw.display_geocoders(geocid,False,False)
 
     
     # show full parameters for geocoding parms in a grid
     elif(optionId == sugm.DISPLAY_FULL_GEOCODING) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
-        if(cfg.get_config_value(cfg.BULK_GEOCODE_MODE_KEY) == None) :
-            sugw.display_geocoders(geocid,True)
-        else :
-            sugw.display_geocoders(geocid,True,False)
+        
+        sugw.display_geocoders(geocid,True,False)
         
     elif(optionId == sugm.DISPLAY_FULL_QUERY) :
-        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS,True)
+        sugw.display_geocode_inputs(None,sugm.GEOCODE_QUERY,True)
 
     elif(optionId == sugm.DISPLAY_FULL_REVERSE) :
-        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS,True)
+        sugw.display_geocode_inputs(None,sugm.GEOCODE_REVERSE,True)
 
     elif(optionId == sugm.DISPLAY_FULL_BULK_GOOGLE_QUERY) :
         subgc.display_bulk_geocode_inputs(sugm.GoogleId,sugm.GEOCODE_QUERY,sugm.COLNAMES_TABLE,True)
@@ -212,11 +214,11 @@ def display_geocode_utility(optionId,parms=None) :
         
         if(gtype == sugm.GEOCODE_QUERY) :
             cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
-            sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS)
+            sugw.display_geocode_inputs(None,sugm.GEOCODE_QUERY)
 
         else :
             cfg.drop_config_value(sugw.get_form_id(geocid,gtype) + "Parms")
-            sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS)
+            sugw.display_geocode_inputs(None,sugm.GEOCODE_REVERSE)
         
     elif(optionId == sugm.BULK_GEOCODE_RUN) :
         print("BULK_GEOCODE_RUN")
@@ -247,7 +249,30 @@ def display_geocode_utility(optionId,parms=None) :
         parms.append(sugm.GEOCODE_QUERY)
         parms.append(None)
         subgc.process_bulk_geocoding(optionId,parms)
+
+    elif(optionId == sugm.CHANGE_BULK_GEOCODER) :
         
+        geocid = None
+        
+        if(parms != None) :
+            for i in range(len(sugm.supported_Geocoders)) :
+                if(sugm.get_geocoder_title(sugm.supported_Geocoders[i]) == parms) :
+                    geocid = sugm.supported_Geocoders[i]
+                    
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
+        
+        optype = cfg.get_config_value(cfg.BULK_GEOCODE_MODE_KEY)
+        if(optype == None) :
+            optype = sugm.DISPLAY_BULK_GEOCODE_QUERY
+        else :
+            if(optype == sugm.GEOCODE_QUERY) :
+                optype = sugm.DISPLAY_BULK_GEOCODE_QUERY
+            else :
+                optype = sugm.DISPLAY_BULK_GEOCODE_REVERSE 
+                
+        subgw.display_bulk_geocoding(optype)
+                   
+         
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -263,6 +288,18 @@ def display_geocode_utility(optionId,parms=None) :
 #--------------------------------------------------------------------------
 """
 def get_geocoder_engine(geocid,opstat) :
+    """
+    * ---------------------------------------------------------
+    * function : get a geocoder engine
+    * 
+    * parms :
+    *  geocid    - geocoder id
+    *  opstat    - operation status object
+    *
+    * returns : 
+    *  geocoder engine 
+    * --------------------------------------------------------
+    """
 
     geolocator  =   None
     
@@ -340,16 +377,39 @@ def get_geocoder_engine(geocid,opstat) :
 #--------------------------------------------------------------------------
 """
 
-"""
-#--------------------------------------------------------------------------
-#  test the geocoder connection and get sample
-#--------------------------------------------------------------------------
-"""
-def test_geocoder(geocid,gcparms) :
 
+def test_geocoder(geocid,gcparms) :
+    """
+    * ---------------------------------------------------------
+    * function : test the geocoder connection and run sample
+    * 
+    * parms :
+    *  geocid    - geocoder id
+    *  gcparms   - geocoder parms
+    *
+    * returns : 
+    *  N?A 
+    * --------------------------------------------------------
+    """
+
+    print("test_geocoder",geocid,gcparms)
+    
     opstat      =   opStatus()
     
-    sugw.validate_cmd_parms(sugm.GEOCODERPARMS,geocid,gcparms,opstat) 
+    if(geocid == sugm.ArcGISId)              :  
+        form    =   sugw.arcgis_geocoder_id
+    elif(geocid == sugm.BingId)              :  
+        form    =   sugw.bing_geocoder_id
+    elif(geocid == sugm.GoogleId)            :  
+        form    =   sugw.google_geocoder_id
+    elif(geocid == sugm.OpenMapQuestId)      :  
+        form    =   sugw.mapquest_geocoder_id
+    elif(geocid == sugm.NominatimId)         :  
+        form    =   sugw.nomin_geocoder_id
+        
+    cfg.set_config_value(form+"Parms",gcparms)
+
+    opstat  =   sugw.validate_geocode_connect_parms(geocid) 
     
     if( not (opstat.get_status()) ) :
 
@@ -398,12 +458,18 @@ def test_geocoder(geocid,gcparms) :
 
 
 
-"""
-#--------------------------------------------------------------------------
-#  get geocoder address
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_coords(inparms) :
+def run_geocoder_query(inparms) :
+    """
+    * ---------------------------------------------------------
+    * function : run a geocoder query operation
+    * 
+    * parms :
+    *  inparms   - geocoder query parms
+    *
+    * returns : 
+    *  N?A 
+    * --------------------------------------------------------
+    """
     
     geocid  =   inparms[1]
     parms   =   inparms[2]
@@ -416,7 +482,7 @@ def get_geocoder_coords(inparms) :
     
     if(not opstat.get_status()) :
         
-        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,None,sugm.QUERYPARMS)
+        sugw.display_geocode_inputs(None,sugm.GEOCODE_QUERY)
         
         if(opstat.get_errorMsg() != "No Parms") :
             display_exception(opstat)
@@ -495,7 +561,7 @@ def get_geocoder_coords(inparms) :
             
         clock.stop()
         
-        sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,inparms,sugm.QUERYPARMS) 
+        sugw.display_geocode_inputs(inparms,sugm.GEOCODE_QUERY) 
         
         if(opstat.get_status()) :
             
@@ -529,12 +595,20 @@ def get_geocoder_coords(inparms) :
         else :
             display_exception(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#  get df coords parms
-#--------------------------------------------------------------------------
-"""
-def get_df_coords_parms(geocid,parms) :
+
+def get_bulk_query_parms(geocid,parms) :
+    """
+    * ---------------------------------------------------------
+    * function : get the bulk query parms 
+    * 
+    * parms :
+    *  geocid   - geocoder id
+    *  parms    - geocoder input parms
+    *
+    * returns : 
+    *  bulk query parms 
+    * --------------------------------------------------------
+    """
         
     dfform  =   sugw.get_comp_addr_conv_form(geocid) 
     fparms  =   get_parms_for_input(parms,dfform[1])
@@ -558,12 +632,19 @@ def get_df_coords_parms(geocid,parms) :
     
     return(fparms)
 
-"""
-#--------------------------------------------------------------------------
-#  get geocoder address for dataframe 
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_df_coords(inparms) :
+
+def run_bulk_geocoder_query(inparms) :
+    """
+    * ---------------------------------------------------------
+    * function : run the bulk geocode query 
+    * 
+    * parms :
+    *  inparms  - bulk geocoder query input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     return()
     
@@ -591,7 +672,7 @@ def get_geocoder_df_coords(inparms) :
             
             try :
                 
-                queryparms = get_df_coords_parms(geocid,parms)
+                queryparms = get_bulk_query_parms(geocid,parms)
                 
                 #print("get_geocoder_df_addresses",queryparms)
                 
@@ -770,12 +851,18 @@ def get_geocoder_df_coords(inparms) :
             display_exception(opstat)
 
 
-"""
-#--------------------------------------------------------------------------
-#  get geocoder address
-#--------------------------------------------------------------------------
-"""
-def get_geocoder_address(inparms) :
+def run_geocoder_reverse(inparms) :
+    """
+    * ---------------------------------------------------------
+    * function : run a geocode reverse 
+    * 
+    * parms :
+    *  inparms  - geocoder reverse input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     geocid  =   inparms[1]
     parms   =   inparms[2]
@@ -787,7 +874,7 @@ def get_geocoder_address(inparms) :
     sugw.validate_cmd_parms(sugm.REVERSEPARMS,geocid,parms,opstat)
     
     if(not opstat.get_status()) :
-        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,None,sugm.REVERSEPARMS)
+        sugw.display_geocode_inputs(None,sugm.GEOCODE_REVERSE)
         
         if(opstat.get_errorMsg() != "No Parms") :
             display_exception(opstat)
@@ -843,7 +930,7 @@ def get_geocoder_address(inparms) :
                     queryparms.pop("number_of_results")
                     queryparms.update({"exactly_one":False})
 
-                print("get_geocoder_address",queryparms)
+                print("run_geocoder_reverse",queryparms)
                 
                 for i in range(len(coords)) :
                     if(len(queryparms) > 0) :
@@ -852,17 +939,17 @@ def get_geocoder_address(inparms) :
                         location = geolocator.reverse(coords[i]) 
                     
                     locations.append(location)
-                print("get_geocoder_address",locations)        
+                print("run_geocoder_reverse",locations)        
             except Exception as e:
                 opstat.store_exception("Error getting geocoder coords",e)
             
         clock.stop()
 
-        sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,inparms,sugm.REVERSEPARMS) 
+        sugw.display_geocode_inputs(inparms,sugm.GEOCODE_REVERSE) 
         
         if(opstat.get_status()) :
             
-            print("get_geocoder_address",numresults)
+            print("run_geocoder_reverse",numresults)
             
             if(location == None) :
                 display_status("no address retrieved check coordinates")
@@ -891,14 +978,21 @@ def get_geocoder_address(inparms) :
         else :
             display_exception(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#  get geocoder address
-#--------------------------------------------------------------------------
-"""
-def get_df_geocoder_address(inparms) :
 
-    print("get_df_geocoder_address",inparms)
+def run_bulk_geocoder_reverse(inparms) :
+    """
+    * ---------------------------------------------------------
+    * function : run a bulk geocode reverse 
+    * 
+    * parms :
+    *  inparms  - geocoder reverse input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    print("run_bulk_geocoder_reverse",inparms)
     return() 
 
 

@@ -706,7 +706,7 @@ def get_bulk_coords(geocid,inputs,state=sugm.LOAD) :
             run_arcgis_bulk_geocode(runParms,opstat,state)
         
     else :
-        subgw.display_bulk_geocoding(sugm.DISPLAY_BULK_GET_COORDS)
+        subgw.display_bulk_geocoding(sugm.DISPLAY_BULK_GEOCODE_QUERY)
         display_exception(opstat)
        
     
@@ -828,10 +828,10 @@ def process_test_bulk_connector(parms) :
             
     if(fid == sugm.BATCH_RETURN)    :
         geotype = int(parms[1])
-        if(geotype == sugm.DISPLAY_GET_COORDS) :
-            sugw.display_geocode_inputs(sugm.GEOCODE_QUERY,parms,sugm.QUERYPARMS)
+        if(geotype == sugm.DISPLAY_GEOCODE_QUERY) :
+            sugw.display_geocode_inputs(parms,sugm.GEOCODE_QUERY)
         else :
-            sugw.display_geocode_inputs(sugm.GEOCODE_REVERSE,parms,sugm.REVERSEPARMS)
+            sugw.display_geocode_inputs(parms,sugm.GEOCODE_REVERSE)
 
 
 

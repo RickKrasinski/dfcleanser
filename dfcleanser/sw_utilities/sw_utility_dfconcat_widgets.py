@@ -100,7 +100,7 @@ df_concat_input_reqList                 =   [0,1,2,3,4]
 fconcat_help_url                         =   "https://pandas.pydata.org/pandas-docs/stable/generated/pandas.concat.html"
 
 df_fconcat_input_title                   =   "dataframe Concat Parameters"
-df_fconcat_input_id                      =   "fconcatinput"
+df_fconcat_input_id                      =   "dfconcatinput"
 df_fconcat_input_idList                  =   ["dflist",
                                              "caxis",
                                              "cjoin",
