@@ -175,6 +175,17 @@ function select_geocoder(gcid) {
     window.scroll_to('DCGeocodeUtility');
 }
 
+function select_bulk_geocoder(gcid) {
+    /**
+    * select geocoder display.
+    *
+    * Parameters:
+    *  gcid - geocoder id
+    */
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID,window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility","25, " + JSON.stringify(gcid)));
+    window.scroll_to('DCGeocodeUtility');
+}
+
 function process_geocoder_callback(fid, gcid) {
     /**
     * geocoder inputs processing.
