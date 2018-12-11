@@ -166,7 +166,7 @@ def process_import_form(formid, parms, display=True) :
                         diw.display_data_import_notes(s,parms[0])
                 else :
                     displayParms(parmstitle,parmslist,fparms,cfg.DataImport_ID)
-                    diw.display_data_import_notes(s,fparms[0])
+                    diw.display_data_import_notes(s,fparms[1])
                     
         else :
             display_exception(opstat)
