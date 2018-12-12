@@ -174,9 +174,6 @@ bulk_google_reverse_input_form            =   [bulk_google_reverse_input_id,
 #--------------------------------------------------------------------------
 """
 
-create_user_url = "https://www.arcgis.com/home/createaccount.html#"
-user = "RickKrasinski"
-pw = "Password2018"
 
 """
 #--------------------------------------------------------------------------
