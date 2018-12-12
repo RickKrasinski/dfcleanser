@@ -197,8 +197,6 @@ google_geocoder_form                =   [google_geocoder_id,
                                          google_geocoder_jsList,
                                          google_geocoder_reqList]
 
-google_API_Key    =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"
-
 
 """
 #--------------------------------------------------------------------------
@@ -256,9 +254,6 @@ bing_geocoder_form                  =   [bing_geocoder_id,
                                          bing_geocoder_placeholderList,
                                          bing_geocoder_jsList,
                                          bing_geocoder_reqList]
-
-bing_API_Key    =   "AhwVfAKfw8CF4K2cwNgfj61-jYzQll4N92sjC6d3Hz-9O4HdCB34MwGObvhoJwB4"
-
 
 
 """
@@ -325,8 +320,6 @@ mapquest_geocoder_form                  =   [mapquest_geocoder_id,
                                              mapquest_geocoder_reqList]
 
 
-Consumer_Key	= "o9GNTP0ut9TNSutr6oDBCk78YWbl4feJ"
-Consumer_Secret	= "X88Lt57EztVhijrs"
 
 """
 #--------------------------------------------------------------------------
