@@ -24,59 +24,70 @@ from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROL
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #    google bulk forms 
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#    google geocode bulk form 
 #--------------------------------------------------------------------------
 """
 bulk_google_query_input_title             =   "Google Bulk Geoocoding Parameters"
 bulk_google_query_input_id                =   "googlebulkquery"
-bulk_google_query_input_idList            =   ["bgqclientid",
+bulk_google_query_input_idList            =   ["bgqapikey",
+                                               "bgqclientid",
                                                "bgqclientsecret",
                                                "bgqaddress",
+                                               "bgqdropaddress",
                                                "bgqcolumnname",
+                                               "bgqsaveaddress",
                                                "bgqlanguage",
                                                "bgqregion",
                                                "bgqbulknumberlimit",
                                                "bgqbulkcheclpointsize",
                                                "bgqbulkfailurelimit",
-                                               "bgqdropaddress",
-                                               "bgqsaveaddress",
                                                None,None,None,None,None,None,None]
 
-bulk_google_query_input_labelList         =   ["google_maps_client_id",
+bulk_google_query_input_labelList         =   ["google_api_key",
+                                               "google_maps_client_id",
                                                "google_maps_client_secret",
                                                "dataframe_address_columns",
+                                               "drop_df_address_columns_flag",
                                                "new_dataframe_lat_long_column_name(s)",
+                                               "save_geocoder_full_address_column_name",
                                                "language",
                                                "region",
                                                "max_addresses_to_geocode",
                                                "checkpoint_size",
                                                "failure_limit",
-                                               "drop_df_address_columns_flag",
-                                               "save_geocoder_address_column_name",
                                                "Get</br> Bulk </br>Coords",
                                                "Get</br> Column </br>Names",
                                                "Get</br> Languages",
                                                "Get</br> Regions",
                                                "Clear","Return","Help"]
 
-bulk_google_query_input_typeList          =   ["text","text",maketextarea(4),"text","text",
+bulk_google_query_input_typeList          =   ["text","text","text",maketextarea(4),"text","text",
                                                "text","text","text","text","text","text",
                                                "button","button","button","button","button","button","button"]
 
-bulk_google_query_input_placeholderList   =  ["google_maps client id (premium) - google api key (standard)",
-                                              "google_maps client secret (premium)",
+bulk_google_query_input_placeholderList   =  ["google_maps api key",
+                                              "google_maps client id (premier)",
+                                              "google_maps client secret (premier)",
                                               "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
+                                              "drop address columns defined in dataframe_address_columns (default = False)",
                                               "colname stored as [lat,long] - [latcolname,longcolname] stored as two cols",
+                                              "retrieve full address from google and store in column name (default = None - don't retrieve and save)",
                                               "language (default - english)",
                                               "region (default - None)",
                                               "number of addresses to get coords for (default - len(dataframe))",
                                               "number of geocode results before checkpoint taken (default - 2000) ",
                                               "failure limit (default - 5%)",
-                                              "drop address fields used in composite address (default = False)",
-                                              "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
                                                None,None,None,None,None,None,None]
 
-bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,
+bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,None,None,
                                                "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_LANGUAGES)+","+str(sugm.GoogleId)+")",
@@ -85,7 +96,7 @@ bulk_google_query_input_jsList            =   [None,None,None,None,None,None,Non
                                                "process_bulk_query("+str(sugm.BULK_RETURN)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_HELP)+","+str(sugm.GoogleId)+")"]
 
-bulk_google_query_input_reqList           =   [0,1,2,3,4,5]
+bulk_google_query_input_reqList           =   [0,1,2,3,4,5,6]
 
 bulk_google_query_input_form              =   [bulk_google_query_input_id,
                                                bulk_google_query_input_idList,
@@ -95,60 +106,71 @@ bulk_google_query_input_form              =   [bulk_google_query_input_id,
                                                bulk_google_query_input_jsList,
                                                bulk_google_query_input_reqList]  
 
+result_typeParm     =   None
+location_typeParm   =   None
+languageParm        =   None
 
-
+"""
+#--------------------------------------------------------------------------
+#    google reverse bulk form 
+#--------------------------------------------------------------------------
+"""
 bulk_google_reverse_input_title           =   "Google Bulk Reverse Parameters"
 bulk_google_reverse_input_id              =   "googlebulkquery"
-bulk_google_reverse_input_idList          =   ["bgqclientid",
-                                               "bgqclientsecret",
-                                               "bgqaddress",
-                                               "bgqcolumnname",
-                                               "bgqlanguage",
-                                               "bgqregion",
-                                               "bgqbulknumberlimit",
-                                               "bgqbulkcheclpointsize",
-                                               "bgqbulkfailurelimit",
-                                               "bgqdropaddress",
-                                               "bgqsaveaddress",
+bulk_google_reverse_input_idList          =   ["bgrapikey",
+                                               "bgrclientid",
+                                               "bgrclientsecret",
+                                               "bgrcolumnname",
+                                               "bgrformattedaddress",
+                                               "bgraddresscomponents",
+                                               "bgraddresslength",
+                                               "bgrresulttype",
+                                               "bgrlocationtype",
+                                               "bgrlanguage",
+                                               "bgrbulknumberlimit",
+                                               "bgrbulkcheckpointsize",
+                                               "bgrbulkfailurelimit",
                                                None,None,None,None,None,None,None]
 
-bulk_google_reverse_input_labelList       =   ["google_maps_client_id",
+bulk_google_reverse_input_labelList       =   ["google_api_key",
+                                               "google_maps_client_id",
                                                "google_maps_client_secret",
-                                               "dataframe_address_columns",
-                                               "new_dataframe_lat_long_column_name(s)",
-                                               "language",
+                                               "dataframe_lat_long_column_name(s)",
+                                               "get_formatted_address_flag",
+                                               "get_address_components_list",
+                                               "address_components_type_flag",
                                                "result_type",
                                                "location_type",
-                                               "max coords",
+                                               "language",
+                                               "max lat_longs",
                                                "checkpoint_size",
                                                "failure_limit",
-                                               "drop_df_address_columns_flag",
-                                               "save_geocoder_address_column_name",
                                                "Get</br> Bulk </br>Coords",
                                                "Get</br> Column </br>Names",
                                                "Get</br> Languages",
                                                "Get</br> Regions",
                                                "Clear","Return","Help"]
 
-bulk_google_reverse_input_typeList        =   ["text","text",maketextarea(4),"text","text","text",
-                                               "text","text","text","text","text","text",
+bulk_google_reverse_input_typeList        =   ["text","text","text","text","text",maketextarea(6),
+                                               "text","text","text","text","text","text","text",
                                                "button","button","button","button","button","button","button"]
 
-bulk_google_reverse_input_placeholderList =  ["google_maps client id (premium) - google api key (standard)",
-                                              "google_maps client secret (premium)",
-                                              "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
-                                              "colname stored as [lat,long] - [latcolname,longcolname] stored as two cols",
-                                              "language (default - english)",
+bulk_google_reverse_input_placeholderList =  ["google_maps api key",
+                                              "google_maps client id (premier) ",
+                                              "google_maps client secret (premier)",
+                                              "lat long colname(s) - [latcolname,longcolname] read from two cols",
+                                              "get the google formatted address column name (default = Full_Address)",
+                                              "individual address components dict (default = None - don't retrieve any components)",
+                                              "address components short length (default = True) False = Long)",
                                               "A filter of one or more address types",
                                               "A filter of one or more location types",
-                                              "number of addresses to get coords for (default - len(dataframe))",
-                                              "number of geocode results before checkpoint taken (default - 2000) ",
+                                              "language (default - english)",
+                                              "number of lat_lngs to get addresses for (default - len(dataframe))",
+                                              "number of reverse results before checkpoint taken (default - 2000) ",
                                               "failure limit (default - 5%)",
-                                              "drop address fields used in composite address (default = False)",
-                                              "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
                                                None,None,None,None,None,None,None]
 
-bulk_google_reverse_input_jsList          =   [None,None,None,None,None,None,None,None,None,None,None,None,
+bulk_google_reverse_input_jsList          =   [None,None,None,None,None,None,None,None,None,None,None,None,None,
                                                "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.GoogleId)+")",
                                                "process_bulk_query("+str(sugm.BULK_GET_LANGUAGES)+","+str(sugm.GoogleId)+")",
@@ -174,6 +196,9 @@ bulk_google_reverse_input_form            =   [bulk_google_reverse_input_id,
 #--------------------------------------------------------------------------
 """
 
+create_user_url = "https://www.arcgis.com/home/createaccount.html#"
+user = "RickKrasinski"
+pw = "Password2018"
 
 """
 #--------------------------------------------------------------------------
@@ -185,6 +210,7 @@ batch_arcgis_query_id               =   "arcgisbatchquery"
 
 batch_arcgis_query_idList           =    ["bagusername",
                                           "bagpw",
+                                          "bagreferer",
                                           "baqaddress",
                                           "baqcolumnname",
                                           "baqsourcecountry",
@@ -201,6 +227,7 @@ batch_arcgis_query_idList           =    ["bagusername",
 
 batch_arcgis_query_labelList        =   ["arcgis_username",
                                          "arcgis_pw",
+                                         "referer",
                                          "dataframe_address_columns",
                                          "new_dataframe_lat_long_column_name(s)",
                                          "source_country",
@@ -220,12 +247,13 @@ batch_arcgis_query_labelList        =   ["arcgis_username",
                                          "Clear","Return","Help"]
 
 
-batch_arcgis_query_typeList         =   ["text","text",maketextarea(4),"text","text","text",
+batch_arcgis_query_typeList         =   ["text","text","text",maketextarea(4),"text","text","text",
                                          "text","text","text","text","text","text","text","text",
                                          "button","button","button","button","button","button","button"]
 
 batch_arcgis_query_placeholderList  =   ["arcgis username",
                                          "arcgis password",
+                                         "ArcGIS referer (default : my-application)",
                                          "select from 'Column Names' for aggregate address : constant value use '+ Buffalo'",
                                          "'colname' stored as [lat,long] - ['latcolname','longcolname'] stored as two cols",
                                          "source country (default - US)",
@@ -240,7 +268,7 @@ batch_arcgis_query_placeholderList  =   ["arcgis username",
                                          "A set of bounding box coords that limit the search area (default - None)",
                                          None,None,None,None,None,None,None]
 
-batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,None,None,None,None,None,None,None,
+batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,None,None,None,None,None,None,None,None,
                                          "process_bulk_query("+str(sugm.BULK_GET_COORDS)+","+str(sugm.ArcGISId)+")",
                                          "process_bulk_query("+str(sugm.BULK_GET_ADDRESS_COLS)+","+str(sugm.ArcGISId)+")",
                                          "process_bulk_query("+str(sugm.BULK_GET_COUNTRIES)+","+str(sugm.ArcGISId)+")",
@@ -749,15 +777,15 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.GEOCODERS_TABLE,sh
         geo_parms_html = get_geocoder_parms_table(geocid)
         
         if(geocid == sugm.GoogleId) :
-            form    =   bulk_google_query_input_form
-        elif(geocid == sugm.ArcGISId) :
-            form    =   batch_arcgis_query_form
-        elif(geocid == sugm.BingId) :
-            form    =   sugw.bing_query_form
-        elif(geocid == sugm.OpenMapQuestId) :
-            form    =   sugw.mapquest_query_form
-        elif(geocid == sugm.NominatimId) :
-            form    =   sugw.nomin_query_form
+            form    =   bulk_google_reverse_input_form
+#        elif(geocid == sugm.ArcGISId) :
+#            form    =   batch_arcgis_query_form
+#        elif(geocid == sugm.BingId) :
+#            form    =   sugw.bing_query_form
+#        elif(geocid == sugm.OpenMapQuestId) :
+#            form    =   sugw.mapquest_query_form
+#        elif(geocid == sugm.NominatimId) :
+#            form    =   sugw.nomin_query_form
     
     from dfcleanser.common.html_widgets import InputForm
     geofunc_input_form = InputForm(form[0],

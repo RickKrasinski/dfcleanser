@@ -47,14 +47,16 @@ geocode_utility_tb_doc_title            =   "Address Conversion Options"
 geocode_utility_tb_title                =   "Address Conversion"
 geocode_utility_tb_id                   =   "addrconverttb"
 
-geocode_utility_tb_keyTitleList         =   ["Simple</br>Geocoding",
+geocode_utility_tb_keyTitleList         =   ["Interactive</br>Geocoding",
                                              "Bulk</br>Geocoding",
+                                             "Bulk</br>Reverse</br>Geocoding",
                                              "Calculate</br>Distance",
                                              "Select</br>Geocoder",
                                              "Clear","Help"]
 
 geocode_utility_tb_jsList               =   ["process_geomain_callback(" + str(sugm.DISPLAY_GEOCODE_QUERY) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_BULK_GEOCODE_QUERY) + ")",
+                                             "process_geomain_callback(" + str(sugm.DISPLAY_BULK_GEOCODE_REVERSE) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_GEOCODER) + ")",
                                              "process_geomain_callback(0)",
@@ -197,6 +199,8 @@ google_geocoder_form                =   [google_geocoder_id,
                                          google_geocoder_jsList,
                                          google_geocoder_reqList]
 
+google_API_Key    =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"
+
 
 """
 #--------------------------------------------------------------------------
@@ -254,6 +258,9 @@ bing_geocoder_form                  =   [bing_geocoder_id,
                                          bing_geocoder_placeholderList,
                                          bing_geocoder_jsList,
                                          bing_geocoder_reqList]
+
+bing_API_Key    =   "AhwVfAKfw8CF4K2cwNgfj61-jYzQll4N92sjC6d3Hz-9O4HdCB34MwGObvhoJwB4"
+
 
 
 """
@@ -320,6 +327,8 @@ mapquest_geocoder_form                  =   [mapquest_geocoder_id,
                                              mapquest_geocoder_reqList]
 
 
+Consumer_Key	= "o9GNTP0ut9TNSutr6oDBCk78YWbl4feJ"
+Consumer_Secret	= "X88Lt57EztVhijrs"
 
 """
 #--------------------------------------------------------------------------
@@ -1775,7 +1784,7 @@ def display_geocode_inputs(parms,ptype,showfull=False) :
         inparms =   None
     else :
         geocid  =    parms[1]
-        inparms =    parms[2]
+        #inparms =    parms[2]
         
     opstat  =   validate_geocode_connect_parms(geocid)
     

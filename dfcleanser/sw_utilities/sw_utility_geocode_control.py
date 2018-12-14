@@ -57,6 +57,7 @@ def display_geocode_utility(optionId,parms=None) :
     * --------------------------------------------------------
     """
 
+    print("display_geocode_utility",optionId,parms)
     from IPython.display import clear_output
     clear_output()
 
@@ -109,7 +110,8 @@ def display_geocode_utility(optionId,parms=None) :
                 display_status("No Dataframe Loaded to get dataframe coords")
     
     # display bulk geocoding op;tions
-    elif( (optionId == sugm.DISPLAY_BULK_GEOCODE_QUERY) or (optionId == sugm.DISPLAY_BULK_GEOCODE_REVERSE) ) :
+    elif( (optionId == sugm.DISPLAY_BULK_GEOCODE_QUERY) or 
+          (optionId == sugm.DISPLAY_BULK_GEOCODE_REVERSE) ) :
         subgw.display_bulk_geocoding(optionId) 
         
     # process bulk geocoding op;tions

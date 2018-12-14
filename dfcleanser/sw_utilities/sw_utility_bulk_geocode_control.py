@@ -374,55 +374,164 @@ def run_google_bulk_geocode(runParms,opstat,state) :
 
 
 
-def get_google_geocode_results(address,runParms,opstat) :
+def get_google_geocode_results(address,geocodeParms) :
     """
     * -------------------------------------------------------------------------- 
     * function : get a single google goeocode result
     * 
     * parms :
     *  address          - address to geocode
-    *  runParms         - google geocode parms
-    *  opstat           - status variable
+    *  geocodeParms     - google geocode parms
     *
     * returns : 
     *    google geocode results
     * --------------------------------------------------------
     """
+    
+    #print("get_google_geocode_results",address,len(address))
+    opstat  =   opStatus()
     geocode_results =   None
     
-    client_id       =   runParms.get(subgw.bulk_google_query_input_labelList[0])
-    client_secret   =   runParms.get(subgw.bulk_google_query_input_labelList[1])
-    gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
-
-    # Geocoding an address
-    geocode_results =   gmaps.geocode(address)
+    #client_id       =   "dfcleanser"#runParms.get(subgw.bulk_google_query_input_labelList[0])
+    client_secret   =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"#runParms.get(subgw.bulk_google_query_input_labelList[1])
+    #gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
     
-    return(geocode_results)
+    try :
+        gmaps           =   googlemaps.Client(key=client_secret)
+        
+    except ValueError :
+        opstat.set_status(False)
+        opstat.set_errorMsg("CLIENT CREDENTIALS INVALID")
+    except NotImplementedError :
+        opstat.set_status(False)
+        opstat.set_errorMsg("NotImplementedError")
+
+    if(opstat.get_status()) :   
+        
+        compParm    =   None
+        boundsParm  =   None
+        if(not (geocodeParms == None)) :
+            regionParm      =   geocodeParms.get("region",None)
+            languageParm    =   geocodeParms.get("language",None)
+        else :
+            regionParm      =   None
+            languageParm    =   None
+        
+        try :
+            geocode_results =   gmaps.geocode(address,
+                                              components=compParm,
+                                              bounds=boundsParm,
+                                              region=regionParm,
+                                              language=languageParm)
+            
+            geocoder_results    =   google_geocode_results(geocode_results,opstat)
+        
+        except googlemaps.exceptions.ApiError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(ApiErrorMessage)
+        except googlemaps.exceptions.HTTPError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(HTTPErrorMessage)
+        except googlemaps.exceptions.Timeout :
+            opstat.set_status(False)
+            opstat.set_errorMsg(TimeoutErrorMessage)
+        except googlemaps.exceptions.TransportError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(TransportErrorMessage)
+        except googlemaps.exceptions._RetriableRequest :
+            opstat.set_status(False)
+            opstat.set_errorMsg(RetriableRequestErrorMessage)
+        except googlemaps.exceptions._OverQueryLimit :
+            opstat.set_status(False)
+            opstat.set_errorMsg(OverQueryLimitErrorMessage)
+        except  :
+            opstat.set_status(False)
+            opstat.set_errorMsg("UNKNOWN EXCEPTION")
+        
+    if(opstat.get_status()) :
+        return(geocoder_results)
+    else :
+        return(None)
 
 
-def get_google_reverse_results(lat_long,runParms,opstat) :
+def get_google_reverse_results(lat_long,reverseParms) :
     """
     * --------------------------------------------------------
     * function : get a single google reverse result
     * 
     * parms :
     *  lat_long         - [lat,long] to reverse
-    *  runParms         - google reverse parms
+    *  reverseParms     - google reverse parms
     *  opstat           - status variable
     *
     * returns : 
     *    google geocode results
     * --------------------------------------------------------
     """
+    opstat  =   opStatus()
     reverse_results =   None
     
-    client_id       =   runParms.get(subgw.bulk_google_query_input_labelList[0])
-    client_secret   =   runParms.get(subgw.bulk_google_query_input_labelList[1])
-    gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
+    #client_id       =   runParms.get(subgw.bulk_google_query_input_labelList[0])
+    #client_secret   =   runParms.get(subgw.bulk_google_query_input_labelList[1])
     
-    reverse_results =   gmaps.reverse_geocode((lat_long[0], lat_long[1]))
+    #client_id       =   "dfcleanser"#runParms.get(subgw.bulk_google_query_input_labelList[0])
+    client_secret   =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"#runParms.get(subgw.bulk_google_query_input_labelList[1])
+    #gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
     
-    return(reverse_results)
+    try :
+        gmaps           =   googlemaps.Client(key=client_secret)
+    
+    except ValueError :
+        opstat.set_status(False)
+        opstat.set_errorMsg("CLIENT CREDENTIALS INVALID")
+    except NotImplementedError :
+        opstat.set_status(False)
+        opstat.set_errorMsg("NotImplementedError")
+
+    if(opstat.get_status()) :   
+        
+        if(not (reverseParms == None)) :
+            result_typeParm     =   reverseParms.get("result_type",None)
+            location_typeParm   =   reverseParms.get("location_type",None)
+            languageParm        =   reverseParms.get("language",None)
+        else :
+            result_typeParm     =   None
+            location_typeParm   =   None
+            languageParm        =   None
+
+        try :
+        
+            reverse_results =   gmaps.reverse_geocode(lat_long,
+                                                      result_type=result_typeParm,
+                                                      location_type=location_typeParm,
+                                                      language=languageParm)
+   
+        except googlemaps.exceptions.ApiError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(ApiErrorMessage)
+        except googlemaps.exceptions.HTTPError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(HTTPErrorMessage)
+        except googlemaps.exceptions.Timeout :
+            opstat.set_status(False)
+            opstat.set_errorMsg(TimeoutErrorMessage)
+        except googlemaps.exceptions.TransportError :
+            opstat.set_status(False)
+            opstat.set_errorMsg(TransportErrorMessage)
+        except googlemaps.exceptions._RetriableRequest :
+            opstat.set_status(False)
+            opstat.set_errorMsg(RetriableRequestErrorMessage)
+        except googlemaps.exceptions._OverQueryLimit :
+            opstat.set_status(False)
+            opstat.set_errorMsg(OverQueryLimitErrorMessage)
+        except  :
+            opstat.set_status(False)
+            opstat.set_errorMsg("UNKNOWN EXCEPTION")
+    
+    if(opstat.get_status()) :
+        return(reverse_results)
+    else :
+        return(None)
 
 
 
@@ -480,6 +589,31 @@ def process_google_geocode_results(geotype,runparms,results,opstat) :
 
 """
 #----------------------------------------------------------------------------
+#-  Google geocode status codes
+#----------------------------------------------------------------------------
+"""
+OK_STATUS                               =   "OK"
+ZERO_RESULTS_STATUS                     =   "ZERO_RESULTS"
+OVER_DAILY_LIMIT_STATUS                 =   "OVER_DAILY_LIMIT"
+OVER_QUERY_LIMIT_STATUS                 =   "OVER_QUERY_LIMIT"
+REQUEST_DENIED_STATUS                   =   "REQUEST_DENIED"
+INVALID_REQUEST_STATUS                  =   "INVALID_REQUEST"
+UNKNOWN_ERROR_STATUS                    =   "UNKNOWN_ERROR"
+"""
+#----------------------------------------------------------------------------
+#-  Google maps geocode exceptions
+#----------------------------------------------------------------------------
+"""
+ApiErrorMessage                         =   "API ERROR"
+HTTPErrorMessage                        =   "HTTP ERROR"
+TimeoutErrorMessage                     =   "TIMEOUT ERROR"
+TransportErrorMessage                   =   "TRANSPORT ERROR"
+RetriableRequestErrorMessage            =   "RETRIABLE REQUEST ERROR"
+OverQueryLimitErrorMessage              =   "OVER QUERY LIMIT"
+
+
+"""
+#----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 #-  Google geocode results class
 #----------------------------------------------------------------------------
@@ -490,118 +624,159 @@ def process_google_geocode_results(geotype,runparms,results,opstat) :
 class google_geocode_results:
     
     results         =   None
-    status          =   None
+    opstat          =   None
     
-    def init_(self,geocode_response) :
-        self.results = geocode_response.get("results",None)
-        self.status  = geocode_response.get("status",None)
+    def __init__(self,geocode_results,opstat) :
+        self.results = geocode_results[0]
+        self.opstat  = opstat
 
-    def get_status(self) :
-        return(self.status)
-    
-    def get_error_message(self) :
-        return(self.results.get("error_message",None))
+    def get_lat(self) :
+        return(self.results.get("geometry").get("location").get("lat"))
+    def get_lng(self) :
+        return(self.results.get("geometry").get("location").get("lng"))
+    def get_formatted_address(self) :
+        return(self.results.get("formatted_address"))
+    def get_location_type(self) :
+        return(self.results.get("geometry").get("location_type"))
+    def get_place_id(self) :
+        return(self.results.get("place_id"))
+    def get_types(self) :
+        return(self.results.get("types"))
 
-    def get_lat_long(self) :
-        
-        lat_long    =   None
-        
-        geom        =   self.results.get("geometry",None)
-        if(not(geom==None)) :
-            loc         =   geom.get("location",None)
-            if(not(loc==None)) :
-                lat_long    =   [loc.get("lat"),loc.get("long",None)]
-        
-        # check values and return None if error
-        return(lat_long)
-        
-    def get_address(self) :
-        addr    = self.results.get("formatted_address",None)
-        
-        #check error codes
-        return(addr)
+    def get_results(self) :
+        return(self.results)
  
+    def get_status(self) :
+        return(self.opstat.get_status())
+    def get_error_message(self) :
+        return(self.opstat.get_errorMsg())
 
 
-
-       
 """
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 #-  Google reverse results class
 #----------------------------------------------------------------------------
-#   google geocode results received from google reverse call
+#   google reverse results received from google reverse call
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 """
 class google_reverse_results:
     
     results         =   None
-    status          =   None
+    opstat          =   None
     
-    def init_(self,reverse_response) :
-        self.results = reverse_response.get("results",None)
-        self.status  = reverse_response.get("status",None)
+    def __init__(self,reverse_results,opstat) :
+        self.results = reverse_results[0]
+        self.opstat  = opstat
 
+    def get_lat(self) :
+        return(self.results.get("geometry").get("location").get("lat"))
+    def get_lng(self) :
+        return(self.results.get("geometry").get("location").get("lng"))
+    def get_formatted_address(self) :
+        return(self.results.get("formatted_address"))
+    def get_location_type(self) :
+        return(self.results.get("geometry").get("location_type"))
+    def get_place_id(self) :
+        return(self.results.get("place_id"))
+    def get_types(self) :
+        return(self.results.get("types"))
+
+    def get_results(self) :
+        return(self.results)
+ 
     def get_status(self) :
-        return(self.status)
+        return(self.opstat.get_status())
+    def get_error_message(self) :
+        return(self.opstat.get_errorMsg())
 
-    def get_long_lat(self) :
-        
-        lat_long    =   None
-        
-        geom        =   self.results.get("geometry",None)
-        if(not(geom==None)) :
-            loc         =   geom.get("location",None)
-            if(not(loc==None)) :
-                lat_long    =   [loc.get("lat"),loc.get("long",None)]
-        
-        # check values and return None if error
-        return(lat_long)
-        
-    def get_address(self) :
-        addr    = self.results.get("formatted_address",None)
-        
-        #check error codes
-        return(addr)
-        
-    def get_address_fields(self) :
-        addr        =   self.results.get("address_components",None)
-        addrcomps   =   google_address_components(addr)
-        return(addrcomps) 
+
+
+
 
 """
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 #-  Google address components class
 #----------------------------------------------------------------------------
-#   google geocode results address received from google geocode call
+#   google geocode results address received from google geocode/reverse call
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 """
 
 """
-#   address field identifiers
+#----------------------------------------------------------------------------
+#-  Google geocode address component types
+#----------------------------------------------------------------------------
 """
-ADDRESS             =   0
-NEIGHBORHOOD        =   1
-CITY                =   2
-COUNTY              =   3
-STATE               =   4
-COUNTRY             =   5
-ZIPCODE             =   6
+GOOGLE_GEOCODER_STREET_NUMBER_ID        =   'street_number'
+GOOGLE_GEOCODER_ROUTE_ID                =   'route'
+GOOGLE_GEOCODER_NEIGHBORHOOD_ID         =   'neighborhood'
+GOOGLE_GEOCODER_LOCALITY_ID             =   'locality'
+GOOGLE_GEOCODER_SUBLOCALITY_ID          =   'sublocality'
+GOOGLE_GEOCODER_ADMIN_LEVEL_1_ID        =   'administrative_area_level_1'
+GOOGLE_GEOCODER_ADMIN_LEVEL_2_ID        =   'administrative_area_level_2'
+GOOGLE_GEOCODER_ADMIN_LEVEL_3_ID        =   'administrative_area_level_3'
+GOOGLE_GEOCODER_ADMIN_LEVEL_4_ID        =   'administrative_area_level_4'
+GOOGLE_GEOCODER_COUNTRY_ID              =   'country'
+GOOGLE_GEOCODER_POSTAL_CODE_ID          =   'postal_code'
 
 """
-#   google address field keys
+#----------------------------------------------------------------------------
+#   google address components common us field defs
+#----------------------------------------------------------------------------
 """
-ADDRESS_1_KEY       =   "street_number"
-ADDRESS_2_KEY       =   "route"
-NEIGHBORHOOD_KEY    =   "neighborhood"
-CITY_KEY            =   "sublocality"
-COUNTY_KEY          =   "administrative_area_level_2"
-STATE_KEY           =   "administrative_area_level_1"
-COUNTRY_KEY         =   "country"
-ZIPCODE_KEY         =   "postal_code"
+google_address_components_comments  =   {GOOGLE_GEOCODER_STREET_NUMBER_ID: "STREET NUMBER",
+                                         GOOGLE_GEOCODER_ROUTE_ID: "STREET",
+                                         GOOGLE_GEOCODER_NEIGHBORHOOD_ID: "NEIGHBORHOOD",
+                                         GOOGLE_GEOCODER_LOCALITY_ID: "LOCALITY",
+                                         GOOGLE_GEOCODER_SUBLOCALITY_ID: "CITY",
+                                         GOOGLE_GEOCODER_ADMIN_LEVEL_1_ID: "STATE",
+                                         GOOGLE_GEOCODER_ADMIN_LEVEL_2_ID: "COUNTY",
+                                         GOOGLE_GEOCODER_ADMIN_LEVEL_3_ID: "AREA 3",
+                                         GOOGLE_GEOCODER_ADMIN_LEVEL_4_ID: "AREA 4",
+                                         GOOGLE_GEOCODER_COUNTRY_ID: "COUNTRY",
+                                         GOOGLE_GEOCODER_POSTAL_CODE_ID: "ZIPCODE"}
+
+"""
+#----------------------------------------------------------------------------
+#   default address for googl;e address components
+#----------------------------------------------------------------------------
+"""
+default_address_format                  =  [GOOGLE_GEOCODER_STREET_NUMBER_ID,
+                                            GOOGLE_GEOCODER_ROUTE_ID,
+                                            GOOGLE_GEOCODER_NEIGHBORHOOD_ID,
+                                            GOOGLE_GEOCODER_LOCALITY_ID,
+                                            GOOGLE_GEOCODER_SUBLOCALITY_ID,
+                                            GOOGLE_GEOCODER_ADMIN_LEVEL_1_ID,
+                                            GOOGLE_GEOCODER_ADMIN_LEVEL_2_ID,
+                                            GOOGLE_GEOCODER_ADMIN_LEVEL_3_ID,
+                                            GOOGLE_GEOCODER_ADMIN_LEVEL_4_ID,
+                                            GOOGLE_GEOCODER_COUNTRY_ID,
+                                            GOOGLE_GEOCODER_POSTAL_CODE_ID]
+
+
+def get_address_from_components(addr_comps,addr_map,short=True) :
+    
+    out_address     =   ""
+    
+    if(addr_comps != None) :
+        if(len(addr_comps) > 0) :
+            for i in range(len(addr_map)) :
+                for j in range(len(addr_comps)) :
+                    ctypes  =   addr_comps[j].get("types",None)
+                    if(ctypes != None) :
+                        if(addr_map[i] in ctypes) :
+                            if(short) :
+                                out_address     =   out_address + addr_comps[j].get("short_name"," ") + " "
+                            else :
+                                out_address     =   out_address + addr_comps[j].get("long_name"," ") + " "    
+                            break
+    
+    return(out_address)                    
+                        
+
 
 
 """
@@ -611,49 +786,34 @@ ZIPCODE_KEY         =   "postal_code"
 """
 class google_address_components:
     
-    full_address_components  =   None
-    long_address_components  =   None
+    address_components  =   None
 
     def init_(self,addr_comps) :
         self.address_components = addr_comps
         
-        self.long_address_components = {}
-        
-        for i in len(self.full_address_components) :
-            self.long_address_components.update({self.full_address_components(i).get("types")[0] : self.full_address_components(i).get("long_name")})
 
-    def get_street_addr(self) :
+    def get_address_component(self,address_component_id,shortName=True) :
         
-        street_number   =   ""
-        street          =   ""
+        if(self.address_components != None) :
+            if(len(self.address_components) > 0) :
+                for i in range(len(self.address_components)) :
+                    ctypes  =   self.address_components[i].get("types",None)
+                    if(ctypes != None) :
+                        if(address_component_id in ctypes) :
+                            if(shortName) :
+                                return(self.address_components[i].get("short_name"," "))
+                            else :
+                                return(self.address_components[i].get("long_name"," "))  
         
-        if(not(self.long_address_components.get(ADDRESS_1_KEY) == None)) :
-            street_number = self.long_address_components.get(ADDRESS_1_KEY)
-        if(not(self.long_address_components.get(ADDRESS_2_KEY) == None)) :
-            street = self.long_address_components.get(ADDRESS_2_KEY)
+    def get_full_address_from_components(self,addr_format,shortName=True) :
         
-        if( (len(street_number)>0) or (len(street)>0) ) :
-            return(street_number + " " + street) 
-        else :
-            return(None)
+        out_address     =   ""
         
-    def get_neighborhood(self) :
-        return(self.long_address_components.get(NEIGHBORHOOD_KEY,None))
-
-    def get_city(self) :
-        return(self.long_address_components.get(CITY_KEY,None))
-        
-    def get_county(self) :
-        return(self.long_address_components.get(COUNTY_KEY,None))
-        
-    def get_state(self) :
-        return(self.long_address_components.get(STATE_KEY,None))
-
-    def get_country(self) :
-        return(self.long_address_components.get(COUNTRY_KEY,None))
-        
-    def get_zip_code(self) :
-        return(self.long_address_components.get(ZIPCODE_KEY,None))
+        if(addr_format != None) :
+            if(len(addr_format) > 0) :
+                for i in range(len(addr_format)) :
+                    out_address     =   out_address + self.get_address_component(addr_format[i],shortName)
+                    
         
 
 
