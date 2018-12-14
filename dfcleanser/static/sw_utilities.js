@@ -110,6 +110,7 @@ function process_geomain_callback(fid) {
         case 5:
         case 7:
         case 11:
+        case 12:
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB,"display_geocode_utility",fid));
             window.scroll_to('DCGeocodeUtility');
             break;
