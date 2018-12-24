@@ -482,13 +482,19 @@ def getbuttonsizing(buttonGroup) :
         if(buttonGroup.get_short()) :
             width = width - 15
     else :
-        width = math.floor(buttonGroup.get_gridwidth() / len(buttonGroup.get_keyList())) - 2
+        if(buttonGroup.get_custombwidth() == 0) :
+            width = math.floor(buttonGroup.get_gridwidth() / len(buttonGroup.get_keyList())) - 2
+        else :
+            width = buttonGroup.get_custombwidth()
     
     if((width > MAX_BUTTON_WIDTH) and (buttonGroup.get_centered() == True)):
         width = MAX_BUTTON_WIDTH
     
     if(len(buttonGroup.get_keyList()) == 1) :
         width = SINGLE_BUTTON_WIDTH
+    
+    if(not(buttonGroup.get_gridwidth() == 0)) :
+        width = width-2
     
     # calculate the left margin of the buttons
     margin = 0
@@ -583,7 +589,8 @@ class ButtonGroupForm :
                  short          =   False,
                  inform         =   False,
                  custom         =   None,
-                 gridwidth      =   0) :
+                 gridwidth      =   0,
+                 custombwidth   =   0) :
         
         # instance variables
 
@@ -598,7 +605,7 @@ class ButtonGroupForm :
         self.inform         =   inform
         self.custom         =   custom
         self.gridwidth      =   gridwidth
-
+        self.custombwidth   =   custombwidth
 
     def get_formid(self) :
         return(self.formid)
@@ -632,6 +639,10 @@ class ButtonGroupForm :
         return(self.gridwidth)
     def set_gridwidth(self,setParm) :
         self.gridwidth = setParm
+    def get_custombwidth(self) :
+        return(self.custombwidth)
+    def set_custombwidth(self,setParm) :
+        self.custombwidth = setParm
 
     def get_html(self) :
         
@@ -676,7 +687,7 @@ class ButtonGroupForm :
         print("inform          [5] : ",self.get_inform())
         print("custom          [6] : ",self.get_custom())
         print("gridwidth       [7] : ",self.get_gridwidth())
-
+        print("custombwidth    [8] : ",self.get_custombwidth())
 
 
 
@@ -734,8 +745,6 @@ input_group_form_textarea1_end = "</textarea>"
 input_group_form_button_start = (new_line + """    <button type='button' class='btn btn-primary' onclick='""")
 input_group_form_button_end = """</button>"""
 
-
-
 input_group_fullparms_start = """
         <div class="panel-heading dc-table-panel-heading">
 """
@@ -746,6 +755,15 @@ input_group_fullparms_middle1 = """ OnClick="getfullparms("""
 input_group_fullparms_end = """)">Show All Parameters</button>
         </div>
 """
+
+input_group_select_start = (new_line + tabs(2) + """    <select """)
+input_group_select_middle = """  style="margin-left:1px" class="form-control">
+"""
+input_group_select_end = (tabs(2) + """    </select>""")
+
+
+
+
 
 """
 * -----------------------------------------------------------------------*
@@ -860,7 +878,9 @@ class InputForm :
                  shortForm          =   False,
                  custom             =   None,
                  fullparms          =   False,
-                 gridwidth          =   0) :
+                 gridwidth          =   0,
+                 custombwidth       =   0,
+                 selectDict         =   {}) :
         
         # instance variables
 
@@ -878,6 +898,9 @@ class InputForm :
         self.custom             =   custom
         self.fullparms          =   fullparms
         self.gridwidth          =   gridwidth
+        self.custombwidth       =   custombwidth
+        self.selectDict         =   selectDict
+
 
     def get_formid(self) :
         return(self.formid)
@@ -927,7 +950,43 @@ class InputForm :
         return(self.gridwidth)
     def set_gridwidth(self,setParm) :
         self.gridwidth = setParm
-
+    def get_custombwidth(self) :
+        return(self.custombwidth)
+    def set_custombwidth(self,setParm) :
+        self.custombwidth = setParm
+        
+    def get_select_default(self,idkey) :
+        seldict     =   self.selectDict.get(idkey,None) 
+        if(not (seldict == None)) :
+            return(seldict.get("default",None))
+        else :
+            return(None)
+            
+    def get_select_list(self,idkey) :
+        seldict     =   self.selectDict.get(idkey,None) 
+        if(not (seldict == None)) :
+            return(seldict.get("list",None))
+        else :
+            return(None)
+       
+    def add_select_dict(self,idkey,seldict) :
+        self.selectDict.update({idkey:seldict})
+        
+    def get_select_html(self,idkey) :
+        
+        selhtml     =   ""
+        
+        options =   self.get_select_list(idkey)
+        for i in range(len(options)) :
+            selhtml     =   (selhtml + tabs(3) + "    <option style='text-align:left margin-left:2px'")
+            if(options[i] == self.get_select_default(idkey)) :
+                selhtml     =   (selhtml + "selected")
+            selhtml     =   (selhtml + ">" + options[i] + "</option>")
+            if(i < len(options)) :
+                selhtml     =   (selhtml + new_line)    
+        
+        return(selhtml)
+        
     def get_html(self) :
         
         if(debugFlag) : 
@@ -1126,6 +1185,36 @@ class InputForm :
                     # end the div for each input line
                     input_group_form_html = (input_group_form_html + input_group_form_div_end)
             
+                elif(self.get_typeList()[i] == "select") :
+                    
+                    # add the label for the select
+                    input_group_form_html = (input_group_form_html + input_group_form_div_start)
+                     
+                    if( not self.get_shortForm()) :
+                        input_group_form_html = (input_group_form_html + input_group_form_label_start)
+                    else :
+                        input_group_form_html = (input_group_form_html + input_group_form_small_label_start)
+                    
+                    input_group_form_html = (input_group_form_html + 
+                                             addattribute("for",self.get_idList()[i]))
+
+                    input_group_form_html = (input_group_form_html + ">")
+                    input_group_form_html = (input_group_form_html + self.get_labelList()[i])
+                
+                    if( not self.get_shortForm()) :
+                        input_group_form_html = (input_group_form_html + input_group_form_label_end)
+                    else :
+                        input_group_form_html = (input_group_form_html + input_group_form_small_label_end)
+
+                    input_group_form_html = (input_group_form_html + input_group_select_start)
+                    input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i])) 
+                    input_group_form_html = (input_group_form_html + input_group_select_middle)
+                    
+                    input_group_form_html = (input_group_form_html + self.get_select_html(self.get_idList()[i]))
+
+                    input_group_form_html = (input_group_form_html + input_group_select_end)
+                    input_group_form_html = (input_group_form_html + input_group_form_div_end)
+                    
                 else :
             
                     if( (self.get_typeList()[i] == "button") and (not noKeys) ): 
@@ -1149,7 +1238,8 @@ class InputForm :
                                                                                  self.get_shortForm(),
                                                                                  True,
                                                                                  None,
-                                                                                 self.get_gridwidth()).get_html())
+                                                                                 self.get_gridwidth(),
+                                                                                 self.get_custombwidth()).get_html())
                                      
             else :
                 input_group_form_html = (input_group_form_html + ButtonGroupForm(self.get_formid()+"tb",
@@ -1159,7 +1249,8 @@ class InputForm :
                                                                                  self.get_shortForm(),
                                                                                  True,
                                                                                  self.get_custom().get("customkeys"),
-                                                                                 self.get_gridwidth()).get_html())
+                                                                                 self.get_gridwidth(),
+                                                                                 self.get_custombwidth()).get_html())
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
@@ -1181,7 +1272,15 @@ class InputForm :
         print("custom          [8] : ",self.get_custom())
         print("fullparms       [9] : ",self.get_fullparms())
         print("gridwidth       [10]: ",self.get_gridwidth())
-
+        print("custombwidth    [11]: ",self.get_custombwidth())
+        
+        if(len(self.selectDict) > 0) :
+            print("select lists    [11]: ",self.get_custombwidth())
+            ids     =   list(self.selectDict.keys())
+            for i in range(len(ids)) :
+                print("   Id : ",ids[i],"\n")
+                print("     defaullt : ",self.get_select_default(ids[i]))
+                print("     list     : ",self.get_select_list(ids[i]))
 
 
 """

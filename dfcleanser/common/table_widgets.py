@@ -264,7 +264,7 @@ table_body_start = """
 """
 table_body_end = """                </tbody>"""
 
-table_body_row_start = """                    <tr class="dc-table-row">
+table_body_row_start = """                    <tr class="dc-table-row" >
 """
 table_body_row_end = """
                     </tr>
@@ -1323,7 +1323,7 @@ def get_table_container_start(table,tableDisplay=True) :
     tableHTML = ""
 
     if(table.get_small()) :
-        tableHTML = (tableHTML + new_line + '<div class="container" ')
+        tableHTML = (tableHTML + new_line + '<div class="container dc-table-container" ')
         tableHTML = (tableHTML + addattribute("id",table.get_tableid() + "Container"))
         tableHTML = (tableHTML + ' style="width:' + str(table.get_smallwidth()) + '%;' + 
                                  ' margin-left:' + str(table.get_smallmargin()) + 'px;">' + new_line)
@@ -1807,7 +1807,7 @@ schema_col_button_end = """
 """ 
 schema_col_button_chdt_start = """
                                             <button type="button" class="btn btn-grp dc-schema-button" style='font-size: 12px; height: 30px; color:white; background-color: #67a1f3;'"""
-schema_col_button_chdt_end = """ >Change Datatype</button>"""
+schema_col_button_chdt_end = """ >Change Schema</button>"""
 
 num_dtypes      =   19
 

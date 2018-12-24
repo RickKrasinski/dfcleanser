@@ -162,9 +162,9 @@ class RunningClock:
     def stop(self):
         self.busy = False
         delete_clock = "$('#clockcontainer').remove();"
-        run_javascript(delete_clock)
         time.sleep(self.delay)
         self.stoptime = time.time()
+        run_javascript(delete_clock)
 
     def get_elapsed_time(self) :
         return(get_formatted_time(self.stoptime - self.starttime))
@@ -467,7 +467,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
         width = ((maxllabels + maxlvalues) + 6) * fontsize
         from dfcleanser.common.html_widgets import DEFAULT_PAGE_WIDTH
         
-        width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100))
+        width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100)) + 20
         parms_table.set_smallwidth(width+6)
 
     parms_table.set_smallmargin(23)
@@ -1617,7 +1617,7 @@ def display_exception(opstat,display=True) :
     
     #print("\n")
     exception_html = ""
-    exception_html = (exception_html + '<div class="container" style="border: 0px solid #428bca; width:82%; margin-left:100px;">' + new_line)
+    exception_html = (exception_html + '<div class="container" style="border: 0px solid #428bca; width:82%; margin-left:20px;">' + new_line)
     exception_html = (exception_html + '    <div class="row">' + new_line)
     exception_html = (exception_html + '        <div class="panel panel-primary" style="border: 0px">' + new_line)
     exception_html = (exception_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
@@ -2214,7 +2214,15 @@ def does_dir_exist(path) :
         else :
             return(False)
     
-
+def make_dir(path) :
+    
+    try :
+        os.mkdir(path)
+        return()
+    
+    except FileExistsError:
+        return()
+        
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
