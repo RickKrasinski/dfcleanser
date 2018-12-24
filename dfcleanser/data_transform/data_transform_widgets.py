@@ -22,7 +22,7 @@ from dfcleanser.common.html_widgets import (display_composite_form, get_button_t
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, get_table_value,
                                              SCROLL_NEXT, ROW_MAJOR, SCROLL_PREVIOUS, COLUMN_MAJOR)
 
-from dfcleanser.common.common_utils import (get_datatype_str, display_grid,
+from dfcleanser.common.common_utils import (get_datatype_str, display_grid,RunningClock,
                                             is_datetime_column, is_date_column, is_time_column, 
                                             get_datatype_id, is_numeric_col)
 
@@ -762,11 +762,26 @@ def display_col_data(df,colname) :
 #------------------------------------------------------------------
 """
 def get_df_schema_table(df,table) : 
+   
     
-    df_cols     =   df.columns.tolist()
-    df_dtypes   =   df.dtypes.tolist()
-    df_nans     =   df.isnull().sum() 
+    schema_parms    =   cfg.get_config_value(cfg.DATA_TRANSFORM_SCHEMA_KEY) 
     
+    if( (schema_parms == None) or 
+        (not (schema_parms.get("df_title",None) == cfg.get_current_dfc_dataframe_title())) ):
+        
+        df_cols     =   df.columns.tolist()
+        df_dtypes   =   df.dtypes.tolist()
+        df_nans     =   df.isnull().sum()
+        df_title    =   cfg.get_current_dfc_dataframe_title()
+        
+        schema_dict =   {"df_title":df_title, "df_cols":df_cols, "df_dtypes":df_dtypes, "df_nans":df_nans}
+        cfg.set_config_value(cfg.DATA_TRANSFORM_SCHEMA_KEY,schema_dict)
+        
+    else :
+        df_cols     =   schema_parms.get("df_cols",None)
+        df_dtypes   =   schema_parms.get("df_dtypes",None)
+        df_nans     =   schema_parms.get("df_nans",None)
+            
     colstart = table.get_lastcoldisplayed() + 1
     
     dfHeaderList    =   []
@@ -829,9 +844,14 @@ def display_df_schema(df,table,direction=SCROLL_NEXT,display=True) :
                 table.set_lastcoldisplayed(table.get_lastcoldisplayed()-(2*table.get_colsperrow()))
                 if(table.get_lastcoldisplayed() < 0) :
                     table.set_lastcoldisplayed(-1)
-            
+    
+    clock = RunningClock()
+    clock.start()
+        
     get_df_schema_table(df,table)
     table.display_table() 
+    
+    clock.stop()
     
     if( table.get_lastcoldisplayed() >= table.get_maxcolumns() ) :
         table.set_lastcoldisplayed(-1)
