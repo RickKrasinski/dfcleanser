@@ -88,36 +88,39 @@ pandas_export_task_bar_centered      =   False
 """
 pandas_export_csv_title         =   "Pandas CSV Export Parameters"
 pandas_export_csv_id            =   "exportPandasCSV"
-pandas_export_csv_idList        =   ["ecsvpath",
+pandas_export_csv_idList        =   ["ecsvdataframe",
+                                     "ecsvpath",
                                      "ecsvnarep",
                                      "ecsvcolheader","ecsvindex",
                                      "ecsvaddlParms",
                                      None,None,None,None]
 
-pandas_export_csv_labelList     =   ["path_or_buf",
+pandas_export_csv_labelList     =   ["dataframe_to_export",
+                                     "path_or_buf",
                                      "na_rep",
                                      "header","index",
                                      "Additional Parm(s)",
                                      "Export CSV File","Clear","Return","Help"]
 
-pandas_export_csv_typeList      =   ["file","text","text",
+pandas_export_csv_typeList      =   ["select","file","text","text",
                                      "text",maketextarea(6),
                                      "button","button","button","button"]
 
-pandas_export_csv_placeholderList = ["enter CSV File name or browse to file below",
+pandas_export_csv_placeholderList = ["select dataframe to export",
+                                     "enter CSV File name or browse to file below",
                                      "enter value to use to fill nans",
                                      "write out column names row to file (default True)",
                                      "write row ids (default True - Infer)",
                                      "enter additional parms { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
-pandas_export_csv_jsList        =   [None,None,None,None,None,
+pandas_export_csv_jsList        =   [None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.CSV_EXPORT)+")",
                                      "pandas_details_export_clear_export_callback("+str(dem.CSV_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
                                      "display_help_url('"+str(dfchelp.CSV_EXPORT_URL)+"')"]
 
-pandas_export_csv_reqList       =   [0]
+pandas_export_csv_reqList       =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -128,23 +131,31 @@ pandas_export_csv_reqList       =   [0]
 pandas_export_excel_title       =   "Pandas Excel Export Parameters"
 pandas_export_excel_id          =   "exportPandasExcel"
 
-pandas_export_excel_idList      =   ["excelwriter","excelSheetName",
-                                     "excelna_rep","excelheader",
+pandas_export_excel_idList      =   ["exceldataframe",
+                                     "excelwriter",
+                                     "excelSheetName",
+                                     "excelna_rep",
+                                     "excelheader",
                                      "excelindex",
                                      "eexceladdlParms",
                                      None,None,None,None]
 
-pandas_export_excel_labelList   =   ["excel_writer","sheet_name","na_rep",
-                                     "header ","index",
+pandas_export_excel_labelList   =   ["dataframe_to_export",
+                                     "excel_writer",
+                                     "sheet_name",
+                                     "na_rep",
+                                     "header ",
+                                     "index",
                                      "Additional Parm(s)",
                                      "Export Excel File","Clear","Return","Help"]
 
-pandas_export_excel_typeList    =   ["file","text","text",
+pandas_export_excel_typeList    =   ["select","file","text","text",
                                      "text","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
-pandas_export_excel_placeholderList = ["enter Excel IO path",
+pandas_export_excel_placeholderList = ["select dataframe to export",
+                                       "enter Excel IO path",
                                        "enter sheet name",
                                        "enter nan value (default '')",
                                        "write out column names row to file (default True)",
@@ -152,13 +163,13 @@ pandas_export_excel_placeholderList = ["enter Excel IO path",
                                        "enter additional parms { Key :  Value} ... (default None)",
                                        None,None,None,None]
 
-pandas_export_excel_jsList      =   [None,None,None,None,None,None,
+pandas_export_excel_jsList      =   [None,None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.EXCEL_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.EXCEL_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
                                      "display_help_url('"+str(dfchelp.EXCEL_EXPORT_URL)+"')"]
 
-pandas_export_excel_reqList     =   [0]
+pandas_export_excel_reqList     =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -169,33 +180,38 @@ pandas_export_excel_reqList     =   [0]
 pandas_export_json_title        =   "Pandas JSON Export Parameters"
 pandas_export_json_id           =   "exportPandasJSON"
 
-pandas_export_json_idList       =   ["jsonPath","jsonOrient",
+pandas_export_json_idList       =   ["jsondataframe",
+                                     "jsonPath",
+                                     "jsonOrient",
                                      "jsondateformat",
                                      "ejsonaddlParmsl",
                                      None,None,None,None]
 
-pandas_export_json_labelList    =   ["path_or_buf","orient",
+pandas_export_json_labelList    =   ["dataframe_to_export",
+                                     "path_or_buf",
+                                     "orient",
                                      "date_format",
                                      "Additional Parm(s)",
                                      "Export JSON File","Clear","Return","Help"]
 
-pandas_export_json_typeList     =   ["file","text","text",
+pandas_export_json_typeList     =   ["select","file","text","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
-pandas_export_json_placeholderList = ["enter JSON path or browse to file ",
+pandas_export_json_placeholderList = ["select dataframe to export",
+                                      "enter JSON path or browse to file ",
                                       "enter JSON orientation",
                                       "enter date-format (default iso)",
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
-pandas_export_json_jsList       =   [None,None,None,None,
+pandas_export_json_jsList       =   [None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.JSON_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.JSON_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
                                      "display_help_url('"+str(dfchelp.JSON_EXPORT_URL)+"')"]
 
-pandas_export_json_reqList      =   [0]
+pandas_export_json_reqList      =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -206,25 +222,31 @@ pandas_export_json_reqList      =   [0]
 pandas_export_html_title        =   "Pandas HTML Export Parameters"
 pandas_export_html_id           =   "exportPandasHTML"
 
-pandas_export_html_idList       =   ["exhtmlPath","excolspace",
+pandas_export_html_idList       =   ["exhtmldataframe",
+                                     "exhtmlPath",
+                                     "excolspace",
                                      "exhtmlheader",
                                      "exhtmlColNamesRow",
                                      "exhtmlRowIndexColumn",
                                      "exhtmladdlParms",
                                      None,None,None,None]
 
-pandas_export_html_labelList    =   ["io","col_space",
+pandas_export_html_labelList    =   ["dataframe_to_export",
+                                     "io",
+                                     "col_space",
                                      "header",
-                                     "index","na_rep",
+                                     "index",
+                                     "na_rep",
                                      "Additional Parm(s)",
                                      "Export HTML File","Clear","Return","Help"]
 
-pandas_export_html_typeList     =   ["file","text","text",
+pandas_export_html_typeList     =   ["select","file","text","text",
                                      "text","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
-pandas_export_html_placeholderList = ["enter HTML path or browse to file ",
+pandas_export_html_placeholderList = ["select dataframe to export",
+                                      "enter HTML path or browse to file ",
                                       "minimum col width (default 1)",
                                       "whether to print column names (default True)",
                                       "whether to print row ids (default True)",
@@ -232,13 +254,13 @@ pandas_export_html_placeholderList = ["enter HTML path or browse to file ",
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
-pandas_export_html_jsList       =   [None,None,None,None,None,None,
+pandas_export_html_jsList       =   [None,None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.HTML_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.HTML_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
                                      "display_help_url('"+str(dfchelp.HTML_EXPORT_URL)+"')"]
 
-pandas_export_html_reqList      =   [0]
+pandas_export_html_reqList      =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -249,7 +271,8 @@ pandas_export_html_reqList      =   [0]
 pandas_export_sqltable_title        =   "Pandas SQL Table Export Parameters"
 pandas_export_sqltable_id           =   "exportPandasSQLTable"
 
-pandas_export_sqltable_idList       =    ["exportsqltableName",
+pandas_export_sqltable_idList       =    ["exportsqldataframe",
+                                          "exportsqltableName",
                                           "exportsqltableflavor",
                                           "exportsqltableschema",
                                           "exportsqltableexists",
@@ -259,7 +282,8 @@ pandas_export_sqltable_idList       =    ["exportsqltableName",
                                           "exportsqltabledtype",
                                           None,None,None,None,None,None]
 
-pandas_export_sqltable_labelList    =   ["table_name",
+pandas_export_sqltable_labelList    =   ["dataframe_to_export",
+                                         "table_name",
                                          "flavor",
                                          "schema",
                                          "if_exists",
@@ -272,11 +296,12 @@ pandas_export_sqltable_labelList    =   ["table_name",
                                          "Export</br>Table",
                                          "Clear","Return","Help"]
 
-pandas_export_sqltable_typeList     =   ["text","text","text","text",
+pandas_export_sqltable_typeList     =   ["select","text","text","text","text",
                                          "text","text","text","text",
                                          "button","button","button","button","button","button"]
 
-pandas_export_sqltable_placeholderList = ["enter the table name",
+pandas_export_sqltable_placeholderList = ["select dataframe to export",
+                                          "enter the table name",
                                           "‘sqlite’, default None",
                                           "specify the schema (if database flavor supports this). If None, use default schema.",
                                           "{‘fail’, ‘replace’, ‘append’}, (default ‘fail’)",
@@ -286,7 +311,7 @@ pandas_export_sqltable_placeholderList = ["enter the table name",
                                           "dict of column name to SQL type, (default None)",
                                           None,None,None,None,None,None]
 
-pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None,
+pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None,None,
                                          "pandas_export_sql_callback(0)",
                                          "pandas_export_sql_callback(1)",
                                          "pandas_export_sql_callback(2)",
@@ -294,7 +319,7 @@ pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None
                                          "pandas_details_export_return_callback()",
                                          "display_help_url('"+str(dfchelp.SQLTABLE_EXPORT_URL)+"')"]
 
-pandas_export_sqltable_reqList      =   [0]
+pandas_export_sqltable_reqList      =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -593,10 +618,21 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                     dbutils.display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),conparms,dbutils.SQL_EXPORT) 
                 
                 else :
-            
+                    
+                    current_export_form     =   get_pandas_export_input_form(detid)
+                    
+                    if(detid == dem.CSV_EXPORT)         :   exid    =    "ecsvdataframe"
+                    elif(detid == dem.EXCEL_EXPORT)     :   exid    =    "exceldataframe" 
+                    elif(detid == dem.JSON_EXPORT)      :   exid    =    "jsondataframe" 
+                    elif(detid == dem.HTML_EXPORT)      :   exid    =    "exhtmldataframe" 
+                    elif(detid == dem.SQLTABLE_EXPORT)  :   exid    =    "exhtmldataframe"  
+                    
+                    current_export_form.add_select_dict(exid,cfg.get_dfc_dataframes_select_list())
+
                     # display the composite form
-                    display_composite_form([get_input_form(get_pandas_export_input_form(detid),
+                    display_composite_form([get_input_form(current_export_form,
                                                            get_pandas_export_input_title(detid))])
+                    
             else :
                 
                 # display the composite form

@@ -185,8 +185,8 @@ def export_sql_table(parms,display=True) :
             sqltableparms[i]  =  get_string_value(sqltableparms[i]) 
             
         displayParms("Pandas SQL Table Export Parms",
-                     dew.get_sqltable_export_form_labels()[0:7],
-                     sqltableparms[0:7],cfg.DataExport_ID)
+                     dew.get_sqltable_export_form_labels()[0:8],
+                     sqltableparms[0:8],cfg.DataExport_ID)
         
         display_notes(["DB Connector String : ",
                        "&nbsp;&nbsp;" + export_notes])
@@ -253,12 +253,6 @@ def test_export_sql_db_connector(driverid,sqlinputparms) :
         display_exception(opstat)        
 
 
-
-
-
-
-
-
 """
 #--------------------------------------------------------------------------
 #   pandas csv export
@@ -274,8 +268,8 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
     else :
         try :
 
-            csvkeys         =   [labellist[1],labellist[2],labellist[3]] 
-            csvvals         =   [fparms[1],fparms[2],fparms[3]]
+            csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
+            csvvals         =   [fparms[2],fparms[3],fparms[4]]
             csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
 
             csvparms        =   {}
@@ -288,8 +282,8 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
         try :
             
             csvparms        =   get_function_parms(csvkeys,csvvals,csvtypes)
-            if(not (fparms[4] == "")) :
-                csvaddlparms    =   json.loads(fparms[4])
+            if(not (fparms[5] == "")) :
+                csvaddlparms    =   json.loads(fparms[5])
             
             if (len(csvaddlparms) > 0) :
                 addlparmskeys = csvaddlparms.keys()
@@ -301,16 +295,20 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dfc_dataframe()
+        if(fparms[0] == "") :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe slected")
+        else :
+            df = cfg.get_dfc_dataframe(fparms[0])            
         
-        try :
-            if(len(csvparms) > 0) :
-                df.to_csv(fparms[0], **csvparms)
-            else :
-                df.to_csv(fparms[0])
+            try :
+                if(len(csvparms) > 0) :
+                    df.to_csv(fparms[1], **csvparms)
+                else :
+                    df.to_csv(fparms[1])
             
-        except Exception as e: 
-            opstat.store_exception("Unable to export to csv file " + fparms[0],e)
+            except Exception as e: 
+                opstat.store_exception("Unable to export to csv file " + fparms[0],e)
     
     if(opstat.get_status()) : 
         
@@ -344,8 +342,8 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
     else :
         try :
 
-            excelkeys       =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-            excelvals       =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            excelkeys       =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+            excelvals       =   [fparms[2],fparms[3],fparms[4],fparms[5]]
             exceltypes      =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
     
             excelparms      =   {}
@@ -359,8 +357,8 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
         try :
             
             excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
-            if(not (fparms[5] == "")) :
-                exceladdlparms    =   json.loads(fparms[5])
+            if(not (fparms[6] == "")) :
+                exceladdlparms    =   json.loads(fparms[6])
             
             if (len(exceladdlparms) > 0) :
                 addlparmskeys = exceladdlparms.keys()
@@ -372,16 +370,20 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
     
     if(opstat.get_status()) : 
         
-        df = cfg.get_dfc_dataframe()
+        if(fparms[0] == "") :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe slected")
+        else :
+            df = cfg.get_dfc_dataframe(fparms[0])            
     
-        try :
-            if(len(excelparms) > 0) :
-                df.to_excel(fparms[0], **excelparms)
-            else :
-                df.to_excel(fparms[0])
+            try :
+                if(len(excelparms) > 0) :
+                    df.to_excel(fparms[1], **excelparms)
+                else :
+                    df.to_excel(fparms[1])
             
-        except Exception as e: 
-            opstat.store_exception("Unable to export excel file" + fparms[0],e)
+            except Exception as e: 
+                opstat.store_exception("Unable to export excel file" + fparms[0],e)
     
     if(opstat.get_status()) : 
         
@@ -415,8 +417,8 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
     else :
         try :
 
-            jsonkeys         =   [labellist[1],labellist[2]] 
-            jsonvals         =   [fparms[1],fparms[2]]
+            jsonkeys         =   [labellist[2],labellist[3]] 
+            jsonvals         =   [fparms[2],fparms[3]]
             jsontypes        =   [STRING_PARM,STRING_PARM]
 
             jsonparms        =   {}
@@ -430,8 +432,8 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
         try :
             
             jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
-            if(not (fparms[3] == "")) :
-                jsonaddlparms    =   json.loads(fparms[3])
+            if(not (fparms[4] == "")) :
+                jsonaddlparms    =   json.loads(fparms[4])
             
             if (len(jsonaddlparms) > 0) :
                 addlparmskeys = jsonaddlparms.keys()
@@ -443,17 +445,20 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dfc_dataframe()
+        if(fparms[0] == "") :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe slected")
+        else :
+            df = cfg.get_dfc_dataframe(fparms[0])            
     
-        try :
-            if(len(jsonparms) > 0) :
-                df.to_json(fparms[0], **jsonparms)
-            else :
-                df.to_json(fparms[0])
+            try :
+                if(len(jsonparms) > 0) :
+                    df.to_json(fparms[1], **jsonparms)
+                else :
+                    df.to_json(fparms[1])
             
-        except Exception as e: 
-            opstat.store_exception("Unable to export json file" + fparms[0],e)
-            #display_exception(opstat)
+            except Exception as e: 
+                opstat.store_exception("Unable to export json file" + fparms[0],e)
     
     if(opstat.get_status()) : 
         
@@ -487,8 +492,8 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
     else :
         try :
 
-            htmlkeys        =   [labellist[1],labellist[2],labellist[3],labellist[4]] 
-            htmlvals        =   [fparms[1],fparms[2],fparms[3],fparms[4]]
+            htmlkeys        =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+            htmlvals        =   [fparms[2],fparms[3],fparms[4],fparms[5]]
             htmltypes       =   [INT_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
 
             htmlparms       =   {}
@@ -502,8 +507,8 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
         try :
             
             htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
-            if(not (fparms[5] == "")) :
-                htmladdlparms    =   json.loads(fparms[5])
+            if(not (fparms[6] == "")) :
+                htmladdlparms    =   json.loads(fparms[6])
             
             if (len(htmladdlparms) > 0) :
                 addlparmskeys = htmladdlparms.keys()
@@ -515,16 +520,20 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
 
     if(opstat.get_status()) :
         
-        df = cfg.get_dfc_dataframe()
+        if(fparms[0] == "") :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe slected")
+        else :
+            df = cfg.get_dfc_dataframe(fparms[0])            
     
-        try :
-            if(len(htmlparms) > 0) :
-                df.to_html(fparms[0], **htmlparms)
-            else :
-                df.to_html(fparms[0])
+            try :
+                if(len(htmlparms) > 0) :
+                    df.to_html(fparms[1], **htmlparms)
+                else :
+                    df.to_html(fparms[1])
         
-        except Exception as e: 
-            opstat.store_exception("Unable to export html file" + fparms[0],e)
+            except Exception as e: 
+                opstat.store_exception("Unable to export html file" + fparms[0],e)
     
     if(opstat.get_status()) : 
         
@@ -589,8 +598,6 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
     
     opstat = opStatus()
     
-    df = cfg.get_dfc_dataframe()
-
     import dfcleanser.common.db_utils as dbu
     dbcon = dbu.dbConnector()
     
@@ -610,38 +617,44 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
         
         if(sqltableparms[0] == "") :
             opstat.set_status(False)
-            opstat.set_errorMsg("Invalid Table Name")
+            opstat.set_errorMsg("No dataframe slected")
+        else :
+            df = cfg.get_dfc_dataframe(sqltableparms[0])            
         
         if(sqltableparms[1] == "") :
-            sqltableparms[1] = None
+            opstat.set_status(False)
+            opstat.set_errorMsg("Invalid Table Name")
         
         if(sqltableparms[2] == "") :
             sqltableparms[2] = None
         
         if(sqltableparms[3] == "") :
-            sqltableparms[3] = 'fail'
+            sqltableparms[3] = None
         
         if(sqltableparms[4] == "") :
-            sqltableparms[4] = True
-         
-        if(sqltableparms[5] == "") :
-            sqltableparms[5] = None
+            sqltableparms[4] = 'fail'
         
+        if(sqltableparms[5] == "") :
+            sqltableparms[5] = True
+         
         if(sqltableparms[6] == "") :
             sqltableparms[6] = None
-        else :
-            sqltableparms[6] = int(sqltableparms[6])
         
         if(sqltableparms[7] == "") :
             sqltableparms[7] = None
+        else :
+            sqltableparms[7] = int(sqltableparms[6])
+        
+        if(sqltableparms[8] == "") :
+            sqltableparms[8] = None
         
     
         if(opstat.get_status()) :  
     
             try :
-                df.to_sql(sqltableparms[0],dbconnector,sqltableparms[1],sqltableparms[2],
-                          sqltableparms[3],sqltableparms[4],sqltableparms[5],sqltableparms[6],
-                          sqltableparms[7])
+                df.to_sql(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
+                          sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7],
+                          sqltableparms[8])
                 
             except Exception as e:
                 opstat.store_exception("Unable to export sql table",e)
