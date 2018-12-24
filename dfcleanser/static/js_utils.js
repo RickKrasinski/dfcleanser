@@ -773,34 +773,33 @@
          case "arcgisgeocoder":
          case "googlegeocoder":
          case "binggeocoder":
-         case "databcgeocoder":
          case "mapquestgeocoder":
          case "nomingeocoder":
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "15"));
-             break;
-
          case "arcgisquery":
          case "googlequery":
          case "bingquery":
          case "databcquery":
          case "mapquestquery":
          case "nominquery":
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "16"));
-             break;
-
          case "arcgisreverse":
          case "bingreverse":
          case "nominreverse":
          case "googlereverse":
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "17"));
-             break;
-         
-         case "googlebulkquery":
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "18"));
-             break;
-
+         case "arcgisbatchgeocoder":
+         case "googlebulkgeocoder":
+         case "bingbulkgeocoder":
+         case "mapquestbulkgeocoder":
+         case "nominbulkgeocoder":
          case "arcgisbatchquery":
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "19"));
+         case "googlebulkquery":
+         case "bingbulkquery":
+         case "mapquestbulkquery":
+         case "nominatimbulkquery":
+         case "googlebulkreverse":
+
+             var inputs = new Array();
+             inputs.push(String(inputid));
+             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "15" + ", " + JSON.stringify(inputs)));
              break;
 
          default:
