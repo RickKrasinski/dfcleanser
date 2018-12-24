@@ -49,17 +49,15 @@ geocode_utility_tb_id                   =   "addrconverttb"
 
 geocode_utility_tb_keyTitleList         =   ["Interactive</br>Geocoding",
                                              "Bulk</br>Geocoding",
-                                             "Bulk</br>Reverse</br>Geocoding",
                                              "Calculate</br>Distance",
                                              "Select</br>Geocoder",
                                              "Clear","Help"]
 
-geocode_utility_tb_jsList               =   ["process_geomain_callback(" + str(sugm.DISPLAY_GEOCODE_QUERY) + ")",
-                                             "process_geomain_callback(" + str(sugm.DISPLAY_BULK_GEOCODE_QUERY) + ")",
-                                             "process_geomain_callback(" + str(sugm.DISPLAY_BULK_GEOCODE_REVERSE) + ")",
+geocode_utility_tb_jsList               =   ["display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoders(-1," + str(sugm.BULK) + ")",
                                              "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
-                                             "process_geomain_callback(" + str(sugm.DISPLAY_GEOCODER) + ")",
-                                             "process_geomain_callback(0)",
+                                             "display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
+                                             "geocode_return()",
                                              "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
 
 geocode_utility_tb_centered             =   False
@@ -83,7 +81,7 @@ arcgis_geocoder_idList              =    ["aguser",
                                           "agscheme",
                                           "agtimeout",
                                           "agproxies",
-                                          None,None,None,None,None,None]
+                                          None,None,None,None,None,None,None]
 
 arcgis_geocoder_labelList           =   ["username",
                                          "password",
@@ -91,14 +89,14 @@ arcgis_geocoder_labelList           =   ["username",
                                          "scheme",
                                          "timeout",
                                          "proxies",
-                                         "Test</br>Geocoder",
-                                         "Simple</br>Geocoding",
+                                         "Test</br>Geocoder</br>Connection",
+                                         "Interactive</br>Geocoding",
+                                         "Interactive</br>Reverse</br>Geocoding",
                                          "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
-
 arcgis_geocoder_typeList            =   ["text","text","text","text","text","text",
-                                         "button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button","button"]
 
 arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
                                          "ArcGIS password (default : None)",
@@ -106,14 +104,15 @@ arcgis_geocoder_placeholderList     =   ["ArcGIS username (default : None)",
                                          "Desired scheme (default : https)",
                                          "Time, in seconds (default : 20)",
                                          "enter proxies dict (default : None)",
-                                         None,None,None,None,None,None]
+                                         None,None,None,None,None,None,None]
 
 arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
-                                         "process_geocoder_callback(0," + str(sugm.ArcGISId) + ")",
-                                         "process_geocoder_callback(1," + str(sugm.ArcGISId) + ")",
-                                         "process_geocoder_callback(2," + str(sugm.ArcGISId) + ")",
-                                         "process_geocoder_callback(3," + str(sugm.ArcGISId) + ")",
-                                         "process_geocoder_callback(4," + str(sugm.ArcGISId) + ")",
+                                         "test_geocoder(" + str(sugm.ArcGISId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.ArcGISId) + ","  +  str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.ArcGISId) + ","  +  str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.ArcGISInitHelp) + "')"]
 
 
@@ -147,7 +146,7 @@ google_geocoder_idList              =    ["ggapikey",
                                           "ggformatstr",
                                           "ggsslcontext",
                                           "ggchannel",
-                                          None,None,None,None,None,None]
+                                          None,None,None,None,None,None,None]
 
 google_geocoder_labelList           =   ["api_key",
                                          "client_id",
@@ -159,14 +158,15 @@ google_geocoder_labelList           =   ["api_key",
                                          "format_string",
                                          "ssl_context",
                                          "channel",
-                                         "Test</br>Geocoder",
-                                         "Simple</br>Geocoding",
+                                         "Test</br>Geocoder</br>Connection",
+                                         "Interactive</br>Geocoding",
+                                         "Interactive</br>Reverse</br>Geocoding",
                                          "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
 google_geocoder_typeList            =   ["text","text","text","text","text","text","text","text","text","text",
-                                         "button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button","button"]
 
 google_geocoder_placeholderList     =   ["enter account api key.",
                                          "enter account client id. (default - None) required for premier",
@@ -178,16 +178,16 @@ google_geocoder_placeholderList     =   ["enter account api key.",
                                          "format string (default - '%s')",
                                          "ssl_context (default - DEFAULT_SENTINEL)",
                                          "enter channel identifier (default - None)",
-                                         None,None,None,None,None,None]
+                                         None,None,None,None,None,None,None]
 
 google_geocoder_jsList              =   [None,None,None,None,None,None,None,None,None,None,
-                                         "process_geocoder_callback(0," + str(sugm.GoogleId) + ")",
-                                         "process_geocoder_callback(1," + str(sugm.GoogleId) + ")",
-                                         "process_geocoder_callback(2," + str(sugm.GoogleId) + ")",
-                                         "process_geocoder_callback(3," + str(sugm.GoogleId) + ")",
-                                         "process_geocoder_callback(4," + str(sugm.GoogleId) + ")",
+                                         "test_geocoder(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.QUERY) + ","  + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.REVERSE) + ","  + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.GoogleId) + "," + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
-
 
 google_geocoder_reqList             =   [0,1]
 
@@ -216,7 +216,7 @@ bing_geocoder_idList                =    ["bingapikey",
                                           "bingfstring",
                                           "bingscheme",
                                           "bingproxies",
-                                          None,None,None,None,None,None]
+                                          None,None,None,None,None,None,None]
 
 bing_geocoder_labelList             =   ["api_key",
                                          "user_agent",
@@ -224,14 +224,15 @@ bing_geocoder_labelList             =   ["api_key",
                                          "format_string",
                                          "scheme",
                                          "proxies",
-                                         "Test</br>Geocoder",
-                                         "Simple</br>Geocoding",
+                                         "Test</br>Geocoder</br>Connection",
+                                         "Interactive</br>Geocoding",
+                                         "Interactive</br>Reverse</br>Geocoding",
                                          "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
 bing_geocoder_typeList              =   ["text","text","text","text","text","text",
-                                         "button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button","button"]
 
 bing_geocoder_placeholderList       =   ["enter Bing api key",
                                          "user agent (default - my-application)",
@@ -239,14 +240,15 @@ bing_geocoder_placeholderList       =   ["enter Bing api key",
                                          "enter format string (default %s)",
                                          "enter scheme (default https)",
                                          "proxies dict (default None)",
-                                         None,None,None,None,None,None]
+                                         None,None,None,None,None,None,None]
 
 bing_geocoder_jsList                =   [None,None,None,None,None,None,
-                                         "process_geocoder_callback(0," + str(sugm.BingId) + ")",
-                                         "process_geocoder_callback(1," + str(sugm.BingId) + ")",
-                                         "process_geocoder_callback(2," + str(sugm.BingId) + ")",
-                                         "process_geocoder_callback(3," + str(sugm.BingId) + ")",
-                                         "process_geocoder_callback(4," + str(sugm.BingId) + ")",
+                                         "test_geocoder(" + str(sugm.BingId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BingId) + ","  + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BingId) + ","  + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
 
 bing_geocoder_reqList               =   [0]
@@ -279,7 +281,7 @@ mapquest_geocoder_idList                =    ["mapquestapikey",
                                               "mapquestproxies",
                                               "mapquestcountry",
                                               "mapquestdomain",
-                                              None,None,None,None,None,None]
+                                              None,None,None,None,None,None,None]
 
 mapquest_geocoder_labelList             =   ["api_key",
                                              "user_agent",
@@ -289,13 +291,14 @@ mapquest_geocoder_labelList             =   ["api_key",
                                              "proxies",
                                              "country_bias",
                                              "domain",
-                                             "Test</br>Geocoder",
-                                             "Simple</br>Geocoding",
+                                             "Test</br>Geocoder</br>Connection",
+                                             "Interactive</br>Geocoding",
+                                             "Interactive</br>Reverse</br>Geocoding",
                                              "Bulk</br>Geocoding",
                                              "Clear","Return","Help"]
 
 mapquest_geocoder_typeList              =   ["text","text","text","text","text","text","text","text",
-                                             "button","button","button","button","button","button"]
+                                             "button","button","button","button","button","button","button"]
 
 mapquest_geocoder_placeholderList       =   ["enter MapQuest API Key",
                                              "enter user agent (default 'my-application'",
@@ -305,14 +308,15 @@ mapquest_geocoder_placeholderList       =   ["enter MapQuest API Key",
                                              "enter proxies dict (default None)",
                                              "country to bias results to (default None)",
                                              "Domain where the target service is hosted. (default open.mapquestapi.com')",
-                                             None,None,None,None,None,None]
+                                             None,None,None,None,None,None,None]
 
 mapquest_geocoder_jsList                =   [None,None,None,None,None,None,None,None,
-                                             "process_geocoder_callback(0," + str(sugm.OpenMapQuestId) + ")",
-                                             "process_geocoder_callback(1," + str(sugm.OpenMapQuestId) + ")",
-                                             "process_geocoder_callback(2," + str(sugm.OpenMapQuestId) + ")",
-                                             "process_geocoder_callback(3," + str(sugm.OpenMapQuestId) + ")",
-                                             "process_geocoder_callback(4," + str(sugm.OpenMapQuestId) + ")",
+                                             "test_geocoder(" + str(sugm.OpenMapQuestId) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + ","   + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + ","   + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
+                                             "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "geocode_return()",
                                              "display_help_url('" + str(dfchelp.OpenMapQuestInitHelp) + "')"]
 
 
@@ -345,7 +349,7 @@ nomin_geocoder_idList               =    ["nominagent",
                                           "nominproxies",
                                           "nomindomain",
                                           "nominscheme",
-                                           None,None,None,None,None,None]
+                                           None,None,None,None,None,None,None]
 
 nomin_geocoder_labelList            =   ["user_agent",
                                          "timeout",
@@ -354,14 +358,15 @@ nomin_geocoder_labelList            =   ["user_agent",
                                          "proxies",
                                          "domain",
                                          "scheme",
-                                         "Test</br>Geocoder",
-                                         "Simple</br>Geocoding",
+                                         "Test</br>Geocoder</br>Connection",
+                                         "Interactive</br>Geocoding",
+                                         "Interactive</br>Reverse</br>Geocoding",
                                          "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
 nomin_geocoder_typeList             =   ["text","text","text","text","text","text","text",
-                                         "button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button","button"]
 
 nomin_geocoder_placeholderList      =   ["enter custom User-Agent (required)",
                                          "enter timeout in secs (default 20)",
@@ -370,14 +375,15 @@ nomin_geocoder_placeholderList      =   ["enter custom User-Agent (required)",
                                          "enter proxies dict)",
                                          "enter domain (default nominatim.openstreetmap.org)",
                                          "enter scheme (default https)",
-                                         None,None,None,None,None,None]
+                                         None,None,None,None,None,None,None]
 
 nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,
-                                         "process_geocoder_callback(0," + str(sugm.NominatimId) + ")",
-                                         "process_geocoder_callback(1," + str(sugm.NominatimId) + ")",
-                                         "process_geocoder_callback(2," + str(sugm.NominatimId) + ")",
-                                         "process_geocoder_callback(3," + str(sugm.NominatimId) + ")",
-                                         "process_geocoder_callback(4," + str(sugm.NominatimId) + ")",
+                                         "test_geocoder(" + str(sugm.NominatimId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.NominatimId) + ","  + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.NominatimId) + ","  + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.NominatimInitHelp) + "')"]
 
 
@@ -418,8 +424,8 @@ arcgis_query_labelList              =   ["address(s)",
                                          "number_of_results",
                                          "timeout",
                                          "Get</br>Coords",
-                                         "Get</br>Address",
-                                         "Change</br> Geocoder",
+                                         "Change</br>Geocoder",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -432,11 +438,11 @@ arcgis_query_placeholderList        =   ["single address string or [] list of ad
                                          None,None,None,None,None,None]
 
 arcgis_query_jsList                 =   [None,None,None,
-                                         "process_query_callback(0," + str(sugm.ArcGISId) + ")",
-                                         "process_query_callback(1," + str(sugm.ArcGISId) + ")",
-                                         "process_query_callback(2," + str(sugm.ArcGISId) + ")",
-                                         "process_query_callback(3," + str(sugm.ArcGISId) + ")",
-                                         "process_query_callback(4," + str(sugm.ArcGISId) + ")",
+                                         "process_geocoding_callback(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.ArcGISQueryHelp) + "')"]
 
 
@@ -479,8 +485,8 @@ google_query_labelList              =   ["address(s)",
                                          "language",
                                          "sensor",
                                          "Get</br>Coords",
-                                         "Get</br>Address",
-                                         "Change</br> Geocoder",
+                                         "Change</br>Geocoder",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -498,11 +504,11 @@ google_query_placeholderList        =   ["single address string or [] list of ad
                                          None,None,None,None,None,None]
 
 google_query_jsList                 =   [None,None,None,None,None,None,None,None,
-                                         "process_query_callback(0," + str(sugm.GoogleId) + ")",
-                                         "process_query_callback(1," + str(sugm.GoogleId) + ")",
-                                         "process_query_callback(2," + str(sugm.GoogleId) + ")",
-                                         "process_query_callback(3," + str(sugm.GoogleId) + ")",
-                                         "process_query_callback(4," + str(sugm.GoogleId) + ")",
+                                         "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 google_query_reqList                =   [0]
@@ -540,8 +546,8 @@ bing_query_labelList                =   ["address(s)",
                                          "include_neighborhood",
                                          "include_country_code",
                                          "Get</br>Coords",
-                                         "Get</br>Address",
                                          "Change</br> Geocoder",
+                                         "Bulk</br>Geocoding",
                                          "Clear","Return","Help"]
 
 
@@ -558,11 +564,11 @@ bing_query_placeholderList          =   ["single address string or [] list of ad
                                          None,None,None,None,None,None]
 
 bing_query_jsList                   =   [None,None,None,None,None,None,None,
-                                         "process_query_callback(0," + str(sugm.BingId) + ")",
-                                         "process_query_callback(1," + str(sugm.BingId) + ")",
-                                         "process_query_callback(2," + str(sugm.BingId) + ")",
-                                         "process_query_callback(3," + str(sugm.BingId) + ")",
-                                         "process_query_callback(4," + str(sugm.BingId) + ")",
+                                         "process_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
                                          "display_help_url('" + str(dfchelp.BingQueryHelp) + "')"]
 
 
@@ -594,8 +600,8 @@ mapquest_query_labelList                 =  ["address(s)",
                                              "number_of_results",
                                              "timeout",
                                              "Get</br>Coords",
-                                             "Get</br>Address",
                                              "Change</br> Geocoder",
+                                             "Bulk</br>Geocoding",
                                              "Clear","Return","Help"]
 
 
@@ -608,11 +614,11 @@ mapquest_query_placeholderList           =   ["single address string or [] list 
                                               None,None,None,None,None,None]
 
 mapquest_query_jsList                    =    [None,None,None,
-                                               "process_query_callback(0," + str(sugm.OpenMapQuestId) + ")",
-                                               "process_query_callback(1," + str(sugm.OpenMapQuestId) + ")",
-                                               "process_query_callback(2," + str(sugm.OpenMapQuestId) + ")",
-                                               "process_query_callback(3," + str(sugm.OpenMapQuestId) + ")",
-                                               "process_query_callback(4," + str(sugm.OpenMapQuestId) + ")",
+                                               "process_geocoding_callback(" + str(sugm.OpenMapQuestId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "geocode_return()",
                                                "display_help_url('" + str(dfchelp.OpenMapQuestQueryHelp) + "')"]
 
 
@@ -649,8 +655,8 @@ nomin_query_labelList                    =  ["address(s)",
                                              "language",
                                              "geometry",
                                              "Get</br>Coords",
-                                             "Get</br>Address",
                                              "Change</br> Geocoder",
+                                             "Bulk</br>Geocoding",
                                              "Clear","Return","Help"]
 
 
@@ -666,11 +672,11 @@ nomin_query_placeholderList              =   ["single address string or [] list 
                                               None,None,None,None,None,None]
 
 nomin_query_jsList                       =    [None,None,None,None,None,None,
-                                               "process_query_callback(0," + str(sugm.NominatimId) + ")",
-                                               "process_query_callback(1," + str(sugm.NominatimId) + ")",
-                                               "process_query_callback(2," + str(sugm.NominatimId) + ")",
-                                               "process_query_callback(3," + str(sugm.NominatimId) + ")",
-                                               "process_query_callback(4," + str(sugm.NominatimId) + ")",
+                                               "process_geocoding_callback(" + str(sugm.NominatimId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                               "geocode_return()",
                                                "display_help_url('" + str(dfchelp.NominatimQueryHelp) + "')"]
 
 
@@ -711,8 +717,8 @@ google_reverse_labelList               =   ["latitude_longitude(s)",
                                             "language",
                                             "sensor",
                                             "Get</br>Address",
-                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
+                                            "Bulk</br>Geocoding",
                                             "Clear","Return","Help"]
 
 
@@ -727,11 +733,11 @@ google_reverse_placeholderList         =   ["list or tuple of (latitude, longitu
                                             None,None,None,None,None,None]
 
 google_reverse_jsList                  =   [None,None,None,None,None,
-                                            "process_reverse_callback(0," + str(sugm.GoogleId) + ")",
-                                            "process_reverse_callback(1," + str(sugm.GoogleId) + ")",
-                                            "process_reverse_callback(2," + str(sugm.GoogleId) + ")",
-                                            "process_reverse_callback(3," + str(sugm.GoogleId) + ")",
-                                            "process_reverse_callback(4," + str(sugm.GoogleId) + ")",
+                                            "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
+                                            "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "geocode_return()",
                                             "display_help_url('" + str(dfchelp.GoogleReverseHelp) + "')"]
 
 
@@ -766,8 +772,8 @@ arcgis_reverse_labelList               =   ["latitude_longitude(s)",
                                             "distance",
                                             "wkid",
                                             "Get</br>Address",
-                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
+                                            "Bulk</br>Geocoding",
                                             "Clear","Return","Help"]
 
 
@@ -782,11 +788,11 @@ arcgis_reverse_placeholderList         =   ["list or tuple of (latitude, longitu
                                             None,None,None,None,None,None]
 
 arcgis_reverse_jsList                  =   [None,None,None,None,None,
-                                            "process_reverse_callback(0," + str(sugm.ArcGISId) + ")",
-                                            "process_reverse_callback(1," + str(sugm.ArcGISId) + ")",
-                                            "process_reverse_callback(2," + str(sugm.ArcGISId) + ")",
-                                            "process_reverse_callback(3," + str(sugm.ArcGISId) + ")",
-                                            "process_reverse_callback(4," + str(sugm.ArcGISId) + ")",
+                                            "process_geocoding_callback(" + str(sugm.ArcGISId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
+                                            "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "geocode_return()",
                                             "display_help_url('" + str(dfchelp.ArcGISReverseHelp) + "')"]
 
 
@@ -821,13 +827,13 @@ bing_reverse_labelList                 =   ["latitude_longitude(s)",
                                             "culture",
                                             "include_country_code",
                                             "Get</br>Address",
-                                            "Get</br>Coordinates",
                                             "Change</br> Geocoder",
+                                            "Bulk</br>Geocoding",
                                             "Clear","Return","Help"]
 
 
 bing_reverse_typeList                  =   [maketextarea(6),"text","text","text","text",
-                                            "button","button","button","button","button","button"]
+                                            "button","button","button","button","button"]
 
 bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
                                             "max number of results (default - 1) ",
@@ -837,11 +843,11 @@ bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitu
                                             None,None,None,None,None,None]
 
 bing_reverse_jsList                    =   [None,None,None,None,None,
-                                            "process_reverse_callback(0," + str(sugm.BingId) + ")",
-                                            "process_reverse_callback(1," + str(sugm.BingId) + ")",
-                                            "process_reverse_callback(2," + str(sugm.BingId) + ")",
-                                            "process_reverse_callback(3," + str(sugm.BingId) + ")",
-                                            "process_reverse_callback(4," + str(sugm.BingId) + ")",
+                                            "process_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
+                                            "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "geocode_return()",
                                             "display_help_url('" + str(dfchelp.BingReverseHelp) + "')"]
 
 
@@ -861,7 +867,7 @@ bing_reverse_form                      =   [bing_reverse_id,
 #--------------------------------------------------------------------------
 """
 mapquest_reverse_title                     =   "OpenMapQuest Geocoder Get Address"
-mapquest_reverse_id                        =   "nominreverse"
+mapquest_reverse_id                        =   "mapquestreverse"
 
 mapquest_reverse_idList                    =    ["mrquery",
                                                  "mrcount",
@@ -876,8 +882,8 @@ mapquest_reverse_labelList                 =   ["latitude_longitude(s)",
                                                 "language",
                                                 "addressdetails",
                                                 "Get</br>Address",
-                                                "Get</br>Coordinates",
-                                                "Change</br> Geocoder",
+                                                "Change</br>Geocoder",
+                                                "Bulk</br>Geocoding",
                                                 "Clear","Return","Help"]
 
 
@@ -892,11 +898,11 @@ mapquest_reverse_placeholderList           =   ["list or tuple of (latitude, lon
                                                 None,None,None,None,None,None]
 
 mapquest_reverse_jsList                    =   [None,None,None,None,None,
-                                                "process_reverse_callback(0," + str(sugm.OpenMapQuestId) + ")",
-                                                "process_reverse_callback(1," + str(sugm.OpenMapQuestId) + ")",
-                                                "process_reverse_callback(2," + str(sugm.OpenMapQuestId) + ")",
-                                                "process_reverse_callback(3," + str(sugm.OpenMapQuestId) + ")",
-                                                "process_reverse_callback(4," + str(sugm.OpenMapQuestId) + ")",
+                                                "process_geocoding_callback(" + str(sugm.OpenMapQuestId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
+                                                "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "geocode_return()",
                                                 "display_help_url('" + str(dfchelp.OpenMapQuestReverseHelp) + "')"]
 
 
@@ -929,8 +935,8 @@ nomin_reverse_labelList                    =   ["latitude_longitude(s)",
                                                 "timeout",
                                                 "language",
                                                 "Get</br>Address",
-                                                "Get</br>Coordinates",
                                                 "Change</br> Geocoder",
+                                                "Bulk</br>Geocoding",
                                                 "Clear","Return","Help"]
 
 
@@ -944,11 +950,11 @@ nomin_reverse_placeholderList              =   ["list or tuple of (latitude, lon
                                                 None,None,None,None,None,None]
 
 nomin_reverse_jsList                       =   [None,None,None,None,
-                                                "process_reverse_callback(0," + str(sugm.NominatimId) + ")",
-                                                "process_reverse_callback(1," + str(sugm.NominatimId) + ")",
-                                                "process_reverse_callback(2," + str(sugm.NominatimId) + ")",
-                                                "process_reverse_callback(3," + str(sugm.NominatimId) + ")",
-                                                "process_reverse_callback(4," + str(sugm.NominatimId) + ")",
+                                                "process_geocoding_callback(" + str(sugm.NominatimId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
+                                                "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                                "geocode_return()",
                                                 "display_help_url('" + str(dfchelp.NominatimReverseHelp) + "')"]
 
 
@@ -1111,19 +1117,19 @@ def get_form_id(geocid,gtype) :
     * --------------------------------------------------------
     """
      
-    if(gtype == sugm.GEOCODERPARMS)  :
+    if(gtype == sugm.GEOCODER)  :
          if(geocid == sugm.ArcGISId)            : return(arcgis_geocoder_id)   
          elif(geocid == sugm.GoogleId)          : return(google_geocoder_id)
          elif(geocid == sugm.BingId)            : return(bing_geocoder_id)
          elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_geocoder_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_geocoder_id)
-    elif(gtype == sugm.QUERYPARMS)  :
+    elif(gtype == sugm.QUERY)  :
          if(geocid == sugm.ArcGISId)            : return(arcgis_query_id) 
          elif(geocid == sugm.GoogleId)          : return(google_query_id)
          elif(geocid == sugm.BingId)            : return(bing_query_id)
          elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_query_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_query_id)
-    elif(gtype == sugm.REVERSEPARMS)  :
+    elif(gtype == sugm.REVERSE)  :
          if(geocid == sugm.ArcGISId)            : return(arcgis_reverse_id)   
          elif(geocid == sugm.GoogleId)          : return(google_reverse_id)
          elif(geocid == sugm.BingId)            : return(bing_reverse_id)
@@ -1157,7 +1163,7 @@ def get_geocoder_parms_table(geocid) :
     elif(geocid == sugm.NominatimId)         : labelList  =   nomin_geocoder_labelList
     
     #geocparms = get_geocoder_parms(geocid)
-    geocparms = get_geocoder_form_parms_list(sugm.GEOCODERPARMS,geocid)
+    geocparms = get_geocoder_form_parms_list(sugm.GEOCODER,geocid)
     
     row_added = 2
     
@@ -1469,7 +1475,7 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(ptype == sugm.GEOCODERPARMS) :
+    if(ptype == sugm.GEOCODER) :
     
         if(geocid == sugm.ArcGISId) :
             return(validate_arcgis_geocoder_parms(gqparms,opstat))
@@ -1486,7 +1492,7 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
         elif(geocid == sugm.OpenMapQuestId) :
             return(validate_mapquest_geocoder_parms(gqparms,opstat))
             
-    elif(ptype == sugm.QUERYPARMS) :
+    elif(ptype == sugm.QUERY) :
         if(geocid == sugm.GoogleId) :
             idList          =   google_query_idList 
             reqList         =   google_query_reqList 
@@ -1507,7 +1513,7 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
             idList          =   arcgis_query_idList 
             reqList         =   arcgis_query_reqList 
             
-    elif(ptype == sugm.REVERSEPARMS) :
+    elif(ptype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId) :
             idList          =   google_reverse_idList 
             reqList         =   google_reverse_reqList 
@@ -1535,9 +1541,9 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
     #print("validate_cmd_parms",fparms)
     missingParm     =   False
         
-    if(ptype == sugm.GEOCODERPARMS)      : cfg_key = get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms"
-    elif(ptype == sugm.QUERYPARMS)       : cfg_key = get_form_id(geocid,sugm.QUERYPARMS) + "Parms"
-    elif(ptype == sugm.REVERSEPARMS)     : cfg_key = get_form_id(geocid,sugm.REVERSEPARMS) + "Parms"
+    if(ptype == sugm.GEOCODER)      : cfg_key = get_form_id(geocid,sugm.GEOCODER) + "Parms"
+    elif(ptype == sugm.QUERY)       : cfg_key = get_form_id(geocid,sugm.QUERY) + "Parms"
+    elif(ptype == sugm.REVERSE)     : cfg_key = get_form_id(geocid,sugm.REVERSE) + "Parms"
     
     if(len(fparms) > 0) :
     
@@ -1581,9 +1587,9 @@ def get_geocoder_form_parms_list(ptype,geocid) :
     
     #print("get_geocoder_form_parms_list",ptype,geocid)
     
-    if(ptype == sugm.GEOCODERPARMS)      : plist = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms")    
-    elif(ptype == sugm.QUERYPARMS)       : plist = cfg.get_config_value(get_form_id(geocid,sugm.QUERYPARMS) + "Parms")    
-    elif(ptype == sugm.REVERSEPARMS)     : plist = cfg.get_config_value(get_form_id(geocid,sugm.REVERSEPARMS) + "Parms") 
+    if(ptype == sugm.GEOCODER)      : plist = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODER) + "Parms")    
+    elif(ptype == sugm.QUERY)       : plist = cfg.get_config_value(get_form_id(geocid,sugm.QUERY) + "Parms")    
+    elif(ptype == sugm.REVERSE)     : plist = cfg.get_config_value(get_form_id(geocid,sugm.REVERSE) + "Parms") 
 
     #print("get_geocoder_form_parms_list\n",plist)
 
@@ -1606,23 +1612,23 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
     
     #print("get_geocoder_cmd_kwargs",ptype,geocid)
         
-    if(ptype == sugm.GEOCODERPARMS)     : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODERPARMS) + "Parms")
-    elif(ptype == sugm.QUERYPARMS)      : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.QUERYPARMS) + "Parms")
-    elif(ptype == sugm.REVERSEPARMS)    : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.REVERSEPARMS) + "Parms")
+    if(ptype == sugm.GEOCODER)     : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODER) + "Parms")
+    elif(ptype == sugm.QUERY)      : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.QUERY) + "Parms")
+    elif(ptype == sugm.REVERSE)    : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.REVERSE) + "Parms")
     
-    if(ptype == sugm.GEOCODERPARMS) :
+    if(ptype == sugm.GEOCODER) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_geocoder_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_geocoder_labelList 
         elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_geocoder_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_geocoder_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_geocoder_labelList 
-    elif(ptype == sugm.QUERYPARMS) :
+    elif(ptype == sugm.QUERY) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_query_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_query_labelList 
         elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_query_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_query_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_query_labelList 
-    elif(ptype == sugm.REVERSEPARMS) :
+    elif(ptype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_reverse_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_reverse_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_reverse_labelList 
@@ -1642,7 +1648,7 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
         return(None)
     else :
         
-        if(ptype == sugm.QUERYPARMS) :
+        if(ptype == sugm.QUERY) :
             return(customize_query_kwargs(geocid,geokwargs)) 
         else :
             return(geokwargs)
@@ -1752,14 +1758,14 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     colnames_table.set_rowspertable(14)
 
     listHtml = get_row_major_table(colnames_table,SCROLL_NEXT,False)
-        
+    #print(listHtml)   
     return(listHtml)
 
 
 
     
 
-def display_geocode_inputs(parms,ptype,showfull=False) :
+def display_geocode_inputs(geocid,gtype,showfull=False) :
     """
     * ---------------------------------------------------------
     * function : display geocode input form
@@ -1774,17 +1780,11 @@ def display_geocode_inputs(parms,ptype,showfull=False) :
     * --------------------------------------------------------
     """
     
-    print("display_geocode_inputs",parms,ptype)
+    print("display_geocode_inputs",geocid,gtype)
 
-    if(parms == None) :
-        geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
-        if(geocid == None) :
-            geocid = sugm.GoogleId
-            cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
-        inparms =   None
-    else :
-        geocid  =    parms[1]
-        #inparms =    parms[2]
+    if(geocid == None) :
+        geocid = sugm.GoogleId
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
         
     opstat  =   validate_geocode_connect_parms(geocid)
     
@@ -1796,7 +1796,7 @@ def display_geocode_inputs(parms,ptype,showfull=False) :
     geo_parms_html = get_geocoder_parms_table(geocid)
 
     
-    if(ptype == sugm.GEOCODE_QUERY) :
+    if(gtype == sugm.QUERY) :
         if(geocid == sugm.ArcGISId)              : form    =   arcgis_query_form
         elif(geocid == sugm.BingId)              : form    =   bing_query_form
         elif(geocid == sugm.GoogleId)            : form    =   google_query_form
@@ -1838,12 +1838,12 @@ def display_geocode_inputs(parms,ptype,showfull=False) :
     geofunc_input_html = ""
     geofunc_input_html = geofunc_input_form.get_html()
     
-    if (ptype == sugm.GEOCODE_QUERY) :
+    if (gtype == sugm.QUERY) :
         geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Geocoding Parameters</h4>"
     else :
         geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Reverse Geocoding Parameters</h4>"
         
-    display_grid("acconv_wrapper",
+    display_grid("geocode_query_wrapper",
                  geofunc_heading_html,
                  geo_parms_html,
                  geofunc_input_html,
@@ -1851,7 +1851,7 @@ def display_geocode_inputs(parms,ptype,showfull=False) :
     
     notes = [] 
     
-    if(ptype == sugm.GEOCODE_QUERY) :
+    if(gtype == sugm.QUERY) :
         notes.append("To retrieve coords for a single address just enter address as single string.  Example : 1600 Pennsylvania Ave Washington, DC")
         notes.append("To retrieve coords for multiple addresses enter each address enclosed in [ ] separated by a comma.  Example : [addr],[addr1], ...[addrn]")
     else :
@@ -1915,11 +1915,7 @@ def get_geocoder_table(for_bulk_geocoding=False) :
     
     return(listHtml)
 
-"""
-#------------------------------------------------------------------
-#   display geocoder inputs form
-#------------------------------------------------------------------
-"""     
+
 def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     """
     * ---------------------------------------------------------
@@ -1936,7 +1932,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     * --------------------------------------------------------
     """
 
-    #print("display_geocoders",geocodeid,showfull,showNotes) 
+    print("display_geocoders",geocodeid,showfull,showNotes) 
     
     listHtml = get_geocoder_table()
     
@@ -2005,17 +2001,6 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     
     geocode_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</h4>"
 
-    #parmsList = get_geocoder_parms(geocodeid)
-    #parmsList = get_geocoder_form_parms_list(sugm.GEOCODERPARMS,geocodeid) 
-    
-    #if(parmsList != None) :
-    #    cfg.set_config_value(geocoder_input_form[0]+"Parms",parmsList) 
-
-    #print("display_geocoders parmsList",parmsList)    
-    #print("cfg",cfg.get_config_value(geocoder_input_form[0]+"Parms"))    
-    #print("display_geocoders",geocoder_input_form) 
-    
-    
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
                                    geocoder_input_form[1],
@@ -2043,19 +2028,9 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
         notes = [] 
     
         if(geocodeid == sugm.ArcGISId) :
-            
             return()
-            notes.append("For ArcGis simple geocoding authenticated mode enter values for username, password and referer.")
-            notes.append("For ArcGis simple geocoding non-authenticated mode leave username, password and referer blank.")
-            notes.append("For ArcGis bulk geocoding enter values for username and password.")
-            notes.append("The rest of the parameters are used as default values for any subsequent simple geocoding calls of this connector.")
         elif(geocodeid == sugm.GoogleId) :
-            
             return()
-            notes.append("For Google enter values for client_id and secret_key or enter a value for the api_key.")
-            notes.append("You must use a client_id and secret_key to do Google bulk geocoding.")
-            notes.append("Entering just an api_key is for simple geocoding")
-            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
         elif(geocodeid == sugm.BingId) :        
             notes.append("Bing geoocoding requires an api_key for all Bing geocoding including bulk geocoding.")
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")

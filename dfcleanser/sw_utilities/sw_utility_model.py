@@ -26,7 +26,7 @@ SELECT_DICT_OPTION          =   10
 DICT_ID         =   0
 LIST_ID         =   1
 
-ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes"]
-ReservedLists   =   ["columnNames"]
+ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes","ArcGIS_Categories"]
+ReservedLists   =   ["columnNames", "Address_Components", "Location_Types"]
 
 
