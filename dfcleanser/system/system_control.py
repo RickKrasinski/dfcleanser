@@ -494,6 +494,10 @@ def clear_system_data() :
 def clear_system_cfg_values() :
     
     cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
+    cfg.drop_config_value(sysw.dfmgr_input_id+"Parms")
+    cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
+    cfg.drop_config_value(sysw.dfmgr_input_id+"ParmsProtect")
+    
     return(True)
     
     
