@@ -184,7 +184,7 @@ google_geocoder_jsList              =   [None,None,None,None,None,None,None,None
                                          "test_geocoder(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
                                          "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.QUERY) + ","  + str(sugm.INTERACTIVE) + ")",
                                          "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.REVERSE) + ","  + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoders(" + str(sugm.GoogleId) + "," + "," + str(sugm.BULK) + ")",
+                                         "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
                                          "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
@@ -490,7 +490,7 @@ google_query_labelList              =   ["address(s)",
                                          "Clear","Return","Help"]
 
 
-google_query_typeList               =   [maketextarea(6),"text","text","text","text","text","text","text",
+google_query_typeList               =   [maketextarea(6),"text","text","text","text","text","text","select",
                                          "button","button","button","button","button","button"]
 
 google_query_placeholderList        =   ["single address string or [] list of address strings",
@@ -551,7 +551,7 @@ bing_query_labelList                =   ["address(s)",
                                          "Clear","Return","Help"]
 
 
-bing_query_typeList                 =   [maketextarea(6),"text","text","text","text","text","text",
+bing_query_typeList                 =   [maketextarea(6),"text","text","text","text","select","select",
                                          "button","button","button","button","button","button"]
 
 bing_query_placeholderList          =   ["single address string or [] list of address strings",
@@ -660,7 +660,7 @@ nomin_query_labelList                    =  ["address(s)",
                                              "Clear","Return","Help"]
 
 
-nomin_query_typeList                     =   [maketextarea(6),"text","text","text","text","text",
+nomin_query_typeList                     =   [maketextarea(6),"text","text","select","text","text",
                                               "button","button","button","button","button","button"]
 
 nomin_query_placeholderList              =   ["single address string or [] list of address strings",
@@ -722,7 +722,7 @@ google_reverse_labelList               =   ["latitude_longitude(s)",
                                             "Clear","Return","Help"]
 
 
-google_reverse_typeList                =   [maketextarea(6),"text","text","text","text",
+google_reverse_typeList                =   [maketextarea(6),"text","text","text","select",
                                             "button","button","button","button","button","button"]
 
 google_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
@@ -832,7 +832,7 @@ bing_reverse_labelList                 =   ["latitude_longitude(s)",
                                             "Clear","Return","Help"]
 
 
-bing_reverse_typeList                  =   [maketextarea(6),"text","text","text","text",
+bing_reverse_typeList                  =   [maketextarea(6),"text","text","text","select",
                                             "button","button","button","button","button"]
 
 bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
@@ -887,7 +887,7 @@ mapquest_reverse_labelList                 =   ["latitude_longitude(s)",
                                                 "Clear","Return","Help"]
 
 
-mapquest_reverse_typeList                  =   [maketextarea(6),"text","text","text","text",
+mapquest_reverse_typeList                  =   [maketextarea(6),"text","text","text","select",
                                                 "button","button","button","button","button","button"]
 
 mapquest_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
@@ -993,7 +993,7 @@ addr_dist_utility_input_labelList         =   ["from_location ",
                                                "Display</br>Dataframe</br>Distance",
                                                "Clear","Return","Help"]
 
-addr_dist_utility_input_typeList          =   ["text","text","text","text","text",
+addr_dist_utility_input_typeList          =   ["text","text","select","select","text",
                                                "button","button","button","button","button"]
 
 addr_dist_utility_input_placeholderList   =  ["enter From location : as string for address or [list] or (tuple) of floats for coords",
@@ -1037,7 +1037,7 @@ addr_df_dist_utility_input_labelList         =   ["from_column ",
                                                   "Calculate</br>Dataframe</br>Distance",
                                                   "Clear","Return","Help"]
 
-addr_df_dist_utility_input_typeList          =   ["text","text","text","text","text","text",
+addr_df_dist_utility_input_typeList          =   ["text","text","text","select","select","text",
                                                   "button","button","button","button","button"]
 
 addr_df_dist_utility_input_placeholderList   =  ["enter From column name",
@@ -1073,26 +1073,41 @@ def display_geocode_main_taskbar() :
                                                                geocode_utility_tb_centered))]) 
 
 def display_calc_distance_input_form() :
-    display_composite_form([get_input_form(InputForm(addr_dist_utility_input_id,
-                                                     addr_dist_utility_input_idList,
-                                                     addr_dist_utility_input_labelList,
-                                                     addr_dist_utility_input_typeList,
-                                                     addr_dist_utility_input_placeholderList,
-                                                     addr_dist_utility_input_jsList,
-                                                     addr_dist_utility_input_reqList,
-                                                     shortForm=False),
-                                            "Calculate Distance")])
+
+    dist_addr_form  =   InputForm(addr_dist_utility_input_id,
+                                  addr_dist_utility_input_idList,
+                                  addr_dist_utility_input_labelList,
+                                  addr_dist_utility_input_typeList,
+                                  addr_dist_utility_input_placeholderList,
+                                  addr_dist_utility_input_jsList,
+                                  addr_dist_utility_input_reqList,
+                                  shortForm=False)       
+    
+    addrsel           =   {"default":"km","list":["km","miles"]}
+    dist_addr_form.add_select_dict("disunits",addrsel)
+    addrsel           =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
+    dist_addr_form.add_select_dict("distalg",addrsel)
+    
+    display_composite_form([get_input_form(dist_addr_form,"Calculate Distance")])
+
 
 def display_calc_df_distance_input_form() :
-    display_composite_form([get_input_form(InputForm(addr_df_dist_utility_input_id,
-                                                     addr_df_dist_utility_input_idList,
-                                                     addr_df_dist_utility_input_labelList,
-                                                     addr_df_dist_utility_input_typeList,
-                                                     addr_df_dist_utility_input_placeholderList,
-                                                     addr_df_dist_utility_input_jsList,
-                                                     addr_df_dist_utility_input_reqList,
-                                                     shortForm=False),
-                                            "Calculate Dataframe Distance")])
+
+    dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
+                                  addr_df_dist_utility_input_idList,
+                                  addr_df_dist_utility_input_labelList,
+                                  addr_df_dist_utility_input_typeList,
+                                  addr_df_dist_utility_input_placeholderList,
+                                  addr_df_dist_utility_input_jsList,
+                                  addr_df_dist_utility_input_reqList,
+                                  shortForm=False)       
+    
+    addrsel           =   {"default":"km","list":["km","miles"]}
+    dist_addr_form.add_select_dict("dfdisunits",addrsel)
+    addrsel           =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
+    dist_addr_form.add_select_dict("dfdistalg",addrsel)
+    
+    display_composite_form([get_input_form(dist_addr_form,"Calculate Dataframe Distance")])
 
 
 """
@@ -1228,8 +1243,6 @@ def get_geocoder_parms_table(geocid) :
 
 def validate_geocode_connect_parms(geocid) :
 
-    print("validate_geocode_connect_parms",geocid) 
-    
     if(geocid == sugm.ArcGISId)              :  
         form    =   arcgis_geocoder_id
         #idlist  =   arcgis_geocoder_idList
@@ -1298,9 +1311,6 @@ def validate_arcgis_geocoder_parms(gparms,opstat,getfparms=True) :
     else :
         fparms  =   gparms
 
-
-    print("validate_arcgis_geocoder_parms",fparms)
-    
     if(len(fparms) > 0) :
         # if autheticated user,pw and agent must be defined
         # else all need to be blank
@@ -1341,8 +1351,6 @@ def validate_bing_geocoder_parms(gparms,opstat,getfparms=True) :
     else :
         fparms  =   gparms
     
-    print("validate_bing_geocoder_parms",fparms)
-    
     if(len(fparms) > 0) :
             
         if( len(fparms[0]) == 0 ) :
@@ -1371,8 +1379,6 @@ def validate_google_geocoder_parms(gparms,opstat,getfparms=True) :
     *  valid status of parms
     * --------------------------------------------------------
     """
-    
-    print("validate_google_geocoder_parms",gparms) 
     
     if(getfparms) :
         fparms  =   get_parms_for_input(gparms,google_geocoder_idList)
@@ -1444,7 +1450,6 @@ def validate_nominatim_geocoder_parms(gparms,opstat,getfparms=True) :
         fparms  =   get_parms_for_input(gparms,google_geocoder_idList)
     else :
         fparms  =   gparms
-    print("validate_nominatim_geocoder_parms",fparms) 
     
     if(len(fparms) > 0) :
     
@@ -1585,13 +1590,9 @@ def get_geocoder_form_parms_list(ptype,geocid) :
     * --------------------------------------------------------
     """
     
-    #print("get_geocoder_form_parms_list",ptype,geocid)
-    
     if(ptype == sugm.GEOCODER)      : plist = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODER) + "Parms")    
     elif(ptype == sugm.QUERY)       : plist = cfg.get_config_value(get_form_id(geocid,sugm.QUERY) + "Parms")    
     elif(ptype == sugm.REVERSE)     : plist = cfg.get_config_value(get_form_id(geocid,sugm.REVERSE) + "Parms") 
-
-    #print("get_geocoder_form_parms_list\n",plist)
 
     return(plist)
         
@@ -1610,8 +1611,6 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
     * --------------------------------------------------------
     """
     
-    #print("get_geocoder_cmd_kwargs",ptype,geocid)
-        
     if(ptype == sugm.GEOCODER)     : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.GEOCODER) + "Parms")
     elif(ptype == sugm.QUERY)      : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.QUERY) + "Parms")
     elif(ptype == sugm.REVERSE)    : geoparms = cfg.get_config_value(get_form_id(geocid,sugm.REVERSE) + "Parms")
@@ -1760,9 +1759,6 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     listHtml = get_row_major_table(colnames_table,SCROLL_NEXT,False)
     #print(listHtml)   
     return(listHtml)
-
-
-
     
 
 def display_geocode_inputs(geocid,gtype,showfull=False) :
@@ -1780,8 +1776,6 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
     * --------------------------------------------------------
     """
     
-    print("display_geocode_inputs",geocid,gtype)
-
     if(geocid == None) :
         geocid = sugm.GoogleId
         cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
@@ -1809,18 +1803,6 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
         elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_reverse_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
     
-    """
-    if(inparms != None) :
-        parmslist = get_parms_for_input(inparms,form[1]) 
-    else :
-        parmslist = get_geocoder_form_parms_list(ptype,geocid)
-
-    print("display_geocode_inputs parmslist",parmslist)
-    
-    if(not(parmslist == None)) :
-        cfg.set_config_value(form[0]+"Parms",parmslist)
-    """
-        
     from dfcleanser.common.html_widgets import InputForm
     geofunc_input_form = InputForm(form[0],
                                    form[1],
@@ -1831,6 +1813,32 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                    form[6],
                                    shortForm=False)
     
+    if(gtype == sugm.QUERY) :
+        if(geocid == sugm.BingId)              : 
+            bingsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("bqnbc",bingsel)
+            bingsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("bqcc",bingsel)
+        elif(geocid == sugm.GoogleId)              : 
+            googsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("gqsensor",googsel)
+        elif(geocid == sugm.NominatimId)              : 
+            googsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("nqaddr",googsel)
+
+    elif(gtype == sugm.REVERSE) :
+        if(geocid == sugm.GoogleId)              : 
+            googsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("grsensor",googsel)
+        elif(geocid == sugm.BingId)              : 
+            bingsel           =   {"default":"False","list":["True","False"]}
+            geofunc_input_form.add_select_dict("brcc",bingsel)
+        elif(geocid == sugm.OpenMapQuestId)              : 
+            mapqsel           =   {"default":"True","list":["True","False"]}
+            geofunc_input_form.add_select_dict("mradetails",mapqsel)
+
+
+   
     geofunc_input_form.set_gridwidth(600)
     if(showfull) :
         geofunc_input_form.set_fullparms(True)    
@@ -1932,8 +1940,6 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     * --------------------------------------------------------
     """
 
-    print("display_geocoders",geocodeid,showfull,showNotes) 
-    
     listHtml = get_geocoder_table()
     
     if(geocodeid == None) :
@@ -2043,19 +2049,6 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
 
         from dfcleanser.common.common_utils import display_msgs
         display_msgs(notes,None)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

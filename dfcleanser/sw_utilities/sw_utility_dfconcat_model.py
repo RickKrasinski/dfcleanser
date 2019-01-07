@@ -15,9 +15,6 @@ this = sys.modules[__name__]
 DISPLAY_MAIN                    =   0
 
 DISPLAY_SIMPLE_CONCAT           =   1
-DISPLAY_FULL_CONCAT             =   2
-
-PROCESS_SIMPLE_CONCAT           =   3
-PROCESS_FULL_CONCAT             =   4
+PROCESS_SIMPLE_CONCAT           =   2
 
 

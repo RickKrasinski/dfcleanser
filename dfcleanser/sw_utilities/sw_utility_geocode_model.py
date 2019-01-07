@@ -42,6 +42,10 @@ supported_Bulk_Reverses     =   [GoogleId]
 MAX_GOOGLE_TASKS            =   10
 
 GOOGLE_DELAY                =   0.2
+BING_DELAY                  =   0.5
+OPENMAPQUEST_DELAY          =   1
+NOMINATIM_DELAY             =   1
+
 
 """
 #--------------------------------------------------------------------------

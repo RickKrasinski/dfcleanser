@@ -60,37 +60,37 @@ gen_function_input_title         =   "Generic Function"
 gen_function_input_id            =   "genfuncform"
 gen_function_input_idList        =   ["gttitle",
                                       "gtcode",
-                                      None,None,None,None,None,None,None,None]
+                                      "gtkwargs",
+                                      None,None,None,None,None,None]
 
 gen_function_input_labelList     =   ["function_title",
                                       "function_code",
-                                      "Open</br>Test</br>Code Cell",
-                                      "Load</br>Test</br>Code",
+                                      "function_kwargs",
+                                      "Load</br>Test</br>Code Cell",
                                       "Save</br>Current</br>Function",
                                       "Delete</br>Current</br>Function",
-                                      "Run</br>Function</br>Code",
                                       "Clear",
                                       "Return","Help"]
 
 gen_function_input_typeList      =   ["text",
                                       maketextarea(15),
-                                      "button","button","button","button","button","button","button","button"]
+                                      maketextarea(3),
+                                      "button","button","button","button","button","button"]
 
 gen_function_input_placeholderList  = ["enter function title",
                                       "# Generic Function",
-                                      None,None,None,None,None,None,None,None]
+                                      "enter func kwargs as dict",
+                                      None,None,None,None,None,None]
 
-gen_function_input_jsList        =    [None,None,
-                                      "generic_function_callback("+str(gfm.NEW_FUNCTION)+")",
-                                      "generic_function_callback("+str(gfm.GET_FUNCTION)+")",
+gen_function_input_jsList        =    [None,None,None,
+                                      "generic_function_callback("+str(gfm.LOAD_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.SAVE_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.DELETE_FUNCTION)+")",
-                                      "generic_function_callback("+str(gfm.RUN_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.CLEAR_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.RETURN_FUNCTION)+")",
                                       "displayhelp(" + str(dfchelp.GENFUNC_GEN_NEW_ID) + ")"]
 
-gen_function_input_reqList       =   [0,1]
+gen_function_input_reqList       =   [0,1,2]
 
 gen_function_input_form          =   [gen_function_input_id,
                                       gen_function_input_idList,
@@ -116,14 +116,22 @@ def get_genfunc_input_parms(parms) :
     return(get_parms_for_input(parms,gen_function_input_idList))
 
 
-def display_generic_function_inputs(notes = False) :
-    
+def display_generic_function_inputs(ftitle,notes = False) :
+
+    if(ftitle == None) :
+        ftitle  =   cfg.get_config_value(cfg.CURRENT_GENERIC_FUNCTION)
+    else :
+        cfg.set_config_value(cfg.CURRENT_GENERIC_FUNCTION,ftitle)
+
+    gt_func = gfc.get_generic_function(ftitle)
+
+    if(not (gt_func == None)) :
+        fparms = [ftitle,gt_func,""]
+        cfg.set_config_value(gen_function_input_id+"Parms",fparms)
+
     display_generic_functions()
     print("\n")
 
-Red     = "#FAA78F"
-Green   = "#8FFAC0"
-Yellow  = "#FAFB95"
 
 """
 #------------------------------------------------------------------
@@ -166,7 +174,7 @@ def get_genfunc_html(forfunc=gfm.FOR_GEN_FUNC) :
                     found = True
                         
             if(found) :
-                colorRow.append(Yellow)
+                colorRow.append(gfm.Yellow)
             else :
                 colorRow.append(None)
                         
@@ -219,7 +227,7 @@ def display_generic_functions(forAddColumn=False):
                   "from dfcleanser.common.cfg import get_dc_dataframe" + new_line + 
                   "df = get_dc_dataframe()" + new_line + new_line)
 
-        parms = ["",newcode]
+        parms = ["",newcode,""]
         cfg.set_config_value(gen_function_input_id+"Parms",parms)
     
     gt_input_form = InputForm(gen_function_input_form[0],

@@ -21,10 +21,6 @@ from dfcleanser.common.html_widgets import (new_line)
 
 from dfcleanser.common.table_widgets import (drop_owner_tables)
 
-from dfcleanser.common.common_utils import (display_status, display_exception, opStatus)
-
-from dfcleanser.scripting.data_scripting_control import add_to_script
-
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -49,7 +45,8 @@ def display_gen_function(optionId,parms=None) :
         gfw.get_genfunc_main_taskbar()
 
     elif(optionId == gfm.DISPLAY_GENERIC_FUNCTION) :
-        gfw.display_generic_function_inputs() 
+        cfg.drop_config_value(gfw.gen_function_input_id+"Parms")
+        gfw.display_generic_functions() 
 
     elif(optionId == gfm.PROCESS_GENERIC_FUNCTION_OPTION) : 
         process_generic_function(parms)
@@ -62,58 +59,38 @@ def display_gen_function(optionId,parms=None) :
 """
 def process_generic_function(parms) :
 
-    funcid     =   parms[0]#[0]
+    funcid     =   parms[0]
 
-    if(funcid == gfm.NEW_FUNCTION) :
+    if(funcid == gfm.LOAD_FUNCTION) :
 
-        cfg.drop_config_value(gfw.gen_function_input_id+"Parms")
-        gfw.display_generic_function_inputs()
-    
-    elif(funcid == gfm.RUN_FUNCTION) :
+        ftitle          =   cfg.get_config_value(cfg.CURRENT_GENERIC_FUNCTION)
+        code            =   get_generic_function(ftitle)
+        code            =   json.dumps(code)
         
-        opstat = opStatus()
+        load_function_js    =   'load_genfunc_test_code_cell(' + code + ');'
         
-        try :
-            code = cfg.get_config_value(gfw.gen_function_input_id+"Parms")[1]
-            exec(code)
-               
-        except Exception as e:
-            opstat.store_exception("Unable to run generic function ",e)
-            
-        gfw.display_generic_function_inputs()
-        
-        if(opstat.get_status()) :
-            display_status("Generic Function Code run Successfully and added to script log")
-            add_to_script(code,opstat)
-        else :
-            display_exception(opstat)
-            
-
-    elif(funcid == gfm.GET_FUNCTION) :
-        gt_title = parms[1]
-        gt_func = get_generic_function(gt_title)
-
-        if(not (gt_func == None)) :
-            fparms = [gt_title,gt_func]
-            cfg.set_config_value(gfw.gen_function_input_id+"Parms",fparms)
-            
-        gfw.display_generic_function_inputs()
+        from dfcleanser.common.common_utils import run_jscript
+        run_jscript(load_function_js,
+                    "fail to load gen function code cell : ",
+                    "load test cell error")
+       
+        gfw.display_generic_function_inputs(None)
     
     if(funcid == gfm.SAVE_FUNCTION) :
-        fparms  =   gfw.get_genfunc_input_parms(parms[1])
-        ttitle  =   fparms[0]
-        newcode =   fparms[1]
+        
+        fparms      =   gfw.get_genfunc_input_parms(parms[1])
+        gt_title    =   fparms[0]
+        newcode     =   fparms[1]
 
-        if( (len(ttitle) > 0) ) : #and (len(tfunction) > 0) ) :
+        if( (len(gt_title) > 0) ) : #and (len(tfunction) > 0) ) :
             #ttitle = ttitle.replace("\n","")
-            if(not(get_generic_function(ttitle) == None)) :
-                print("should delete")
-                delete_generic_function(ttitle)
+            if(not(get_generic_function(gt_title) == None)) :
+                delete_generic_function(gt_title)
                 
-            add_generic_function(ttitle,newcode)
-            cfg.set_config_value(gfw.gen_function_input_id+"Parms",[ttitle,newcode])
+            add_generic_function(gt_title,newcode)
+            cfg.set_config_value(gfw.gen_function_input_id+"Parms",[gt_title,newcode,""])
             
-        gfw.display_generic_function_inputs()
+        gfw.display_generic_function_inputs(gt_title)
 
     if(funcid == gfm.DELETE_FUNCTION) :
         
@@ -125,14 +102,17 @@ def process_generic_function(parms) :
                    "from dfcleanser.common.cfg import get_dfc_dataframe" + new_line + 
                    "df = get_dfc_dataframe()" + new_line + new_line)
         
-        cfg.set_config_value(gfw.gen_function_input_id+"Parms",["",newcode])
-        gfw.display_generic_function_inputs()
+        cfg.set_config_value(gfw.gen_function_input_id+"Parms",["",newcode,""])
+        gfw.display_generic_function_inputs(None)
         
     elif(funcid == gfm.CLEAR_FUNCTION) :
 
         cfg.drop_config_value(gfw.gen_function_input_id+"Parms")
-        gfw.display_generic_function_inputs()
+        gfw.display_generic_function_inputs(None)
     
+    if(funcid == gfm.SELECT_FUNCTION) :
+        gfw.display_generic_function_inputs(parms[1])
+
 
 """
 #--------------------------------------------------------------------------
@@ -297,7 +277,7 @@ def clear_gen_function_data() :
     
 def clear_gen_function_cfg_values() :
     cfg.drop_config_value(gfw.gen_function_input_id+"Parms")
-    
+    cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)    
     
     
     

@@ -35,6 +35,12 @@ GET_COLUMN_NAMES                =   9
 
 DISPLAY_GET_COL_VALUES          =   8
 
+DISPLAY_FILTERS                 =   10
+EDIT_FILTER                     =   11
+DELETE_FILTER                   =   12
+EDIT_CRITERIA                   =   13
+SELECT_FILTER                   =   14
+
 """
 #--------------------------------------------------------------------------
 #    dfsubset main task bar
@@ -60,37 +66,42 @@ dfsubset_tb_centered                =   False
 """
 get_subset_input_title                  =   "Get Dataframe Subset"
 get_subset_input_id                     =   "dcdfsubset"
-get_subset_input_idList                 =   ["gsrowrange",
+get_subset_input_idList                 =   ["gsindataframe",
+                                             "gsoutdataframe",
                                              "gscolnames",
                                              "gsadddrop",
                                              "subsetfname",
-                                             None,None,None,None,None]
+                                             None,None,None,None,None,None]
 
-get_subset_input_labelList              =   ["drop_row_range",
+get_subset_input_labelList              =   ["input_dataframe",
+                                             "output_dataframe",
                                              "column_names_list",
-                                             "keep_column_names_flag",
+                                             "keep_column_names_list_flag",
                                              "csv_file_name",
                                              "Define</br>Filter(s)",
                                              "Get</br>Subset",
+                                             "Display</br>Filter(s)",
                                              "Clear","Return","Help"]
 
-get_subset_input_typeList               =   ["text",maketextarea(4),"text","file",
-                                             "button","button","button","button","button"]
+get_subset_input_typeList               =   ["select","text",maketextarea(4),"select","file",
+                                             "button","button","button","button","button","button"]
 
-get_subset_input_placeholderList        =   ["drop row range - as slice - [0:2000] (default = no rows dropped)",
-                                             "column names list to grab or drop from Column Names table (default = all columns)",
+get_subset_input_placeholderList        =   ["dataframe to get subset from",
+                                             "dataframe name to copy subset to (default - None)",
+                                             "column names list to grab or drop - use Column Names table (default None = all columns)",
                                              "keep(True) or drop(False) columns in column name list (default = True)",
-                                             "select file name to write to (default = None write to current dataframe)",
-                                             None,None,None,None,None]
+                                             "select file name to write to export as csv (default = None)",
+                                             None,None,None,None,None,None]
 
-get_subset_input_jsList                 =   [None,None,None,None,
+get_subset_input_jsList                 =   [None,None,None,None,None,
                                              "get_subset_callback("+str(DISPLAY_GET_SUBSET_FILTER)+")",
                                              "get_subset_callback("+str(PROCESS_GET_SUBSET)+")",
+                                             "get_subset_callback("+str(DISPLAY_FILTERS)+")",
                                              "get_subset_callback("+str(CLEAR_SUBSET_FORM)+")",
                                              "get_subset_callback("+str(DISPLAY_MAIN)+")",
                                              "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + ")"]
 
-get_subset_input_reqList                =   [0,5]
+get_subset_input_reqList                =   [0,1,2]
 
 get_subset_input_form                   =   [get_subset_input_id,
                                              get_subset_input_idList,
@@ -111,39 +122,38 @@ get_subset_filter_input_idList            =   ["gscolname",
                                                "gscolvalue",
                                                "gscoloper",
                                                "gscolandor",
-                                               "gsselandor",
                                                "gsselectstring",
-                                               None,None,None,None,None]
+                                               None,None,None,None,None,None]
 
 get_subset_filter_input_labelList         =   ["filter_column_name",
                                                "filter_column_value(s)",
                                                "filter_column_value(s)_operator(s)",
                                                "filter_column_value(s)_logicals",
-                                               "next_filter_logical",
                                                "selection_criteria",
                                                "Add</br>Filter</br>To Criteria",
+                                               "Display</br>Filters",
                                                "Get</br>Subset",
                                                "Clear","Return","Help"]
 
-get_subset_filter_input_typeList          =   ["text",maketextarea(3),"text","text","text",maketextarea(8),
-                                               "button","button","button","button","button"]
+get_subset_filter_input_typeList          =   ["text",maketextarea(6),"text","text",maketextarea(3),
+                                               "button","button","button","button","button","button"]
 
 get_subset_filter_input_placeholderList   =   ["current filter column name - select from Condition Columns table",
                                                "current filter column value(s) - select from Column Values table or enter 'value' ",
                                                "current filter column operator(s) - '<' '<=' '>' '=>' '==' '!=' (default '==')",
                                                "select and/or logical to use between column sub filters (default = or)",
-                                               "select OR/AND/NOT logical to add next filter to selection criteria (default = AND)",
                                                "select string : can be editted manually (default - None)",
-                                               None,None,None,None,None]
+                                               None,None,None,None,None,None]
 
-get_subset_filter_input_jsList            =   [None,None,None,None,None,None,
+get_subset_filter_input_jsList            =   [None,None,None,None,None,
                                                "get_subset_callback("+str(ADD_FILTER)+")",
+                                               "get_subset_callback("+str(DISPLAY_FILTERS)+")",
                                                "get_subset_callback("+str(PROCESS_GET_SUBSET_FILTERED)+")",
                                                "get_subset_callback("+str(CLEAR_FILTER_FORM)+")",
                                                "get_subset_callback("+str(DISPLAY_MAIN)+")",
                                                "displayhelp(" + str(dfchelp.DFSUBSET_FILTER_ID) + ")"]
 
-get_subset_filter_input_reqList           =   [5]
+get_subset_filter_input_reqList           =   [0,1,2,3,4]
 
 get_subset_filter_input_form              =   [get_subset_filter_input_id,
                                                get_subset_filter_input_idList,
@@ -152,6 +162,49 @@ get_subset_filter_input_form              =   [get_subset_filter_input_id,
                                                get_subset_filter_input_placeholderList,
                                                get_subset_filter_input_jsList,
                                                get_subset_filter_input_reqList]  
+
+
+"""
+#--------------------------------------------------------------------------
+#   get subset input 
+#--------------------------------------------------------------------------
+"""
+get_subset_filters                      =   "Dataframe Subset Filters"
+get_subset_filters_id                   =   "dcdfsubsetfilters"
+get_subset_filters_idList               =   ["gsfiltername",
+                                             "gsfilterlogic",
+                                             None,None,None,None]
+
+get_subset_filters_labelList            =   ["filter_name",
+                                             "filter_logic",
+                                             "Edit</br>Filter",
+                                             "Delete</br>Filter",
+                                             "Return","Help"]
+
+get_subset_filters_typeList             =   ["text",maketextarea(10),
+                                             "button","button","button","button"]
+
+get_subset_filters_placeholderList      =   ["filter name",
+                                             "filter logic",
+                                             "df subset selection criteria",
+                                             None,None,None,None]
+
+get_subset_filters_jsList               =   [None,None,
+                                             "get_subset_callback("+str(EDIT_FILTER)+")",
+                                             "get_subset_callback("+str(DELETE_FILTER)+")",
+                                             "get_subset_callback("+str(DISPLAY_GET_SUBSET_FILTER)+")",
+                                             "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + ")"]
+
+get_subset_filters_reqList              =   [0,1]
+
+get_subset_filters_form                 =   [get_subset_filters_id,
+                                             get_subset_filters_idList,
+                                             get_subset_filters_labelList,
+                                             get_subset_filters_typeList,
+                                             get_subset_filters_placeholderList,
+                                             get_subset_filters_jsList,
+                                             get_subset_filters_reqList]  
+
     
 """
 #--------------------------------------------------------------------------
@@ -174,15 +227,25 @@ def get_dfsubset_filter_input_parms(parms) :
    return(get_parms_for_input(parms,get_subset_filter_input_idList))
 
 
-
-
 """            
 #--------------------------------------------------------------------------
 #    display df subset status
 #--------------------------------------------------------------------------
 """
-def display_df_subset_status(df,filename,filtertext) :
-    
+def display_df_subset_status(df,out_df,filename,filtertext=None) :
+    """
+    * -------------------------------------------------------- 
+    * function : display df subset status
+    * 
+    * parms :
+    *   df          - dataframe
+    *   out_df      - output dataframe
+    *   filename    - output file name
+    *   filtertext  - filter description
+    *   
+    * returns : operators html
+    * --------------------------------------------------------
+    """
     
     statusHeader    =   ["",""]
     statusRows      =   []
@@ -198,17 +261,18 @@ def display_df_subset_status(df,filename,filtertext) :
     statusRows.append(["Total Columns",len(df.columns)])
     colorList.append([whitecolor,whitecolor])
     
-    if(filename == None) :
-        ftext = "original dataframe"
-    else :
-        ftext = filename
-    statusRows.append(["Output",ftext])
+    statusRows.append(["output dataframe",out_df])
+    colorList.append([whitecolor,whitecolor])
+    
+    if(not (filename == None)) :
+        statusRows.append(["output file",filename])
     colorList.append([whitecolor,whitecolor])
     
     if(filtertext == None) :
         ftext = "no filters"
     else :
         ftext = filtertext
+        
     statusRows.append(["Filters",ftext])
     colorList.append([whitecolor,whitecolor])
     
@@ -237,6 +301,15 @@ def display_df_subset_status(df,filename,filtertext) :
 #--------------------------------------------------------------------------
 """
 def get_operators_table() :
+    """
+    * -------------------------------------------------------- 
+    * function : get math operators table
+    * 
+    * parms :
+    *
+    * returns : operators html
+    * --------------------------------------------------------
+    """
     
     operatorsHeader      =   [""]
 
@@ -247,7 +320,6 @@ def get_operators_table() :
     
     column_operators     =   ["==","!=","<","<=",">",">="]
     clause_operators     =   ["or","and"]
-    filter_operators     =   ["OR","AND","NOT"]
     
     for i in range(len(column_operators)) :
         operatorsRows.append([column_operators[i]])
@@ -255,18 +327,13 @@ def get_operators_table() :
         
     operatorsRows.append([" "])
     operatorsHrefs.append([None])
+    operatorsRows.append([" "])
+    operatorsHrefs.append([None])
     
     for i in range(len(clause_operators)) :
         operatorsRows.append([clause_operators[i]])
         operatorsHrefs.append(["set_clause_oper"])
     
-    operatorsRows.append([" "])
-    operatorsHrefs.append([None])
-    
-    for i in range(len(filter_operators)) :
-        operatorsRows.append([filter_operators[i]])
-        operatorsHrefs.append(["set_filter_oper"])
-
     operators_table = dcTable("",
                               "dcoperatorsTable",
                               cfg.SWDFSubsetUtility_ID,
@@ -285,17 +352,24 @@ def get_operators_table() :
     operators_table.set_checkLength(False)
     operators_table.set_html_only(True) 
     
-    #operators_table.dump() 
-    
     operatorshtml   =   "" 
-    
     operatorshtml   =   operators_table.get_html()
     
     return(operatorshtml)
-
         
 
 def get_col_uniques_table(df,colname) :
+    """
+    * -------------------------------------------------------- 
+    * function : get unique column values
+    * 
+    * parms :
+    *  df       -   dataframe 
+    *  colname  -   filters column name 
+    *
+    * returns : unique columns html
+    * --------------------------------------------------------
+    """
     
     columnuniquesHeader      =   [""]
 
@@ -360,18 +434,13 @@ def get_col_uniques_table(df,colname) :
                                   columnuniquesWidths,columnuniquesAligns)
 
     columnuniques_table.set_refList(columnuniquesHrefs)
-    
     columnuniques_table.set_small(True)
     columnuniques_table.set_smallwidth(98)
     columnuniques_table.set_smallmargin(10)
-
     columnuniques_table.set_border(True)
-        
     columnuniques_table.set_checkLength(True)
-            
     columnuniques_table.set_textLength(30)
     columnuniques_table.set_html_only(True) 
-    
     columnuniques_table.set_tabletype(ROW_MAJOR)
     columnuniques_table.set_rowspertable(14)
 
@@ -379,8 +448,19 @@ def get_col_uniques_table(df,colname) :
     return(tablehtml)
 
 
-def get_dfsubset_table(filters=False,colname=None) :
-    
+def get_dfsubset_table(df,filters=False,colname=None) :
+    """
+    * --------------------------------------------------------- 
+    * function : get dfsubset table
+    * 
+    * parms :
+    *  filters -   filters flag 
+    *  colname -   filters column name 
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+ 
     from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
     
     if(colname==None) :
@@ -393,14 +473,24 @@ def get_dfsubset_table(filters=False,colname=None) :
         dfsparms = cfg.get_config_value(get_subset_input_id+"Parms")
         
         if( (not(dfsparms == None)) and (len(dfsparms) > 0) ):
-            collist = dfsparms[1]
-            collist = collist.split(",")
-            for i in range(len(collist)) :
-                collist[i]  =   collist[i].rstrip(" ")    
+            collist = cfg.get_cfg_parm_from_input_list(get_subset_input_id,
+                                                       "column_names_list",
+                                                       get_subset_input_labelList)
+            
+            if(collist == "") :
+                collist =  df.columns.get_values().tolist() 
+            else :    
+                #collist = dfsparms[3]
+                collist = collist.split(",")
+                for i in range(len(collist)) :
+                    collist[i]  =   collist[i].rstrip(" ")    
             
             if(len(collist) > 0) :
                 keepcols = True
-                keepflag = dfsparms[2]
+                keepflag = cfg.get_cfg_parm_from_input_list(get_subset_input_id,
+                                                           "column_names_list_flag",
+                                                           get_subset_input_labelList)
+                #keepflag = dfsparms[4]
                 if(len(keepflag) > 0) :
                     if(keepflag == "False") :
                         keepcols = False
@@ -453,14 +543,17 @@ def display_df_subset(df,filters=False,colname=None) :
     * --------------------------------------------------------
     """
     
+    print("display_df_subset",filters,colname,"\n",cfg.get_config_value(get_subset_filter_input_id+"Parms"))
+ 
     if(not colname==None) :
         cfg.set_config_value(get_subset_filter_input_id+"Parms",[colname,"","","","",""])
 
-    col_names_html  =   get_dfsubset_table(filters,colname)
+    col_names_html  =   get_dfsubset_table(df,filters,colname)
     
     if(filters) :
         operators_html = get_operators_table()
 
+    
     get_subset_input_html = ""
     
     if(filters) :
@@ -477,42 +570,8 @@ def display_df_subset(df,filters=False,colname=None) :
         
         get_subset_input_html = get_filter_subset_input_form.get_html() 
         
-        dfdsparms   =   cfg.get_config_value(get_subset_input_id+"Parms")
-        dfdstexts   =   []
-        
-        if( (dfdsparms == None) or (len(dfdsparms) == 0) ) :
-            dfdstexts.append("Keep All Rows")            
-            dfdstexts.append("Keep All Cols")
-            dfdstexts.append("Overwrite Dataframe Cleanser dataframe")
-        else :
-            if(dfdsparms[0] == "") :
-                dfdstexts.append("Keep All Rows") 
-            else :
-                dfdstexts.append("Drop Rows Slice " + str(dfdsparms[0]))
-            
-            if(dfdsparms[2] == "") :
-                opcmd = "Keep" 
-            else :
-                opcmd = "Drop"
-                
-            if(dfdsparms[1] == "") :
-                dfdstexts.append("Keep All Columns") 
-            else :
-                dfdstexts.append(opcmd + " Cols : " + str(dfdsparms[1]))
-            if(dfdsparms[3] == "") :
-                dfdstexts.append("Overwrite Dataframe Cleanser dataframe") 
-            else :
-                dfdstexts.append("Write dataframe subset to " + str(dfdsparms[3]))
-
-        heading_title   =   ("<div>")
-        heading_title   =   (heading_title + "<h4>&nbsp;&nbsp;Get Dataframe Subset Filters</h4><br></br>")
-        heading_title   =   (heading_title + "<div class='container' style='font-size:12px; border: 1px solid #428bca; width:40%; margin-left:40px;'>")
-        for i in range(len(dfdstexts)) :
-            heading_title   =   (heading_title + "<div>" + dfdstexts[i] + "</div>")
-        heading_title   =   (heading_title + "</div>")
-        heading_title   =   (heading_title + "</div>")
-                
-        get_subset_heading_html = heading_title
+        from dfcleanser.common.html_widgets import get_html_spaces
+        get_subset_heading_html = "<h4>" + get_html_spaces(62) + "Create Dataframe Subset Filter</h4>"
         
     else :
         
@@ -521,10 +580,14 @@ def display_df_subset(df,filters=False,colname=None) :
                                       get_subset_input_form[2],get_subset_input_form[3],
                                       get_subset_input_form[4],get_subset_input_form[5],
                                       get_subset_input_form[6])
+    
+        subssel     =   {"default":"True","list":["True","False"]}
+        subset_input_form.add_select_dict("gsadddrop",subssel)
         
         subset_input_form.set_shortForm(False)
         subset_input_form.set_gridwidth(550)
         subset_input_form.set_fullparms(True)
+        subset_input_form.add_select_dict("gsindataframe",cfg.get_dfc_dataframes_select_list())
         
         get_subset_input_html = subset_input_form.get_html() 
             
@@ -545,3 +608,116 @@ def display_df_subset(df,filters=False,colname=None) :
                      get_subset_input_html,
                      None)
 
+
+def get_filters_table() :
+    """
+    * -------------------------------------------------------- 
+    * function : get filters table
+    * 
+    * parms :
+    *
+    * returns : filters html
+    * --------------------------------------------------------
+    """
+    
+    filtersHeader     =   [""]
+
+    filtersRows       =   []
+    filtersWidths     =   [100]
+    filtersAligns     =   ["left"]
+    filtersHrefs      =   []
+    
+    filtersDict       =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
+    
+    if(not(filtersDict == None)) :
+        
+        for key in filtersDict.keys() :
+            filtersRows.append([filtersDict.get(key).get("title")])
+            filtersHrefs.append(["select_filter"])
+        
+    else :
+        filtersRows.append(["no Filters"])
+        filtersHrefs.append([""])
+        
+    filters_table = dcTable("Subset Filters",
+                            "dcfiltersTable",
+                            cfg.SWDFSubsetUtility_ID,
+                            filtersHeader,filtersRows,
+                            filtersWidths,filtersAligns)
+
+    filters_table.set_refList(filtersHrefs)
+    filters_table.set_small(True)
+    filters_table.set_smallwidth(98)
+    filters_table.set_smallmargin(10)
+    filters_table.set_border(True)
+    filters_table.set_checkLength(True)
+    filters_table.set_textLength(40)
+    filters_table.set_html_only(True) 
+    filters_table.set_tabletype(ROW_MAJOR)
+    filters_table.set_rowspertable(14)
+
+    filtershtml = get_row_major_table(filters_table,SCROLL_NEXT,False)
+
+    return(filtershtml)
+        
+
+def display_filters(df) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display current df subset form
+    * 
+    * parms :
+    *  df      -   dataframe to subset from
+    *  filters -   filters form 
+    *  colname -   filters column name 
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    print("display_filters")    
+    
+    
+    filter_names_html  =   get_filters_table()
+    
+    
+    filters_input_html = ""
+    
+    from dfcleanser.common.html_widgets import InputForm
+    filters_input_form = InputForm(get_subset_filters_form[0],get_subset_filters_form[1],
+                                   get_subset_filters_form[2],get_subset_filters_form[3],
+                                   get_subset_filters_form[4],get_subset_filters_form[5],
+                                   get_subset_filters_form[6])
+        
+    filters_input_form.set_shortForm(False)
+    filters_input_form.set_gridwidth(550)
+    filters_input_form.set_fullparms(True)
+    filters_input_form.add_select_dict("gsindataframe",cfg.get_dfc_dataframes_select_list())
+        
+    filters_input_html = filters_input_form.get_html() 
+            
+    filters_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dataframe Subset Filters</h4>"
+    
+        
+    display_grid("dfsubset_wrapper",
+                 filters_heading_html,
+                 filter_names_html,
+                 filters_input_html,
+                 None)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

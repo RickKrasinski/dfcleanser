@@ -16,8 +16,7 @@ import dfcleanser.sw_utilities.sw_utility_bulk_geocode_widgets as subgw
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_console as subgc
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_model as subgm
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_exception, display_notes, 
-                                            display_status, displayParms, RunningClock, opStatus)
+from dfcleanser.common.common_utils import (display_exception, display_status, displayParms, RunningClock, opStatus)
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
 import googlemaps
@@ -97,6 +96,8 @@ def test_arcgis_batch_connection(user,pw,opstat) :
     if(opstat.get_status()) :
         cfg.set_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,cparms[1][0])
         cfg.set_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY,cparms[1][1])
+        
+    return(cparms[0])
 
         
 def validate_batch_arcgis_geocoder_parms(connectParms,opstat) :
@@ -139,20 +140,9 @@ def test_arcgis_batch_connector(connectParms) :
     
         try :
     
-            test_arcgis_batch_connection(connectParms[1],connectParms[2],opstat)
+            geocoder    =  test_arcgis_batch_connection(connectParms[1],connectParms[2],opstat)
             if(opstat.get_status()) :
                 cfg.set_config_value(subgw.batch_arcgis_geocoder_id + "Parms",connectParms)
-                bulk_parms      =   cfg.get_config_value(subgw.batch_arcgis_query_id + "Parms")
-                if(bulk_parms == None) :
-                    bulk_parms  =   []
-                    for i in range((len(subgw.batch_arcgis_query_idList)-5)) :
-                        bulk_parms.append("")
-                    
-                bulk_parms[1]   =   connectParms[1] 
-                bulk_parms[2]   =   connectParms[2]
-                bulk_parms[11]  =   str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))
-                cfg.set_config_value(subgw.batch_arcgis_query_id + "Parms",bulk_parms)
-                print("bulk_parms",bulk_parms,cfg.get_config_value(subgw.batch_arcgis_query_id + "Parms"))
     
         except Exception as e:
             opstat.store_exception("Unable to connect to arcgis ",e)
@@ -163,17 +153,63 @@ def test_arcgis_batch_connector(connectParms) :
     
     if(opstat.get_status()) :
         display_status("arcGIS batch geocoder connected to successfully")
-
+        
         displayParms("arcGIS Batch Size Settings",
                      ["MaxBatchSize","SuggestedBatchSize"],
                      [str(cfg.get_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY)),
                       str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))],
-                     cfg.SWUtilities_ID)
+                      cfg.SWUtilities_ID)
+        
+        try :
+            addresses   =   ["11111 Euclid Ave, Cleveland OH "]
+            from arcgis.geocoding import batch_geocode
+            results     =   batch_geocode(addresses,geocoder=geocoder)
+        except Exception as e:
+            opstat.store_exception("Unable to geocode from arcgis ",e)
+            
+        if(opstat.get_status()) :
+            
+            test_results    =   results[0]
+            score           =   test_results.get("score")
+            attributes      =   test_results.get("attributes")
+            address         =   test_results.get("address")
+            location        =   test_results.get("location")
+            
+            displayParms("arcGIS Geocode Results",
+                         ["Input Address","Lat : Long",
+                          "Score","Returned Address"],
+                         ["11111 Euclid Ave, Cleveland OH ",
+                          str(location.get("x")) + " : " + str(location.get("y")),
+                          str(score),
+                          str(address)],
+                          cfg.SWUtilities_ID)
+            
+            city            =   attributes.get("City","NA")
+            subregion       =   attributes.get("Subregion","NA")
+            region          =   attributes.get("Region","NA")
+            postal          =   attributes.get("Postal","NA")
+            country         =   attributes.get("Country","NA")
+            
+            displayParms("arcGIS Address Results",
+                         ["City","Subregion",
+                          "Region","Postal","Country"],
+                         [str(city),str(subregion),str(region),
+                          str(postal),
+                          str(country)],
+                          cfg.SWUtilities_ID)
+
+
     else :
         from dfcleanser.common.common_utils import display_exception
         display_exception(opstat) 
 
 
+
+"""
+#--------------------------------------------------------------------------
+#   arcgis query methods
+#--------------------------------------------------------------------------
+"""
 def get_arcgis_batch_addresses(rowIndex,runParms,addressMap) :
     """
     * -------------------------------------------------------------------------- 
@@ -190,8 +226,8 @@ def get_arcgis_batch_addresses(rowIndex,runParms,addressMap) :
     
     arcgisbatch     =   []
 
-    batchSize   =   int(runParms.get(subgw.batch_arcgis_query_labelList[6]))
-    maxAddrs    =   int(runParms.get(subgw.batch_arcgis_query_labelList[7]))
+    batchSize   =   int(cfg.get_cfg_parm_from_input_list(subgw.batch_arcgis_query_id,"batch_size",subgw.batch_arcgis_query_labelList))
+    maxAddrs    =   int(cfg.get_cfg_parm_from_input_list(subgw.batch_arcgis_query_id,"max_addresses_to_geocode",subgw.batch_arcgis_query_labelList))
     
     if((rowIndex + batchSize) > maxAddrs) :
         stopRow     =   maxAddrs - 1
@@ -221,7 +257,7 @@ def run_arcgis_bulk_geocode(runParms,opstat,state) :
 
     if(state == sugm.LOAD) :
         #print("\nrun_arcgis_bulk_geocode : LOAD\n",runParms) 
-        address_map     =   subgm.get_address_map(runParms.get(subgw.batch_arcgis_query_labelList[2]))
+        address_map     =   subgm.get_address_map(runParms.get("dataframe_address_columns"))
     
         if(opstat.get_status()) :
             subgc.display_geocoder_console(sugm.ArcGISId,runParms,opstat)
@@ -250,20 +286,20 @@ def get_arcgis_geocode_batch(geocoder,addresslist,runParms,opstat) :
     *  geocoder         - arcgis geocoder
     *  addresslist      - lisy of addresses
     *
-    * returns : N/A
+    * returns : 
+    *   list of batch geocode results
     * --------------------------------------------------------
     """
     
     geocode_list    =   []
     get_address     =   False
     
-    if(runParms.get(subgw.batch_arcgis_query_labelList[12])  == "True") :
+    if(runParms.get("save_geocoder_full_address_column_name")  == "True") :
         get_address     =   True
 
-    
-    country         =   runParms.get(subgw.batch_arcgis_query_labelList[4],None)
-    category        =   runParms.get(subgw.batch_arcgis_query_labelList[5],None)
-    out_sr          =   runParms.get(subgw.batch_arcgis_query_labelList[13],None)
+    country         =   runParms.get("source_country",None)
+    category        =   runParms.get("category",None)
+    out_sr          =   runParms.get("out_sr",None)
 
     try :
     
@@ -300,18 +336,46 @@ def process_arcgis_geocode_batch_results(batch_results,runParms,opstat) :
     * function : process a single arcgis goeocode batch
     * 
     * parms :
-    *  geocoder         - arcgis geocoder
-    *  addresslist      - lisy of addresses
+    *  batch_results    - single arcgis batch results
+    *  runParms         - run parms
+    *  opstat           - run op status
     *
     * returns : N/A
     * --------------------------------------------------------
     """
 
     print("process_arcgis_geocode_batch_results",batch_results,runParms,opstat)
+    
+    resultsLog    =   subgm.get_geocode_runner_results_log()
+    
+    
 
 
 def process_arcgis_geocode_batch_error(batch_results,runParms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process a arcgis goeocode error
+    * 
+    * parms :
+    *  batch_results    - single arcgis batch results
+    *  runParms         - run parms
+    *  opstat           - run op status
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
     print("process_arcgis_geocode_batch_error",batch_results,runParms,opstat)
+    errorLog    =   subgm.get_geocode_runner_error_log()
+    
+    batchindex  =   errorLog.get_error_count() + 1
+    inputValue  =   runParms[0]
+    errorMsg    =   opstat.get_errorMsg()
+
+    
+    errorLog.log_error(batchindex,inputValue,errorMsg)
+
+
 
 
 
@@ -320,6 +384,12 @@ def process_arcgis_geocode_batch_error(batch_results,runParms,opstat) :
 #--------------------------------------------------------------------------
 #   google bulk coding methods
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#   google bulk geocoder methods
 #--------------------------------------------------------------------------
 """
 def get_bulk_google_geocoder_connection(apikey,cid,csecret,opstat) :
@@ -346,8 +416,6 @@ def get_bulk_google_geocoder_connection(apikey,cid,csecret,opstat) :
     #client_secret   =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"#runParms.get(subgw.bulk_google_query_input_labelList[1])
     #gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
 
-    print("get_bulk_google_geocoder_connection",apikey,cid,csecret)
-    
     try :
         if(api_key == None) :
             gmaps           =   googlemaps.Client(client_id=client_ID,client_secret=client_Secret)
@@ -375,8 +443,6 @@ def validate_bulk_google_geocoder_parms(connectParms,opstat) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    
-    print("validate_bulk_google_geocoder_parms",connectParms)    
     
     if( len(connectParms[0]) == 0 ) :
         if( (len(connectParms[1]) == 0) or (len(connectParms[2]) == 0) ) :        
@@ -411,20 +477,10 @@ def test_google_bulk_connector(connectParms) :
             gmaps           =   get_bulk_google_geocoder_connection(connectParms[0],connectParms[1],connectParms[2],opstat)
             
             queryParms      =   [None,connectParms[0],connectParms[1],connectParms[2],None,None,None,None,None,None]
-            test_results    =   get_google_geocode_results(test_address,gmaps,queryParms)            
+            test_results    =   get_google_geocode_results(test_address,gmaps,queryParms) 
             
             if(opstat.get_status()) :
                 cfg.set_config_value(subgw.google_bulk_geocoder_id + "Parms",connectParms)
-                bulk_parms      =   cfg.get_config_value(subgw.bulk_google_query_input_id + "Parms")
-                if(bulk_parms == None) :
-                    bulk_parms  =   []
-                    for i in range((len(subgw.bulk_google_query_idList)-6)) :
-                        bulk_parms.append("")
-                    
-                bulk_parms[1]   =   connectParms[0] 
-                bulk_parms[2]   =   connectParms[1]
-                bulk_parms[3]   =   connectParms[2]
-                cfg.set_config_value(subgw.bulk_google_query_input_id + "Parms",bulk_parms)
     
         except Exception as e:
             opstat.store_exception("Unable to connect to google ",e)
@@ -440,20 +496,62 @@ def test_google_bulk_connector(connectParms) :
         from dfcleanser.common.common_utils import display_exception
         display_exception(opstat) 
 
+
 def display_google_test_results(address,results) : 
-    
-    notes = []
-    notes.append("Starting Address   : " + address)
-    notes.append("  ")
-    notes.append("Returned Address   : " + results.get_formatted_address())
-    notes.append("Returned Latitude  : " + str(results.get_lat()))
-    notes.append("Returned Longitude : " + str(results.get_lng()))
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display google test geocoder results
+    * 
+    * parms :
+    *  address - address to test with
+    *  results - results returned
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
             
-    display_notes(notes)
+    displayParms("Google Geocode Results",
+                 ["Input Address",
+                  "Lat : Long",
+                  "Location_Type",
+                  "Returned Address"],
+                  [address,
+                   str(results.get_lat()) + " : " + str(results.get_lng()),
+                   str(results.get_location_type()),
+                   str(results.get_formatted_address())],
+                   cfg.SWUtilities_ID)
     
-    print(results.get_results())
+    address_results    =   google_address_components(results.get_address_components())
+    
+    displayParms("Google Address Components",
+                 [GOOGLE_GEOCODER_STREET_NUMBER_ID,
+                  GOOGLE_GEOCODER_ROUTE_ID,
+                  GOOGLE_GEOCODER_NEIGHBORHOOD_ID,
+                  GOOGLE_GEOCODER_LOCALITY_ID,
+                  GOOGLE_GEOCODER_ADMIN_LEVEL_1_ID,
+                  GOOGLE_GEOCODER_ADMIN_LEVEL_2_ID,
+                  GOOGLE_GEOCODER_ADMIN_LEVEL_3_ID,
+                  GOOGLE_GEOCODER_ADMIN_LEVEL_4_ID,
+                  GOOGLE_GEOCODER_COUNTRY_ID,
+                  GOOGLE_GEOCODER_POSTAL_CODE_ID],
+                  [address_results.get_address_component(GOOGLE_GEOCODER_STREET_NUMBER_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_ROUTE_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_NEIGHBORHOOD_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_LOCALITY_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_ADMIN_LEVEL_1_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_ADMIN_LEVEL_2_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_ADMIN_LEVEL_3_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_ADMIN_LEVEL_4_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_COUNTRY_ID),
+                   address_results.get_address_component(GOOGLE_GEOCODER_POSTAL_CODE_ID)],
+                  cfg.SWUtilities_ID)
+    
 
-
+"""
+#--------------------------------------------------------------------------
+#   google bulk query methods
+#--------------------------------------------------------------------------
+"""
 def run_google_bulk_geocode(runParms,opstat,state) :
     """
     * -------------------------------------------------------------------------- 
@@ -462,6 +560,7 @@ def run_google_bulk_geocode(runParms,opstat,state) :
     * parms :
     *  runParms     - google run parms
     *  opstat       - operation status object
+    *  state        - run state
     *
     * returns : N/A
     * --------------------------------------------------------
@@ -471,7 +570,7 @@ def run_google_bulk_geocode(runParms,opstat,state) :
 
     if(state == sugm.LOAD) :
         #print("\nrun_arcgis_bulk_geocode : LOAD\n",runParms) 
-        address_map     =   subgm.get_address_map(runParms.get(subgw.bulk_google_query_input_labelList[2]))
+        address_map     =   subgm.get_address_map(runParms.get("dataframe_address_columns"))
     
         if(opstat.get_status()) :
             subgc.display_geocoder_console(sugm.GoogleId,runParms,opstat)
@@ -491,8 +590,6 @@ def run_google_bulk_geocode(runParms,opstat,state) :
         subgc.display_geocoder_console(sugm.GoogleId,None,opstat,sugm.PAUSING)
 
 
-
-
 def get_google_geocode_results(address,geocodeConnector,queryParms) :
     """
     * -------------------------------------------------------------------------- 
@@ -507,14 +604,13 @@ def get_google_geocode_results(address,geocodeConnector,queryParms) :
     * --------------------------------------------------------
     """
     
-    print("get_google_geocode_results",address,len(address),"\n",queryParms)
     opstat          =   opStatus()
     geocode_results =   None
     gmaps           =   geocodeConnector 
     
     if(gmaps == None) :
-        gmaps   =   get_bulk_google_geocoder_connection(queryParms[1],queryParms[2],
-                                                        queryParms[3],opstat)        
+        cparms  =   cfg.get_config_value(subgw.google_bulk_geocoder_id+"Parms")
+        gmaps   =   get_bulk_google_geocoder_connection(cparms[0],cparms[1],cparms[2],opstat)        
     
     #client_id       =   "dfcleanser"#runParms.get(subgw.bulk_google_query_input_labelList[0])
     #client_secret   =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"#runParms.get(subgw.bulk_google_query_input_labelList[1])
@@ -525,8 +621,8 @@ def get_google_geocode_results(address,geocodeConnector,queryParms) :
         compParm    =   None
         boundsParm  =   None
         if(not (queryParms == None)) :
-            regionParm      =   queryParms[8]
-            languageParm    =   queryParms[9]
+            regionParm      =   queryParms[5]
+            languageParm    =   queryParms[6]
         else :
             regionParm      =   None
             languageParm    =   None
@@ -561,10 +657,11 @@ def get_google_geocode_results(address,geocodeConnector,queryParms) :
             opstat.set_errorMsg("UNKNOWN EXCEPTION")
         
     current_geocode_results    =   google_geocode_results(geocode_results,opstat)
+    
     return(current_geocode_results)
 
 
-def get_google_reverse_results(lat_long,reverseParms) :
+def get_google_reverse_results(lat_long,geocodeConnector,reverseParms) :
     """
     * --------------------------------------------------------
     * function : get a single google reverse result
@@ -584,22 +681,11 @@ def get_google_reverse_results(lat_long,reverseParms) :
     opstat          =   opStatus()
     reverse_results =   None
     
-    #client_id       =   runParms.get(subgw.bulk_google_query_input_labelList[0])
-    #client_secret   =   runParms.get(subgw.bulk_google_query_input_labelList[1])
+    gmaps           =   geocodeConnector 
     
-    #client_id       =   "dfcleanser"#runParms.get(subgw.bulk_google_query_input_labelList[0])
-    client_secret   =   "AIzaSyA8_3-UFBQTxukj6ePW0wp7eLW45GH3B7c"#runParms.get(subgw.bulk_google_query_input_labelList[1])
-    #gmaps           =   googlemaps.Client(client_id=client_id, client_secret=client_secret)
-    
-    try :
-        gmaps           =   googlemaps.Client(key=client_secret)
-    
-    except ValueError :
-        opstat.set_status(False)
-        opstat.set_errorMsg("CLIENT CREDENTIALS INVALID")
-    except NotImplementedError :
-        opstat.set_status(False)
-        opstat.set_errorMsg("NotImplementedError")
+    if(gmaps == None) :
+        cparms  =   cfg.get_config_value(subgw.google_bulk_geocoder_id+"Parms")
+        gmaps   =   get_bulk_google_geocoder_connection(cparms[0],cparms[1],cparms[2],opstat)        
 
     if(opstat.get_status()) :   
         
@@ -663,8 +749,20 @@ def process_google_geocoding_errors(geotype,inputParms,runParms,geocoding_result
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """    
-def get_header_columns_map(geocid,geotype,runParms) :
-    print("get_header_columns",geocid,geotype,runParms)
+
+def init_geocoding_data_structures(geocid,geotype,runParms) :
+    """
+    * --------------------------------------------------------- 
+    * function : init data structures to run geocoder
+    * 
+    * parms :
+    *  geocid     - geocoder identifier
+    *  geotype    - geocoding op type
+    *  runParms   - run parameters
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     columns     =   ["rowIndex", "inputval"]
     widths      =   []
@@ -696,15 +794,8 @@ def get_header_columns_map(geocid,geotype,runParms) :
                 widths  =   [10,30,20,40]
             else :
                 widths  =   [10,60,30]
-            
-    return([columns,widths])           
-
-
-def init_geocoding_data_structures(geocid,geotype,runParms) :
     
-    column_headers_map      =   get_header_columns_map(geocid,geotype,runParms)   
-    BulkGeocodeResultsdf    =   BulkGeocodeResults(column_headers_map)    
-
+    BulkGeocodeResultsdf    =   BulkGeocodeResults([columns,widths])    
     BulkGeocodeErrors       =   BulkGeocodeErrorLog()    
 
     return([BulkGeocodeResultsdf,BulkGeocodeErrors])
@@ -724,6 +815,7 @@ def get_bulk_coords(geocid,inputs,state=sugm.LOAD) :
     """
     
     print("get_bulk_coords",geocid,state,"\n",inputs)
+    
     
     opstat      =   opStatus()
     
@@ -838,213 +930,11 @@ def run_bulk_geocoder_query(geocid, parms) :
     * --------------------------------------------------------
     """
     
+    print("run_bulk_geocoder_query",geocid, parms)    
     return()
 
-    """    
-    #geocid  =   inparms[1]
-    #parms   =   inparms[2]
-    opstat  =   opStatus()
     
-    opstat = sugw.validate_cmd_parms(sugm.QUERY,geocid,parms)
-    
-    if(not opstat.get_status()) :
-        
-        sugw.display_comp_addr_geocode_inputs(inparms)
-        
-        if(opstat.get_errorMsg() != "No Parms") :
-            display_exception(opstat)
-        
-    else :
-        
-        clock = RunningClock()
-        clock.start()
-
-        geolocator = get_geocoder_engine(geocid,opstat)
-
-        if(opstat.get_status()) :
-            
-            try :
-                
-                queryparms = get_bulk_query_parms(geocid,parms)
-                
-                #print("get_geocoder_df_addresses",queryparms)
-                
-                cols        =   queryparms[0]
-                
-                colnames    =   []
-                
-                if(queryparms[1].find(",") > 1) :
-                    cnames = queryparms[1].split(",")
-                    for i in range(len(cnames)) :
-                        colnames.append(cnames[i])
-                else :
-                    colnames.append(queryparms[1])
-
-                if(len(queryparms[2]) > 0) :
-                    deloldcols  =   True
-                else :
-                    deloldcols  =   False
-                
-                qparms  =   sugw.get_geocoder_cmd_kwargs(sugm.QUERY,geocid)
-                
-                if(len(qparms) > 3) :
-                    qparms  =   qparms[3:]
-                
-                invalidaddr     =   []
-                timeoutaddr     =   []
-                parseerror      =   []
-                
-                stopRun         =   False
-                
-                totalTimeouts   =   0
-                MAX_TIMEOUTS    =   100
-                
-                totalParseErrors   =   0
-                MAX_PARSEERRORS    =   200
-                
-                addresses       =   []
-                latitudes       =   []
-                longitudes      =   []
-                latlongs        =   []
-                
-                # for each row in the dataframe
-                for i in range(len(cfg.get_dfc_dataframe())) :
-                    
-                    if(stopRun) :  
-                        i = len(cfg.get_dfc_dataframe()) + 1
-                    else :
-                        
-                        query = ""
-                        for j in range(len(cols[0])) :
-                            if(cols[1][j]) :
-                                val = cfg.get_dfc_dataframe().iloc[i][cols[0][j]]
-                                import pandas as pd
-                                if(not pd.isnull(val)) :
-                                    query = query + " " + str(val) 
-                            else :
-                                query = query + " " + str(cols[0][j])
-                
-                        if(len(query > 0)) :
-                        
-                            import geopy as gp
-                        
-                            try :    
-                                if(len(qparms) > 0) :
-                                    address, (latitude, longitude) = geolocator.geocode(query, **qparms) 
-                                else :
-                                    address, (latitude, longitude) = geolocator.geocode(query)
-                                
-                                    if(len(colnames) == 1) :
-                                        latlongs.append((latitude, longitude)) 
-                                    else :
-                                        latitudes.append(latitude)
-                                        longitudes.append(longitude)
-                                        if(len(colnames) == 3) :
-                                            addresses.append(address)
-                                        
-                                addresses.append(address)
-                                latitudes.append(latitude)
-                                longitudes.append(longitude)
-                                
-                            except gp.exc.ConfigurationError as e:
-                                opstat.store_exception("ConfigurationError Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderServiceError as e:
-                                opstat.store_exception("GeocoderServiceError Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderQueryError as e:
-                                opstat.store_exception("GeocoderQueryError Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderQuotaExceeded as e:
-                                opstat.store_exception("GeocoderQuotaExceeded Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderAuthenticationFailure as e:
-                                opstat.store_exception("GeocoderAuthenticationFailure",e)
-                                stopRun = True
-                            except gp.exc.GeocoderInsufficientPrivileges as e:
-                                opstat.store_exception("GeocoderInsufficientPrivileges Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderTimedOut as e:
-                                
-                                totalTimeouts = totalTimeouts + 1
-                                
-                                if(totalTimeouts > MAX_TIMEOUTS) :
-                                    stopRun = True
-                                    opstat.store_exception("GeocoderTimedOut Error",e)
-                                else :
-                                    addresses.append(None)
-                                    latitudes.append(None)
-                                    longitudes.append(None)
-                                    timeoutaddr.append(i)
-    
-                            except gp.exc.GeocoderUnavailable as e:
-                                opstat.store_exception("GeocoderUnavailable Error",e)
-                                stopRun = True
-                            except gp.exc.GeocoderParseError as e:
-                                
-                                totalParseErrors = totalParseErrors + 1
-                                
-                                if(totalParseErrors > MAX_PARSEERRORS) :
-                                    stopRun = True
-                                    opstat.store_exception("GeocoderParseError Error",e)
-                                else :
-                                    addresses.append(None)
-                                    latitudes.append(None)
-                                    longitudes.append(None)
-                                    parseerror.append(i)
-                                    
-                            except gp.exc.GeocoderNotFound as e:
-                                opstat.store_exception("GeocoderNotFound Error",e)
-                                stopRun = True
-    
-                        else :
-                            invalidaddr.append(i)
-                            
-            except Exception as e:
-                opstat.store_exception("Error getting geocoder coords",e)
-            
-        clock.stop()
-
-        if(opstat.get_status()) :
-            
-            try :
-                
-                # create new lat long cols
-                from dfcleanser.data_transform.data_transform_columns_widgets import add_column
-                
-                if(len(colnames) == 1) :
-                    add_column(colnames[0],latlongs,opstat) 
-                else :
-                    add_column(colnames[0],latitudes,opstat)
-                    add_column(colnames[1],longitudes,opstat)
-                    if(len(colnames) == 3) :
-                        add_column(colnames[2],addresses,opstat)
-                
-                # delete old cols
-                if(deloldcols) :
-                    for i in range(len(queryparms[1])) :
-                        if(queryparms[1][i]) :
-                            cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().drop([queryparms[0][i]],axis=1))
-                
-            except Exception as e:
-                opstat.store_exception("Unable to save coors columns",e)
-
-            print("\n")
-            display_status("dataframe coordinates loaded successfully")
-            
-            notes = []
-            notes.append("Total Coords Loaded   : " + str(len(cfg.get_dfc_dataframe())))
-            notes.append("  ")
-            notes.append("Total Timeouts        : " + str(len(timeoutaddr)))
-            notes.append("Total Parse Errors    : " + str(len(parseerror)))
-            
-            display_notes(notes)
-            
-        else :
-            display_exception(opstat)
-    """
-    
-def run_bulk_geocoder_reverse(inparms) :
+def run_bulk_geocoder_reverse(geocid, parms) :
     """
     * ---------------------------------------------------------
     * function : run a bulk geocode reverse 
@@ -1057,18 +947,32 @@ def run_bulk_geocoder_reverse(inparms) :
     * --------------------------------------------------------
     """
 
-    print("run_bulk_geocoder_reverse",inparms)
+    print("run_bulk_geocoder_reverse",geocid, parms)
     return() 
     
     
     
-
+"""
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+#-  Common Test bulk geocoders
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+"""
 def validate_bulk_geocode_connect_parms(geocid) :
+    """
+    * ---------------------------------------------------------
+    * function : validate bulk geocodr parms 
+    * 
+    * parms :
+    *  geocid  - geocoder id
+    *
+    * returns : 
+    *  True or False 
+    * --------------------------------------------------------
+    """
 
-    print("validate_geocode_connect_parms",geocid) 
     fparms    =   cfg.get_config_value(subgw.get_bulk_form_id(geocid,sugm.GEOCODER) + "Parms")
-    
-    print("connectparms",fparms)
     
     opstat  =   opStatus()
     
@@ -1099,33 +1003,30 @@ def validate_bulk_geocode_connect_parms(geocid) :
     return(opstat)
 
 
-def process_test_bulk_connector(geocid,gcparms) :
+def test_bulk_geocoder(geocid,inputs) :
     """
-    * -------------------------------------------------------------------------- 
-    * function : process commands from test the bulk geocoder
+    * ---------------------------------------------------------
+    * function : test bulk geocodr connection 
     * 
     * parms :
-    *  parms        - input parameters
+    *  geocid  - geocoder id
+    *  inputs  - geocoder connect parms
     *
-    * returns : N/A
+    * returns : 
+    *  N/A 
     * --------------------------------------------------------
     """
-
-    print("process_test_bulk_connector",geocid,gcparms)
     
-     
-    
+    if(geocid == sugm.ArcGISId) :
+        test_arcgis_batch_connector(inputs)
+    elif(geocid == sugm.GoogleId) :
+        test_google_bulk_connector(inputs)  
+        
     return()
 
 
 
-def test_bulk_geocoder(geocid,inputs) :
-    print("test_bulk_geocoder",geocid,inputs)
 
-    if(geocid == sugm.ArcGISId) :
-        test_arcgis_batch_connector(inputs)
-    elif(geocid == sugm.GoogleId) :
-        test_google_bulk_connector(inputs)    
 
 
 """
@@ -1161,6 +1062,9 @@ class google_geocode_results:
 
     def get_results(self) :
         return(self.results)
+    
+    def get_address_components(self) :
+        return(self.results.get("address_components"))
  
     def get_status(self) :
         return(self.opstat.get_status())
@@ -1271,6 +1175,19 @@ default_address_format                  =  [GOOGLE_GEOCODER_STREET_NUMBER_ID,
 
 
 def get_address_from_components(addr_comps,addr_map,short=True) :
+    """
+    * --------------------------------------------------------------------
+    * function : get a complete address from google address components 
+    * 
+    * parms :
+    *  addr_comps  - address components
+    *  addr_map    - address parms map
+    *  short       - get short values boolean
+    *
+    * returns : 
+    *  full adddress defined by map from address components
+    * -------------------------------------------------------------------
+    """
     
     out_address     =   ""
     
@@ -1299,7 +1216,7 @@ class google_address_components:
     
     address_components  =   None
 
-    def init_(self,addr_comps) :
+    def __init__(self,addr_comps) :
         self.address_components = addr_comps
         
 
@@ -1314,7 +1231,15 @@ class google_address_components:
                             if(shortName) :
                                 return(self.address_components[i].get("short_name"," "))
                             else :
-                                return(self.address_components[i].get("long_name"," "))  
+                                return(self.address_components[i].get("long_name"," "))
+                                
+                return("")
+                
+            else :
+                return("") 
+                
+        else :
+            return("")
         
     def get_full_address_from_components(self,addr_format,shortName=True) :
         
@@ -1330,7 +1255,7 @@ class google_address_components:
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-#   geocoding results class
+#   geocoding results log class
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 """
