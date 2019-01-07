@@ -36,7 +36,7 @@ from dfcleanser.common.display_utils import (get_df_datatypes_data, display_samp
 """
 
 
-def     get_cbox_flag(id) :
+def get_cbox_flag(id) :
     
     if(id == 0) :
         if(cfg.get_config_value(cfg.DATA_TYPES_CBOX_0_KEY) == None)  :
@@ -245,7 +245,10 @@ def get_drop_cbox_flags() :
 def display_inspection_html(title) :
 
     status_html = ""
-    status_html = (status_html + '<div class="container status-header" style="width:30%; margin-left:25px; margin-bottom:5px; ">' + new_line)
+    if(title == "&nbsp;dataframe Imported") :
+        status_html = (status_html + '<div class="container status-header" style="width:22%; margin-left:25px; margin-bottom:5px; ">' + new_line)
+    else :
+        status_html = (status_html + '<div class="container status-header" style="width:18%; margin-left:25px; margin-bottom:5px; ">' + new_line)
     status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
     status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
     status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
@@ -267,11 +270,11 @@ def display_inspection_html(title) :
 def display_inspection_data() :
     
     if(cfg.is_a_dfc_dataframe_loaded()) :
-        display_inspection_html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dataframe Imported")
+        display_inspection_html("&nbsp;dataframe Imported")
         print("     [NUMBER OF ROWS] :",len(cfg.get_dfc_dataframe()),flush=True)
         print("     [NUMBER OF COLS] :",len(cfg.get_dfc_dataframe().columns))
     else :
-        display_inspection_html("&nbsp;&nbsp;&nbsp;&nbsp;No dataframe selected")
+        display_inspection_html("&nbsp;No dataframe Imported")
 
 
 """            
