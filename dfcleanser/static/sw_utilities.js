@@ -784,17 +784,27 @@ function get_subset_callback(fid) {
                 }
             }
 
-            newcselectstring = newcselectstring + newcondition + " ) ";
-            $('#gsselectstring').val(newcselectstring);
             $('#gscolname').val("");
             $('#gscoloper').val("");
             $('#gscolvalue').val("");
             $('#gscolandor').val("");
 
             var parms = new Array();
-            parms.push(1);
-            parms.push("");
-            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_dfsubset_vals", JSON.stringify(parms)));
+            parms.push(condcolname);
+            parms.push(newcondition);
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid + ", " + JSON.stringify(parms)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+
+        case 10:
+        case 12:
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 11:
+        case 13:
+            var inputs = window.get_input_form_parms("dcdfsubsetfilters")
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid + ", " + JSON.stringify(inputs)));
             window.scroll_to('DCDFSubsetUtility');
             break;
     }
@@ -807,6 +817,7 @@ function set_filter_colname(colname) {
      * Parameters:
      *  colname - column name
      */
+    console.log("set_filter_colname", colname);
     var colnamefield = $('#gscolname');
     colnamefield.val(colname);
     $('#gscoloper').val("");
@@ -817,6 +828,18 @@ function set_filter_colname(colname) {
     parms.push(-1);
     parms.push(colname);
     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_dfsubset_vals", JSON.stringify(parms)));
+}
+
+function select_filter(ftitle) {
+    /**
+     * df subset set filter callback.
+     *
+     * Parameters:
+     *  colname - column name
+     */
+    var parms = new Array();
+    parms.push(ftitle);
+    window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", ("14" + ", " + JSON.stringify(parms))));
 }
 
 //
@@ -849,6 +872,7 @@ function getgsval(uval) {
 }
 
 function set_ds_colname(colname) {
+    console.log("set_ds_colname", colname);
     var colnamefield = $('#gscolnames');
     if (colnamefield.val().length == 0) {
         colnamefield.val(colname);
@@ -951,71 +975,51 @@ function generic_function_callback(fid) {
         case 0:
             inputs.push(0)
             window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
 
             IPython.notebook.insert_cell_below('code');
             var cell = IPython.notebook.select_next().get_selected_cell();
 
-            var code = "# generic function" + NEW_LINE +
-                '# function title' + NEW_LINE +
-                "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
-                "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
+            var code = "# generic function code cell" + NEW_LINE
+            cell.set_text(code);
 
-            window.run_code(cell, code);
+            // add the cellid metadata
+            var dfcellDict = { "dfc_cellid": "DCGenFunctionCodeCell" };
+            var dfcleanserDict = { "dfcleanser_metadata": dfcellDict };
+            var newcellDict = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
+            cell.metadata = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
             break;
         case 1:
-            var generic_cell = window.get_cell_for_id(SW_UTILS_GENFUNC_CODECELL_ID);
-
-            if (generic_cell != null) {
-                var generic_code = generic_cell.get_text();
-                var c_line_start = generic_code.indexOf("#");
-                var c_code = generic_code.slice(c_line_start + 1, generic_code.length)
-                c_line_start = c_code.indexOf("#");
-                c_code = c_code.slice(c_line_start, generic_code.length)
-                var c_line_end = c_code.indexOf("\n");
-                c_code = c_code.slice(2, c_line_end);
-                var title = $('#gttitle');
-                title.val(c_code);
-                var code = $('#gtcode');
-                code.val(generic_code);
-            }
-            break;
         case 2:
         case 3:
-        case 4:
             var fparms = get_input_form_parms("genfuncform");
-            if ((fid == 2) || (fid == 4)) {
-                var gfuncfound = fparms.search("# generic function");
-                if (fparms.indexOf("# generic function") != -1) {
-                    fparms = fparms.replace("# generic function", "");
-                    var tfound = fparms.search("#");
-                    fparms = fparms.slice(0, (tfound - 2)) + fparms.slice(tfound, fparms.length);
-                }
-            }
-
             inputs.push(fid, fparms);
-            window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
             break;
-        case 5:
-            var title = $('#gttitle');
-            title.val("");
-
-            var code = $('#gtcode');
-            var newcode = "# generic function" + NEW_LINE +
-                '# function title' + NEW_LINE +
-                "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
-                "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
-            code.val(newcode);
-
-            window.delete_output_cell(window.DC_GEN_FUNCTION_ID);
-            break;
-
-        case 6:
+        case 4:
             window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
             window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
             break;
     }
+    window.scroll_to('DCGenFunctionUtility');
+}
+
+function delete_genfunc_test_code_cell() {
+    /**
+     * delete generic function test code cell.
+     *
+     */
+    window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
+    window.scroll_to('DCGenFunctionUtility');
+}
+
+function load_genfunc_test_code_cell(cellcode) {
+    /**
+     * delete generic function test code cell.
+     *
+     */
+    var generic_cell = window.get_cell_for_id(SW_UTILS_GENFUNC_CODECELL_ID);
+    generic_cell.set_text(cellcode);
     window.scroll_to('DCGenFunctionUtility');
 }
 
@@ -1027,7 +1031,7 @@ function select_gen_function(genid) {
      *  genid - gen function id
      */
     var inputs = new Array();
-    inputs.push(1, genid);
+    inputs.push(5, genid);
     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2," + JSON.stringify(inputs)));
     window.scroll_to('DCGenFunctionUtility');
 }
@@ -1062,4 +1066,43 @@ function process_concat_callback(fid) {
             break;
     }
     window.scroll_to('DCDFConcatUtility');
+}
+
+function select_concat_df(sid) {
+    /**
+     * process dataframe select callback.
+     *
+     * Parameters:
+     *  sid - select id
+     */
+
+    var parms = new Array();
+    if (sid == "dataframe1title")
+        var seldf = $('#dataframe1title').val();
+    else
+        var seldf = $('#dataframe2title').val();
+
+    var df1 = $('#dataframe1title').val();
+    var df2 = $('#dataframe2title').val();
+    parms.push(seldf, df1, df2);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_select_concat_df_vals", JSON.stringify(parms)));
+
+}
+
+function set_concat_direction(direction) {
+    /**
+     * process dataframe concat direction.
+     *
+     * Parameters:
+     *  direction - to dataframe
+     */
+
+    if (direction == "df2") {
+        var dfselected = $('#dataframe2title').val();
+    } else {
+        var dfselected = $('#dataframe1title').val();
+    }
+
+    $('#dftoconcatto').val(dfselected);
 }
