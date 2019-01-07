@@ -14,8 +14,12 @@ this = sys.modules[__name__]
 import json 
 
 import dfcleanser.common.cfg as cfg
+
 import dfcleanser.data_transform.data_transform_widgets as dtw
 import dfcleanser.data_transform.data_transform_model as dtm
+import dfcleanser.data_transform.data_transform_columns_widgets as dtcw
+import dfcleanser.data_transform.data_transform_columns_control as dtcc
+import dfcleanser.data_transform.data_transform_dataframe_widgets as dtdw
 
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables, get_table_value)
 
@@ -30,8 +34,6 @@ from dfcleanser.common.display_utils import display_df_unique_column
 
 from IPython.display import clear_output
 
-from dfcleanser.data_transform.data_transform_columns_widgets import (display_column_transform_status)
- 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -95,8 +97,7 @@ def display_data_transform(option,parms=None) :
             
             display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
             
-            from dfcleanser.data_transform.data_transform_columns_widgets import display_mapping_col
-            display_mapping_col(cfg.get_dfc_dataframe(),colname) 
+            dtcw.display_mapping_col(cfg.get_dfc_dataframe(),colname) 
 
         elif(option == dtm.DISPLAY_DUMMY_OPTION) :
 
@@ -135,24 +136,16 @@ def display_data_transform(option,parms=None) :
 
 
         elif(option == dtm.TRANSFORM_OPTION) :
-            
-            from dfcleanser.data_transform.data_transform_columns_control import process_column_option
-            process_column_option(parms)
+            dtcc.process_column_option(parms)
 
         elif(option == dtm.DATAFRAME_DISPLAY_OPTION ) :
-            
-            from dfcleanser.data_transform.data_transform_dataframe_widgets import display_dataframe_options
-            display_dataframe_options(parms)               
+            dtdw.display_dataframe_options(parms)               
 
         elif(option == dtm.DATAFRAME_PROCESS_OPTION ) :
-            
-            from dfcleanser.data_transform.data_transform_dataframe_widgets import process_dataframe_transform
-            process_dataframe_transform(parms)
+            dtdw.process_dataframe_transform(parms)
         
         elif(option == dtm.DISPLAY_TRANSFORM_COLS_OPTION) :
-            
-            from dfcleanser.data_transform.data_transform_columns_widgets import display_transform_cols_option
-            display_transform_cols_option(parms)
+            dtcw.display_transform_cols_option(parms)
 
         elif(option == dtm.DISPLAY_DATETIME_TRANSFORM_OPTION) :
             dtw.display_datetime_column_taskbar()
@@ -257,8 +250,7 @@ def process_datetime_datatype_transform(parms,display=True) :
                 opstat.store_exception("Error renaming " + colname + " to " + colname+"temp",e)
             
             if(opstat.get_status()) :
-                from dfcleanser.data_transform.data_transform_columns_widgets import add_column
-                add_column(colname,dtcomps,opstat)
+                dtcw.add_column(colname,dtcomps,opstat)
                 
                 df = cfg.get_dfc_dataframe()
                 if(opstat.get_status()) :
@@ -367,11 +359,10 @@ def process_datetime_timedelta_transform(parms,display=True) :
         try :
 
             from dfcleanser.common.common_utils import YEARS, DAYS, HOURS, MINUTES, SECONDS, MICROSECONDS, TIMEDELTA
-            from dfcleanser.data_transform.data_transform_columns_widgets import add_column
             import pandas as pd
             
             timedeltacol = df[colname] - df[colname1]
-            add_column(tdcolname,timedeltacol,opstat)
+            dtcw.add_column(tdcolname,timedeltacol,opstat)
 
             df = cfg.get_dfc_dataframe()
             
@@ -417,7 +408,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
             dtw.display_main_taskbar()
             print("\n")
             display_status("Timedelta values stored successfully in " + tdcolname)
-            display_column_transform_status(cfg.get_dfc_dataframe(),tdcolname)
+            dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),tdcolname)
         
     else :
         
@@ -479,9 +470,8 @@ def process_datetime_merge_split_transform(parms,display=True) :
                 splitdate = df[datetimecolumn].apply(lambda x: x.date())            
                 splittime = df[datetimecolumn].apply(lambda x: x.time())            
         
-                from dfcleanser.data_transform.data_transform_columns_widgets import add_column
-                add_column(datecolumn,splitdate,opstat)
-                add_column(timecolumn,splittime,opstat)
+                dtcw.add_column(datecolumn,splitdate,opstat)
+                dtcw.add_column(timecolumn,splittime,opstat)
         
             # convert to .date or .time         
             except Exception as e:
@@ -539,8 +529,7 @@ def process_datetime_merge_split_transform(parms,display=True) :
                 for i in range(len(df[datecolumn])) :
                     mergeddatetime.append(datetime.datetime.combine(df[datecolumn][i],df[timecolumn][i]))
         
-                from dfcleanser.data_transform.data_transform_columns_widgets import add_column
-                add_column(datetimecolumn,mergeddatetime,opstat)
+                dtcw.add_column(datetimecolumn,mergeddatetime,opstat)
         
             # convert to .date or .time         
             except Exception as e:
@@ -660,7 +649,7 @@ def process_datatype_transform(parms,display=True) :
                            "process_datatype_transform(" + json.dumps(parms) + ",False)"],opstat)
         
             display_status("Column " + colname +" data type changed successfully to " + get_datatype_str(dtid))
-            display_column_transform_status(cfg.get_dfc_dataframe(),colname)
+            dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
         
         else :
         
@@ -676,8 +665,7 @@ def clear_data_transform_cfg_values() :
     from dfcleanser.data_transform.data_transform_dataframe_control import clear_dataframe_transform_cfg_values
     clear_dataframe_transform_cfg_values()
     
-    from dfcleanser.data_transform.data_transform_columns_control import clear_dataframe_columns_transform_cfg_values
-    clear_dataframe_columns_transform_cfg_values()
+    dtcc.clear_dataframe_columns_transform_cfg_values()
     
     return
     

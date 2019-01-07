@@ -15,6 +15,7 @@ import json
 
 import dfcleanser.common.cfg as cfg 
 import dfcleanser.data_transform.data_transform_columns_widgets as dtcw
+import dfcleanser.data_transform.data_transform_model as dtm
 
 from dfcleanser.common.common_utils import (displayParms, single_quote, 
                                             display_exception, display_status, 
@@ -64,27 +65,27 @@ def process_column_option(parms) :
         
     colname = cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY)
         
-    if(optionid == dtcw.RENAME_COLUMN) :
+    if(optionid == dtm.RENAME_COLUMN) :
         process_rename_column(colname,parms)
-    elif(optionid == dtcw.ADD_COLUMN) :
+    elif(optionid == dtm.ADD_COLUMN) :
         process_add_column(parms)
-    elif(optionid == dtcw.DROP_COLUMN) :
+    elif(optionid == dtm.DROP_COLUMN) :
         process_drop_column(colname,parms)
-    elif(optionid == dtcw.REORDER_COLUMNS) :
+    elif(optionid == dtm.REORDER_COLUMNS) :
         process_reorder_columns(parms)
-    elif(optionid == dtcw.MAP_COLUMN) :
+    elif(optionid == dtm.MAP_COLUMN) :
         process_map_transform(colname,parms)
-    elif(optionid == dtcw.DUMMIES_COLUMN) :
+    elif(optionid == dtm.DUMMIES_COLUMN) :
         process_dummy_transform(colname,parms)
-    elif(optionid == dtcw.CAT_COLUMN) :
+    elif(optionid == dtm.CAT_COLUMN) :
         process_cat_transform(colname,parms)
-    elif(optionid == dtcw.SAVE_COLUMN) :
+    elif(optionid == dtm.SAVE_COLUMN) :
         process_save_column(colname,parms)
-    elif(optionid == dtcw.COPY_COLUMN) :
+    elif(optionid == dtm.COPY_COLUMN) :
         process_copy_column(parms)
-    elif(optionid == dtcw.SORT_COLUMN) :
+    elif(optionid == dtm.SORT_COLUMN) :
         process_sort_by_column(parms)
-    elif(optionid == dtcw.APPLY_COLUMN) :
+    elif(optionid == dtm.APPLY_COLUMN) :
         process_apply_fn_to_column(parms)
         
 """
@@ -105,23 +106,23 @@ def process_rename_column(colname,parms,display=True) :
     try :
         cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().rename(columns=namesdict))
         
-        if(display) :
-            #make scriptable
-            add_to_script(["# Rename column " + colname + " to " + newname,
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_rename_column",
-                           "process_rename_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
-        
-            display_status("Column " + colname + " renamed to " + newname + " successfully")
-        
     except Exception as e:
         opstat.store_exception("Rename Column Error",e)
         display_exception(opstat)
         
     if(opstat.get_status()) :
+
         if(display) :
-            dtcw.display_col_transform_columns(dtcw.RENAME_COLUMN,"renaming",
-                                               "Column " + colname + " renamed to " + newname,
-                                               True,False) 
+            
+            #make scriptable
+            add_to_script(["# Rename column " + colname + " to " + newname,
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_rename_column",
+                           "process_rename_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
+            display_status("Column " + colname + " renamed to " + newname + " successfully")
+        
 
 """
 #--------------------------------------------------------------------------
@@ -173,7 +174,7 @@ def process_add_column(parms,display=True) :
             clock.start()
         
         # get column names from file
-        if(optionid == dtcw.PROCESS_FILE_OPTION) :
+        if(optionid == dtm.PROCESS_FILE_OPTION) :
 
             filename    =   parms[1][1]
             
@@ -203,7 +204,7 @@ def process_add_column(parms,display=True) :
                         display_exception(opstat) 
                         
         # get column names from code    
-        elif(optionid == dtcw.PROCESS_ADD_NEW_CODE_OPTION) :
+        elif(optionid == dtm.PROCESS_ADD_NEW_CODE_OPTION) :
             
             code = parms[1][1]
             code = code.replace('\\n','\n')
@@ -221,7 +222,6 @@ def process_add_column(parms,display=True) :
             clock.stop()    
             
     if(opstat.get_status()) :
-        
 
         if(display) :
             
@@ -231,13 +231,9 @@ def process_add_column(parms,display=True) :
                            "process_add_column(" + json.dumps(parms) + ",False)"],opstat)
 
             clear_output()
-        
             dtcw.display_base_data_transform_columns_taskbar()
-            
             display_status("New Column " + newcolname + " Added Successfully")
             
-            from dfcleanser.data_transform.data_transform_widgets import display_col_data
-            display_col_data(cfg.get_dfc_dataframe(),newcolname)
 
 """
 #--------------------------------------------------------------------------
@@ -283,23 +279,26 @@ def process_drop_column(colname,parms,display=True) :
     if(opstat.get_status()) :
         
         try :
-            cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().drop([colname],axis=1))
+            tdf     =   cfg.get_dfc_dataframe().drop([colname],axis=1)
+            cfg.set_current_dfc_dataframe(tdf)
             
-            if(display) :
-                #make scriptable
-                add_to_script(["# drop column " + colname,
-                               "from dfcleanser.data_transform.data_transform_columns_widgets import process_drop_column",
-                               "process_drop_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
-
         except Exception as e:
             opstat.store_exception("Drop Columns Error",e)
             display_exception(opstat)
     
     if(opstat.get_status()) : 
+
         if(display) :
-            dtcw.display_col_transform_columns(dtcw.DROP_COLUMN,"dropping",
-                                               "Column " + colname + " dropped Successfully",
-                                               True,False)
+            
+            #make scriptable
+            add_to_script(["# drop column " + colname,
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_drop_column",
+                           "process_drop_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
+            display_status("Column " + colname + " dropped Successfully")
+
  
 """
 #--------------------------------------------------------------------------
@@ -327,7 +326,6 @@ def process_save_column(colname,parms,display=True) :
             opstat.store_exception("Unable to save column being dropped ",e)
     
     if(opstat.get_status()) :
-            
         
         if(display) :
             
@@ -335,12 +333,12 @@ def process_save_column(colname,parms,display=True) :
             add_to_script(["# save column " + colname,
                            "from dfcleanser.data_transform.data_transform_columns_widgets import process_save_column",
                            "process_save_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
+            display_status("Column " + colname + " Saved Successfully")
 
-            dtcw.display_col_transform_columns(dtcw.DROP_COLUMN,"dropping",
-                                               "Column " + colname + " Dropped Successfully",
-                                               True,False) 
-    
     return(opstat)
+
     
 """
 #--------------------------------------------------------------------------
@@ -373,21 +371,23 @@ def process_reorder_columns(parms,display=True) :
     try :        
         cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe()[final_cols])       
         
-        if(display) :
-            #make scriptable
-            add_to_script(["# reorder columns ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_reorder_columns",
-                           "process_reorder_columns(" + json.dumps(parms) + ",False)"],opstat)
-
     except Exception as e:
         opstat.store_exception("Reorder Columns Error",e)
         display_exception(opstat)
 
     if(opstat.get_status()) :
+        
         if(display) :
-            dtcw.display_col_transform_columns(dtcw.REORDER_COLUMNS,"reorder",
-                                               "Column " + movecol + " moved Successfully",
-                                               True,False) 
+            
+            #make scriptable
+            add_to_script(["# reorder columns ",
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_reorder_columns",
+                           "process_reorder_columns(" + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
+            display_status("Column " + movecol + " moved Successfully")
+
     
 """
 #--------------------------------------------------------------------------
@@ -407,21 +407,24 @@ def process_copy_column(parms,display=True) :
         df[copytocol] = df[copyfromcol]
         cfg.set_current_dfc_dataframe(df)       
         
-        if(display) :
-            #make scriptable
-            add_to_script(["# copy column ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_copy_column",
-                           "process_copy_column(" + json.dumps(parms) + ",False)"],opstat)
-
     except Exception as e:
         opstat.store_exception("Reorder Columns Error",e)
         display_exception(opstat)
 
     if(opstat.get_status()) :
+        
         if(display) :
-            dtcw.display_col_transform_columns(dtcw.REORDER_COLUMNS,"reorder",
-                                               "Column " + copyfromcol + " copied to " + copytocol + " Successfully",
-                                               True,False) 
+            
+            #make scriptable
+            add_to_script(["# copy column ",
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_copy_column",
+                           "process_copy_column(" + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
+            display_status("Column " + copyfromcol + " copied to " + copytocol + " Successfully")
+
+
 """
 #--------------------------------------------------------------------------
 #    sort by column 
@@ -445,18 +448,21 @@ def process_sort_by_column(parms,display=True) :
             from dfcleanser.data_transform.data_transform_dataframe_control import reset_row_ids_column
             opstat = reset_row_ids_column()
         
-        if(display) :
-            #make scriptable
-            add_to_script(["# sort by column ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_sort_by_column",
-                           "process_sort_by_column(" + json.dumps(parms) + ",False)"],opstat)
-    
     except Exception as e:
         opstat.store_exception("Sort df By Column Error : "+coltosort,e)
         display_exception(opstat)
     
     if(opstat.get_status()) :
+        
         if(display) :
+            
+            #make scriptable
+            add_to_script(["# sort by column ",
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_sort_by_column",
+                           "process_sort_by_column(" + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
             display_status("Column " + coltosort + " sorted successfully.")
     
     cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
@@ -474,10 +480,8 @@ def process_apply_fn_to_column(parms,display=True) :
 
     coltoapply      =   fparms[0]
     lambdaflag      =   fparms[1]
-    fnname          =   fparms[2]
+    #fnname          =   fparms[2]
     fncode          =   fparms[3]
-    
-    print("process_apply_fn_to_column",coltoapply,lambdaflag,fnname,"\n",fncode)
     
     try : 
     
@@ -504,13 +508,20 @@ def process_apply_fn_to_column(parms,display=True) :
         display_exception(opstat)
     
     if(opstat.get_status()) :
+        
         if(display) :
+            
+            #make scriptable
+            add_to_script(["# apply fn to column ",
+                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_apply_fn_to_column",
+                           "process_apply_fn_to_column(" + json.dumps(parms) + ",False)"],opstat)
+            
+            clear_output()
+            dtcw.display_base_data_transform_columns_taskbar()
             display_status("function applied to column " + coltoapply + " successfully.")
     
     #et_dc_dataframe()[coltoapply].apply(fncode)
     cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
-
-
 
     
 """
@@ -542,7 +553,7 @@ def process_map_transform(colname,parms,display=True) :
                 fparms[i] = float(fparms[i])
             else :
                 fparms[i] = int(fparms[i])
-        except Exception as e :
+        except Exception :
             fparms[i] = str(fparms[i])    
      
     if(len(mapkeys) == 0) :

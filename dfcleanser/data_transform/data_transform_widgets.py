@@ -681,7 +681,7 @@ def display_main_option(parms,clear=False) :
 #
 #------------------------------------------------------------------
 """
-def display_col_data(df,colname) :
+def display_col_data(df,colname,display=True) :
 
     statsHeader    =   ["",""]
     statsRows      =   []
@@ -742,14 +742,18 @@ def display_col_data(df,colname) :
     stats_table.set_rowspertable(10)
     stats_table.set_color(True)
     stats_table.set_colorList(colorList)
-    stats_table.set_small(True)
-    stats_table.set_smallwidth(30)
-    stats_table.set_smallmargin(32)
+    if(display) :
+        stats_table.set_small(True)
+        stats_table.set_smallwidth(30)
+        stats_table.set_smallmargin(32)
     stats_table.set_smallfsize(12)
     stats_table.set_border(False)
     stats_table.set_checkLength(False)
     
-    stats_table.display_table()
+    if(display) :
+        stats_table.display_table()
+    else :
+        return(stats_table.get_html())
 
 
 

@@ -75,7 +75,7 @@ df_save_row_transform_input_labelList       =   ["column_names_file_name",
 df_save_row_transform_input_typeList        =   ["file",
                                                  "button","button","button","button"]
 
-df_save_row_transform_input_placeholderList     = ["enter File name to save column names to or browse to file below (default use default name)",
+df_save_row_transform_input_placeholderList     = ["enter File name to save column names to or browse to file below (default use df name)",
                                                  None,None,None,None]
 
 df_save_row_transform_input_jsList          =    [None,
@@ -250,7 +250,7 @@ df_sort_row_ids_transform_input_labelList      =   ["ascending",
                                                     "Sort Row</br> Index Column",
                                                     "Return","Help"]
 
-df_sort_row_ids_transform_input_typeList       =   ["text","text","text","text",
+df_sort_row_ids_transform_input_typeList       =   ["select","select","select","select",
                                                     "button","button","button"]
 
 df_sort_row_ids_transform_input_placeholderList =  ["Order of sort : True - ascending - False - descending (default True )",
@@ -279,11 +279,11 @@ df_drop_dups_transform_input_idList         =   ["dtddrcolumnids",
                                                  None,None,None]
 
 df_drop_dups_transform_input_labelList      =   ["column_names_list",
-                                                 "include_or_exclude_column_Ids_list_flag",
+                                                 "include_column_Ids_list",
                                                  "Drop Duplicate</br>Rows",
                                                  "Return","Help"]
 
-df_drop_dups_transform_input_typeList       =   [maketextarea(3),"text",
+df_drop_dups_transform_input_typeList       =   [maketextarea(3),"select",
                                                  "button","button","button"]
 
 df_drop_dups_transform_input_placeholderList =  ["enter list of columns to use as keys to identify dups (default blank -  all cols) ",
@@ -483,14 +483,24 @@ def display_dataframe_options(parms) :
                                                                    dataframe_transform_tb_jsList,
                                                                    False))])
     
-        #cfg.set_config_value(df_sort_row_ids_transform_input_id+"Parms",["True"])        
-        display_composite_form([get_input_form(InputForm(df_sort_row_ids_transform_input_id,
-                                                         df_sort_row_ids_transform_input_idList,
-                                                         df_sort_row_ids_transform_input_labelList,
-                                                         df_sort_row_ids_transform_input_typeList,
-                                                         df_sort_row_ids_transform_input_placeholderList,
-                                                         df_sort_row_ids_transform_input_jsList,
-                                                         df_sort_row_ids_transform_input_reqList))])
+        sort_input_form     =   InputForm(df_sort_row_ids_transform_input_id,
+                                          df_sort_row_ids_transform_input_idList,
+                                          df_sort_row_ids_transform_input_labelList,
+                                          df_sort_row_ids_transform_input_typeList,
+                                          df_sort_row_ids_transform_input_placeholderList,
+                                          df_sort_row_ids_transform_input_jsList,
+                                          df_sort_row_ids_transform_input_reqList)   
+
+        sortsel     =   {"default":"True","list":["True","False"]}
+        sort_input_form.add_select_dict("ascending",sortsel)
+        sortsel     =   {"default":"False","list":["True","False"]}
+        sort_input_form.add_select_dict("inplace",sortsel)
+        sortsel     =   {"default":"quicksort","list":["quicksort","mergesort","heapsort"]}
+        sort_input_form.add_select_dict("kind",sortsel)
+        sortsel     =   {"default":"last","list":["first","last"]}
+        sort_input_form.add_select_dict("na_position",sortsel)
+
+        display_composite_form([get_input_form(sort_input_form)])
 
     elif(funcid == dtm.DROP_DUPLICATE_ROWS) :
         
@@ -504,13 +514,19 @@ def display_dataframe_options(parms) :
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
         display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dtdcrcol")
         
-        display_composite_form([get_input_form(InputForm(df_drop_dups_transform_input_id,
-                                                         df_drop_dups_transform_input_idList,
-                                                         df_drop_dups_transform_input_labelList,
-                                                         df_drop_dups_transform_input_typeList,
-                                                         df_drop_dups_transform_input_placeholderList,
-                                                         df_drop_dups_transform_input_jsList,
-                                                         df_drop_dups_transform_input_reqList))])
+        
+        drop_input_form     =   InputForm(df_drop_dups_transform_input_id,
+                                          df_drop_dups_transform_input_idList,
+                                          df_drop_dups_transform_input_labelList,
+                                          df_drop_dups_transform_input_typeList,
+                                          df_drop_dups_transform_input_placeholderList,
+                                          df_drop_dups_transform_input_jsList,
+                                          df_drop_dups_transform_input_reqList)
+        
+        dropsel     =   {"default":"True","list":["True","False"]}
+        drop_input_form.add_select_dict("ascending",dropsel)
+       
+        display_composite_form([get_input_form(drop_input_form)])
 
         #from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
         #display_inspection_data()
