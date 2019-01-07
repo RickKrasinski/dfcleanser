@@ -65,6 +65,38 @@ def run_javascript(script) :
     except :
         alert_user("javascript failure" + script)
 
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#  javascript from python
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+def run_jscript(jscript, errmsg, errtitle) :
+    """
+    * ---------------------------------------------------------
+    * function : run a javascript script
+    * 
+    * parms :
+    *  jscript    - javascript script
+    *  errmsg     - detailed error message
+    *  errtitle   - error title
+    *
+    * returns : 
+    *  geocoder engine 
+    * --------------------------------------------------------
+    """
+    #from IPython.core.display import Javascript
+    #display_jupyter_HTML(Javascript(jscript))
+    try :            
+        from IPython.core.magics.display import Javascript
+        display_jupyter_HTML(Javascript(jscript))
+
+    except :
+        alert_user(errmsg)
+
+
 """
 #--------------------------------------------------------------------------
 #   display a windows message box
@@ -328,19 +360,19 @@ def valid_parms_list(labels, parms) :
                     
     return(goodList)
 
-"""
-#--------------------------------------------------------------------------
-#   get the parameter list for a returned form
-#
-#       parms  - input form parms 
-#       ids    - list of ids to match parms
-#
-#   return list of parms
-#
-#--------------------------------------------------------------------------
-"""     
+     
 def get_parms_for_input(parms,ids) :
-
+    """
+    #--------------------------------------------------------------------------
+    #   get the parameter list for a returned form
+    #
+    #       parms  - input form parms 
+    #       ids    - list of ids to match parms
+    #
+    #   return list of parms
+    #
+    #--------------------------------------------------------------------------
+    """
     outparms = []
 
     
@@ -378,7 +410,6 @@ def get_parms_for_input(parms,ids) :
 
     return(outparms)
 
-
  
 def displayParms(title,labels,values,id,width=None,printBlank=False) :
     """
@@ -395,6 +426,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
     #
     #--------------------------------------------------------------------------
     """ 
+    
     maxllabels      =   0
     maxlvalues      =   0
 
@@ -463,7 +495,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
     if(not (width == None)) :
         parms_table.set_smallwidth(width)
     else :
-        fontsize = 8
+        fontsize = 4
         width = ((maxllabels + maxlvalues) + 6) * fontsize
         from dfcleanser.common.html_widgets import DEFAULT_PAGE_WIDTH
         
@@ -474,21 +506,21 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
     parms_table.set_smallfsize(12)
     parms_table.set_border(False)
     parms_table.set_checkLength(False)
-    
+
     parms_table.display_table()
 
 
 def get_parms_list_from_dict(labels,parmsdict) :
     """
-    #--------------------------------------------------------------------------
-    #   display a list of parms as a table
+    #-----------------------------------------------------------
+    #   extracty parm values from a dict
     #
     #       labels    - parm labels
     #       parmsdict - parm dict
     #
     #   return list of parms values
     #
-    #--------------------------------------------------------------------------
+    #----------------------------------------------------------
     """
     parmsValues     =   []
     
@@ -496,39 +528,27 @@ def get_parms_list_from_dict(labels,parmsdict) :
         parmsValues.append(parmsdict.get(labels[i],""))
 
     return(parmsValues)
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   get the input parms for a from
-#
-#       ptext - list of lists in format 
-#               [parm_label_text, isString_flag, isaddl_parms_flag]
-#       parms   parm values
-#
-#   return arg list to be passed into a function
-#
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""    
+ 
 
 STRING_PARM             =   0
 INT_PARM                =   1
 FLOAT_PARM              =   2
+BOOLEAN_PARM            =   3
 
-"""
-#--------------------------------------------------------------------------
-#   get the input parms for a form to pass to python function
-#
-#       ptext - list of lists in format 
-#               [parm_label_text, isString_flag, isaddl_parms_flag]
-#       parms   parm values
-#
-#   return arg list to be passed into a function
-#
-#--------------------------------------------------------------------------
-"""    
 def get_function_parms(pkeys,pvals,ptypes) :
+    """
+    * ---------------------------------------------------------
+    * function : get kwargs from form cfg parms
+    * 
+    * parms :
+    *  pkeys    - parm key values
+    *  pvals    - parm values
+    *  ptypes   - parm types
+    *
+    * returns : 
+    *  geocoder engine 
+    * --------------------------------------------------------
+    """
 
     kwargs      =   {}
 
@@ -554,6 +574,11 @@ def get_function_parms(pkeys,pvals,ptypes) :
                 pval = float(plist[i])
             elif(ptypes[i] == INT_PARM) :
                 pval = int(plist[i])
+            elif(ptypes[i] == BOOLEAN_PARM) :
+                if(plist == "True") :
+                    pval = True
+                else :
+                    pval = False
             else :
                 pval = plist[i]
    
@@ -561,28 +586,12 @@ def get_function_parms(pkeys,pvals,ptypes) :
      
     return(kwargs)    
 
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   run a javascript from python
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-def run_jscript(jscript, errmsg, errtitle) :
 
-    #from IPython.core.display import Javascript
-    #display_jupyter_HTML(Javascript(jscript))
-    try :            
-        from IPython.core.magics.display import Javascript
-        display_jupyter_HTML(Javascript(jscript))
-
-    except :
-        alert_user(errmsg)
 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   Generic table scrolling methods
+#   dfcleanser table scrolling methods
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -605,11 +614,6 @@ def patch_html(htmlin,replaceNewline=True) :
                 new_table_html = new_str
     
     return(new_table_html)
-
-
-
-
-
 
 
 """
@@ -651,6 +655,7 @@ def get_scroll_table_html(tableid,direction) :
     new_table_html = patch_html(table_html)
     
     return(new_table_html)
+
 
 """
 #--------------------------------------------------------------------------
@@ -867,6 +872,7 @@ def scroll_single_row(parms) :
                 "fail scroll_single_row : "+tableid+" "+str(direction),
                  "scroll_single_row")
 
+
 """
 #--------------------------------------------------------------------------
 #   get full input html
@@ -883,6 +889,7 @@ def get_generic_function_html(gt_title) :
     gt_html = get_generic_function(gt_title)
     
     return(gt_title,gt_html)
+
     
 """
 #--------------------------------------------------------------------------
@@ -928,6 +935,7 @@ def select_generic_function(parms) :
         run_jscript(change_input_js,
                     "fail to get gen transform title for : " + formid,
                     "select_generic_function")
+ 
     
 """
 #--------------------------------------------------------------------------
@@ -941,8 +949,20 @@ def select_generic_function(parms) :
 """           
 def get_dfsubset_vals_html(filters,colname) :
 
+    from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_subset_input_id, get_subset_input_labelList
+    import dfcleanser.common.cfg as cfg
+    # get the drop flag and col name list
+    dfsparms = cfg.get_config_value(get_subset_input_id+"Parms")
+        
+    if( (not(dfsparms == None)) and (len(dfsparms) > 0) ):
+        dftitle = cfg.get_cfg_parm_from_input_list(get_subset_input_id,
+                                                   "input_dataframe",
+                                                    get_subset_input_labelList)
+        
+    df  =   cfg.get_dfc_dataframe(dftitle)
+
     from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_dfsubset_table
-    cols_html = get_dfsubset_table(filters,colname)
+    cols_html = get_dfsubset_table(df,filters,colname)
 
     startinner  =   cols_html.find('<div class="input-group">')
     endinner    =   cols_html.find('<table class="table dc-table"')
@@ -958,6 +978,7 @@ def get_dfsubset_vals_html(filters,colname) :
     
     return([title_html,table_html])
 
+
 """
 #--------------------------------------------------------------------------
 #   get full parms for an input
@@ -970,13 +991,14 @@ def get_dfsubset_vals_html(filters,colname) :
 """           
 def get_dfsubset_vals(parms) :
 
+    print("get_dfsubset_vals",parms)
 
     filters     =   parms[0]
     colname     =   parms[1]
     
     if( (colname == -1) or (len(colname) == 0) ):
         colname = None
-        
+
     fetched_html    =   get_dfsubset_vals_html(filters,colname) 
     panel_html      =   fetched_html[0]
     cols_html       =   fetched_html[1]
@@ -1002,6 +1024,8 @@ def get_dfsubset_vals(parms) :
                  "get_gs_uniques")
 
     buttons     =   ["downarrow","uparrow"]
+    
+    
     for i in range(len(buttons)) :
     
         import datetime 
@@ -1024,10 +1048,111 @@ def get_dfsubset_vals(parms) :
         run_jscript(change_title_js,
                     "fail to get unique vals for : ",
                     "get_gs_uniques")
+ 
+
+
+def get_select_concat_df_vals(parms) :
+    print("get_select_concat_df_vals",parms)
+
+    dfsel   =   parms[0]
+    df1     =   parms[1]
+    df2     =   parms[2]
+    
+    import dfcleanser.common.cfg as cfg
+    
+    tdf         =   cfg.get_dfc_dataframe(df1)
+    if(tdf is None) :
+        df1rcount   =   ""
+        df1ccount   =   ""
+    else :
+        df1rcount   =   str(len(tdf))
+        df1cols     =   cfg.get_dfc_dataframe(df1).columns.tolist()
+        df1ccount   =   str(len(df1cols))
+    
+    tdf         =   cfg.get_dfc_dataframe(df2)
+    if(tdf is None) :
+        df2rcount   =   ""
+        df2ccount   =   ""
+    else :
+        df2rcount   =   str(len(tdf))
+        df2cols     =   cfg.get_dfc_dataframe(df2).columns.tolist()
+        df2ccount   =   str(len(df2cols))
+    
+    
+    if(dfsel == df1) :
         
+        if(not (df1rcount == "")) :
+        
+            update_row_js = "$('#df1numrows').val(" + df1rcount + ");"
+            run_jscript(update_row_js,"update_row_count_js","update_row_count_js")
+            update_row_js = "$('#df1numcols').val(" + df1ccount + ");"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
 
+            update_row_js = "$('#df1numrows').attr('readonly', true);"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
+            update_row_js = "$('#df1numcols').attr('readonly', true);"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
+        
+    if(dfsel == df2) :
+        
+        if(not (df2rcount == "")) :
+        
+            update_row_js = "$('#df2numrows').val(" + df2rcount + ");"
+            run_jscript(update_row_js,"update_row_count_js","update_row_count_js")
+            update_row_js = "$('#df2numcols').val(" + df2ccount + ");"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
 
-
+            update_row_js = "$('#df2numrows').attr('readonly', true);"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
+            update_row_js = "$('#df2numcols').attr('readonly', true);"
+            run_jscript(update_row_js,"update_row_js","update_row_js")
+ 
+    import json
+    
+    if(not (df1rcount == "")) :   
+        df1cols     =   cfg.get_dfc_dataframe(df1).columns.tolist()
+    else :
+        df1cols     =   None
+    if(not (df2rcount == "")) :   
+        df2cols     =   cfg.get_dfc_dataframe(df2).columns.tolist()
+    else :
+        df2cols     =   None
+    
+    print("df1rcount",df1rcount,"df2rcount",df2rcount)
+    
+    if( (not (df1rcount == "")) and 
+        (not (df2rcount == "")) ) :  
+        
+        print("df1cols",df1cols)
+        print("df2cols",df2cols)
+        # change diff columns fileds
+        df1diffs    =   []
+        for i in range(len(df1cols)) :
+            if(not(df1cols[i] in df2cols)) :
+                df1diffs.append(df1cols[i])
+        df1dstr     =   json.dumps(df1diffs)
+    
+        df2diffs    =   []
+        for i in range(len(df2cols)) :
+            if(not(df2cols[i] in df1cols)) :
+                df2diffs.append(df2cols[i])
+        df2dstr     =   json.dumps(df2diffs)
+    
+    else :
+        df1dstr     =   ""
+        df2dstr     =   "" 
+    
+    print("df1dstr",df1dstr,"df2dstr",df2dstr)       
+    update_row_js = "$('#df1diffcols').val(" + df1dstr + ");"
+    run_jscript(update_row_js,"update_row_count_js","update_row_count_js")
+    update_row_js = "$('#df2diffcols').val(" + df2dstr + ");"
+    run_jscript(update_row_js,"update_row_count_js","update_row_count_js")
+            
+    update_row_js = "$('#df1diffcols').attr('readonly', true);"
+    run_jscript(update_row_js,"update_row_js","update_row_js")
+    update_row_js = "$('#df2diffcols').attr('readonly', true);"
+    run_jscript(update_row_js,"update_row_js","update_row_js")
+    
 
 
 """
@@ -1112,6 +1237,7 @@ def get_column_samples_html(colname) :
     endinner    =   len(tablehtml) - 7
     
     return(tablehtml[startinner:endinner])
+
 
 """
 #--------------------------------------------------------------------------
@@ -1202,6 +1328,7 @@ def get_datetime_formats_html() :
     formats_html = tblw.get_row_major_table(formats_table,tblw.SCROLL_NEXT,False)
     
     return(formats_html)
+ 
     
 """
 #--------------------------------------------------------------------------
@@ -1826,6 +1953,9 @@ class opStatus :
 wrapper_start   = """<div class='"""
 wrapper_start1  = """'>
 """
+
+wrapper_end     = """</div>"""
+
 header_start    = """<div class="box header" style="color:black;">
   """
 sidebar_start   = """<div class="box sidebar">"""
@@ -1837,7 +1967,31 @@ footer_start    = """<div class="box footer">"""
 
 section_end     = """</div>
 """ 
-wrapper_end     = """</div>"""
+
+
+GRID_HEADER     =   0
+GRID_LEFT       =   1
+GRID_MAIN       =   2
+GRID_RIGHT      =   3
+GRID_FOOTER     =   4
+
+
+def display_generic_grid(gridname,gridclasses,gridhtmls) :
+    
+    gridHTML = ""
+    from dfcleanser.common.html_widgets import new_line
+    gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1 + new_line)
+    
+    for i in range(len(gridclasses)) :
+        
+        gridHTML = (gridHTML + "<div class='" + gridclasses[i] + "'>" + new_line)
+        gridHTML = (gridHTML + gridhtmls[i] + new_line)
+        gridHTML = (gridHTML + "</div>" + new_line)
+
+    gridHTML = (gridHTML + wrapper_end + new_line)
+
+    #print(gridHTML)
+    displayHTML(gridHTML)
 
 
 def display_grid(gridname,headerHTML,sidebarHTML,contentHTML,footerHTML,sidebar1HTML=None) :

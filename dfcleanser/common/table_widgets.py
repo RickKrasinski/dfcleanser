@@ -242,6 +242,8 @@ table_start = """
              <table class="table dc-table" """
 table_start13 = """
              <table class="table dc-table13" """
+table_start18 = """
+             <table class="table dc-table18" """
              
 table_end = """
              </table>
@@ -790,6 +792,8 @@ class dcTable :
         if(self.get_small()) :
             if(self.get_smallfsize() == 13) :
                 tableHTML = (tableHTML + table_start13)
+            elif(self.get_smallfsize() == 18) :
+                tableHTML = (tableHTML + table_start18)
             else :
                 tableHTML = (tableHTML + table_start)
         else :
@@ -934,7 +938,6 @@ class dcTable :
         return(tableHTML)
 
     def display_table(self) :
-    
         tableHTML = self.get_html(True)
         from dfcleanser.common.common_utils import (displayHTML)
         displayHTML(tableHTML)
@@ -956,9 +959,9 @@ class dcTable :
             if(type(self.get_rowList()[0]) == list) :
                 for i in range(len(self.get_rowList())) :
                     if(len(str(self.get_rowList()[i])) > 50) :
-                        print("   Row ["+str(i) + "] : ",len(self.get_rowList()[i])) 
+                        print("   Row ["+str(i) + "]     : ",len(self.get_rowList()[i])) 
                     else :
-                        print("   Row ["+str(i) + "] : ",self.get_rowList()[i])
+                        print("   Row ["+str(i) + "]     : ",self.get_rowList()[i])
             else :
                 print(self.get_rowList())
                 
@@ -978,9 +981,9 @@ class dcTable :
             print(" Refs        : [",len(self.get_refList()),"]")
             if(type(self.get_refList()[0]) == list) :
                 for i in range(len(self.get_refList())) :
-                    print("   Ref ["+str(i) + "] : ",self.get_refList()[i])
+                    print("   Ref ["+str(i) + "]     : ",self.get_refList()[i])
             else :
-                print("   Ref ["+str(i) + "] : ",self.get_refList())
+                print("   Ref ["+str(i) + "]     : ",self.get_refList())
         
         if(self.get_hhrefList() == None) :
             print(" hhrefs      :  None")

@@ -491,7 +491,8 @@ def getbuttonsizing(buttonGroup) :
         width = MAX_BUTTON_WIDTH
     
     if(len(buttonGroup.get_keyList()) == 1) :
-        width = SINGLE_BUTTON_WIDTH
+        if(buttonGroup.get_custombwidth() == 0) :
+            width = SINGLE_BUTTON_WIDTH
     
     if(not(buttonGroup.get_gridwidth() == 0)) :
         width = width-2
@@ -670,7 +671,7 @@ class ButtonGroupForm :
         button_group_form_html = (button_group_form_html + button_group_form_div_end)
         button_group_form_html = (button_group_form_html + button_group_form_end)
     
-        if(0):# (self.get_formid() == "inspectiondfschematb") or (self.get_formid() == "inspectionoptionstb") ):
+        if( (self.get_formid() == "#df1toconcattb") or (self.get_formid() == "#inspectionoptionstb") ):
             self.dump()
             print(button_group_form_html)
 
@@ -961,6 +962,14 @@ class InputForm :
             return(seldict.get("default",None))
         else :
             return(None)
+    
+    def get_select_callback(self,idkey) :
+        seldict     =   self.selectDict.get(idkey,None) 
+        if(not (seldict == None)) :
+            return(seldict.get("callback",None))
+        else :
+            return(None)
+        
             
     def get_select_list(self,idkey) :
         seldict     =   self.selectDict.get(idkey,None) 
@@ -977,6 +986,7 @@ class InputForm :
         selhtml     =   ""
         
         options =   self.get_select_list(idkey)
+
         for i in range(len(options)) :
             selhtml     =   (selhtml + tabs(3) + "    <option style='text-align:left margin-left:2px'")
             if(options[i] == self.get_select_default(idkey)) :
@@ -986,6 +996,8 @@ class InputForm :
                 selhtml     =   (selhtml + new_line)    
         
         return(selhtml)
+
+
         
     def get_html(self) :
         
@@ -1207,6 +1219,13 @@ class InputForm :
                         input_group_form_html = (input_group_form_html + input_group_form_small_label_end)
 
                     input_group_form_html = (input_group_form_html + input_group_select_start)
+                    
+                    # add onchange event handler
+                    if(not (self.get_select_callback(self.get_idList()[i])) == None) :
+                        input_group_form_html = (input_group_form_html + "onChange=" + '"' +
+                                                 self.get_select_callback(self.get_idList()[i]) +
+                                                 "('" + self.get_idList()[i] + "')" + '"')
+                    
                     input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i])) 
                     input_group_form_html = (input_group_form_html + input_group_select_middle)
                     
@@ -1254,7 +1273,7 @@ class InputForm :
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
-        if((self.get_formid() == "##googlequery") or (self.get_formid() == "$$dropcolsinput") or (self.get_formid() == "$$addcolcodeInput") ) :   
+        if((self.get_formid() == "##concatinput") or (self.get_formid() == "$$dropcolsinput") or (self.get_formid() == "$$addcolcodeInput") ) :   
             print(input_group_form_html)
 
         return(input_group_form_html)
@@ -1275,7 +1294,7 @@ class InputForm :
         print("custombwidth    [11]: ",self.get_custombwidth())
         
         if(len(self.selectDict) > 0) :
-            print("select lists    [11]: ",self.get_custombwidth())
+            print("select lists    [11]: ",len(self.selectDict))
             ids     =   list(self.selectDict.keys())
             for i in range(len(ids)) :
                 print("   Id : ",ids[i],"\n")

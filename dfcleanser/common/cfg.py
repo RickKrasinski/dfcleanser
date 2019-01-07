@@ -156,6 +156,7 @@ def drop_dfc_dataframe(title=None) :
 * --------------------------------------
 """
 def set_current_dfc_dataframe(df) :
+    print("set_current_dfc_dataframe",len(df),type(df))
     DCdf.update_current_dataframe(df)
 def set_current_dfc_dataframe_title(title) :
     DCdf.set_current_dataframe(title)
@@ -218,11 +219,11 @@ class DCDataframes :
     def get_current_dataframe(self) :
         return(self.current_df)
     def update_current_dataframe(self,df) :
-        dfindex     =   self.get_df_index(self,self.current_df)
+        dfindex     =   self.get_df_index(self.current_df)
         if(dfindex > -1) :
             self.dcdataframes[dfindex].set_df(df)    
     def update_current_dataframe_notes(self,notes) :
-        dfindex     =   self.get_df_index(self,self.current_df)
+        dfindex     =   self.get_df_index(self.current_df)
         if(dfindex > -1) :
             self.dcdataframes[dfindex].set_notes(notes)    
     def is_current_dataframe_set(self) :
@@ -342,6 +343,31 @@ class DCDataframes :
 """
 DCdf = DCDataframes()
 
+
+def get_cfg_parm_from_input_list(formid,label,labellist) :
+    """
+    * ---------------------------------------------------------
+    * function : get a parm from cfg parms list
+    * 
+    * parms :
+    *  formid     - form id
+    *  label      - label of parm to get
+    *  labellist  - input form label list
+    *
+    * returns : 
+    *  geocoder engine 
+    * --------------------------------------------------------
+    """
+
+    parmslist   =   get_config_value(formid+"Parms")
+    
+    if(not (parmslist == None)) :
+        
+        for i in range(len(labellist)) :
+            if(label == labellist[i]) :
+                return(parmslist[i])
+                
+    return(None)
 
 
 
@@ -463,6 +489,9 @@ CURRENT_GEOCODER_KEY                    =   "currentGeocoder"
 ARCGIS_BATCH_MAX_BATCH_SIZE_KEY         =   "arcgisMaxBatchSize"
 ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY   =   "arcgisSuggestedBatchSize"
 BULK_GEOCODE_MODE_KEY                   =   "bulkGeocodeMode"
+CURRENT_GENERIC_FUNCTION                =   "currentGenFunction"
+CURRENT_SUBSET_FILTERS                  =   "currentSubsetFilters"
+CURRENT_SUBSET_FILTER                   =   "currentSubsetFilter"
 
 """
 #--------------------------------------------------------------------------
