@@ -212,7 +212,7 @@ pandas_import_excel_labelList   =   ["dataframe_title",
                                      "Additional Parm(s)",
                                      "Import Excel File","Clear","Return","Help"]
 
-pandas_import_excel_typeList    =   ["text","file","text","file","text",
+pandas_import_excel_typeList    =   ["text","file","text","text","file","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
@@ -1008,9 +1008,7 @@ def display_data_import_notes(s,fname,dbnote=False,custom=False) :
     if(custom) :
         display_status("Custom import code Imported successfully as a pandas dataframe ")
         
-        importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
-                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
+        importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds"]
         
     else :
         
@@ -1019,10 +1017,7 @@ def display_data_import_notes(s,fname,dbnote=False,custom=False) :
         else :
             display_status("File " + fname + " Imported successfully as a pandas dataframe ")
 
-        importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
-                       "( set dataframe via dfcleanser.common.cfg.set_current_dfc_dataframe(df) )",
-                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
+        importnotes = ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds"]
     
     display_notes(importnotes)
 

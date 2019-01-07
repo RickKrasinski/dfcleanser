@@ -111,7 +111,7 @@ def process_import_form(formid, parms, display=True) :
                                               diw.get_csv_import_form_labels())
             
             parmstitle  =   "Pandas CSV Import Parms"
-            parmslist   =   diw.get_csv_import_form_labels()[:5]
+            parmslist   =   diw.get_csv_import_form_labels()[:6]
         
         if (formid == dim.FWF_IMPORT) :
             fparms      =   diw.get_fwf_import_inputs(parms)
@@ -120,7 +120,7 @@ def process_import_form(formid, parms, display=True) :
                                               diw.get_fwf_import_form_labels())
             
             parmstitle  =   "Pandas FWF Import Parms"
-            parmslist   =   diw.get_fwf_import_form_labels()[:5]
+            parmslist   =   diw.get_fwf_import_form_labels()[:7]
         
         elif (formid == dim.EXCEL_IMPORT) :
             fparms      =   diw.get_excel_import_inputs(parms)
@@ -129,7 +129,7 @@ def process_import_form(formid, parms, display=True) :
                                                 diw.get_excel_import_form_labels())
             
             parmstitle  =   "Pandas Excel Import Parms"
-            parmslist   =   diw.get_excel_import_form_labels()[:6]
+            parmslist   =   diw.get_excel_import_form_labels()[:7]
         
         elif (formid == dim.JSON_IMPORT) : 
             fparms      =   diw.get_json_import_inputs(parms)
@@ -138,7 +138,7 @@ def process_import_form(formid, parms, display=True) :
                                                diw.get_json_import_form_labels())
             
             parmstitle  =   "Pandas JSON Import Parms"
-            parmslist   =   diw.get_json_import_form_labels()[:2]
+            parmslist   =   diw.get_json_import_form_labels()[:8]
         
         elif (formid == dim.HTML_IMPORT) : 
             fparms      =   diw.get_html_import_inputs(parms)
@@ -147,14 +147,14 @@ def process_import_form(formid, parms, display=True) :
                                                diw.get_html_import_form_labels())
             
             parmstitle  =   "Pandas HTML Import Parms"
-            parmslist   =   diw.get_html_import_form_labels()[:4]
+            parmslist   =   diw.get_html_import_form_labels()[:8]
 
         elif (formid == dim.CUSTOM_IMPORT) : 
             (dispstats, opstat)     =   import_custom(parms)
             
             if(dispstats) :
                 parmstitle  =   "Custom Import Parms"
-                parmslist   =   diw.get_custom_import_form_labels()[0]
+                parmslist   =   diw.get_custom_import_form_labels()[:2]
 
            
         if(opstat.get_status()) : 
