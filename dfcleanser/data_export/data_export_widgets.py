@@ -91,7 +91,8 @@ pandas_export_csv_id            =   "exportPandasCSV"
 pandas_export_csv_idList        =   ["ecsvdataframe",
                                      "ecsvpath",
                                      "ecsvnarep",
-                                     "ecsvcolheader","ecsvindex",
+                                     "ecsvcolheader",
+                                     "ecsvindex",
                                      "ecsvaddlParms",
                                      None,None,None,None]
 
@@ -102,16 +103,16 @@ pandas_export_csv_labelList     =   ["dataframe_to_export",
                                      "Additional Parm(s)",
                                      "Export CSV File","Clear","Return","Help"]
 
-pandas_export_csv_typeList      =   ["select","file","text","text",
-                                     "text",maketextarea(6),
+pandas_export_csv_typeList      =   ["select","file","text","select",
+                                     "select",maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_export_csv_placeholderList = ["select dataframe to export",
                                      "enter CSV File name or browse to file below",
-                                     "enter value to use to fill nans",
+                                     "string representation of NAN to use (default NaN)",
                                      "write out column names row to file (default True)",
-                                     "write row ids (default True - Infer)",
-                                     "enter additional parms { Key :  Value} ... (default None)",
+                                     "write row ids (default True)",
+                                     "enter additional parms as dict { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
 pandas_export_csv_jsList        =   [None,None,None,None,None,None,
@@ -150,17 +151,17 @@ pandas_export_excel_labelList   =   ["dataframe_to_export",
                                      "Export Excel File","Clear","Return","Help"]
 
 pandas_export_excel_typeList    =   ["select","file","text","text",
-                                     "text","text",
+                                     "select","select",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_export_excel_placeholderList = ["select dataframe to export",
                                        "enter Excel IO path",
                                        "enter sheet name",
-                                       "enter nan value (default '')",
+                                       "string representation of NAN to use (default NaN)",
                                        "write out column names row to file (default True)",
-                                       "write row ids (default True - Infer)",
-                                       "enter additional parms { Key :  Value} ... (default None)",
+                                       "write row ids (default True)",
+                                       "enter additional parms as dict { Key :  Value} ... (default None)",
                                        None,None,None,None]
 
 pandas_export_excel_jsList      =   [None,None,None,None,None,None,None,
@@ -202,7 +203,7 @@ pandas_export_json_placeholderList = ["select dataframe to export",
                                       "enter JSON path or browse to file ",
                                       "enter JSON orientation",
                                       "enter date-format (default iso)",
-                                      "enter additional parms { Key :  Value} ... (default None)",
+                                      "enter additional parms as dict { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
 pandas_export_json_jsList       =   [None,None,None,None,None,
@@ -240,8 +241,8 @@ pandas_export_html_labelList    =   ["dataframe_to_export",
                                      "Additional Parm(s)",
                                      "Export HTML File","Clear","Return","Help"]
 
-pandas_export_html_typeList     =   ["select","file","text","text",
-                                     "text","text",
+pandas_export_html_typeList     =   ["select","file","text","select",
+                                     "select","text",
                                      maketextarea(6),
                                      "button","button","button","button"]
 
@@ -439,10 +440,7 @@ def display_data_export_notes(s,fname,dbnote=False,custom=False) :
         else :    
             display_status(" Dataframe Exported successfully to File " + fname)
 
-        importnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds",
-                       "( get dataframe via dfcleanser.common.cfg.get_dfc_dataframe() )",
-                       "( set dataframe via dfcleanser.common.cfg.set_current_dfc_dataframe(df) )",
-                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
+        importnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-s))+ " seconds"]
     
     display_notes(importnotes)
 
@@ -466,14 +464,22 @@ def get_pandas_export_input_form(exid) :
                                 pandas_export_csv_jsList,
                                 pandas_export_csv_reqList)
         
+        chsel   =   {"default":"True","list":["True","False"]}
+        export_form.add_select_dict("ecsvcolheader",chsel)
+        export_form.add_select_dict("ecsvindex",chsel)
+        
     elif(exid == dem.EXCEL_EXPORT)    : 
-         export_form = InputForm(pandas_export_excel_id,
+        export_form = InputForm(pandas_export_excel_id,
                                  pandas_export_excel_idList,
                                  pandas_export_excel_labelList,
                                  pandas_export_excel_typeList,
                                  pandas_export_excel_placeholderList,
                                  pandas_export_excel_jsList,
                                  pandas_export_excel_reqList)    
+
+        chsel   =   {"default":"True","list":["True","False"]}
+        export_form.add_select_dict("excelheader",chsel)
+        export_form.add_select_dict("excelindex",chsel)
 
     elif(exid == dem.JSON_EXPORT)    : 
          export_form = InputForm(pandas_export_json_id,
@@ -485,14 +491,18 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_json_reqList)    
     
     elif(exid == dem.HTML_EXPORT)    : 
-         export_form = InputForm(pandas_export_html_id,
+        export_form = InputForm(pandas_export_html_id,
                                  pandas_export_html_idList,
                                  pandas_export_html_labelList,
                                  pandas_export_html_typeList,
                                  pandas_export_html_placeholderList,
                                  pandas_export_html_jsList,
                                  pandas_export_html_reqList)    
-    
+
+        chsel   =   {"default":"True","list":["True","False"]}
+        export_form.add_select_dict("exhtmlheader",chsel)
+        export_form.add_select_dict("exhtmlColNamesRow",chsel)
+
     elif(exid == dem.SQLTABLE_EXPORT)    : 
          export_form = InputForm(pandas_export_sqltable_id,
                                  pandas_export_sqltable_idList,

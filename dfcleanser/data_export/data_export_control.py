@@ -18,7 +18,7 @@ import dfcleanser.data_export.data_export_model as dem
 from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (get_function_parms, opStatus, RunningClock, display_exception, 
-                                            INT_PARM, STRING_PARM, displayParms, get_string_value, display_notes)
+                                            INT_PARM, STRING_PARM, BOOLEAN_PARM, displayParms, get_string_value, display_notes)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
 
@@ -136,10 +136,10 @@ def process_export_form(formid, parms, display=True) :
                     if(dispstats) : 
                         ciparms = parms[0].replace("\n","</br>")
                         displayParms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID)
-                        dew.display_data_export_notes(s,fparms[0])
+                        dew.display_data_export_notes(s,fparms[1])
                 else : 
                     displayParms(parmstitle,parmslist,fparms,cfg.DataExport_ID)
-                    dew.display_data_export_notes(s,fparms[0])
+                    dew.display_data_export_notes(s,fparms[1])
         else :
             display_exception(opstat)
 
@@ -270,7 +270,7 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 
             csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
             csvvals         =   [fparms[2],fparms[3],fparms[4]]
-            csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
+            csvtypes        =   [STRING_PARM,BOOLEAN_PARM,BOOLEAN_PARM]
 
             csvparms        =   {}
             csvaddlparms    =   {}
@@ -344,7 +344,7 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
 
             excelkeys       =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
             excelvals       =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-            exceltypes      =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
+            exceltypes      =   [STRING_PARM,STRING_PARM,BOOLEAN_PARM,BOOLEAN_PARM]
     
             excelparms      =   {}
             exceladdlparms  =   {}
@@ -494,7 +494,7 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
 
             htmlkeys        =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
             htmlvals        =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-            htmltypes       =   [INT_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
+            htmltypes       =   [INT_PARM,BOOLEAN_PARM,BOOLEAN_PARM,STRING_PARM]
 
             htmlparms       =   {}
             htmladdlparms   =   {}
