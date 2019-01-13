@@ -51,7 +51,7 @@ dfmgr_input_labelList             =   ["df_title",
                                        "df_notes",
                                        "Rename</br>Dataframe",
                                        "Drop",
-                                       "Set</br>Current",
+                                       "Set As</br>Current",
                                        "Update</br>Notes",
                                        "Return",
                                        "Help"]
@@ -464,7 +464,7 @@ def get_df_dataframes_table() :
     df_titles_table.set_smallmargin(10)
     df_titles_table.set_border(True)
     df_titles_table.set_checkLength(True)
-    df_titles_table.set_textLength(22)
+    df_titles_table.set_textLength(36)
     df_titles_table.set_html_only(True) 
 
     #geo_parms_table.dump()
