@@ -191,7 +191,7 @@ function select_geocoder(gcid) {
     }
 
     var inputs = [id, 0, []];
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "51, " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "3, " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -224,12 +224,13 @@ function select_bulk_geocoder(gcid) {
     }
 
     var inputs = [id, 1, []];
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "51, " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "3, " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
 function get_geocode_form_id(gcid, gtype, gmode) {
 
+    console.log("get_geocode_form_id", gcid, gtype, gmode);
     var id = ""
 
     if (gmode == 0) {
@@ -351,6 +352,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                 break;
         }
     }
+
+    console.log("get_geocode_form_id", id);
+
     return (id);
 }
 
@@ -366,10 +370,10 @@ function process_geocoding_callback(gcid, gtype, gmode) {
 
     console.log("process_geocoding_callback", gcid, gtype, gmode);
 
-    var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
+    var fparms = get_input_form_parms(get_geocode_form_id(gcid, gtype, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "55" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "7" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -388,7 +392,7 @@ function display_geocoding_callback(gcid, gtype, gmode) {
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "53" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "5" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -404,7 +408,7 @@ function test_geocoder(gid, gmode) {
     var fparms = get_input_form_parms(get_geocode_form_id(gid, 0, gmode));
     var inputs = [gid, gmode, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "52" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "4" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -417,7 +421,7 @@ function display_geocoders(gid, gmode) {
      *  gmode - geocode mode
      */
     var inputs = [gid, gmode];
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "51" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "3" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -431,7 +435,7 @@ function clear_geocode_form(gid, gtype, gmode) {
      *  gmode - geocode mode
      */
     var inputs = [gid, gtype, gmode];
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "50" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "2" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -460,7 +464,7 @@ function get_geocoding_table(tableid, gcid, gtype, gmode) {
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
     var inputs = [tableid, gcid, gtype, gmode, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "54" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "6" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -566,7 +570,7 @@ function controlbulkrun(fid) {
      *  fid- function id
      */
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid));
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", fid));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -663,27 +667,26 @@ function gbr_google_add_addrcomp(addrcomp) {
 function gbr_add_location_type(loctype) {
 
     console.log("gbr_add_location_type", loctype);
-    var ltype = $("#bgrlocationtype");
+    var ltype = $("#bgqloctypes");
     var loc = ltype.val();
+    var llist = "";
 
     if (loc != undefined) {
         if (loc.length > 0) {
-            var llist = loc.split(",");
-            llist.push(loctype);
+            var endlist = loc.indexOf("]");
+            llist = loc.slice(0, endlist);
+            llist = llist + "," + loctype + "]"
         } else {
-            var llist = new Array();
-            llist.push(loctype);
+            llist = "[" + loctype + "]";
         }
     } else {
-        var llist = new Array();
-        llist.push(loctype);
+        llist = "[" + loctype + "]";
     }
     console.log("llist", llist);
-    ltype.val(llist.toString());
+    ltype.val(llist);
 }
 
 function gbr_select_language(language) {
-    console.log("gbr_select_language", language);
 
     var lang = $("#bgrlanguage");
     lang.val(language);
