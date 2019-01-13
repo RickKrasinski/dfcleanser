@@ -41,7 +41,8 @@ from dfcleanser.common.common_utils import (get_parms_for_input, display_excepti
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-
+def process_bulk_geocoding_run_cmd(command) :
+    subgc.process_bulk_geocoding_run_cmd(command)
 
 def display_geocode_utility(optionId,parms=None) :
     """
@@ -58,14 +59,16 @@ def display_geocode_utility(optionId,parms=None) :
     """
 
     print("display_geocode_utility",optionId,parms)
-    from IPython.display import clear_output
-    clear_output()
+
+    if(not( (optionId == sugm.BULK_START_GEOCODER) or (optionId == sugm.BULK_STOP_GEOCODER)  or 
+            (optionId == sugm.BULK_PAUSE_GEOCODER) or (optionId == sugm.BULK_RESUME_GEOCODER)  or 
+            (optionId == sugm.BULK_VIEW_ERRORS) or (optionId == sugm.BULK_CHECKPT_GEOCODER) ) ) :
+        from IPython.display import clear_output
+        clear_output()
 
     if(not cfg.check_if_dc_init()) :
         sugw.display_geocode_main_taskbar()        
         clear_sw_utility_geocodedata()
-        #display_status("DataframeCleanser not fully initialized yet - please wait and try again")
-        return
 
     if(optionId == sugm.DISPLAY_MAIN_GEOCODING) :
         sugw.display_geocode_main_taskbar()        
@@ -74,10 +77,9 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId ==  sugm.DISPLAY_DISTANCE) :
         clear_output() 
         sugw.display_calc_distance_input_form()
-    
+
     elif(optionId ==  sugm.PROCESS_DISTANCE) :
         sugw.display_geocode_main_taskbar() 
-        print("PROCESS_DISTANCE",parms)        
     
     elif(optionId ==  sugm.DISPLAY_DF_DISTANCE) :
         clear_output()        
@@ -86,8 +88,6 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId ==  sugm.PROCESS_DF_DISTANCE) :
         sugw.display_geocode_main_taskbar() 
         print("PROCESS_DF_DISTANCE",parms)        
-
-
 
     elif(optionId == sugm.PROCESS_GEOCODER) :
  
@@ -170,8 +170,8 @@ def display_geocode_utility(optionId,parms=None) :
             else :
                 subgw.display_bulk_geocoding(geocid,gtype,True)
 
-
     elif(optionId == sugm.PROCESS_GEOCODING) :
+        
         geocid  =   int(parms[0])
         gtype   =   int(parms[1])
         gmode   =   int(parms[2])
@@ -187,7 +187,7 @@ def display_geocode_utility(optionId,parms=None) :
         else :
             if(cfg.is_a_dfc_dataframe_loaded()) :
                 if(gtype == sugm.QUERY) :
-                    subgc.run_bulk_geocoder_query(geocid,fparms)
+                    subgc.get_bulk_coords(geocid,fparms)
                 else :
                     subgc.run_bulk_geocoder_reverse(geocid,fparms)
             else :
@@ -235,7 +235,6 @@ def display_geocode_utility(optionId,parms=None) :
                     
             inputs  =   get_parms_for_input(parms[2],ids)
                 
-            print("TEST_GEOOCODER",inputs)
             if(len(inputs) > 0) :
                 cfg.set_config_value(subgw.get_bulk_form_id(geocid,sugm.GEOCODER) + "Parms",inputs)    
 
@@ -301,39 +300,13 @@ def display_geocode_utility(optionId,parms=None) :
     #--------------------------------------------------------------------------
     #"""
        
-    elif(optionId == sugm.BULK_GEOCODE_RUN) :
-        print("BULK_GEOCODE_RUN")
+    elif( (optionId == sugm.BULK_START_GEOCODER) or (optionId == sugm.BULK_STOP_GEOCODER)  or 
+          (optionId == sugm.BULK_PAUSE_GEOCODER) or (optionId == sugm.BULK_RESUME_GEOCODER)  or 
+          (optionId == sugm.BULK_VIEW_ERRORS) or (optionId == sugm.BULK_CHECKPT_GEOCODER) ) :
+        print("BULK command",optionId)
+        return
+        subgc.process_bulk_geocoding_run_cmd(optionId)
         
-        parms   =   []
-        parms.append(sugm.BULK_START_GEOCODER)
-        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.QUERY)
-        parms.append(None)
-        subgc.process_bulk_geocoding_run_cmd(optionId,parms)
-        
-    elif(optionId == sugm.BULK_GEOCODE_PAUSE) :
-        print("BULK_GEOCODE_PAUSE")
-        
-        parms   =   []
-        parms.append(sugm.BULK_PAUSE_GEOCODER)
-        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.QUERY)
-        parms.append(None)
-        subgc.process_bulk_geocoding_run_cmd(optionId,parms)
-        
-    elif(optionId == sugm.BULK_GEOCODE_STOP) :
-        print("BULK_GEOCODE_STOP")
-        
-        parms   =   []
-        parms.append(sugm.BULK_STOP_GEOCODER)
-        parms.append(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
-        parms.append(sugm.QUERY)
-        parms.append(None)
-        subgc.process_bulk_geocoding_run_cmd(optionId,parms)
-
-
-
-
     elif(optionId == sugm.CHANGE_BULK_GEOCODER) :
         
         geocid = None

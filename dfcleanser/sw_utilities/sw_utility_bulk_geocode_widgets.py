@@ -8,6 +8,7 @@ Created on Tue Sept 13 22:29:22 2017
 
 @author: Rick
 """
+
 import dfcleanser.common.cfg as cfg
 
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
@@ -16,9 +17,10 @@ import dfcleanser.sw_utilities.sw_utility_geocode_widgets as sugw
 import dfcleanser.common.help_utils as dfchelp
 
 from dfcleanser.common.html_widgets import (maketextarea) 
-from dfcleanser.common.common_utils import (display_grid, opStatus, get_parms_for_input, display_exception, 
-                                            get_dfc_dataframe)
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
+from dfcleanser.common.common_utils import (display_grid, opStatus, get_parms_for_input, 
+                                            display_exception, get_dfc_dataframe)
+from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, 
+                                             SCROLL_NEXT, ROW_MAJOR)
 
 
 
@@ -121,6 +123,7 @@ bulk_google_query_input_idList            =   ["bgqdataframe",
                                                "bgqsaveaddress",
                                                "bgqregion",
                                                "bgqlanguage",
+                                               "bgqloctypes",
                                                "bgqbulknumberlimit",
                                                "bgqbulkfailurelimit",
                                                None,None,None,None,None,None]
@@ -132,16 +135,32 @@ bulk_google_query_input_labelList         =   ["dataframe_to_geocode",
                                                "save_geocoder_full_address_column_name",
                                                "region",
                                                "language",
+                                               "acceptable_location_types",
+                                               "max_addresses_to_geocode",
+                                               "failure_limit_percent",
+                                               "Get</br> Location </br>Types",
+                                               "Get</br> Bulk </br>Coords",
+                                               "Bulk</br>Reverse</br>Geocoding",
+                                               "Clear","Return","Help"]
+
+bulk_google_query_ltypes_input_labelList  =   ["dataframe_to_geocode",
+                                               "dataframe_address_columns",
+                                               "drop_df_address_columns_flag",
+                                               "new_dataframe_lat_long_column_name(s)",
+                                               "save_geocoder_full_address_column_name",
+                                               "region",
+                                               "language",
+                                               "location_types",
                                                "max_addresses_to_geocode",
                                                "failure_limit",
+                                               "Get</br> Column</br>Names",
                                                "Get</br> Bulk </br>Coords",
-                                               "Get</br> Column </br>Names",
                                                "Bulk</br>Reverse</br>Geocoding",
                                                "Clear","Return","Help"]
 
 bulk_google_query_input_typeList          =   ["select",maketextarea(4),"select","text",
-                                               "text","select","select","text","text",
-                                               "button","button","button","button","button","button"]
+                                               "text","select","select","text","text","text",
+                                               "button","button","button","button","button","button","button"]
 
 bulk_google_query_input_placeholderList   =  ["dataframe to geocode",
                                               "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
@@ -150,17 +169,30 @@ bulk_google_query_input_placeholderList   =  ["dataframe to geocode",
                                               "full address column name (default = None - don't retrieve full address and save)",
                                               "region (default - None)",
                                               "language (default - english)",
+                                              "valid location types default - ALL",
                                               "number of addresses to get coords for (default - len(dataframe))",
                                               "failure limit (default - 2%)",
                                                None,None,None,None,None,None]
 
-bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,
+bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,
+                                               "get_geocoding_table(" + str(sugm.LOCATION_TYPES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
-                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
                                                "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+
+bulk_google_query_ltypes_input_jsList     =   [None,None,None,None,None,None,None,None,None,None,
+                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "geocode_return()",
+                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+
+
+
+
 
 bulk_google_query_input_reqList           =   [0,1,2,3,4]
 
@@ -1168,7 +1200,7 @@ def get_location_types_table(tableid,owner,callback) :
 #  bulk geocode display methods
 #--------------------------------------------------------------------------
 """
-def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.GEOCODERS_TABLE,showfull=False) :
+def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,showfull=False) :
     """
     * --------------------------------------------------------- 
     * function : display the input form for geoocoding
@@ -1183,6 +1215,8 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.GEOCODERS_TABLE,sh
     *  N/A
     * --------------------------------------------------------
     """
+
+    print("display_bulk_geocode_inputs",geocid,geotype,tabletype)
 
     if(geocid == None) :
         geocid = cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
@@ -1208,12 +1242,26 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.GEOCODERS_TABLE,sh
                 geo_parms_html = get_regions_table("gegdfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_region")
             else :
                 geo_parms_html = get_regions_table("geadfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_country",True)
+        
+        elif(tabletype==sugm.LOCATION_TYPES_TABLE) :
+            if(geocid == sugm.GoogleId) :
+                geo_parms_html = get_location_types_table("gegdfltypesTable",cfg.SWGeocodeUtility_ID,"gbr_add_location_type")
                 
         else :
             geo_parms_html = get_categories_table("gedfregionsTable",cfg.SWGeocodeUtility_ID,"gb_select_category")
             
         if(geocid == sugm.GoogleId) :
-            form    =   bulk_google_query_input_form
+            if(tabletype==sugm.COLNAMES_TABLE) :
+                form    =   bulk_google_query_input_form
+            else :
+                form    =   [bulk_google_query_input_id,
+                             bulk_google_query_input_idList,
+                             bulk_google_query_ltypes_input_labelList,
+                             bulk_google_query_input_typeList,
+                             bulk_google_query_input_placeholderList,
+                             bulk_google_query_ltypes_input_jsList,
+                             bulk_google_query_input_reqList]  
+                
         elif(geocid == sugm.ArcGISId) :
             form    =   batch_arcgis_query_form
             inparms     =   cfg.get_config_value(batch_arcgis_query_id+"Parms")
@@ -1494,9 +1542,6 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                                    google_bulk_geocoder_jsList,
                                    google_bulk_geocoder_reqList]
 
-        geocsel           =   {"default":"False","list":["True","False"]}
-        geocoder_input_form.add_select_dict("ggbretryoverquerylimit",geocsel)
- 
     elif(geocodeid == sugm.BingId) :
         
         cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BingId)
@@ -1507,10 +1552,6 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                                    bing_bulk_geocoder_placeholderList,
                                    bing_bulk_geocoder_jsList,
                                    bing_bulk_geocoder_reqList]
-        
-        geocsel           =   {"default":"True","list":["True","False"]}
-        geocoder_input_form.add_select_dict("verify_cert",geocsel)
-        geocoder_input_form.add_select_dict("set_active",geocsel)
         
     elif(geocodeid == sugm.OpenMapQuestId) :
         
@@ -1557,6 +1598,17 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                                    geocoder_input_form[6],
                                    shortForm=False)
     
+    if(geocodeid == sugm.GoogleId) :
+
+        geocsel           =   {"default":"False","list":["True","False"]}
+        geocode_input_form.add_select_dict("ggbretryoverquerylimit",geocsel)
+ 
+    elif(geocodeid == sugm.BingId) :
+        
+        geocsel           =   {"default":"True","list":["True","False"]}
+        geocode_input_form.add_select_dict("verify_cert",geocsel)
+        geocode_input_form.add_select_dict("set_active",geocsel)
+    
     geocode_input_form.set_gridwidth(640)
     
     if(showfull) :
@@ -1593,6 +1645,177 @@ def get_bulk_input_parms(geocid,geotype,inputs) :
             return(get_parms_for_input(inputs,bulk_google_reverse_input_idList))
 
 
+
+def validate_google_bulk_parms(geotype,inputs,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : validate the bulk geocode parms
+    * 
+    * parms :
+    *  geotype      - geocoder operation type
+    *  inputs       - geocode input parms
+    *  opstat       - operation status object
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    bulk_geocode_kwargs     =   {}
+
+    if(geotype == sugm.QUERY) :
+
+        fparms = get_parms_for_input(inputs,bulk_google_query_input_idList)
+
+        if(len(fparms[0]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe selected defined")
+        else :
+                
+            if(opstat.get_status()) :
+                if(len(fparms[1]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe address column name(s) defined")
+                
+            if(opstat.get_status()) :
+                if(len(fparms[3]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe lat lng column name(s) defined")
+
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_google_query_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_google_query_input_labelList[1] : fparms[1]})
+            bulk_geocode_kwargs.update({bulk_google_query_input_labelList[2] : fparms[2]})
+            bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : fparms[3]})
+                
+            if(len(fparms[4]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[4] : fparms[4]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[4] : "None"})
+                
+            if(len(fparms[5]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : fparms[5]})    
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : "None"}) 
+                
+            if(len(fparms[6]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : fparms[6]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : "en"})
+                
+            if(len(fparms[7]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : fparms[7]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : "ALL"})
+
+            if(len(fparms[8]) > 0) :
+                if(int(fparms[8]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : len(cfg.get_dfc_dataframe())}) 
+                    
+            if(len(fparms[9]) > 0) :
+                if(int(fparms[9]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : "2"}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : fparms[9]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : "2"}) 
+                    
+    else :
+                
+        # check the required reverse parms
+        fparms = get_parms_for_input(inputs,bulk_google_reverse_input_idList)
+
+        if( (len(fparms[0]) == 0) and (len(fparms[1]) == 0) and (len(fparms[2]) == 0) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No api key or client id and secret parm(s) defined")
+        else :
+                
+            # check the required query parms 
+            if(len(fparms[0]) == 0) :
+                if( (len(fparms[1]) == 0) or (len(fparms[2]) == 0) ) :   
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No client id and secret parm(s) defined")
+                        
+            if(opstat.get_status()) :
+                if(len(fparms[3]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No lat lng column name defined")
+                
+            if(opstat.get_status()) :
+                if(len(fparms[4]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No address column name defined")
+        
+        # validate non required parmsd            
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[1] : fparms[1]})
+            bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[2] : fparms[2]})
+            bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[3] : fparms[3]})
+            bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[4] : fparms[4]})
+                
+            if(len(fparms[5]) > 0) :
+                try :
+                    import json
+                    addr_comps = json.loads(fparms[5])     
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("address components dict errort")
+                        
+                if(opstat.get_status()) :  
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : fparms[5]})
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "long"})
+                    
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : ""})
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "short"})
+                
+            if(len(fparms[7]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : fparms[7]}) 
+                
+            if(len(fparms[8]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]}) 
+                
+            if(len(fparms[9]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : fparms[9]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : "en"})
+
+            if(len(fparms[10]) > 0) :
+                if(int(fparms[10]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : fparms[10]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
+
+            if(len(fparms[11]) > 0) :
+                if(int(fparms[11]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : fparms[11]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
+
+            if(len(fparms[12]) > 0) :
+                if(int(fparms[12]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : fparms[12]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
+
+    if(opstat.get_status()) :  
+        return(bulk_geocode_kwargs)
+    else :
+        return(None)
+
+
 def validate_bulk_parms(geocid,geotype,inputs,opstat) :
     """
     * -------------------------------------------------------------------------- 
@@ -1611,160 +1834,7 @@ def validate_bulk_parms(geocid,geotype,inputs,opstat) :
     bulk_geocode_kwargs     =   {}
     
     if(geocid == sugm.GoogleId) :
-        
-        if(geotype == sugm.QUERY) :
-
-            fparms = get_parms_for_input(inputs,bulk_google_query_input_idList)
-
-            if( (len(fparms[0]) == 0) and (len(fparms[1]) == 0) and (len(fparms[2]) == 0) ) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("No api key or client id and secret parm(s) defined")
-            else :
-                
-                # check the required query parms 
-                if(len(fparms[0]) == 0) :
-                    if( (len(fparms[1]) == 0) or (len(fparms[2]) == 0) ) :   
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No client id and secret parm(s) defined")
-                        
-                if(opstat.get_status()) :
-                    if(len(fparms[3]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No dataframe address column name(s) defined")
-                        
-                if(opstat.get_status()) :
-                    if(len(fparms[5]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No dataframe lat lng column name(s) defined")
-
-            if(opstat.get_status()) :
-                
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[0] : fparms[0]})
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[1] : fparms[1]})
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[2] : fparms[2]})
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : fparms[3]})
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : fparms[5]})
-                
-                if(len(fparms[4]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[4] : "False"})
-                
-                if(len(fparms[6]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : fparms[6]}) 
-                
-                if(len(fparms[8]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : "en"})
-
-                if(len(fparms[9]) > 0) :
-                    if(int(fparms[9]) > len(cfg.get_dfc_dataframe())) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : len(cfg.get_dfc_dataframe())}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : fparms[9]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : len(cfg.get_dfc_dataframe())}) 
-
-                if(len(fparms[10]) > 0) :
-                    if(int(fparms[10]) > len(cfg.get_dfc_dataframe())) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : fparms[10]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-
-                if(len(fparms[11]) > 0) :
-                    if(int(fparms[11]) > 100) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : 2}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : fparms[11]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : 2}) 
-                    
-        else :
-                
-                # check the required reverse parms
-            fparms = get_parms_for_input(inputs,bulk_google_reverse_input_idList)
-
-            if( (len(fparms[0]) == 0) and (len(fparms[1]) == 0) and (len(fparms[2]) == 0) ) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("No api key or client id and secret parm(s) defined")
-            else :
-                
-                # check the required query parms 
-                if(len(fparms[0]) == 0) :
-                    if( (len(fparms[1]) == 0) or (len(fparms[2]) == 0) ) :   
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No client id and secret parm(s) defined")
-                        
-                if(opstat.get_status()) :
-                    if(len(fparms[3]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No lat lng column name defined")
-                
-                if(opstat.get_status()) :
-                    if(len(fparms[4]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No address column name defined")
-        
-        # validate non required parmsd            
-            if(opstat.get_status()) :
-                
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[0] : fparms[0]})
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[1] : fparms[1]})
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[2] : fparms[2]})
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[3] : fparms[3]})
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[4] : fparms[4]})
-                
-                if(len(fparms[5]) > 0) :
-                    try :
-                        import json
-                        addr_comps = json.loads(fparms[5])     
-                    except :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("address components dict errort")
-                        
-                    if(opstat.get_status()) :  
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : fparms[5]})
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "long"})
-                    
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : ""})
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "short"})
-                
-                if(len(fparms[7]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : fparms[7]}) 
-                
-                if(len(fparms[8]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]}) 
-                
-                if(len(fparms[9]) > 0) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : fparms[9]}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : "en"})
-
-                if(len(fparms[10]) > 0) :
-                    if(int(fparms[10]) > len(cfg.get_dfc_dataframe())) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : fparms[10]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-
-                if(len(fparms[11]) > 0) :
-                    if(int(fparms[11]) > len(cfg.get_dfc_dataframe())) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : fparms[11]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
-
-                if(len(fparms[12]) > 0) :
-                    if(int(fparms[12]) > 100) :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
-                    else :
-                        bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : fparms[12]})
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
+        bulk_geocode_kwargs     =   validate_google_bulk_parms(geotype,inputs,opstat)       
                 
     elif(geocid == sugm.ArcGISId) :
         

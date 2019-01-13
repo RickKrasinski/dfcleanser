@@ -1074,6 +1074,7 @@ def display_geocode_main_taskbar() :
 
 def display_calc_distance_input_form() :
 
+    print("display_calc_distance_input_form")
     dist_addr_form  =   InputForm(addr_dist_utility_input_id,
                                   addr_dist_utility_input_idList,
                                   addr_dist_utility_input_labelList,
