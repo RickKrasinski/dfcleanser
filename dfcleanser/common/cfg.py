@@ -174,7 +174,9 @@ def get_dfc_dataframes_select_list() :
     
     return(df_select)
  
-
+def get_dfc_df(title) :
+    return(DCdf.get_dfc_dataframe(title))    
+    
 """
 #--------------------------------------------------------------------------
 #  dfcleanser Dataframe object
@@ -284,6 +286,9 @@ class DCDataframes :
             else :
                 return(None)
                 
+    def get_dfc_dataframe(self,title) : 
+        return(self.dcdataframes[self.get_df_index(title)])
+           
     def get_dataframe_notes(self,title=None) :
         if(title == None) :
             dfindex     =   self.get_df_index(self.current_df)
@@ -518,7 +523,7 @@ def get_current_col_name() :
     return(get_config_value(CURRENT_COL_NAME))
 
 
-GlobalKeys     =   [EULA_FLAG_KEY,"geocoder","GoogleV3_querykwargs","googlebulkqueryParms","googlebulkreverseParms",
+GlobalKeys     =   [EULA_FLAG_KEY,"geocoder","GoogleV3_querykwargs",
                     "arcgisgeocoderParms","binggeocoderParms","mapquestgeocoderParms","nomingeocoderParms",
                     "googlegeocoderParms","PostgresqldbconnectorParms","MySQLdbconnectorParms",
                     "SQLitedbconnectorParms","OracledbconnectorParms","MSSQLServerdbconnectorParms",

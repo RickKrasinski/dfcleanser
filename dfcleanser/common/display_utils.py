@@ -616,8 +616,6 @@ def display_column_names(df,table,callback) :
                 colsrow      =   []
 
         colsrow.append(cnames[i])
-        print(cnames[i])
-        
 
     if(((i+1) % table.get_colsperrow()) != 0) :
         for k in range(table.get_colsperrow() - ((i+1) % table.get_colsperrow())) :

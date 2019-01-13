@@ -811,7 +811,7 @@ def get_form_parms(formid,idList) :
         if(len(formParms) == totalids) :
             return(formParms)
         else :
-            #return(formParms)
+            print("get_form_parms drop",formParms)
             cfg.drop_config_value(formid + "Parms")
             return(None)
     

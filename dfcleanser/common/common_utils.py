@@ -411,7 +411,7 @@ def get_parms_for_input(parms,ids) :
     return(outparms)
 
  
-def displayParms(title,labels,values,id,width=None,printBlank=False) :
+def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
     """
     #--------------------------------------------------------------------------
     #   display a list of parms as a table
@@ -426,7 +426,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
     #
     #--------------------------------------------------------------------------
     """ 
-    
+
     maxllabels      =   0
     maxlvalues      =   0
 
@@ -484,7 +484,7 @@ def displayParms(title,labels,values,id,width=None,printBlank=False) :
                 parmsRows.append([" ",labels[i],"<b>:</b>",values[i]])
             colorList.append([whitecolor,whitecolor,whitecolor,whitecolor])
     
-    parms_table = tblw.dcTable(title,"parmsTable",id,
+    parms_table = tblw.dcTable(title,"parmsTable",tblid,
                                parmsHeader,parmsRows,parmsWidths,parmsAligns)
 
     parms_table.set_rowspertable(len(labels))
