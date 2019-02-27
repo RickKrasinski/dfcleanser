@@ -14,14 +14,14 @@ this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
-#import dfcleanser.data_inspection.data_inspection_model as dim
 
 from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock, get_parms_for_input, 
-                                            get_col_uniques_by_id, new_line, displayHTML)
+                                            get_col_uniques_by_id, display_status, opStatus, 
+                                            display_exception, display_generic_grid,
+                                            get_select_defaults, displayParms, new_line)
 
-from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, InputForm, 
-                                            get_checkbox_form, displayHeading,
-                                            get_input_form, CheckboxGroupForm, ButtonGroupForm)
+from dfcleanser.common.html_widgets import (get_button_tb_form, InputForm, 
+                                            CheckboxGroupForm, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT)
 
@@ -34,6 +34,24 @@ from dfcleanser.common.display_utils import (get_df_datatypes_data, display_samp
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
+def print_page_separator(title,divid) :
+    
+    style_name      =   "dfc-divider_" + str(divid)
+    
+    divider_cont    =   ("<div style='margin-left: 0px; width:95%;'>" + new_line) 
+    divider1_html   =   ("        <style>" + new_line + "            hr." + style_name + " { " + new_line + "                overflow: visible; padding: 0; width: 90%; border: none; box-shadow: 0 0 10px 1px #296093; text-align: center;" + new_line + "            } " + new_line)
+    divider2_html   =   ('            hr.' + style_name + ':after { ' + new_line + '                content: "' + title + '"; ')
+    divider3_html   =   (" display: inline-block; position: relative; top: -0.7em; font-size: 24px; font-weight: bold;" + new_line + "                font-family: Arial; color: #236BAF; padding: 0 0.25em; background: white;" + new_line + "            }" + new_line + "        </style>" + new_line) 
+    
+    
+    divider_start_html  =   ("    <hr class='" + style_name + "'>" + new_line + "    <div>" + new_line)
+    divider_end_html    =   ("    </div>" + new_line + "</div>" + new_line + "<br>" + new_line)
+    
+    divider_html     =   (divider_cont + divider_start_html + divider1_html + divider2_html + divider3_html + divider_end_html) 
+    
+    from dfcleanser.common.common_utils import (displayHTML)
+    displayHTML(divider_html)
 
 
 def get_cbox_flag(id) :
@@ -112,6 +130,71 @@ data_inspection_tb_jsList          =   ["inspection_task_bar_callback(0)",
 
 data_inspection_tb_centered        =   False
 
+
+"""
+#--------------------------------------------------------------------------
+#    select dataframe input form  
+#--------------------------------------------------------------------------
+"""
+data_inspection_df_input_title             =   "Dataframe To Inspect"
+data_inspection_df_input_id                =   "datainspectdf"
+data_inspection_df_input_idList            =   ["didfdataframe"]
+
+data_inspection_df_input_labelList        =   ["dataframe_to_inspect"]
+
+data_inspection_df_input_typeList         =   ["select"]
+
+data_inspection_df_input_placeholderList  =   ["dataframe to inspect"]
+
+data_inspection_df_input_jsList           =   [None]
+
+data_inspection_df_input_reqList          =   [0]
+
+data_inspection_df_input_form             =   [data_inspection_df_input_id,
+                                               data_inspection_df_input_idList,
+                                               data_inspection_df_input_labelList,
+                                               data_inspection_df_input_typeList,
+                                               data_inspection_df_input_placeholderList,
+                                               data_inspection_df_input_jsList,
+                                               data_inspection_df_input_reqList]  
+
+
+"""
+#--------------------------------------------------------------------------
+#    column search data  
+#--------------------------------------------------------------------------
+"""
+data_inspection_colsearch_title            =   "Column Values To Search For"
+data_inspection_colsearch_id               =   "datainspectcolsearch"
+data_inspection_colsearch_idList           =   ["colsearchnames",
+                                                "colsearchvalues",
+                                                None]
+
+data_inspection_colsearch_labelList        =   ["column_names",
+                                                "column_values",
+                                                "Get Rows Matching colunm_values"]
+
+data_inspection_colsearch_typeList         =   ["select","text","button"]
+
+data_inspection_colsearch_placeholderList  =   ["columns to search in",
+                                                "column values to search for [] ",
+                                                None]
+
+data_inspection_colsearch_jsList           =   [None,None,
+                                                "get_col_rows_callback()"]
+
+data_inspection_colsearch_reqList          =   [0,1]
+
+data_inspection_colsearch_form             =   [data_inspection_colsearch_id,
+                                               data_inspection_colsearch_idList,
+                                               data_inspection_df_input_labelList,
+                                               data_inspection_colsearch_typeList,
+                                               data_inspection_colsearch_placeholderList,
+                                               data_inspection_colsearch_jsList,
+                                               data_inspection_colsearch_reqList]  
+
+
+
 """
 #--------------------------------------------------------------------------
 #    drop rows input form
@@ -187,12 +270,108 @@ def get_inspection_main_taskbar() :
                                               data_inspection_tb_centered)))
 
 def get_inspection_dfschema_taskbar() :
-    return(get_button_tb_form(ButtonGroupForm(data_inspection_dfschema_tb_id,
+    return(ButtonGroupForm(data_inspection_dfschema_tb_id,
                                               data_inspection_dfschema_tb_keyTitleList,
                                               data_inspection_dfschema_tb_jsList,
-                                              data_inspection_dfschema_tb_centered)))
+                                              data_inspection_dfschema_tb_centered))
 
+
+def get_select_df_form(title="Inspect") :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display select dataframe form
+    * 
+    * parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    if(title == "Cleanse") :
+        labellist     =   ["dataframe_to_cleanse"]
+    elif(title == "Transform") :
+        labellist     =   ["dataframe_to_transform"]
+    else :
+        labellist     =   data_inspection_df_input_labelList
+    
+    select_df_form  =   InputForm(data_inspection_df_input_id,
+                                  data_inspection_df_input_idList,
+                                  labellist,
+                                  data_inspection_df_input_typeList,
+                                  data_inspection_df_input_placeholderList,
+                                  data_inspection_df_input_jsList,
+                                  data_inspection_df_input_reqList)
+    
+    df_list     =   cfg.get_dfc_dataframes_select_list()
+
+    if(not (df_list.get("list") == None)) :
+        dataframes      =   df_list
+    else :
+        dataframes      =   {'default': "", 'list': [""]}
+
+    selectDicts     =   []
+    selectDicts.append(dataframes)
+
+    get_select_defaults(select_df_form,
+                        data_inspection_df_input_id,
+                        data_inspection_df_input_idList,
+                        data_inspection_df_input_typeList,
+                        selectDicts)
+
+    select_df_form.set_gridwidth(780)
+    
+    return(select_df_form)
+
+
+def get_colsearch_form() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display column search form
+    * 
+    * Parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    colsearch_form  =   InputForm(data_inspection_colsearch_id,
+                                  data_inspection_colsearch_idList,
+                                  data_inspection_colsearch_labelList,
+                                  data_inspection_colsearch_typeList,
+                                  data_inspection_colsearch_placeholderList,
+                                  data_inspection_colsearch_jsList,
+                                  data_inspection_colsearch_reqList)
+    
+    col_names   =   cfg.get_dfc_dataframe().columns.tolist()
+    col_names.append("ALL")
+    cnames      =   {'default': "ALL", 'list': col_names}
+    
+    selectDicts     =   []
+    selectDicts.append(cnames)
+
+    get_select_defaults(colsearch_form,
+                        data_inspection_colsearch_id,
+                        data_inspection_colsearch_idList,
+                        data_inspection_colsearch_typeList,
+                        selectDicts)
+
+    colsearch_form.set_shortForm(True)
+    
+    return(colsearch_form)
+
+    
 def get_inspection_check_form_parms(parms,current_checkboxes) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display inspection checkbox form
+    * 
+    * Parms :
+    *   parms               -   check boxes to set
+    *   current_checkboxes  -   current check boxes set
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     parms = []
             
@@ -210,18 +389,25 @@ def get_inspection_check_form_parms(parms,current_checkboxes) :
     return()
 
 def get_main_checkbox_form(current_checkboxes) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display inspection checkbox form
+    * 
+    * Parms :
+    *   current_checkboxes  -   current check boxes set
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
-    main_inspection_checkbox    =  CheckboxGroupForm(main_inspection_checkbox_id,
-                                                     main_inspection_checkbox_idList,
-                                                     main_inspection_checkbox_labelList,
-                                                     main_inspection_checkbox_jsList,
-                                                     current_checkboxes,
-                                                     [0,0,0,0,0])
-
-    inspection_checkboxForm = get_checkbox_form("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Inspection Options",
-                                                main_inspection_checkbox)
-    
+    inspection_checkboxForm    =  CheckboxGroupForm(main_inspection_checkbox_id,
+                                                    main_inspection_checkbox_idList,
+                                                    main_inspection_checkbox_labelList,
+                                                    main_inspection_checkbox_jsList,
+                                                    current_checkboxes,
+                                                    [0,0,0,0,0])
     return(inspection_checkboxForm)
+
 
 def get_drop_rows_input_parms(parms) :
     return(get_parms_for_input(parms,drop_rows_input_idList))
@@ -241,73 +427,81 @@ def get_drop_cbox_flags() :
     return(parms)
 
 
-
-def display_inspection_html(title) :
-
-    status_html = ""
-    if(title == "&nbsp;dataframe Imported") :
-        status_html = (status_html + '<div class="container status-header" style="width:22%; margin-left:25px; margin-bottom:5px; ">' + new_line)
-    else :
-        status_html = (status_html + '<div class="container status-header" style="width:18%; margin-left:25px; margin-bottom:5px; ">' + new_line)
-    status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '                <div class="input-group">' + new_line)
-    status_html = (status_html + '                    <p class="dc-table-title">' + title + '</p>' + new_line)
-    status_html = (status_html + '                </div>' + new_line)
-    status_html = (status_html + '            </div>' + new_line)
-    status_html = (status_html + '        </div>' + new_line) 
-    status_html = (status_html + '    </div>' + new_line) 
-    status_html = (status_html + '</div>')
-
-    displayHTML(status_html)
-
 """            
 #------------------------------------------------------------------
 #   display data inspection header
 #------------------------------------------------------------------
 """           
-def display_inspection_data() :
-    
+def display_inspection_data(display=True,forExport=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display inspection data form
+    * 
+    * Parms :
+    *   display     -   display flag
+    *   forExport   -   for Export flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+
     if(cfg.is_a_dfc_dataframe_loaded()) :
-        display_inspection_html("&nbsp;dataframe Imported")
-        print("     [NUMBER OF ROWS] :",len(cfg.get_dfc_dataframe()),flush=True)
-        print("     [NUMBER OF COLS] :",len(cfg.get_dfc_dataframe().columns))
+        
+        labels  =   ["NUMBER OF ROWS","NUMBER OF COLS"]
+        values  =   [str(len(cfg.get_dfc_dataframe())),str(len(cfg.get_dfc_dataframe().columns))]
+        
+        if(display) :
+            displayParms("&nbsp;dataframe Imported",labels,values,"inspectdata",width=None)
+        else :
+            if(forExport) :
+                return(displayParms("&nbsp;dataframe Exported",labels,values,"inspectdata",100,0,False))
+            else :
+                return(displayParms("&nbsp;dataframe Imported",labels,values,"inspectdata",100,0,False))
+            
     else :
-        display_inspection_html("&nbsp;No dataframe Imported")
+        display_status("No Dataframe selected for inspection", 1)
 
 
-"""            
-#------------------------------------------------------------------
-#   display drop nan rows threshold form 
-#------------------------------------------------------------------
-""" 
 def display_drop_rows() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display drop nan rows threshold form
+    * 
+    * Parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
-    display_composite_form([get_input_form(InputForm(drop_rows_input_id,
-                                                     drop_rows_input_idList,
-                                                     drop_rows_input_labelList,
-                                                     drop_rows_input_typeList,
-                                                     drop_rows_input_placeholderList,
-                                                     drop_rows_input_jsList,
-                                                     drop_rows_input_reqList,
-                                                     drop_rows_input_short))]) 
+    return(InputForm(drop_rows_input_id,
+                             drop_rows_input_idList,
+                             drop_rows_input_labelList,
+                             drop_rows_input_typeList,
+                             drop_rows_input_placeholderList,
+                             drop_rows_input_jsList,
+                             drop_rows_input_reqList,
+                             drop_rows_input_short).get_html())
     
-"""            
-#------------------------------------------------------------------
-#   display drop nan cols threshold form 
-#------------------------------------------------------------------
-""" 
+
 def display_drop_cols() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display drop nan cols threshold form
+    * 
+    * Parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
-    display_composite_form([get_input_form(InputForm(drop_columns_input_id,
-                                                     drop_columns_input_idList,
-                                                     drop_columns_input_labelList,
-                                                     drop_columns_input_typeList,
-                                                     drop_columns_input_placeholderList,
-                                                     drop_columns_input_jsList,
-                                                     drop_columns_input_reqList,
-                                                     True))]) 
+    return(InputForm(drop_columns_input_id,
+                     drop_columns_input_idList,
+                     drop_columns_input_labelList,
+                     drop_columns_input_typeList,
+                     drop_columns_input_placeholderList,
+                     drop_columns_input_jsList,
+                     drop_columns_input_reqList,
+                     True).get_html())
 
 """
 #------------------------------------------------------------------
@@ -317,17 +511,22 @@ def display_drop_cols() :
 #------------------------------------------------------------------
 """       
 
-"""            
-#------------------------------------------------------------------
-#   display datatypes  
-#
-#       dtypes_list         -   list of datatype
-#       colnames_count_list -   list of colnames count for datatype
-#       colnames_list       -   list of colnames for datatype
-#
-#------------------------------------------------------------------
-""" 
-def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict) : 
+
+def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display drop nan cols threshold form
+    * 
+    * Parms :
+    *  table               -   table object
+    *  dtypes_list         -   list of datatype
+    *  colnames_count_list -   list of colnames count for datatype    
+    *  colnames_dict       -   list of colnames for datatype    
+    *  display             -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     dtypesHeader   =   ["Data Type","Count","Column Names"]
     dtypesRows     =   []
@@ -373,11 +572,14 @@ def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict) :
     table.set_alignList(dtypesAligns)
     #table.set_refList(dtypesHrefs)
     table.set_checkLength(True) 
-    table.set_textLength(25) 
+    table.set_textLength(21) 
     
     table.set_note("<b>*</b> To perform group actions on a specific data type click on the data type above.")
     
-    table.display_table()
+    if(display) :
+        table.display_table()
+    else :
+        return(table.get_html())
 
     
 """            
@@ -389,67 +591,103 @@ def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict) :
 #------------------------------------------------------------------
 """
 def display_null_data(df,rownantable,colnantable,rowsize) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display null data info for a dataframe
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  rownantable  -   row nan table object
+    *  colnantable  -   col nan table object
+    *  rowsize      -   row size    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     df_cols         =   df.columns
     df_nulls        =   df.isnull().sum()
     totnullcols     =   0
     
     df_nulls_dict   =   {}
-
-    for i in range(len(df_nulls)) :
-        if(not df_nulls[i] == 0) :
-            totnullcols = totnullcols + 1
-            
-            if( not ((df_nulls_dict.get(df_nulls[i], None)) == None ) ): 
-                df_nulls_list = df_nulls_dict.get(df_nulls[i])
-                df_nulls_list.append(df_cols[i])
-                df_nulls_dict.update({df_nulls[i]:df_nulls_list})
-            else :
-                df_nulls_list = []
-                df_nulls_list.append(df_cols[i])
-                df_nulls_dict.update({df_nulls[i]:df_nulls_list})
     
-    if(sum(df_nulls) == 0) :
-        display_row_nan_stats(df)
-    else : 
-        
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row NaNs",4)
-        
-        clock = RunningClock()
-        clock.start()
+    opstat  =   opStatus()
+    
+    clock = RunningClock()
+    clock.start()
 
-        #print("\n")
-        rowswithnulls, rowcounts = display_row_nan_stats(df)
-        display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50)
-        from dfcleanser.data_inspection.data_inspection_widgets import display_drop_rows
-        display_drop_rows()
-        
-        clock.stop()
-        
-        print("\n")
-        
-        displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column NaNs",4)
-        
-        clock = RunningClock()
-        clock.start()
+    try :                
 
-        #print("\n")
-        display_col_nan_stats(df)
-        display_df_col_nans(df,colnantable)
-        from dfcleanser.data_inspection.data_inspection_widgets import display_drop_cols
-        display_drop_cols()
-
-        clock.stop()
+        for i in range(len(df_nulls)) :
+            if(not df_nulls[i] == 0) :
+                totnullcols = totnullcols + 1
             
-"""            
-#------------------------------------------------------------------
-#   display row nan stats
-#
-#   df              -   dataframe
-#
-#------------------------------------------------------------------
-"""
-def display_row_nan_stats(df) :
+                if( not ((df_nulls_dict.get(df_nulls[i], None)) == None ) ): 
+                    df_nulls_list = df_nulls_dict.get(df_nulls[i])
+                    df_nulls_list.append(df_cols[i])
+                    df_nulls_dict.update({df_nulls[i]:df_nulls_list})
+                else :
+                    df_nulls_list = []
+                    df_nulls_list.append(df_cols[i])
+                    df_nulls_dict.update({df_nulls[i]:df_nulls_list})
+    
+        if(sum(df_nulls) == 0) :
+            display_row_nan_stats(df)
+        else : 
+        
+            row_nans_header_html    =   "<p>Row Nans</p>"
+            rowswithnulls, rowcounts, row_nan_stats_html = display_row_nan_stats(df,False)
+            row_nans_html           =   display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50,False)
+            drop_row_nans_html      =   display_drop_rows()
+            
+            gridclasses     =   ["df-inspection-nan-wrapper-header",
+                                 "df-inspection-nan-wrapper-content",
+                                 "df-inspection-nan-wrapper-content1",
+                                 "df-inspection-nan-wrapper-footer"]
+                
+            gridhtmls       =   [row_nans_header_html,
+                                 row_nan_stats_html,
+                                 row_nans_html,
+                                 drop_row_nans_html]
+                    
+            display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
+            print("\n")
+
+            col_nans_header_html    =   "<p>Column Nans</p>"
+            col_nan_stats_html      =   display_col_nan_stats(df,False)
+            col_nans_html           =   display_df_col_nans(df,colnantable,False)
+            drop_col_nans_html      =   display_drop_cols()
+            
+            gridhtmls       =   [col_nans_header_html,
+                                 col_nan_stats_html,
+                                 col_nans_html,
+                                 drop_col_nans_html]
+            
+            display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
+            
+
+    except Exception as e:
+        opstat.store_exception("Error displaying nan data\n ",e)
+
+    clock.stop()
+                
+    if(not (opstat.get_status())) :
+        display_exception(opstat)
+
+            
+
+def display_row_nan_stats(df,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row nan stats
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  display      -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     nanstatsHeader    =   ["",""]
     nanstatsRows      =   []
@@ -484,22 +722,27 @@ def display_row_nan_stats(df) :
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
-    nan_stats_table.display_table()
-    
-    return(rowswithnulls , rowcounts)
+    if(display) :
+        nan_stats_table.display_table()
+        return(rowswithnulls , rowcounts)
+    else :
+        return(rowswithnulls , rowcounts, nan_stats_table.get_html())
 
 
-"""            
-#------------------------------------------------------------------
-#   display row nans  
-#
-#       df              -   dataframe
-#       table           -   table to populate
-#       numworstRows    -   count of worst nan rows
-#
-#------------------------------------------------------------------
-""" 
-def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows) :
+def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row nans
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  table           -   table to populate
+    *  numworstRows    -   count of worst nan rows
+    *  display      -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     numcols         =   len(df.columns)
     numrows         =   len(rowsnulls)
@@ -557,18 +800,24 @@ def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows) :
     table.set_rowspertable(20)
     #table.set_lastrowdisplayed(-1)
 
-    get_row_major_table(table,SCROLL_NEXT)
+    if(display) :
+        get_row_major_table(table,SCROLL_NEXT)
+    else :
+        return(get_row_major_table(table,SCROLL_NEXT,False))
 
 
-"""            
-#------------------------------------------------------------------
-#   display columns nan stats
-#
-#   df              -   dataframe
-#
-#------------------------------------------------------------------
-"""
-def display_col_nan_stats(df) :
+def display_col_nan_stats(df,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display col nans
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  display      -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     df_cols         =   df.columns
     df_nulls        =   df.isnull().sum()
@@ -604,19 +853,25 @@ def display_col_nan_stats(df) :
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
-    nan_stats_table.display_table()
+    if(display) :
+        nan_stats_table.display_table()
+    else :
+        return(nan_stats_table.get_html())
 
 
-"""            
-#------------------------------------------------------------------
-#   display col nans  
-#
-#       df          -   dataframe
-#       table       -   table to populate
-#
-#------------------------------------------------------------------
-""" 
-def display_df_col_nans(df,table) :
+def display_df_col_nans(df,table,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display col nans
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  table        -   table to populate
+    *  display      -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     df_cols         =   df.columns
     df_nulls        =   df.isnull().sum().tolist()
@@ -669,50 +924,61 @@ def display_df_col_nans(df,table) :
 
     table.set_shortrow(False)
     table.set_tabletype(ROW_MAJOR)
-    #table.set_lastrowdisplayed(-1)
 
-    get_row_major_table(table,SCROLL_NEXT)
+    if(display) :
+        get_row_major_table(table,SCROLL_NEXT)
+    else :
+        return(get_row_major_table(table,SCROLL_NEXT,False))
  
 
-"""            
-#------------------------------------------------------------------
-#   display row data   
-#
-#       df          -   dataframe
-#       tableid     -   html tableid
-#       rowid       -   row id
-#       colid       -   col id
-#
-#------------------------------------------------------------------
-""" 
-def display_df_row_data(df,table,rowid,colId) : #,numworstRows) :
-    
-    print("\n")
-    display_row_stats(df,rowid)
+def display_df_row_data(df,table,rowid,colId,opstat,display=True) : #,numworstRows) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row data
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  table        -   table to populate
+    *  rowid        -   row id    
+    *  colid        -   col id    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     if(type(rowid) == str) :
-        return(display_sample_row(df,table,int(rowid),int(colId)))
+        if(display) :
+            display_sample_row(df,table,int(rowid),int(colId),opstat)
+        else :
+            return(display_sample_row(df,table,int(rowid),int(colId),opstat,False))
     else :
-        return(display_sample_row(df,table,rowid,colId))
+        if(display) :
+            display_sample_row(df,table,rowid,colId,opstat)
+        else :
+            return(display_sample_row(df,table,rowid,colId,opstat,False))
 
-"""            
-#------------------------------------------------------------------
-#   display row stats
-#
-#   df              -   dataframe
-#   rowid           -   numeric row id
-#
-#------------------------------------------------------------------
-"""
-def display_row_stats(df,rowid) :#,colId) :
+
+def display_row_stats(df,dftitle,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row data
+    * 
+    * Parms :
+    *  df           -   dataframe    
+    *  dftitle      -   dataframe title
+    *  display      -   display flag    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     rowstatsHeader    =   ["",""]
     rowstatsRows      =   []
-    rowstatsWidths    =   [75,25]
+    rowstatsWidths    =   [80,20]
     rowstatsAligns    =   ["left","left"]
     
-    rowstatsRows.append(["Number of Rows Imported",str(len(df))])
-    rowstatsRows.append(["&nbsp;","&nbsp;"])#"Number of Unique Row ID Values",str(uniqueRowIdsCount)])
+    rowstatsRows.append(["Number of Rows in "+ dftitle,str(len(df))])
+    #rowstatsRows.append(["&nbsp;","&nbsp;"])#"Number of Unique Row ID Values",str(uniqueRowIdsCount)])
     
     row_stats_table = dcTable("Row Stats","rowstatsTable",
                               cfg.DataInspection_ID,
@@ -721,27 +987,31 @@ def display_row_stats(df,rowid) :#,colId) :
 
     row_stats_table.set_rowspertable(len(rowstatsRows))
     row_stats_table.set_small(True)
-    row_stats_table.set_smallwidth(35)
+    row_stats_table.set_smallwidth(50)
     row_stats_table.set_smallmargin(32)
     row_stats_table.set_smallfsize(12)
     row_stats_table.set_border(False)
     row_stats_table.set_checkLength(False)
     
-    row_stats_table.display_table()
+    if(display) :
+        row_stats_table.display_table()
+    else :
+        return(row_stats_table.get_html())
 
 
-
-"""            
-#------------------------------------------------------------------
-#   display categories  
-#
-#       df                  -   dataframe
-#       cattable            -   category table
-#       catcandidatetable   -   category candidate table
-#
-#------------------------------------------------------------------
-""" 
 def display_df_categories(df,cattable,catcandidatetable) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row data
+    * 
+    * Parms :
+    *  df                  -   dataframe    
+    *  cattable            -   category table
+    *  catcandidatetable   -   category candidate table    
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     df_cols     = df.columns.tolist()
     datatypesList, datatypesCountList, datatypesColsList = get_df_datatypes_data(df)
@@ -751,10 +1021,10 @@ def display_df_categories(df,cattable,catcandidatetable) :
         uniquesCountList.append(get_num_uniques_by_id(df, df_cols[i]))
                     
     uniquesValsList = []
-    #import pandas
                 
     for i in range(len(df_cols)) :
-        if(uniquesCountList[i] < 25) :
+        if( (uniquesCountList[i] < 25) and 
+            (int((uniquesCountList[i]/len(df)*100)) < 20) ) :
             uniquesVals = get_col_uniques_by_id(df,df_cols[i])
             
             if(not (df[df_cols[i]].dtype.name == "category")) :
@@ -775,8 +1045,9 @@ def display_df_categories(df,cattable,catcandidatetable) :
             catcolsuniques.append(uniquesValsList[i])
         else :
             if(not (type(uniquesValsList[i]) == str)) :
-                catcandidates.append(df_cols[i])
-                catcandidatesuniques.append(uniquesValsList[i])
+                if(int((uniquesCountList[i]/len(df)*100)) < 20) :
+                    catcandidates.append(df_cols[i])
+                    catcandidatesuniques.append(uniquesValsList[i])
         
     nans = []
     for i in range(len(catcandidates)) :
@@ -835,6 +1106,16 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
         print("\n")
 
+        gridclasses     =   ["df-inspection-category-data-wrapper-header",
+                             "df-inspection-category-data-wrapper-footer"]
+                
+        gridhtmls       =   ["<p>Categorical Columns</p>",
+                             cattable.get_html()]
+                    
+        display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
+
+
+
     if(len(catcandidates) > 0) :
         
         #catcandhref         =   ["scatcol",None,None,None,None,None]
@@ -878,7 +1159,22 @@ def display_df_categories(df,cattable,catcandidatetable) :
         catcandidatetable.set_note("<b>*</b> To select a column click on the column name.")
         catcandidatetable.set_checkLength(False)
         
-        catcandidatetable.display_table()
+        if(len(catcandRows) > 0) :
+            
+            gridclasses     =   ["df-inspection-category-data-wrapper-header",
+                                 "df-inspection-category-data-wrapper-footer"]
+                
+            gridhtmls       =   ["<p>Categorical Candidate Columns</p>",
+                                 catcandidatetable.get_html()]
+                    
+            display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
+            
+            #catcandidatetable.display_table()
+        else :
+            display_status("no Candidate Category Columns found",1)
+            
+    else :
+        display_status("no Candidate Category Columns found",1)
         
     return(len(catcols), len(catcandidates))
 

@@ -17,14 +17,15 @@ import dfcleanser.data_inspection.data_inspection_widgets as diw
 
 from dfcleanser.common.table_widgets import drop_owner_tables, dcTable
 
-from dfcleanser.common.html_widgets import displayHeading, display_composite_form
+from dfcleanser.common.html_widgets import display_composite_form
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
-from dfcleanser.common.common_utils import (RunningClock, opStatus, display_exception)
+from dfcleanser.common.common_utils import (RunningClock, opStatus, display_exception, 
+                                            get_parms_for_input, is_numeric_col,
+                                            display_generic_grid, display_status)
 
-from dfcleanser.common.display_utils import (get_df_datatypes_data, display_more_sample_rows,
-                                             display_column_names, display_df_describe)
+from dfcleanser.common.display_utils import (get_df_datatypes_data, display_column_names, display_df_describe)
 
 """
 #--------------------------------------------------------------------------
@@ -37,9 +38,12 @@ from dfcleanser.common.display_utils import (get_df_datatypes_data, display_more
 
 def display_data_inspection(id, parms=None) :
     
+    
     from IPython.display import clear_output
     clear_output()
-
+    
+    no_df_selected  =   False
+    
     opstat  =   opStatus()  
       
     # setup the button bar form
@@ -47,8 +51,6 @@ def display_data_inspection(id, parms=None) :
 
     # setup the checkbox form 
     current_checkboxes      =  []
-    newrowId                =   0
-    tableId                 =   ""
     
     # display the default insoection data
     if(id == dim.MAIN_OPTION) :
@@ -60,12 +62,23 @@ def display_data_inspection(id, parms=None) :
         
         # check if parms have checkbox flags
         if(not(parms==None)) :
-            for i in range(len(parms)) :
-                if(parms[i] == "True") :   
+            
+            fparms  =   get_parms_for_input(parms[0],diw.data_inspection_df_input_idList)
+
+            if(not (len(fparms) == 0) ) :
+                cfg.set_current_dfc_dataframe_title(fparms[0])
+            else :
+                no_df_selected  =   True
+            
+            import json
+            inspcbs     =   json.loads(parms[1])
+            
+            for i in range(len(inspcbs)) :
+                if(inspcbs[i] == "True") :   
                     current_checkboxes.append(True)
                 else :
                     current_checkboxes.append(False)
-        
+    
         # no checkbox parms so read from cfg file
         else :
             parms = []
@@ -75,11 +88,31 @@ def display_data_inspection(id, parms=None) :
 
         inparm = parms
         parms = []
-        diw.get_inspection_check_form_parms(parms,current_checkboxes)           
-        
+        diw.get_inspection_check_form_parms(parms,current_checkboxes)  
+
+    display_composite_form([inspection_tbForm])
     
-    inspection_checkboxForm =   diw.get_main_checkbox_form(current_checkboxes) 
-    display_composite_form([inspection_tbForm,inspection_checkboxForm])
+    if(cfg.is_a_dfc_dataframe_loaded() ) :
+    
+        select_df_form              =   diw.get_select_df_form()
+        inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
+    
+        gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
+        gridhtmls       =   [select_df_form.get_html(),
+                             inspection_checkboxForm.get_html()]
+    
+        display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
+        
+    else :
+        
+        inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
+        
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [inspection_checkboxForm.get_html()]
+    
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+        
+
     
     import matplotlib.pyplot as plt
     
@@ -124,7 +157,8 @@ def display_data_inspection(id, parms=None) :
     if( (id == dim.REFRESH_OPTION)   or (id == dim.DISPLAY_ROW_OPTION) or 
         (id == dim.DROP_ROWS_OPTION) or (id == dim.DROP_COLS_OPTION) ) :
 
-        if(cfg.is_a_dfc_dataframe_loaded()) :
+        if( (cfg.is_a_dfc_dataframe_loaded()) and
+            (not (no_df_selected)) ) :
 
             clock = RunningClock()
             clock.start()
@@ -133,126 +167,216 @@ def display_data_inspection(id, parms=None) :
 
             clock.stop() 
             
+            import json
+            inspcbs     =   json.loads(parms[1])
+
+            
             # if display data types
-            if(parms[dim.INSPECT_DATATYPES] == "True") : 
+            if(inspcbs[dim.INSPECT_DATATYPES] == "True") : 
+                
+                opstat = opStatus()
                 
                 cfg.set_config_value(cfg.DATA_TYPES_CBOX_0_KEY,"True")
                 
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Types",2)
-                print("\n")
+                diw.print_page_separator("Data Types",0)
                 
-                data_types_table = dcTable("Column Data Types",
-                                           "datatypesTable",
-                                           cfg.DataInspection_ID)
+                clock = RunningClock()
+                clock.start()
 
-                diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2]) 
+                try :                
                 
-                print("\n")
-                
-                import matplotlib.pyplot as plt
-                import numpy as np
+                    data_types_table = dcTable("Column Data Types",
+                                               "datatypesTable",
+                                               cfg.DataInspection_ID)
+                    data_types_html         =   diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2],False) 
+                    data_types_schema_html  =   diw.get_inspection_dfschema_taskbar().get_html()
 
-                font =  {'fontsize': 14 }
-                font2 = {'fontsize': 18 }
+
+                    gridclasses     =   ["df-inspection-data-type-wrapper-content",
+                                         "df-inspection-data-type-wrapper-footer"]
                 
-                objects = []
-                for i in range(len(df_data_info[0])) :
-                    ttype = str(df_data_info[0][i]) 
-                    ttype = ttype.replace("datetime.","")
-                    ttype = ttype.replace("datetime64[ns]","datetime")
-                    ttype = ttype.replace("timedelta64[ns]","timedelta")
-                    objects.append(ttype)    
-                y_pos = np.arange(len(objects))
+                    gridhtmls       =   [data_types_html,
+                                         data_types_schema_html]
+                    
+                    display_generic_grid("df-inspection-data-type-wrapper",gridclasses,gridhtmls)
+
+                    print("\n")
+                    import matplotlib.pyplot as plt
+                    import numpy as np
+
+                    font =  {'fontsize': 14 }
+                    font2 = {'fontsize': 18 }
                 
-                plt.bar(y_pos, df_data_info[1], align='center', alpha=0.5, color='#428bca')
-                plt.xticks(y_pos, objects,rotation='vertical')
-                plt.ylabel('Type Counts',fontdict=font)
-                plt.xlabel('Data Types',fontdict=font)
-                plt.title('Column Data Types',fontdict=font2)
+                    objects = []
+                    for i in range(len(df_data_info[0])) :
+                        ttype = str(df_data_info[0][i]) 
+                        ttype = ttype.replace("datetime.","")
+                        ttype = ttype.replace("datetime64[ns]","datetime")
+                        ttype = ttype.replace("timedelta64[ns]","timedelta")
+                        objects.append(ttype)    
+                    y_pos = np.arange(len(objects))
+                
+                    plt.bar(y_pos, df_data_info[1], align='center', alpha=0.5, color='#428bca')
+                    plt.xticks(y_pos, objects,rotation='vertical')
+                    plt.ylabel('Type Counts',fontdict=font)
+                    plt.xlabel('Data Types',fontdict=font)
+                    plt.title('Column Data Types',fontdict=font2)
  
-                plt.show()
+                    plt.show()
                 
-                print("\n")
+                except Exception as e:
+                    opstat.store_exception("Error displaying data types\n ",e)
+
+                clock.stop()
                 
-                display_composite_form([diw.get_inspection_dfschema_taskbar()])
-                print("\n")
-                
+                if(not (opstat.get_status())) :
+                    display_exception(opstat)
+ 
+               
             # if display nan data
-            if(parms[dim.INSPECT_NANS] == "True") : 
+            if(inspcbs[dim.INSPECT_NANS] == "True") : 
                 
                 cfg.set_config_value(cfg.NANS_CBOX_1_KEY,"True")
-                    
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NaNs",2)
-                #print("\n")
+                
+                print("\n")
+                diw.print_page_separator("NaNs Data",1)
                 
                 nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
                 nans_cols_table = dcTable("Columns with most NaNs","nansTable",cfg.DataInspection_ID)
                 diw.display_null_data(cfg.get_dfc_dataframe(),nans_rows_table,nans_cols_table,120)
-            
+ 
+           
             # if display sample row data
-            if(parms[dim.INSPECT_ROWS] == "True") : 
-                
-                opstat = opStatus
+            if(inspcbs[dim.INSPECT_ROWS] == "True") : 
+
+                opstat = opStatus()
                 
                 cfg.set_config_value(cfg.ROWS_CBOX_2_KEY,"True")
-                print("\n")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Row Data",2)
                 
-                rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
-        
-                if(id == 2) :
-                    opstat = diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,rowid,0)
-                else : 
-                    if(newrowId==0) :
-                        opstat = diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,0,0)
-                    else :
-                        opstat = display_more_sample_rows(cfg.get_dfc_dataframe(),tableId,1,newrowId)
-            
-                if(not opstat.get_status()) :
+                print("\n")
+                diw.print_page_separator("Rows Data",2)
+                clock = RunningClock()
+                clock.start()
+
+                try :                
+                
+                    row_stats_html          =   diw.display_row_stats(cfg.get_dfc_dataframe(),
+                                                                      cfg.get_current_dfc_dataframe_title(),
+                                                                      False)
+                    
+                    rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
+                    sample_row_html         =   diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,0,0,opstat,False)  
+                    searchcols_html         =   diw.get_colsearch_form().get_html()
+                    
+                    gridclasses     =   ["df-inspection-row-data-wrapper-content",
+                                         "df-inspection-row-data-wrapper-content1",
+                                         "df-inspection-row-data-wrapper-footer"]
+                
+                    gridhtmls       =   [row_stats_html,
+                                         sample_row_html,
+                                         searchcols_html]
+                    
+                    display_generic_grid("df-inspection-row-data-wrapper",gridclasses,gridhtmls)
+                    
+             
+                except Exception as e:
+                    opstat.store_exception("Error displaying row data\n ",e)
+
+                clock.stop()
+                
+                if(not (opstat.get_status())) :
                     display_exception(opstat)
+
                     
             #if display column data
-            if(parms[dim.INSPECT_COLS] == "True") : 
-                
+            if(inspcbs[dim.INSPECT_COLS] == "True") : 
+                                
+                opstat = opStatus()
+
                 cfg.set_config_value(cfg.COLS_CBOX_3_KEY,"True")
-                print("\n")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Column Data",2)
                 
                 clock = RunningClock()
                 clock.start()
+
+                try : 
+                    
+                    
+                    diw.print_page_separator("Columns Data",3)
+                    print("\n")
                 
-                col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
-                display_column_names(cfg.get_dfc_dataframe(),col_names_table,"scol")
+                    col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
+                    column_names_html   =   display_column_names(cfg.get_dfc_dataframe(),col_names_table,"scol",False)   
+
+                    df_cols     =   cfg.get_dfc_dataframe().columns.tolist()
                 
-                print("\n")
-                num_col_names_table = dcTable("Numeric Column Names ","gendfdesc",cfg.DataInspection_ID)
-                display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table)
+                    found_numeric   =   False
+                    for i in range(len(df_cols)) :
+                        if( is_numeric_col(cfg.get_dfc_dataframe(),df_cols[i]) ) :
+                            found_numeric   =   True
+                            break
+                    
+                    if(found_numeric) :
+                        num_col_names_table = dcTable("Numeric Column Stats ","gendfdesc",cfg.DataInspection_ID)
+                        num_col_stats_html  =   display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table,False)
                 
+                        gridclasses     =   ["df-inspection-column-data-wrapper-content",
+                                             "df-inspection-column-data-wrapper-footer"]
+                
+                        gridhtmls       =   [column_names_html,
+                                             num_col_stats_html]
+    
+                        display_generic_grid("df-inspection-numeric-column-data-wrapper",gridclasses,gridhtmls)
+                    
+                    else :
+                    
+                        gridclasses     =   ["df-inspection-column-data-wrapper-content"]
+                
+                        gridhtmls       =   [column_names_html]
+    
+                        display_generic_grid("df-inspection-nn-column-data-wrapper",gridclasses,gridhtmls)
+                    
+                except Exception as e:
+                    opstat.store_exception("Error displaying column data\n ",e)
+
                 clock.stop()
+                
+                if(not (opstat.get_status())) :
+                    display_exception(opstat)
 
             #if display categories data
-            if(parms[dim.INSPECT_CATS] == "True") : 
+            if(inspcbs[dim.INSPECT_CATS] == "True") : 
                 
+                opstat = opStatus()
+
                 cfg.set_config_value(cfg.CATS_CBOX_4_KEY,"True")
                 print("\n")
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Categories",2)
+                diw.print_page_separator("Category Data",4)
                 
                 clock = RunningClock()
                 clock.start()
-
-                cattable = dcTable("Category Columns",
-                                   "catcolsTable",
-                                   cfg.DataInspection_ID)
-
-                catcandidatetable = dcTable("Category Candidate Columns",
-                                            "catcandcolsTable",
-                                            cfg.DataInspection_ID)
                 
-                numcats, numcands = diw.display_df_categories(cfg.get_dfc_dataframe(),cattable,catcandidatetable)
+                try : 
+
+                    cattable = dcTable("Category Columns",
+                                       "catcolsTable",
+                                       cfg.DataInspection_ID)
+
+                    catcandidatetable = dcTable("Category Candidate Columns",
+                                                "catcandcolsTable",
+                                                cfg.DataInspection_ID)
                 
+                    numcats, numcands = diw.display_df_categories(cfg.get_dfc_dataframe(),cattable,catcandidatetable)
+                    
+                except Exception as e:
+                    opstat.store_exception("Error displaying category data\n ",e)
+
                 clock.stop()
+                
+                if(not (opstat.get_status())) :
+                    display_exception(opstat)
         else :
-            diw.display_inspection_data()
+            display_status("No Dataframe seleted for inspection", 1) 
+
 
 """            
 #------------------------------------------------------------------
