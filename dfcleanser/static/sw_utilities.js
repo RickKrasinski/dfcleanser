@@ -461,7 +461,7 @@ function get_geocoding_table(tableid, gcid, gtype, gmode) {
 
     console.log("get_geocoding_table", tableid, gcid, gtype, gmode);
 
-    var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
+    var fparms = get_input_form_parms(get_geocode_form_id(gcid, gtype, gmode));
     var inputs = [tableid, gcid, gtype, gmode, fparms];
 
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "6" + ", " + JSON.stringify(inputs)));
@@ -510,55 +510,95 @@ function process_batch_geocoder(fid, geotype) {
     window.scroll_to('DCGeocodeUtility');
 }
 
-function process_bulk_query(fid, gcid) {
-    /**
-     * geocoder bulk query processing.
-     *
-     * Parameters:
-     *  fid- function id
-     *  gcid - geocoder id
-     */
+//function process_bulk_query(fid, gcid) {
+/**
+ * geocoder bulk query processing.
+ *
+ * Parameters:
+ *  fid- function id
+ *  gcid - geocoder id
+ */
 
-    var formid = "";
-    switch (gcid) {
-        case 0:
-            formid = "arcgisbatchquery";
-            break;
-        case 7:
-            formid = "googlebulkquery";
-            break;
-    }
-    var fparms = get_input_form_parms(formid);
-    console.log("process_bulk_query", formid, fparms);
-    var inputs = [fid, gcid, 0, fparms];
+//var formid = "";
+//switch (gcid) {
+//    case 0:
+//        formid = "arcgisbatchquery";
+//        break;
+//    case 7:
+//        formid = "googlebulkquery";
+//        break;
+//}
+//var fparms = get_input_form_parms(formid);
+//console.log("process_bulk_query", formid, fparms);
+//var inputs = [fid, gcid, 0, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("13, " + JSON.stringify(inputs))));
-    window.scroll_to('DCGeocodeUtility');
-}
+//window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("13, " + JSON.stringify(inputs))));
+//window.reset_dependents([false, true, false, false, false, false]);
+//window.scroll_to('DCGeocodeUtility');
+//}
 
-function process_bulk_reverse(fid, gcid) {
+function display_bulk_geocoding_results(fid) {
     /**
      * geocoder bulk reverse processing.
      *
      * Parameters:
      *  fid- function id
-     *  gcid - geocoder id
      */
 
+    console.log("display_bulk_geocoding_results", fid);
+
+    var inputs = [fid];
+
+    if (fid == 3) {
+        window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("30, " + JSON.stringify(inputs))));
+        window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "2,4"));
+        window.scroll_to('DCDataExport');
+    } else {
+        window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("30, " + JSON.stringify(inputs))));
+        window.scroll_to('DCGeocodeUtility');
+    }
+}
+
+function process_bulk_geocoding_results(fid) {
+    /**
+     * geocoder bulk geocoding processing.
+     *
+     * Parameters:
+     *  fid- function id
+     */
+
+    console.log("process_bulk_geocoding_results", fid);
+
     var formid = "";
-    switch (gcid) {
-        case 0:
-            formid = "arcgisbatchreverse";
-            break;
+    switch (fid) {
+        case 5:
+        case 6:
         case 7:
-            formid = "googlebulkreverse";
+        case 8:
+            formid = "geocodebulkproc";
+            break;
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+            formid = "reversebulkproc";
+            break;
+        case 15:
+        case 16:
+        case 17:
+        case 18:
+            formid = "bulkcsvexport";
             break;
     }
-    var fparms = get_input_form_parms(formid);
-    console.log("process_bulk_reverse", formid, fparms);
-    var inputs = [fid, gcid, 0, fparms];
 
-    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("14, " + JSON.stringify(inputs))));
+    if (formid != "") {
+        var fparms = get_input_form_parms(formid);
+    } else {
+        fparms = [];
+    }
+    var inputs = [fid, fparms];
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("30, " + JSON.stringify(inputs))));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -570,8 +610,15 @@ function controlbulkrun(fid) {
      *  fid- function id
      */
 
-    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", fid));
-    window.scroll_to('DCGeocodeUtility');
+    if (fid == 26) {
+        window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", fid));
+        window.reset_dependents([false, true, false, false, false, false]);
+        window.scroll_to('DCGeocodeUtility');
+    } else {
+        window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", fid));
+        window.reset_dependents([false, true, false, false, false, false]);
+        window.scroll_to('DCGeocodeUtility');
+    }
 }
 
 function set_bulk_progress_bar(barid, barvalue) {
@@ -583,27 +630,58 @@ function set_bulk_progress_bar(barid, barvalue) {
      *  barvalue - progress bar value
      */
 
+    console.log("set_bulk_progress_bar", barid, barvalue, barvalue.toString() + "%");
     var progressbar = $("#" + barid);
+    progressbar.text(barvalue.toString() + "%");
     progressbar.attr('aria-valuenow', barvalue).css('width', barvalue + "%");
-
 }
 
-function set_bulk_progress_status(text, color) {
+function view_geocode_errors() {
     /**
-     * set progress value
+     * view_geocode_errors
      *
      * Parameters:
-     *  barid    - progress bar id
-     *  barvalue - progress bar value
      */
 
-    console.log("set_bulk_progress_status", text, color);
-    var statusbar = $("#bulkstatus");
-    console.log("set_bulk_progress_status", statusbar);
-    statusbar.attr('background-color', color);
-    statusbar.val(text);
+    console.log("view_geocode_errors");
 
+    var ids = new Array("didfdataframe");
+    var inputs = new Array("Current_Geocoding_Error_Log_df");
+
+    var parms = new Array();
+    parms.push(ids);
+    parms.push(inputs);
+    fparms = JSON.stringify(parms);
+
+    var inputcbs = new Array("False", "False", "True", "False", "False");
+    cbs = JSON.stringify(inputcbs);
+
+    var inputs = [fparms, cbs];
+    window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
+    window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "1" + ", " + JSON.stringify(inputs)));
+    window.scroll_to('DCDataInspection');
 }
+
+function report_geocode_run_error(cmd, msg) {
+    /**
+     * report a geocode run error
+     *
+     * Parameters:
+     *  geocid  - geocoder id
+     *  cmd     - run cmd
+     *  msg     - error message
+     */
+
+    console.log("report_geocode_run_error", cmd, msg);
+
+    var parms = new Array();
+    parms.push(cmd);
+    parms.push(msg);
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", "31, " + JSON.stringify(parms)));
+    window.scroll_to('DCGeocodeUtility');
+}
+
 
 // ------------------------------------------------------
 // dynamic html functions 

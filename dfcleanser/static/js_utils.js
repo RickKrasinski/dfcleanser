@@ -109,6 +109,10 @@
      var cellText = "";
      var nbbcellId = null;
 
+     var workingcell = get_cell_for_id(WORKING_CELL_ID);
+     if (workingcell != null)
+         sync_notebook();
+
      window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
      window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
      window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
@@ -126,7 +130,6 @@
      window.run_code_in_cell(window.SW_UTILS_DFCONCAT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFCONCAT_LIB, "display_dfconcat_utility", "0"));
      window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
 
-     var workingcell = get_cell_for_id(WORKING_CELL_ID);
      if (workingcell != null)
          workingcell.set_text(WORKING_CELL + "- please do not remove");
  };
@@ -728,6 +731,8 @@
  // 
  window.get_input_form_parms = function(id) {
 
+     console.log("get_input_form_parms", id);
+
      var inputs = new Array();
      var ids = new Array();
 
@@ -791,7 +796,6 @@
          case "mapquestbulkgeocoder":
          case "nominbulkgeocoder":
          case "arcgisbatchquery":
-         case "googlebulkquery":
          case "bingbulkquery":
          case "mapquestbulkquery":
          case "nominatimbulkquery":
@@ -799,7 +803,23 @@
 
              var inputs = new Array();
              inputs.push(String(inputid));
-             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "15" + ", " + JSON.stringify(inputs)));
+             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "12" + ", " + JSON.stringify(inputs)));
+             break;
+
+         case "googlebulkquery":
+
+             var inputs = new Array();
+             inputs.push(String(inputid));
+
+             var tableid = $('#gegdfltypesTable');
+
+             console.log("tableid", tableid);
+             if (tableid == null)
+                 inputs.push(String(0));
+             else
+                 inputs.push(String(6));
+
+             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "12" + ", " + JSON.stringify(inputs)));
              break;
 
          default:
@@ -837,10 +857,11 @@
  };
 
  //
- // ---------------------------------------------------
- // common functions for jupyter to get notebook info 
- // via javascript calls
- // ---------------------------------------------------
+ // ---------------------------------------------------------
+ // ---------------------------------------------------------
+ // common functions for jupyter to javascript coordination
+ // ---------------------------------------------------------
+ // ---------------------------------------------------------
  //
 
  //
@@ -882,6 +903,9 @@
      }
  };
 
+ //
+ // check if dfcleanser is loaded
+ // 
  window.is_dfcleanser_loaded = function() {
 
      var cells = IPython.notebook.get_cells();
@@ -1009,3 +1033,25 @@
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "display_url", JSON.stringify(url)));
      return true;
  };
+
+
+ //
+ // display help section by dfc help id
+ //
+ window.sync_notebook = function() {
+     console.log("sync_notebook");
+     var nbname = IPython.notebook.get_notebook_name();
+     console.log("nbname", nbname);
+     var inputs = new Array();
+     inputs.push(nbname);
+
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "sync_with_js", JSON.stringify(inputs)));
+     //window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.CFG_LIB, "reset_cfg_data"));
+
+
+
+     console.log("sync_notebook complete");
+ };
+
+
+ sync_notebook();
