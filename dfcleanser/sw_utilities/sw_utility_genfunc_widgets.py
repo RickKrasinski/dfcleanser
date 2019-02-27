@@ -21,7 +21,7 @@ from dfcleanser.common.html_widgets import (maketextarea, display_composite_form
 
 from dfcleanser.common.table_widgets import (SCROLL_NEXT, dcTable, ROW_MAJOR, get_row_major_table)
 
-from dfcleanser.common.common_utils import (display_grid, get_parms_for_input)
+from dfcleanser.common.common_utils import (display_generic_grid, get_parms_for_input)
 
 """
 #--------------------------------------------------------------------------
@@ -239,17 +239,17 @@ def display_generic_functions(forAddColumn=False):
                               gen_function_input_form[6],
                               shortForm=False)
     
-    gt_input_form.set_gridwidth(700)
+    gt_input_form.set_gridwidth(640)
     
     gt_input_html = ""
     gt_input_html = gt_input_form.get_html()
         
-    gt_heading_html = "<h4>" + get_html_spaces(3) + gen_function_input_title + "</h4>"
+    gt_heading_html =   "<p>" + get_html_spaces(58) + gen_function_input_title + "</p>"
+    
+    gridclasses     =   ["generic-function-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [gt_heading_html,gtlistHtml,gt_input_html]
+    
+    display_generic_grid("generic-function-wrapper",gridclasses,gridhtmls)
 
-    display_grid("generic_transform_wrapper",
-                 gt_heading_html,
-                 gtlistHtml,
-                 gt_input_html,
-                 None)
 
 

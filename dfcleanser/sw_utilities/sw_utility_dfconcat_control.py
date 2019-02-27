@@ -137,7 +137,7 @@ def process_simple_concat(parms,display=True) :
             
             print("\n")
             display_status(" dataframes concatenated successfully and stored in " + fparms[0])
-            displayParms("dataframe Concatenation Parms",dfcw.df_concat_input_labelList[:4],fparms,cfg.SWDFConcatUtility_ID,None,True)
+            displayParms("dataframe Concatenation Parms",dfcw.df_concat_input_labelList[:4],fparms,cfg.SWDFConcatUtility_ID)
                 
     else :
         display_exception(opstat)           

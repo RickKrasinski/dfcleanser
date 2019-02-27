@@ -15,11 +15,13 @@ this = sys.modules[__name__]
 import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 
-from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, ButtonGroupForm)
+from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
+                                            ButtonGroupForm, get_html_spaces)
 
 from dfcleanser.common.table_widgets import dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_grid, is_numeric_col, is_str_column)
+from dfcleanser.common.common_utils import (get_parms_for_input, is_numeric_col, display_generic_grid, 
+                                            is_str_column, get_select_defaults, whitecolor)
 
 DISPLAY_MAIN                    =   0
 
@@ -252,7 +254,6 @@ def display_df_subset_status(df,out_df,filename,filtertext=None) :
     statusWidths    =   [60,40]
     statusAligns    =   ["left","left"]
     
-    whitecolor  =   "#FFFFFF"
     colorList = []  
     
     statusRows.append(["Total Rows",len(df)])
@@ -570,9 +571,8 @@ def display_df_subset(df,filters=False,colname=None) :
         
         get_subset_input_html = get_filter_subset_input_form.get_html() 
         
-        from dfcleanser.common.html_widgets import get_html_spaces
-        get_subset_heading_html = "<h4>" + get_html_spaces(62) + "Create Dataframe Subset Filter</h4>"
-        
+        get_subset_heading_html =   "<p>" + get_html_spaces(58) + " Create Dataframe Subset Filter</p>"        
+
     else :
         
         from dfcleanser.common.html_widgets import InputForm
@@ -581,32 +581,43 @@ def display_df_subset(df,filters=False,colname=None) :
                                       get_subset_input_form[4],get_subset_input_form[5],
                                       get_subset_input_form[6])
     
-        subssel     =   {"default":"True","list":["True","False"]}
-        subset_input_form.add_select_dict("gsadddrop",subssel)
+    
+        selectDicts     =   []
+        
+        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        selectDicts.append(dataframes)
+        
+        subssel         =   {"default":"True","list":["True","False"]}
+        selectDicts.append(subssel)
+        
+        get_select_defaults(subset_input_form,
+                            get_subset_input_form[0],
+                            get_subset_input_form[1],
+                            get_subset_input_form[3],
+                            selectDicts)
         
         subset_input_form.set_shortForm(False)
         subset_input_form.set_gridwidth(550)
         subset_input_form.set_fullparms(True)
-        subset_input_form.add_select_dict("gsindataframe",cfg.get_dfc_dataframes_select_list())
         
         get_subset_input_html = subset_input_form.get_html() 
             
-        get_subset_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get Dataframe Subset</h4>"
+        get_subset_heading_html =   "<p>" + get_html_spaces(58) + "Get Dataframe Subset</p>"
     
     if(filters) :
-        display_grid("dfsubset1_wrapper",
-                     get_subset_heading_html,
-                     col_names_html,
-                     get_subset_input_html,
-                     None,
-                     operators_html)
+        
+        gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-middle","dfc-right"]
+        gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html,operators_html]
+    
+        display_generic_grid("dfsubset1-wrapper",gridclasses,gridhtmls)
         
     else :
-        display_grid("dfsubset_wrapper",
-                     get_subset_heading_html,
-                     col_names_html,
-                     get_subset_input_html,
-                     None)
+        
+        gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-right"]
+        gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html]
+    
+        display_generic_grid("dfsubset-wrapper",gridclasses,gridhtmls)
+
 
 
 def get_filters_table() :
@@ -687,25 +698,28 @@ def display_filters(df) :
                                    get_subset_filters_form[2],get_subset_filters_form[3],
                                    get_subset_filters_form[4],get_subset_filters_form[5],
                                    get_subset_filters_form[6])
+    
+    dataframes      =   cfg.get_dfc_dataframes_select_list()
+        
+    get_select_defaults(filters_input_form,
+                        get_subset_filters_form[0],
+                        get_subset_filters_form[1],
+                        get_subset_filters_form[3],
+                        [dataframes])
         
     filters_input_form.set_shortForm(False)
     filters_input_form.set_gridwidth(550)
     filters_input_form.set_fullparms(True)
-    filters_input_form.add_select_dict("gsindataframe",cfg.get_dfc_dataframes_select_list())
         
     filters_input_html = filters_input_form.get_html() 
             
-    filters_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dataframe Subset Filters</h4>"
+    filters_heading_html =   "<p>" + get_html_spaces(58) + "Dataframe Subset Filters</p>"
     
+    gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [filters_heading_html,filter_names_html,filters_input_html]
+    
+    display_generic_grid("dfsubset-wrapper",gridclasses,gridhtmls)
         
-    display_grid("dfsubset_wrapper",
-                 filters_heading_html,
-                 filter_names_html,
-                 filters_input_html,
-                 None)
-    
-    
-    
     
     
     

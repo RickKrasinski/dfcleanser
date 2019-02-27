@@ -18,7 +18,7 @@ from dfcleanser.common.html_widgets import (display_composite_form, maketextarea
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (display_grid, get_parms_for_input)
+from dfcleanser.common.common_utils import (display_generic_grid, get_parms_for_input)
 
 """
 #--------------------------------------------------------------------------
@@ -189,16 +189,16 @@ def display_list_dict(id) :
         
     if(id==swum.DICT_ID)  :
         list_title_html = "<p class='grid_title'>" + get_html_spaces(1) + build_dict_utility_input_title + "</p>"
-        wrapper = "dict_table_wrapper"
+        wrapper = "dict-table-wrapper"
     else :   
         list_title_html = "<p class='grid_title'>" + get_html_spaces(1) + build_list_utility_input_title + "</p>"
-        wrapper = "list_table_wrapper"
+        wrapper = "list-table-wrapper"
+    
+    gridclasses     =   ["dict-table-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [list_title_html,list_html,list_dictcustom_html]
+    
+    display_generic_grid(wrapper,gridclasses,gridhtmls)
 
-    display_grid(wrapper,
-                 list_title_html,
-                 list_html,
-                 list_dictcustom_html,
-                 None)
 
 
 Red     = "#FAA78F"

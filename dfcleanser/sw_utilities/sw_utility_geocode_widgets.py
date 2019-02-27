@@ -18,12 +18,12 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
-                                            get_input_form, ButtonGroupForm, InputForm)
+                                            get_input_form, ButtonGroupForm, InputForm, get_html_spaces)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_grid, is_numeric_col, 
-                                            display_exception, opStatus)
+from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid, is_numeric_col, 
+                                            display_exception, opStatus, get_select_defaults)
 
 
 """
@@ -61,7 +61,6 @@ geocode_utility_tb_jsList               =   ["display_geocoders(-1," + str(sugm.
                                              "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
 
 geocode_utility_tb_centered             =   False
-
 """
 #--------------------------------------------------------------------------
 #   geocoder init forms
@@ -1084,11 +1083,19 @@ def display_calc_distance_input_form() :
                                   addr_dist_utility_input_reqList,
                                   shortForm=False)       
     
-    addrsel           =   {"default":"km","list":["km","miles"]}
-    dist_addr_form.add_select_dict("disunits",addrsel)
-    addrsel           =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
-    dist_addr_form.add_select_dict("distalg",addrsel)
-    
+    selectDicts     =   []
+            
+    geocsel         =   {"default":"km","list":["km","miles"]}
+    selectDicts.append(geocsel)
+    geocsel         =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
+    selectDicts.append(geocsel)
+
+    get_select_defaults(dist_addr_form,
+                        addr_dist_utility_input_id,
+                        addr_dist_utility_input_idList,
+                        addr_dist_utility_input_typeList,
+                        selectDicts)
+
     display_composite_form([get_input_form(dist_addr_form,"Calculate Distance")])
 
 
@@ -1102,12 +1109,20 @@ def display_calc_df_distance_input_form() :
                                   addr_df_dist_utility_input_jsList,
                                   addr_df_dist_utility_input_reqList,
                                   shortForm=False)       
-    
-    addrsel           =   {"default":"km","list":["km","miles"]}
-    dist_addr_form.add_select_dict("dfdisunits",addrsel)
-    addrsel           =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
-    dist_addr_form.add_select_dict("dfdistalg",addrsel)
-    
+        
+    selectDicts     =   []
+            
+    geocsel         =   {"default":"km","list":["km","miles"]}
+    selectDicts.append(geocsel)
+    geocsel         =   {"default":"Geodisc 1","list":["Geodisc","Vincenty","Great_Circle"]}
+    selectDicts.append(geocsel)
+
+    get_select_defaults(dist_addr_form,
+                        addr_df_dist_utility_input_id,
+                        addr_df_dist_utility_input_idList,
+                        addr_df_dist_utility_input_typeList,
+                        selectDicts)
+
     display_composite_form([get_input_form(dist_addr_form,"Calculate Dataframe Distance")])
 
 
@@ -1815,32 +1830,38 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                    shortForm=False)
     
     if(gtype == sugm.QUERY) :
-        if(geocid == sugm.BingId)              : 
+        
+        selectDicts     =   [] 
+        
+        if(geocid == sugm.BingId) :
+
             bingsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("bqnbc",bingsel)
-            bingsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("bqcc",bingsel)
+            selectDicts.append(bingsel)
+            bingsel1           =   {"default":"False","list":["True","False"]}
+            selectDicts.append(bingsel1)
+            
         elif(geocid == sugm.GoogleId)              : 
             googsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("gqsensor",googsel)
+            selectDicts.append(googsel)
+            
         elif(geocid == sugm.NominatimId)              : 
-            googsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("nqaddr",googsel)
+            nonimsel          =   {"default":"False","list":["True","False"]}
+            selectDicts.append(nonimsel)
+
+        get_select_defaults(geofunc_input_form,
+                            form[0],form[1],form[3],
+                            selectDicts)
 
     elif(gtype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId)              : 
             googsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("grsensor",googsel)
-        elif(geocid == sugm.BingId)              : 
-            bingsel           =   {"default":"False","list":["True","False"]}
-            geofunc_input_form.add_select_dict("brcc",bingsel)
-        elif(geocid == sugm.OpenMapQuestId)              : 
-            mapqsel           =   {"default":"True","list":["True","False"]}
-            geofunc_input_form.add_select_dict("mradetails",mapqsel)
-
-
-   
+        
+            get_select_defaults(geofunc_input_form,
+                                form[0],form[1],form[3],
+                                [googsel])
+            
     geofunc_input_form.set_gridwidth(600)
+    
     if(showfull) :
         geofunc_input_form.set_fullparms(True)    
     
@@ -1848,16 +1869,15 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (gtype == sugm.QUERY) :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Geocoding Parameters</h4>"
+        geofunc_heading_html =   "<p>" + get_html_spaces(58) + "Simple Geocoding Parameters</p>"
     else :
-        geofunc_heading_html = "<h4>&nbsp;&nbsp;&nbsp;Simple Reverse Geocoding Parameters</h4>"
-        
-    display_grid("geocode_query_wrapper",
-                 geofunc_heading_html,
-                 geo_parms_html,
-                 geofunc_input_html,
-                 None)
+        geofunc_heading_html =   "<p>" + get_html_spaces(58) + "Simple Reverse Geocoding Parameters</p>"
+ 
+    gridclasses     =   ["geocode-connector-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html]
     
+    display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
+       
     notes = [] 
     
     if(gtype == sugm.QUERY) :
@@ -2006,8 +2026,6 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
                                    arcgis_geocoder_jsList,
                                    arcgis_geocoder_reqList]
     
-    geocode_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</h4>"
-
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
                                    geocoder_input_form[1],
@@ -2025,11 +2043,13 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
+        
+    geocode_heading_html =   "<p>" + get_html_spaces(58) + "Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</p>"
+ 
+    gridclasses     =   ["geocode-connector-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
     
-    display_grid("sql_connector_wrapper",
-                 geocode_heading_html,
-                 listHtml,
-                 geocode_input_html,None)
+    display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
     
     if(showNotes) :
         notes = [] 
