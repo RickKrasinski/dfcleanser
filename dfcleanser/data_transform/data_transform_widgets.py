@@ -22,9 +22,9 @@ from dfcleanser.common.html_widgets import (display_composite_form, get_button_t
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, get_table_value,
                                              SCROLL_NEXT, ROW_MAJOR, SCROLL_PREVIOUS, COLUMN_MAJOR)
 
-from dfcleanser.common.common_utils import (get_datatype_str, display_grid,RunningClock,
+from dfcleanser.common.common_utils import (get_datatype_str, display_generic_grid, RunningClock,
                                             is_datetime_column, is_date_column, is_time_column, 
-                                            get_datatype_id, is_numeric_col)
+                                            get_datatype_id, is_numeric_col, whitecolor)
 
 from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
 
@@ -474,14 +474,13 @@ def display_datetime_convert(parms=None) :
     
     dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-    ptext   =  "Datetime Convert Parms" 
-    dt_datetime_title_html = "<p class='grid_title'>" + get_html_spaces(1) + ptext + "</p>"
+    dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Datetime Convert Parms </p>"
+        
+    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
+    gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
+    
+    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
 
-    display_grid("dtformat_wrapper",
-                 dt_datetime_title_html,
-                 list_html,
-                 dt_datetime_custom_html,
-                 None)
 
 """
 #--------------------------------------------------------------------------
@@ -513,15 +512,13 @@ def display_datetime_timedelta(parms)  :
     dt_datetime_custom_form.set_fullparms(True) 
     dt_datetime_custom_html = dt_datetime_custom_form.get_html()
     
-    ptext   =  "Calculate Datetime.timedelta Parms"
+    dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Calculate Datetime.timedelta </p>"
         
-    dt_datetime_title_html = "<p class='grid_title'>" + get_html_spaces(1) + ptext + "</p>"
+    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
+    gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
+    
+    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
 
-    display_grid("dtformat_wrapper",
-                 dt_datetime_title_html,
-                 list_html,
-                 dt_datetime_custom_html,
-                 None)
 
 """
 #--------------------------------------------------------------------------
@@ -564,8 +561,7 @@ def display_datetime_split_merge(parms,action) :
         dt_datetime_custom_form.set_fullparms(True)
         dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-        
-        ptext   =   "Split Datetime Column Parameters"
+        dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Split Datetime Column Parameters </p>"
         
     else :
         
@@ -582,15 +578,12 @@ def display_datetime_split_merge(parms,action) :
         dt_datetime_custom_form.set_fullparms(True)
         dt_datetime_custom_html = dt_datetime_custom_form.get_html()
         
-        ptext   =   "Merge Datetime Column Parameters"
+        dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Merge Datetime Column </p>"
         
-    dt_datetime_title_html = "<p class='grid_title'>" + get_html_spaces(1) + ptext + "</p>"
-
-    display_grid("dtformat_wrapper",
-                 dt_datetime_title_html,
-                 list_html,
-                 dt_datetime_custom_html,
-                 None)
+    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
+    gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
+    
+    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
 
        
 """
@@ -616,6 +609,15 @@ def display_main_option(parms,clear=False) :
                                                                       False))]
 
         display_composite_form(data_transform_forms)
+        
+        from dfcleanser.data_inspection.data_inspection_widgets import get_select_df_form
+        select_df_form              =   get_select_df_form("Transform")
+    
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [select_df_form.get_html()]
+    
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+
 
     else : 
         
@@ -687,8 +689,6 @@ def display_col_data(df,colname,display=True) :
     statsRows      =   []
     statsWidths    =   [60,40]
     statsAligns    =   ["left","left"]
-    
-    whitecolor  =   "#FFFFFF"
     
     colorList = []    
     
@@ -768,7 +768,7 @@ def display_col_data(df,colname,display=True) :
 def get_df_schema_table(df,table) : 
    
     
-    schema_parms    =   cfg.get_config_value(cfg.DATA_TRANSFORM_SCHEMA_KEY) 
+    schema_parms    =   cfg.df_schema_dict 
     
     if( (schema_parms == None) or 
         (not (schema_parms.get("df_title",None) == cfg.get_current_dfc_dataframe_title())) ):
@@ -779,7 +779,7 @@ def get_df_schema_table(df,table) :
         df_title    =   cfg.get_current_dfc_dataframe_title()
         
         schema_dict =   {"df_title":df_title, "df_cols":df_cols, "df_dtypes":df_dtypes, "df_nans":df_nans}
-        cfg.set_config_value(cfg.DATA_TRANSFORM_SCHEMA_KEY,schema_dict)
+        cfg.df_schema_dict  =   schema_dict
         
     else :
         df_cols     =   schema_parms.get("df_cols",None)
@@ -796,9 +796,11 @@ def get_df_schema_table(df,table) :
 
     dfRow   =   []
     
+    print("get_df_schema_table : colstart",colstart)
+    
     from dfcleanser.common.table_widgets import get_df_schema_table_col
     for i in range(table.get_colsperrow()) :
-        if((i+colstart + 1) < len(df_cols)) :
+        if((i+colstart) < len(df_cols)) :
             dfHeaderList.append(df_cols[i + colstart])
             
             colHTML     =  get_df_schema_table_col(df_cols[i + colstart],

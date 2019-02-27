@@ -20,7 +20,7 @@ from dfcleanser.common.html_widgets import (display_composite_form, get_button_t
 
 from dfcleanser.common.table_widgets import dcTable
 
-from dfcleanser.common.common_utils import (get_parms_for_input)
+from dfcleanser.common.common_utils import (get_parms_for_input, get_select_defaults, display_generic_grid)
 
 from dfcleanser.common.display_utils import display_column_names
 
@@ -348,7 +348,25 @@ def get_set_colnames_row_input_parms(inparms) :
 def get_drop_duplicate_rows_input_parms(inparms) :
     return(get_parms_for_input(inparms,df_drop_dups_transform_input_idList))            
 
+
+def display_common_df_options(header_html,grid_input_form) :
     
+    display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
+                                                               dataframe_transform_tb_keyTitleList,
+                                                               dataframe_transform_tb_jsList,
+                                                               False))])
+    
+    grid_input_form.set_custombwidth(160)
+    grid_input_form.set_gridwidth(740)
+    grid_input_form.set_fullparms(True) 
+    grid_input_html   =   grid_input_form.get_html()
+    
+    gridclasses     =   ["df-common-df-wrapper-header","dfc-footer"]
+    gridhtmls       =   [header_html,grid_input_html]
+    
+    display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
+
+   
 """
 #--------------------------------------------------------------------------
 #    display dataframe main taskbar widgets
@@ -364,71 +382,84 @@ def display_dataframe_options(parms) :
                                                                    dataframe_transform_tb_keyTitleList,
                                                                    dataframe_transform_tb_jsList,
                                                                    False))])
+
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Save Column Names </p>"
         
         filename = cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
         filename = filename.replace('.','_')
         filename = filename.replace('datasets/','')
-        
-        print("\n              * Default File Name is " + filename + "_" + "column_names.json")
-        
-        display_composite_form([get_input_form(InputForm(df_save_row_transform_input_id,
-                                                         df_save_row_transform_input_idList,
-                                                         df_save_row_transform_input_labelList,
-                                                         df_save_row_transform_input_typeList,
-                                                         df_save_row_transform_input_placeholderList,
-                                                         df_save_row_transform_input_jsList,
-                                                         df_save_row_transform_input_reqList))])
+
+        save_col_note_html                  =   "<p>" + get_html_spaces(45) + "* Default File Name is " + filename + "_" + "column_names.json</p>"
+            
+        grid_input_form                     =   InputForm(df_save_row_transform_input_id,
+                                                          df_save_row_transform_input_idList,
+                                                          df_save_row_transform_input_labelList,
+                                                          df_save_row_transform_input_typeList,
+                                                          df_save_row_transform_input_placeholderList,
+                                                          df_save_row_transform_input_jsList,
+                                                          df_save_row_transform_input_reqList)
+            
+        grid_input_form.set_custombwidth(160)
+        grid_input_form.set_gridwidth(740)
+        grid_input_form.set_fullparms(True)    
+        grid_input_html   =   grid_input_form.get_html()
+    
+        gridclasses     =   ["df-save-col-names-wrapper-header","df-save-col-names-wrapper-note","dfc-footer"]
+        gridhtmls       =   [common_dataframe_heading_html,save_col_note_html,grid_input_html]
+    
+        display_generic_grid("df-save-col-names-wrapper",gridclasses,gridhtmls)
+            
 
     # add column names row
     elif(funcid == dtm.ADD_COLUMN_NAMES_ROW) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
-
-        display_composite_form([get_input_form(InputForm(df_add_row_transform_input_id,
-                                                         df_add_row_transform_input_idList,
-                                                         df_add_row_transform_input_labelList,
-                                                         df_add_row_transform_input_typeList,
-                                                         df_add_row_transform_input_placeholderList,
-                                                         df_add_row_transform_input_jsList,
-                                                         df_add_row_transform_input_reqList))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Add Column Names </p>"
+        
+        grid_input_form                     =   InputForm(df_add_row_transform_input_id,
+                                                          df_add_row_transform_input_idList,
+                                                          df_add_row_transform_input_labelList,
+                                                          df_add_row_transform_input_typeList,
+                                                          df_add_row_transform_input_placeholderList,
+                                                          df_add_row_transform_input_jsList,
+                                                          df_add_row_transform_input_reqList)
+        
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
     
+ 
     elif(funcid == dtm.CHANGE_COLUMN_NAMES) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
-    
         colslist    =   cfg.get_dfc_dataframe().columns.tolist()
-        cliststr    =   str(colslist)
-        cliststr    =   cliststr.replace(","," , ")
+        import json
+        cliststr    =   json.dumps(colslist)#str(colslist)
+        cfg.set_config_value(df_change_row_transform_input_id+"Parms",[cliststr])
         
-        cfg.set_config_value(df_change_row_transform_input_id+"Parms",cliststr)
-        display_composite_form([get_input_form(InputForm(df_change_row_transform_input_id,
-                                                         df_change_row_transform_input_idList,
-                                                         df_change_row_transform_input_labelList,
-                                                         df_change_row_transform_input_typeList,
-                                                         df_change_row_transform_input_placeholderList,
-                                                         df_change_row_transform_input_jsList,
-                                                         df_change_row_transform_input_reqList))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Change Column Names </p>"
+        
+        grid_input_form                     =   InputForm(df_change_row_transform_input_id,
+                                                          df_change_row_transform_input_idList,
+                                                          df_change_row_transform_input_labelList,
+                                                          df_change_row_transform_input_typeList,
+                                                          df_change_row_transform_input_placeholderList,
+                                                          df_change_row_transform_input_jsList,
+                                                          df_change_row_transform_input_reqList)
+            
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
 
     elif(funcid == dtm.RESET_ROW_IDS) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Reset Index Column </p>"
         
-        display_composite_form([get_input_form(InputForm(df_reset_col_transform_input_id,
-                                                         df_reset_col_transform_input_idList,
-                                                         df_reset_col_transform_input_labelList,
-                                                         df_reset_col_transform_input_typeList,
-                                                         df_reset_col_transform_input_placeholderList,
-                                                         df_reset_col_transform_input_jsList,
-                                                         df_reset_col_transform_input_reqList))])
+        grid_input_form                     =   InputForm(df_reset_col_transform_input_id,
+                                                          df_reset_col_transform_input_idList,
+                                                          df_reset_col_transform_input_labelList,
+                                                          df_reset_col_transform_input_typeList,
+                                                          df_reset_col_transform_input_placeholderList,
+                                                          df_reset_col_transform_input_jsList,
+                                                          df_reset_col_transform_input_reqList)
+            
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
 
     elif(funcid == dtm.SET_NEW_ROW_IDS_COL) :
         
@@ -445,92 +476,95 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.SET_NEW_ROW_IDS_COL_SEL) :
 
-        print("SET_NEW_ROW_IDS_COL_SEL",parms)
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Set Index Column </p>"
         
-        cfg.set_config_value(df_set_new_col_transform_input_id+"Parms",parms[1])        
-        display_composite_form([get_input_form(InputForm(df_set_new_col_transform_input_id,
-                                                         df_set_new_col_transform_input_idList,
-                                                         df_set_new_col_transform_input_labelList,
-                                                         df_set_new_col_transform_input_typeList,
-                                                         df_set_new_col_transform_input_placeholderList,
-                                                         df_set_new_col_transform_input_jsList,
-                                                         df_set_new_col_transform_input_reqList))])
+        cfg.set_config_value(df_set_new_col_transform_input_id+"Parms",[parms[1]])        
+        
+        grid_input_form                     =   InputForm(df_set_new_col_transform_input_id,
+                                                          df_set_new_col_transform_input_idList,
+                                                          df_set_new_col_transform_input_labelList,
+                                                          df_set_new_col_transform_input_typeList,
+                                                          df_set_new_col_transform_input_placeholderList,
+                                                          df_set_new_col_transform_input_jsList,
+                                                          df_set_new_col_transform_input_reqList)
+             
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
 
     elif(funcid == dtm.DROP_ROW_IDS_COL) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Drop Index Column </p>"
         
-        display_composite_form([get_input_form(InputForm(df_drop_row_ids_transform_input_id,
-                                                         df_drop_row_ids_transform_input_idList,
-                                                         df_drop_row_ids_transform_input_labelList,
-                                                         df_drop_row_ids_transform_input_typeList,
-                                                         df_drop_row_ids_transform_input_placeholderList,
-                                                         df_drop_row_ids_transform_input_jsList,
-                                                         df_drop_row_ids_transform_input_reqList))])
+        grid_input_form                     =   InputForm(df_drop_row_ids_transform_input_id,
+                                                          df_drop_row_ids_transform_input_idList,
+                                                          df_drop_row_ids_transform_input_labelList,
+                                                          df_drop_row_ids_transform_input_typeList,
+                                                          df_drop_row_ids_transform_input_placeholderList,
+                                                          df_drop_row_ids_transform_input_jsList,
+                                                          df_drop_row_ids_transform_input_reqList)
+            
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
 
     elif(funcid == dtm.SORT_ROWS) :
         
-        print("SORT_ROWS")
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Sort Index Column </p>"
+        
+        grid_input_form                     =   InputForm(df_sort_row_ids_transform_input_id,
+                                                          df_sort_row_ids_transform_input_idList,
+                                                          df_sort_row_ids_transform_input_labelList,
+                                                          df_sort_row_ids_transform_input_typeList,
+                                                          df_sort_row_ids_transform_input_placeholderList,
+                                                          df_sort_row_ids_transform_input_jsList,
+                                                          df_sort_row_ids_transform_input_reqList)
     
-        sort_input_form     =   InputForm(df_sort_row_ids_transform_input_id,
-                                          df_sort_row_ids_transform_input_idList,
-                                          df_sort_row_ids_transform_input_labelList,
-                                          df_sort_row_ids_transform_input_typeList,
-                                          df_sort_row_ids_transform_input_placeholderList,
-                                          df_sort_row_ids_transform_input_jsList,
-                                          df_sort_row_ids_transform_input_reqList)   
-
-        sortsel     =   {"default":"True","list":["True","False"]}
-        sort_input_form.add_select_dict("ascending",sortsel)
-        sortsel     =   {"default":"False","list":["True","False"]}
-        sort_input_form.add_select_dict("inplace",sortsel)
-        sortsel     =   {"default":"quicksort","list":["quicksort","mergesort","heapsort"]}
-        sort_input_form.add_select_dict("kind",sortsel)
-        sortsel     =   {"default":"last","list":["first","last"]}
-        sort_input_form.add_select_dict("na_position",sortsel)
-
-        display_composite_form([get_input_form(sort_input_form)])
+        selectDicts     =   []
+        sortsel         =   {"default" : "True", "list" : ["True","False"]}
+        selectDicts.append(sortsel)
+        sortsel         =   {"default" : "False", "list" : ["True","False"]}
+        selectDicts.append(sortsel)
+        sortsel         =   {"default":"quicksort","list":["quicksort","mergesort","heapsort"]}
+        selectDicts.append(sortsel)
+        sortsel         =   {"default":"last","list":["first","last"]}
+        selectDicts.append(sortsel)
+          
+        get_select_defaults(grid_input_form,
+                            df_sort_row_ids_transform_input_id,
+                            df_sort_row_ids_transform_input_idList,
+                            df_sort_row_ids_transform_input_typeList,
+                            selectDicts)
+        
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
 
     elif(funcid == dtm.DROP_DUPLICATE_ROWS) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
-
         print("\n")
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
         display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dtdcrcol")
         
+        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Drop Duplicate Rows </p>"
         
-        drop_input_form     =   InputForm(df_drop_dups_transform_input_id,
-                                          df_drop_dups_transform_input_idList,
-                                          df_drop_dups_transform_input_labelList,
-                                          df_drop_dups_transform_input_typeList,
-                                          df_drop_dups_transform_input_placeholderList,
-                                          df_drop_dups_transform_input_jsList,
-                                          df_drop_dups_transform_input_reqList)
+        grid_input_form                     =   InputForm(df_drop_dups_transform_input_id,
+                                                          df_drop_dups_transform_input_idList,
+                                                          df_drop_dups_transform_input_labelList,
+                                                          df_drop_dups_transform_input_typeList,
+                                                          df_drop_dups_transform_input_placeholderList,
+                                                          df_drop_dups_transform_input_jsList,
+                                                          df_drop_dups_transform_input_reqList)
         
-        dropsel     =   {"default":"True","list":["True","False"]}
-        drop_input_form.add_select_dict("ascending",dropsel)
-       
-        display_composite_form([get_input_form(drop_input_form)])
-
-        #from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        #display_inspection_data()
-
+        selectDicts     =   []
+        dropsel         =   {"default" : "True", "list" : ["True","False"]}
+        selectDicts.append(dropsel)
+        
+        get_select_defaults(grid_input_form,
+                            df_drop_dups_transform_input_id,
+                            df_drop_dups_transform_input_idList,
+                            df_drop_dups_transform_input_typeList,
+                            selectDicts)
+        
+        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
 
     elif(funcid == dtm.DF_TRANSFORM_RETURN) :
                     

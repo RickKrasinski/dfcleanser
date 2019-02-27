@@ -16,6 +16,7 @@ import json
 
 import dfcleanser.common.cfg as cfg 
 import dfcleanser.data_transform.data_transform_dataframe_widgets as dftw
+import dfcleanser.data_transform.data_transform_model as dtm
 
 from dfcleanser.data_transform.data_transform_widgets import display_main_option
 
@@ -145,7 +146,7 @@ def reset_row_ids_column(startid):
     opstat = opStatus() 
 
     try :
-        cfg.get_dfc_dataframe().index = range(startid,len(get_dfc_dataframe().index)+startid)
+        cfg.get_dfc_dataframe().index = range(startid,len(cfg.get_dfc_dataframe().index)+startid)
     except Exception as e:
         opstat.store_exception("Unable to reset row ids",e)
 
@@ -225,8 +226,6 @@ def drop_duplicate_rows(colkeys):
 """
 def process_df_transform(parms,display=True) :
     
-    print("process_df_transform",parms)
-
     opstat  =   opStatus()
     
     optionid    =   parms[0][0]
@@ -237,7 +236,7 @@ def process_df_transform(parms,display=True) :
     
     dftw.display_dataframe_transform_taskbar()
 
-    if(optionid == dftw.SAVE_COLUMN_NAMES_ROW) :
+    if(optionid == dtm.SAVE_COLUMN_NAMES_ROW) :
         
         # remove column names row
         if(funcid == PROCESS_CMD) :
@@ -289,7 +288,7 @@ def process_df_transform(parms,display=True) :
              dftw.display_save_colnames_row_input()
             
     # add column names row
-    elif(optionid == dftw.ADD_COLUMN_NAMES_ROW) :
+    elif(optionid == dtm.ADD_COLUMN_NAMES_ROW) :
         
         # add column names row
         if(funcid == PROCESS_CMD) :
@@ -338,7 +337,7 @@ def process_df_transform(parms,display=True) :
                 opstat.set_errormsg("Adding Column Names Row - No file name or column List defined")
                 display_exception(opstat)
     
-    elif(optionid == dftw.CHANGE_COLUMN_NAMES) :
+    elif(optionid == dtm.CHANGE_COLUMN_NAMES) :
         
         opstat = change_column_names(parms)
         
@@ -366,7 +365,7 @@ def process_df_transform(parms,display=True) :
                 display_exception(opstat)
                 
     # reset row ids column
-    elif(optionid == dftw.RESET_ROW_IDS) :
+    elif(optionid == dtm.RESET_ROW_IDS) :
         
         # Remove Row Ids Column
         if(funcid == PROCESS_CMD) :
@@ -400,7 +399,7 @@ def process_df_transform(parms,display=True) :
                 dftw.display_dataframe_options([[1,0]])
                 display_exception(opstat)
             
-    elif(optionid == dftw.SET_NEW_ROW_IDS_COL) :
+    elif(optionid == dtm.SET_NEW_ROW_IDS_COL) :
         
         if(funcid == PROCESS_CMD) :
             
@@ -438,7 +437,7 @@ def process_df_transform(parms,display=True) :
                 opstat.set_errormsg("No Column Name Defined")
                 display_exception(opstat)
         
-    elif(optionid == dftw.DROP_ROW_IDS_COL) :
+    elif(optionid == dtm.DROP_ROW_IDS_COL) :
         
         # Remove Row Ids Column
         if(funcid == PROCESS_CMD) :
@@ -465,7 +464,7 @@ def process_df_transform(parms,display=True) :
                 dftw.display_dataframe_options([[4,0]])
                 display_exception(opstat)
     
-    elif(optionid == dftw.SORT_ROWS) :
+    elif(optionid == dtm.SORT_ROWS) :
         
         # Remove Row Ids Column
         if(funcid == PROCESS_CMD) :
@@ -493,7 +492,7 @@ def process_df_transform(parms,display=True) :
                 display_exception(opstat)
             
     # drop duplicate rows
-    elif(optionid == dftw.DROP_DUPLICATE_ROWS) :
+    elif(optionid == dtm.DROP_DUPLICATE_ROWS) :
 
         # drop duplicate rows
         if(funcid == PROCESS_CMD) :
@@ -524,12 +523,12 @@ def process_df_transform(parms,display=True) :
                 display_exception(opstat) 
     
     # return
-    elif(optionid == dftw.DF_TRANSFORM_RETURN) :
+    elif(optionid == dtm.DF_TRANSFORM_RETURN) :
         
         dftw.display_dataframe_transform_main()
         
     # help
-    elif(optionid == dftw.DF_TRANSFORM_HELP) :
+    elif(optionid == dtm.DF_TRANSFORM_HELP) :
         print("help")
 
 def clear_dataframe_transform_cfg_values() :
@@ -540,3 +539,8 @@ def clear_dataframe_transform_cfg_values() :
     cfg.drop_config_value(dftw.df_drop_dups_transform_input_id+"Parms")
     cfg.drop_config_value(dftw.df_change_row_transform_input_id+"Parms")    
     cfg.drop_config_value(dftw.df_sort_row_ids_transform_input_id+"Parms")
+    cfg.drop_config_value(dftw.df_set_new_col_transform_input_id+"Parms")    
+    
+    
+    
+    

@@ -604,7 +604,7 @@ def process_map_transform(colname,parms,display=True) :
             valslist  = [map_file_name,nanFlag,
                          str(mapkeys),str(mapvals)]
   
-            displayParms("Map Column " + colname + " Parms",labellist,valslist,cfg.DataTransform_ID,None,True)
+            displayParms("Map Column " + colname + " Parms",labellist,valslist,cfg.DataTransform_ID)
             
             display_status("Column " + colname + " mapped successfully")
             
@@ -890,28 +890,22 @@ def make_col_categorical_from_map(df, columnName, cmap, handleNA)  :
 #    clear column transform working vars
 #--------------------------------------------------------------------------
 """ 
-
-from dfcleanser.data_transform.data_transform_columns_widgets import (transform_map_input_id,
-                                                                      add_column_input_id,
-                                                                      add_column_file_input_id,
-                                                                      add_column_code_input_id,
-                                                                      reorder_columns_input_id,
-                                                                      sort_column_input_id)
-   
 def clear_dataframe_columns_transform_cfg_values() :
     
-    cfg.drop_config_value(transform_map_input_id+"Parms")
-    cfg.drop_config_value(transform_map_input_id+"ParmsProtect")
-    cfg.drop_config_value(add_column_input_id+"Parms")
-    cfg.drop_config_value(add_column_input_id+"ParmsProtect")
-    cfg.drop_config_value(add_column_file_input_id+"Parms")
-    cfg.drop_config_value(add_column_file_input_id+"ParmsProtect")
-    cfg.drop_config_value(add_column_code_input_id+"Parms")
-    cfg.drop_config_value(add_column_code_input_id+"ParmsProtect")
-    cfg.drop_config_value(reorder_columns_input_id+"Parms")
-    cfg.drop_config_value(reorder_columns_input_id+"ParmsProtect")
-    cfg.drop_config_value(sort_column_input_id+"Parms")
-    cfg.drop_config_value(sort_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.transform_map_input_id+"Parms")
+    cfg.drop_config_value(dtcw.transform_map_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_file_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_file_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_code_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_code_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.reorder_columns_input_id+"Parms")
+    cfg.drop_config_value(dtcw.reorder_columns_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.sort_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.apply_column_input_id+"ParmsProtect")
     
     cfg.drop_config_value(cfg.ADD_COL_CODE_KEY)
     cfg.drop_config_value(cfg.COPY_COL_TO_KEY)

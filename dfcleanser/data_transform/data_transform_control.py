@@ -19,6 +19,7 @@ import dfcleanser.data_transform.data_transform_widgets as dtw
 import dfcleanser.data_transform.data_transform_model as dtm
 import dfcleanser.data_transform.data_transform_columns_widgets as dtcw
 import dfcleanser.data_transform.data_transform_columns_control as dtcc
+import dfcleanser.data_transform.data_transform_dataframe_control as dtdc
 import dfcleanser.data_transform.data_transform_dataframe_widgets as dtdw
 
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables, get_table_value)
@@ -568,6 +569,21 @@ def process_datetime_merge_split_transform(parms,display=True) :
             display_exception(opstat)
 
 
+def convert_nan_value(dtype,nanvalue,opstat) :
+    
+    try :
+                
+        # covert nan value to dattype                
+                
+                
+        nanvalue = float(nanvalue)    
+    except :
+        opstat.set_status(False)
+        opstat.set_errorMsg("Nan fill value is invalid")
+    
+
+
+
 """
 #--------------------------------------------------------------------------
 #    change column datatype
@@ -579,23 +595,23 @@ def process_datatype_transform(parms,display=True) :
 
     colname     =   parms[0]
     dtid        =   int(parms[1])
-    dropflag    =   int(parms[2])
-    nanvalue    =   float(parms[3])
+    nafunc      =   parms[2]
+    
+    if(len(parms[3]) > 0) :
+        nanvalue    =   float(parms[3])
+    else :
+        nanvalue    =   None
 
     col_nans     =   cfg.get_dfc_dataframe()[colname].isnull().sum() 
 
     if(col_nans > 0) :
-        if(not(dropflag)) :
-            #TODO convert to native datatype
-            if(len(parms[3]) == 0) :
+        if(nafunc == "fillna") :
+
+            if(nanvalue is None) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("No Nan fill value is specified")
             else : 
-                try :
-                    nanvalue = float(nanvalue)    
-                except :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("Nan fill value is invalid")
+                nanvalue    =   convert_nan_value(dtid,nanvalue,opstat)        
         else :
             nanvalue = None
             
@@ -662,9 +678,13 @@ def clear_data_transform_data() :
     clear_data_transform_cfg_values()
     
 def clear_data_transform_cfg_values() :
-    from dfcleanser.data_transform.data_transform_dataframe_control import clear_dataframe_transform_cfg_values
-    clear_dataframe_transform_cfg_values()
     
+    cfg.drop_config_value(dtw.datetime_format_input_id+"Parms")
+    cfg.drop_config_value(dtw.datetime_format_input_id+"ParmsProtect")
+
+    
+    
+    dtdc.clear_dataframe_transform_cfg_values()
     dtcc.clear_dataframe_columns_transform_cfg_values()
     
     return
