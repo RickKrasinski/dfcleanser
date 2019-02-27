@@ -28,8 +28,8 @@ POSTGRESQL_CONNECTOR_SQLA_URL   =   "http://docs.sqlalchemy.org/en/latest/dialec
 ORACLE_CONNECTOR_URL            =   "https://oracle.github.io/python-cx_Oracle/"
 ORACLE_CONNECTOR_SQLA_URL       =   "http://docs.sqlalchemy.org/en/latest/dialects/oracle.html#module-sqlalchemy.dialects.oracle.cx_oracle"
  
-from dfcleanser.common.html_widgets import displayHeading, InputForm
-from dfcleanser.common.common_utils import (display_status, display_exception, get_parms_for_input, display_grid, RunningClock, opStatus)
+from dfcleanser.common.html_widgets import displayHeading, InputForm, get_html_spaces
+from dfcleanser.common.common_utils import (display_status, display_exception, get_parms_for_input, display_generic_grid, RunningClock, opStatus)
 
 from dfcleanser.common.help_utils import IMPORT_CUSTOM_ID
 """
@@ -59,7 +59,9 @@ def get_db_connector_idList(dbid) :
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #   mysql db connector parms
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 mysql_connector_title               =   "MySql DB Connector Parameters"
@@ -70,112 +72,143 @@ mysql_connector_idList              =    ["sqlconservername",
                                           "sqlconusername",
                                           "sqlconpassword",
                                           "sqldbcondblibid",
-                                          None,None,None,None,None,None,None]
-
-mysql_connector_labelList           =   ["hostname",
-                                         "database",
-                                         "username",
-                                         "password",
-                                         "dblibrary",
-                                         "Import</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-mysql_query_connector_labelList     =   ["hostname",
-                                         "database",
-                                         "username",
-                                         "password",
-                                         "dblibrary",
-                                         "Run</br>Import</br>Query",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-mysql_export_connector_labelList     =   ["hostname",
-                                         "database",
-                                         "username",
-                                         "password",
-                                         "dblibrary",
-                                         "Export</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
+                                          None,None,None,None,None,None]
 
 mysql_connector_typeList            =   ["text","text","text","text","text",
-                                         "button","button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 mysql_connector_placeholderList     =   ["enter host name",
                                          "enter database",
                                          "enter user name",
                                          "enter passsword",
                                          "enter the database connector library",
-                                         None,None,None,None,None,None,None]
-
-mysql_connector_jsList              =   [None,None,None,None,None,
-                                         "pandas_sql_import_callback(0,0)",
-                                         "pandas_details_test_con_callback(0,0,0)",
-                                         "pandas_details_test_con_callback(0,0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mysql_connector_mysql_jsList        =   [None,None,None,None,None,
-                                         "pandas_sql_import_callback(0,0)",
-                                         "pandas_details_test_con_callback(0,0,0)",
-                                         "pandas_details_test_con_callback(0,0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
-
-
-mysql_query_connector_jsList        =   [None,None,None,None,None,
-                                         "pandas_sql_import_callback(1,0)",
-                                         "pandas_details_test_con_callback(1,0,0)",
-                                         "pandas_details_test_con_callback(1,0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mysql_query_connector_mysql_jsList  =   [None,None,None,None,None,
-                                         "pandas_sql_import_callback(1,0)",
-                                         "pandas_details_test_con_callback(1,0,0)",
-                                         "pandas_details_test_con_callback(1,0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mysql_export_connector_jsList        =   [None,None,None,None,None,
-                                         "pandas_sql_export_callback(0)",
-                                         "pandas_details_export_test_con_callback(0,0)",
-                                         "pandas_details_export_test_con_callback(0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mysql_export_connector_mysql_jsList  =   [None,None,None,None,None,
-                                         "pandas_sql_export_callback(0)",
-                                         "pandas_details_export_test_con_callback(0,0)",
-                                         "pandas_details_export_test_con_callback(0,1)",
-                                         "pandas_details_clear_callback(5)",
-                                         "pandas_details_return_callback()",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
-                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
+                                         None,None,None,None,None,None]
 
 mysql_connector_reqList             =   [0,1,2,3,4]
 
 """
 #--------------------------------------------------------------------------
+#   MySQL import sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+mysql_connector_labelList           =   ["hostname",
+                                         "database",
+                                         "username",
+                                         "password",
+                                         "dblibrary",
+                                         "Import</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pymysql lib db connector parms
+"""
+mysql_connector_jsList              =   [None,None,None,None,None,
+                                         "pandas_sql_import_callback(0,0)",
+                                         "pandas_details_test_con_callback(0,0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   mysql lib db connector parms
+"""
+mysql_connector_mysql_jsList        =   [None,None,None,None,None,
+                                         "pandas_sql_import_callback(0,0)",
+                                         "pandas_details_test_con_callback(0,0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#   MySQL import sqlquery db connector parms
+#--------------------------------------------------------------------------
+"""
+mysql_query_connector_labelList     =   ["hostname",
+                                         "database",
+                                         "username",
+                                         "password",
+                                         "dblibrary",
+                                         "Run</br>Import</br>Query",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pymysql lib db connector parms
+"""
+mysql_query_connector_jsList        =   [None,None,None,None,None,
+                                         "pandas_sql_import_callback(1,0)",
+                                         "pandas_details_test_con_callback(1,0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   mysql lib db connector parms
+"""
+mysql_query_connector_mysql_jsList  =   [None,None,None,None,None,
+                                         "pandas_sql_import_callback(1,0)",
+                                         "pandas_details_test_con_callback(1,0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+
+
+"""
+#--------------------------------------------------------------------------
+#   MySQL export sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+mysql_export_connector_labelList     =   ["hostname",
+                                         "database",
+                                         "username",
+                                         "password",
+                                         "dblibrary",
+                                         "Export</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pymysql lib db connector parms
+"""
+mysql_export_connector_jsList        =   [None,None,None,None,None,
+                                         "pandas_sql_export_callback(0)",
+                                         "pandas_details_export_test_con_callback(0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(PYMYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   mysql lib db connector parms
+"""
+mysql_export_connector_mysql_jsList  =   [None,None,None,None,None,
+                                         "pandas_sql_export_callback(0)",
+                                         "pandas_details_export_test_con_callback(0,0)",
+                                         "pandas_details_clear_callback(5)",
+                                         "pandas_details_return_callback()",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')",
+                                         "display_help_url('"+str(MYSQL_CONNECTOR_SQLA_URL)+"')"]
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #   MS SQL Server db connector parms
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 mssql_connector_title               =    "MS SQL Server DB Connector Parameters"
@@ -186,111 +219,137 @@ mssql_connector_idList              =    ["sqlconservername",
                                           "sqlconusername",
                                           "sqlconpassword",
                                           "sqldbcondblibid",
-                                          None,None,None,None,None,None,None]
-
-mssql_connector_labelList           =   ["msserver",
-                                         "msdatabase",
-                                         "msusername",
-                                         "mspassword",
-                                         "dblibrary",
-                                         "Import</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-mssql_query_connector_labelList     =   ["msserver",
-                                         "msdatabase",
-                                         "msusername",
-                                         "mspassword",
-                                         "dblibrary",
-                                         "Run</br>Import</br>Query",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-mssql_export_connector_labelList     =   ["msserver",
-                                         "msdatabase",
-                                         "msusername",
-                                         "mspassword",
-                                         "dblibrary",
-                                         "Export</br>Dataframe",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
+                                          None,None,None,None,None,None]
 
 mssql_connector_typeList            =   ["text","text","text","text","text",
-                                         "button","button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 mssql_connector_placeholderList     = ["enter server name",
                                        "enter database name",
                                        "enter user name",
                                        "enter password",
                                        "enter the database connector library",
-                                       None,None,None,None,None,None,None]
-
-mssql_connector_jsList              =  [None,None,None,None,None,
-                                        "pandas_sql_import_callback(0,1)",
-                                        "pandas_details_test_con_callback(0,1,0)",
-                                        "pandas_details_test_con_callback(0,1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
-
-mssql_connector_pymssql_jsList      =  [None,None,None,None,None,
-                                        "pandas_sql_import_callback(0,1)",
-                                        "pandas_details_test_con_callback(0,1,0)",
-                                        "pandas_details_test_con_callback(0,1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mssql_query_connector_jsList        =  [None,None,None,None,None,
-                                        "pandas_sql_import_callback(1,1)",
-                                        "pandas_details_test_con_callback(1,1,0)",
-                                        "pandas_details_test_con_callback(1,1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
-
-mssql_query_connector_pymssql_jsList =  [None,None,None,None,None,
-                                        "pandas_sql_import_callback(1,1)",
-                                        "pandas_details_test_con_callback(1,1,0)",
-                                        "pandas_details_test_con_callback(1,1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
-
-mssql_export_connector_jsList        =  [None,None,None,None,None,
-                                        "pandas_sql_export_callback(1)",
-                                        "pandas_details_export_test_con_callback(1,0)",
-                                        "pandas_details_export_test_con_callback(1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
-
-mssql_export_connector_pymssql_jsList =  [None,None,None,None,None,
-                                        "pandas_sql_export_callback(1)",
-                                        "pandas_details_export_test_con_callback(1,0)",
-                                        "pandas_details_export_test_con_callback(1,1)",
-                                        "pandas_details_clear_callback(5)",
-                                        "pandas_details_return_callback()",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
-                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
+                                       None,None,None,None,None,None]
 
 mssql_connector_reqList             =   [0,1,2,3,4]
 
+
 """
 #--------------------------------------------------------------------------
+#   MS SQL Server import sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+mssql_connector_labelList           =   ["msserver",
+                                         "msdatabase",
+                                         "msusername",
+                                         "mspassword",
+                                         "dblibrary",
+                                         "Import</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pyodbc lib db connector parms
+"""
+mssql_connector_jsList              =  [None,None,None,None,None,
+                                        "pandas_sql_import_callback(0,1)",
+                                        "pandas_details_test_con_callback(0,1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   pymssql lib db connector parms
+"""
+mssql_connector_pymssql_jsList      =  [None,None,None,None,None,
+                                        "pandas_sql_import_callback(0,1)",
+                                        "pandas_details_test_con_callback(0,1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#   MS SQL Server import sqlquery db connector parms
+#--------------------------------------------------------------------------
+"""
+mssql_query_connector_labelList     =   ["msserver",
+                                         "msdatabase",
+                                         "msusername",
+                                         "mspassword",
+                                         "dblibrary",
+                                         "Run</br>Import</br>Query",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pyodbc lib db connector parms
+"""
+mssql_query_connector_jsList        =  [None,None,None,None,None,
+                                        "pandas_sql_import_callback(1,1)",
+                                        "pandas_details_test_con_callback(1,1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   pymssql lib db connector parms
+"""
+mssql_query_connector_pymssql_jsList =  [None,None,None,None,None,
+                                        "pandas_sql_import_callback(1,1)",
+                                        "pandas_details_test_con_callback(1,1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#   MS SQL Server export sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+mssql_export_connector_labelList     =   ["msserver",
+                                         "msdatabase",
+                                         "msusername",
+                                         "mspassword",
+                                         "dblibrary",
+                                         "Export</br>Dataframe",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
+"""
+#   pyodbc lib db connector parms
+"""
+mssql_export_connector_jsList        =  [None,None,None,None,None,
+                                        "pandas_sql_export_callback(1)",
+                                        "pandas_details_export_test_con_callback(1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYODBC_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#   pymssql lib db connector parms
+"""
+mssql_export_connector_pymssql_jsList =  [None,None,None,None,None,
+                                        "pandas_sql_export_callback(1)",
+                                        "pandas_details_export_test_con_callback(1,0)",
+                                        "pandas_details_clear_callback(5)",
+                                        "pandas_details_return_callback()",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_URL)+"')",
+                                        "display_help_url('"+str(PYMSSQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #   Postgresql db connector parms
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 Postgresql_connector_title          =   "Postgresql DB Connector Parameters"
@@ -301,79 +360,91 @@ Postgresql_connector_idList         =    ["sqlconservername",
                                           "sqlconusername",
                                           "sqlconpassword",
                                           "sqldbcondblibid",
-                                          None,None,None,None,None,None,None]
-
-Postgresql_connector_labelList      =   ["pghost",
-                                         "pgdbname",
-                                         "pguser",
-                                         "pgpassword",
-                                         "dblibrary",
-                                         "Import</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-Postgresql_query_connector_labelList=   ["pghost",
-                                         "pgdbname",
-                                         "pguser",
-                                         "pgpassword",
-                                         "dblibrary",
-                                         "Run</br>Import</br>Query",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-Postgresql_export_connector_labelList=   ["pghost",
-                                         "pgdbname",
-                                         "pguser",
-                                         "pgpassword",
-                                         "dblibrary",
-                                         "Export</br>Dataframe",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+                                          None,None,None,None,None,None]
 
 Postgresql_connector_typeList       =   ["text","text","text","text","text",
-                                         "button","button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 Postgresql_connector_placeholderList = ["enter server name",
                                         "enter database name",
                                         "enter user name",
                                         "enter password",
                                         "enter the database connector library",
-                                        None,None,None,None,None,None,None]
+                                        None,None,None,None,None,None]
+
+Postgresql_connector_reqList        =   [0,1,2,3,4]
+
+"""
+#--------------------------------------------------------------------------
+#   Postgres import sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+Postgresql_connector_labelList      =   ["pghost",
+                                         "pgdbname",
+                                         "pguser",
+                                         "pgpassword",
+                                         "dblibrary",
+                                         "Import</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 Postgresql_connector_jsList         =   [None,None,None,None,None,
                                          "pandas_sql_import_callback(0,3)",
                                          "pandas_details_test_con_callback(0,3,0)",
-                                         "pandas_details_test_con_callback(0,3,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_SQLA_URL)+"')"]
+
+
+"""
+#--------------------------------------------------------------------------
+#   Postgres import sqlquery db connector parms
+#--------------------------------------------------------------------------
+"""
+Postgresql_query_connector_labelList=   ["pghost",
+                                         "pgdbname",
+                                         "pguser",
+                                         "pgpassword",
+                                         "dblibrary",
+                                         "Run</br>Import</br>Query",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 Postgresql_query_connector_jsList   =   [None,None,None,None,None,
                                          "pandas_sql_import_callback(1,3)",
                                          "pandas_details_test_con_callback(1,3,0)",
-                                         "pandas_details_test_con_callback(1,3,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#   Postgres export sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+Postgresql_export_connector_labelList=   ["pghost",
+                                         "pgdbname",
+                                         "pguser",
+                                         "pgpassword",
+                                         "dblibrary",
+                                         "Export</br>Dataframe",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 Postgresql_export_connector_jsList   =   [None,None,None,None,None,
                                          "pandas_sql_export_callback(3)",
                                          "pandas_details_export_test_con_callback(3,0)",
-                                         "pandas_details_export_test_con_callback(3,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(POSTGRESQL_CONNECTOR_SQLA_URL)+"')"]
 
-Postgresql_connector_reqList        =   [0,1,2,3,4]
+
 
 """
 #--------------------------------------------------------------------------
@@ -385,38 +456,28 @@ sqlite_connector_id                 =   "SQLitedbconnector"
 
 sqlite_connector_idList             =    ["SQLitedbfileName",
                                           "SQLitedblibid",
-                                          None,None,None,None,None,None,None]
-
-sqlite_connector_labelList          =   ["db_file",
-                                         "dblibrary",
-                                         "Import</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-sqlite_query_connector_labelList    =   ["db_file",
-                                         "dblibrary",
-                                         "Run</br>Import</br>Query",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-sqlite_export_connector_labelList    =   ["db_file",
-                                         "dblibrary",
-                                         "Export</br>Dataframe",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+                                          None,None,None,None,None,None]
 
 sqlite_connector_typeList           =   ["text","text",
-                                         "button","button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 sqlite_connector_placeholderList    =   ["enter the db file name",
                                          "enter the database connector library",
-                                         None,None,None,None,None,None,None]
+                                         None,None,None,None,None,None]
+
+sqlite_connector_reqList            =   [0,1,2,3,4]
+
+"""
+#--------------------------------------------------------------------------
+#   sqlite import sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+sqlite_connector_labelList          =   ["db_file",
+                                         "dblibrary",
+                                         "Import</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 sqlite_connector_jsList             =   [None,None,
                                          "pandas_sql_import_callback(0,2)",
@@ -427,6 +488,18 @@ sqlite_connector_jsList             =   [None,None,
                                          "display_help_url('"+str(SQLITE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(SQLITE_CONNECTOR_SQLA_URL)+"')"]
 
+"""
+#--------------------------------------------------------------------------
+#   sqlite import sqlquery db connector parms
+#--------------------------------------------------------------------------
+"""
+sqlite_query_connector_labelList    =   ["db_file",
+                                         "dblibrary",
+                                         "Run</br>Import</br>Query",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
 sqlite_query_connector_jsList       =   [None,None,
                                          "pandas_sql_import_callback(1,2)",
                                          "pandas_details_test_con_callback(1,2,0)",
@@ -436,6 +509,18 @@ sqlite_query_connector_jsList       =   [None,None,
                                          "display_help_url('"+str(SQLITE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(SQLITE_CONNECTOR_SQLA_URL)+"')"]
 
+"""
+#--------------------------------------------------------------------------
+#   sqlite export sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+sqlite_export_connector_labelList    =   ["db_file",
+                                         "dblibrary",
+                                         "Export</br>Dataframe",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+
 sqlite_export_connector_jsList       =   [None,None,
                                          "pandas_sql_export_callback(2)",
                                          "pandas_details_export_test_con_callback(2,0)",
@@ -444,8 +529,6 @@ sqlite_export_connector_jsList       =   [None,None,
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(SQLITE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(SQLITE_CONNECTOR_SQLA_URL)+"')"]
-
-sqlite_connector_reqList            =   [0,1,2,3,4]
 
 """
 #--------------------------------------------------------------------------
@@ -459,75 +542,85 @@ oracle_connector_idList             =    ["sqlconservername",
                                           "sqlconusername",
                                           "sqlconpassword",
                                           "sqldbcondblibid",
-                                          None,None,None,None,None,None,None]
-
-oracle_connector_labelList          =   ["tdshost",
-                                         "user",
-                                         "password",
-                                         "dblibrary",
-                                         "Import</br>Table",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-oracle_query_connector_labelList    =   ["tdshost",
-                                         "user",
-                                         "password",
-                                         "dblibrary",
-                                         "Run</br>Import</br>Query",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
-
-oracle_export_connector_labelList    =   ["tdshost",
-                                         "user",
-                                         "password",
-                                         "dblibrary",
-                                         "Export</br>Dataframe",
-                                         "Test</br>Native</br>Connector",
-                                         "Test</br>SQL</br>Alchemy</br>Connector",
-                                         "Clear","Return",
-                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
+                                          None,None,None,None,None,None]
 
 oracle_connector_typeList           =   ["text","text","text","text",
-                                         "button","button","button","button","button","button","button"]
+                                         "button","button","button","button","button","button"]
 
 oracle_connector_placeholderList    =   ["enter server name",
                                          "enter database name",
                                          "enter password",
                                          "enter the database connector library",
-                                         None,None,None,None,None,None,None]
+                                         None,None,None,None,None,None]
+
+oracle_connector_reqList            =   [0,1,2,3]
+
+
+"""
+#--------------------------------------------------------------------------
+#   oracle import sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+oracle_connector_labelList          =   ["tdshost",
+                                         "user",
+                                         "password",
+                                         "dblibrary",
+                                         "Import</br>Table",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 oracle_connector_jsList             =   [None,None,None,None,
                                          "pandas_sql_import_callback(0,4)",
                                          "pandas_details_test_con_callback(0,4,0)",
-                                         "pandas_details_test_con_callback(0,4,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#   oracle import sqlquery db connector parms
+#--------------------------------------------------------------------------
+"""
+oracle_query_connector_labelList    =   ["tdshost",
+                                         "user",
+                                         "password",
+                                         "dblibrary",
+                                         "Run</br>Import</br>Query",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 oracle_query_connector_jsList       =   [None,None,None,None,
                                          "pandas_sql_import_callback(1,4)",
                                          "pandas_details_test_con_callback(1,4,0)",
-                                         "pandas_details_test_con_callback(1,4,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_SQLA_URL)+"')"]
+
+"""
+#--------------------------------------------------------------------------
+#   oracle export sqltable db connector parms
+#--------------------------------------------------------------------------
+"""
+oracle_export_connector_labelList    =   ["tdshost",
+                                         "user",
+                                         "password",
+                                         "dblibrary",
+                                         "Export</br>Dataframe",
+                                         "Test</br>SQL</br>Connector",
+                                         "Clear","Return",
+                                         "Native</br>Help","SQL</br>Alchemy</br>Help"]
 
 oracle_export_connector_jsList       =   [None,None,None,None,
                                          "pandas_sql_export_callback(4)",
                                          "pandas_details_export_test_con_callback(4,0)",
-                                         "pandas_details_export_test_con_callback(4,1)",
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback()",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_URL)+"')",
                                          "display_help_url('"+str(ORACLE_CONNECTOR_SQLA_URL)+"')"]
-
-oracle_connector_reqList            =   [0,1,2,3]
 
 """
 #--------------------------------------------------------------------------
@@ -717,7 +810,7 @@ def parse_connector_parms(sqlinputparms,dbid,dbparms) :
 #
 #------------------------------------------------------------------
 """ 
-def get_db_connector_table() :
+def get_db_connector_table(forExport=False) :
     
     dblibslistHeader        =   [""]
     dblibslistRows          =   []
@@ -739,9 +832,15 @@ def get_db_connector_table() :
                          "&nbsp;&nbsp;&nbsp;&nbsp;"+cx_oracle_library,
                          "Custom"]
     
-    dblibshrefs    =    [None,"select_db","select_db",None,"select_db","select_db",
-                         None,"select_db",None,"select_db",None,"select_db",
-                         "select_custom"]
+    if(forExport) :
+        dblibshrefs    =    [None,"select_export_db","select_export_db",None,
+                             "select_export_db","select_export_db",None,
+                             "select_export_db",None,"select_export_db",None,
+                             "select_export_db","select_custom"]
+    else :
+        dblibshrefs    =    [None,"select_db","select_db",None,"select_db","select_db",
+                             None,"select_db",None,"select_db",None,"select_db",
+                             "select_custom"]
     
     for i in range(len(dblibstexts)) :
         dblibslistRows.append([dblibstexts[i]])    
@@ -775,7 +874,12 @@ def get_db_connector_table() :
 """     
 def display_db_connector_inputs(dbid,dbconparms,sqlid) :
     
-    listHtml = get_db_connector_table()
+    print("display_db_connector_inputs",dbid,sqlid)
+    
+    if(sqlid == SQL_EXPORT) :
+        listHtml = get_db_connector_table(True)
+    else :
+        listHtml = get_db_connector_table(False) 
 
     db_con_input_form = None
     
@@ -806,34 +910,38 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
             
         elif(sqlid == SQL_QUERY) :
             
+            db_con_labelist  =   mysql_query_connector_labelList    
+            
             if(dblib == pymysql_library) :
                 db_con_jslist = mysql_query_connector_jsList
             else :
                 db_con_jslist = mysql_query_connector_mysql_jsList
-            
+
             db_con_input_form   =   InputForm(mysql_connector_id,
                                               mysql_connector_idList,
-                                              mysql_query_connector_labelList,
+                                              db_con_labelist,
                                               mysql_connector_typeList,
                                               mysql_connector_placeholderList,
                                               db_con_jslist,
                                               mysql_connector_reqList)
-        else :
+            
+        else : #sqlid == SQL_EXPORT
+            
+            db_con_labelist     =   mysql_export_connector_labelList
             
             if(dblib == pymysql_library) :
-                
-                db_con_jslist = mysql_export_connector_jsList
+                db_con_jslist       =   mysql_export_connector_jsList
             else :
-                db_con_jslist = mysql_export_connector_mysql_jsList
-            
+                db_con_jslist       =   mysql_export_connector_mysql_jsList
+
             db_con_input_form   =   InputForm(mysql_connector_id,
                                               mysql_connector_idList,
-                                              mysql_export_connector_labelList,
+                                              db_con_labelist,
                                               mysql_connector_typeList,
                                               mysql_connector_placeholderList,
                                               db_con_jslist,
-                                              mysql_connector_reqList)           
-    
+                                              mysql_connector_reqList)
+            
     elif(dbid == MS_SQL_Server) :
         
         dblib = dblib = dbconparms[4]
@@ -868,7 +976,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
                                               db_con_jslist,
                                               mssql_connector_reqList)
             
-        else :
+        else : #sqlid == SQL_EXPORT
             
             if(dblib == pyodbc_library) :
                 db_con_jslist = mssql_export_connector_jsList
@@ -903,7 +1011,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
                                               sqlite_connector_placeholderList,
                                               sqlite_query_connector_jsList,
                                               sqlite_connector_reqList)
-        else :
+        else : #sqlid == SQL_EXPORT
             db_con_input_form   =   InputForm(sqlite_connector_id,
                                               sqlite_connector_idList,
                                               sqlite_export_connector_labelList,
@@ -933,7 +1041,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
                                               Postgresql_connector_placeholderList,
                                               Postgresql_query_connector_jsList,
                                               Postgresql_connector_reqList)
-        else :
+        else : #sqlid == SQL_EXPORT
             db_con_input_form   =   InputForm(Postgresql_connector_id,
                                               Postgresql_connector_idList,
                                               Postgresql_export_connector_labelList,
@@ -962,7 +1070,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
                                               oracle_connector_placeholderList,
                                               oracle_query_connector_jsList,
                                               oracle_connector_reqList)
-        else :
+        else : #sqlid == SQL_EXPORT
             db_con_input_form   =   InputForm(oracle_connector_id,
                                               oracle_connector_idList,
                                               oracle_export_connector_labelList,
@@ -1020,23 +1128,23 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid) :
     if( (dbid == None) )            :   dbtitle = ""
     elif( (dbid == MySql) )         :   dbtitle = "MySql : " + dblib
     elif( (dbid == MS_SQL_Server) ) :   dbtitle = "MS SQL Server : " + dblib
-    elif( (dbid == SQLite) )        :   dbtitle = "SQLite" + dblib
+    elif( (dbid == SQLite) )        :   dbtitle = "SQLite : " + dblib
     elif( (dbid == Postgresql) )    :   dbtitle = "Postgresql : " + dblib
     elif( (dbid == Oracle) )        :   dbtitle = "Oracle : " + dblib
     elif( (dbid == Custom) )        :   dbtitle = "Custom"
     
-    sql_db_connector_heading_html = "<h4>" + "&nbsp;&nbsp;&nbsp;&nbsp;Connection Parms - " + dbtitle + "</h4>"
+    sql_db_connector_heading_html =   "<p>" + get_html_spaces(58) + "Connection Parms - " + dbtitle + "</p>"
 
     db_con_input_form.set_gridwidth(640)
 
     db_con_input_html = ""
     db_con_input_html = db_con_input_form.get_html() 
+    
+    gridclasses     =   ["geocode-query-wrapper-header","dfc-left","dfc-right"]
+    gridhtmls       =   [sql_db_connector_heading_html,listHtml,db_con_input_html]
+    
+    display_generic_grid("sql_connector_wrapper",gridclasses,gridhtmls)
    
-    display_grid("sql_connector_wrapper",
-                 sql_db_connector_heading_html,
-                 listHtml,
-                 db_con_input_html,None)
-
 
 def get_stored_con_Parms(dbid) :
     
@@ -1145,7 +1253,8 @@ def test_db_connector(dbid,driverid,sqlinputparms,sqlid) :
     
     if(errormsg == None) :
     
-        display_db_connector_inputs(dbid,parmslist,sqlid)
+        if(driverid == NATIVE) :
+            display_db_connector_inputs(dbid,parmslist,sqlid)
         
         if(driverid == NATIVE) :
             displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Testing Native DB Connector",4)

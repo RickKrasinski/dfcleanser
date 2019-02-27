@@ -179,7 +179,7 @@ table_header_start = """
             <div class="panel-heading dc-table-panel-heading">
 """
 small_table_header_start = """
-            <div class="panel-heading clearfix dc-small-table-panel-heading" height="30px" style=" margin-bottom:0px;" """
+            <div class="panel-heading clearfix dc-small-table-panel-heading" style="height:38px; font-size:11px;" """
 small_table_no_header_start = """
             <div class="panel-heading clearfix dc-small-table-noheader-panel-heading" style=" margin-bottom:0px; background-color:white;" """
 
@@ -266,7 +266,7 @@ table_body_start = """
 """
 table_body_end = """                </tbody>"""
 
-table_body_row_start = """                    <tr class="dc-table-row" >
+table_body_row_start = """                    <tr class="dc-describe-table-body-row">
 """
 table_body_row_end = """
                     </tr>
@@ -775,6 +775,7 @@ class dcTable :
     def set_firstcolpadding(self,setParm) :
         self.firstcolpadding = setParm
 
+
     def get_html(self,fulltable=True) :
         
         more = False
@@ -850,12 +851,18 @@ class dcTable :
                     
                     if(i != (len(self.get_headerList())) - 1) : #table.get_colsperrow()-1)):#len(table.get_headerList()) - 1) ) :
                         tableHTML = (tableHTML + new_line)
-            except :
+                        
+            except Exception as e:
+                
                 print("Header Error i = ",i)
-                print(self.get_headerList())
-                print(self.get_widthList())
-                print(self.get_alignList())
-                print(self.get_hhrefList())
+                self.dump()
+                from dfcleanser.common.common_utils import opStatus,display_exception
+                opstat  =   opStatus()
+                
+                opstat.store_exception("table header",e)
+                opstat.set_status(False)
+                display_exception(opstat)
+
             
             tableHTML = (tableHTML + new_line + table_head_row_end)
             tableHTML = (tableHTML + table_head_end)
@@ -932,7 +939,9 @@ class dcTable :
         
         #debug 
         if(self.get_title() != None)  :  
-            if( (self.get_title() == "@Geocoders") or ("#Geocoder Parms" in self.get_title()) ) :   
+            if( (self.get_title() == "#Pandas CSV Import Parms") or 
+               (self.get_title() == "#df Browser") or 
+               ("#Pandas CSV Import Parms" in self.get_title()) ) :   
                print(tableHTML)
                
         return(tableHTML)
@@ -958,8 +967,8 @@ class dcTable :
             print(" Rows        :  [",len(self.get_rowList()),"]")
             if(type(self.get_rowList()[0]) == list) :
                 for i in range(len(self.get_rowList())) :
-                    if(len(str(self.get_rowList()[i])) > 50) :
-                        print("   Row ["+str(i) + "]     : ",len(self.get_rowList()[i])) 
+                    if(len(str(self.get_rowList()[i])) > 100) :
+                        print("   Row ["+str(i) + "]     : ",self.get_rowList()[i][0:100]) 
                     else :
                         print("   Row ["+str(i) + "]     : ",self.get_rowList()[i])
             else :
@@ -986,9 +995,9 @@ class dcTable :
                 print("   Ref ["+str(i) + "]     : ",self.get_refList())
         
         if(self.get_hhrefList() == None) :
-            print(" hhrefs      :  None")
+            print("  hhrefs      :  None")
         else :
-            print(" hhrefs      : ",self.get_hhrefList())
+            print("  hhrefs      : ",self.get_hhrefList())
 
         if(self.get_color() == True) :
             print(" Colors      : [",len(self.get_colorList()),"]")
@@ -1025,11 +1034,12 @@ class dcTable :
             print(" shorthead      : ",self.get_shorthead())
         if(self.get_shortrow()) :
             print(" shortrow       : ",self.get_shortrow())
+        
+        print(" textlength     : ",self.get_textLength())
 
         if(not(self.get_note() == "")) :
             print("\nnote           : ",self.get_note())
             
-        print(" textlength     : ",self.get_textLength())
 
 
 
@@ -1050,7 +1060,7 @@ class dcTable :
 *   displayTable    -   display the html flag  
 * -----------------------------------------------------------------------*
 """
-def add_callback_to_item(table,rowflag,value,func,parm=None) :
+def add_callback_to_item(table,headerrow,rowflag,value,func,parm=None) :
     
     item_html = ""
 
@@ -1075,7 +1085,8 @@ def add_callback_to_item(table,rowflag,value,func,parm=None) :
         else :
             cparm = "," + str(parm)
             
-    valueIsstring = False    
+    valueIsstring = False 
+    
     try :
         int(rowvalue)
         valueIsstring = False
@@ -1095,12 +1106,19 @@ def add_callback_to_item(table,rowflag,value,func,parm=None) :
         if(len(newstrvalue) > maxRowElement) :
             
             if(valueIsstring):
-                item_html = (item_html + '<a href="#" style="text-decoration:none;" onclick="' + func + "(" + 
-                             "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')"' + 
-                             ' data-toggle="tooltip" data-placement="top" title="' + 
-                             strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
+                if(headerrow) :
+                    item_html = (item_html + '<a href="#" style="text-decoration:none; color:black;" onclick="' + func + "(" + 
+                                 "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')"' + 
+                                 ' data-toggle="tooltip" data-placement="top" title="' + 
+                                 strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
+                    
+                else :    
+                    item_html = (item_html + '<a href="#" style="text-decoration:none;" onclick="' + func + "(" + 
+                                 "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')"' + 
+                                 ' data-toggle="tooltip" data-placement="top" title="' + 
+                                 strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
             else :
-                item_html = (item_html + '<a href="#" style="text-decoration:none;" onclick="' + func + "(" + 
+                item_html = (item_html + '<a href="#" style="text-decoration:none; color:black;" onclick="' + func + "(" + 
                              strip_leading_blanks(strvalue) + cparm + ')"' + 
                              ' data-toggle="tooltip" data-placement="top" title="' +
                              strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
@@ -1117,8 +1135,12 @@ def add_callback_to_item(table,rowflag,value,func,parm=None) :
     else :  
 
         if(valueIsstring):
-            item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
-                         "'" + rowindex + "'" +  cparm + ')">' + strvalue + "</a>")
+            if(headerrow) :
+                item_html = (item_html + '<a href="#"style="text-decoration:none; color:black;" onclick="' + func + "(" + 
+                             "'" + rowindex + "'" +  cparm + ')">' + strvalue + "</a>")
+            else :
+                item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
+                             "'" + rowindex + "'" +  cparm + ')">' + strvalue + "</a>")
         else :
             item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
                          rowindex + cparm + ')">' + strvalue + "</a>")
@@ -1153,7 +1175,7 @@ def add_table_head_column(table,coltext,width,align,href=None) :
         colHTML = (colHTML + ">" + coltext + "</th>")
     else :
         if(len(coltext) > 0) :
-            colHTML = (colHTML + ">" + add_callback_to_item(table,False,coltext,href) + "</th>")
+            colHTML = (colHTML + ">" + add_callback_to_item(table,True,False,coltext,href) + "</th>")
 
     return(colHTML)
 
@@ -1179,7 +1201,7 @@ def shorten_element(table,element,row=True) :
             return(element)  
             
     if(len(element) > table.get_textLength()) :
-        halflength = int(table.get_textLength()/2)
+        halflength = int(table.get_textLength()/2) - 2
         if(0):#element.find(",") > -1) :
             shortelement = element
         else :
@@ -1259,10 +1281,11 @@ def add_table_body_row(table,index,rowElement,href) :
                        addattribute("style",addstyleattribute("width", str(table.get_widthList()[i])+"%")))
         
         if( table.get_alignList()[i] == "left") :    
-            rowHTML = (rowHTML + addattribute("class","dccolleft dctablecol dccolwrap")) 
+            rowHTML = (rowHTML + addattribute("class","dccolleft dccolwrap")) 
         else :    
-            rowHTML = (rowHTML + addattribute("class","dctablecol dccolwrap")) 
- 
+            rowHTML = (rowHTML + addattribute("class","dccolwrap"))
+            #rowHTML = (rowHTML + " style='font-size: 10px; font-family: Arial;' ")
+
         if(href == None) :
             if("_cb" in str(rowElement[i])) :
                 rowHTML = (rowHTML + ">" + new_line)
@@ -1282,14 +1305,14 @@ def add_table_body_row(table,index,rowElement,href) :
                 if(table.get_refIndex() == -1) :
                 
                     if(len(str(rowElement[i])) > 0) :
-                        rowHTML = (rowHTML + ">" + add_callback_to_item(table,True,
+                        rowHTML = (rowHTML + ">" + add_callback_to_item(table,False,True,
                                                                         rowElement[i],
                                                                         href[i],
                                                                         table.get_refParm()) + "</td>")
                     else :
                         rowHTML = (rowHTML + ">"  + "</td>")
                 else :
-                    rowHTML = (rowHTML + ">" + add_callback_to_item(table,True,
+                    rowHTML = (rowHTML + ">" + add_callback_to_item(table,False,True,
                                                                     [(table.get_refIndex()+index),
                                                                      rowElement[i]],
                                                                      href[i],
@@ -1366,16 +1389,16 @@ search_table_input_start             = """                        <input type="t
 search_table_button_div_start        = """                    <div class="input-group-btn" style='margin-left:2%; '>
 """
 
-search_table_title_start             = """                        <p class="panel-title dc-search-panel-title pull-left" style="padding-right:20px">"""
+search_table_title_start             = """                            <p class="panel-title dc-search-panel-title pull-left" style="padding-right:20px">"""
 search_table_title_end               = """</p>
 """
 
-search_table_search_button_start     = """                        <button class='btn btn-primary dc-btn-primary' """
-search_table_button_glyph            = """                          <i class='glyphicon glyphicon-search'"""
+search_table_search_button_start     = """                            <button class='btn btn-primary' """
+search_table_button_glyph            = """                                <i class='glyphicon glyphicon-search'"""
 search_table_button_glyph_end        = """></i>
 """
-search_table_search_button_end       = """                        </button>
-                      </div>
+search_table_search_button_end       = """                           </button>
+                        </div>
 """
 
 search_dir_table_input_div_start = """                    <div class="input-group-btn">
@@ -1387,11 +1410,11 @@ search_dir_table_button_div_start = """                      <div class="input-g
 """
 search_dir_table_button_div_start1= """                      <div class="input-group-btn" align="right" style="margin-right:1%;">
 """
-search_dir_table_button_div_end   = """                      </div>
+search_dir_table_button_div_end   = """                     </div>
 """
-search_table_button_start         = """                        <button class='btn btn-primary'"""
-search_table_button_img_start     = """                          <img src='"""
-search_table_button_end           = """                        </button>
+search_table_button_start         = """                            <button class='btn btn-primary'"""
+search_table_button_img_start     = """                               <img src='"""
+search_table_button_end           = """                            </button>
 """
 
 """
@@ -1492,6 +1515,7 @@ def get_search_table_header(table,fulltable) :
             
             tableHTML = (tableHTML + search_dir_table_button_div_start)
             tableHTML = (tableHTML + search_table_search_button_start)
+            tableHTML = (tableHTML + addattribute("title","Get Row"))
             tableHTML = (tableHTML + addattribute("OnClick",str(searchParms.get("searchcallback"))) + ">" + new_line) 
             tableHTML = (tableHTML + search_table_button_glyph)
             tableHTML = (tableHTML + addattribute("id",(table.get_tableid()+"searchglyph")) )
@@ -1744,6 +1768,14 @@ def get_hiddens(fid,hiddensList) :
         
 """
 * -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+* Dataframe Schema Table components 
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+"""
+
+"""
+* -----------------------------------------------------------------------*
 * Dataframe Schema Table html 
 * -----------------------------------------------------------------------*
 """
@@ -1814,7 +1846,15 @@ schema_col_button_chdt_end = """ >Change Schema</button>"""
 
 num_dtypes      =   19
 
+"""
+* -----------------------------------------------------------------------*
+* Dataframe Schema Table methods 
+* -----------------------------------------------------------------------*
+"""
 def get_df_schema_table_col(col_name,datatypeId,nancount) : 
+    
+    
+    print("get_df_schema_table_col",col_name,datatypeId,nancount)
 
     df_schema_HTML  =   ""
     df_schema_HTML  =   (df_schema_HTML + schema_col_table_start)
@@ -1886,8 +1926,219 @@ def get_df_schema_table_col(col_name,datatypeId,nancount) :
    
     df_schema_HTML  =   (df_schema_HTML + schema_col_table_end)
 
-    if(0) :
+    if(1) :
         print(df_schema_HTML)
         
     return(df_schema_HTML)
+
+
+
+
+        
+"""
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+* Dataframe Describe Table components 
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+"""
+
+"""
+* -----------------------------------------------------------------------*
+* Dataframe Describe Table html 
+* -----------------------------------------------------------------------*
+"""
+mini_table_start = """
+                            <div container dc-tbl-container" style='border:0px; """
+mini_table_end = """                            </div>
+"""
+
+mini_panel_start = """                                <div class="panels panel-primary" style="border:0px;">"""
+mini_panel_end   = """                                </div>
+"""
+
+mini_panel_heading_start = """
+                                    <div class="panel-heading clearfix dc-describe-table-panel-heading" style="background-color: rgb(61, 126, 216);">
+                                        <div class="input-group-btn">"""
+mini_panel_heading_end = """                                        </div>
+                                    </div>"""
+
+mini_panel_title_start = """
+                                            <p class="panel-title dc-describe-table-panel-title pull-left">"""
+#describe_panel_title_end = """                                            </div>
+#"""
+
+mini_data_table_start = """
+                                    <div>
+                                        <table class="table">"""
+mini_data_table_end = """
+                                        </table>
+                                    </div>
+"""
+
+mini_table_head_start = """
+                                            <thead>
+                                                <tr class="dc-describe-table-head">
+"""
+describe_df_table_head_start = """
+                                            <thead>
+                                                <tr class="dc-describe-table-head">
+"""
+mini_table_head_end = """                                                </tr>
+                                            </thead>"""
+                                            
+mini_table_head_col_start = """                                                    <th class=" dccolhead dc-describe-table-head-col">"""
+describe_df_table_head_col_start = """                                                    <th class=" dccolhead dc-describe-table-head-col">"""
+#table_head_col_end = """</th>"""
+
+mini_data_table_body_start = """
+                                            <tbody>"""
+mini_data_table_body_end = """
+                                            </tbody>"""
+
+mini_data_table_body_row_start = """
+                                                <tr class='dc-describe-table-body-row'>"""
+describe_df_table_body_row_start = """
+                                                <tr class='dc-describe-table-body-row'>"""
+mini_data_table_body_row_end = """
+                                                </tr>"""
+
+describe_df_table_body_first_col = """
+                                                    <td class="dctablecol dccolwrap dc-describe-table-body-first-col">"""
+describe_df_table_body_col = """
+                                                    <td class="dctablecol dccolwrap">"""
+mini_data_table_body_col = """
+                                                    <td class="dctablecol dccolwrap">"""
+
+"""
+* -----------------------------------------------------------------------*
+* Dataframe Describe Table methods 
+* -----------------------------------------------------------------------*
+"""
+def get_stats_table(title,colnames,colvalues,width=0) : 
+    
+    stats_HTML  =   ""
+    
+    if(width==0) :
+        stats_HTML  =   (stats_HTML + mini_table_start + "'>" + new_line)
+    else :
+        stats_HTML  =   (stats_HTML + mini_table_start + addstyleattribute("width",str(width) + "px") + "'>" + new_line)
+
+    stats_HTML  =   (stats_HTML + mini_panel_start)
+
+    stats_HTML  =   (stats_HTML + mini_panel_heading_start)
+    stats_HTML  =   (stats_HTML + mini_panel_title_start)
+    stats_HTML  =   (stats_HTML + title + "</p>" + new_line)
+    stats_HTML  =   (stats_HTML + mini_panel_heading_end)
+
+    stats_HTML  =   (stats_HTML + mini_data_table_start)
+
+    # table head
+    stats_HTML  =   (stats_HTML + mini_table_head_start)
+    for i in range(len(colnames)) :
+        stats_HTML  =   (stats_HTML + mini_table_head_col_start + str(colnames[i]) + "</th>" + new_line)
+    stats_HTML  =   (stats_HTML + mini_table_head_end)
+
+    # table body
+    stats_HTML  =   (stats_HTML + mini_data_table_body_start)
+    stats_HTML  =   (stats_HTML + mini_data_table_body_row_start)   
+    for i in range(len(colvalues)) :
+        stats_HTML  =   (stats_HTML + mini_data_table_body_col + str(colvalues[i]) + "</td>")   
+    stats_HTML  =   (stats_HTML + mini_data_table_body_row_end)
+
+    stats_HTML  =   (stats_HTML + mini_data_table_body_end)
+    
+    stats_HTML  =   (stats_HTML + mini_data_table_end)
+    
+    stats_HTML  =   (stats_HTML + mini_panel_end)
+    stats_HTML  =   (stats_HTML + mini_table_end)
+    #print(stats_HTML)
+    return(stats_HTML)
+"""
+* -----------------------------------------------------------------------*
+* Dataframe Describe Table methods 
+* -----------------------------------------------------------------------*
+"""
+def get_df_describe_table(df_title,df,rowids,colids,width=0,centered=False) : 
+
+    df_describe_HTML  =   ""
+    
+    if(width==0) :
+        if(centered) :
+            df_describe_HTML  =   (df_describe_HTML + mini_table_start + "' align='center' >" + new_line)
+        else :
+            df_describe_HTML  =   (df_describe_HTML + mini_table_start + "'>" + new_line)
+    else :
+        if(centered) :
+            df_describe_HTML  =   (df_describe_HTML + mini_table_start + addstyleattribute("width",str(width) + "px") + "' align='center' >" + new_line)
+        else :
+            df_describe_HTML  =   (df_describe_HTML + mini_table_start + addstyleattribute("width",str(width) + "px") + "'>" + new_line)
+        
+    df_describe_HTML  =   (df_describe_HTML + mini_panel_start)
+
+    df_describe_HTML  =   (df_describe_HTML + mini_panel_heading_start)
+    df_describe_HTML  =   (df_describe_HTML + mini_panel_title_start)
+    df_describe_HTML  =   (df_describe_HTML + df_title + " dataframe : " +  str(len(df)) + " Rows x " + str(len(df.columns)) + " Columns" + "</p>" + new_line)
+    df_describe_HTML  =   (df_describe_HTML + mini_panel_heading_end)
+
+    df_describe_HTML  =   (df_describe_HTML + mini_data_table_start)
+    
+    # table head
+    df_describe_HTML  =   (df_describe_HTML + describe_df_table_head_start)
+    
+    colnames          =   list(df.columns)
+    
+    for i in range(len(colids)) :
+        if(colids[i] == None) :
+            df_describe_HTML  =   (df_describe_HTML + describe_df_table_head_col_start + "........" + "</th>" + new_line) 
+        else :
+            if(colids[i] == -1) :
+                df_describe_HTML  =   (df_describe_HTML + describe_df_table_head_col_start + "row index" + "</th>" + new_line)
+            else :
+                df_describe_HTML  =   (df_describe_HTML + describe_df_table_head_col_start + str(colnames[colids[i]]) + "</th>" + new_line)
+                               
+    df_describe_HTML  =   (df_describe_HTML + table_head_end)
+
+    # table body
+    df_describe_HTML  =   (df_describe_HTML + mini_data_table_body_start)
+    
+    for i in range(len(rowids)) :
+        df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_row_start)   
+        
+        for j in range(len(colids)) :
+        
+            if(j == 0) :
+                
+                if(rowids[i] == None) :
+                    df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_first_col + "........" + "</td>") 
+                else :
+                    df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_first_col + str(rowids[i]) + "</td>")    
+            
+            else :
+                if(rowids[i] == None) :
+                    df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_col + "........" + "</td>")
+                else :
+                
+                    if(colids[j] == None) :
+                        df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_col + "........" + "</td>") 
+                    else :
+                        df_describe_HTML  =   (df_describe_HTML + describe_df_table_body_col + str(df.iloc[rowids[i],colids[j]]) + "</td>")   
+            
+        df_describe_HTML  =   (df_describe_HTML + mini_data_table_body_row_end)
+        
+    df_describe_HTML  =   (df_describe_HTML + mini_data_table_body_end)
+
+    
+    df_describe_HTML  =   (df_describe_HTML + mini_data_table_end)
+
+    df_describe_HTML  =   (df_describe_HTML + mini_panel_end)
+    df_describe_HTML  =   (df_describe_HTML + mini_table_end)
+
+    if(0) :
+        print(df_describe_HTML)
+        
+    return(df_describe_HTML)
+
+
+
 

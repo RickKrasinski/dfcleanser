@@ -26,6 +26,17 @@ SECONDS         =   4
 MICROSECONDS    =   5
 TIMEDELTA       =   6
 
+
+
+whitecolor      =   "#FFFFFF"
+yellowcolor     =   "#FAF6BE"
+redcolor        =   "#F1C4B7"
+greencolor      =   "#ADECC4"
+    
+
+
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -84,11 +95,10 @@ def run_jscript(jscript, errmsg, errtitle) :
     *  errtitle   - error title
     *
     * returns : 
-    *  geocoder engine 
+    *  N/A 
     * --------------------------------------------------------
     """
-    #from IPython.core.display import Javascript
-    #display_jupyter_HTML(Javascript(jscript))
+
     try :            
         from IPython.core.magics.display import Javascript
         display_jupyter_HTML(Javascript(jscript))
@@ -107,6 +117,18 @@ def run_jscript(jscript, errmsg, errtitle) :
 #--------------------------------------------------------------------------
 """          
 def display_windows_MessageBox(msg,title) :
+    """
+    * ---------------------------------------------------------
+    * function : display a message box
+    * 
+    * parms :
+    *  msg     - message
+    *  title   - box title
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     try :
         import win32api
@@ -127,10 +149,23 @@ def display_windows_MessageBox(msg,title) :
 #--------------------------------------------------------------------------
 """  
 def get_formatted_time(seconds) :
+    """
+    * ---------------------------------------------------------
+    * function : get a formatted representation of delta time
+    * 
+    * Parms :
+    *  seconds    - number of seonds
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     m, s = divmod(seconds, 60)
     h, m = divmod(m, 60)
     return( "%d:%02d:%02d" % (h, m, s)  )  
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -213,6 +248,7 @@ def is_numeric(data) :
     import numpy as np  
     return(np.issubdtype(data, np.number)) 
 
+
 def is_numeric_col(df,colname) :
     import numpy as np
     
@@ -241,6 +277,7 @@ def is_numeric_col(df,colname) :
     else :
         return(False)
 
+
 def is_numeric_col_int(df,colname) :
 
     import numpy as np
@@ -265,6 +302,7 @@ def is_numeric_col_int(df,colname) :
     else :
         return(False)
 
+
 def is_string_a_float(string) : 
     try :
         float(string)
@@ -272,12 +310,14 @@ def is_string_a_float(string) :
     except : 
         return(False)
 
+
 def is_string_an_int(string) : 
     try :
         int(string)
         return(True)
     except : 
         return(False)
+
  
 def get_numeric_from_string(string) :
     
@@ -288,6 +328,7 @@ def get_numeric_from_string(string) :
     else :
         return(None)
 
+
 def does_string_contain_single_quote(string) : 
     
     for i in range(len(string)) :
@@ -296,6 +337,7 @@ def does_string_contain_single_quote(string) :
             
     return(False)
 
+
 def get_string_value(val) :
     
     if(type(val) == str) : return(val)
@@ -303,6 +345,7 @@ def get_string_value(val) :
     if(val== True) : return("True")
     if(val == False) : return("False")
     return(" ")
+
 
 def is_datatype_numeric(datatype) :
  
@@ -349,6 +392,17 @@ def addspaces(count) :
 
 
 def valid_parms_list(labels, parms) :
+    """
+    #--------------------------------------------------------------------------
+    #   get the parameter list for a returned form
+    #
+    #       parms  - input form parms 
+    #       ids    - list of ids to match parms
+    #
+    #   return list of parms
+    #
+    #--------------------------------------------------------------------------
+    """
     
     goodList = True 
     
@@ -410,8 +464,38 @@ def get_parms_for_input(parms,ids) :
 
     return(outparms)
 
+     
+def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
+    """
+    #--------------------------------------------------------------------------
+    #   get all select dicts for a form
+    #
+    #       formid         - form id 
+    #       parmids        - parms list id 
+    #       parmtypes      - parm types
+    #       selectDicts    - list of select dicts
+    #
+    #   return select default value
+    #
+    #--------------------------------------------------------------------------
+    """
+
+    #print("get_select_defaults",formid,parmids,parmtypes,selectDicts)
+    
+    numselects  =   0
+    
+    for i in range(len(parmids)) :
+        
+        if(parmtypes[i] == "select") :
+            form.add_select_dict(formid,
+                                 parmids,
+                                 parmids[i],
+                                 selectDicts[numselects])
+            
+            numselects  =   numselects + 1
+
  
-def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
+def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True) :
     """
     #--------------------------------------------------------------------------
     #   display a list of parms as a table
@@ -457,8 +541,9 @@ def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
     
             else :
                 maxlvalues = len(values[i])
-           
-    print("\n")        
+    
+    if(display) :      
+        print("\n")        
     
     import math
     labelwidth = int(math.ceil((maxllabels / (maxllabels + maxlvalues)) * 100)) - 6
@@ -471,8 +556,6 @@ def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
     else :
         parmsWidths    =   [2,labelwidth,4,valuewidth]
     parmsAligns    =   ["center","left","center","left"]
-    
-    whitecolor  =   "#FFFFFF"
     
     colorList = []    
     
@@ -488,8 +571,8 @@ def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
                                parmsHeader,parmsRows,parmsWidths,parmsAligns)
 
     parms_table.set_rowspertable(len(labels))
-    parms_table.set_color(True)
-    parms_table.set_colorList(colorList)
+    #parms_table.set_color(True)
+    #parms_table.set_colorList(colorList)
     parms_table.set_small(True)
     
     if(not (width == None)) :
@@ -502,13 +585,16 @@ def displayParms(title,labels,values,tblid,width=None,printBlank=False) :
         width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100)) + 20
         parms_table.set_smallwidth(width+6)
 
-    parms_table.set_smallmargin(23)
+    parms_table.set_smallmargin(leftMargin)
     parms_table.set_smallfsize(12)
     parms_table.set_border(False)
     parms_table.set_checkLength(False)
 
-    parms_table.display_table()
-
+    if(display) :
+        parms_table.display_table()
+    else :
+        return(parms_table.get_html())
+        
 
 def get_parms_list_from_dict(labels,parmsdict) :
     """
@@ -534,6 +620,7 @@ STRING_PARM             =   0
 INT_PARM                =   1
 FLOAT_PARM              =   2
 BOOLEAN_PARM            =   3
+DICT_PARM               =   4
 
 def get_function_parms(pkeys,pvals,ptypes) :
     """
@@ -575,18 +662,18 @@ def get_function_parms(pkeys,pvals,ptypes) :
             elif(ptypes[i] == INT_PARM) :
                 pval = int(plist[i])
             elif(ptypes[i] == BOOLEAN_PARM) :
-                if(plist == "True") :
+                if(plist[i] == "True") :
                     pval = True
                 else :
                     pval = False
+            elif(ptypes[i] == DICT_PARM) :
+                pval    =   json.loads(plist[i])            
             else :
                 pval = plist[i]
    
             kwargs.update({pkeys[i] : pval})
      
     return(kwargs)    
-
-
 
 """
 #--------------------------------------------------------------------------
@@ -698,6 +785,15 @@ def scroll_table(parms) :
                         "fail to refresh sroll table : ",
                         "get_dfsubset_vals")
 
+    refresh_bg_js = "$('#" + tableid + "_sth').css('background-color','#4891D5');"
+    run_jscript(refresh_bg_js,
+                "fail scroll_sample_rows : "+tableid+" "+str(direction),
+                 "scroll_sample_rows")
+    
+    refresh_bg_js = "$('#" + tableid + "_sth').css('color','#E3DEDE');"
+    run_jscript(refresh_bg_js,
+                "fail scroll_sample_rows : "+tableid+" "+str(direction),
+                 "scroll_sample_rows")
     
 """
 #--------------------------------------------------------------------------
@@ -756,14 +852,14 @@ def get_fullparms(parms) :
     elif(formid == "nomingeocoder")     :   display_geocoders(sugm.NominatimId,True)
         
     else :
-    
+        
         change_input_js = "$('#" + formid + "').html('"
         change_input_js = change_input_js + new_input_html + "');"
     
         run_jscript(change_input_js,
                     "fail to get full parms for : " + formid,
                     "scroll_table")
-    
+ 
     
 """
 #--------------------------------------------------------------------------
@@ -780,6 +876,8 @@ def scroll_sample_rows(parms) :
     
     tableid     =   parms[0]
     direction   =   int(parms[1])
+    
+    print("scroll_sample_rows",tableid,direction)
     
     from dfcleanser.common.display_utils import display_more_sample_rows
     table_html = display_more_sample_rows(get_dfc_dataframe(),tableid,direction)
@@ -799,6 +897,15 @@ def scroll_sample_rows(parms) :
                 "fail scroll_sample_rows : "+tableid+" "+str(direction),
                  "scroll_sample_rows")
 
+    refresh_bg_js = "$('#" + tableid + "_sth').css('background-color','#4891D5');"
+    run_jscript(refresh_bg_js,
+                "fail scroll_sample_rows : "+tableid+" "+str(direction),
+                 "scroll_sample_rows")
+    
+    refresh_bg_js = "$('#" + tableid + "_sth').css('color','#E3DEDE');"
+    run_jscript(refresh_bg_js,
+                "fail scroll_sample_rows : "+tableid+" "+str(direction),
+                 "scroll_sample_rows")
 
 """
 #--------------------------------------------------------------------------
@@ -813,12 +920,14 @@ def scroll_sample_rows(parms) :
 """           
 def get_sample_row(parms) :
     
+    opstat      =   opStatus()
+    
     tableId     =   parms[0][0]
     newrowId    =   int(parms[0][1])
         
     from dfcleanser.common.display_utils import display_more_sample_rows
     new_rows_html = display_more_sample_rows(get_dfc_dataframe(),
-                                             tableId,1,newrowId)
+                                             tableId,1,newrowId,opstat)
 
     table_html = patch_html(new_rows_html)
     
@@ -1444,6 +1553,14 @@ def is_timedelta_datatype(datatype) :
     else :
         return(False)
 
+
+def is_simple_type(value) :
+    if type(value) in (int, float, bool, str) :
+        return(True)
+    else :
+        return(False)
+    
+
 def get_first_non_nan_value(df,colname) :
 
     import pandas as pd
@@ -1451,9 +1568,16 @@ def get_first_non_nan_value(df,colname) :
     found   =   -1
     
     for i in range(len(df)) :
-        if(not (pd.isnull(df.iloc[i][colname])) ) :    
-            found = i
-            break;
+        if(is_simple_type(df.iloc[i][colname])) :
+        
+            if(not (pd.isnull(df.iloc[i][colname])) ) :    
+                found = i
+                break;
+        else :
+            
+            if(not (df.iloc[i][colname] is None)) :
+                found = i
+                break;
     
     if(found == -1) :
         return(None)
@@ -1826,7 +1950,7 @@ def display_status(msg, skipLines = 0) :
     displayHTML(status_html)
 
 
-def display_msgs(notes,text,color=False,margin=30,helpmsg=False) :
+def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     
     notes_html = ""
     notes_html = (notes_html + '<div class="container" style="width:80%; margin-left:' + str(margin) + 'px; border:1px;">' + new_line)
@@ -1842,7 +1966,7 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False) :
     if(not (text == None)) :   
         notes_html = (notes_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
         notes_html = (notes_html + '                <div class="input-group">' + new_line)
-        notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px;">' + text +'</p>' + new_line)
+        notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px; padding-bottom:5px;">' + text +'</p>' + new_line)
         notes_html = (notes_html + '                </div>' + new_line) 
         notes_html = (notes_html + '            </div>' + new_line)
     
@@ -1861,11 +1985,19 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False) :
     notes_html = (notes_html + "</div>")
     
     #print(notes_html)
-    displayHTML(notes_html)
+    if(display) :
+        displayHTML(notes_html)
+    else :
+        return(notes_html)
 
 
-def display_notes(notes) :
-    display_msgs(notes,"Notes :")    
+def display_notes(notes,display=True) :
+    
+    if(display) :
+        display_msgs(notes,"Notes :")
+    else :
+        return(display_msgs(notes,"Notes :",color=False,margin=30,helpmsg=False,display=False))
+        
 
     
 def display_inline_help(helptext,margin=80) :
@@ -1994,45 +2126,6 @@ def display_generic_grid(gridname,gridclasses,gridhtmls) :
     displayHTML(gridHTML)
 
 
-def display_grid(gridname,headerHTML,sidebarHTML,contentHTML,footerHTML,sidebar1HTML=None) :
-    
-    gridHTML = ""
-    
-    from dfcleanser.common.html_widgets import new_line
-    
-    gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1 + new_line)
-
-    if( not (headerHTML == None) ) :
-        gridHTML = (gridHTML + header_start)
-        gridHTML = (gridHTML + headerHTML + new_line)
-        gridHTML = (gridHTML + section_end + new_line)
-    
-    if( not (sidebarHTML == None) ) :
-        gridHTML = (gridHTML + sidebar_start + new_line)
-        gridHTML = (gridHTML + sidebarHTML + new_line)
-        gridHTML = (gridHTML + section_end + new_line)
-    
-    if( not (sidebar1HTML == None) ) :
-        gridHTML = (gridHTML + sidebar1_start + new_line)
-        gridHTML = (gridHTML + sidebar1HTML + new_line)
-        gridHTML = (gridHTML + section_end + new_line)
-
-    if( not (contentHTML == None) ) :
-        gridHTML = (gridHTML + content_start + new_line)
-        gridHTML = (gridHTML + contentHTML + new_line)
-        gridHTML = (gridHTML + section_end + new_line)
-    
-    if( not (footerHTML == None) ) :
-        gridHTML = (gridHTML + footer_start + new_line)
-        gridHTML = (gridHTML + footerHTML + new_line)
-        gridHTML = (gridHTML + section_end + new_line)
-
-    gridHTML = (gridHTML + wrapper_end + new_line)
-
-    #print(gridHTML)
-    displayHTML(gridHTML)
-
-
 
 def is_existing_column(df,colname) : 
     
@@ -2098,8 +2191,13 @@ def get_col_uniques(df, columnName)  :
 #
 #------------------------------------------------------------------
 """
-def get_col_uniques_by_id(df, columnId)  :   
-    return(df[columnId].unique())
+def get_col_uniques_by_id(df, columnId)  :  
+    try :
+        return(df[columnId].unique())
+    except :
+        return(df[columnId])
+
+    #return(df[columnId].unique())
 
    
 """            
@@ -2130,8 +2228,13 @@ def get_num_uniques(df, columnName)  :
 """
 def get_num_uniques_by_id(df, columnId)  :   
 
-    return(len(df.ix[:,columnId].unique()))
-    
+    #return(len(df.ix[:,columnId].unique()))
+    #return(len(df.loc[columnId].unique()))
+    try :
+        return(len(df[columnId].unique()))
+    except :
+        return(len(df))
+        
     
 """
 #------------------------------------------------------------------
@@ -2303,6 +2406,15 @@ def delete_a_file(path,opstat) :
         opstat.store_exception("File Not Found : " + "filename " + path,e)
     except Exception as e:
         opstat.store_exception("remove filename " + path,e)
+
+def rename_a_file(oldname,newname,opstat) :
+
+    try :
+        os.rename(oldname,newname)
+    except FileNotFoundError as e:
+        opstat.store_exception("File Not Found : " + "filename " + oldname,e)
+    except Exception as e:
+        opstat.store_exception("rename filename " + oldname,e)
                         
 def read_json_file(path,opstat) :
     
@@ -2390,17 +2502,37 @@ def alert_user(text) :
                 "fail to get datatime format strings : ",
                  "get_datetime_formats")
     
+
+NO_CFG_FILE_ID              =   1000
+CORRUPTED_CFG_FILE_ID       =   1001
+   
+    
+def confirm_user(text,confirmID) :
+    
+    run_jscript('displayconfirm(' + '"' + text + '",' + str(confirmID) + ');',
+                "fail display confirm : ",
+                 str(confirmID))
     
     
     
+def handle_confirm(parms) :
     
+    print("handle_confirm",parms)
     
+    confirmID   =   int(parms[0])
+    response    =   int(parms[1])
     
+    if(confirmID == NO_CFG_FILE_ID) :
+        if(response == 1) :
+            alert_user("Blank default config file is loaded.")
+        else :
+            alert_user("Reset the Kernel and after completion Reset the dfcleanser notebook.")
     
-    
-    
-    
-    
+    elif(confirmID == CORRUPTED_CFG_FILE_ID) :
+        if(response == 1) :
+            alert_user("The corrupted cfg file is renammed and a Blank default is loaded.")
+        else :
+            alert_user("Reset the Kernel and after completion Reset the dfcleanser notebook.")
     
     
     

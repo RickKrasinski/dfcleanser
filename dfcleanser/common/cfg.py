@@ -59,9 +59,15 @@ def does_file_exist(path) :
 #--------------------------------------------------------------------------
 """
 def get_notebook_name() :
-    run_javascript("window.getNotebookName();","Javascript Error","Unable to get notebook name")
+    try :
+        run_javascript("window.getNotebookName();","Javascript Error","Unable to get notebook name")
+    except :
+        print("get_notebook_name error")
 def get_notebook_path() :
-    run_javascript("window.getNotebookPath();","Javascript Error","Unable to get notebook path")
+    try :
+        run_javascript("window.getNotebookPath();","Javascript Error","Unable to get notebook path")
+    except :
+        print("get_notebook_path error")
 def get_notebook_location() :
     run_javascript("window.getNotebookLocation();","Javascript Error","Unable to get notebook location")
 
@@ -156,7 +162,6 @@ def drop_dfc_dataframe(title=None) :
 * --------------------------------------
 """
 def set_current_dfc_dataframe(df) :
-    print("set_current_dfc_dataframe",len(df),type(df))
     DCdf.update_current_dataframe(df)
 def set_current_dfc_dataframe_title(title) :
     DCdf.set_current_dataframe(title)
@@ -173,7 +178,10 @@ def get_dfc_dataframes_select_list() :
     df_select.update({"list":df_select_titles})
     
     return(df_select)
- 
+
+def get_dfc_dataframes_titles_list() :
+    return(DCdf.get_dataframe_titles())
+    
 def get_dfc_df(title) :
     return(DCdf.get_dfc_dataframe(title))    
     
@@ -432,7 +440,7 @@ GRAPHS_FLAG_KEY                         =   "graphcolumn"
 #   Export config value keys
 #--------------------------------------------------------------------------
 """
-CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentEXportedFileName"
+CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
 
 """
 #--------------------------------------------------------------------------
@@ -442,12 +450,12 @@ CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentEXportedFileName"
 CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
 CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
 
-MYSQL_IMPORT_PARMS_KEY                  =   "MySqlImportParms"
-MSSQL_IMPORT_PARMS_KEY                  =   "MSSqlServerImportParms"
-SQLITE_IMPORT_PARMS_KEY                 =   "SqliteImportParms"
-POSTGRESQL_IMPORT_PARMS_KEY             =   "PostgresqlImportParms"
-ORACLE_IMPORT_PARMS_KEY                 =   "OracleImportParms"
-CUSTOM_IMPORT_PARMS_KEY                 =   "CustomImportParms"
+#MYSQL_IMPORT_PARMS_KEY                  =   "MySqlImportParms"
+#MSSQL_IMPORT_PARMS_KEY                  =   "MSSqlServerImportParms"
+#SQLITE_IMPORT_PARMS_KEY                 =   "SqliteImportParms"
+#POSTGRESQL_IMPORT_PARMS_KEY             =   "PostgresqlImportParms"
+#ORACLE_IMPORT_PARMS_KEY                 =   "OracleImportParms"
+#CUSTOM_IMPORT_PARMS_KEY                 =   "CustomImportParms"
 
 """
 #--------------------------------------------------------------------------
@@ -474,7 +482,6 @@ ADD_COL_DATATYPE_ID_KEY                 =   "AddColumnDataType"
 ADD_COL_CODE_KEY                        =   "AddColumnCode"
 COPY_COL_TO_KEY                         =   "CopyColumnTo"
 COPY_COL_FROM_KEY                       =   "CopyColumnFrom"
-DATA_TRANSFORM_SCHEMA_KEY               =   "dfschema"
 
 """
 #--------------------------------------------------------------------------
@@ -557,7 +564,23 @@ def get_config_data() :
     return(DataframeCleanserCfgData.get_config_data())
 def get_dfc_config_data() :
     return(DataframeCleanserCfgData.get_dfc_config_data())
+def get_current_notebook_name() :
+    return(DataframeCleanserCfgData.get_notebookName())
+    
+def sync_with_js(parms) :
+    print("sync_with_js")
+    DataframeCleanserCfgData.sync_js(parms)    
 
+def send_sync_request() :
+    print("send_sync_request")
+    try :
+        run_javascript("window.sync_notebook();","Javascript Error","Unable to sync with js")
+    except :
+        print("send_sync_request")
+    
+def reset_cfg_data() :
+    print("reset_cfg_data")
+    DataframeCleanserCfgData.load_cfg_file()    
 
 """
 #--------------------------------------------------------------------------
@@ -568,19 +591,33 @@ def get_dfc_config_data() :
 class DataframeCleansercfg :
     
     # instance variables
+    
+    # notebook specific cfg file data
     cfg_data                =   {}
+    # global dfcleanser cfg file data
     dfc_cfg_data            =   {}
-    default_dfc_cfg_data    =   {}
-    notebookcfg_data        =   {}
+    
+    # default starting cfg data
+    default_dfc_cfg_data    =   {"EULARead":"False"}
     
     notebookName            =   ""
     notebookPath            =   ""
+    
+    # notebook specific cfg file name
     cfgfilename             =   ""
+    # global dfcleanser cfg file name
     dfccfgfilename          =   ""
+    
+    # Jupyter synced flag
+    js_synced               =   False
+    cfg_file_loaded         =   False
+    
     
     # full constructor
     def __init__(self) :
+ 
         
+        #print("fuck you")
         self.cfg_data               =   {"EULARead":"true"}
         self.dfc_cfg_data           =   {}
         self.default_dfc_cfg_data   =   {"EULARead":"False"}
@@ -589,64 +626,80 @@ class DataframeCleansercfg :
         self.notebookPath           =   ""
         self.cfgfilename            =   ""
         self.dfccfgfilename         =   ""
-        
-        get_notebook_path()
-        get_notebook_name()
-        
-        self.init_cfg_file_dir()
-        self.load_cfg_file()  
-        
-        self.init_dfc_cfg_file()
-        self.load_dfc_cfg_file()        
-
+        self.js_synced              =   False
+        self.cfg_file_loaded        =   False
     
-    def init_cfg_file_dir(self) :
+    def init_cfg_file(self) :
+        
         if( (self.notebookName == "") or (self.notebookPath == "") ) :
-            get_notebook_path()
-            get_notebook_name()
             self.cfgfilename = ""
             return()
-        else :
-            if(self.cfgfilename == "")  :
-                # check if notebook specific dir exists
-                cfgdir = os.path.join(self.notebookPath,self.notebookName+"_files")
-                if(not (does_dir_exist(cfgdir))) :
-                    make_dir(cfgdir)
+        
+        if(self.cfgfilename == "")  :
+            # check if notebook specific dir exists
+            cfgdir = os.path.join(self.notebookPath,self.notebookName+"_files")
+            if(not (does_dir_exist(cfgdir))) :
+                make_dir(cfgdir)
                 
-                self.cfgfilename = os.path.join(cfgdir,self.notebookName+"_config.json")
-                if(not (does_file_exist(self.cfgfilename))) :
-                    with open(self.cfgfilename, 'w') as cfg_file :
-                        json.dump(self.default_cfg_data,cfg_file)
-                        cfg_file.close()
-            else :
-                return()
+            self.cfgfilename = os.path.join(cfgdir,self.notebookName+"_config.json")
+            if(not (does_file_exist(self.cfgfilename))) :
+
+                with open(self.cfgfilename, 'w') as cfg_file :
+                    json.dump(self.cfg_data,cfg_file)
+                    cfg_file.close()
+        else :
+            return()
+            
         
     def get_cfg_file_name(self) :
         
         if(self.cfgfilename == "") :
-            self.init_cfg_file_dir()
+            self.init_cfg_file()
             return(self.cfgfilename)
         else :
             return(self.cfgfilename)    
             
     def load_cfg_file(self) :
-
+        
+        cfg_fname   =   self.get_cfg_file_name()
+        
+        if(cfg_fname == "") :
+            return(cfg_fname)
+        
         try :
             if(len(self.cfgfilename) > 0) :
-                with open(self.get_cfg_file_name(), 'r') as cfg_file :
+                with open(cfg_fname, 'r') as cfg_file :
                     self.cfg_data = json.load(cfg_file)
                     cfg_file.close()
                     
+            self.cfg_file_loaded    =   True
+                    
         except json.JSONDecodeError :
-            print("[corrupted config file Error] " + "[" + self.get_cfg_file_name() + "] ")
+            print("[corrupted config file Error] " + "[" + cfg_fname + "] ")
+            
+            from dfcleanser.common.common_utils import confirm_user,CORRUPTED_CFG_FILE_ID 
+            confirm_user("Config File Corrupted : Use blank default file",CORRUPTED_CFG_FILE_ID)
+
             self.cfg_data   =   {}
-            os.remove(self.cfgfilename)
+            os.rename(self.cfgfilename,self.cfgfilename+"_corrupted")
                         
         except :
             if(len(self.get_notebookName()) > 0) :
-                print("[load_config_file Error] " + "[" + self.get_cfg_file_name() + "] " + str(sys.exc_info()[0].__name__))
+                
+                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID 
+                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
+
+                print("[load_config_file Error] " + "[" + cfg_fname + "] " + str(sys.exc_info()[0].__name__))
+                
+            else :
+                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID
+                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
+        
     
     def save_cfg_file(self) :
+        
+        if(not(self.cfg_file_loaded)) :
+            self.load_cfg_file()
     
         try :
             if(len(self.cfgfilename) > 0) :
@@ -661,6 +714,12 @@ class DataframeCleansercfg :
         return(self.cfg_data)            
     
     def get_config_value(self,key,local) :
+        
+        if( not (self.js_synced) ) :
+            if(key == "EULARead") :
+                return("true")
+            else :
+                return(None)
         
         if(not(is_global_parm(key))) :
             if(self.cfg_data.get(key) == None) :
@@ -686,6 +745,7 @@ class DataframeCleansercfg :
             self.set_dfc_config_value(key, value)    
             
     def drop_config_value(self, key, local) :
+
         if(local) :
             try :
                 self.cfg_data.pop(key,None)
@@ -702,12 +762,10 @@ class DataframeCleansercfg :
     #---------------------------------------------------    
     def set_notebookName(self,nbname) :
         self.notebookName = nbname
-        self.init_cfg_file_dir()
-        self.init_dfc_cfg_file()
 
     def set_notebookPath(self,nbpath) :
         self.notebookPath = nbpath
-        self.init_cfg_file_dir()
+        self.init_cfg_file()
         self.init_dfc_cfg_file()
         
     def get_notebookName(self) :
@@ -779,6 +837,15 @@ class DataframeCleansercfg :
             self.load_dfc_cfg_file()
         
         self.save_dfc_cfg_file()
+        
+    def sync_js(self,parms) :
+        print("sync_js",parms)
+        self.js_synced    =   True
+
+        nbname  =   parms[0]
+        self.set_notebookName(nbname)
+        get_notebook_path()
+
 
         
 """
@@ -841,9 +908,11 @@ def get_loaded_cells() :
 def init_dc_data() :
     
     if(DataframeCleanserCfgData.get_notebookName() == None) :
-        run_javascript("window.getNotebookName();","Javascript Error","Unable to get Notebook Name")
+        get_notebook_name()
+        #run_javascript("window.getNotebookName();","Javascript Error","Unable to get Notebook Name")
     if(DataframeCleanserCfgData.get_notebookPath() == None) :    
-        run_javascript("window.getNotebookPath();","Javascript Error","Unable to get Notebook Path")
+        get_notebook_path()
+        #run_javascript("window.getNotebookPath();","Javascript Error","Unable to get Notebook Path")
         
     get_loaded_cells()
     
@@ -958,6 +1027,12 @@ def check_notebook_dir_and_cfg_files(notebookname) :
 
 
     
+"""
+* ----------------------------------------------------
+# static instantiation of the df schema dict
+* ----------------------------------------------------
+"""    
+df_schema_dict    =   {}
     
     
     

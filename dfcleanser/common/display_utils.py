@@ -21,8 +21,9 @@ from dfcleanser.common.table_widgets import (SCROLL_NEXT, ROW_MAJOR, MULTIPLE,
 from dfcleanser.common.common_utils import  (is_numeric_col_int, is_numeric_col, get_col_uniques_by_id,
                                              is_datetime_value,is_date_value,is_time_value,is_str_value,
                                              get_first_non_nan_value, get_datatype_id, opStatus,
-                                             get_datatype_title, is_numeric)
+                                             get_datatype_title, is_numeric, display_generic_grid)
 
+from dfcleanser.common.html_widgets import (get_html_spaces) 
 
 """            
 #------------------------------------------------------------------
@@ -43,7 +44,7 @@ from dfcleanser.common.common_utils import  (is_numeric_col_int, is_numeric_col,
 #
 #------------------------------------------------------------------
 """ 
-def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None) : 
+def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,display=True) : 
     
     if(incounts == None) :
         counts          =   df[colname].value_counts().to_dict()
@@ -178,7 +179,21 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None) :
 
     #table.dump()
     
-    table.display_table()
+    table_html  =   table.get_html()
+    
+    if(display) :
+    
+        unique_column_heading_html      =   "<p>" + get_html_spaces(36) + "Unique Column Values</p>"
+            
+        gridclasses     =   ["display-df-unique-columns-base-wrapper-header", "dfc-top-centered"]
+        gridhtmls       =   [unique_column_heading_html, table_html]
+    
+        display_generic_grid("display-df-unique-columns-base-wrapper",gridclasses,gridhtmls)
+    
+    else :
+        
+        return(table_html)
+        
     
 def unique_list(inlist):
     
@@ -336,7 +351,7 @@ def get_num_stats(df,df_cols,i,num_stats) :
 #
 #------------------------------------------------------------------
 """
-def display_df_describe(df,table,datatype=None,colList=None) : #,checkboxes=False) : 
+def display_df_describe(df,table,display=True,datatype=None,colList=None) : #,checkboxes=False) : 
  
     if( (colList == None) or (len(colList) == 0) ) :
         df_cols     =   df.columns.tolist()
@@ -480,7 +495,11 @@ def display_df_describe(df,table,datatype=None,colList=None) : #,checkboxes=Fals
     table.set_numtables(len(dfHeaderList))
     table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above")
 
-    get_mult_table(table,SCROLL_NEXT)
+    if(display) :
+        get_mult_table(table,SCROLL_NEXT)
+    else :
+        mult_html   =   get_mult_table(table,SCROLL_NEXT,False)
+        return(mult_html)
 
 """            
 #------------------------------------------------------------------
@@ -586,7 +605,7 @@ def display_df_column_data(df,table) :
 #
 #------------------------------------------------------------------
 """ 
-def display_column_names(df,table,callback) : 
+def display_column_names(df,table,callback,display=True) : 
 
     cnames      =    df.columns.values.tolist() 
     
@@ -632,7 +651,10 @@ def display_column_names(df,table,callback) :
     if(table.get_note() == "") :
         table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above.")
     
-    table.display_table()
+    if(display) :
+        table.display_table()
+    else :
+        return(table.get_html())
     
 
 """            
@@ -665,7 +687,7 @@ max_single_cols     =   10
 #
 #------------------------------------------------------------------
 """
-def display_more_single_row(df,tableid,direction) : 
+def display_more_single_row(df,tableid,direction,opstat) : 
 
     sdirection = int(direction)
     
@@ -677,24 +699,24 @@ def display_more_single_row(df,tableid,direction) :
     maxcol = len(df.columns)
     
     if(sdirection == down_direction) :
+        
         srow = srow + 1
         scol = 0
+        
         if((len(df) - 1) < srow) : 
             srow = 0
+        
         cfg.set_config_value(cfg.CLEANSING_ROW_KEY,str(srow))
-        #from dfcleanser.data_cleansing.data_cleansing_widgets import display_row_data
-        #display_row_data(df,srow,0)
-        #return()
 
     elif(sdirection == up_direction) :
+        
         srow = srow - 1
         scol = 0
+        
         if(srow < 0) :
             srow = 0
+        
         cfg.set_config_value(cfg.CLEANSING_ROW_KEY,str(srow))
-        #from dfcleanser.data_cleansing.data_cleansing_widgets import display_row_data
-        #display_row_data(df,srow,0)
-        #return()
             
     elif(sdirection == back_direction) :
         if(scol == maxcol) :
@@ -713,25 +735,35 @@ def display_more_single_row(df,tableid,direction) :
         else :
             scol = scol + 1
     
-    opstat  =   opStatus()    
-    opstat, new_rows_html = display_single_row(df,srtable,srow,scol,False)
+    new_rows_html = display_single_row(df,srtable,srow,scol,opstat,False)
     
     return(new_rows_html)
-    
-"""            
-#------------------------------------------------------------------
-#   display single rows
-#
-#   df              -   dataframe
-#   rowid           -   numeric row id
-#   tableid         -   html table id
-#   scripts         -   javascripts list
-#
-#------------------------------------------------------------------
-"""
-def display_single_row(df,table,rowid,colid,displayTable=True,headscript=None) : 
 
-    opstat = opStatus()
+    
+def display_single_row(df,table,rowid,colid,opstat,displayTable=True,headscript=None) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display a single df row
+    * 
+    * parms :
+    *   df              -   dataframe
+    *   table           -   dfc table
+    *   rowid           -   numeric row id
+    *   colid           -   cokumn id
+    *   opstat          -   op status var
+    *   displayTable    -   display table flag
+    *   headscript      -   header hhref
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    dfHeaderList    =   []
+    dfWidths        =   []
+    dfAligns        =   [] 
+    dfRowsList      =   []
+    dfhrefs         =   []
     
     if(type(rowid) == str) :
         rowid = int(rowid)
@@ -741,16 +773,18 @@ def display_single_row(df,table,rowid,colid,displayTable=True,headscript=None) :
     
     if(rowid > len(df)) :
         rowid = len(df) - 1
+
+
+    results     =   setup_sample_row_lists(df,table,rowid,colid,opstat)
+    
+    dfWidths    =   results[0]
+    dfAligns    =   results[1]
+    numcols     =   results[2]
         
     column_names = list(df.columns.values)
- 
-    dfRowsList      =   []
-    dfhrefs         =   [] 
-    dfHeaderList    =   ["","","","","","","","","",""]
-    dfWidths        =   [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-    dfAligns        =   ['center', 'center', 'center', 'center', 'center', 
-                         'center', 'center', 'center', 'center', 'center']
-      
+    num_cols        =   len(column_names)
+
+    # populat the trable rows
     for i in range(max_single_rows) :
             
         rowlistIds          =   []
@@ -758,7 +792,7 @@ def display_single_row(df,table,rowid,colid,displayTable=True,headscript=None) :
         rowlistIdshrefs     =   []
         rowlistvalueshrefs  =   [] 
 
-        for j in range(max_single_cols) :
+        for j in range(numcols) :
             if(colid < len(column_names)) :
                 
                 rowlistIds.append(column_names[colid])
@@ -779,38 +813,37 @@ def display_single_row(df,table,rowid,colid,displayTable=True,headscript=None) :
             dfRowsList.append(rowlistvalues)
             dfhrefs.append(rowlistIdshrefs)
             dfhrefs.append(rowlistvalueshrefs)
-
-    table.set_title("df Row Cleanser")
-   
-    if(len(table.get_note()) == 0) :
-        table.set_note("<b>*</b> To view a specific row enter the row index and hit search icon. To change a column value click on the column id")
-        
-    table.set_colsperrow(10)
-    table.set_rowspertable(len(dfRowsList))
-    table.set_maxtables(1)
     
     table.set_headerList(dfHeaderList)
     table.set_rowList(dfRowsList)
     table.set_widthList(dfWidths)
     table.set_alignList(dfAligns)
     table.set_refList(dfhrefs)
-    
-    table.set_searchable(True)
-    table.set_searchRow(rowid)
-    table.set_searchCol(colid-1)
-    
+
+    if(len(table.get_note()) == 0) :
+        tnote   =  "<b>*</b> To view a specific row enter the row index and hit search icon. To change a column value click on the column id"
+    else :
+        tnote   =   None
+
     searchParms = {}
     
-    searchParms.update({"searchtext":"Row Id"})
-    searchParms.update({"searchsize":14})
-    searchParms.update({"searchheight":30})
-    searchParms.update({"searchwidth":120})
+    setup_sample_row_table(table,
+                           "df Row Cleanser",
+                           tnote,
+                           numcols,
+                           len(dfRowsList),
+                           rowid,
+                           colid-1,
+                           searchParms,
+                           opstat) 
+       
     searchParms.update({"searchcallback":"getSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
     
-    searchParms.update({"upflag":True})
-    searchParms.update({"upcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
-    searchParms.update({"downflag":True})
-    searchParms.update({"downcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
+    if(len(column_names) > (max_single_rows * max_single_cols)) :
+        searchParms.update({"upflag":True})
+        searchParms.update({"upcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
+        searchParms.update({"downflag":True})
+        searchParms.update({"downcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
     
     if(len(column_names) > (max_single_rows * max_single_cols)) :
         searchParms.update({"moreflag":True})
@@ -820,21 +853,25 @@ def display_single_row(df,table,rowid,colid,displayTable=True,headscript=None) :
     
     table.set_searchParms(searchParms)
     
-    table.set_checkLength(True) 
-    table.set_textLength(10) 
-    
+    if(num_cols > max_cols) :
+        table.set_checkLength(True) 
+        table.set_textLength(10)
+    else :
+        table.set_checkLength(False)
+
     if(displayTable) :
         table.display_table()
         return(opstat)
     else :
         
         table_html = table.get_html(False)
-        return(opstat, table_html)
+        return(table_html)
+
 
 """            
 #------------------------------------------------------------------
 #
-#  Multiple Sample Row components
+#  Multiple rows components
 #
 #------------------------------------------------------------------
 """
@@ -866,67 +903,166 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
 
     if(rowid > -1) :
         
-        srow = rowid
-        scol = 0
+        srow    =   rowid
+        scol    =   0
     
     else :    
         
-        srow = srtable.get_searchRow()
-        scol = srtable.get_searchCol()
+        srow    =   srtable.get_searchRow()
+        scol    =   srtable.get_searchCol()
+        
+    print("display_more_sample_rows",tableid,rowid,"srow - ",srow,"scol - ",scol) 
     
     if(rowid == -1) :
         
         if(sdirection == up_direction) :
-            if( (srow - ((2*max_rows)-1)) < 0) :
+            
+            if( (srow - (max_rows)-1) < 0) :
                 srow = 0
             else :
-                srow = srow - ((2*max_rows)-1)
-            scol = scol - (max_cols -1)
+                srow = srow - ((max_rows))
+                
+            #scol = scol - (max_cols -1)
         
         elif(sdirection == down_direction) :
+            
             if((srow + max_rows) > len(df) ) :
                 srow = 0
             else :
-                srow = srow + 1
-            scol = scol - (max_cols -1)
+                srow = srow + max_rows
+                
+            #scol = scol - (max_cols -1)
 
         elif(sdirection == back_direction) :
-            if((scol - ((2*max_cols)-1)) < 0 ) :
+            if((scol - (max_cols-1)) < 0 ) :
                 scol = 0
             else :
-                scol = scol - ((2*max_cols)-1)
-            srow = srow - (max_rows -1)
+                scol = scol - ((max_cols))
+                
+            #srow = srow - (max_rows -1)
             
         else :
-            if((scol +1) == len(df.columns)) :
+            if((scol + max_cols) > len(df.columns) ) :
                 scol = 0
-            elif((scol + max_cols) > len(df.columns) ) :
-                scol = scol + 1#len(df.columns) - max_cols
             else :
-                scol = scol + 1
+                scol = scol + max_cols
                 
-            srow = srow - (max_rows -1)
+            #srow = srow - (max_rows -1)
+    
+    print("display_more_sample_rows after",tableid,rowid,srow,scol) 
     
     opstat  =   opStatus()    
-    opstat, new_rows_html = display_sample_row(df,srtable,srow,scol,False)
+    new_rows_html = display_sample_row(df,srtable,srow,scol,opstat,False)
     
     return(new_rows_html)
 
 
-"""            
-#------------------------------------------------------------------
-#   display sample rows
-#
-#   df              -   dataframe
-#   rowid           -   numeric row id
-#   tableid         -   html table id
-#   scripts         -   javascripts list
-#
-#------------------------------------------------------------------
-"""
-def display_sample_row(df,table,rowid,colid,displayTable=True) : 
+def setup_sample_row_lists(df,table,rowid,colid,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : set sample row table lists
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
-    opstat = opStatus()
+    dfWidths        =   []
+    dfAligns        =   []
+            
+    column_names    =   list(df.columns.values)
+    num_cols        =   len(column_names)
+    
+    if(num_cols < max_cols) :
+        
+        #if first column is numeric make narrow
+        from dfcleanser.common.common_utils import is_numeric_col
+        if(is_numeric_col(df,column_names[0])) :
+            dfWidths.append(10)
+            dfAligns.append('center')
+            more_cols   =  num_cols-1
+        else :
+            more_cols   =  num_cols
+        
+        for i in range(more_cols) :
+            dfWidths.append(int((max_cols/more_cols) * 10))
+            dfAligns.append('center')
+            
+        numcolsdisplayed    =   num_cols
+        
+    else :
+        
+        dfWidths            =   [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+        dfAligns            =   ['center', 'center', 'center', 'center', 'center', 
+                                 'center', 'center', 'center', 'center', 'center']
+        
+        numcolsdisplayed    =   max_cols
+
+    return([dfWidths, dfAligns, numcolsdisplayed])
+
+
+def setup_sample_row_table(table,title,note,numcols,max_rows,searchrow,searchcol,searchParms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : set sample row table attributes
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    table.set_title(title)
+    
+    if(len(table.get_note()) == 0) :
+        if(not (note is None)) :
+            table.set_note(note)
+    
+    table.set_colsperrow(numcols)
+    table.set_rowspertable(max_rows)
+    table.set_maxtables(1)
+   
+    table.set_searchable(True)
+    table.set_searchRow(searchrow)
+    table.set_searchCol(searchcol)
+
+    searchParms.update({"searchtext":"Row Id"})
+    searchParms.update({"searchsize":14})
+    searchParms.update({"searchheight":30})
+    searchParms.update({"searchwidth":120})
+ 
+    searchParms.update({"searchcoltext":"Column Value"})
+    searchParms.update({"searchcolsize":18})
+    searchParms.update({"searchcolheight":30})
+    searchParms.update({"searchcolwidth":140})
+    
+
+def display_sample_row(df,table,rowid,colid,opstat,displayTable=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display sample rows
+    * 
+    * parms :
+    *   df              -   dataframe
+    *   table           -   dfc table
+    *   rowid           -   numeric row id
+    *   colid           -   cokumn id
+    *   opstat          -   op status var
+    *   displayTable    -   display table flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    dfHeaderList    =   []
+    dfWidths        =   []
+    dfAligns        =   [] 
+    dfRowsList      =   []
+    dfhrefs         =   []
     
     if(type(rowid) == str) :
         rowid = int(rowid)
@@ -943,55 +1079,50 @@ def display_sample_row(df,table,rowid,colid,displayTable=True) :
                 if((i+ rowid) < len(df)) :
                     df_vals     = df.iloc[[rowid+i]].values
                     df_vals_list.append(df_vals)
-        except Exception as e: 
+        except Exception : 
             opstat.set_status(False)
             opstat.set_errorMsg("Row Id " + str(rowid) + "out of index")
 
         df_vals     = df_vals[0]
     
-    if(not opstat.get_status()) :
+    if(not (opstat.get_status()) ) :
         return(opstat)
     
-    table.set_title("df Browser")
-   
-    if(len(table.get_note()) == 0) :
-        table.set_note("<b>*</b> To view a specific row enter the Row Id(index) and hit search icon.")
-        
-    dfHeaderList    =   []
-    dfWidths        =   [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-    dfAligns        =   ['center', 'center', 'center', 'center', 'center', 
-                         'center', 'center', 'center', 'center', 'center']
-        
-    dfHeaderList    =   []
-    dfRowsList      =   []
-    dfhrefs         =   []
+    results     =   setup_sample_row_lists(df,table,rowid,colid,opstat)
     
-    table.set_colsperrow(10)
-    table.set_rowspertable(max_rows)
-    table.set_maxtables(1)
-    
-    column_names = list(df.columns.values)
-    
-    for i in range(max_cols) :
+    dfWidths    =   results[0]
+    dfAligns    =   results[1]
+    numcols     =   results[2]
+
+    column_names    =   list(df.columns)#.values)
+    num_cols        =   len(column_names)
+
+    for i in range(numcols) :
         if(len(column_names) > (colid + i) )  :
             dfHeaderList.append(column_names[colid + i])
         else :
-            dfHeaderList.append("")
+            if(numcols > max_cols) :
+                dfHeaderList.append("")
             
-    lastrow     =   0
-    lastcol     =   0
+    #lastrow     =   0
+    #lastcol     =   0
     
-    for i in range(max_rows) :
+    if(len(df >= max_rows)) :
+        num_rows    =   max_rows
+    else :
+        num_rows    =   len(df)
+    
+    for i in range(num_rows) :
         
         rowlistIdshrefs     =   []
         dfrow               =   []
         
         if(len(df) > (rowid + i))  :
-            for j in range(max_cols) :
+            for j in range(numcols) :
                 if(len(column_names) > (colid + j))  : 
                     dfrow.append(df.iloc[(rowid + i),(colid + j)])
-                    lastrow =  rowid + i
-                    lastcol =  colid + j
+                    #lastrow =  rowid + i
+                    #lastcol =  colid + j
                 else :
                     dfrow.append("")
                     
@@ -1000,7 +1131,6 @@ def display_sample_row(df,table,rowid,colid,displayTable=True) :
                         rowlistIdshrefs.append("getsrow")
                     else :
                         rowlistIdshrefs.append(None)
-                            
         
         dfRowsList.append(dfrow)
         if(colid == 0) :
@@ -1019,38 +1149,52 @@ def display_sample_row(df,table,rowid,colid,displayTable=True) :
     else :
         table.set_refList(None)
         
-    table.set_searchable(True)
-    table.set_searchRow(lastrow)
-    table.set_searchCol(lastcol)
+    if(len(table.get_note()) == 0) :
+        tnote   =   "<b>*</b> To view a specific row enter the Row Id(index) and hit search icon."
+    else :
+        tnote   =   None
     
     searchParms = {}
     
-    searchParms.update({"searchtext":"Row Id"})
-    searchParms.update({"searchsize":14})
-    searchParms.update({"searchheight":30})
-    searchParms.update({"searchwidth":120})
+    setup_sample_row_table(table,
+                           "df Browser",
+                           tnote,
+                           numcols,
+                           num_rows,
+                           rowid,
+                           colid,
+                           searchParms,
+                           opstat) 
+       
     searchParms.update({"searchcallback":"getSampleRow('" + str(table.get_tableid()) + "')"})
+    searchParms.update({"searchcolcallback":"getColumnValueTow('" + str(table.get_tableid()) + "')"})
     
-    searchParms.update({"upflag":True})
-    searchParms.update({"upcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
-    searchParms.update({"downflag":True})
-    searchParms.update({"downcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
-    searchParms.update({"moreflag":True})
-    searchParms.update({"morecallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
-    searchParms.update({"prevflag":True})
-    searchParms.update({"prevcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
+    if(num_rows >= max_rows) :
+        searchParms.update({"upflag":True})
+        searchParms.update({"upcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
+        searchParms.update({"downflag":True})
+        searchParms.update({"downcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
+    
+    if(num_cols > max_cols) :
+        searchParms.update({"moreflag":True})
+        searchParms.update({"morecallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
+        searchParms.update({"prevflag":True})
+        searchParms.update({"prevcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
     
     table.set_searchParms(searchParms)
     
-    table.set_checkLength(True) 
-    table.set_textLength(10) 
-    
+    if(num_cols > max_cols) :
+        table.set_checkLength(True) 
+        table.set_textLength(10)
+    else :
+        table.set_checkLength(False)
+
     if(displayTable) :
         table.display_table()
-        return(opstat)
+
     else :
         table_html = table.get_html(False)
-        return(opstat, table_html)
+        return(table_html)
 
 
    
