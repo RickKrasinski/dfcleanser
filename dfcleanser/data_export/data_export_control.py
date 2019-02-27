@@ -18,7 +18,8 @@ import dfcleanser.data_export.data_export_model as dem
 from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (get_function_parms, opStatus, RunningClock, display_exception, 
-                                            INT_PARM, STRING_PARM, BOOLEAN_PARM, displayParms, get_string_value, display_notes)
+                                            INT_PARM, STRING_PARM, BOOLEAN_PARM, DICT_PARM, 
+                                            displayParms, get_string_value, display_generic_grid)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
 
@@ -57,16 +58,29 @@ import time
 """
 def display_export_forms(id, detid=0, notes=False) :
     dew.display_dc_export_forms(id, detid, notes)
+    
+def display_export_sql_details_form(cmd,dblibid) :
+    from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
+    from dfcleanser.common.db_utils import SQL_EXPORT
+    display_dc_sql_connector_forms(SQL_EXPORT,dblibid)
 
 def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
     dew.display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms)
 
-"""
-#--------------------------------------------------------------------------
-#   export routing function
-#--------------------------------------------------------------------------
-"""
+
 def process_export_form(formid, parms, display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process export function
+    * 
+    * parms :
+    *   formid   -   form id
+    *   fname    -   export parms
+    *   display  -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     if( not (cfg.is_a_dfc_dataframe_loaded()) ) :
         print("No Dataframe Currently Loadad")
@@ -76,7 +90,6 @@ def process_export_form(formid, parms, display=True) :
         (formid == dem.JSON_EXPORT) or (formid == dem.HTML_EXPORT) or 
         (formid == dem.CUSTOM_EXPORT) )  :
     
-        s       =   time.time()
         opstat  =   opStatus()
     
         if(display) :
@@ -90,56 +103,56 @@ def process_export_form(formid, parms, display=True) :
         if (formid == dem.CSV_EXPORT) :
             fparms      =   dew.get_csv_export_inputs(parms)
             opstat      =   export_pandas_csv(fparms,
-                                              dew.get_csv_export_form_id(),
-                                              dew.get_csv_export_form_labels())
+                                              dew.pandas_export_csv_id,
+                                              dew.pandas_export_csv_labelList)
             
             parmstitle  =   "Pandas CSV Export Parms"
-            parmslist   =   dew.get_csv_export_form_labels()[:5]
+            parmslist   =   dew.pandas_export_csv_labelList[:5]
         
         elif (formid == dem.EXCEL_EXPORT) :
             fparms      =   dew.get_excel_export_inputs(parms)
             opstat      =   export_pandas_excel(fparms,
-                                                dew.get_excel_export_form_id(),
-                                                dew.get_excel_export_form_labels())
+                                                dew.pandas_export_excel_id,
+                                                dew.pandas_export_excel_labelList)
             
             parmstitle  =   "Pandas Excel Export Parms"
-            parmslist   =   dew.get_excel_export_form_labels()[:6]
+            parmslist   =   dew.pandas_export_excel_labelList[:6]
         
         elif (formid == dem.JSON_EXPORT) : 
             fparms      =   dew.get_json_export_inputs(parms)
             opstat      =   export_pandas_json(fparms,
-                                               dew.get_json_export_form_id(),
-                                               dew.get_json_export_form_labels())
+                                               dew.pandas_export_json_id,
+                                               dew.pandas_export_json_labelList)
             
             parmstitle  =   "Pandas JSON Export Parms"
-            parmslist   =   dew.get_json_export_form_labels()[:2]
+            parmslist   =   dew.pandas_export_json_labelList[:2]
         
         elif (formid == dem.HTML_EXPORT) : 
             fparms      =   dew.get_html_export_inputs(parms)
             opstat      =   export_pandas_html(fparms,
-                                               dew.get_html_export_form_id(),
-                                               dew.get_html_export_form_labels())
+                                               dew.pandas_export_html_id,
+                                               dew.pandas_export_html_labelList)
             
             parmstitle  =   "Pandas HTML Export Parms"
-            parmslist   =   dew.get_html_export_form_labels()[:4]
+            parmslist   =   dew.pandas_export_html_labelList[:4]
 
         elif (formid == dem.CUSTOM_EXPORT) : 
             (dispstats, opstat)     =   export_custom(parms)
             
             if(dispstats) :
                 parmstitle  =   "Custom Export Parms"
-                parmslist   =   dew.get_custom_export_form_labels()[0]
+                parmslist   =   dew.custom_export_labelList[0]
            
         if(opstat.get_status()) : 
             if(display) :
                 if (formid == dem.CUSTOM_EXPORT) :
                     if(dispstats) : 
                         ciparms = parms[0].replace("\n","</br>")
-                        displayParms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID)
-                        dew.display_data_export_notes(s,fparms[1])
+                        display_data_export_parms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID,fparms[1])
+
                 else : 
-                    displayParms(parmstitle,parmslist,fparms,cfg.DataExport_ID)
-                    dew.display_data_export_notes(s,fparms[1])
+                    display_data_export_parms(parmstitle,parmslist,fparms,cfg.DataExport_ID,fparms[1])
+
         else :
             display_exception(opstat)
 
@@ -152,20 +165,51 @@ def process_export_form(formid, parms, display=True) :
         print("Invalid formid "+ str(formid))
         return
 
-"""
-#------------------------------------------------------------------
-#   export a sql table into pandas dataframe - javascript helper
-#
-#    parms       -   html input form parms 
-#
-#------------------------------------------------------------------
-"""   
+
+def display_data_export_parms(title,plist,fparms,exportID,fname,dbnote=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display export parms
+    * 
+    * parms :
+    *   title       -   poarms title
+    *   plist       -   label list
+    *   fparms      -   values list
+    *   exportID    -   export table id
+    *   fname       -   file name
+    *   dbnote      -   dbnote flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    parms_html  =   displayParms(title,plist,fparms,exportID,100,40,False)
+    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+    stats_html  =   display_inspection_data(False,True)
+
+    gridclasses     =   ["dfc-left","dfc-right"]
+    gridhtmls       =   [parms_html,stats_html]
+    display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls)
+    
+    dew.display_data_export_notes(time.time(),fname,dbnote)
+
+
 def export_sql_table(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : export a sql table into pandas dataframe
+    * 
+    * parms :
+    *   parms       -   sql parms
+    *   display     -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     
     dew.display_export_main_taskbar()
-    s = time.time()
     
     clock = RunningClock()
     clock.start()
@@ -175,7 +219,7 @@ def export_sql_table(parms,display=True) :
 
     sqltableparms = dew.get_sqltable_export_inputs(parms)
     
-    (export_notes, opstat) = export_pandas_sqltable(sqltableparms, dbcondict, dew.get_sqltable_export_form_id)    
+    (export_notes, opstat) = export_pandas_sqltable(sqltableparms, dbcondict, dew.pandas_export_sqltable_id)    
 
     clock.stop() 
     
@@ -183,15 +227,15 @@ def export_sql_table(parms,display=True) :
         
         for i in range(len(sqltableparms)) :
             sqltableparms[i]  =  get_string_value(sqltableparms[i]) 
-            
-        displayParms("Pandas SQL Table Export Parms",
-                     dew.get_sqltable_export_form_labels()[0:8],
-                     sqltableparms[0:8],cfg.DataExport_ID)
         
-        display_notes(["DB Connector String : ",
-                       "&nbsp;&nbsp;" + export_notes])
+        sqltableparms   =   sqltableparms[0:8]
+        sqltableparms.append(export_notes)
+        sqltablelabels  =   dew.pandas_export_sqltable_labelList[0:8]
+        sqltablelabels.append("DB Connector String")
         
-        dew.display_data_export_notes(s,sqltableparms[0],True)
+        display_data_export_parms("Pandas SQL Table Export Parms",
+                                  sqltablelabels,sqltableparms,
+                                  cfg.DataExport_ID,sqltableparms[1],True)        
         
     else :
         display_exception(opstat)
@@ -207,6 +251,16 @@ def export_sql_table(parms,display=True) :
 #--------------------------------------------------------------------------
 """     
 def export_custom(parms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : export a custom 
+    * 
+    * parms :
+    *   parms       -   sql parms
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     functionid = parms[0]
     
@@ -214,17 +268,17 @@ def export_custom(parms) :
     dispstats   =   False
     
     if(functionid == 1) :
-        opstat      =   process_custom_export(parms[1],dew.get_custom_export_form_id(),display=True) 
+        opstat      =   process_custom_export(parms[1],dew.custom_export_id,display=True) 
         dispstats   =   True
         
     elif(functionid == 2) :
         custom_code = "# custom export\n"
         custom_code = custom_code + parms[1]
-        cfg.set_config_value(dew.get_custom_export_form_id() + "Parms",custom_code)
+        cfg.set_config_value(dew.custom_export_id + "Parms",custom_code)
         display_export_forms(dem.EXPORT_CUSTOM_ONLY)
         
     elif(functionid == 3) :
-        cfg.drop_config_value(dew.get_custom_export_form_id() + "Parms")
+        cfg.drop_config_value(dew.custom_export_id + "Parms")
         display_export_forms(dem.EXPORT_CUSTOM_ONLY)
         
     elif(functionid == 5) :
@@ -233,16 +287,18 @@ def export_custom(parms) :
     return(dispstats, opstat)
 
 
-"""
-#------------------------------------------------------------------
-#   test the sql db connector
-#
-#    importtype         -   pandas import identifier 
-#    sqlinputparms      -   connection string 
-#
-#------------------------------------------------------------------
-""" 
 def test_export_sql_db_connector(driverid,sqlinputparms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : test the sql db connector 
+    * 
+    * parms :
+    *   importtype         -   pandas export identifier
+    *   sqlinputparms      -   connection string
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     
@@ -253,12 +309,20 @@ def test_export_sql_db_connector(driverid,sqlinputparms) :
         display_exception(opstat)        
 
 
-"""
-#--------------------------------------------------------------------------
-#   pandas csv export
-#--------------------------------------------------------------------------
-"""
 def export_pandas_csv(fparms,exportId,labellist,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : pandas csv export 
+    * 
+    * parms :
+    *   fparms        -   export parms
+    *   exportId      -   export id
+    *   labellist     -   parm label list
+    *   display       -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat          =   opStatus()
     
@@ -327,12 +391,21 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 
     return(opstat)
         
-"""
-#--------------------------------------------------------------------------
-#   pandas excel export
-#--------------------------------------------------------------------------
-"""
+
 def export_pandas_excel(fparms,exportId,labellist,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : pandas excel export 
+    * 
+    * parms :
+    *   fparms        -   export parms
+    *   exportId      -   export id
+    *   labellist     -   parm label list
+    *   display       -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat          =   opStatus()    
     
@@ -402,12 +475,21 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
     
     return(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#   pandas json export
-#--------------------------------------------------------------------------
-"""
+
 def export_pandas_json(fparms,exportId,labellist,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : pandas json export 
+    * 
+    * parms :
+    *   fparms        -   export parms
+    *   exportId      -   export id
+    *   labellist     -   parm label list
+    *   display       -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat          =   opStatus()    
 
@@ -477,12 +559,21 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
 
     return(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#   pandas html export
-#--------------------------------------------------------------------------
-"""    
+   
 def export_pandas_html(fparms,exportId,labellist,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : pandas html export 
+    * 
+    * parms :
+    *   fparms        -   export parms
+    *   exportId      -   export id
+    *   labellist     -   parm label list
+    *   display       -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat          =   opStatus()    
 
@@ -552,12 +643,20 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
 
     return(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#   custom export
-#--------------------------------------------------------------------------
-"""
+
 def process_custom_export(fparms,exportId,display=True) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : custom export 
+    * 
+    * parms :
+    *   fparms        -   export parms
+    *   exportId      -   export id
+    *   display       -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     opstat          =   opStatus()
     
@@ -586,15 +685,20 @@ def process_custom_export(fparms,exportId,display=True) :
     return(opstat)
 
        
-"""
-#------------------------------------------------------------------
-#   export pandas dataframe into sql table
-#
-##   parms       -   associated import parms 
-#
-#------------------------------------------------------------------
-"""      
 def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : export pandas dataframe into sql table 
+    * 
+    * parms :
+    *   sqltableparms    -   export parms
+    *   dbcondict        -   db connector dict
+    *   exportId         -   export id
+    *   display          -   display flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     
@@ -614,6 +718,76 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
     dbconnector = dbcon.connect_to_db(dbu.SQLALCHEMY,opstat)
     
     if(opstat.get_status()) :
+        
+        if(len(sqltableparms) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No Export parameters defined")
+        
+        else :
+            
+            if(sqltableparms[0] == "") :
+                opstat.set_status(False)
+                opstat.set_errorMsg("No dataframe selcted to export")
+                
+            else :
+                
+                if(sqltableparms[1] == "") :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No tabl;e selcted to export to")
+                
+                else :
+                
+                    df = cfg.get_dfc_dataframe(sqltableparms[0])            
+            
+                    labellist   =   dew.pandas_export_sqltable_labelList
+            
+                    try :
+
+                        sqlkeys         =   [labellist[2],labellist[3],labellist[4],
+                                             labellist[5],labellist[6],labellist[7]] 
+                        sqlvals         =   [sqltableparms[2],sqltableparms[3],sqltableparms[4],
+                                             sqltableparms[5],sqltableparms[6],sqltableparms[7]]
+                        sqltypes        =   [STRING_PARM,STRING_PARM,BOOLEAN_PARM,
+                                             STRING_PARM,INT_PARM,DICT_PARM]
+    
+                        sqlparms        =   {}
+                        sqladdlparms    =   {}
+            
+                    except Exception as e:
+                        opstat.set_status(False)
+                        opstat.store_exception("Error parsing Export parms",e)
+
+                    if(opstat.get_status()) :
+        
+                        try :
+            
+                            sqlparms        =   get_function_parms(sqlkeys,sqlvals,sqltypes)
+                            if(not (sqltableparms[8] == "")) :
+                                sqladdlparms    =   json.loads(sqltableparms[8])
+            
+                            if (len(sqladdlparms) > 0) :
+                                addlparmskeys = sqladdlparms.keys()
+                                for i in range(len(addlparmskeys)) : 
+                                    sqlparms.update({addlparmskeys[i]:sqladdlparms.get(addlparmskeys[i])})
+            
+                        except Exception as e:
+                            opstat.set_status(False)
+                            opstat.store_exception("Error parsing Export additional parms",e)
+
+                        if(opstat.get_status()) :  
+
+                            try :
+                            
+                                df.to_sql(sqltableparms[1], dbconnector, **sqlparms)
+                            #df.to_sql(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
+                                      #sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7])
+                
+                            except Exception as e:
+                                opstat.store_exception("Unable to export to sql table",e)
+        
+        
+        """        
+        
         
         if(sqltableparms[0] == "") :
             opstat.set_status(False)
@@ -645,19 +819,15 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
         else :
             sqltableparms[7] = int(sqltableparms[6])
         
-        if(sqltableparms[8] == "") :
-            sqltableparms[8] = None
-        
-    
         if(opstat.get_status()) :  
-    
+
             try :
                 df.to_sql(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
-                          sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7],
-                          sqltableparms[8])
+                          sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7])
                 
             except Exception as e:
                 opstat.store_exception("Unable to export sql table",e)
+        """
 
     export_notes    =   ""
 
@@ -666,9 +836,9 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
         if(display) :
             #make scriptable
             add_to_script(["# Export SQL Table ",
-                           "from dfcleanser.data_export.data_export_widgets export export_pandas_sqltable",
+                           "from dfcleanser.data_export.data_export_control export export_pandas_sqltable",
                            "export_pandas_sqltable(" + json.dumps(sqltableparms) + "," + 
-                           + json.dumps(dbcondict) + "," + str(exportid) + ",False)",
+                           json.dumps(dbcondict) + "," + str(exportid) + ",False)",
                            "from dfcleanser.common.cfg import set_current_dfc_dataframe",
                            "set_current_dfc_dataframe(df)"],opstat)
        
@@ -681,21 +851,24 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
     return(export_notes, opstat)    
 
 
-"""
-#------------------------------------------------------------------
-#   test the sql db connector
-#
-#    importtype         -   pandas import identifier 
-#    sqlinputparms      -   connection string 
-#
-#------------------------------------------------------------------
-"""    
 def export_test_sql_db_connector(driverid,sqlinputparms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : export pandas dataframe into sql table 
+    * 
+    * parms :
+    *   driverid        -   driver id
+    *   sqlinputparms   -   connection string
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     try :
 
-        from dfcleanser.common.db_utils import test_db_connector, SQL_EXPORT
-        opstat  =   test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),driverid,sqlinputparms,SQL_EXPORT)
+        from dfcleanser.common.db_utils import test_db_connector, SQL_EXPORT, NATIVE, SQLALCHEMY
+        opstat  =   test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),NATIVE,sqlinputparms,SQL_EXPORT)
+        opstat  =   test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),SQLALCHEMY,sqlinputparms,SQL_EXPORT)
             
     except Exception as e: 
         opstat.store_exception("DB Connection failed ",e)

@@ -21,7 +21,7 @@ from dfcleanser.common.html_widgets import (display_composite_form, maketextarea
 
 from dfcleanser.common.common_utils import (opStatus, display_exception, 
                                             display_notes, display_status, display_inline_help, get_parms_for_input,
-                                            get_formatted_time, display_grid) 
+                                            get_formatted_time, display_generic_grid, get_select_defaults) 
 
 from dfcleanser.common.display_utils import display_df_sizing_info
 
@@ -274,48 +274,46 @@ pandas_export_sqltable_id           =   "exportPandasSQLTable"
 
 pandas_export_sqltable_idList       =    ["exportsqldataframe",
                                           "exportsqltableName",
-                                          "exportsqltableflavor",
                                           "exportsqltableschema",
                                           "exportsqltableexists",
                                           "exportsqltableindex",
                                           "exportsqltableindexlabel",
                                           "exportsqltablechunksize",
                                           "exportsqltabledtype",
-                                          None,None,None,None,None,None]
+                                          "exportsqltableaddlParms",
+                                          None,None,None,None,None]
 
 pandas_export_sqltable_labelList    =   ["dataframe_to_export",
                                          "table_name",
-                                         "flavor",
                                          "schema",
                                          "if_exists",
                                          "index",
                                          "index_label",
                                          "chunksize",
                                          "dtype",
-                                         "Get</br>Tables",
-                                         "Get</br>Columns",
+                                         "Additional Parm(s)",
                                          "Export</br>Table",
+                                         "Get</br>Columns",
                                          "Clear","Return","Help"]
 
-pandas_export_sqltable_typeList     =   ["select","text","text","text","text",
-                                         "text","text","text","text",
-                                         "button","button","button","button","button","button"]
+pandas_export_sqltable_typeList     =   ["select","text","text","select",
+                                         "select","text","text","text",maketextarea(4),
+                                         "button","button","button","button","button"]
 
 pandas_export_sqltable_placeholderList = ["select dataframe to export",
                                           "enter the table name",
-                                          "‘sqlite’, default None",
                                           "specify the schema (if database flavor supports this). If None, use default schema.",
                                           "{‘fail’, ‘replace’, ‘append’}, (default ‘fail’)",
                                           "write DataFrame index as a column (default None)",
                                           "column label for index column(s) (default None)",
                                           "number of rows (default None)",
                                           "dict of column name to SQL type, (default None)",
-                                          None,None,None,None,None,None]
+                                          "enter additional parms { Key :  Value} ... (default None)",
+                                          None,None,None,None,None]
 
 pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None,None,
-                                         "pandas_export_sql_callback(0)",
-                                         "pandas_export_sql_callback(1)",
                                          "pandas_export_sql_callback(2)",
+                                         "pandas_export_sql_callback(1)",
                                          "pandas_details_export_clear_callback("+str(dem.SQLTABLE_EXPORT)+")",
                                          "pandas_details_export_return_callback()",
                                          "display_help_url('"+str(dfchelp.SQLTABLE_EXPORT_URL)+"')"]
@@ -369,63 +367,116 @@ def display_export_main_taskbar() :
 
 def get_csv_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_csv_idList))
-def get_csv_export_form_id() :
-    return(pandas_export_csv_id)
-def get_csv_export_form_labels() :
-    return(pandas_export_csv_labelList)
 
 def get_excel_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_excel_idList))
-def get_excel_export_form_id() :
-    return(pandas_export_excel_id)
-def get_excel_export_form_labels() :
-    return(pandas_export_excel_labelList)
 
 def get_json_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_json_idList))
-def get_json_export_form_id() :
-    return(pandas_export_json_id)
-def get_json_export_form_labels() :
-    return(pandas_export_json_labelList)
 
 def get_html_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_html_idList))
-def get_html_export_form_id() :
-    return(pandas_export_html_id)
-def get_html_export_form_labels() :
-    return(pandas_export_html_labelList)
-
-def get_custom_export_form_id() :
-    return(custom_export_id)
-def get_custom_export_form_labels() :
-    return(custom_export_labelList)
 
 def get_sqltable_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_sqltable_idList))
-def get_sqltable_export_form_id() :
-    return(pandas_export_sqltable_id)
-def get_sqltable_export_form_labels() :
-    return(pandas_export_sqltable_labelList)
    
 
-
-
-"""
-#------------------------------------------------------------------
-#   display data export notes 
-#
-#   s       -   start of import
-#   fname   -   name of file imported
-#
-#------------------------------------------------------------------
-"""
-def display_data_export_notes(s,fname,dbnote=False,custom=False) :
-
-    displayHeading("Data Exported",4)
-        
-    display_df_sizing_info(cfg.get_dfc_dataframe())
-    print("\n")
+def display_export_dc_sql_details_forms(dblibid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display export sql form
+    * 
+    * parms :
+    *   dblibid   -   db loib id
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
+    import dfcleanser.common.db_utils as dbutils
+    
+    if(dblibid == None) :
+        cfg.drop_config_value(cfg.CURRENT_DB_ID_KEY) 
+        
+    if((dblibid == dbutils.pymysql_library) or (dblibid == dbutils.mysql_connector_library)) :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.MySql)
+    elif((dblibid == dbutils.pyodbc_library) or (dblibid == dbutils.pymssql_library)) :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.MS_SQL_Server)
+    elif((dblibid == dbutils.sqlite_library) or (dblibid == dbutils.sqlite3_library)) :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.SQLite)
+    elif(dblibid == dbutils.psycopg2_library) :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.Postgresql)
+    elif(dblibid == dbutils.cx_oracle_library) :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.Oracle)
+    elif(dblibid == "custom") :
+        cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.Custom)
+        
+    dbid =  cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
+    
+    if(dbid == None) :
+        inparms = cfg.get_config_value(cfg.MYSQL_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["","","","",dblibid]
+        else :
+            inparms[4] = dblibid
+            
+    if(dbid == dbutils.MySql) :
+        inparms = cfg.get_config_value(cfg.MYSQL_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["","","","",dblibid]
+        else :
+            inparms[4] = dblibid
+            
+    elif(dbid == dbutils.MS_SQL_Server) :
+        inparms = cfg.get_config_value(cfg.MSSQL_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["","","","",dblibid]
+        else :
+            inparms[4] = dblibid
+            
+    elif(dbid == dbutils.Postgresql) :
+        inparms = cfg.get_config_value(cfg.POSTGRESQL_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["","","","",dblibid]
+        else :
+            inparms[4] = dblibid
+            
+    elif(dbid == dbutils.SQLite) :
+        inparms = cfg.get_config_value(cfg.SQLITE_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["",dblibid]
+        else :
+            inparms[1] = dblibid
+            
+    elif(dbid == dbutils.Oracle) :
+        inparms = cfg.get_config_value(cfg.ORACLE_IMPORT_PARMS_KEY)
+        if(inparms == None) :
+            inparms = ["","","",dblibid]
+        else :
+            inparms[1] = dblibid
+                
+    elif(dbid == dbutils.Custom) :
+        inparms = cfg.get_config_value(cfg.CUSTOM_IMPORT_PARMS_KEY)
+        
+    from dfcleanser.common.db_utils import display_db_connector_inputs, SQL_EXPORT
+    display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_EXPORT) 
+        
+
+def display_data_export_notes(s,fname,dbnote=False,custom=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display data export notes
+    * 
+    * parms :
+    *   s       -   start of import
+    *   fname   -   name of table exported to
+    *   dbnote  -   db note
+    *   custom  -   custom export flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+
     if(custom) :
         display_status("Custom export code Exported successfully")
         
@@ -445,16 +496,20 @@ def display_data_export_notes(s,fname,dbnote=False,custom=False) :
     display_notes(importnotes)
 
 
-"""
-#------------------------------------------------------------------
-#   get pandas export input form  
-#
-#   id      -   export type
-#
-#------------------------------------------------------------------
-"""
 def get_pandas_export_input_form(exid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get pandas export input form
+    * 
+    * parms :
+    *   exid    -   export type
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
  
+    selectDicts     =   []
+    
     if(exid == dem.CSV_EXPORT)      : 
         export_form = InputForm(pandas_export_csv_id,
                                 pandas_export_csv_idList,
@@ -464,9 +519,18 @@ def get_pandas_export_input_form(exid) :
                                 pandas_export_csv_jsList,
                                 pandas_export_csv_reqList)
         
-        chsel   =   {"default":"True","list":["True","False"]}
-        export_form.add_select_dict("ecsvcolheader",chsel)
-        export_form.add_select_dict("ecsvindex",chsel)
+        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        selectDicts.append(dataframes)
+
+        boolFlag        =   {"default":"True","list":["True","False"]}
+        selectDicts.append(boolFlag)
+        selectDicts.append(boolFlag)
+        
+        get_select_defaults(export_form,
+                            pandas_export_csv_id,
+                            pandas_export_csv_idList,
+                            pandas_export_csv_typeList,
+                            selectDicts)
         
     elif(exid == dem.EXCEL_EXPORT)    : 
         export_form = InputForm(pandas_export_excel_id,
@@ -475,11 +539,20 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_excel_typeList,
                                  pandas_export_excel_placeholderList,
                                  pandas_export_excel_jsList,
-                                 pandas_export_excel_reqList)    
+                                 pandas_export_excel_reqList)
+        
+        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        selectDicts.append(dataframes)
 
-        chsel   =   {"default":"True","list":["True","False"]}
-        export_form.add_select_dict("excelheader",chsel)
-        export_form.add_select_dict("excelindex",chsel)
+        boolFlag        =   {"default":"True","list":["True","False"]}
+        selectDicts.append(boolFlag)
+        selectDicts.append(boolFlag)
+        
+        get_select_defaults(export_form,
+                            pandas_export_excel_id,
+                            pandas_export_excel_idList,
+                            pandas_export_excel_typeList,
+                            selectDicts)
 
     elif(exid == dem.JSON_EXPORT)    : 
          export_form = InputForm(pandas_export_json_id,
@@ -488,7 +561,16 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_json_typeList,
                                  pandas_export_json_placeholderList,
                                  pandas_export_json_jsList,
-                                 pandas_export_json_reqList)    
+                                 pandas_export_json_reqList)
+         
+         dataframes      =   cfg.get_dfc_dataframes_select_list()
+         selectDicts.append(dataframes)
+        
+         get_select_defaults(export_form,
+                            pandas_export_json_id,
+                            pandas_export_json_idList,
+                            pandas_export_json_typeList,
+                            selectDicts)
     
     elif(exid == dem.HTML_EXPORT)    : 
         export_form = InputForm(pandas_export_html_id,
@@ -498,10 +580,19 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_html_placeholderList,
                                  pandas_export_html_jsList,
                                  pandas_export_html_reqList)    
+        
+        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        selectDicts.append(dataframes)
 
-        chsel   =   {"default":"True","list":["True","False"]}
-        export_form.add_select_dict("exhtmlheader",chsel)
-        export_form.add_select_dict("exhtmlColNamesRow",chsel)
+        boolFlag        =   {"default":"True","list":["True","False"]}
+        selectDicts.append(boolFlag)
+        selectDicts.append(boolFlag)
+        
+        get_select_defaults(export_form,
+                            pandas_export_html_id,
+                            pandas_export_html_idList,
+                            pandas_export_html_typeList,
+                            selectDicts)
 
     elif(exid == dem.SQLTABLE_EXPORT)    : 
          export_form = InputForm(pandas_export_sqltable_id,
@@ -510,19 +601,40 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_sqltable_typeList,
                                  pandas_export_sqltable_placeholderList,
                                  pandas_export_sqltable_jsList,
-                                 pandas_export_sqltable_reqList)    
+                                 pandas_export_sqltable_reqList)
+         
+         dataframes      =   cfg.get_dfc_dataframes_select_list()
+         selectDicts.append(dataframes)
+         
+         ifexists        =   {"default":"fail","list":["fail","replace","append"]}
+         selectDicts.append(ifexists)
+         
+         index           =   {"default":"True","list":["True","False"]}
+         selectDicts.append(index)
+         
+        
+         get_select_defaults(export_form,
+                            pandas_export_sqltable_id,
+                            pandas_export_sqltable_idList,
+                            pandas_export_sqltable_typeList,
+                            selectDicts)
+
        
     return(export_form)
 
-"""
-#------------------------------------------------------------------
-#   get pandas export input form title 
-#
-#   id      -   export type
-#
-#------------------------------------------------------------------
-"""
-def get_pandas_export_input_title(id,dbid=None) :
+
+def get_pandas_export_input_title(exid,dbid=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get pandas export input form title
+    * 
+    * parms :
+    *   exid    -   export type
+    *   dbid    -   db lib id
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     if(dbid == None) :
         pandas_title = {dem.CSV_EXPORT      : pandas_export_csv_title,
@@ -531,7 +643,7 @@ def get_pandas_export_input_title(id,dbid=None) :
                         dem.HTML_EXPORT     : pandas_export_html_title,
                         dem.SQLTABLE_EXPORT : pandas_export_sqltable_title} 
         
-        return(pandas_title[id])
+        return(pandas_title[exid])
     else :
         
         import dfcleanser.common.db_utils as dbutils
@@ -549,20 +661,24 @@ def get_pandas_export_input_title(id,dbid=None) :
             return(pandas_export_sqltable_title)
                 
 
-"""
-#------------------------------------------------------------------
-#   display pandas export input form title 
-#
-#   id      -   export type
-#
-#------------------------------------------------------------------
-"""
-def display_dc_export_forms(id, detid=0, notes=False) :
+def display_dc_export_forms(exid, detid=0, notes=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display pandas export input forms
+    * 
+    * parms :
+    *   exid    -   export type
+    *   detid   -   detail id
+    *   notes   -   notes flag
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     clear_output()
 
     # add the main import task bar
-    if (id == dem.EXPORT_TB_ONLY) :
+    if (exid == dem.EXPORT_TB_ONLY) :
 
         display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
                                                                    export_task_bar_keyTitleList,
@@ -571,8 +687,8 @@ def display_dc_export_forms(id, detid=0, notes=False) :
     
 
     # add the pandas import task bar or pandas details form 
-    elif ( (id == dem.EXPORT_PANDAS_TB_ONLY) or 
-           (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
+    elif ( (exid == dem.EXPORT_PANDAS_TB_ONLY) or 
+           (exid == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) ) :
         
         if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
@@ -586,7 +702,7 @@ def display_dc_export_forms(id, detid=0, notes=False) :
         else :
             
             # add the pandas import details form 
-            if (id == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) :
+            if (exid == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) :
                 
                 if(detid==dem.SQLTABLE_EXPORT):
                     
@@ -631,14 +747,6 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                     
                     current_export_form     =   get_pandas_export_input_form(detid)
                     
-                    if(detid == dem.CSV_EXPORT)         :   exid    =    "ecsvdataframe"
-                    elif(detid == dem.EXCEL_EXPORT)     :   exid    =    "exceldataframe" 
-                    elif(detid == dem.JSON_EXPORT)      :   exid    =    "jsondataframe" 
-                    elif(detid == dem.HTML_EXPORT)      :   exid    =    "exhtmldataframe" 
-                    elif(detid == dem.SQLTABLE_EXPORT)  :   exid    =    "exhtmldataframe"  
-                    
-                    current_export_form.add_select_dict(exid,cfg.get_dfc_dataframes_select_list())
-
                     # display the composite form
                     display_composite_form([get_input_form(current_export_form,
                                                            get_pandas_export_input_title(detid))])
@@ -678,7 +786,8 @@ def display_dc_export_forms(id, detid=0, notes=False) :
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(leave the '# custom export' comment line in the code cell",
                                 "&nbsp;&nbsp;&nbsp;&nbsp;(call dfcleanser.common.cfg.get_dfc_dataframe() to get the current dataframe)",
                                 "To run the export code in the Custom Export Code box hit 'Run Custom Export' button",
-                                "&nbsp;&nbsp;&nbsp;&nbsp;(only the code in the Custom Export Code box is run and stored for scripting)",                        "Once import successful hit 'Save Custom Import' button to store import code for future retrieval",
+                                "&nbsp;&nbsp;&nbsp;&nbsp;(only the code in the Custom Export Code box is run and stored for scripting)",                        
+                                "Once import successful hit 'Save Custom Import' button to store import code for future retrieval",
                                 "To drop the custom export code and clear the Custom Export Code box hit 'Drop Custom Export' button"]
             
                 print("\n")
@@ -687,13 +796,21 @@ def display_dc_export_forms(id, detid=0, notes=False) :
             # display the composite form
             display_composite_form([exportCustomDetailsForm])
 
-"""
-#------------------------------------------------------------------
-#   display pandas sql export form 
-#
-#------------------------------------------------------------------
-"""
+
 def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display pandas sql export form
+    * 
+    * parms :
+    *   fid             -   export type
+    *   dbid            -   database id
+    *   dbconparms      -   db connector parms
+    *   exportparms     -   export parms
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     opstat          =   opStatus()
     opstatStatus    =   True
@@ -716,8 +833,9 @@ def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
         cfg.set_config_value(pandas_export_sqltable_id+"Parms",fparms)
 
         if(len(fparms[0]) > 0) :
-            from dfcleanser.data_import.data_import_widgets import (get_column_names, COLUMN_NAMES, get_rows_html)
-            columnlist  =   get_column_names(dbid,fparms[0],opstat)
+            from dfcleanser.data_import.data_import_widgets import (get_column_names, get_rows_html)
+            from dfcleanser.data_import.data_import_model import COLUMN_NAMES
+            columnlist  =   get_column_names(dbid,fparms[1],opstat)
             listHtml    =   get_rows_html(columnlist,COLUMN_NAMES,True)
         else :
             opstat.set_status(False)
@@ -758,23 +876,49 @@ def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
                                           pandas_export_sqltable_reqList,
                                           shortForm=False)
         
-        export_sql_input_form.set_gridwidth(700)
+        selectDicts     =   []
+        df_list         =   cfg.get_dfc_dataframes_select_list()
+        selectDicts.append(df_list)
+        
+        #dbid        =   cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
+        #from dfcleanser.data_import.data_import_widgets import get_table_names
+        #tableslist  =   get_table_names(dbid,opstat)
+        #tables  =   {"default":str(tableslist[0]),"list":tableslist}
+        #selectDicts.append(tables)
+        exists  =   {"default":"fail","list":["fail","replace","append"]}
+        selectDicts.append(exists)
+        index  =   {"default":"True","list":["True","False"]}
+        selectDicts.append(index)
+        
+        get_select_defaults(export_sql_input_form,
+                            pandas_export_sqltable_id,
+                            pandas_export_sqltable_idList,
+                            pandas_export_sqltable_typeList,
+                            selectDicts)
+
+        export_sql_input_form.set_shortForm(False)
+        export_sql_input_form.set_gridwidth(680)
+        export_sql_input_form.set_custombwidth(125)
+        export_sql_input_form.set_fullparms(True)
 
         export_sql_input_html = ""
         export_sql_input_html = export_sql_input_form.get_html()
         
-        export_sql_heading_html = "<h4>" + get_html_spaces(12) + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</h4>"
+        export_sql_heading_html     =   "<p>" + get_html_spaces(11) + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</p>"
 
         if( not (exportparms == None) ) :
             cfg.set_config_value(pandas_export_sqltable_id+"Parms",fparms)
     
-
-        display_grid("export_sql_table_wrapper",
-                     export_sql_heading_html,
-                     listHtml,
-                     export_sql_input_html,
-                     None)
+        gridclasses     =   ["geocode-final-header",
+                             "dfc-left",
+                             "dfc-right"]
     
+        gridhtmls       =   [export_sql_heading_html,
+                             listHtml,
+                             export_sql_input_html]
+    
+        display_generic_grid("data-import-sql-table-wrapper",gridclasses,gridhtmls)
+
     if( not (opstatStatus)) :
         opstat.set_status(opstatStatus)
         opstat.set_errorMsg(opstatErrormsg)
