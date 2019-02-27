@@ -18,7 +18,8 @@ import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
 from dfcleanser.common.common_utils import (RunningClock, display_status, display_exception, 
-                                            opStatus, single_quote, is_numeric_col, is_numeric_col_int)
+                                            opStatus, single_quote, is_numeric_col, is_numeric_col_int,
+                                            display_generic_grid)
 
 from dfcleanser.common.html_widgets import (displayHeading)
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables)
@@ -47,6 +48,17 @@ def display_data_cleansing(option,parms=None) :
     
     # setup the button bar form
     dcw.display_data_cleansing_main_taskbar()
+
+    if(cfg.is_a_dfc_dataframe_loaded() ) :
+    
+        from dfcleanser.data_inspection.data_inspection_widgets import get_select_df_form
+        select_df_form              =   get_select_df_form("Cleanse")
+    
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [select_df_form.get_html()]
+    
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+
     
     if(cfg.is_a_dfc_dataframe_loaded()) :
         

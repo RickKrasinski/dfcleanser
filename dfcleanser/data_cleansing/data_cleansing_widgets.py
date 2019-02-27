@@ -17,16 +17,16 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
 from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form,
-                                            get_blank_line_form, displayHeading, get_input_form,
-                                            get_html_spaces, ButtonGroupForm, InputForm, DEFAULT_PAGE_WIDTH)
+                                            displayHeading, get_html_spaces, ButtonGroupForm, 
+                                            InputForm, DEFAULT_PAGE_WIDTH)
 
 from dfcleanser.common.table_widgets import (dcTable, MULTIPLE, SCROLL_NEXT, get_mult_table) 
 
 from dfcleanser.common.common_utils import (is_numeric_col_int, get_datatype, get_datatype_title, 
                                             display_exception, opStatus, get_parms_for_input, is_numeric_col, 
                                             is_datatype_numeric, RunningClock, get_col_uniques_by_id, displayParms,
-                                            display_notes, get_datatype_str, is_numeric_datatype_id,
-                                            is_datetime_datatype)
+                                            display_notes, get_datatype_str, is_numeric_datatype_id, display_generic_grid,
+                                            is_datetime_datatype, whitecolor, yellowcolor, redcolor, greencolor)
 
 from dfcleanser.common.display_utils import (display_df_describe, get_df_datatypes_data, 
                                              display_df_unique_column, display_single_row)
@@ -481,11 +481,6 @@ def display_col_stats(df,colname, numeric=True) :
     statsWidths    =   []
     statsAligns    =   ["left","left"]
     
-    whitecolor  =   "#FFFFFF"
-    yellowcolor =   "#FAF6BE"
-    redcolor    =   "#F1C4B7"
-    greencolor  =   "#ADECC4"
-    
     colorList = []    
 
     statsRows.append(["Column Name",colname])
@@ -529,7 +524,14 @@ def display_col_stats(df,colname, numeric=True) :
         values.append(str(pct)+"%")
         colorList.append([whitecolor,whitecolor])
 
-    uniques   =     df[colname].unique()    
+    try :
+        uniques     =   df[colname].unique()
+    except :
+        try :
+            uniques     =   list(map(list, set(map(lambda i: tuple(i), df[colname])))) 
+        except :
+            uniques     =   []
+    
     statsRows.append(["Column Uniques Count",len(uniques)])
     labels.append("Column Uniques Count")
     values.append(str(len(uniques)))
@@ -621,12 +623,14 @@ def display_numeric_col_data(df) :
         showuniques = False
 
     print("\n")
-    
     display_col_stats(df,colname)
     
-    displayHeading("Column Unique Values",4)
-
+    
+    
     if (showuniques == False) :
+        
+        displayHeading("Column Uniques",4)
+        
         display_composite_form([get_button_tb_form(ButtonGroupForm(list_unique_id,
                                                                    list_unique_keyTitleList,
                                                                    list_unique_jsList,
@@ -697,7 +701,8 @@ def display_unique_col_data(df) :
     
     dfcol = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
 
-    opstat = opStatus()
+    opstat          =   opStatus()
+    toomanyUniques  =   False    
     
     if not (is_numeric_col(df,dfcol) ) :
         display_column_header_data(df,dfcol)
@@ -718,13 +723,28 @@ def display_unique_col_data(df) :
             cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
             
             #return()
-
-    counts      =   df[dfcol].value_counts().to_dict()
-    uniques     =   list(counts.keys())
     
-    displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unique Values",4)
+    try :
+        counts      =   df[dfcol].value_counts().to_dict()
+        uniques     =   list(counts.keys())
     
-    toomanyUniques  =   False
+    except :
+        try :
+            uniques     =   list(map(list, set(map(lambda i: tuple(i), df[dfcol]))))
+            counts      =   {}
+        
+            uniques_length  =  len(df[dfcol])
+            if(uniques_length > 250) :
+                uniques_length = 250
+                
+            import json
+            for i in range(uniques_length) :
+                ukey    =   json.dumps(df[dfcol][i])
+                uniques_count   =   counts.get(ukey,0)
+                counts.update({ukey : uniques_count + 1})
+        except :
+            counts      =   0
+            uniques     =   {}
             
     clock = RunningClock()
     clock.start()
@@ -739,14 +759,15 @@ def display_unique_col_data(df) :
             if(len(uniques) < 250) :
                 print("\n")
             else :
-                display_notes(["* Number of Uniques is " + str(len(uniques)) +" and is too large to display all uniques. A sample set of 60 unique values is displayed",
-                               "* To find a subset of unique values hit 'Find Values' and enter 'Min Value' and 'Max Value' and hit 'Find Values' again"])
-                toomanyUniques  =   True
+                toomanyUniques_html     =   display_notes(["* Number of Uniques is " + str(len(uniques)) +" and is too large to display all uniques. A sample set of 60 unique values is displayed",
+                                                           "* To find a subset of unique values hit 'Find Values' and enter 'Min Value' and 'Max Value' and hit 'Find Values' again"],False)
+                toomanyUniques          =   True
                 
-            display_df_unique_column(df,col_uniques_table,dfcol,True,counts)
+            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,dfcol,True,counts,False)
+            
         else :
-            #print("range",parms)
-            display_df_unique_column(df,col_uniques_table,dfcol,True,counts)
+
+            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,dfcol,True,counts,False)
             
     except Exception as e:
         
@@ -756,92 +777,110 @@ def display_unique_col_data(df) :
     clock.stop()
     
     if(get_options_flag(dcm.ROUNDING_FLAG) == True) : 
-        cleansing_text_inputs   =   get_input_form(InputForm(col_round_input_id,
-                                                             col_round_input_idList,
-                                                             col_round_input_labelList,
-                                                             col_round_input_typeList,
-                                                             col_round_input_placeholderList,
-                                                             col_round_input_jsList,
-                                                             col_round_input_reqList,
-                                                             col_round_input_short))
+        cleansing_text_inputs   =   InputForm(col_round_input_id,
+                                              col_round_input_idList,
+                                              col_round_input_labelList,
+                                              col_round_input_typeList,
+                                              col_round_input_placeholderList,
+                                              col_round_input_jsList,
+                                              col_round_input_reqList)
         
     else :
         if(is_numeric_col(df,dfcol)) :
-            cleansing_text_inputs   =   get_input_form(InputForm(change_values_input_id,
-                                                                 change_values_input_idList,
-                                                                 change_values_input_labelList,
-                                                                 change_values_input_typeList,
-                                                                 change_values_input_placeholderList,
-                                                                 change_values_input_jsList,
-                                                                 change_values_input_reqList,
-                                                                 change_values_input_short)) 
+            cleansing_text_inputs   =   InputForm(change_values_input_id,
+                                                  change_values_input_idList,
+                                                  change_values_input_labelList,
+                                                  change_values_input_typeList,
+                                                  change_values_input_placeholderList,
+                                                  change_values_input_jsList,
+                                                  change_values_input_reqList) 
         else :
             if(toomanyUniques) :
-                cleansing_text_inputs   =   get_input_form(InputForm(change_values_input_id,
-                                                                     change_values_input_idList,
-                                                                     change_values_input_labelList,
-                                                                     change_values_input_typeList,
-                                                                     change_values_input_placeholderList,
-                                                                     change_values_input_jsList,
-                                                                     change_values_input_reqList,
-                                                                     change_values_input_short))
+                cleansing_text_inputs   =   InputForm(change_values_input_id,
+                                                      change_values_input_idList,
+                                                      change_values_input_labelList,
+                                                      change_values_input_typeList,
+                                                      change_values_input_placeholderList,
+                                                      change_values_input_jsList,
+                                                      change_values_input_reqList)
             else :
-                cleansing_text_inputs   =   get_input_form(InputForm(nn_change_values_input_id,
-                                                                     nn_change_values_input_idList,
-                                                                     nn_change_values_input_labelList,
-                                                                     nn_change_values_input_typeList,
-                                                                     nn_change_values_input_placeholderList,
-                                                                     nn_change_values_input_jsList,
-                                                                     nn_change_values_input_reqList,
-                                                                     nn_change_values_input_short)) 
-    
-    blank_line      =   get_blank_line_form()
+                cleansing_text_inputs   =   InputForm(nn_change_values_input_id,
+                                                      nn_change_values_input_idList,
+                                                      nn_change_values_input_labelList,
+                                                      nn_change_values_input_typeList,
+                                                      nn_change_values_input_placeholderList,
+                                                      nn_change_values_input_jsList,
+                                                      nn_change_values_input_reqList) 
     
     if(get_options_flag(dcm.ROUNDING_FLAG) == True) :
         
-        col_uniques_tb  =   get_button_tb_form(ButtonGroupForm(col_uniques_change_tb_id,
-                                                               col_uniques_change_tb_keyTitleList,
-                                                               col_uniques_change_tb_jsList,
-                                                               col_uniques_change_tb_centered))
+        col_uniques_tb  =   ButtonGroupForm(col_uniques_change_tb_id,
+                                            col_uniques_change_tb_keyTitleList,
+                                            col_uniques_change_tb_jsList,
+                                            col_uniques_change_tb_centered)
         
     else :
         
         if (is_numeric_col(df,dfcol) ) :
             if(is_numeric_col_int(df,dfcol)) :
                 
-                col_uniques_tb  =   get_button_tb_form(ButtonGroupForm(col_uniques_int_tb_id,
-                                                                       col_uniques_int_tb_keyTitleList,
-                                                                       col_uniques_int_tb_jsList,
-                                                                       col_uniques_int_tb_centered))
+                col_uniques_tb  =   ButtonGroupForm(col_uniques_int_tb_id,
+                                                    col_uniques_int_tb_keyTitleList,
+                                                    col_uniques_int_tb_jsList,
+                                                    col_uniques_int_tb_centered)
                 
             else :
         
-                col_uniques_tb  =   get_button_tb_form(ButtonGroupForm(col_uniques_round_tb_id,
-                                                                       col_uniques_round_tb_keyTitleList,
-                                                                       col_uniques_round_tb_jsList,
-                                                                       col_uniques_round_tb_centered))
+                col_uniques_tb  =   ButtonGroupForm(col_uniques_round_tb_id,
+                                                    col_uniques_round_tb_keyTitleList,
+                                                    col_uniques_round_tb_jsList,
+                                                    col_uniques_round_tb_centered)
 
         else :
             
-            col_uniques_tb  =   get_button_tb_form(ButtonGroupForm(nn_col_uniques_change_tb_id,
-                                                                   nn_col_uniques_change_tb_keyTitleList,
-                                                                   nn_col_uniques_change_tb_jsList,
-                                                                   nn_col_uniques_change_tb_centered))
+            col_uniques_tb  =   ButtonGroupForm(nn_col_uniques_change_tb_id,
+                                                nn_col_uniques_change_tb_keyTitleList,
+                                                nn_col_uniques_change_tb_jsList,
+                                                nn_col_uniques_change_tb_centered)
             
-    if(get_options_flag(dcm.ROUNDING_FLAG) == True) : 
+    
+    unique_column_heading_html      =   "<p>" + get_html_spaces(36) + dfcol + " Unique Column Values</p>"
+    cleansing_text_input_html       =   cleansing_text_inputs.get_html() 
+    col_uniques_tb.set_gridwidth(860)
+    cleansing_text_tb_html          =   col_uniques_tb.get_html() 
+    
+    if(toomanyUniques) :  
         
-        cleansing_text_inputs_forms    =   [cleansing_text_inputs,
-                                            blank_line,
-                                            col_uniques_tb]
+        gridclasses     =   ["display-df-unique-columns-notes-wrapper-header", 
+                             "dfc-top-centered",
+                             "dfc-main",
+                             "dfc-bottom",
+                             "dfc-footer"]
         
-    else : 
+        gridhtmls       =   [unique_column_heading_html,
+                             toomanyUniques_html,
+                             unique_cols_html,
+                             cleansing_text_input_html,
+                             cleansing_text_tb_html]
+    
+        display_generic_grid("display-df-unique-columns-notes-wrapper",
+                             gridclasses,gridhtmls)
         
-        cleansing_text_inputs_forms    =   [cleansing_text_inputs,
-                                            blank_line,
-                                            col_uniques_tb]
-
-    display_composite_form(cleansing_text_inputs_forms)
-
+    else :
+        
+        gridclasses     =   ["display-df-unique-columns-wrapper-header", 
+                             "dfc-main",
+                             "dfc-bottom",
+                             "dfc-footer"]
+        
+        gridhtmls       =   [unique_column_heading_html,
+                             unique_cols_html,
+                             cleansing_text_input_html,
+                             cleansing_text_tb_html]
+    
+        display_generic_grid("display-df-unique-columns-wrapper",
+                             gridclasses,gridhtmls)
+        
 
 """            
 #------------------------------------------------------------------
@@ -867,7 +906,7 @@ def display_change_objects(df,formid,dtypeId,colList=None) :#,skipactionbar=Fals
     
     # numeric datatypes
     if(is_numeric_datatype_id(dtypeId))  : 
-        display_df_describe(df,change_objects_table,typeparm,colList)#,True)
+        display_df_describe(df,change_objects_table,True,typeparm,colList)#,True)
     else :
         display_non_numeric_df_describe(df,change_objects_table,typeparm,colList)#,True)
         
@@ -1004,23 +1043,38 @@ def display_row_data(df,rowid,colid) :
     rows_table.set_refList(refList)
     
     opstat = opStatus()
-    opstat = display_single_row(df,rows_table,rowid,colid)
+    
+    df_row_cleanser_table_html    =   display_single_row(df,rows_table,rowid,colid,opstat,False)
     
     if(not opstat.get_status()) :
         display_exception(opstat)
+
+    else :
         
-    # setup the button bar form
-    display_composite_form([get_input_form(InputForm(change_row_values_input_id,
-                                                     change_row_values_input_idList,
-                                                     change_row_values_input_labelList,
-                                                     change_row_values_input_typeList,
-                                                     change_row_values_input_placeholderList,
-                                                     change_row_values_input_jsList,
-                                                     change_row_values_input_reqList,
-                                                     change_row_values_input_short))])
+        print("\n")
         
-    print("\n")
+        df_row_cleanser_heading_html    =   "<p>" + get_html_spaces(42) + " dataframe Row Cleanser : Row " + str(rowid) + "</p>"
+        
+        df_row_cleanser_input_html      =   InputForm(change_row_values_input_id,
+                                                      change_row_values_input_idList,
+                                                      change_row_values_input_labelList,
+                                                      change_row_values_input_typeList,
+                                                      change_row_values_input_placeholderList,
+                                                      change_row_values_input_jsList,
+                                                      change_row_values_input_reqList).get_html()
+        
+        gridclasses     =   ["display-df-row-cleanser-wrapper-header", 
+                             "dfc-top-centered",
+                             "dfc-footer"]
+
+        gridhtmls       =   [df_row_cleanser_heading_html,
+                             df_row_cleanser_table_html,
+                             df_row_cleanser_input_html]
     
+        display_generic_grid("display-df-row-cleanser-wrapper",
+                             gridclasses,gridhtmls)
+
+
 """ 
 #------------------------------------------------------------------
 #------------------------------------------------------------------
