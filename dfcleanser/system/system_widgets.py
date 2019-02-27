@@ -21,7 +21,7 @@ from dfcleanser.common.html_widgets import (get_button_tb_form, maketextarea, di
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
 from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML, opStatus, 
-                                            display_exception, display_grid)
+                                            display_exception, display_generic_grid)
 
 
 """
@@ -123,7 +123,7 @@ system_environment_title                =   None
 
 system_environment_keyTitleList         =   ["Select</br>Chapters",
                                              "Reset</br>Chapters",
-                                             "Dataframe</br>Manager",
+                                             "dataframe</br>Manager",
                                              "System","dfcleanser</br>Files","About",
                                              "EULA","Clear","Help"]
 
@@ -173,12 +173,12 @@ dfc_core_modules_checkbox_jsList     =   [None,None,None,None,None]
 dfc_utils_modules_checkbox_title      =   "dfcleanser Utilities"
 dfc_utils_modules_checkbox_id         =   "dfc_utils_cb"
 
-dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgenfunc","dfcutilgeocode","dfcutildfsubset","dfcutildfconcat"]
-dfc_utils_modules_checkbox_labelList  =   ["Data Structures","Generic Function","Geocoding","Dataframe Subset","Dataframe Concat"]
+dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgenfunc","dfcutilgeocode","dfcutildfsubset"]
+dfc_utils_modules_checkbox_labelList  =   ["Data Structures","Generic Function","Geocoding","Dataframe Subset"]
 
 dfc_utils_modules_checkbox_jsList     =   [None,None,None,None,None]
 
-dfc_script_modules_checkbox_title      =   "dfcleanser Utilities"
+dfc_script_modules_checkbox_title      =   "dfcleanser Scripting"
 dfc_script_modules_checkbox_id         =   "dfc_script_cb"
 
 dfc_script_modules_checkbox_idList     =   ["dfcscripting"]
@@ -209,9 +209,9 @@ dfc_files_input_idList              =   ["nbname","newnbname",
 
 dfc_files_input_labelList           =   ["notebook_name",
                                          "new_notebook_name",
-                                         "Copy</br>Notebook</br>dfcleanser files",
-                                         "Rename</br>Notebook</br>dfcleanser files",
-                                         "Delete</br>Notebook</br>dfcleanser files",
+                                         "Copy</br>Notebook</br>dfcleanser</br>files",
+                                         "Rename</br>Notebook</br>dfcleanser</br>files",
+                                         "Delete</br>Notebook</br>dfcleanser</br>files",
                                          "Return","Help"]
 
 dfc_files_input_typeList            =   ["text","text",
@@ -306,8 +306,14 @@ def display_system_chapters_taskbar() :
                                                      get_current_checkboxes(sysm.CORE),
                                                      [1,1,1,1,1])
     
-    dfc_core_modules_checkboxForm = get_checkbox_form("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfcleanser Core Modules",
-                                                      dfc_core_modules_checkbox)
+    dfc_core_modules_heading_html       =   "<p>" + get_html_spaces(62) + "dfcleanser Core Modules</p>"
+    dfc_core_modules_checkbox_html      =   dfc_core_modules_checkbox.get_html()
+    
+    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridhtmls       =   [dfc_core_modules_heading_html,dfc_core_modules_checkbox_html]
+    
+    print("\n")
+    display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
 
     dfc_utils_modules_checkbox =  CheckboxGroupForm(dfc_utils_modules_checkbox_id,
                                                     dfc_utils_modules_checkbox_idList,
@@ -316,8 +322,13 @@ def display_system_chapters_taskbar() :
                                                     get_current_checkboxes(sysm.UTILITIES),
                                                     [0,0,0,0,0])
     
-    dfc_utils_modules_checkboxForm = get_checkbox_form("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfcleanser Utilities",
-                                                       dfc_utils_modules_checkbox)
+    dfc_utils_modules_heading_html       =   "<p>" + get_html_spaces(68) + "dfcleanser Utilities</p>"
+    dfc_utils_modules_checkbox_html      =   dfc_utils_modules_checkbox.get_html()
+        
+    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridhtmls       =   [dfc_utils_modules_heading_html,dfc_utils_modules_checkbox_html]
+    
+    display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
 
     dfc_script_modules_checkbox     =  CheckboxGroupForm(dfc_script_modules_checkbox_id,
                                                          dfc_script_modules_checkbox_idList,
@@ -326,17 +337,27 @@ def display_system_chapters_taskbar() :
                                                          get_current_checkboxes(sysm.SCRIPTING),
                                                          [0])
     
-    dfc_script_modules_checkboxForm = get_checkbox_form("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfcleanser Utilities",
-                                                        dfc_script_modules_checkbox)
-
-    display_composite_form([dfc_core_modules_checkboxForm,
-                            dfc_utils_modules_checkboxForm,
-                            dfc_script_modules_checkboxForm])
+    dfc_script_modules_heading_html       =   "<p>" + get_html_spaces(70) + "dfcleanser Scripting</p>"
+    dfc_script_modules_checkbox_html      =   dfc_script_modules_checkbox.get_html()
+        
+    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridhtmls       =   [dfc_script_modules_heading_html,dfc_script_modules_checkbox_html]
     
-    display_composite_form([get_button_tb_form(ButtonGroupForm(system_chapters_tb_doc_id,
-                                                               system_chapters_tb_keyTitleList,
-                                                               system_chapters_tb_jsList,
-                                                               system_chapters_tb_centered))])
+    display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
+
+
+    dfc_script_modules_tb           =   ButtonGroupForm(system_chapters_tb_doc_id,
+                                                        system_chapters_tb_keyTitleList,
+                                                        system_chapters_tb_jsList,
+                                                        system_chapters_tb_centered)
+    
+    dfc_script_modules_tb_html      =   dfc_script_modules_tb.get_html()
+
+    gridclasses     =   ["dfc-footer"]
+    gridhtmls       =   [dfc_script_modules_tb_html]
+    
+    display_generic_grid("dfcleanser-chapters-tb-wrapper",gridclasses,gridhtmls)
+
     print("\n")
 
 
@@ -366,8 +387,7 @@ def get_dfcleanser_notebooks() :
     os.chdir(dfc_nbs_path)
     dfc_nb_files    =   os.listdir(dfc_nbs_path)
     dfc_nbs         =   []
-    print("dfc_nbs_path",dfc_nbs_path) 
-    print("dfc_nb_files",dfc_nb_files)    
+
     for i in range(len(dfc_nb_files)) :
         if(os.path.isfile(dfc_nb_files[i]))  :
             found =  dfc_nb_files[i].find("_config.json") 
@@ -378,8 +398,6 @@ def get_dfcleanser_notebooks() :
         for i in range(len(dfc_nbs)) :
             dfcnbslistRows.append([dfc_nbs[i]])
             dfcnbslistHrefs.append(["select_dfc_nb"])
-        
-    print("dfc_nbs",dfc_nbs)
         
     dfc_notebooks_table = dcTable("dfcleanser Notebooks","dfcNotebooksTable",
                                   cfg.System_ID,
@@ -440,38 +458,38 @@ def get_df_dataframes_table() :
             else :
                 colorList.append([None])
     
-    else :
-        dfsRows.append(["&nbsp;No Dataframes"])
-        dfsHrefs.append([None])
             
-    df_titles_table = dcTable("dfcleanser Dataframes","dfcdfsTable",
-                              cfg.System_ID,
-                              dfsHeader,dfsRows,
-                              dfsWidths,dfsAligns)
+            df_titles_table = dcTable("dfcleanser Dataframes","dfcdfsTable",
+                                      cfg.System_ID,
+                                      dfsHeader,dfsRows,
+                                      dfsWidths,dfsAligns)
     
-    df_titles_table.set_refList(dfsHrefs)
+        df_titles_table.set_refList(dfsHrefs)
     
-    if(df_titles != None) :
-        df_titles_table.set_color(True)
-        df_titles_table.set_colorList(colorList)
-        df_titles_table.set_rowspertable(len(df_titles))
+        if(df_titles != None) :
+            df_titles_table.set_color(True)
+            df_titles_table.set_colorList(colorList)
+            df_titles_table.set_rowspertable(len(df_titles))
         
-    else :
-        df_titles_table.set_rowspertable(1)        
+        else :
+            df_titles_table.set_rowspertable(1)        
     
-    df_titles_table.set_small(True)
-    df_titles_table.set_smallwidth(98)
-    df_titles_table.set_smallmargin(10)
-    df_titles_table.set_border(True)
-    df_titles_table.set_checkLength(True)
-    df_titles_table.set_textLength(36)
-    df_titles_table.set_html_only(True) 
+        df_titles_table.set_small(True)
+        df_titles_table.set_smallwidth(98)
+        df_titles_table.set_smallmargin(10)
+        df_titles_table.set_border(True)
+        df_titles_table.set_checkLength(True)
+        df_titles_table.set_textLength(36)
+        df_titles_table.set_html_only(True) 
 
-    #geo_parms_table.dump()
-    df_titles_table_html = ""
-    df_titles_table_html = df_titles_table.get_html()
+        #geo_parms_table.dump()
+        df_titles_table_html = ""
+        df_titles_table_html = df_titles_table.get_html()
     
-    return(df_titles_table_html)    
+        return(df_titles_table_html)    
+    
+    else :
+        return(None)
     
  
 
@@ -489,59 +507,67 @@ def display_df_dataframes(title=None) :
  
     df_names_html  =   get_df_dataframes_table()
     
-    fparms  =   []
-
-    if(title == None) :
-        current_df  =   cfg.get_current_dfc_dataframe_title()
-    else :
-        current_df  =   title
-
-    cfg.set_config_value(cfg.CURRENT_DF_DISPLAYED_KEY,current_df)
+    if(df_names_html == None) :
     
-    if(not(current_df == None)) :
-        cdf     =   cfg.get_dfc_dataframe(current_df)
-        cdfn    =   cfg.get_dfc_dataframe_notes(current_df)
+        print("\n")
+        dfmgrNotes  =   ["No dataframes defined"]
+        display_notes(dfmgrNotes)
         
-        fparms.append(current_df)
-        
-        if(not(cdf is None)) :
-            fparms.append(str(len(cdf)))
-            fparms.append(str(len(cdf.columns)))
-        else :
-            fparms.append("")
-            fparms.append("")
-            
-        if(not(cdfn == None)) :
-            fparms.append(cdfn)
-        else :
-            fparms.append("")
     else :
-        fparms  =   ["","","",""]
-        
-    parmsProtect = [False,True,True,False]
-        
-    cfg.set_config_value(dfmgr_input_id+"Parms",fparms)
-    cfg.set_config_value(dfmgr_input_id+"ParmsProtect",parmsProtect)
-            
-    from dfcleanser.common.html_widgets import InputForm
-    dfmanager_input_form = InputForm(dfmgr_input_form[0],dfmgr_input_form[1],
-                                     dfmgr_input_form[2],dfmgr_input_form[3],
-                                     dfmgr_input_form[4],dfmgr_input_form[5],
-                                     dfmgr_input_form[6])
-        
-    dfmanager_input_form.set_shortForm(False)
-    dfmanager_input_form.set_gridwidth(550)
-    dfmanager_input_form.set_fullparms(True)
-        
-    dfmgr_input_html = dfmanager_input_form.get_html() 
-            
-    dfmgr_input_heading_html = "<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Current dfcleanser Dataframes</h4>"
     
-    display_grid("dfsubset_wrapper",
-                 dfmgr_input_heading_html,
-                 df_names_html,
-                 dfmgr_input_html,
-                 None)
+        fparms  =   []
+
+        if(title == None) :
+            current_df  =   cfg.get_current_dfc_dataframe_title()
+        else :
+            current_df  =   title
+
+        cfg.set_config_value(cfg.CURRENT_DF_DISPLAYED_KEY,current_df)
+    
+        if(not(current_df == None)) :
+            cdf     =   cfg.get_dfc_dataframe(current_df)
+            cdfn    =   cfg.get_dfc_dataframe_notes(current_df)
+        
+            fparms.append(current_df)
+        
+            if(not(cdf is None)) :
+                fparms.append(str(len(cdf)))
+                fparms.append(str(len(cdf.columns)))
+            else :
+                fparms.append("")
+                fparms.append("")
+            
+            if(not(cdfn == None)) :
+                fparms.append(cdfn)
+            else :
+                fparms.append("")
+        else :
+            fparms  =   ["","","",""]
+        
+        parmsProtect = [False,True,True,False]
+        
+        cfg.set_config_value(dfmgr_input_id+"Parms",fparms)
+        cfg.set_config_value(dfmgr_input_id+"ParmsProtect",parmsProtect)
+            
+        from dfcleanser.common.html_widgets import InputForm
+        dfmanager_input_form = InputForm(dfmgr_input_form[0],dfmgr_input_form[1],
+                                         dfmgr_input_form[2],dfmgr_input_form[3],
+                                         dfmgr_input_form[4],dfmgr_input_form[5],
+                                         dfmgr_input_form[6])
+        
+        dfmanager_input_form.set_shortForm(False)
+        dfmanager_input_form.set_gridwidth(550)
+        dfmanager_input_form.set_fullparms(True)
+        
+        dfmgr_input_html = dfmanager_input_form.get_html()
+    
+        dfmgr_heading_html       =   "<p>" + get_html_spaces(58) + "Current dfCleanser dataframes </p>"
+        
+        gridclasses     =   ["dfcleanser-dfmgr-wrapper-header","df-left","dfc-right"]
+        gridhtmls       =   [dfmgr_heading_html,df_names_html,dfmgr_input_html]
+    
+        print("\n")
+        display_generic_grid("dfcleanser-dfmgr-wrapper",gridclasses,gridhtmls)
 
 
 def display_dfc_files_form() :
@@ -567,28 +593,30 @@ def display_dfc_files_form() :
                                       dfc_files_input_jsList,
                                       dfc_files_input_reqList)
     
-    nbname = cfg.get_notebook_name()
+    nbname = cfg.get_current_notebook_name()
+    
     cfg.set_config_value(dfc_files_input_id + "Parms",[nbname,""])
         
-    dfc_files_input_form.set_gridwidth(640)
+    dfc_files_input_form.set_shortForm(False)
+    dfc_files_input_form.set_gridwidth(440)
+    dfc_files_input_form.set_fullparms(True)
+    dfc_files_input_form.set_custombwidth(110)
     
     try :    
     
         dfc_files_input_html = ""
-        dfc_files_input_html = dfc_files_input_form.get_html()
         
-        print("dfc_files_input_html\n",dfc_files_input_html)
+        #print("dfc_files_input_html\n",dfc_files_input_html)
         
-        dfc_files_heading_html = "<h4>" + get_html_spaces(2) + "dfcleanser Notebook Files Parms" + "</h4>"
-
-        list_html   =   get_dfcleanser_notebooks()
+        dfc_files_heading_html  =   "<p>" + get_html_spaces(64) + "Notebook : '" + str(nbname) + "' Files  </p>"
+        dfc_files_list_html     =   get_dfcleanser_notebooks()
+        dfc_files_input_html    =   dfc_files_input_form.get_html()
+        
+        gridclasses     =   ["dfcleanser-files-wrapper-header","df-left","dfc-right"]
+        gridhtmls       =   [dfc_files_heading_html,dfc_files_list_html,dfc_files_input_html]
     
-        # display the grid
-        display_grid("import_sql_table_wrapper",
-                     dfc_files_heading_html,
-                     list_html,
-                     dfc_files_input_html,
-                     None)
+        print("\n")
+        display_generic_grid("dfcleanser-files-wrapper",gridclasses,gridhtmls)
         
     except Exception as e:
         opstat.store_exception("Unable to display dfc files form ",e)

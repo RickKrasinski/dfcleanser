@@ -73,6 +73,7 @@ def display_system_environment(funcId,parms=None) :
         
         if(funcId == sysm.DISPLAY_MAIN) :
             display_main_tb()
+            clear_system_data()            
     
         if( not (funcId == sysm.PROCESS_EULA ) ) :
             
@@ -494,9 +495,10 @@ def clear_system_data() :
 def clear_system_cfg_values() :
     
     cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
+    cfg.drop_config_value(sysw.dfc_files_input_id+"ParmsProtect")
+
     cfg.drop_config_value(sysw.dfmgr_input_id+"Parms")
-    cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
-    cfg.drop_config_value(sysw.dfmgr_input_id+"ParmsProtect")
+    cfg.drop_config_value(sysw.dfmgr_input_id+"ParmsProtect") 
     
     return(True)
     
