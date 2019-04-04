@@ -25,7 +25,7 @@ from dfcleanser.common.html_widgets import (get_button_tb_form, InputForm,
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT)
 
-from dfcleanser.common.display_utils import (get_df_datatypes_data, display_sample_row, get_datatype_id)
+from dfcleanser.common.display_utils import (get_df_datatypes_data, display_sample_rows, get_datatype_id)
 
 """
 #--------------------------------------------------------------------------
@@ -158,6 +158,9 @@ data_inspection_df_input_form             =   [data_inspection_df_input_id,
                                                data_inspection_df_input_jsList,
                                                data_inspection_df_input_reqList]  
 
+data_cleansing_df_input_id                =   "datacleansedf"
+data_transform_df_input_id                =   "datatransformdf"
+
 
 """
 #--------------------------------------------------------------------------
@@ -288,13 +291,21 @@ def get_select_df_form(title="Inspect") :
     """
     
     if(title == "Cleanse") :
-        labellist     =   ["dataframe_to_cleanse"]
+        formid      =   data_cleansing_df_input_id
+        labellist   =   ["dataframe_to_cleanse"]
+        formid      =   "datacleansedf"
+
     elif(title == "Transform") :
-        labellist     =   ["dataframe_to_transform"]
+        formid      =   data_transform_df_input_id
+        labellist   =   ["dataframe_to_transform"]
+        formid      =   "datatransformdf"
+
     else :
-        labellist     =   data_inspection_df_input_labelList
+        formid      =   data_transform_df_input_id
+        labellist   =   data_inspection_df_input_labelList
+        formid      =   data_inspection_df_input_id
     
-    select_df_form  =   InputForm(data_inspection_df_input_id,
+    select_df_form  =   InputForm(formid,
                                   data_inspection_df_input_idList,
                                   labellist,
                                   data_inspection_df_input_typeList,
@@ -640,7 +651,7 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
             row_nans_html           =   display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50,False)
             drop_row_nans_html      =   display_drop_rows()
             
-            gridclasses     =   ["df-inspection-nan-wrapper-header",
+            gridclasses     =   ["dfcleanser-common-grid-header",
                                  "df-inspection-nan-wrapper-content",
                                  "df-inspection-nan-wrapper-content1",
                                  "df-inspection-nan-wrapper-footer"]
@@ -718,7 +729,6 @@ def display_row_nan_stats(df,display=True) :
     nan_stats_table.set_small(True)
     nan_stats_table.set_smallwidth(35)
     nan_stats_table.set_smallmargin(32)
-    nan_stats_table.set_smallfsize(12)
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
@@ -849,7 +859,6 @@ def display_col_nan_stats(df,display=True) :
     nan_stats_table.set_small(True)
     nan_stats_table.set_smallwidth(35)
     nan_stats_table.set_smallmargin(32)
-    nan_stats_table.set_smallfsize(12)
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
@@ -948,14 +957,14 @@ def display_df_row_data(df,table,rowid,colId,opstat,display=True) : #,numworstRo
     
     if(type(rowid) == str) :
         if(display) :
-            display_sample_row(df,table,int(rowid),int(colId),opstat)
+            display_sample_rows(df,table,int(rowid),int(colId),opstat)
         else :
-            return(display_sample_row(df,table,int(rowid),int(colId),opstat,False))
+            return(display_sample_rows(df,table,int(rowid),int(colId),opstat,False))
     else :
         if(display) :
-            display_sample_row(df,table,rowid,colId,opstat)
+            display_sample_rows(df,table,rowid,colId,opstat)
         else :
-            return(display_sample_row(df,table,rowid,colId,opstat,False))
+            return(display_sample_rows(df,table,rowid,colId,opstat,False))
 
 
 def display_row_stats(df,dftitle,display=True) :
@@ -989,7 +998,6 @@ def display_row_stats(df,dftitle,display=True) :
     row_stats_table.set_small(True)
     row_stats_table.set_smallwidth(50)
     row_stats_table.set_smallmargin(32)
-    row_stats_table.set_smallfsize(12)
     row_stats_table.set_border(False)
     row_stats_table.set_checkLength(False)
     
@@ -1106,7 +1114,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
         print("\n")
 
-        gridclasses     =   ["df-inspection-category-data-wrapper-header",
+        gridclasses     =   ["dfcleanser-common-grid-header",
                              "df-inspection-category-data-wrapper-footer"]
                 
         gridhtmls       =   ["<p>Categorical Columns</p>",
@@ -1161,7 +1169,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
         if(len(catcandRows) > 0) :
             
-            gridclasses     =   ["df-inspection-category-data-wrapper-header",
+            gridclasses     =   ["dfcleanser-common-grid-header",
                                  "df-inspection-category-data-wrapper-footer"]
                 
             gridhtmls       =   ["<p>Categorical Candidate Columns</p>",

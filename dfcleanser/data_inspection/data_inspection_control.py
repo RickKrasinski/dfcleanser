@@ -66,7 +66,8 @@ def display_data_inspection(id, parms=None) :
             fparms  =   get_parms_for_input(parms[0],diw.data_inspection_df_input_idList)
 
             if(not (len(fparms) == 0) ) :
-                cfg.set_current_dfc_dataframe_title(fparms[0])
+                #cfg.set_current_dfc_dataframe_title(fparms[0])
+                cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,fparms[0])
             else :
                 no_df_selected  =   True
             
@@ -163,7 +164,7 @@ def display_data_inspection(id, parms=None) :
             clock = RunningClock()
             clock.start()
 
-            df_data_info = get_df_datatypes_data(cfg.get_dfc_dataframe())
+            df_data_info = get_df_datatypes_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
 
             clock.stop() 
             
@@ -243,7 +244,8 @@ def display_data_inspection(id, parms=None) :
                 
                 nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
                 nans_cols_table = dcTable("Columns with most NaNs","nansTable",cfg.DataInspection_ID)
-                diw.display_null_data(cfg.get_dfc_dataframe(),nans_rows_table,nans_cols_table,120)
+                diw.display_null_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                      nans_rows_table,nans_cols_table,120)
  
            
             # if display sample row data
@@ -255,18 +257,20 @@ def display_data_inspection(id, parms=None) :
                 
                 print("\n")
                 diw.print_page_separator("Rows Data",2)
+                
                 clock = RunningClock()
                 clock.start()
 
                 try :                
                 
-                    row_stats_html          =   diw.display_row_stats(cfg.get_dfc_dataframe(),
-                                                                      cfg.get_current_dfc_dataframe_title(),
+                    row_stats_html          =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                      cfg.get_config_value(cfg.CURRENT_INSPECTION_DF),
                                                                       False)
                     
-                    rows_table = dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
-                    sample_row_html         =   diw.display_df_row_data(cfg.get_dfc_dataframe(),rows_table,0,0,opstat,False)  
-                    searchcols_html         =   diw.get_colsearch_form().get_html()
+                    rows_table          =   dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
+                    sample_row_html     =   diw.display_df_row_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                    rows_table,0,0,opstat,False)  
+                    searchcols_html     =   diw.get_colsearch_form().get_html()
                     
                     gridclasses     =   ["df-inspection-row-data-wrapper-content",
                                          "df-inspection-row-data-wrapper-content1",
@@ -305,7 +309,8 @@ def display_data_inspection(id, parms=None) :
                     print("\n")
                 
                     col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
-                    column_names_html   =   display_column_names(cfg.get_dfc_dataframe(),col_names_table,"scol",False)   
+                    column_names_html   =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                 col_names_table,"scol",False)   
 
                     df_cols     =   cfg.get_dfc_dataframe().columns.tolist()
                 
@@ -316,8 +321,9 @@ def display_data_inspection(id, parms=None) :
                             break
                     
                     if(found_numeric) :
-                        num_col_names_table = dcTable("Numeric Column Stats ","gendfdesc",cfg.DataInspection_ID)
-                        num_col_stats_html  =   display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table,False)
+                        num_col_names_table =   dcTable("Numeric Column Stats ","gendfdesc",cfg.DataInspection_ID)
+                        num_col_stats_html  =   display_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                    num_col_names_table,None,None,False)
                 
                         gridclasses     =   ["df-inspection-column-data-wrapper-content",
                                              "df-inspection-column-data-wrapper-footer"]
@@ -365,7 +371,8 @@ def display_data_inspection(id, parms=None) :
                                                 "catcandcolsTable",
                                                 cfg.DataInspection_ID)
                 
-                    numcats, numcands = diw.display_df_categories(cfg.get_dfc_dataframe(),cattable,catcandidatetable)
+                    numcats, numcands = diw.display_df_categories(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                  cattable,catcandidatetable)
                     
                 except Exception as e:
                     opstat.store_exception("Error displaying category data\n ",e)
