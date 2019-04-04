@@ -17,11 +17,12 @@ import dfcleanser.common.cfg as cfg
 
 from dfcleanser.common.table_widgets import  (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT, 
                                               get_df_describe_table, get_stats_table)   
-from dfcleanser.common.html_widgets import   (get_html_spaces, addattribute, addstyleattribute, new_line, 
+from dfcleanser.common.html_widgets import   (addattribute, addstyleattribute, new_line, 
                                               InputForm, ButtonGroupForm, display_composite_form, 
                                               get_button_tb_form)
 
-from dfcleanser.common.common_utils import  display_generic_grid, get_select_defaults,  displayParms
+from dfcleanser.common.common_utils import  (display_generic_grid, get_select_defaults,  displayParms,
+                                             run_jscript, display_status)
 
 """
 #--------------------------------------------------------------------------
@@ -40,16 +41,20 @@ bulk_geocode_process_tb_doc_title            =   "Process Bulk Geocode"
 bulk_geocode_process_tb_title                =   "Process Bulk Geocode"
 bulk_geocode_process_tb_id                   =   "procbulkgeocode"
 
-bulk_geocode_process_tb_keyTitleList         =   ["Concat Results</br>to Dataframe",
-                                                  "Export Results</br>to CSV File",
-                                                  "Export Results</br>to SQL Table",
-                                                  "Show Source</br>Dataframe",
-                                                  "Return"]
+bulk_geocode_process_tb_keyTitleList         =   ["Concat</br>Results to</br>Dataframe",
+                                                  "Export</br>Results to</br>CSV File",
+                                                  "Export</br>Results to</br>SQL Table",
+                                                  "Show</br>Source</br>Dataframe",
+                                                  "Show</br>Results</br>Dataframe",
+                                                  "Show</br>Errors</br>Dataframe",
+                                                  "End</br>Geocoding"]
 
 bulk_geocode_process_tb_jsList               =   ["display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_CONCAT) + ")",
                                                   "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV) + ")",
                                                   "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_EXPORT_SQL) + ")",
-                                                  "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_FULL) + ")",
+                                                  "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_SOURCE_DF) + ")",
+                                                  "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_DF) + ")",
+                                                  "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_ERRORS_DF) + ")",
                                                   "display_bulk_geocoding_results(" + str(sugm.DISPLAY_BULK_RESULTS_RETURN) + ")"]
 
 bulk_geocode_process_tb_centered             =   False
@@ -245,8 +250,7 @@ bulk_console_commands = """        <div style="margin-top:10px; margin-bottom:20
             </div>
             <br>
             <div class="container" style="margin-top:20px; width:95%; overflow-x: hidden !important;">
-                <button type="button" class="btn btn-primary" style="  width:150px;  height:40px;" onclick="controlbulkrun(""" + str(sugm.BULK_VIEW_ERRORS) + """)">View Errors</button>
-                <button type="button" class="btn btn-primary" style="  width:150px;  height:40px;" onclick="controlbulkrun(""" + str(sugm.BULK_RESULTS_GEOCODER) + """)">Process Results</button>
+                <button type="button" class="btn btn-primary" style="  width:300px;  height:40px;" onclick="controlbulkrun(""" + str(sugm.BULK_RESULTS_GEOCODER) + """)">Process Results</button>
             </div>
 
         </div>
@@ -281,12 +285,9 @@ bulk_end = """</div>"""
 #--------------------------------------------------------------------------
 """
 
-google_results_bar_text     =   "Total Addresses Geocoded &nbsp;&nbsp;&nbsp;: &nbsp;"
-google_errors_bar_text      =   "Total Geocode Errors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;"
-
-arcgis_results_bar_text     =   "Total Addresses Geocoded &nbsp;&nbsp;&nbsp;: &nbsp;"
-arcgis_errors_bar_text      =   "Total Geocode Errors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;"
-
+geocode_results_bar_text     =   "Total Addresses Geocoded &nbsp;&nbsp;&nbsp;: &nbsp;"
+reverse_results_bar_text     =   "Total Locations Geocoded &nbsp;&nbsp;&nbsp;: &nbsp;"
+errors_bar_text              =   "Total Geocode Errors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;"
 
 def display_base_taskbar() :
     display_composite_form([get_button_tb_form(ButtonGroupForm(bulk_geocode_process_tb_id,
@@ -298,7 +299,7 @@ def display_base_taskbar() :
 
 
 
-def set_progress_bar_value(geocid,barid,countvalue,barvalue) :
+def set_progress_bar_value(geocid,geotype,barid,countvalue,barvalue) :
     """
     * -------------------------------------------------------------------------- 
     * function : update status bars
@@ -318,11 +319,11 @@ def set_progress_bar_value(geocid,barid,countvalue,barvalue) :
         if(barid == sugm.GEOCODE_BAR)   :   
             bid         =   "arcgistotaladdrs"
             countid     =   "geocodeaddresses"
-            bhtml       =   arcgis_results_bar_text + str(countvalue)
+            bhtml       =   geocode_results_bar_text + str(countvalue)
         else                            :   
             bid         =   "arcgiserrorrate"
             countid     =   "geocodeerrors"
-            bhtml       =   arcgis_errors_bar_text + str(countvalue)
+            bhtml       =   errors_bar_text + str(countvalue)
 
             
     elif(geocid == sugm.GoogleId) :
@@ -330,27 +331,53 @@ def set_progress_bar_value(geocid,barid,countvalue,barvalue) :
         if(barid == sugm.GEOCODE_BAR)   :   
             bid         =   "bgqbulknumberlimit"
             countid     =   "geocodeaddresses"
-            bhtml       =   google_results_bar_text + str(countvalue)
+            if(geotype == sugm.QUERY) :
+                bhtml       =   geocode_results_bar_text + str(countvalue)
+            else :
+                bhtml       =   reverse_results_bar_text + str(countvalue)
         else                            :   
             bid         =   "bgqbulkfailurelimit"
             countid     =   "geocodeerrors"
-            bhtml       =   google_errors_bar_text + str(countvalue)
+            bhtml       =   errors_bar_text + str(countvalue)
+            
+    elif(geocid == sugm.BingId) :
+
+        if(barid == sugm.GEOCODE_BAR)   :   
+            bid         =   "bbqbulknumberlimit"
+            countid     =   "geocodeaddresses"
+            if(geotype == sugm.QUERY) :
+                bhtml       =   geocode_results_bar_text + str(countvalue)
+            else :
+                bhtml       =   reverse_results_bar_text + str(countvalue)
+        else                            :   
+            bid         =   "bbrbulknumberlimit"
+            countid     =   "geocodeerrors"
+            bhtml       =   errors_bar_text + str(countvalue)
+            
+    elif(geocid == sugm.BaiduId) :
+
+        if(barid == sugm.GEOCODE_BAR)   :   
+            bid         =   "baiduqbulknumberlimit"
+            countid     =   "geocodeaddresses"
+            if(geotype == sugm.QUERY) :
+                bhtml       =   geocode_results_bar_text + str(countvalue)
+            else :
+                bhtml       =   reverse_results_bar_text + str(countvalue)
+        else                            :   
+            bid         =   "baidurbulknumberlimit"
+            countid     =   "geocodeerrors"
+            bhtml       =   errors_bar_text + str(countvalue)
+            
 
     if(barid == sugm.GEOCODE_BAR) :
         
         set_progress_bar_js = "set_bulk_progress_bar('" + bid + "', " + str(barvalue) + ");"
     
-        from dfcleanser.common.common_utils import run_jscript
-        run_jscript(set_progress_bar_js,
-                    "fail to set progress bar : ",
-                    str(bid))
+        run_jscript(set_progress_bar_js,"fail to set progress bar : ")
 
     set_progress_count_js = "$('#" + countid + "').html('" + bhtml +"');"
 
-    from dfcleanser.common.common_utils import run_jscript
-    run_jscript(set_progress_count_js,
-                "fail to set count value : ",
-                 str(countid))
+    run_jscript(set_progress_count_js,"fail to set count value : ")
 
 
 def set_status_bar(state) :
@@ -396,10 +423,7 @@ def set_status_bar(state) :
 
     change_state_js = ("$('#geocodeconsolestateId').attr('src'," + "'" + image + "?timestamp=" + str(tstamp) + "'" + ");")
 
-    from dfcleanser.common.common_utils import run_jscript
-    run_jscript(change_state_js,
-                "fail to change console state : ",
-                str(state))
+    run_jscript(change_state_js,"fail to change console state : ")
 
 
 
@@ -498,7 +522,9 @@ def get_bulk_parms_table_html(geocid,geotype,runParms) :
     * returns : parms html
     * --------------------------------------------------------
     """
-    
+
+    #print("get_bulk_parms_table_html",runParms)
+
     parmsHeader      =   [""]
     parmsRows        =   []
     parmsWidths      =   [100]
@@ -514,11 +540,19 @@ def get_bulk_parms_table_html(geocid,geotype,runParms) :
         parmsRows.append(parmsrow)
         
     parms_table = None
-                
-    parms_table = dcTable("Query Parms","geocodeParms",
-                          cfg.SWGeocodeUtility_ID,
-                          parmsHeader,parmsRows,
-                          parmsWidths,parmsAligns)
+    
+    if(geotype == sugm.QUERY) :           
+        parms_table = dcTable("Query Parms","geocodeParms",
+                              cfg.SWGeocodeUtility_ID,
+                              parmsHeader,parmsRows,
+                              parmsWidths,parmsAligns)
+    else :
+        parms_table = dcTable("Reverse Parms","geocodeParms",
+                              cfg.SWGeocodeUtility_ID,
+                              parmsHeader,parmsRows,
+                              parmsWidths,parmsAligns)
+        
+        
             
     parms_table.set_small(True)
     parms_table.set_smallwidth(240)
@@ -553,8 +587,9 @@ def display_geocoder_console(geocid,geotype,runParms,opstat,cmd=sugm.STOP) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    #print("display_geocoder_console",runParms)
 
-    geocoding_heading_html  =   "<p>" + get_html_spaces(68) + "Bulk Geocoding Console</p>"
+    geocoding_heading_html  =   "<div>Bulk Geocoding Console</div><nr></br>"
     parms_html  =   get_bulk_parms_table_html(geocid,geotype,runParms) 
     
     if(cmd == sugm.LOAD) :    state  =   sugm.STOPPED
@@ -562,15 +597,9 @@ def display_geocoder_console(geocid,geotype,runParms,opstat,cmd=sugm.STOP) :
     
     if(geocid == sugm.ArcGISId) :
         
-        if(not(runParms == None)) :
-            from dfcleanser.common.common_utils import displayParms, get_parms_list_from_dict 
-            parms   =   get_parms_list_from_dict(subgw.batch_arcgis_query_labelList,runParms) 
-            displayParms("arcGIS Batch Geocoding Parms",subgw.batch_arcgis_query_labelList,parms,"arcgisbulkparms")
-
-        bar0 = ["Total Addresses Geocoded","arcgistotaladdrs",0,100,0]
-        #bar1 = ["Geocode Error Rate","arcgiserrorrate",0,100,0]
+        bar0 = ["Total Addresses Geocoded","geocodeaddresses","arcgistotaladdrs",0,100,0]
         
-        progressBars    =   [bar0]#,bar1]
+        progressBars    =   [bar0]
         
         console_html    =   get_bulk_geocode_console_html(progressBars,state)
         
@@ -578,13 +607,35 @@ def display_geocoder_console(geocid,geotype,runParms,opstat,cmd=sugm.STOP) :
         
     elif(geocid == sugm.GoogleId) :
         
-        bar0 = [google_results_bar_text+"0","geocodeaddresses","bgqbulknumberlimit",0,100,0]
-        #bar1 = [google_errors_bar_text+"0","geocodeerrors","bgqbulkfailurelimit",0,100,0]
+        if(geotype == sugm.QUERY) :
+            bar0 = [geocode_results_bar_text+"0","geocodeaddresses","bgqbulknumberlimit",0,100,0]
+        else :
+            bar0 = [reverse_results_bar_text+"0","geocodeaddresses","bgrbulknumberlimit",0,100,0]
 
-        progressBars    =   [bar0]#,bar1]
+        progressBars    =   [bar0]
         console_html    =   get_bulk_geocode_console_html(progressBars,state)
     
-    gridclasses     =   ["df-concat-header","dfc-left","dfc-right"]
+    elif(geocid == sugm.BingId) :
+        
+        if(geotype == sugm.QUERY) :
+            bar0 = [geocode_results_bar_text+"0","geocodeaddresses","bbqbulknumberlimit",0,100,0]
+        else :
+            bar0 = [reverse_results_bar_text+"0","geocodeaddresses","bbrbulknumberlimit",0,100,0]
+
+        progressBars    =   [bar0]
+        console_html    =   get_bulk_geocode_console_html(progressBars,state)
+    
+    elif(geocid == sugm.BingId) :
+        
+        if(geotype == sugm.QUERY) :
+            bar0 = [geocode_results_bar_text+"0","geocodeaddresses","baiduqbulknumberlimit",0,100,0]
+        else :
+            bar0 = [reverse_results_bar_text+"0","geocodeaddresses","baidurbulknumberlimit",0,100,0]
+
+        progressBars    =   [bar0]
+        console_html    =   get_bulk_geocode_console_html(progressBars,state)
+    
+    gridclasses     =   ["dfcleanser-common-grid-header-large","dfc-left","dfc-right"]
     gridhtmls       =   [geocoding_heading_html,parms_html,
                          console_html]
     
@@ -605,7 +656,7 @@ def get_results_df_html(opstat) :
 
     # build geocode results table   
     results_df_title    =   sugm.GEOCODING_RESULTS_DF_TITLE
-    results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_df()
+    results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_results_df()
     
     rowids              =   [0,1,None,(len(results_df)-2),(len(results_df)-1)]
     colids              =   [-1]
@@ -618,133 +669,6 @@ def get_results_df_html(opstat) :
     return(results_df_html)
 
 
-def get_source_df_html(geotype,geocid,results_df,runParms,merged,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : get the results for the source mini table
-    * 
-    * parms :
-    *  opstat - opStatus object to return status and error message
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-
-    source_df_html     =    ""
-    
-    try :
-    
-        # build geocode source df table   
-        if(geotype == sugm.QUERY) :
-            if(geocid == sugm.GoogleId) :
-                geoparms        =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
-            elif(geocid == sugm.ArcGISId) :
-                geoparms        =   cfg.get_config_value(subgw.batch_arcgis_query_id+"Parms")
-            
-        else :
-            if(geocid == sugm.GoogleId) :
-                geoparms        =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
-
-        source_df_title     =   geoparms[0]
-        source_df           =   cfg.get_dfc_df(source_df_title).get_df()
-    
-        start_index         =   0
-    
-        colnames    =   list(results_df.columns)
-    
-        if(colnames[0] == "source df rowid") :
-            start_index         =   int(results_df.iloc[0,0])
-            end_index           =   int(results_df.iloc[(len(results_df)-1),0])
-    
-        else :
-            start_index         =   0
-            end_index           =   len(results_df)-1
-    
-        if(start_index == 0) :
-            if(len(results_df) < len(source_df)) :
-                rowids          =   [start_index,start_index+1,None,end_index-1,end_index,None,(len(source_df)-2),(len(source_df)-1)]
-            else :
-                rowids          =   [start_index,start_index+1,None,(len(source_df)-2),(len(source_df)-1)]
-                
-        else :
-            if(len(results_df) < len(source_df)) :
-                rowids          =   [0,1,None,start_index,start_index+1,None,end_index-1,end_index,None,(len(source_df)-2),(len(source_df)-1)]            
-            else :
-                rowids          =   [0,1,None,start_index,start_index+1,None,(len(source_df)-2),(len(source_df)-1)]
-    
-        source_columns      =   list(source_df.columns)
-    
-        address_map         =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
-        addr_cols_map       =   address_map.get_colindices()
-        addr_cols           =   []
-    
-        for i in range(len(addr_cols_map)) :
-            if(not (addr_cols_map[i] == -1))  :
-                addr_cols.append(addr_cols_map[i])
-    
-    
-        if(not (merged)) :
-            
-            if(len(addr_cols) > 5) :
-                num_addr_cols   =   5
-            else :
-                num_addr_cols   =   len(addr_cols)
-
-            if(num_addr_cols == 0) :
-                colids  =   [-1,0,1,2,3,4,5,6,None,int(len(source_columns)-1)]
-            else :
-                colids              =   [-1,0]
-        
-                for i in range((5-num_addr_cols)) :
-                    colids.append(i+1) 
-            
-                colids.append(None)
-        
-                for i in range((num_addr_cols)) :
-                    colids.append(source_columns.index(addr_cols[i])) 
-            
-                colids.append(None)
-                colids.append(int(len(source_columns)-1))
-                
-        else :
-            
-            if(len(addr_cols) > 3) :
-                num_addr_cols   =   3
-            else :
-                num_addr_cols   =   len(addr_cols)
-            
-            if(num_addr_cols == 0) :
-                colids  =   [-1,0,1,2,3,4,None,
-                             int(len(source_columns)-3),
-                             int(len(source_columns)-2),
-                             int(len(source_columns)-1)]
-            else :
-                colids              =   [-1,0]
-        
-                for i in range((3-num_addr_cols)) :
-                    colids.append(i+1) 
-            
-                colids.append(None)
-        
-                for i in range((num_addr_cols)) :
-                    colids.append(source_columns.index(addr_cols[i])) 
-            
-                colids.append(None)
-                colids.append(int(len(source_columns)-3))
-                colids.append(int(len(source_columns)-2))
-                colids.append(int(len(source_columns)-1))
-            
-            
-            
-
-        source_df_html     =   get_df_describe_table(source_df_title,source_df,rowids,colids) 
-        
-    except Exception as e:
-        opstat.store_exception("Unable to generate source df html ",e)
-
-    return(source_df_html)
-
-
 def display_geocoder_process_results(optionid,opstat,showFull=False) :
     """
     * -------------------------------------------------------------------------- 
@@ -752,19 +676,16 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
     * 
     * parms :
     *  geotype      - geocoder cmd type
-    *  opstat - opStatus object to return status and error message
+    *  opstat       - opStatus object to return status and error message
     *
     * returns : N/A
     * --------------------------------------------------------
     """
 
-    print("display_geocoder_process_results",optionid,showFull)
-
-
     if(not ((optionid == sugm.DISPLAY_BULK_RESULTS_CONCAT_PROCESSED) or 
             (optionid == sugm.DISPLAY_BULK_RESULTS_CSV_PROCESSED))) :
         
-        geocoding_heading_html      =   "<p>" + get_html_spaces(36) + "Process Bulk Geocoding Results</p>"
+        geocoding_heading_html      =   "<div>Process Bulk Geocoding Results</div>"
 
         labels      =   ["Total Geocode Results","Total Geocode Errors","Total Run Time - Seconds","Geocodes/Second"]
         values      =   [str(subgc.get_geocode_runner_results_log().get_results_count()),
@@ -776,18 +697,6 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
 
         geocid              =   subgc.get_geocode_runner_id()
         geotype             =   subgc.get_geocode_runner_type() 
-        runParms            =   subgc.get_geocode_runParms()
-    
-        results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_df()
-        results_df_html     =   get_results_df_html(opstat)
-        
-        if(optionid == sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV) :
-            source_df_html      =   ""
-        else :
-            if(showFull) :
-                source_df_html      =   get_source_df_html(geotype,geocid,results_df,runParms,False,opstat)
-            else :
-                source_df_html      =   ""
 
         # ----------------------------------
         # get intermediate input forms
@@ -799,15 +708,15 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":140,"leftmargin":100}
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
             proc_command_input_form.set_custom(custom_keys)
         
-        if(optionid == sugm.DISPLAY_BULK_RESULTS_FULL) :
+        if(optionid == sugm.DISPLAY_BULK_RESULTS) :
         
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":140,"leftmargin":100}
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
             proc_command_input_form.set_custom(custom_keys)
 
 
@@ -872,8 +781,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                                     bulk_geocode_procr_input_typeList,
                                     selectDicts)
 
-                proc_command_input_form.set_gridwidth(620)
-                proc_command_input_form.set_custombwidth(120)
+                proc_command_input_form.set_gridwidth(860)
+                proc_command_input_form.set_custombwidth(110)
 
 
         elif(optionid == sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV) :
@@ -895,8 +804,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                 csv_file_name   =   gparms[0] + "_Reverse_Results.csv"
                 cfg.set_config_value(bulk_geocode_export_input_id + "Parms",[csv_file_name])
         
-            proc_command_input_form.set_gridwidth(620)
-            proc_command_input_form.set_custombwidth(160)
+            proc_command_input_form.set_gridwidth(860)
+            proc_command_input_form.set_custombwidth(140)
 
 
         elif(optionid == sugm.DISPLAY_BULK_RESULTS_EXPORT_SQL) :
@@ -906,64 +815,91 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                                                     bulk_geocode_export_input_form[4],bulk_geocode_export_input_form[5],
                                                     bulk_geocode_export_input_form[6])
         
-            proc_command_input_form.set_gridwidth(620)
-            custom_keys     =   {"keywidth":140,"leftmargin":100}
+            proc_command_input_form.set_gridwidth(860)
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
             proc_command_input_form.set_custom(custom_keys)
 
-            proc_command_input_form.set_custombwidth(120)
+            proc_command_input_form.set_custombwidth(90)
 
+
+        elif(optionid == sugm.DISPLAY_BULK_SOURCE_DF) :
+            
+            geocid      =   subgc.get_geocode_runner_id()
+            geotype     =   subgc.get_geocode_runner_type() 
+            
+            if(geotype == sugm.QUERY) :
+                if(geocid == sugm.GoogleId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
+                elif(geocid == sugm.ArcGISId) :
+                    geoparms        =   cfg.get_config_value(subgw.batch_arcgis_query_id+"Parms")
+                elif(geocid == sugm.BingId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_bing_query_input_id+"Parms")
+                elif(geocid == sugm.BaiduId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_baidu_query_input_id+"Parms")
+            
+            else :
+                if(geocid == sugm.GoogleId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
+                elif(geocid == sugm.BingId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_bing_reverse_input_id+"Parms")
+                elif(geocid == sugm.BingId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_baidu_reverse_input_id+"Parms")
+                    
+
+            df_title     =   geoparms[0]
+            print("\n")
+            display_dataframe(df_title,cfg.SWGeocodeUtility_ID,opstat)
+            
+            proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
+                                                          bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
+    
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
+            proc_command_input_form.set_custom(custom_keys)
+
+        
+        elif(optionid == sugm.DISPLAY_BULK_RESULTS_DF) :
+            
+            print("\n")
+            display_dataframe(sugm.GEOCODING_RESULTS_DF_TITLE,cfg.SWGeocodeUtility_ID,opstat)
+
+            proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
+                                                          bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
+    
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
+            proc_command_input_form.set_custom(custom_keys)
+
+        
+        elif(optionid == sugm.DISPLAY_BULK_ERRORS_DF) :
+            
+            print("\n")
+            display_dataframe(sugm.GEOCODING_ERROR_LOG_DF_TITLE,cfg.SWGeocodeUtility_ID,opstat)
+            
+            proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
+                                                          bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
+    
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
+            proc_command_input_form.set_custom(custom_keys)
+
+        elif(optionid == sugm.DISPLAY_BULK_RESULTS_RETURN) :
+            proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
+                                                          bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
+    
+            custom_keys     =   {"keywidth":110,"leftmargin":100}
+            proc_command_input_form.set_custom(custom_keys)
 
         #proc_command_input_form.dump()
         proc_command_input_html     =   proc_command_input_form.get_html()
-        
-        if(optionid == sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV) :
-        
-            gridclasses     =   ["geocode-final-header",
-                                 "dfc-header",
-                                 "dfc-top-centered",
-                                 "dfc-footer"]
-    
-            gridhtmls       =   [geocoding_heading_html,
-                                 stats_html,
-                                 results_df_html,
-                                 proc_command_input_html]
-    
-            display_generic_grid("geocode-final-wrapper",gridclasses,gridhtmls)
-            
-        else :
-        
-            if(showFull) :
-                
-                gridclasses     =   ["geocode-process-header",
-                                    "dfc-header",
-                                    "dfc-top-centered",
-                                    "dfc-bottom",
-                                    "dfc-footer"]
-    
-                gridhtmls       =   [geocoding_heading_html,
-                                     stats_html,
-                                     results_df_html,
-                                     source_df_html,
-                                     proc_command_input_html]
-    
-                display_generic_grid("geocode-process-wrapper",gridclasses,gridhtmls)
-                
-            else :
-                
-                gridclasses     =   ["geocode-final-header",
-                                     "dfc-header",
-                                     "dfc-top-centered",
-                                     "dfc-footer"]
-    
-                gridhtmls       =   [geocoding_heading_html,
-                                     stats_html,
-                                     results_df_html,
-                                     proc_command_input_html]
-    
-                display_generic_grid("geocode-final-wrapper",gridclasses,gridhtmls)
-                
 
-
+        gridclasses     =   ["dfcleanser-common-grid-header",
+                             "dfc-top",
+                             "dfc-footer"]
+    
+        gridhtmls       =   [geocoding_heading_html,
+                             stats_html,
+                             proc_command_input_html]
+    
+        display_generic_grid("geocode-final-wrapper",gridclasses,gridhtmls)
+        
 
     # ----------------------------------
     # display final processed results 
@@ -976,7 +912,7 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
         proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                       bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-        custom_keys     =   {"keywidth":140,"leftmargin":100}
+        custom_keys     =   {"keywidth":110,"leftmargin":100}
         proc_command_input_form.set_custom(custom_keys)
         
         proc_command_input_html     =   proc_command_input_form.get_html()  
@@ -985,9 +921,9 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             
             geocid      =   subgc.get_geocode_runner_id()
             geotype     =   subgc.get_geocode_runner_type() 
-            runParms    =   subgc.get_geocode_runParms()
+            #runParms    =   subgc.get_geocode_runParms()
 
-            geocoding_heading_html      =   "<p>" + get_html_spaces(36) + "Bulk Geocoding Concatenate Final Results</p>"
+            geocoding_heading_html      =   "<div>Bulk Geocoding Concatenate Final Results</div>"
            
             # build geocode source df table   
             if(geotype == sugm.QUERY) :
@@ -995,10 +931,18 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                     geoparms        =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
                 elif(geocid == sugm.ArcGISId) :
                     geoparms        =   cfg.get_config_value(subgw.batch_arcgis_query_id+"Parms")
+                elif(geocid == sugm.BingId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_bing_query_input_id+"Parms")
+                elif(geocid == sugm.BaiduId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_baidu_query_input_id+"Parms")
             
             else :
                 if(geocid == sugm.GoogleId) :
                     geoparms        =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
+                elif(geocid == sugm.BingId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_bing_reverse_input_id+"Parms")
+                elif(geocid == sugm.BaiduId) :
+                    geoparms        =   cfg.get_config_value(subgw.bulk_baidu_reverse_input_id+"Parms")
 
             source_df_title     =   geoparms[0]
             source_df           =   cfg.get_dfc_df(source_df_title).get_df()
@@ -1010,19 +954,12 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                                      
             stats_html                  =   get_stats_table(stats_title,stats_colnames,stats_values)
 
-            # build geocode results table   
-            results_df_title    =   sugm.GEOCODING_RESULTS_DF_TITLE
-            results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_df()
-        
-            data_df_html        =   get_source_df_html(geotype,geocid,results_df,runParms,True,opstat)
-
-
         if(optionid == sugm.DISPLAY_BULK_RESULTS_CSV_PROCESSED) :     
 
-            geocoding_heading_html      =   "<p>" + get_html_spaces(36) + "Bulk Geocoding Export CSV Final Results</p>"
+            geocoding_heading_html      =   "<div>Bulk Geocoding Export CSV Final Results</div>"
            
             results_df_title    =   sugm.GEOCODING_RESULTS_DF_TITLE
-            results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_df()
+            results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_results_df()
             
             stats_title         =   results_df_title + " dataframe"
             stats_colnames      =   ["Total Rows","Total Columns"]
@@ -1031,36 +968,59 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                                      
             stats_html          =   get_stats_table(stats_title,stats_colnames,stats_values)
 
-            # build geocode results table   
-            results_df_title    =   sugm.GEOCODING_RESULTS_DF_TITLE
-            results_df          =   subgc.get_geocode_runner_results_log().get_geocoding_df()
-        
-            data_df_html        =   get_results_df_html(opstat)
 
-
-
-
-        if(optionid == sugm.DISPLAY_BULK_RESULTS_CSV_PROCESSED) :  
-            
-            gridclasses     =   ["geocode-final-header",
-                                 "dfc-header",
-                                 "dfc-top-centered",
-                                 "dfc-footer"]
-            
-        else :
-
-            gridclasses     =   ["geocode-final-header",
-                                 "dfc-header",
-                                 "dfc-top",
-                                 "dfc-footer"]
+        gridclasses     =   ["dfcleanser-common-grid-header",
+                             "dfc-header",
+                             "dfc-footer"]
     
         gridhtmls       =   [geocoding_heading_html,
                              stats_html,
-                             data_df_html,
                              proc_command_input_html]
     
         display_generic_grid("geocode-final-wrapper",gridclasses,gridhtmls)
 
+
+
+def display_dataframe(df_title,owner,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the process bu;k geocoding results
+    * 
+    * parms :
+    *  df_title     -   dataframe title
+    *  owner        -   owner of display
+    *  opstat       -   opStatus object to return status and error message
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+
+    df  =   cfg.get_dfc_dataframe(df_title)
+    
+    if(len(df) == 0) :
+        display_status("dataframe " + df_title + " has no rows")
+        return()
+        
+    else :
+
+        try :  
+              
+            df_heading_html      =   "<div>" + df_title + "&nbsp;dataframe</div>"
+                    
+            rows_table      =   dcTable(df_title,df_title + "_search_" + str(owner),owner)
+        
+            from dfcleanser.common.display_utils import display_sample_rows
+            sample_row_html =   display_sample_rows(cfg.get_dfc_dataframe(df_title),rows_table,0,0,opstat,False)
+                    
+            gridclasses     =   ["dfcleanser-common-grid-header","df-display-wrapper-content"]
+            gridhtmls       =   [df_heading_html,sample_row_html]
+                    
+            display_generic_grid("df-display-wrapper",gridclasses,gridhtmls)
+                    
+             
+        except Exception as e:
+            opstat.store_exception("Error displaying dataframe " + df_title,e)
+            display_status("Error displaying dataframe " + df_title)
 
 
 

@@ -16,10 +16,11 @@ import dfcleanser.sw_utilities.sw_utility_geocode_widgets as sugw
 
 import dfcleanser.common.help_utils as dfchelp
 
-from dfcleanser.common.html_widgets import (maketextarea, get_html_spaces) 
+from dfcleanser.common.html_widgets import (maketextarea) 
 from dfcleanser.common.common_utils import (display_generic_grid, opStatus,  
-                                            display_exception, get_dfc_dataframe,
+                                            display_exception,
                                             get_parms_for_input, get_select_defaults)
+
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, 
                                              SCROLL_NEXT, ROW_MAJOR)
 
@@ -68,7 +69,7 @@ google_bulk_geocoder_labelList           =   ["api_key",
                                               "Test</br>Bulk</br>Geocoder</br>Connection",
                                               "Bulk</br>Geocoding",
                                               "Bulk</br>Reverse</br>Geocoding",
-                                              "Interactive</br>Geocoding",
+                                              "Bulk</br>Geocoding</br>Tuning",
                                               "Clear","Return","Help"]
 
 
@@ -92,7 +93,7 @@ google_bulk_geocoder_jsList              =   [None,None,None,None,None,None,None
                                               "test_geocoder(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                               "display_geocoding_callback(" + str(sugm.GoogleId)  + "," + str(sugm.QUERY) + ","  + str(sugm.BULK) + ")",
                                               "display_geocoding_callback(" + str(sugm.GoogleId)  + "," + str(sugm.REVERSE) + ","  + str(sugm.BULK) + ")",
-                                              "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
+                                              "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK_TUNING) + ")",
                                               "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
                                               "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
@@ -135,12 +136,12 @@ bulk_google_query_input_labelList         =   ["dataframe_to_geocode_from",
                                                "save_geocoder_full_address_column_name",
                                                "region",
                                                "language",
-                                               "acceptable_location_types",
+                                               "valid_location_types",
                                                "save_location_type",
                                                "max_addresses_to_geocode",
                                                "failure_limit_percent",
-                                               "Get</br> Location </br>Types",
                                                "Get</br> Bulk </br>Coords",
+                                               "Get</br> Location </br>Types",
                                                "Bulk</br>Reverse</br>Geocoding",
                                                "Clear","Return","Help"]
 
@@ -150,12 +151,12 @@ bulk_google_query_ltypes_input_labelList  =   ["dataframe_to_geocode_from",
                                                "save_geocoder_full_address_column_name",
                                                "region",
                                                "language",
-                                               "location_types",
+                                               "valid_location_types",
                                                "save_location_type_flag",
                                                "max_addresses_to_geocode",
                                                "failure_limit",
-                                               "Get</br> Column</br>Names",
                                                "Get</br> Bulk </br>Coords",
+                                               "Get</br> Column</br>Names",
                                                "Bulk</br>Reverse</br>Geocoding",
                                                "Clear","Return","Help"]
 
@@ -176,16 +177,16 @@ bulk_google_query_input_placeholderList   =  ["dataframe to geocode",
                                                None,None,None,None,None,None]
 
 bulk_google_query_input_jsList            =   [None,None,None,None,None,None,None,None,None,None,
-                                               "get_geocoding_table(" + str(sugm.LOCATION_TYPES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "get_geocoding_table(" + str(sugm.LOCATION_TYPES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
                                                "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_google_query_ltypes_input_jsList     =   [None,None,None,None,None,None,None,None,None,None,
-                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
@@ -205,9 +206,6 @@ bulk_google_query_input_form              =   [bulk_google_query_input_id,
                                                bulk_google_query_input_jsList,
                                                bulk_google_query_input_reqList]  
 
-result_typeParm     =   None
-location_typeParm   =   None
-languageParm        =   None
 
 """
 #--------------------------------------------------------------------------
@@ -220,8 +218,8 @@ bulk_google_reverse_input_idList          =   ["bgrdataframe",
                                                "bgrcolumnname",
                                                "bgraddresscomponents",
                                                "bgraddresslength",
-                                               "bgrformattedaddress",
-                                               "bgrlocationtype",
+                                               "bgrcolumnnames",
+                                               "bgqloctypes",
                                                "bgrlanguage",
                                                "bgrbulknumberlimit",
                                                "bgrbulkfailurelimit",
@@ -229,17 +227,17 @@ bulk_google_reverse_input_idList          =   ["bgrdataframe",
 
 bulk_google_reverse_input_labelList       =   ["dataframe_to_geocode_from",
                                                "dataframe_lat_long_column_name(s)",
-                                               "address_components_dict",
+                                               "address_components_list",
                                                "address_components_length_flag",
                                                "address_column_name(s)",
-                                               "location_type(s)",
+                                               "valid_location_type(s)",
                                                "language",
-                                               "max lat_longs",
+                                               "max_lat_longs",
                                                "failure_limit",
                                                "Get</br> Bulk </br>Addresses",
+                                               "Get</br>Column</br>Names",
                                                "Get</br>Address</br>Comps",
                                                "Get</br>Location</br>Types",
-                                               "Bulk </br>Geocoding",
                                                "Clear","Return","Help"]
 
 bulk_google_reverse_input_typeList        =   ["select","text",maketextarea(6),"select","text","text",
@@ -248,9 +246,9 @@ bulk_google_reverse_input_typeList        =   ["select","text",maketextarea(6),"
 
 bulk_google_reverse_input_placeholderList =  ["datframe to geocode from",
                                               "lat long colname(s) - [latcolname,longcolname] read from two cols",
-                                              "address components dict (default = None - store full address in address_column_name)",
+                                              "address components list (default = None - store full address in address_column_name(s))",
                                               "address components short length (default = True) False = Long)",
-                                              "address column name to store full address or list to store components",
+                                              "single address column name to store full address or [list] to store address components",
                                               "A filter of one or more location types to accept as valid (default - ALL)",
                                               "language (default - english)",
                                               "number of lat_lngs to get addresses for (default - len(dataframe))",
@@ -259,9 +257,9 @@ bulk_google_reverse_input_placeholderList =  ["datframe to geocode from",
 
 bulk_google_reverse_input_jsList          =   [None,None,None,None,None,None,None,None,None,
                                                "process_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "get_geocoding_table(" + str(sugm.ADDRESS_COMPONENTS_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "get_geocoding_table(" + str(sugm.LOCATION_TYPES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
-                                               "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
                                                "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
@@ -279,13 +277,15 @@ bulk_google_reverse_input_form            =   [bulk_google_reverse_input_id,
 
 """
 #--------------------------------------------------------------------------
-#   arcGIS get batch coords forms
+#--------------------------------------------------------------------------
+#   arcGIS get batch forms
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
-create_user_url = "https://www.arcgis.com/home/createaccount.html#"
-user = "RickKrasinski"
-pw = "Password2018"
+create_user_url = "https://richardkrasinski.maps.arcgis.com"
+user = "RichardKrasinski"
+pw = "ArcGISPW2018"
 
 
 """
@@ -382,7 +382,7 @@ batch_arcgis_query_idList           =    ["bagdataframe",
                                           "baqscore",
                                           "baqbulknumberlimit",
                                           "baqbulkfailurelimit",
-                                          None,None,None,None,None]
+                                          None,None,None,None]
 
 batch_arcgis_query_labelList        =   ["dataframe_to_geocode",
                                          "dataframe_address_columns",
@@ -394,15 +394,14 @@ batch_arcgis_query_labelList        =   ["dataframe_to_geocode",
                                          "batch_size",
                                          "score",
                                          "max_addresses_to_geocode",
-                                         "failure_limit",
-                                         "Get</br> Bulk </br>Coords",
-                                         "Get</br> Column </br>Names",
+                                         "failure_limit_pct",
+                                         "Get</br> Bulk Coords",
                                          "Clear","Return","Help"]
 
 
 batch_arcgis_query_typeList         =   ["select",maketextarea(4),"text", "text","select",
                                          "select","text","text","text","text","text",
-                                         "button","button","button","button","button"]
+                                         "button","button","button","button"]
 
 batch_arcgis_query_placeholderList  =   ["dataframe to geocode",
                                          "select from 'Column Names' for aggregate address : constant value use '+ Buffalo'",
@@ -415,16 +414,15 @@ batch_arcgis_query_placeholderList  =   ["dataframe to geocode",
                                          "address match score threshold (0-100)  (default - 85%)",
                                          "max number of dataframe rows (default - all dataframe rows)",
                                          "failure limit (default - 5%)",
-                                         None,None,None,None,None]
+                                         None,None,None,None]
 
 batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,None,None,None,None,
                                          "process_geocoding_callback(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
-                                         "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                          "geocode_return()",
                                          "display_help_url('" + arcgis_geocode_help + "')"]
 
-batch_arcgis_query_reqList          =   [0,1,2,3,4,5,6,7,8]
+batch_arcgis_query_reqList          =   [0,1,2,3,4,5,6]
 
 batch_arcgis_query_form             =   [batch_arcgis_query_id,
                                          batch_arcgis_query_idList,
@@ -437,7 +435,15 @@ batch_arcgis_query_form             =   [batch_arcgis_query_id,
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #    bing bulk forms 
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#    bing bulk geocoder form
 #--------------------------------------------------------------------------
 """
 bing_bulk_geocoder_title                 =   "Bing Bulk Geocoder Connector"
@@ -460,7 +466,7 @@ bing_bulk_geocoder_labelList             =   ["api_key",
                                                "Test</br>Geocoder</br>Connection",
                                                "Bulk</br>Geocoding",
                                                "Bulk</br>Reverse</br>Geocoding",
-                                               "Interactive</br>Geocoding",
+                                               "Bulk</br>Geocoding</br>Tuning",
                                                "Clear","Return","Help"]
 
 
@@ -477,9 +483,9 @@ bing_bulk_geocoder_placeholderList       =   ["enter Bing api key",
 
 bing_bulk_geocoder_jsList                 =   [None,None,None,None,None,None,
                                               "test_geocoder(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
-                                              "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + ","+ ","  + str(sugm.BULK) + ")",
-                                              "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + ","+ ","  + str(sugm.BULK) + ")",
-                                              "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.INTERACTIVE) + ")",
+                                              "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + ","  + str(sugm.BULK) + ")",
+                                              "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + ","  + str(sugm.BULK) + ")",
+                                              "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK_TUNING) + ")",
                                               "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
                                                "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
@@ -494,58 +500,63 @@ bing_bulk_geocoder_form                  =   [bing_bulk_geocoder_id,
                                               bing_bulk_geocoder_jsList,
                                               bing_bulk_geocoder_reqList]
 
-
+"""
+#--------------------------------------------------------------------------
+#    bing bulk query form
+#--------------------------------------------------------------------------
+"""
 bulk_bing_query_input_title               =   "Bing Bulk Geoocoding Parameters"
 bulk_bing_query_input_id                  =   "bingbulkquery"
-bulk_bing_query_input_idList              =   ["dataframe to geocode",
+bulk_bing_query_input_idList              =   ["bbgdataframe",
                                                "bbqaddress",
                                                "bbqcolumnname",
                                                "bbqsaveaddress",
-                                               "bbqlanguage",
-                                               "bbqregion",
+                                               "bbquserloc",
+                                               "bbqculture",
+                                               "bbqneighborhood",
+                                               "bbqcountrycode",
                                                "bbqbulknumberlimit",
-                                               "bbqbulkcheclpointsize",
                                                "bbqbulkfailurelimit",
-                                               None,None,None,None,None,None]
+                                               None,None,None,None,None]
 
 bulk_bing_query_input_labelList           =   ["dataframe_to_geocode",
                                                "dataframe_address_columns",
                                                "new_dataframe_lat_long_column_name(s)",
-                                               "save_geocoder_address_column_name",
-                                               "language",
-                                               "region",
+                                               "save_geocoder_full_address_column_name",
+                                               "user_location",
+                                               "culture",
+                                               "include_neighborhood",
+                                               "include_country_code",
                                                "max_addresses_to_geocode",
-                                               "checkpoint_size",
                                                "failure_limit",
                                                "Get</br> Bulk </br>Coords",
-                                               "Get</br> Column </br>Names",
                                                "Bulk </br>Reverse</br>Geocoding",
                                                "Clear","Return","Help"]
 
-bulk_bing_query_input_typeList            =   ["select",maketextarea(4),"text",
-                                               "text","select","select","text","text","text",
-                                               "button","button","button","button","button","button"]
+bulk_bing_query_input_typeList            =   ["select",maketextarea(4),"text","text","text",
+                                               "select","select","select","text","text",
+                                               "button","button","button","button","button"]
 
 bulk_bing_query_input_placeholderList     =  ["dataframe to geocode",
                                               "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
                                               "colname stored as [lat,long] - [latcolname,longcolname] stored as two cols",
-                                              "retrieve aggregate address and store in column name (default = None - don't retrieve and save)",
-                                              "language (default - english)",
-                                              "region (default - None)",
+                                              "full address column name (default = None - don't retrieve full address and save)",
+                                              "prioritize result closest to user_location [lat,lng] (default - None)",
+                                              "culture (default - US)",
+                                              "include neighborhood in response (default - False)",
+                                              "include country code in response (default - False)",
                                               "number of addresses to get coords for (default - len(dataframe))",
-                                              "number of geocode results before checkpoint taken (default - 2000) ",
                                               "failure limit (default - 5%)",
-                                               None,None,None,None,None,None]
+                                               None,None,None,None,None]
 
-bulk_bing_query_input_jsList              =   [None,None,None,None,None,None,None,None,None,
+bulk_bing_query_input_jsList              =   [None,None,None,None,None,None,None,None,None,None,
                                                "process_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
-                                               "get_geocoding_table(" + str(sugm.COLNAMES_TABLE) + "," + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
                                                "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
-bulk_bing_query_input_reqList             =   [0,1,2,3,4,5,6]
+bulk_bing_query_input_reqList             =   [0,1,2]
 
 bulk_bing_query_input_form                =   [bulk_bing_query_input_id,
                                                bulk_bing_query_input_idList,
@@ -555,6 +566,234 @@ bulk_bing_query_input_form                =   [bulk_bing_query_input_id,
                                                bulk_bing_query_input_jsList,
                                                bulk_bing_query_input_reqList]  
 
+"""
+#--------------------------------------------------------------------------
+#    bing bulk reverse form
+#--------------------------------------------------------------------------
+"""
+bulk_bing_reverse_input_title             =   "Bing Bulk Geoocoding Parameters"
+bulk_bing_reverse_input_id                =   "bingbulkreverse"
+bulk_bing_reverse_input_idList            =   ["bbrdataframe",
+                                               "bbrcolumnname",
+                                               "bbrculture",
+                                               "bbrcountrycode",
+                                               "bbrbulknumberlimit",
+                                               "bbrbulkfailurelimit",
+                                               None,None,None,None,None]
+
+bulk_bing_reverse_input_labelList         =   ["dataframe_to_geocode",
+                                               "dataframe_lat_long_column_name(s)",
+                                               "culture",
+                                               "include_country_code",
+                                               "max_lat_longs",
+                                               "failure_limit",
+                                               "Get</br> Bulk </br>Addresses",
+                                               "Bulk </br>Geocoding",
+                                               "Clear","Return","Help"]
+
+bulk_bing_reverse_input_typeList          =   ["select",maketextarea(2),
+                                               "select","select","text","text",
+                                               "button","button","button","button","button"]
+
+bulk_bing_reverse_input_placeholderList   =  ["dataframe to geocode",
+                                              "lat long colname(s) - [latcolname,longcolname] read from two cols",
+                                              "culture (default - US)",
+                                              "include country code in response (default - False)",
+                                              "number of addresses to get coords for (default - len(dataframe))",
+                                              "failure limit (default - 5%)",
+                                               None,None,None,None,None]
+
+bulk_bing_reverse_input_jsList            =   [None,None,None,None,None,None,
+                                               "process_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "geocode_return()",
+                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+
+bulk_bing_reverse_input_reqList           =   [0,1,2]
+
+bulk_bing_reverse_input_form              =   [bulk_bing_reverse_input_id,
+                                               bulk_bing_reverse_input_idList,
+                                               bulk_bing_reverse_input_labelList,
+                                               bulk_bing_reverse_input_typeList,
+                                               bulk_bing_reverse_input_placeholderList,
+                                               bulk_bing_reverse_input_jsList,
+                                               bulk_bing_reverse_input_reqList]  
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    Baidu bulk forms 
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#    bing bulk geocoder form
+#--------------------------------------------------------------------------
+"""
+baidu_bulk_geocoder_title                =   "Baidu Bulk Geocoder Connector"
+baidu_bulk_geocoder_id                   =   "baidubulkgeocoder"
+
+baidu_bulk_geocoder_idList               =    ["baiduapikey",
+                                               "baiduscheme",
+                                               "baidutimeout",
+                                               "baiduproxies",
+                                               "baiduagent",
+                                               "baidufstring",
+                                               "baidssl",
+                                               "baiduseckey",
+                                               None,None,None,None,None,None,None]
+
+baidu_bulk_geocoder_labelList            =   ["api_key",
+                                              "scheme",
+                                              "timeout",
+                                              "proxies",
+                                              "user_agent",
+                                              "format_string",
+                                              "ssl_context",
+                                              "security_key", 
+                                              "Test</br>Geocoder</br>Connection",
+                                              "Bulk</br>Geocoding",
+                                              "Bulk</br>Reverse</br>Geocoding",
+                                              "Bulk</br>Geocoding</br>Tuning",
+                                              "Clear","Return","Help"]
+
+
+baidu_bulk_geocoder_typeList             =   ["text","text","text","text","text","text","text","text",
+                                              "button","button","button","button","button","button","button"]
+
+baidu_bulk_geocoder_placeholderList      =   ["enter Baidu api key",
+                                              "enter scheme (default https)",
+                                              "enter timeout in seconds (default 1)",
+                                              "proxies dict (default None)",
+                                              "user agent (default - 'geopy/x.xx.x')",
+                                              "enter format string (default %s)",
+                                              "enter ssl context (default None)",
+                                              "enter authentication security key (default None)",
+                                              None,None,None,None,None,None,None]
+
+baidu_bulk_geocoder_jsList               =   [None,None,None,None,None,None,None,None,
+                                              "test_geocoder(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
+                                              "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + ","  + str(sugm.BULK) + ")",
+                                              "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + ","  + str(sugm.BULK) + ")",
+                                              "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK_TUNING) + ")",
+                                              "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
+                                              "geocode_return()",
+                                               "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+
+baidu_bulk_geocoder_reqList              =   [0]
+
+baidu_bulk_geocoder_form                 =   [baidu_bulk_geocoder_id,
+                                              baidu_bulk_geocoder_idList,
+                                              baidu_bulk_geocoder_labelList,
+                                              baidu_bulk_geocoder_typeList,
+                                              baidu_bulk_geocoder_placeholderList,
+                                              baidu_bulk_geocoder_jsList,
+                                              baidu_bulk_geocoder_reqList]
+
+
+"""
+#--------------------------------------------------------------------------
+#    baidu bulk query form
+#--------------------------------------------------------------------------
+"""
+bulk_baidu_query_input_title              =   "Baidu Bulk Geoocoding Parameters"
+bulk_baidu_query_input_id                 =   "baidubulkquery"
+bulk_baidu_query_input_idList             =   ["baiduqdataframe",
+                                               "baiduqaddress",
+                                               "baiduqcolumnname",
+                                               "baiduqsaveaddress",
+                                               "baiduqbulknumberlimit",
+                                               "baiduqbulkfailurelimit",
+                                               None,None,None,None,None]
+
+bulk_baidu_query_input_labelList          =   ["dataframe_to_geocode",
+                                               "dataframe_address_columns",
+                                               "new_dataframe_lat_long_column_name(s)",
+                                               "save_geocoder_full_address_column_name",
+                                               "max_addresses_to_geocode",
+                                               "failure_limit",
+                                               "Get</br> Bulk </br>Coords",
+                                               "Bulk </br>Reverse</br>Geocoding",
+                                               "Clear","Return","Help"]
+
+bulk_baidu_query_input_typeList           =   ["select",maketextarea(4),"text","text","text","text",
+                                               "button","button","button","button","button"]
+
+bulk_baidu_query_input_placeholderList    =  ["dataframe to geocode",
+                                              "select from 'Column Names' for aggregate address : constant value ie .. + Cleveland",
+                                              "colname stored as [lat,long] - [latcolname,longcolname] stored as two cols",
+                                              "full address column name (default = None - don't retrieve full address and save)",
+                                              "number of addresses to get coords for (default - len(dataframe))",
+                                              "failure limit (default - 5%)",
+                                               None,None,None,None,None]
+
+bulk_baidu_query_input_jsList             =   [None,None,None,None,None,None,None,None,None,None,
+                                               "process_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "geocode_return()",
+                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+
+bulk_baidu_query_input_reqList            =   [0,1,2]
+
+bulk_baidu_query_input_form               =   [bulk_baidu_query_input_id,
+                                               bulk_baidu_query_input_idList,
+                                               bulk_baidu_query_input_labelList,
+                                               bulk_baidu_query_input_typeList,
+                                               bulk_baidu_query_input_placeholderList,
+                                               bulk_baidu_query_input_jsList,
+                                               bulk_baidu_query_input_reqList]  
+
+"""
+#--------------------------------------------------------------------------
+#    bing bulk reverse form
+#--------------------------------------------------------------------------
+"""
+bulk_baidu_reverse_input_title            =   "Baidu Bulk Geoocoding Parameters"
+bulk_baidu_reverse_input_id               =   "baidubulkreverse"
+bulk_baidu_reverse_input_idList           =   ["baidurdataframe",
+                                               "baidurcolumnname",
+                                               "baidurbulknumberlimit",
+                                               "baidurbulkfailurelimit",
+                                               None,None,None,None,None]
+
+bulk_baidu_reverse_input_labelList        =   ["dataframe_to_geocode",
+                                               "dataframe_lat_long_column_name(s)",
+                                               "max_lat_longs",
+                                               "failure_limit",
+                                               "Get</br> Bulk </br>Addresses",
+                                               "Bulk </br>Geocoding",
+                                               "Clear","Return","Help"]
+
+bulk_baidu_reverse_input_typeList         =   ["select",maketextarea(2),"text","text",
+                                               "button","button","button","button","button"]
+
+bulk_baidu_reverse_input_placeholderList  =  ["dataframe to geocode",
+                                              "lat long colname(s) - [latcolname,longcolname] read from two cols",
+                                              "number of addresses to get coords for (default - len(dataframe))",
+                                              "failure limit (default - 5%)",
+                                               None,None,None,None,None]
+
+bulk_baidu_reverse_input_jsList           =   [None,None,None,None,None,None,
+                                               "process_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
+                                               "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
+                                               "geocode_return()",
+                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+
+bulk_baidu_reverse_input_reqList          =   [0,1,2]
+
+bulk_baidu_reverse_input_form             =   [bulk_bing_reverse_input_id,
+                                               bulk_bing_reverse_input_idList,
+                                               bulk_bing_reverse_input_labelList,
+                                               bulk_bing_reverse_input_typeList,
+                                               bulk_bing_reverse_input_placeholderList,
+                                               bulk_bing_reverse_input_jsList,
+                                               bulk_bing_reverse_input_reqList]  
 
 
 """
@@ -780,7 +1019,11 @@ def get_address_components_table(tableid,owner,callback) :
     addrcompsHrefs        =   []
 
     from dfcleanser.sw_utilities.sw_utility_control import get_List
-    addrcomplist    =   get_List("Address_Components")
+    acomplist       =   get_List("Address_Components")
+    addrcomplist    =   ["full_address"]
+    
+    for i in range(len(acomplist)) :
+        addrcomplist.append(acomplist[i])    
 
     for i in range(len(addrcomplist)) :
         
@@ -962,9 +1205,13 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
         elif(tabletype==sugm.COLNAMES_TABLE) :
             if(geocid == sugm.GoogleId) :
-                geo_parms_html = sugw.get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"gb_google_add_df_column")
-            else :
-                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"gb_arcgis_add_df_column")
+                geo_parms_html = sugw.get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.QUERY))
+            elif(geocid == sugm.ArcGISId) :  
+                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.ArcGISId) + "," + str(sugm.QUERY))
+            elif(geocid == sugm.BingId) :
+                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.QUERY))
+            elif(geocid == sugm.BaiduId) :
+                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BaiduId) + "," + str(sugm.QUERY))
                 
         elif(tabletype==sugm.LANGUAGE_TABLE) :
             geo_parms_html = get_languages_table("gedflanguagesTable",cfg.SWGeocodeUtility_ID,"gb_select_language")
@@ -998,17 +1245,31 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         elif(geocid == sugm.ArcGISId) :
             form    =   batch_arcgis_query_form
             inparms     =   cfg.get_config_value(batch_arcgis_query_id+"Parms")
-            inparms[8]  =   str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))
+            if(not (inparms is None)) :
+                inparms[7]  =   str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))
+            else :
+                inparms     =   ["","","","","","","","","","",""]
+                inparms[7]  =   str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))
+                
             cfg.set_config_value(batch_arcgis_query_id+"Parms",inparms)
             
         elif(geocid == sugm.BingId) :
             form    =   bulk_bing_query_input_form
+        
+        elif(geocid == sugm.BaiduId) :
+            form    =   bulk_baidu_query_input_form
             
     else :
         
         if(tabletype==sugm.GEOCODERS_TABLE) :
             from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_geocoder_table
             geo_parms_html = get_geocoder_table(True) 
+        
+        elif(tabletype==sugm.COLNAMES_TABLE) :
+            if(geocid == sugm.GoogleId) :
+                geo_parms_html = sugw.get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.REVERSE))
+            elif(geocid == sugm.BingId) :
+                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.REVERSE))
             
         elif(tabletype==sugm.ADDRESS_COMPONENTS_TABLE) :
             if(geocid == sugm.GoogleId) :
@@ -1033,6 +1294,11 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         # get the correct input form            
         if(geocid == sugm.GoogleId) :
             form    =   bulk_google_reverse_input_form
+        elif(geocid == sugm.BingId) :
+            form    =   bulk_bing_reverse_input_form
+        elif(geocid == sugm.BaiduId) :
+            form    =   bulk_baidu_reverse_input_form
+            
 
     # build the input form
     from dfcleanser.common.html_widgets import InputForm
@@ -1052,7 +1318,17 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
         
         geofunc_input_form.set_gridwidth(680)
-        geofunc_input_form.set_custombwidth(92)
+        
+        if(geocid == sugm.ArcGISId) :
+            geofunc_input_form.set_custombwidth(120)
+        elif(geocid == sugm.BingId) :
+            geofunc_input_form.set_custombwidth(120)
+        elif(geocid == sugm.BaiduId) :
+            geofunc_input_form.set_custombwidth(120)
+        else :
+            geofunc_input_form.set_custombwidth(92)
+            
+        geofunc_input_form.set_fullparms(True) 
         
         if(geocid == sugm.GoogleId) :
             
@@ -1124,31 +1400,38 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             dataframes      =   cfg.get_dfc_dataframes_select_list()
             selectDicts.append(dataframes)
             
-            languages       =   {}
-            languages.update({"default": "English"})
+            countries       =   {}
+            countries.update({"default": "United States"})
             
             dicts           =   get_Dictlog()
-            langdict        =   dicts.get("Language_Codes",None)
-            languageslist   =   list(langdict.keys())
-            languageslist.sort()
-            languages.update({"list":languageslist})
-            selectDicts.append(languages)
-            
-            regions             =   {}
-            regions.update({"default": "United States"})
-
-            dicts           =   get_Dictlog()
-            regionsdict     =   dicts.get("Country_Codes",None)
-            regionslist     =   list(regionsdict.keys())
-            regionslist.sort()
-            regions.update({"list":regionslist})
-            selectDicts.append(regions)
-            
+            countrydict     =   dicts.get("Country_Codes",None)
+            countrylist     =   list(countrydict.keys())
+            countrylist.sort()
+            countries.update({"list":countrylist})
+            selectDicts.append(countries)
+ 
+            includecomp     =   {"default" : "False",
+                                 "list" : ["True","False"]}
+            selectDicts.append(includecomp)
+            selectDicts.append(includecomp)
+           
             get_select_defaults(geofunc_input_form,
                                 bulk_bing_query_input_id,
                                 bulk_bing_query_input_idList,
                                 bulk_bing_query_input_typeList,
                                 selectDicts)
+        
+        elif(geocid == sugm.BaiduId) :
+            
+            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            selectDicts.append(dataframes)
+            
+            get_select_defaults(geofunc_input_form,
+                                bulk_baidu_query_input_id,
+                                bulk_baidu_query_input_idList,
+                                bulk_baidu_query_input_typeList,
+                                selectDicts)
+
 
     # bulk reverse   
     else :
@@ -1157,14 +1440,15 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
         
         geofunc_input_form.set_gridwidth(680)
-        geofunc_input_form.set_custombwidth(92)
-
+        geofunc_input_form.set_custombwidth(120)
+        geofunc_input_form.set_fullparms(True)
+        
         if(geocid == sugm.GoogleId) :
             
             dataframes      =   cfg.get_dfc_dataframes_select_list()
             selectDicts.append(dataframes)
 
-            lengthFlag      =   {"default":"True","list":["True","False"]}
+            lengthFlag      =   {"default":"short","list":["short","long"]}
             selectDicts.append(lengthFlag)
             
             languages       =   {}
@@ -1183,19 +1467,55 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
                                 bulk_google_reverse_input_idList,
                                 bulk_google_reverse_input_typeList,
                                 selectDicts)
+            
+        elif(geocid == sugm.BingId) :
+            
+            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            selectDicts.append(dataframes)
+            
+            countries       =   {}
+            countries.update({"default": "United States"})
+            
+            dicts           =   get_Dictlog()
+            countrydict     =   dicts.get("Country_Codes",None)
+            countrylist     =   list(countrydict.keys())
+            countrylist.sort()
+            countries.update({"list":countrylist})
+            selectDicts.append(countries)
+ 
+            includecomp     =   {"default" : "False",
+                                 "list" : ["True","False"]}
+            selectDicts.append(includecomp)
+           
+            get_select_defaults(geofunc_input_form,
+                                bulk_bing_reverse_input_id,
+                                bulk_bing_reverse_input_idList,
+                                bulk_bing_reverse_input_typeList,
+                                selectDicts)
+            
+        elif(geocid == sugm.BaiduId) :
+            
+            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            selectDicts.append(dataframes)
+            
+            get_select_defaults(geofunc_input_form,
+                                bulk_baidu_reverse_input_id,
+                                bulk_baidu_reverse_input_idList,
+                                bulk_baidu_reverse_input_typeList,
+                                selectDicts)
+            
 
-    if(showfull) :
-        geofunc_input_form.set_fullparms(True)    
+    print("\n")
     
     geofunc_input_html = ""
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (geotype == sugm.QUERY) :
-        geofunc_heading_html    =   "<p>" + get_html_spaces(58) + sugm.get_geocoder_title(geocid) + " Bulk Geocoding</p>"
+        geofunc_heading_html    =   "<div>" + sugm.get_geocoder_title(geocid) + " Bulk Geocoding</div>"
     else :
-        geofunc_heading_html    =   "<p>" + get_html_spaces(58) + sugm.get_geocoder_title(geocid) + " Bulk Reverse Geocoding</p>"
+        geofunc_heading_html    =   "<div>" + sugm.get_geocoder_title(geocid) + " Bulk Reverse Geocoding</div>"
         
-    gridclasses     =   ["geocode-query-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html]
    
     if(geotype == sugm.QUERY) : 
@@ -1322,6 +1642,18 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                                    batch_arcgis_geocoder_jsList,
                                    batch_arcgis_geocoder_reqList]
     
+    elif(geocodeid == sugm.BaiduId) :
+        
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BingId)
+        geocoder_input_form   =   [baidu_bulk_geocoder_id,
+                                   baidu_bulk_geocoder_idList,
+                                   baidu_bulk_geocoder_labelList,
+                                   baidu_bulk_geocoder_typeList,
+                                   baidu_bulk_geocoder_placeholderList,
+                                   baidu_bulk_geocoder_jsList,
+                                   baidu_bulk_geocoder_reqList]
+        
+
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
                                    geocoder_input_form[1],
@@ -1356,8 +1688,22 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                             geocoder_input_form[1],
                             geocoder_input_form[3],
                             selectDicts)
+    
+    elif(geocodeid == sugm.BaiduId) :
         
-    geocode_input_form.set_gridwidth(640)
+        selectDicts     =   []
+        geocsel         =   {"default":"True","list":["True","False"]}
+        selectDicts.append(geocsel)
+        selectDicts.append(geocsel)
+        
+        get_select_defaults(geocode_input_form,
+                            geocoder_input_form[0],
+                            geocoder_input_form[1],
+                            geocoder_input_form[3],
+                            selectDicts)
+        
+    geocode_input_form.set_gridwidth(720)
+    geocode_input_form.set_custombwidth(100)
     
     if(showfull) :
         geocode_input_form.set_fullparms(True)
@@ -1365,12 +1711,12 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
     
-    geocode_heading_html =   "<p>" + get_html_spaces(58) + "Bulk Geocoder Connector Parms - " + sugm.get_geocoder_title(geocodeid) + "</p>"
+    geocode_heading_html =   "<div>Bulk Geocoder Connector Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
 
-    gridclasses     =   ["geocode-query-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
     
-    display_generic_grid("sql_connector_wrapper",gridclasses,gridhtmls)
+    display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
     
 
 """
@@ -1385,13 +1731,20 @@ def get_bulk_input_parms(geocid,geotype,inputs) :
     if(geotype == sugm.QUERY) :
         if(geocid == sugm.GoogleId) :
             return(get_parms_for_input(inputs,bulk_google_query_input_idList))
+        elif(geocid == sugm.BingId) :
+            return(get_parms_for_input(inputs,bulk_bing_query_input_idList))
+        elif(geocid == sugm.BaiduId) :
+            return(get_parms_for_input(inputs,bulk_baidu_query_input_idList))
         else :
             return(get_parms_for_input(inputs,batch_arcgis_query_idList))
 
     else :
         if(geocid == sugm.GoogleId) :
             return(get_parms_for_input(inputs,bulk_google_reverse_input_idList))
-
+        elif(geocid == sugm.BingId) :
+            return(get_parms_for_input(inputs,bulk_bing_reverse_input_idList))
+        elif(geocid == sugm.BaiduId) :
+            return(get_parms_for_input(inputs,bulk_baidu_reverse_input_idList))
 
 
 def validate_google_bulk_parms(geotype,inputs,opstat) :
@@ -1477,6 +1830,8 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
                 
         # check the required reverse parms
         fparms = get_parms_for_input(inputs,bulk_google_reverse_input_idList)
+        
+        #print("validate_google_bulk_parms : fparms\n",inputs,"\n",fparms)
 
         if( (len(fparms[0]) == 0) and (len(fparms[1]) == 0) and (len(fparms[2]) == 0) ) :
             opstat.set_status(False)
@@ -1509,56 +1864,25 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[4] : fparms[4]})
                 
             if(len(fparms[5]) > 0) :
-                try :
-                    import json
-                    addr_comps = json.loads(fparms[5])     
-                except :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("address components dict errort")
-                        
-                if(opstat.get_status()) :  
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : fparms[5]})
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "long"})
-                    
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[5] : fparms[5]})
             else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[5] : ""})
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[6] : "short"})
-                
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[5] : ""})
+                         
+            if(len(fparms[6]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[6] : fparms[6]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[6] : "short"})    
+    
             if(len(fparms[7]) > 0) :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : fparms[7]}) 
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[7] : fparms[7]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[7] : len(cfg.get_dfc_dataframe())}) 
                 
             if(len(fparms[8]) > 0) :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]}) 
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[8] : fparms[8]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[8] : "2"}) 
                 
-            if(len(fparms[9]) > 0) :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : fparms[9]}) 
-            else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[9] : "en"})
-
-            if(len(fparms[10]) > 0) :
-                if(int(fparms[10]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : fparms[10]})
-            else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[10] : len(cfg.get_dfc_dataframe())}) 
-
-            if(len(fparms[11]) > 0) :
-                if(int(fparms[11]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : fparms[11]})
-            else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[11] : len(cfg.get_dfc_dataframe())}) 
-
-            if(len(fparms[12]) > 0) :
-                if(int(fparms[12]) > 100) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : fparms[12]})
-            else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[12] : 2}) 
-
     if(opstat.get_status()) :  
         return(bulk_geocode_kwargs)
     else :
@@ -1578,96 +1902,323 @@ def validate_arcgis_bulk_parms(geotype,inputs,opstat) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    
+
     bulk_geocode_kwargs     =   {}
     
     if(geotype == sugm.QUERY) :
 
-        fparms = inputs
-
+        fparms  =   get_parms_for_input(inputs,batch_arcgis_query_idList)  
+        
+        bulk_geocode_kwargs.update({batch_arcgis_query_labelList[0] : fparms[0]})
+        
         # check the required parms 
-        if(len(fparms[0]) == 0) :
+        if(len(fparms[1]) == 0) :
             opstat.set_status(False)
-            opstat.set_errorMsg("No " + bulk_google_query_input_labelList[0] + " defined")
+            opstat.set_errorMsg("No " + bulk_google_query_input_labelList[1] + " defined")
         else :
-            bulk_geocode_kwargs.update({batch_arcgis_query_labelList[0] : fparms[0]})    
-            if(len(fparms[1]) == 0) :
+            bulk_geocode_kwargs.update({batch_arcgis_query_labelList[1] : fparms[1]})    
+            if(len(fparms[2]) == 0) :
                 opstat.set_status(False)
-                opstat.set_errorMsg("No " + bulk_google_query_input_labelList[1] + " defined")
+                opstat.set_errorMsg("No " + bulk_google_query_input_labelList[2] + " defined")
             else :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[1] : fparms[1]})
-                if(len(fparms[2]) == 0) :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("No " + bulk_google_query_input_labelList[2] + " defined")
-                else :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[2] : fparms[2]})     
-                    if(len(fparms[3]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No " + bulk_google_query_input_labelList[3] + " defined")
-                    else :
-                        bulk_geocode_kwargs.update({batch_arcgis_query_labelList[3] : fparms[3]})    
-
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[2] : fparms[2]})
+                
         if(opstat.get_status()) :
+            
+            if(len(fparms[3]) > 0) :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[3] : fparms[3]})
+            else :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[3] : "None"})
             
             if(len(fparms[4]) > 0) :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[4] : fparms[4]})
+            else :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[4] : "US"})    
+            
+            if(len(fparms[5]) > 0) :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[5] : fparms[5]}) 
+            else :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[5] : "None"})    
+            
+            
+            print("fparms[6]",fparms[6])
+            if(len(fparms[6]) > 0) :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : fparms[6]}) 
+            else :
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : "None"})    
                 
-            if(len(fparms[5]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[4] : fparms[4]})  
-                
-            if(len(fparms[6]) == 0) :
+            if(len(fparms[7]) == 0) :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))})
             else :
-                batch_size  =   int(fparms[6])
+                batch_size  =   int(fparms[7])
                 if(batch_size > cfg.get_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY)) :
                     opstat.set_status(False)
                     opstat.set_errorMsg("batch size exceeds arcGIS suggested max batch size of "+ str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY)))
                 else :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[6] : fparms[6]})    
-                    
-            if(len(fparms[7]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dfc_dataframe()))})
-            else :
-                if(int(fparms[7]) > len(get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : str(len(get_dfc_dataframe()))})
-                else :
-                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : fparms[7]})
-            
+                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[7] : fparms[7]})    
+ 
             if(len(fparms[8]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[8] : str(cfg.get_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY))})
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[8] : "85"})
             else :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[8] : fparms[6]})
-            
+                bulk_score  =   int(fparms[8])
+                if( (bulk_score > 100) or (bulk_score < 0) ) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("bulk score is not within limit of 0 - 100 ")
+                else :
+                    bulk_geocode_kwargs.update({batch_arcgis_query_labelList[8] : fparms[8]}) 
+
             if(len(fparms[9]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[9] : "85"})
+                df_title    =   fparms[0]
+                df          =   cfg.get_dfc_dataframe(df_title)
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[9] : str(len(df))})
             else :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[9] : fparms[9]}) 
-
+            
             if(len(fparms[10]) == 0) :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[10] : "5"})
             else :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[10] : fparms[9]}) 
+                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[10] : fparms[10]}) 
 
-            if(len(fparms[11]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[11] : "False"})
-            else :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[11] : "True"}) 
-
-            if(len(fparms[12]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[12] : fparms[12]})
-                
-            if(len(fparms[13]) == 0) :
-                bulk_geocode_kwargs.update({batch_arcgis_query_labelList[13] : fparms[13]}) 
-                
-                
     if(opstat.get_status()) :  
         return(bulk_geocode_kwargs)
     else :
         return(None)
         
     
+def validate_bing_bulk_parms(geotype,inputs,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : validate the bulk geocode parms
+    * 
+    * parms :
+    *  geotype      - geocoder operation type
+    *  inputs       - geocode input parms
+    *  opstat       - operation status object
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    bulk_geocode_kwargs     =   {}
+
+    if(geotype == sugm.QUERY) :
+        
+        fparms = get_parms_for_input(inputs,bulk_bing_query_input_idList)
+
+        if(len(fparms[0]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe selected defined")
+        else :
+                
+            if(opstat.get_status()) :
+                if(len(fparms[1]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe address column name(s) defined")
+                
+            if(opstat.get_status()) :
+                if(len(fparms[2]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe lat lng column name(s) defined")
+
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[1] : fparms[1]})
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[2] : fparms[2]})
+            
+            if(len(fparms[3]) > 0) :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : fparms[3]})
+            else :
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : "None"})
+                
+            if(len(fparms[4]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : fparms[4]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : "None"})
+                
+            if(len(fparms[5]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : fparms[5]})    
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : "en"}) 
+                
+            if(len(fparms[6]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : fparms[6]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : "False"})
+            
+            if(len(fparms[7]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : fparms[7]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : "False"})
+                
+            if(len(fparms[8]) > 0) :
+                if(int(fparms[8]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : fparms[8]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                    
+            if(len(fparms[9]) > 0) :
+                if(int(fparms[9]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "2"}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : fparms[9]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "2"}) 
+                    
+    else :
+                
+        # check the required reverse parms
+        fparms = get_parms_for_input(inputs,bulk_bing_reverse_input_idList)
+        
+        if(len(fparms[0]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe selected defined")
+        else :
+                
+            if(opstat.get_status()) :
+                if(len(fparms[1]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe lat_lng name(s) defined")
+      
+        # validate non required parmsd            
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[1] : fparms[1]})
+
+            if(len(fparms[2]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : fparms[2]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : "False"})
+            
+            if(len(fparms[3]) > 0) :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : fparms[3]}) 
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : "False"})
+                
+            if(len(fparms[4]) > 0) :
+                if(int(fparms[4]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : fparms[4]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(cfg.get_dfc_dataframe())}) 
+                    
+            if(len(fparms[5]) > 0) :
+                if(int(fparms[5]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[5] : "2"}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[5] : fparms[5]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[5] : "2"}) 
+
+                
+    if(opstat.get_status()) :  
+        return(bulk_geocode_kwargs)
+    else :
+        return(None)
     
     
+def validate_baidu_bulk_parms(geotype,inputs,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : validate the bulk geocode parms
+    * 
+    * parms :
+    *  geotype      - geocoder operation type
+    *  inputs       - geocode input parms
+    *  opstat       - operation status object
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    bulk_geocode_kwargs     =   {}
+
+    if(geotype == sugm.QUERY) :
+        
+        fparms = get_parms_for_input(inputs,bulk_baidu_query_input_idList)
+
+        if(len(fparms[0]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe selected defined")
+        else :
+                
+            if(opstat.get_status()) :
+                if(len(fparms[1]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe address column name(s) defined")
+                
+            if(opstat.get_status()) :
+                if(len(fparms[2]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe lat lng column name(s) defined")
+
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[1] : fparms[1]})
+            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[2] : fparms[2]})
+            
+            if(len(fparms[3]) > 0) :
+                if(int(fparms[3]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : fparms[8]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(cfg.get_dfc_dataframe())}) 
+                    
+            if(len(fparms[4]) > 0) :
+                if(int(fparms[4]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : "2"}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : fparms[4]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : "2"}) 
+                    
+    else :
+                
+        # check the required reverse parms
+        fparms = get_parms_for_input(inputs,bulk_bing_reverse_input_idList)
+        
+        if(len(fparms[0]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe selected defined")
+        else :
+                
+            if(opstat.get_status()) :
+                if(len(fparms[1]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("No dataframe lat_lng name(s) defined")
+      
+        # validate non required parmsd            
+        if(opstat.get_status()) :
+                
+            bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[0] : fparms[0]})
+            bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[1] : fparms[1]})
+
+            if(len(fparms[2]) > 0) :
+                if(int(fparms[4]) > len(cfg.get_dfc_dataframe())) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(cfg.get_dfc_dataframe())}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : fparms[2]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(cfg.get_dfc_dataframe())}) 
+                    
+            if(len(fparms[3]) > 0) :
+                if(int(fparms[3]) > 100) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : "2"}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : fparms[3]})
+            else :
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : "2"}) 
+                
+    if(opstat.get_status()) :  
+        return(bulk_geocode_kwargs)
+    else :
+        return(None)
     
 
 def validate_bulk_parms(geocid,geotype,inputs,opstat) :
@@ -1692,6 +2243,12 @@ def validate_bulk_parms(geocid,geotype,inputs,opstat) :
                 
     elif(geocid == sugm.ArcGISId) :
         bulk_geocode_kwargs     =   validate_arcgis_bulk_parms(geotype,inputs,opstat)
+    
+    elif(geocid == sugm.BingId) :
+        bulk_geocode_kwargs     =   validate_bing_bulk_parms(geotype,inputs,opstat)  
+    
+    elif(geocid == sugm.BaiduId) :
+        bulk_geocode_kwargs     =   validate_baidu_bulk_parms(geotype,inputs,opstat)  
         
     if(opstat.get_status()) :  
         return(bulk_geocode_kwargs)
@@ -1712,17 +2269,23 @@ def get_bulk_form_id(geocid,gtype) :
     *  geocoder form id
     * --------------------------------------------------------
     """
-     
+ 
     if(gtype == sugm.GEOCODER)  :
          if(geocid == sugm.ArcGISId)            : return(batch_arcgis_geocoder_id)   
          elif(geocid == sugm.GoogleId)          : return(google_bulk_geocoder_id)
          elif(geocid == sugm.BingId)            : return(bing_bulk_geocoder_id)
+         elif(geocid == sugm.BaiduId)           : return(baidu_bulk_geocoder_id)
+         
     elif(gtype == sugm.QUERY)  :
          if(geocid == sugm.ArcGISId)            : return(batch_arcgis_query_id) 
          elif(geocid == sugm.GoogleId)          : return(bulk_google_query_input_id)
          elif(geocid == sugm.BingId)            : return(bulk_bing_query_input_id)
+         elif(geocid == sugm.BaiduId)           : return(bulk_baidu_query_input_id)
+         
     elif(gtype == sugm.REVERSE)  :
          if(geocid == sugm.GoogleId)            : return(bulk_google_reverse_input_id)
+         if(geocid == sugm.BingId)              : return(bulk_bing_reverse_input_id)
+         if(geocid == sugm.BaiduId)             : return(bulk_baidu_reverse_input_id)
 
 
 

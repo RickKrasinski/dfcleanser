@@ -17,7 +17,7 @@ from dfcleanser.sw_utilities import sw_utility_genfunc_control as gfc
 import dfcleanser.sw_utilities.sw_utility_genfunc_model as gfm
 
 from dfcleanser.common.html_widgets import (maketextarea, display_composite_form, ButtonGroupForm, 
-                                            get_button_tb_form, get_html_spaces, new_line, InputForm)
+                                            get_button_tb_form, new_line, InputForm)
 
 from dfcleanser.common.table_widgets import (SCROLL_NEXT, dcTable, ROW_MAJOR, get_row_major_table)
 
@@ -58,39 +58,45 @@ gen_function_tb_jsList                    =   ["genfunction_task_bar_callback("+
 """
 gen_function_input_title         =   "Generic Function"
 gen_function_input_id            =   "genfuncform"
-gen_function_input_idList        =   ["gttitle",
+gen_function_input_idList        =   ["gtmodule",
+                                      "gttitle",
                                       "gtcode",
                                       "gtkwargs",
-                                      None,None,None,None,None,None]
+                                      None,None,None,None,None,None,None,None]
 
-gen_function_input_labelList     =   ["function_title",
-                                      "function_code",
+gen_function_input_labelList     =   ["function_module",
+                                      "function_title",
+                                      "function_description",
                                       "function_kwargs",
-                                      "Load</br>Test</br>Code Cell",
-                                      "Save</br>Current</br>Function",
-                                      "Delete</br>Current</br>Function",
-                                      "Clear",
-                                      "Return","Help"]
+                                      "Open</br>Test</br>Code</br>Cell",
+                                      "Save</br>Test</br>Code</br>Cell",
+                                      "Update</br>Current",
+                                      "Get</br>help()",
+                                      "Delete</br>Current",
+                                      "Clear","Return","Help"]
 
-gen_function_input_typeList      =   ["text",
-                                      maketextarea(15),
+gen_function_input_typeList      =   ["text","text",
+                                      maketextarea(20),
                                       maketextarea(3),
-                                      "button","button","button","button","button","button"]
+                                      "button","button","button","button","button","button","button","button"]
 
-gen_function_input_placeholderList  = ["enter function title",
+gen_function_input_placeholderList  = ["enter function module",
+                                       "enter function title",
                                       "# Generic Function",
                                       "enter func kwargs as dict",
                                       None,None,None,None,None,None]
 
-gen_function_input_jsList        =    [None,None,None,
+gen_function_input_jsList        =    [None,None,None,None,
                                       "generic_function_callback("+str(gfm.LOAD_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.SAVE_FUNCTION)+")",
+                                      "generic_function_callback("+str(gfm.UPDATE_FUNCTION)+")",
+                                      "generic_function_callback("+str(gfm.DISPLAY_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.DELETE_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.CLEAR_FUNCTION)+")",
                                       "generic_function_callback("+str(gfm.RETURN_FUNCTION)+")",
                                       "displayhelp(" + str(dfchelp.GENFUNC_GEN_NEW_ID) + ")"]
 
-gen_function_input_reqList       =   [0,1,2]
+gen_function_input_reqList       =   [0,1,2,3]
 
 gen_function_input_form          =   [gen_function_input_id,
                                       gen_function_input_idList,
@@ -117,17 +123,27 @@ def get_genfunc_input_parms(parms) :
 
 
 def display_generic_function_inputs(ftitle,notes = False) :
+    
+    print("display_generic_function_inputs",ftitle)
 
-    if(ftitle == None) :
-        ftitle  =   cfg.get_config_value(cfg.CURRENT_GENERIC_FUNCTION)
-    else :
+    if(not(ftitle is None)) :
+        
         cfg.set_config_value(cfg.CURRENT_GENERIC_FUNCTION,ftitle)
+        gt_func = gfc.get_generic_function(ftitle)
 
-    gt_func = gfc.get_generic_function(ftitle)
-
-    if(not (gt_func == None)) :
-        fparms = [ftitle,gt_func,""]
-        cfg.set_config_value(gen_function_input_id+"Parms",fparms)
+        if(not (gt_func == None)) :
+            
+            if(type(gt_func) == str) :
+                fparms = [gfm.reservedfunctionsmodule,
+                          ftitle,
+                          gt_func,""]
+                
+            else :
+                fparms = [gt_func.get_func_module(),
+                          gt_func.get_func_title(),
+                          gt_func.get_func_code(),""]
+                
+            cfg.set_config_value(gen_function_input_id+"Parms",fparms)
 
     display_generic_functions()
     print("\n")
@@ -190,7 +206,7 @@ def get_genfunc_html(forfunc=gfm.FOR_GEN_FUNC) :
         gt_table.set_refList(genTranslistHrefs)
         
     gt_table.set_small(True)
-    gt_table.set_smallwidth(98)
+    gt_table.set_smallwidth(90)
     gt_table.set_smallmargin(10)
     
     gt_table.set_border(True)
@@ -205,12 +221,29 @@ def get_genfunc_html(forfunc=gfm.FOR_GEN_FUNC) :
     if(len(colorList) > 0) :
         gt_table.set_color(True)
         gt_table.set_colorList(colorList)
-
+    
+    gt_table.set_note("&nbsp;&nbsp;&nbsp;reserved system functions")
+    gt_table.set_notecolor(gfm.Yellow)
+    
     #gt_table.dump()
     listHtml = get_row_major_table(gt_table,SCROLL_NEXT,False)
     
     return(listHtml)
+
         
+def get_genfunc_module(ftitle) :
+    
+    if(ftitle in gfm.reservedfunctions) :
+        return(gfm.reservedfunctionsmodule) 
+    else :
+        gt_func     =   gfc.get_generic_function(ftitle)
+        
+        if(not (gt_func is None)) :
+            return(gt_func.get_func_module()) 
+        else :
+            return("None")
+    
+
 
 """
 #------------------------------------------------------------------
@@ -221,14 +254,21 @@ def display_generic_functions(forAddColumn=False):
 
     gtlistHtml = get_genfunc_html()
 
-    if(cfg.get_config_value(gen_function_input_id+"Parms") == None) :
-        newcode = ("# generic function" + new_line + 
-                  '# function title' + new_line +
-                  "from dfcleanser.common.cfg import get_dc_dataframe" + new_line + 
-                  "df = get_dc_dataframe()" + new_line + new_line)
+    ftitle  =  cfg.get_config_value(cfg.CURRENT_GENERIC_FUNCTION) 
 
-        parms = ["",newcode,""]
-        cfg.set_config_value(gen_function_input_id+"Parms",parms)
+    if(not (ftitle is None)) :
+
+        code        =   gfc.get_generic_function(ftitle)
+        
+        if(not(code is None)) :
+            if(not (type(code) == str)) :
+                code    =   code.get_func_code()
+                fmodule     =   get_genfunc_module(ftitle)
+            else :
+                fmodule     =   gfm.reservedfunctionsmodule
+                
+            parms = [fmodule,ftitle,code,""]
+            cfg.set_config_value(gen_function_input_id+"Parms",parms)
     
     gt_input_form = InputForm(gen_function_input_form[0],
                               gen_function_input_form[1],
@@ -243,10 +283,12 @@ def display_generic_functions(forAddColumn=False):
     
     gt_input_html = ""
     gt_input_html = gt_input_form.get_html()
-        
-    gt_heading_html =   "<p>" + get_html_spaces(58) + gen_function_input_title + "</p>"
     
-    gridclasses     =   ["generic-function-wrapper-header","dfc-left","dfc-right"]
+    cfg.drop_config_value(gen_function_input_id+"Parms")
+        
+    gt_heading_html =   "<div>" + gen_function_input_title + "</div>"
+    
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [gt_heading_html,gtlistHtml,gt_input_html]
     
     display_generic_grid("generic-function-wrapper",gridclasses,gridhtmls)

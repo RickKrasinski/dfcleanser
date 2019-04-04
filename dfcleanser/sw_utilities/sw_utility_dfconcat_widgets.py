@@ -18,7 +18,8 @@ import dfcleanser.sw_utilities.sw_utility_dfconcat_model as dfcm
 from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, 
                                             ButtonGroupForm, maketextarea)
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid)
+from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid,
+                                            get_select_defaults)
 
 import dfcleanser.common.cfg as cfg
 
@@ -144,6 +145,7 @@ df_concat_df2_input_labelList        = ["df2_title",
                                         "num_cols",
                                         "cols_not_in_df1",
                                         "Save Result To"]
+df_concat_df2_input_typeList        =   ["select","text","text",maketextarea(4),"button"]
 
 df_concat_df2_input_placeholderList =   ["dataframe title",
                                          "number of rows",
@@ -157,7 +159,7 @@ df_concat_df2_input_jsList         =   [None,None,None,None,
 df_concat_df2_input_form            =  [df_concat_df2_input_id,
                                         df_concat_df2_input_idList,
                                         df_concat_df2_input_labelList,
-                                        df_concat_df1_input_typeList,
+                                        df_concat_df2_input_typeList,
                                         df_concat_df2_input_placeholderList,
                                         df_concat_df2_input_jsList,
                                         df_concat_df1_input_reqList]  
@@ -201,7 +203,7 @@ def display_simple_concat_grid() :
     * --------------------------------------------------------
     """
     
-    df_concat_heading_html  =   "<p>&nbsp;Simple Dataframes Concatenation</p>"
+    df_concat_heading_html  =   "<div>Simple Dataframes Concatenation</div>"
 
     df1_concat_input_html = ""
     
@@ -211,7 +213,7 @@ def display_simple_concat_grid() :
                                           df_concat_df1_input_form[4],df_concat_df1_input_form[5],
                                           df_concat_df1_input_form[6])
         
-    df1_concat_input_form.set_gridwidth(240)
+    df1_concat_input_form.set_gridwidth(400)
     df1_concat_input_form.set_custombwidth(160)
     
     df1_select_dict     =   cfg.get_dfc_dataframes_select_list()
@@ -221,8 +223,12 @@ def display_simple_concat_grid() :
     df1_option_list.append("")
     df1_select_dict.update({"list":df1_option_list})
 
-    df1_concat_input_form.add_select_dict("dataframe1title",df1_select_dict)
-     
+    get_select_defaults(df1_concat_input_form,
+                        df_concat_df1_input_id,
+                        df_concat_df1_input_idList,
+                        df_concat_df1_input_typeList,
+                        [df1_select_dict])
+
     df1_concat_input_html = df1_concat_input_form.get_html() 
 
     df2_concat_input_html = ""
@@ -233,7 +239,7 @@ def display_simple_concat_grid() :
                                           df_concat_df2_input_form[4],df_concat_df2_input_form[5],
                                           df_concat_df2_input_form[6])
         
-    df2_concat_input_form.set_gridwidth(240)
+    df2_concat_input_form.set_gridwidth(400)
     df2_concat_input_form.set_custombwidth(160)
     
     df2_select_dict     =   cfg.get_dfc_dataframes_select_list()
@@ -243,8 +249,12 @@ def display_simple_concat_grid() :
     df2_option_list.append("")
     df2_select_dict.update({"list":df2_option_list})
 
-    df2_concat_input_form.add_select_dict("dataframe2title",df2_select_dict)
-    
+    get_select_defaults(df2_concat_input_form,
+                        df_concat_df2_input_id,
+                        df_concat_df2_input_idList,
+                        df_concat_df2_input_typeList,
+                        [df2_select_dict])
+
     df2_concat_input_html = df2_concat_input_form.get_html() 
     
     from dfcleanser.common.html_widgets import InputForm
@@ -256,21 +266,28 @@ def display_simple_concat_grid() :
                                   df_concat_input_jsList,
                                   df_concat_input_reqList) 
     
-    concat_input_form.set_custombwidth(75)
-    concat_input_form.set_gridwidth(320)
-    
-    axissel           =   {"default":"0","list":["0","1"]}
-    concat_input_form.add_select_dict("caxis",axissel)
+    selectDicts     =   {}
+    axissel         =   {"default":"0","list":["0","1"]}
+    selectDicts.append(axissel)
     
     joinsel           =   {"default":"outer","list":["inner","outer"]}
-    concat_input_form.add_select_dict("cjoin",joinsel)
+    selectDicts.append(joinsel)
     
     resisel           =   {"default":"False","list":["True","False"]}
-    concat_input_form.add_select_dict("cresrow",resisel)
-   
+    selectDicts.append(resisel)
+    
+    get_select_defaults(concat_input_form,
+                        df_concat_input_id,
+                        df_concat_input_idList,
+                        df_concat_input_typeList,
+                        selectDicts)
+
+    concat_input_form.set_custombwidth(160)
+    concat_input_form.set_gridwidth(800)
+    
     concat_input_html   =   concat_input_form.get_html()
     
-    gridclasses     =   ["df-concat-header","dfc-left","dfc-main","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","footer"]
     gridhtmls       =   [df_concat_heading_html,df1_concat_input_html,
                          df2_concat_input_html,concat_input_html]
     

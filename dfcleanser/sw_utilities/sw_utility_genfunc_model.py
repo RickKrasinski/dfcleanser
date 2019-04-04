@@ -25,19 +25,26 @@ PROCESS_GENERIC_FUNCTION_OPTION     =   2
 
 LOAD_FUNCTION                       =   0
 SAVE_FUNCTION                       =   1
-DELETE_FUNCTION                     =   2
-CLEAR_FUNCTION                      =   3
-RETURN_FUNCTION                     =   4
-SELECT_FUNCTION                     =   5
+UPDATE_FUNCTION                     =   2
+DISPLAY_FUNCTION                    =   3
+DELETE_FUNCTION                     =   4
+RETURN_FUNCTION                     =   5
+SELECT_FUNCTION                     =   6
+CLEAR_FUNCTION                      =   7
 
 FOR_ADD_COLUMNS                     =   0
 FOR_APPLY_FN                        =   1
 FOR_GEN_FUNC                        =   2
 
-reservedfunctions                   =   ["normalize_column","add_normalized_column","upperCase_column",
-                                         "get_normalized_column_values","get_trigonometric_column_values",
-                                         "convert_to_degrees","convert_to_radians","absolute_column",
-                                         "round_float","round_to_int"]
+reservedfunctions                   =   ["normalize_list","normalize_df_column","upperCase_column",
+                                         "get_trigonometric_column_values",
+                                         "convert_to_degrees_or_radians","convert_df_to_degrees_or_radians",
+                                         "absolute_df_column","absolute_values",
+                                         "round_float","to_numeric_column",
+                                         "to_string_column","get_df_geocode_center","get_geocode_center"]
+
+reservedfunctionsmodule             =    "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
+
 
 Red     = "#FAA78F"
 Green   = "#8FFAC0"

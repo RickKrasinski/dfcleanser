@@ -16,7 +16,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
-                                            ButtonGroupForm, get_html_spaces)
+                                            ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR
 
@@ -287,7 +287,6 @@ def display_df_subset_status(df,out_df,filename,filtertext=None) :
     status_table.set_small(True)
     status_table.set_smallwidth(50)
     status_table.set_smallmargin(32)
-    status_table.set_smallfsize(12)
     status_table.set_border(False)
     status_table.set_checkLength(False)
     
@@ -347,7 +346,6 @@ def get_operators_table() :
     operators_table.set_small(True)
     operators_table.set_smallwidth(98)
     operators_table.set_smallmargin(10)
-    operators_table.set_smallfsize(13)
     operators_table.set_smallheader(False)
     operators_table.set_border(False)
     operators_table.set_checkLength(False)
@@ -512,7 +510,7 @@ def get_dfsubset_table(df,filters=False,colname=None) :
                 
                 if(len(colnames) > 0) :
                     col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
-                                                            cfg.SWDFSubsetUtility_ID,callback,colnames)    
+                                                            cfg.SWDFSubsetUtility_ID,callback,None,colnames)    
                 else :
                     col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
                                                             cfg.SWDFSubsetUtility_ID,callback)
@@ -571,7 +569,7 @@ def display_df_subset(df,filters=False,colname=None) :
         
         get_subset_input_html = get_filter_subset_input_form.get_html() 
         
-        get_subset_heading_html =   "<p>" + get_html_spaces(58) + " Create Dataframe Subset Filter</p>"        
+        get_subset_heading_html =   "<div>Create Dataframe Subset Filter</div>"        
 
     else :
         
@@ -602,18 +600,18 @@ def display_df_subset(df,filters=False,colname=None) :
         
         get_subset_input_html = subset_input_form.get_html() 
             
-        get_subset_heading_html =   "<p>" + get_html_spaces(58) + "Get Dataframe Subset</p>"
+        get_subset_heading_html =   "<div>Get Dataframe Subset</div>"
     
     if(filters) :
         
-        gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-middle","dfc-right"]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-middle","dfc-right"]
         gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html,operators_html]
     
         display_generic_grid("dfsubset1-wrapper",gridclasses,gridhtmls)
         
     else :
         
-        gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-right"]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
         gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html]
     
         display_generic_grid("dfsubset-wrapper",gridclasses,gridhtmls)
@@ -713,9 +711,9 @@ def display_filters(df) :
         
     filters_input_html = filters_input_form.get_html() 
             
-    filters_heading_html =   "<p>" + get_html_spaces(58) + "Dataframe Subset Filters</p>"
+    filters_heading_html =   "<div>Dataframe Subset Filters</div>"
     
-    gridclasses     =   ["dfsubset-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [filters_heading_html,filter_names_html,filters_input_html]
     
     display_generic_grid("dfsubset-wrapper",gridclasses,gridhtmls)

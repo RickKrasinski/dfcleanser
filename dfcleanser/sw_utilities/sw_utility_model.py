@@ -27,6 +27,6 @@ DICT_ID         =   0
 LIST_ID         =   1
 
 ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes","ArcGIS_Categories"]
-ReservedLists   =   ["columnNames", "Address_Components", "Location_Types"]
+ReservedLists   =   ["columnNames", "Google_Address_Components", "Google_Location_Types"]
 
 

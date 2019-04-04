@@ -51,6 +51,7 @@ def get_geocoding_connect_parms(geocid,gmode,fparms) :
     if(gmode == sugm.INTERACTIVE) :
             
         if(geocid == sugm.ArcGISId)         :   ids =   sugw.arcgis_geocoder_idList
+        elif(geocid == sugm.BaiduId)        :   ids =   sugw.baidu_geocoder_idList
         elif(geocid == sugm.BingId)         :   ids =   sugw.bing_geocoder_idList
         elif(geocid == sugm.GoogleId)       :   ids =   sugw.google_geocoder_idList
         elif(geocid == sugm.OpenMapQuestId) :   ids =   sugw.mapquest_geocoder_idList
@@ -64,6 +65,7 @@ def get_geocoding_connect_parms(geocid,gmode,fparms) :
     else :
             
         if(geocid == sugm.ArcGISId)         :   ids =   subgw.batch_arcgis_geocoder_idList
+        elif(geocid == sugm.BaiduId)        :   ids =   sugw.baidu_geocoder_idList
         elif(geocid == sugm.BingId)         :   ids =   sugw.bing_geocoder_idList
         elif(geocid == sugm.GoogleId)       :   ids =   subgw.google_bulk_geocoder_idList
         elif(geocid == sugm.OpenMapQuestId) :   ids =   sugw.mapquest_geocoder_idList
@@ -76,6 +78,23 @@ def get_geocoding_connect_parms(geocid,gmode,fparms) :
 
     
     return(inputs)
+
+def get_geocid_from_formid(formid) :
+    
+    if( (formid == "googlegeocoder")  or (formid == "googlequery") or (formid == "googlereverse") or 
+        (formid == "googlebulkgeocoder") or (formid == "googlebulkquery") or (formid ==  "googlebulkreverse") ) :   return(sugm.GoogleId)
+    elif( (formid == "arcgisgeocoder")  or (formid == "arcgisquery") or (formid == "arcgisreverse") or 
+          (formid == "arcgisbatchgeocoder") or (formid == "arcgisbatchquery") ) :                                   return(sugm.ArcGISId)
+    elif( (formid == "baidugeocoder")  or (formid == "baiduquery") or (formid == "baidureverse") or 
+          (formid == "baidubulkgeocoder") or (formid == "baidubulkquery") ) :                                       return(sugm.BaiduId)
+    elif( (formid == "binggeocoder")  or (formid == "bingquery") or (formid == "bingreverse") or 
+          (formid == "bingbulkgeocoder") or (formid == "bingbulkquery") ) :                                         return(sugm.BingId)
+    elif( (formid == "baidugeocoder")  or (formid == "baiduquery") or (formid == "baidureverse") or 
+          (formid == "baidubulkgeocoder") or (formid == "baidubulkquery") ) :                                       return(sugm.BaiduId)
+    elif( (formid == "mapquestgeocoder")  or (formid == "mapquestquery") or (formid == "mapquestreverse") ) :       return(sugm.OpenMapQuestId)
+    elif( (formid == "nomingeocoder")  or (formid == "nominquery") or (formid == "nominreverse") ) :                return(sugm.NominatimId)
+    else :                                                                                                          return(None)
+ 
 
 def display_geocode_utility(optionId,parms=None) :
     """
@@ -104,19 +123,43 @@ def display_geocode_utility(optionId,parms=None) :
     if(optionId == sugm.DISPLAY_MAIN_GEOCODING) :
         sugw.display_geocode_main_taskbar()        
         clear_sw_utility_geocodedata()
-        
+    
+    if(optionId == sugm.DISPLAY_GEOUTILS) :
+        sugw.display_geocode_utils_taskbar()        
+    
     elif(optionId ==  sugm.DISPLAY_DISTANCE) :
         clear_output() 
         sugw.display_calc_distance_input_form()
 
-    elif(optionId ==  sugm.PROCESS_DISTANCE) :
-        sugw.display_geocode_main_taskbar() 
-    
     elif(optionId ==  sugm.DISPLAY_DF_DISTANCE) :
         clear_output()        
         sugw.display_calc_df_distance_input_form()
+    
+    elif(optionId ==  sugm.PROCESS_DISTANCE) :
+        sugw.display_geocode_main_taskbar() 
 
     elif(optionId ==  sugm.PROCESS_DF_DISTANCE) :
+        sugw.display_geocode_main_taskbar() 
+        
+    elif(optionId ==  sugm.DISPLAY_CENTER) :
+        clear_output() 
+        sugw.display_calc_center_input_form()
+
+    elif(optionId ==  sugm.DISPLAY_DF_CENTER) :
+        clear_output()        
+        sugw.display_calc_df_center_input_form()
+        
+    elif(optionId ==  sugm.PROCESS_CENTER) :
+        sugw.display_geocode_main_taskbar() 
+
+    elif(optionId ==  sugm.PROCESS_DF_CENTER) :
+        sugw.display_geocode_main_taskbar() 
+    
+    elif(optionId ==  sugm.DISPLAY_TUNING) :
+        clear_output() 
+        sugw.display_bulk_tune_input_form()
+    
+    elif(optionId ==  sugm.PROCESS_TUNING) :
         sugw.display_geocode_main_taskbar() 
 
     elif(optionId == sugm.PROCESS_GEOCODER) :
@@ -135,11 +178,14 @@ def display_geocode_utility(optionId,parms=None) :
     # show full parameters for geocoding parms in a grid
     elif(optionId == sugm.DISPLAY_FULL_GEOCODING) :
 
-        formid  =    parms[0]        
         
+        formid  =   parms[0]        
+        geocid  =   get_geocid_from_formid(formid)
+        print("DISPLAY_FULL_GEOCODING",formid,geocid)       
         if( (formid == "arcgisgeocoder") or 
             (formid == "googlegeocoder") or
             (formid == "binggeocoder") or
+            (formid == "baidugeocoder") or
             (formid == "mapquestgeocoder") or
             (formid == "nomingeocoder") ) :
             
@@ -149,6 +195,7 @@ def display_geocode_utility(optionId,parms=None) :
         elif( (formid == "arcgisquery") or 
               (formid == "googlequery") or
               (formid == "bingquery") or
+              (formid == "baiduquery") or
               (formid == "mapquestquery") or
               (formid == "nominquery") ) :
             
@@ -158,6 +205,7 @@ def display_geocode_utility(optionId,parms=None) :
         elif( (formid == "arcgisreverse") or 
               (formid == "googlereverse") or
               (formid == "bingreverse") or
+              (formid == "baidureverse") or
               (formid == "mapquestreverse") or
               (formid == "nominreverse") ) :
             
@@ -166,9 +214,8 @@ def display_geocode_utility(optionId,parms=None) :
             
         elif( (formid == "arcgisbatchgeocoder") or 
               (formid == "googlebulkgeocoder") or
-              (formid == "bingbulkgeocoder") or
-              (formid == "mapquestbulkgeocoder") or
-              (formid == "nominbulkgeocoder") ) :
+              (formid == "bingbulkgeocoder") or 
+              (formid == "baidubulkgeocoder") ) :
             
             gmode   =   sugm.BULK
             gtype   =   sugm.GEOCODER
@@ -176,13 +223,14 @@ def display_geocode_utility(optionId,parms=None) :
         elif( (formid == "arcgisbatchquery") or 
               (formid == "googlebulkquery") or
               (formid == "bingbulkquery") or
-              (formid == "mapquestbulkquery") or
-              (formid == "nominatimbulkquery") ) :
+              (formid == "baidubulkquery") ) :
             
             gmode   =   sugm.BULK
             gtype   =   sugm.QUERY
         
-        elif( (formid == "googlebulkquery")  ) :
+        elif( (formid == "googlebulkreverse")  or 
+              (formid == "bingbulkreverse")  or
+              (formid == "baidubulkreverse")  ) :
             
             gmode   =   sugm.BULK
             gtype   =   sugm.REVERSE
@@ -204,7 +252,7 @@ def display_geocode_utility(optionId,parms=None) :
                 if(gmode == sugm.INTERACTIVE) :
                     sugw.display_geocode_inputs(geocid,gtype,True)
                 else :
-                    subgw.display_bulk_geocoding(geocid,gtype,True)
+                    subgw.display_bulk_geocoding(geocid,gtype)
 
     elif(optionId == sugm.PROCESS_GEOCODING) :
         
@@ -292,8 +340,10 @@ def display_geocode_utility(optionId,parms=None) :
                 
         if(gmode == sugm.INTERACTIVE) :
             sugw.display_geocoders(geocid)
-        else :
+        elif(gmode == sugm.BULK) :
             subgw.display_bulk_geocoders(geocid)
+        else :
+            print("display bulk tuning")
  
     elif(optionId == sugm.GET_TABLE) :
         tableid =   int(parms[0])
@@ -402,8 +452,6 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId == sugm.PROCESS_BULK_RESULTS) :
         sugw.display_geocode_main_taskbar()        
 
-        print("PROCESS_BULK_RESULTS",parms) 
-        
         opstat  =   opStatus()
         
         cmd     =   parms[0] 
@@ -411,12 +459,13 @@ def display_geocode_utility(optionId,parms=None) :
         if(cmd == sugm.DISPLAY_BULK_RESULTS_RETURN) : 
             clear_sw_utility_geocodedata()
             
-        if((cmd == sugm.DISPLAY_BULK_RESULTS_CONCAT) or 
-           (cmd == sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV)) : 
-            
+        elif((cmd == sugm.DISPLAY_BULK_RESULTS_CONCAT) or 
+             (cmd == sugm.DISPLAY_BULK_RESULTS_EXPORT_CSV)) : 
+
+            print("DISPLAY_BULK_RESULTS_CONCAT",cmd)            
             subgcs.display_geocoder_process_results(cmd,opstat)
             
-        if(cmd == sugm.DISPLAY_BULK_RESULTS_FULL) : 
+        elif(cmd == sugm.DISPLAY_BULK_RESULTS) : 
             subgcs.display_geocoder_process_results(cmd,opstat,True)
             
         elif(cmd == sugm.DISPLAY_BULK_RESULTS_EXPORT_SQL) :
@@ -451,9 +500,20 @@ def display_geocode_utility(optionId,parms=None) :
             
             subgcs.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_BASE,opstat)
         
+        elif(cmd == sugm.DISPLAY_BULK_SOURCE_DF) :
+            
+            subgcs.display_geocoder_process_results(sugm.DISPLAY_BULK_SOURCE_DF,opstat)
+        
+        elif(cmd == sugm.DISPLAY_BULK_RESULTS_DF) :
+            
+            subgcs.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_DF,opstat)
+        
+        elif(cmd == sugm.DISPLAY_BULK_ERRORS_DF) :
+            
+            subgcs.display_geocoder_process_results(sugm.DISPLAY_BULK_ERRORS_DF,opstat)
+        
         else :
-            fparms  =   parms[1]
-            subgc.process_geocode_final_results(cmd,fparms)
+            subgcs.display_geocoder_process_results(cmd,opstat,True)
         
          
 """
@@ -503,21 +563,16 @@ def get_geocoder_engine(geocid,opstat) :
                 geolocator = Bing() 
             else :
                 geolocator = Bing(**geocinitparms)
+        
+        elif(geocid == sugm.BaiduId) :
             
-        elif(geocid == sugm.DataBCId) :
-            from geopy.geocoders import DataBC
-            if(geocinitparms == None) :
-                geolocator = DataBC() 
+            print("get_geocoder_engine",geocinitparms)
+            from geopy.geocoders import Baidu
+            if(1):#geocinitparms == None) :
+                geolocator = Baidu("NaKYPfQCGqrGdX8pR77rdWLuGyiGCu4E")#secret_key = "d3UWh3WGWTxvmm897KQoczVfHmZzyMOR") 
             else :
-                geolocator = DataBC(**geocinitparms)
+                geolocator = Baidu(**geocinitparms)
             
-        elif(geocid == sugm.GeocoderDotUSId) :
-            from geopy.geocoders import GeocoderDotUS
-            if(geocinitparms == None) :
-                geolocator = GeocoderDotUS() 
-            else :
-                geolocator = GeocoderDotUS(**geocinitparms)
-                    
         elif(geocid == sugm.OpenMapQuestId) :
             from geopy.geocoders import OpenMapQuest
             if(geocinitparms == None) :
@@ -532,13 +587,6 @@ def get_geocoder_engine(geocid,opstat) :
             else :
                 geolocator = Nominatim(**geocinitparms)
                     
-        elif(geocid == sugm.YahooPlaceFinderId) :
-            from geopy.geocoders import YahooPlaceFinder
-            if(geocinitparms == None) :
-                geolocator = YahooPlaceFinder() 
-            else :
-                geolocator = YahooPlaceFinder(**geocinitparms)
-                    
         elif(geocid == sugm.ArcGISId) :
             from geopy.geocoders import ArcGIS
             if(geocinitparms == None) :
@@ -547,7 +595,7 @@ def get_geocoder_engine(geocid,opstat) :
                 geolocator = ArcGIS(**geocinitparms)
                     
     except Exception as e:
-        opstat.store_exception("Error initializing geocoder service",e)
+        opstat.store_exception("Error getting geocoder service (_init) ",e)
     
     return(geolocator)    
   
@@ -562,6 +610,8 @@ def get_geocoder_engine(geocid,opstat) :
 
 
 def test_geocoder(geocid,gcparms) :
+    
+    print("test_geocoder",geocid,gcparms)
     """
     * ---------------------------------------------------------
     * function : test the geocoder connection and run sample
@@ -581,6 +631,8 @@ def test_geocoder(geocid,gcparms) :
         form    =   sugw.arcgis_geocoder_id
     elif(geocid == sugm.BingId)              :  
         form    =   sugw.bing_geocoder_id
+    elif(geocid == sugm.BaiduId)              :  
+        form    =   sugw.baidu_geocoder_id
     elif(geocid == sugm.GoogleId)            :  
         form    =   sugw.google_geocoder_id
     elif(geocid == sugm.OpenMapQuestId)      :  
@@ -721,10 +773,7 @@ def run_geocoder_query(geocid, parms) :
                 if(queryparms.get("number_of_results") != None) :
                     numresults = int(queryparms.get("number_of_results"))
                     queryparms.pop("number_of_results")
-                    if(geocid == sugw.DataBCId) :
-                        queryparms.update({"max_results":numresults}) 
-                    else :
-                        queryparms.update({"exactly_one":False})
+                    queryparms.update({"exactly_one":False})
                 
                 for i in range(len(addresses)) :
                 

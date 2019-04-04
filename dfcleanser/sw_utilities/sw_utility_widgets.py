@@ -188,15 +188,16 @@ def display_list_dict(id) :
     list_dictcustom_html = list_dict_input_form.get_html()
         
     if(id==swum.DICT_ID)  :
-        list_title_html = "<p class='grid_title'>" + get_html_spaces(1) + build_dict_utility_input_title + "</p>"
+        list_title_html =   "<div>" + build_dict_utility_input_title + "</div>"
         wrapper = "dict-table-wrapper"
-    else :   
-        list_title_html = "<p class='grid_title'>" + get_html_spaces(1) + build_list_utility_input_title + "</p>"
+    else : 
+        list_title_html =   "<div>" + build_list_utility_input_title + "</div><br></br>"
         wrapper = "list-table-wrapper"
     
-    gridclasses     =   ["dict-table-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [list_title_html,list_html,list_dictcustom_html]
     
+    print("\n")
     display_generic_grid(wrapper,gridclasses,gridhtmls)
 
 
@@ -292,7 +293,7 @@ def get_grid_list_html(id) :
 
         grid_table.set_border(True)
         grid_table.set_checkLength(True)
-        grid_table.set_textLength(20)
+        grid_table.set_textLength(30)
         grid_table.set_html_only(True) 
         
         grid_table.set_color(True)

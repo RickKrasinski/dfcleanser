@@ -18,7 +18,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
-                                            get_input_form, ButtonGroupForm, InputForm, get_html_spaces)
+                                            ButtonGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
@@ -38,29 +38,56 @@ from dfcleanser.common.help_utils import GEOCODING_MAIN_TASKBAR_ID
 
 """
 #--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#    address conversion main task bar
-#--------------------------------------------------------------------------
+#    geocoding main task bar
 #--------------------------------------------------------------------------
 """
-geocode_utility_tb_doc_title            =   "Address Conversion Options"
-geocode_utility_tb_title                =   "Address Conversion"
-geocode_utility_tb_id                   =   "addrconverttb"
+geocode_main_tb_doc_title               =   "Geocoding"
+geocode_main_tb_title                   =   "Geocoding"
+geocode_main_tb_id                      =   "geocodemaintb"
 
-geocode_utility_tb_keyTitleList         =   ["Interactive</br>Geocoding",
+geocode_main_tb_keyTitleList            =   ["Interactive</br>Geocoding",
                                              "Bulk</br>Geocoding",
-                                             "Calculate</br>Distance",
                                              "Select</br>Geocoder",
+                                             "Geocode</br>Utilities",
                                              "Clear","Help"]
 
-geocode_utility_tb_jsList               =   ["display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
+geocode_main_tb_jsList                  =   ["display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
                                              "display_geocoders(-1," + str(sugm.BULK) + ")",
-                                             "process_geomain_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
                                              "display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
+                                             "process_geoutils_callback(" + str(sugm.DISPLAY_GEOUTILS) + ")",
                                              "geocode_return()",
                                              "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
 
-geocode_utility_tb_centered             =   False
+geocode_main_tb_centered                =   False
+
+
+"""
+#--------------------------------------------------------------------------
+#    geocoding utilities task bar
+#--------------------------------------------------------------------------
+"""
+geocode_utilities_tb_doc_title          =   "Geocoding Utilities"
+geocode_utilities_tb_title              =   "Geocoding Utilities"
+geocode_utilities_tb_id                 =   "geocodeutilstb"
+
+geocode_utilities_tb_keyTitleList       =   ["Calculate</br>Distance",
+                                             "Calculate</br>df</br>Distance",
+                                             "Calculate</br>Center",
+                                             "Calculate</br>df</br>Center",
+                                             "Tune</br>Bulk</br>Geocoder",
+                                             "Return","Help"]
+
+geocode_utilities_tb_jsList             =   ["process_geoutils_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
+                                             "process_geoutils_callback(" + str(sugm.DISPLAY_DF_DISTANCE) + ")",
+                                             "process_geoutils_callback(" + str(sugm.DISPLAY_CENTER) + ")",
+                                             "process_geoutils_callback(" + str(sugm.DISPLAY_DF_CENTER) + ")",
+                                             "process_geoutils_callback(" + str(sugm.DISPLAY_TUNING) + ")",
+                                             "geocode_return()",
+                                             "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
+
+geocode_utilities_tb_centered           =   False
+
+
 """
 #--------------------------------------------------------------------------
 #   geocoder init forms
@@ -398,6 +425,71 @@ nomin_geocoder_form                 =   [nomin_geocoder_id,
 
 nomin_user_agent	= "my-application"
 
+
+"""
+#--------------------------------------------------------------------------
+#   Baidu geocoder parms
+#--------------------------------------------------------------------------
+"""
+baidu_geocoder_title                =   "Baidu Geocoder Connector"
+baidu_geocoder_id                   =   "baidugeocoder"
+
+baidu_geocoder_idList               =    ["baiduapikey",
+                                          "baiduscheme",
+                                          "baidutimeout",
+                                          "baiduproxies",
+                                          "baiduagent",
+                                          "baidufstring",
+                                          "baidssl",
+                                          "baiduseckey",
+                                          None,None,None,None,None,None,None]
+
+baidu_geocoder_labelList            =   ["api_key",
+                                         "scheme",
+                                         "timeout",
+                                         "proxies",
+                                         "user_agent",
+                                         "format_string",
+                                         "ssl_context",
+                                         "security_key", 
+                                         "Test</br>Geocoder</br>Connection",
+                                         "Interactive</br>Geocoding",
+                                         "Interactive</br>Reverse</br>Geocoding",
+                                         "Bulk</br>Geocoding",
+                                         "Clear","Return","Help"]
+
+
+baidu_geocoder_typeList             =   ["text","text","text","text","text","text","text","text",
+                                         "button","button","button","button","button","button","button"]
+
+baidu_geocoder_placeholderList      =   ["enter Baidu api key",
+                                         "enter scheme (default https)",
+                                         "enter timeout in seconds (default 1)",
+                                         "proxies dict (default None)",
+                                         "user agent (default - 'geopy/x.xx.x')",
+                                         "enter format string (default %s)",
+                                         "enter ssl context (default None)",
+                                         "enter authentication security key (default None)",
+                                         None,None,None,None,None,None,None]
+
+baidu_geocoder_jsList               =   [None,None,None,None,None,None,None,None,
+                                         "test_geocoder(" + str(sugm.BaiduId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BaiduId) + ","  + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BaiduId) + ","  + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
+                                         "geocode_return()",
+                                         "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+
+baidu_geocoder_reqList              =   [0]
+
+
+baidu_APP_Name      =   "MyTestGeocoder"
+baidu_ID            =   "15870017"
+baidu_API_Key       =   "GISxFUnzA8jFfzYF7pVcKWig"
+baidu_Secret_Key    =   "d3UWh3WGWTxvmm897KQoczVfHmZzyMOR"
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -691,6 +783,55 @@ nomin_query_form                         =   [nomin_query_id,
 
 """
 #--------------------------------------------------------------------------
+#   baidu get coords form
+#--------------------------------------------------------------------------
+"""
+baidu_query_title                   =   "Baidu Geocoder Get Coordinates"
+baidu_query_id                      =   "baiduquery"
+
+baidu_query_idList                  =    ["baiduqquery",
+                                          "baiduqcount",
+                                          "baiduqtimeout",
+                                          None,None,None,None,None,None]
+
+baidu_query_labelList               =   ["address(s)",
+                                         "number_of_results",
+                                         "timeout",
+                                         "Get</br>Coords",
+                                         "Change</br> Geocoder",
+                                         "Bulk</br>Geocoding",
+                                         "Clear","Return","Help"]
+
+
+baidu_query_typeList                =   [maketextarea(6),"text","text",
+                                         "button","button","button","button","button","button"]
+
+baidu_query_placeholderList         =   ["single address string or [] list of address strings",
+                                         "max number of results per address (default - 1) ",
+                                         "enter timeout in seconds (default - 20)",
+                                         None,None,None,None,None,None]
+
+baidu_query_jsList                  =   [None,None,None,
+                                         "process_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
+                                         "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "geocode_return()",
+                                         "display_help_url('" + str(dfchelp.BingQueryHelp) + "')"]
+
+
+baidu_query_reqList                 =   [0]
+
+baidu_query_form                    =   [baidu_query_id,
+                                         baidu_query_idList,
+                                         baidu_query_labelList,
+                                         baidu_query_typeList,
+                                         baidu_query_placeholderList,
+                                         baidu_query_jsList,
+                                         baidu_query_reqList]
+
+"""
+#--------------------------------------------------------------------------
 #   geocoder get address forms
 #--------------------------------------------------------------------------
 """
@@ -969,9 +1110,56 @@ nomin_reverse_form                         =   [nomin_reverse_id,
 
 """
 #--------------------------------------------------------------------------
+#   Baidu get address forms
+#--------------------------------------------------------------------------
+"""
+baidu_reverse_title                    =   "Baidu Geocoder Get Address"
+baidu_reverse_id                       =   "baidureverse"
+
+baidu_reverse_idList                   =    ["baidurquery",
+                                             "baidurcount",
+                                             "baidurtimeout",
+                                             None,None,None,None,None,None]
+
+baidu_reverse_labelList                =   ["latitude_longitude(s)",
+                                            "number_of_results",
+                                            "timeout",
+                                            "Get</br>Address",
+                                            "Change</br> Geocoder",
+                                            "Bulk</br>Geocoding",
+                                            "Clear","Return","Help"]
+
+
+baidu_reverse_typeList                 =   [maketextarea(6),"text","text",
+                                            "button","button","button","button","button"]
+
+baidu_reverse_placeholderList          =   ["list or tuple of (latitude, longitude)",
+                                            "max number of results (default - 1) ",
+                                            "enter timeout in seconds (default - 5)",
+                                            None,None,None,None,None,None]
+
+baidu_reverse_jsList                   =   [None,None,None,
+                                            "process_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
+                                            "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                            "geocode_return()",
+                                            "display_help_url('" + str(dfchelp.BingReverseHelp) + "')"]
+
+
+baidu_reverse_reqList                  =   [0]
+
+baidu_reverse_form                     =   [baidu_reverse_id,
+                                            baidu_reverse_idList,
+                                            baidu_reverse_labelList,
+                                            baidu_reverse_typeList,
+                                            baidu_reverse_placeholderList,
+                                            baidu_reverse_jsList,
+                                            baidu_reverse_reqList]
+
+"""
 #--------------------------------------------------------------------------
 #    address distance input form
-#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 addr_dist_utility_input_title             =   "Address Distance Columns"
@@ -983,8 +1171,8 @@ addr_dist_utility_input_idList            =   ["fromaddr",
                                                "elipsoid",
                                                None,None,None,None,None]
 
-addr_dist_utility_input_labelList         =   ["from_location ",
-                                               "to_location",
+addr_dist_utility_input_labelList         =   ["from_location(s) ",
+                                               "to_location(s)",
                                                "distance_units",
                                                "distance_algorithm",
                                                "elipsoid",
@@ -995,18 +1183,18 @@ addr_dist_utility_input_labelList         =   ["from_location ",
 addr_dist_utility_input_typeList          =   ["text","text","select","select","text",
                                                "button","button","button","button","button"]
 
-addr_dist_utility_input_placeholderList   =  ["enter From location : as string for address or [list] or (tuple) of floats for coords",
-                                              "enter to location : as string for address or [list] or (tuple) of floats for coords",
+addr_dist_utility_input_placeholderList   =  ["enter From location(s) : as single or [list] or (tuple) of [lat,lng] for from coords",
+                                              "enter to location(s) : as single or [list] or (tuple) of [lat,lng] for to coords",
                                               "result in km - True : km, False : miles (default - True) ",
                                               "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default - 0) ",
                                               "select elipsoid (default - 'WGS-84') ",
                                               None,None,None,None,None]
 
 addr_dist_utility_input_jsList            =    [None,None,None,None,None,
-                                                "process_addr_dist("+str(sugm.PROCESS_DISTANCE)+")",
-                                                "process_addr_dist("+str(sugm.DISPLAY_DF_DISTANCE)+")",
-                                                "process_addr_dist("+str(sugm.DISPLAY_DISTANCE)+")",
-                                                "process_addr_dist("+str(sugm.DISPLAY_GEOCODING)+")",
+                                                "process_geoutils_callback("+str(sugm.PROCESS_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
+                                                "geocode_return()",
                                                 "displayhelp(" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + ")"]
 
 addr_dist_utility_input_reqList           =   [0,1]
@@ -1017,8 +1205,9 @@ addr_dist_utility_input_reqList           =   [0,1]
 #--------------------------------------------------------------------------
 """
 addr_df_dist_utility_input_title             =   "Address Distance Columns"
-addr_df_dist_utility_input_id                =   "addrdist"
-addr_df_dist_utility_input_idList            =   ["fromcol",
+addr_df_dist_utility_input_id                =   "addrdfdist"
+addr_df_dist_utility_input_idList            =   ["addrdfdistdf",
+                                                  "fromcol",
                                                   "tocol",
                                                   "newcol",
                                                   "dfdisunits",
@@ -1026,8 +1215,9 @@ addr_df_dist_utility_input_idList            =   ["fromcol",
                                                   "dfelipsoid",
                                                   None,None,None,None,None]
 
-addr_df_dist_utility_input_labelList         =   ["from_column ",
-                                                  "to_column",
+addr_df_dist_utility_input_labelList         =   ["dataframe_to_geocode",
+                                                  "from_location(s)",
+                                                  "to_location(s)",
                                                   "new_distance_column",
                                                   "distance_units",
                                                   "distance_algorithm",
@@ -1036,27 +1226,124 @@ addr_df_dist_utility_input_labelList         =   ["from_column ",
                                                   "Calculate</br>Dataframe</br>Distance",
                                                   "Clear","Return","Help"]
 
-addr_df_dist_utility_input_typeList          =   ["text","text","text","select","select","text",
+addr_df_dist_utility_input_typeList          =   ["select","text","text","text","select","select","text",
                                                   "button","button","button","button","button"]
 
-addr_df_dist_utility_input_placeholderList   =  ["enter From column name",
-                                                 "enter to column name",
-                                                 "enter column name to store distance",
+addr_df_dist_utility_input_placeholderList   =  ["enter dataframe",
+                                                 "enter From column name(s) - lat_lng or [lat,lng] or single location [lat,lng]",
+                                                 "enter to column name(s) - lat_lng or [lat,lng] or single location [lat,lng]",
+                                                 "enter column name to store distance in",
                                                  "result in km - True : km, False : miles (default = True) ",
                                                  "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default = 0) ",
                                                  "select elipsoid (default = 'WGS-84') ",
                                                  None,None,None,None,None]
 
-addr_df_dist_utility_input_jsList            =    [None,None,None,None,None,None,
-                                                   "process_addr_dist("+str(sugm.DISPLAY_DISTANCE)+")",
-                                                   "process_addr_dist("+str(sugm.PROCESS_DF_DISTANCE)+")",
-                                                   "process_addr_dist("+str(sugm.DISPLAY_DF_DISTANCE)+")",
-                                                   "process_addr_dist("+str(sugm.DISPLAY_GEOCODING)+")",
+addr_df_dist_utility_input_jsList            =    [None,None,None,None,None,None,None,
+                                                   "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
+                                                   "process_geoutils_callback("+str(sugm.PROCESS_DF_DISTANCE)+")",
+                                                   "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
+                                                   "geocode_return()",
                                                    "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
 
 addr_df_dist_utility_input_reqList           =   [0,1,2]
 
            
+"""
+#--------------------------------------------------------------------------
+#    address center input form
+#--------------------------------------------------------------------------
+"""
+addr_center_utility_input_title             =   "Address Center Columns"
+addr_center_utility_input_id                =   "addrcenter"
+addr_center_utility_input_idList            =   ["fromaddr",
+                                                 None,None,None,None,None]
+
+addr_center_utility_input_labelList         =   ["locations",
+                                                 "Calculate</br>Center</br>Point",
+                                                 "Display</br>Dataframe</br>Center</br>Point",
+                                                 "Clear","Return","Help"]
+
+addr_center_utility_input_typeList          =   ["text",
+                                                 "button","button","button","button","button"]
+
+addr_center_utility_input_placeholderList   =   ["enter [list] or (tuple) of [lat,lng] for locations",
+                                                 None,None,None,None,None]
+
+addr_center_utility_input_jsList            =    [None,
+                                                  "process_geoutils_callback("+str(sugm.PROCESS_CENTER)+")",
+                                                  "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
+                                                  "process_geoutils_callback("+str(sugm.DISPLAY_CENTER)+")",
+                                                  "geocode_return()",
+                                                  "displayhelp(" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + ")"]
+
+addr_center_utility_input_reqList           =   [0,1]
+
+
+"""
+#--------------------------------------------------------------------------
+#    address dataframe center input form
+#--------------------------------------------------------------------------
+"""
+addr_df_center_utility_input_title             =   "Address Distance Columns"
+addr_df_center_utility_input_id                =   "addrdfcenter"
+addr_df_center_utility_input_idList            =   ["addrdfcenterdf",
+                                                    "addrcol",
+                                                    None,None,None,None,None]
+
+addr_df_center_utility_input_labelList         =   ["dataframe_to_geocode",
+                                                    "df_locations(s)",
+                                                    "Display</br>Distance",
+                                                    "Calculate</br>Dataframe</br>Distance",
+                                                    "Clear","Return","Help"]
+
+addr_df_center_utility_input_typeList          =   ["select","text",
+                                                    "button","button","button","button","button"]
+
+addr_df_center_utility_input_placeholderList   =   ["select dataframe",
+                                                    "select location column name(s) [lat_lng] or [lat,lng]",
+                                                    None,None,None,None,None]
+
+addr_df_center_utility_input_jsList            =    [None,None,
+                                                     "process_geoutils_callback("+str(sugm.DISPLAY_CENTER)+")",
+                                                     "process_geoutils_callback("+str(sugm.PROCESS_DF_CENTER)+")",
+                                                     "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
+                                                     "geocode_return()",
+                                                     "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+
+addr_df_center_utility_input_reqList           =   [0,1,2]
+
+
+"""
+#--------------------------------------------------------------------------
+#    address dataframe center input form
+#--------------------------------------------------------------------------
+"""
+bulk_tune_utility_input_title                   =   "Bulk Geocoding Tuning"
+bulk_tune_utility_input_id                      =   "bulktune"
+bulk_tune_utility_input_idList                  =   ["tunegeocid",
+                                                     "tunemaxthreads",
+                                                     None,None,None,None]
+
+bulk_tune_utility_input_labelList               =   ["geocoder_Id",
+                                                     "max_threads",
+                                                     "Set</br>Bulk</br>Parameters",
+                                                     "Clear","Return","Help"]
+
+bulk_tune_utility_input_typeList                =   ["select","text",
+                                                     "button","button","button","button"]
+
+bulk_tune_utility_input_placeholderList         =   ["select lat_lng column name",
+                                                     "max concurrent geocode threads -- see Help",
+                                                     None,None,None,None]
+
+bulk_tune_utility_input_jsList                  =    [None,None,
+                                                      "process_geoutils_callback("+str(sugm.PROCESS_TUNING)+")",
+                                                      "process_geoutils_callback("+str(sugm.DISPLAY_TUNING)+")",
+                                                      "geocode_return()",
+                                                      "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+
+bulk_tune_utility_input_reqList                 =   [0,1]
+
  
 """
 #--------------------------------------------------------------------------
@@ -1066,14 +1353,18 @@ addr_df_dist_utility_input_reqList           =   [0,1,2]
 #--------------------------------------------------------------------------
 """
 def display_geocode_main_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(geocode_utility_tb_id,
-                                                               geocode_utility_tb_keyTitleList,
-                                                               geocode_utility_tb_jsList,
-                                                               geocode_utility_tb_centered))]) 
-
+    display_composite_form([get_button_tb_form(ButtonGroupForm(geocode_main_tb_id,
+                                                               geocode_main_tb_keyTitleList,
+                                                               geocode_main_tb_jsList,
+                                                               geocode_main_tb_centered))]) 
+def display_geocode_utils_taskbar() :
+    display_composite_form([get_button_tb_form(ButtonGroupForm(geocode_utilities_tb_id,
+                                                               geocode_utilities_tb_keyTitleList,
+                                                               geocode_utilities_tb_jsList,
+                                                               geocode_utilities_tb_centered))]) 
+    
 def display_calc_distance_input_form() :
 
-    print("display_calc_distance_input_form")
     dist_addr_form  =   InputForm(addr_dist_utility_input_id,
                                   addr_dist_utility_input_idList,
                                   addr_dist_utility_input_labelList,
@@ -1096,7 +1387,21 @@ def display_calc_distance_input_form() :
                         addr_dist_utility_input_typeList,
                         selectDicts)
 
-    display_composite_form([get_input_form(dist_addr_form,"Calculate Distance")])
+    dist_addr_form.set_gridwidth(720)
+    dist_addr_form.set_custombwidth(120)
+    
+    dist_addr_form.set_fullparms(True)
+    
+    geocode_input_html = ""
+    geocode_input_html = dist_addr_form.get_html() 
+    
+    geocode_heading_html =   "<div>Interactive Get Distance</div>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [geocode_heading_html,geocode_input_html]
+    
+    print("\n")
+    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
 
 
 def display_calc_df_distance_input_form() :
@@ -1111,6 +1416,9 @@ def display_calc_df_distance_input_form() :
                                   shortForm=False)       
         
     selectDicts     =   []
+    
+    dataframes      =   cfg.get_dfc_dataframes_select_list()
+    selectDicts.append(dataframes)
             
     geocsel         =   {"default":"km","list":["km","miles"]}
     selectDicts.append(geocsel)
@@ -1123,7 +1431,136 @@ def display_calc_df_distance_input_form() :
                         addr_df_dist_utility_input_typeList,
                         selectDicts)
 
-    display_composite_form([get_input_form(dist_addr_form,"Calculate Dataframe Distance")])
+    dist_addr_form.set_gridwidth(720)
+    dist_addr_form.set_custombwidth(120)
+    
+    dist_addr_form.set_fullparms(True)
+    
+    geocode_input_html = ""
+    geocode_input_html = dist_addr_form.get_html() 
+    
+    geocode_heading_html =   "<div>Get Distance(s) from dataframe</div>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [geocode_heading_html,geocode_input_html]
+    
+    print("\n")
+    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
+
+
+def display_calc_center_input_form() :
+
+    center_addr_form  =   InputForm(addr_center_utility_input_id,
+                                    addr_center_utility_input_idList,
+                                    addr_center_utility_input_labelList,
+                                    addr_center_utility_input_typeList,
+                                    addr_center_utility_input_placeholderList,
+                                    addr_center_utility_input_jsList,
+                                    addr_center_utility_input_reqList,
+                                    shortForm=False)       
+    
+    center_addr_form.set_gridwidth(720)
+    center_addr_form.set_custombwidth(120)
+    center_addr_form.set_fullparms(True)
+    
+    geocode_input_html = ""
+    geocode_input_html = center_addr_form.get_html() 
+    
+    geocode_heading_html =   "<div>Interactive Get Center Point</div>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [geocode_heading_html,geocode_input_html]
+
+    print("\n")
+    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
+
+
+def display_calc_df_center_input_form() :
+
+    center_addr_form  =   InputForm(addr_df_center_utility_input_id,
+                                    addr_df_center_utility_input_idList,
+                                    addr_df_center_utility_input_labelList,
+                                    addr_df_center_utility_input_typeList,
+                                    addr_df_center_utility_input_placeholderList,
+                                    addr_df_center_utility_input_jsList,
+                                    addr_df_center_utility_input_reqList,
+                                    shortForm=False)       
+    
+    selectDicts     =   []
+    
+    dataframes      =   cfg.get_dfc_dataframes_select_list()
+    selectDicts.append(dataframes)
+            
+    get_select_defaults(center_addr_form,
+                        addr_df_center_utility_input_id,
+                        addr_df_center_utility_input_idList,
+                        addr_df_center_utility_input_typeList,
+                        selectDicts)
+        
+    center_addr_form.set_gridwidth(720)
+    center_addr_form.set_custombwidth(120)
+    center_addr_form.set_fullparms(True)
+    
+    geocode_input_html = ""
+    geocode_input_html = center_addr_form.get_html() 
+    
+    geocode_heading_html =   "<div>Get Center Point from dataframe</div>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [geocode_heading_html,geocode_input_html]
+
+    print("\n")
+    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
+
+
+def display_bulk_tune_input_form() :
+
+    bulk_tune_form  =   InputForm(bulk_tune_utility_input_id,
+                                    bulk_tune_utility_input_idList,
+                                    bulk_tune_utility_input_labelList,
+                                    bulk_tune_utility_input_typeList,
+                                    bulk_tune_utility_input_placeholderList,
+                                    bulk_tune_utility_input_jsList,
+                                    bulk_tune_utility_input_reqList,
+                                    shortForm=False)       
+    
+    selectDicts     =   []
+    geocoders       =   [] 
+
+    geocoders.append(sugm.get_geocoder_title(sugm.ArcGISId))  
+    geocoders.append(sugm.get_geocoder_title(sugm.BaiduId))  
+    geocoders.append(sugm.get_geocoder_title(sugm.BingId))  
+    geocoders.append(sugm.get_geocoder_title(sugm.GoogleId))  
+
+    geocid  =   cfg.get_config_value("currentGeocoder")
+    if(geocid == None) :
+        geocdefault     =   sugm.get_geocoder_title(sugm.GoogleId)
+    else :
+        geocdefault     =   sugm.get_geocoder_title(geocid)
+    
+    geocsel         =   {"default":geocdefault,"list":geocoders}
+    selectDicts.append(geocsel)
+
+    get_select_defaults(bulk_tune_form,
+                        bulk_tune_utility_input_id,
+                        bulk_tune_utility_input_idList,
+                        bulk_tune_utility_input_typeList,
+                        selectDicts)
+        
+    bulk_tune_form.set_gridwidth(720)
+    bulk_tune_form.set_custombwidth(120)
+    bulk_tune_form.set_fullparms(True)
+    
+    geocode_input_html = ""
+    geocode_input_html = bulk_tune_form.get_html() 
+    
+    geocode_heading_html =   "<div>df Bulk Geoociding Tuning Parameters</div>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [geocode_heading_html,geocode_input_html]
+
+    print("\n")
+    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
 
 
 """
@@ -1154,18 +1591,25 @@ def get_form_id(geocid,gtype) :
          elif(geocid == sugm.BingId)            : return(bing_geocoder_id)
          elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_geocoder_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_geocoder_id)
+         elif(geocid == sugm.BaiduId)           : return(baidu_geocoder_id)
+         
     elif(gtype == sugm.QUERY)  :
          if(geocid == sugm.ArcGISId)            : return(arcgis_query_id) 
          elif(geocid == sugm.GoogleId)          : return(google_query_id)
          elif(geocid == sugm.BingId)            : return(bing_query_id)
          elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_query_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_query_id)
+         elif(geocid == sugm.BaiduId)           : return(baidu_query_id)
+
     elif(gtype == sugm.REVERSE)  :
          if(geocid == sugm.ArcGISId)            : return(arcgis_reverse_id)   
          elif(geocid == sugm.GoogleId)          : return(google_reverse_id)
          elif(geocid == sugm.BingId)            : return(bing_reverse_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_reverse_id)
-         
+         elif(geocid == sugm.BaiduId)           : return(baidu_reverse_id)
+   
+    else :
+        return(None)
  
 
 def get_geocoder_parms_table(geocid) :
@@ -1192,6 +1636,7 @@ def get_geocoder_parms_table(geocid) :
     elif(geocid == sugm.GoogleId)            : labelList  =   google_geocoder_labelList
     elif(geocid == sugm.OpenMapQuestId)      : labelList  =   mapquest_geocoder_labelList
     elif(geocid == sugm.NominatimId)         : labelList  =   nomin_geocoder_labelList
+    elif(geocid == sugm.BaiduId)             : labelList  =   baidu_geocoder_labelList
     
     #geocparms = get_geocoder_parms(geocid)
     geocparms = get_geocoder_form_parms_list(sugm.GEOCODER,geocid)
@@ -1261,19 +1706,16 @@ def validate_geocode_connect_parms(geocid) :
 
     if(geocid == sugm.ArcGISId)              :  
         form    =   arcgis_geocoder_id
-        #idlist  =   arcgis_geocoder_idList
     elif(geocid == sugm.BingId)              :  
         form    =   bing_geocoder_id
-        #idlist  =   bing_geocoder_idList
     elif(geocid == sugm.GoogleId)            :  
         form    =   google_geocoder_id
-        #idlist  =   google_geocoder_idList
     elif(geocid == sugm.OpenMapQuestId)      :  
         form    =   mapquest_geocoder_id
-        #idlist  =   mapquest_geocoder_idList
     elif(geocid == sugm.NominatimId)         :  
         form    =   nomin_geocoder_id
-        #idlist  =   nomin_geocoder_idList
+    elif(geocid == sugm.BaiduId)         :  
+        form    =   baidu_geocoder_id
         
     fparms    =   cfg.get_config_value(form+"Parms")
     
@@ -1298,6 +1740,9 @@ def validate_geocode_connect_parms(geocid) :
 
         elif(geocid == sugm.NominatimId)         : 
             validate_nominatim_geocoder_parms(fparms,opstat,False)
+        
+        elif(geocid == sugm.BaiduId)              :
+            validate_baidu_geocoder_parms(fparms,opstat,False)
             
     else :
         
@@ -1306,6 +1751,40 @@ def validate_geocode_connect_parms(geocid) :
             opstat.set_errorMsg("No geocoder connect parms defined")
         
     return(opstat)
+
+
+def validate_baidu_geocoder_parms(gparms,opstat,getfparms=True) :
+    """
+    * ---------------------------------------------------------
+    * function : validate baidu geocoder parms
+    * 
+    * parms :
+    *  gparms  - baidu geocoder parms
+    *  opstat  - processing status 
+    *
+    * returns : 
+    *  valid status of parms
+    * --------------------------------------------------------
+    """
+
+    if(getfparms) :
+        fparms  =   get_parms_for_input(gparms,baidu_geocoder_idList)
+    else :
+        fparms  =   gparms
+    
+    if(len(fparms) > 0) :
+            
+        if( len(fparms[0]) == 0 ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Missing baidu api_key parameter")
+            
+        cfg.set_config_value(bing_geocoder_id + "Parms",fparms)
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errorMsg("Missing baidu api_key parameter")
+
+        cfg.drop_config_value(baidu_geocoder_id + "Parms")    
 
 
 def validate_arcgis_geocoder_parms(gparms,opstat,getfparms=True) :
@@ -1512,6 +1991,9 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
             
         elif(geocid == sugm.OpenMapQuestId) :
             return(validate_mapquest_geocoder_parms(gqparms,opstat))
+        
+        elif(geocid == sugm.BaiduId) :
+            return(validate_baidu_geocoder_parms(gqparms,opstat))
             
     elif(ptype == sugm.QUERY) :
         if(geocid == sugm.GoogleId) :
@@ -1533,6 +2015,14 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
         elif(geocid == sugm.ArcGISId) :
             idList          =   arcgis_query_idList 
             reqList         =   arcgis_query_reqList 
+        
+        elif(geocid == sugm.BaiduId) :
+            idList          =   baidu_query_idList 
+            reqList         =   baidu_query_reqList 
+        
+        else :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Geocode not supportd")
             
     elif(ptype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId) :
@@ -1550,6 +2040,10 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
         elif(geocid == sugm.NominatimId) :
             idList          =   nomin_reverse_idList 
             reqList         =   nomin_reverse_reqList 
+        
+        elif(geocid == sugm.BaiduId) :
+            idList          =   baidu_reverse_idList 
+            reqList         =   baidu_reverse_reqList 
             
         else :
             opstat.set_status(False)
@@ -1637,17 +2131,22 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
         elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_geocoder_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_geocoder_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_geocoder_labelList 
+        elif(geocid == sugm.BaiduId)             : labelList       =   baidu_geocoder_labelList 
+
     elif(ptype == sugm.QUERY) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_query_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_query_labelList 
         elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_query_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_query_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_query_labelList 
+        elif(geocid == sugm.BaiduId)             : labelList       =   baidu_query_labelList 
+        
     elif(ptype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_reverse_labelList 
         elif(geocid == sugm.BingId)              : labelList       =   bing_reverse_labelList 
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_reverse_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_reverse_labelList 
+        elif(geocid == sugm.BaiduId)             : labelList       =   baidu_reverse_labelList 
  
     #print("get_geocoder_cmd_kwargs\n",geoparms,"\n",labelList)
 
@@ -1709,7 +2208,7 @@ def customize_query_kwargs(geocid,geokwargs) :
 """ 
 
 
-def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=False) :
+def get_df_col_names_table(tableid,owner,callback,callbackParms=None,colsList=None,nonnumericOnly=False) :
     """
     * ---------------------------------------------------------
     * function : get dataframe column names html table
@@ -1718,6 +2217,7 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     *  tableid          - table id
     *  owner            - table owner
     *  callback         - callback for column click
+    *  callbackParms    - callback parms for column click
     *  colsList         - df columns list or None for all cols
     *  nonnumericOnly   - numeric only cols flag
     *
@@ -1771,6 +2271,9 @@ def get_df_col_names_table(tableid,owner,callback,colsList=None,nonnumericOnly=F
     
     colnames_table.set_tabletype(ROW_MAJOR)
     colnames_table.set_rowspertable(14)
+    
+    if(not (callbackParms == None)) :
+        colnames_table.set_refParm(str(callbackParms))
 
     listHtml = get_row_major_table(colnames_table,SCROLL_NEXT,False)
     #print(listHtml)   
@@ -1812,12 +2315,15 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
         elif(geocid == sugm.GoogleId)            : form    =   google_query_form
         elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_query_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_query_form
+        elif(geocid == sugm.BaiduId)             : form    =   baidu_query_form
+        
     else :
         if(geocid == sugm.ArcGISId)              : form    =   arcgis_reverse_form
         elif(geocid == sugm.BingId)              : form    =   bing_reverse_form
         elif(geocid == sugm.GoogleId)            : form    =   google_reverse_form
         elif(geocid == sugm.OpenMapQuestId)      : form    =   mapquest_reverse_form
         elif(geocid == sugm.NominatimId)         : form    =   nomin_reverse_form
+        elif(geocid == sugm.BaiduId)             : form    =   baidu_reverse_form
     
     from dfcleanser.common.html_widgets import InputForm
     geofunc_input_form = InputForm(form[0],
@@ -1860,7 +2366,7 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                 form[0],form[1],form[3],
                                 [googsel])
             
-    geofunc_input_form.set_gridwidth(600)
+    geofunc_input_form.set_gridwidth(620)
     
     if(showfull) :
         geofunc_input_form.set_fullparms(True)    
@@ -1869,11 +2375,11 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
     geofunc_input_html = geofunc_input_form.get_html()
     
     if (gtype == sugm.QUERY) :
-        geofunc_heading_html =   "<p>" + get_html_spaces(58) + "Simple Geocoding Parameters</p>"
+        geofunc_heading_html =   "<div>Simple Geocoding Parameters</div>"
     else :
-        geofunc_heading_html =   "<p>" + get_html_spaces(58) + "Simple Reverse Geocoding Parameters</p>"
+        geofunc_heading_html =   "<div>Simple Reverse Geocoding Parameters</div>"
  
-    gridclasses     =   ["geocode-connector-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html]
     
     display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
@@ -1913,12 +2419,16 @@ def get_geocoder_table(for_bulk_geocoding=False) :
     geocstexts          =   []
     geocshrefs          =   []
     
-    for i in range(len(sugm.supported_Geocoders)) :
-        geocstexts.append("&nbsp;&nbsp;" + sugm.get_geocoder_title(sugm.supported_Geocoders[i]))
-        if(not(for_bulk_geocoding)) :
-            geocshrefs.append("select_geocoder")
-        else :
+    if(for_bulk_geocoding) :
+        for i in range(len(sugm.supported_Bulk_Geocoders)) :
+            geocstexts.append("&nbsp;&nbsp;" + sugm.get_geocoder_title(sugm.supported_Bulk_Geocoders[i]))
             geocshrefs.append("select_bulk_geocoder")
+        
+    else :
+        
+        for i in range(len(sugm.supported_Geocoders)) :
+            geocstexts.append("&nbsp;&nbsp;" + sugm.get_geocoder_title(sugm.supported_Geocoders[i]))
+            geocshrefs.append("select_geocoder")
 
     for i in range(len(geocstexts)) :
         geocslistRows.append([geocstexts[i]])    
@@ -2026,6 +2536,17 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
                                    arcgis_geocoder_jsList,
                                    arcgis_geocoder_reqList]
     
+    elif(geocodeid == sugm.BaiduId) :
+        
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BaiduId)
+        geocoder_input_form   =   [baidu_geocoder_id,
+                                   baidu_geocoder_idList,
+                                   baidu_geocoder_labelList,
+                                   baidu_geocoder_typeList,
+                                   baidu_geocoder_placeholderList,
+                                   baidu_geocoder_jsList,
+                                   baidu_geocoder_reqList]
+    
     from dfcleanser.common.html_widgets import InputForm
     geocode_input_form = InputForm(geocoder_input_form[0],
                                    geocoder_input_form[1],
@@ -2036,7 +2557,8 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
                                    geocoder_input_form[6],
                                    shortForm=False)
     
-    geocode_input_form.set_gridwidth(640)
+    geocode_input_form.set_gridwidth(720)
+    geocode_input_form.set_custombwidth(100)
     
     if(showfull) :
         geocode_input_form.set_fullparms(True)
@@ -2044,9 +2566,9 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
         
-    geocode_heading_html =   "<p>" + get_html_spaces(58) + "Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</p>"
+    geocode_heading_html =   "<div>Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
  
-    gridclasses     =   ["geocode-connector-wrapper-header","dfc-left","dfc-right"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
     
     display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
@@ -2066,6 +2588,9 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
         elif(geocodeid == sugm.NominatimId) :        
             notes.append("Nominatim geoocoding requires a user-agent for all Nominatim geocoding including bulk geocoding.")
+            notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
+        elif(geocodeid == sugm.BaiduId) :        
+            notes.append("Baidu geoocoding requires an api_key for all Baidu geocoding including bulk geocoding.")
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
 
         from dfcleanser.common.common_utils import display_msgs
