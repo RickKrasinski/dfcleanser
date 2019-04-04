@@ -180,6 +180,8 @@ table_header_start = """
 """
 small_table_header_start = """
             <div class="panel-heading clearfix dc-small-table-panel-heading" style="height:38px; font-size:11px;" """
+small_table_with_arrows_header_start = """
+            <div class="panel-heading clearfix dc-small-table-panel-heading" style="height:48px; font-size:11px;" """
 small_table_no_header_start = """
             <div class="panel-heading clearfix dc-small-table-noheader-panel-heading" style=" margin-bottom:0px; background-color:white;" """
 
@@ -200,11 +202,16 @@ table_title_short_div_start = """                    <div class="input-group-btn
 table_title_short_div_end   = """                    </div>
 """
 
-table_title_start = """                      <p class="dc-table-title pull-left" """
+table_title_div_start = """                    <div class='input-group-btn'>
+"""
+table_title_div_end = """                    </div>
+"""
+
+table_title_start = """                    <p class="dc-table-title pull-left" """
 table_title_end = """</p>
 """
 
-table_more_div_start = """                    <div class="input-group-btn dc-table-input-group-btn dc-scroll-div">
+table_more_div_start = """                    <div class="input-group-btn" align="right" style="margin-right:1%;">
 """
 table_short_more_div_start = """                    <div class="input-group-btn dc-table-title" style="padding-right:0px; padding-left:2%;" >
 """
@@ -212,14 +219,20 @@ table_short_more_div_start = """                    <div class="input-group-btn 
 table_more_div_end = """                    </div>
 """
 
-table_next_start = """                        <button class="btn btn-primary moreNext" id="moreNext" """
-search_table_next_start = """                        <button class="btn btn-primary search-moreNext" id="moreNext" """
-table_next_end   = """>Next</button>
+table_next_start = """                        <button class="btn btn-primary" """
+search_table_next_start = """                        <button class="btn btn-primary" """
+table_next_end   = """>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/rightarrow.png' height="20px" width="20px" id='"""
+table_next_final_end   = """leftarrowimg'></img>
+                        </button>
 """
 
-table_prev_start = """                        <button class="btn btn-primary morePrev" id="morePrev" """
-search_table_prev_start = """                        <button class="btn btn-primary search-morePrev" id="morePrev" """
-table_prev_end   = """>Previous</button>
+table_prev_start = """                        <button class="btn btn-primary" """
+search_table_prev_start = """                        <button class="btn btn-primary" id="morePrev" """
+table_prev_end   = """>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/leftarrow.png' height="20px" width="20px" id='"""
+table_prev_final_end   = """rightarrowimg'></img>
+                        </button>
 """
 
 table_short_next_start = """                        <button class="btn btn-primary" """
@@ -234,17 +247,14 @@ table_short_button_end = """                        </button>
 """
 
 table_note_start = """<div class="table-note">
-    <p class="search-table-note" """
+    <p> """
 table_note_end   = """</div>
 """                     
-                
+
+table_note_color_start = """<span style='background-color:"""
+              
 table_start = """
              <table class="table dc-table" """
-table_start13 = """
-             <table class="table dc-table13" """
-table_start18 = """
-             <table class="table dc-table18" """
-             
 table_end = """
              </table>
             </div>"""
@@ -254,10 +264,8 @@ table_head_start = """                <thead>
 table_head_end = """
                 </thead>"""
 
-table_head_row_start = """                    <tr style='background-color:#95C0FB; color:#262729;'>
-"""
-table_color_head_row_start = """                    <tr style='background-color:#95C0FB'>
-"""
+table_head_row_start = """                    <tr  class="dcrowhead" """
+table_color_head_row_start = """                    <tr  class="dcrowhead" """
 
 table_head_row_end = """                    </tr>"""
 
@@ -268,6 +276,9 @@ table_body_end = """                </tbody>"""
 
 table_body_row_start = """                    <tr class="dc-describe-table-body-row">
 """
+table_body_row_href_start = """                    <tr class="dc-describe-table-head-row">
+"""
+
 table_body_row_end = """
                     </tr>
 """
@@ -424,7 +435,27 @@ def get_col_major_table(table,direction,displayTable=True) :
     else :
         table.display_table() 
 
+
+
+
+TABLE_TITLE_FONTSIZE    =   0
+TABLE_TITLE_FONTCOLOR   =   1
+TABLE_TITLE_FONTFAMILY  =   2
+TABLE_TITLE_COLOR       =   3
         
+TABLE_HEADER_FONTSIZE    =   0
+TABLE_HEADER_FONTCOLOR   =   1
+TABLE_HEADER_FONTFAMILY  =   2
+TABLE_HEADER_COLOR       =   3
+TABLE_HEADER_BGCOLOR     =   4
+        
+TABLE_COLUMN_FONTSIZE    =   0
+TABLE_COLUMN_FONTCOLOR   =   1
+TABLE_COLUMN_FONTFAMILY  =   2
+TABLE_COLUMN_COLOR       =   3
+TABLE_COLUMN_BGCOLOR     =   4
+        
+       
 """
 * -----------------------------------------------------------------------*
 * class for defining dataframe cleanser html based tables 
@@ -446,6 +477,7 @@ def get_col_major_table(table,direction,displayTable=True) :
 *   refParm             -   list of <tr> OnClick callback parms
 *   buttonList          -   list of <tr> buttons
 *   hiddensList         -   list of hidden elements associated with table
+*
 *   tabletype           -   table type (ROW_MAJOR, COLUMN_MAJOR, MULTIPLE) 
 *   colsperrow          -   number of columns per row
 *   rowspertable        -   number of rows per table
@@ -453,19 +485,25 @@ def get_col_major_table(table,direction,displayTable=True) :
 *   lastrowdisplayed    -   last row displayed in ROW_MAJOR table
 *   numtables           -   number of MULTIPLE tables generated 
 *   lasttabledisplayed  -   last MULTIPLE table displayed
+*
 *   searchable          -   flag to make table searchable
 *   searchtext          -   text for search box
 *   searchcallback      -   search callback function
+*
 *   color               -   flag to make table colored
 *   colorList           -   list of colors for each column 
+*
 *   border              -   flag to draw border
+*
 *   small               -   flag to make table small
 *   smallwidth          -   small table width in percent
-*   smallmargin         -   small table lefty margin
+*   smallmargin         -   small table left margin
 *   smallfsize          -   small table font size
+*
 *   shorthead           -   list of colors for each column 
 *   shortrow            -   flag to draw border
 *   note                -   note below table
+*   notecolor           -   note below table
 *   checkLength         -   flag to check <th> and <tr> lengths and use popover
 *   firstcolpadding     -   list of left padding for first column in rows
 *
@@ -550,9 +588,14 @@ class dcTable :
         self.shortrow        =   True
 
         self.note            =   ""
+        self.notecolor       =   None
         
         self.checkLength     =   True
         self.textLength      =   maxRowElement
+        
+        self.table_title_parms      =   None  
+        self.table_header_parms     =   None    
+        self.table_column_parms     =   None 
 
         # add the table to internal dict for later retrieval    
         if(get_table_value(self.tableid)==None) :
@@ -562,6 +605,9 @@ class dcTable :
             set_table_value(self.tableid,self)
         
     # class setters
+    """
+    # table identifier attributes
+    """
     def set_title(self,titleParm) :
         self.title = titleParm
     def set_tableid(self,tableidParm) :
@@ -569,7 +615,9 @@ class dcTable :
     def set_owner(self,ownerParm) :
         self.owner = ownerParm
 
-    
+    """
+    # table content attributes
+    """
     def set_headerList(self,headerListParm) :
         self.headerList = headerListParm
     def set_rowList(self,rowListParm) :
@@ -578,7 +626,6 @@ class dcTable :
         self.widthList = widthListParm
     def set_alignList(self,alignListParm) :
         self.alignList = alignListParm
-    
     def set_refList(self,refListParm) :
         self.refList = refListParm
     def set_refIndex(self,refIndexParm) :
@@ -589,10 +636,12 @@ class dcTable :
         self.refParm = refParmParm
     def set_buttonList(self,buttonListParm) :
         self.buttonList = buttonListParm
-        
     def set_hiddensList(self,hiddensListParm) :
         self.hiddensList = hiddensListParm
 
+    """
+    # table type attributes
+    """
     def set_tabletype(self,tabletypeParm) :
         self.tabletype        =   tabletypeParm
           
@@ -622,7 +671,9 @@ class dcTable :
     def set_colscrollcallback(self,callbackparm) :
         self.colscrollcallback        =   callbackparm 
         
-    # attributes for search table     
+    """
+    # search table attributes
+    """
     def set_searchable(self,searchableParm) :
         self.searchable = searchableParm
     def set_searchParms(self,searchParms) :
@@ -632,35 +683,47 @@ class dcTable :
     def set_searchCol(self,colParm) :
         self.searchCol = colParm
 
-    # attributes for color table     
+    """
+    * color table attributes
+    """
     def set_color(self,colorParm) :
         self.color           =   colorParm
     def set_colorList(self,colorListParm) :
         self.colorList       =   colorListParm
-    
     def set_border(self,borderParm) :
         self.border          =   borderParm
         
-    # attributes for small table
+    """
+    * small table attributes
+    """
     def set_small(self,smallParm) :
         self.small           =   smallParm
     def set_smallwidth(self,smallwidthParm) :
         self.smallwidth       =   smallwidthParm
     def set_smallmargin(self,smallmarginParm) :
         self.smallmargin       =   smallmarginParm
-    def set_smallfsize(self,smallfsizeParm) :
-        self.smallfsize       =   smallfsizeParm
     def set_smallheader(self,smallheaderParm) :
         self.smallheader       =   smallheaderParm
-
+    
+    """
+    * shorten elements with popover table attributes
+    """
     def set_shorthead(self,shortheadParm) :
         self.shorthead       =   shortheadParm
     def set_shortrow(self,shortrowParm) :
         self.shortrow        =   shortrowParm
-     
+    
+    """
+    * attach note to table attributes
+    """
     def set_note(self,noteParm) :
         self.note           =   noteParm
+    def set_notecolor(self,notecolorParm) :
+        self.notecolor      =   notecolorParm
 
+    """
+    * shorten elements with popover table attributes
+    """
     def set_checkLength(self,checkLengthParm) :
         self.checkLength    =   checkLengthParm
     def set_textLength(self,textLengthParm) :
@@ -668,7 +731,16 @@ class dcTable :
         
     def set_html_only(self,html_onlyParm) :    
         self.html_only       =   html_onlyParm
-    
+        
+    def set_table_title_parms(self,table_title_parms_in) :        
+        self.table_title_parms      =   table_title_parms_in 
+    def set_table_header_parms(self,table_header_parms_in) :        
+        self.table_header_parms     =   table_header_parms_in 
+    def set_table_column_parms(self,table_column_parms_in) :        
+        self.table_column_parms     =   table_column_parms_in
+        
+        
+        
     # class getters    
     def get_title(self) :
         return(self.title)
@@ -752,8 +824,6 @@ class dcTable :
         return(self.smallwidth)
     def get_smallmargin(self) :
         return(self.smallmargin)
-    def get_smallfsize(self) :
-        return(self.smallfsize)
     def get_smallheader(self) :
         return(self.smallheader)
     
@@ -764,6 +834,8 @@ class dcTable :
         
     def get_note(self) :
         return(self.note)
+    def get_notecolor(self) :
+        return(self.notecolor)
     
     def get_checkLength(self) :
         return(self.checkLength)
@@ -775,6 +847,35 @@ class dcTable :
     def set_firstcolpadding(self,setParm) :
         self.firstcolpadding = setParm
 
+    def get_table_title_parms(self) :        
+        return(self.table_title_parms) 
+    def get_table_header_parms(self) :        
+        return(self.table_header_parms) 
+    def get_table_column_parms(self) :        
+        return(self.table_column_parms)
+        
+
+    def get_table_title_parm(self,title_parm_id) :
+        try :
+            return(self.get_table_title_parms(self)[title_parm_id])
+        except :
+            return(None)
+
+    def get_table_header_parm(self,header_parm_id) :
+        try :
+            return(self.get_table_header_parms(self)[header_parm_id])
+        except :
+            return(None)
+
+    def get_table_column_parm(self,column_parm_id) :
+        try :
+            return(self.get_table_column_parms(self)[column_parm_id])
+        except :
+            return(None)
+
+
+        
+        
 
     def get_html(self,fulltable=True) :
         
@@ -790,15 +891,7 @@ class dcTable :
         else :
             tableHTML = (tableHTML + get_non_search_table_header(self,more,prev,fulltable))
 
-        if(self.get_small()) :
-            if(self.get_smallfsize() == 13) :
-                tableHTML = (tableHTML + table_start13)
-            elif(self.get_smallfsize() == 18) :
-                tableHTML = (tableHTML + table_start18)
-            else :
-                tableHTML = (tableHTML + table_start)
-        else :
-            tableHTML = (tableHTML + table_start) 
+        tableHTML = (tableHTML + table_start) 
     
         if(self.get_tableid() != None) :
             tableHTML = (tableHTML + addattribute("id",self.get_tableid()))
@@ -820,9 +913,9 @@ class dcTable :
         
             tableHTML = (tableHTML + new_line + table_head_start)
             if(self.get_color()) :
-                tableHTML = (tableHTML + table_color_head_row_start)
+                tableHTML = (tableHTML + table_color_head_row_start + addattribute("id",self.get_tableid() + "_thr") + ">" + new_line)
             else :
-                tableHTML = (tableHTML + table_head_row_start)
+                tableHTML = (tableHTML + table_head_row_start + addattribute("id",self.get_tableid() + "_thr") + ">" + new_line)
     
             try :
 
@@ -903,9 +996,17 @@ class dcTable :
             tableHTML = (tableHTML + table_container_end)
         
             if(len(self.get_note()) > 0 ) :
+                
                 tableHTML = (tableHTML + table_note_start)
                 tableHTML = (tableHTML + addattribute("id",self.get_tableid()+"note") + ">" + new_line)
-                tableHTML = (tableHTML + self.get_note() + "</p>" + new_line)
+
+                if(not (self.get_notecolor() is None)) :
+                    tableHTML = (tableHTML + table_note_color_start)
+                    tableHTML = (tableHTML + str(self.get_notecolor()) + "'>")
+                    tableHTML = (tableHTML + self.get_note() + "</span></p>" + new_line)
+                else :
+                    tableHTML = (tableHTML + self.get_note() + "</p>" + new_line)
+                    
                 tableHTML = (tableHTML + table_note_end)
             
             tableHTML = (tableHTML + table_container_end1)
@@ -914,8 +1015,16 @@ class dcTable :
             tableHTML = (tableHTML + table_nd_container_end)
         
             if(len(self.get_note()) > 0 ) :
+                
                 tableHTML = (tableHTML + table_note_start)
-                tableHTML = (tableHTML + self.get_note() + "</p>" + new_line)
+
+                if(not (self.get_notecolor() is None)) :
+                    tableHTML = (tableHTML + table_note_color_start)
+                    tableHTML = (tableHTML + str(self.get_notecolor()) + "'>")
+                    tableHTML = (tableHTML + self.get_note() + "</span></p>" + new_line)
+                else :
+                    tableHTML = (tableHTML + self.get_note() + "</p>" + new_line)
+                    
                 tableHTML = (tableHTML + table_note_end)
             
             tableHTML = (tableHTML + table_nd_container_end1)
@@ -939,9 +1048,9 @@ class dcTable :
         
         #debug 
         if(self.get_title() != None)  :  
-            if( (self.get_title() == "#Pandas CSV Import Parms") or 
-               (self.get_title() == "#df Browser") or 
-               ("#Pandas CSV Import Parms" in self.get_title()) ) :   
+            if( (self.get_title() == "#df Browser") or 
+               (self.get_title() == "#Generic Functions") or 
+               ("#Column Stats" in self.get_title()) ) :   
                print(tableHTML)
                
         return(tableHTML)
@@ -1028,7 +1137,6 @@ class dcTable :
         if(self.get_small()) :
             print("\n smallwidth     : ",self.get_smallwidth())
             print(" smallmargin    : ",self.get_smallmargin())
-            print(" smallfsize     : ",self.get_smallfsize())
 
         if(self.get_shorthead()) :
             print(" shorthead      : ",self.get_shorthead())
@@ -1107,26 +1215,25 @@ def add_callback_to_item(table,headerrow,rowflag,value,func,parm=None) :
             
             if(valueIsstring):
                 if(headerrow) :
-                    item_html = (item_html + '<a href="#" style="text-decoration:none; color:black;" onclick="' + func + "(" + 
+                    item_html = (item_html + '<a href="#" class="dc-table-link" style="text-decoration:none;" onclick="' + func + "(" + 
                                  "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')"' + 
                                  ' data-toggle="tooltip" data-placement="top" title="' + 
                                  strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
                     
-                else :    
-                    item_html = (item_html + '<a href="#" style="text-decoration:none;" onclick="' + func + "(" + 
+                else : 
+                    item_html = (item_html + '<a href="#" class="dc-table-row-link" style="text-decoration:none;" onclick="' + func + "(" + 
                                  "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')"' + 
                                  ' data-toggle="tooltip" data-placement="top" title="' + 
                                  strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
             else :
-                item_html = (item_html + '<a href="#" style="text-decoration:none; color:black;" onclick="' + func + "(" + 
+                item_html = (item_html + '<a href="#" class="dc-table-link" style="text-decoration:none;" onclick="' + func + "(" + 
                              strip_leading_blanks(strvalue) + cparm + ')"' + 
                              ' data-toggle="tooltip" data-placement="top" title="' +
                              strip_leading_blanks(strvalue) + '">' + shorten_element(table,newstrvalue,rowflag) + "</a>")
                 
         else : 
-            
             if(valueIsstring):
-                item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
+                item_html = (item_html + '<a href="#" class="dc-table-link" style="text-decoration:none;" onclick="' + func + "(" + 
                              "'" + strip_leading_blanks(strvalue) + "'" +  cparm + ')">' + strvalue + "</a>")
             else :
                 item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
@@ -1136,13 +1243,13 @@ def add_callback_to_item(table,headerrow,rowflag,value,func,parm=None) :
 
         if(valueIsstring):
             if(headerrow) :
-                item_html = (item_html + '<a href="#"style="text-decoration:none; color:black;" onclick="' + func + "(" + 
+                item_html = (item_html + '<a href="#" class="dc-table-link" style="text-decoration:none;" onclick="' + func + "(" + 
                              "'" + rowindex + "'" +  cparm + ')">' + strvalue + "</a>")
             else :
-                item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
+                item_html = (item_html + '<a href="#" class="dc-table-row-link" style="text-decoration:none;" onclick="' + func + "(" + 
                              "'" + rowindex + "'" +  cparm + ')">' + strvalue + "</a>")
         else :
-            item_html = (item_html + '<a href="#"style="text-decoration:none;" onclick="' + func + "(" + 
+            item_html = (item_html + '<a href="#" class="dc-table-row-link" style="text-decoration:none;" onclick="' + func + "(" + 
                          rowindex + cparm + ')">' + strvalue + "</a>")
 
         
@@ -1172,7 +1279,23 @@ def add_table_head_column(table,coltext,width,align,href=None) :
     
     
     if(href == None) :
-        colHTML = (colHTML + ">" + coltext + "</th>")
+        
+        coltext_sep     =   coltext.split(" ")
+        too_long        =   False
+        
+        for i in range(len(coltext_sep)) :
+            if(len(coltext_sep[i]) > maxRowElement) :
+                too_long    =   True
+                break
+                
+        if(too_long) :
+            colHTML = (colHTML + '<a href="#" class="dc-table-link" style="text-decoration:none;"'  +  
+                                 ' data-toggle="tooltip" data-placement="top" title="' +
+                                 strip_leading_blanks(coltext) + '">' + shorten_element(table,coltext,False) + "</a></th>")
+            
+        else :
+            colHTML = (colHTML + ">" + coltext + "</th>")
+            
     else :
         if(len(coltext) > 0) :
             colHTML = (colHTML + ">" + add_callback_to_item(table,True,False,coltext,href) + "</th>")
@@ -1260,7 +1383,18 @@ def add_table_body_row(table,index,rowElement,href) :
     
     rowHTML = ""
     
-    rowHTML = (rowHTML + table_body_row_start)
+    not_all_hrefs   =   False
+    
+    if(not href == None) :
+        for i in range(len(rowElement)) : 
+            if(href[i] == None) :
+                not_all_hrefs   =   True
+                break
+        
+    if(not_all_hrefs) :
+        rowHTML = (rowHTML + table_body_row_start)
+    else :
+        rowHTML = (rowHTML + table_body_row_href_start)
 
     if(table.get_color()) :
         tablecolorlist = table.get_colorList()[index]
@@ -1389,7 +1523,7 @@ search_table_input_start             = """                        <input type="t
 search_table_button_div_start        = """                    <div class="input-group-btn" style='margin-left:2%; '>
 """
 
-search_table_title_start             = """                            <p class="panel-title dc-search-panel-title pull-left" style="padding-right:20px">"""
+search_table_title_start             = """                        <p class="panel-title dc-search-panel-title pull-left" style="padding-right:20px">"""
 search_table_title_end               = """</p>
 """
 
@@ -1574,7 +1708,10 @@ def get_non_search_table_header(table,more,prev,fulltable) :
         
     if(table.get_small()) :
         if(table.get_smallheader()) :
-            tableHTML = (tableHTML + small_table_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line) 
+            if( (more) or (prev) ) :
+                tableHTML = (tableHTML + small_table_with_arrows_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line)     
+            else :    
+                tableHTML = (tableHTML + small_table_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line) 
         else :
             tableHTML = (tableHTML + small_table_no_header_start + addattribute("id",table.get_tableid()+"PanelHeading") + ">" + new_line)
     else :
@@ -1585,10 +1722,10 @@ def get_non_search_table_header(table,more,prev,fulltable) :
     if(table.get_title() != None) :
         if(table.get_small()) :
             tableHTML = (tableHTML + table_title_short_div_start)
-            tableHTML = (tableHTML + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" + table.get_title() + table_title_end)
+            tableHTML = (tableHTML + table_title_div_start + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" + table.get_title() + table_title_end + table_title_div_end)
             tableHTML = (tableHTML + table_title_div_end)
         else :
-            tableHTML = (tableHTML + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" +table.get_title() + table_title_end)
+            tableHTML = (tableHTML + table_title_div_start + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" +table.get_title() + table_title_end + table_title_div_end)
 
     if( (more) or (prev) ) :  
 
@@ -1618,15 +1755,13 @@ def get_non_search_table_header(table,more,prev,fulltable) :
         else :
             tableHTML = (tableHTML + table_more_div_start)
             
-            if(more) :
-                tableHTML = (tableHTML + table_next_start)
-                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',0" + ")")))
-                tableHTML = (tableHTML + table_next_end)
+            tableHTML = (tableHTML + table_next_start)
+            tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'" + table.get_tableid()+"',0" + ")")))
+            tableHTML = (tableHTML + table_next_end + table.get_tableid() + table_next_final_end)
         
-            if(prev) :
-                tableHTML = (tableHTML + table_prev_start)
-                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',1" + ")")))
-                tableHTML = (tableHTML + table_prev_end)
+            tableHTML = (tableHTML + table_prev_start)
+            tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',1" + ")")))
+            tableHTML = (tableHTML + table_prev_end + table.get_tableid() + table_prev_final_end)
         
         tableHTML = (tableHTML + table_more_div_end)
     
@@ -1853,9 +1988,6 @@ num_dtypes      =   19
 """
 def get_df_schema_table_col(col_name,datatypeId,nancount) : 
     
-    
-    print("get_df_schema_table_col",col_name,datatypeId,nancount)
-
     df_schema_HTML  =   ""
     df_schema_HTML  =   (df_schema_HTML + schema_col_table_start)
     
@@ -1926,7 +2058,7 @@ def get_df_schema_table_col(col_name,datatypeId,nancount) :
    
     df_schema_HTML  =   (df_schema_HTML + schema_col_table_end)
 
-    if(1) :
+    if(0) :
         print(df_schema_HTML)
         
     return(df_schema_HTML)

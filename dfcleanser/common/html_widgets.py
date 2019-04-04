@@ -751,8 +751,8 @@ input_group_form_button_end = """</button>"""
 input_group_fullparms_start = """
         <div class="panel-heading dc-table-panel-heading">
 """
-input_group_fullparms_middle = """            <button class="btn-group" """ 
-input_group_fullparms_custom_middle = """            <button class="btn-group" """ 
+input_group_fullparms_middle = """            <button class="btn-group dc-show-full" """ 
+input_group_fullparms_custom_middle = """            <button class="btn-group dc-show-full" """ 
 
 input_group_fullparms_middle1 = """ OnClick="getfullparms("""
 input_group_fullparms_end = """)">Show All Parameters</button>
@@ -760,7 +760,7 @@ input_group_fullparms_end = """)">Show All Parameters</button>
 """
 
 input_group_select_start = (new_line + tabs(2) + """    <select """)
-input_group_select_middle = """  style="margin-left:1px" class="form-control" style="font-size: 11px;"> 
+input_group_select_middle = """  style="margin-left:1px; font-size: 11px;" class="form-control"> 
 """
 input_group_select_end = (tabs(2) + """    </select>""")
 
@@ -1251,7 +1251,9 @@ class InputForm :
                     
                     input_group_form_html = (input_group_form_html + 
                                              addattribute("for",self.get_idList()[i]))
-
+                    
+                    input_group_form_html = (input_group_form_html + " style='font-size: 11px;'")    
+                        
                     input_group_form_html = (input_group_form_html + ">")
                     input_group_form_html = (input_group_form_html + self.get_labelList()[i])
                 
@@ -1315,7 +1317,7 @@ class InputForm :
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
-        if((self.get_formid() == "#addcolfileInput") or (self.get_formid() == "#MySQLdbconnector") or (self.get_formid() == "$$addcolcodeInput") ) :   
+        if((self.get_formid() == "#importPandasCSV") or (self.get_formid() == "#addrdist") or (self.get_formid() == "$$addcolcodeInput") ) :   
             print(input_group_form_html)
 
         return(input_group_form_html)

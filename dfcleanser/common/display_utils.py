@@ -351,7 +351,7 @@ def get_num_stats(df,df_cols,i,num_stats) :
 #
 #------------------------------------------------------------------
 """
-def display_df_describe(df,table,display=True,datatype=None,colList=None) : #,checkboxes=False) : 
+def display_df_describe(df,table,datatype=None,colList=None,display=True) : 
  
     if( (colList == None) or (len(colList) == 0) ) :
         df_cols     =   df.columns.tolist()
@@ -952,7 +952,7 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
     print("display_more_sample_rows after",tableid,rowid,srow,scol) 
     
     opstat  =   opStatus()    
-    new_rows_html = display_sample_row(df,srtable,srow,scol,opstat,False)
+    new_rows_html = display_sample_rows(df,srtable,srow,scol,opstat,False)
     
     return(new_rows_html)
 
@@ -1040,14 +1040,14 @@ def setup_sample_row_table(table,title,note,numcols,max_rows,searchrow,searchcol
     searchParms.update({"searchcolwidth":140})
     
 
-def display_sample_row(df,table,rowid,colid,opstat,displayTable=True) : 
+def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : display sample rows
     * 
     * parms :
     *   df              -   dataframe
-    *   table           -   dfc table
+    *   table           -   dfc table 
     *   rowid           -   numeric row id
     *   colid           -   cokumn id
     *   opstat          -   op status var
@@ -1103,9 +1103,6 @@ def display_sample_row(df,table,rowid,colid,opstat,displayTable=True) :
         else :
             if(numcols > max_cols) :
                 dfHeaderList.append("")
-            
-    #lastrow     =   0
-    #lastcol     =   0
     
     if(len(df >= max_rows)) :
         num_rows    =   max_rows
@@ -1121,8 +1118,6 @@ def display_sample_row(df,table,rowid,colid,opstat,displayTable=True) :
             for j in range(numcols) :
                 if(len(column_names) > (colid + j))  : 
                     dfrow.append(df.iloc[(rowid + i),(colid + j)])
-                    #lastrow =  rowid + i
-                    #lastcol =  colid + j
                 else :
                     dfrow.append("")
                     

@@ -61,7 +61,7 @@ def display_url(url) :
     webbrowser.open(url)
 
 
-def run_javascript(script) :
+def run_javaScript(script) :
     
     #from IPython.core.display import Javascript
     
@@ -70,8 +70,6 @@ def run_javascript(script) :
 
         from IPython.display import display, Javascript
         display(Javascript(script))
-        #from IPython.core.magics.display import Javascript
-        #display_jupyter_HTML(Javascript(script))
 
     except :
         alert_user("javascript failure" + script)
@@ -84,7 +82,7 @@ def run_javascript(script) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-def run_jscript(jscript, errmsg, errtitle) :
+def run_jscript(jscript, errmsg=None) :
     """
     * ---------------------------------------------------------
     * function : run a javascript script
@@ -104,7 +102,8 @@ def run_jscript(jscript, errmsg, errtitle) :
         display_jupyter_HTML(Javascript(jscript))
 
     except :
-        alert_user(errmsg)
+        if(not (errmsg is None)) :
+            alert_user(errmsg)
 
 
 """
@@ -218,7 +217,7 @@ class RunningClock:
     def clock_task(self):
         while self.busy:
             change_face_js = "$('#clockrunner').attr('src','" + next(self.clock_generator) + "');"
-            run_javascript(change_face_js)
+            run_javaScript(change_face_js)
             time.sleep(self.delay)
 
     def start(self):
@@ -231,7 +230,7 @@ class RunningClock:
         delete_clock = "$('#clockcontainer').remove();"
         time.sleep(self.delay)
         self.stoptime = time.time()
-        run_javascript(delete_clock)
+        run_javaScript(delete_clock)
 
     def get_elapsed_time(self) :
         return(get_formatted_time(self.stoptime - self.starttime))
@@ -480,7 +479,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     #--------------------------------------------------------------------------
     """
 
-    #print("get_select_defaults",formid,parmids,parmtypes,selectDicts)
+    #print("get_select_defaults",formid,parmids,parmtypes,len(selectDicts))
     
     numselects  =   0
     
@@ -571,8 +570,6 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True)
                                parmsHeader,parmsRows,parmsWidths,parmsAligns)
 
     parms_table.set_rowspertable(len(labels))
-    #parms_table.set_color(True)
-    #parms_table.set_colorList(colorList)
     parms_table.set_small(True)
     
     if(not (width == None)) :
@@ -586,7 +583,6 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True)
         parms_table.set_smallwidth(width+6)
 
     parms_table.set_smallmargin(leftMargin)
-    parms_table.set_smallfsize(12)
     parms_table.set_border(False)
     parms_table.set_checkLength(False)
 
@@ -716,6 +712,9 @@ def patch_html(htmlin,replaceNewline=True) :
 """ 
 def get_scroll_table_html(tableid,direction) :
     
+    print("get_scroll_table_html",tableid,direction,tblw.get_table_value(tableid).get_tabletype())
+    
+    
     if(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) : 
        table_html = tblw.get_mult_table(tblw.get_table_value(tableid),direction,False)
     
@@ -725,11 +724,20 @@ def get_scroll_table_html(tableid,direction) :
     else :
         table_html = tblw.get_row_major_table(tblw.get_table_value(tableid),direction,False)
 
-    if(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) : 
+    if(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) :
+        
+        print("COLUMN_MAJOR")
         tablehtmlloc    = table_html.find("<thead")
         tableendhtmlloc = table_html.find("</tbody>")
         table_html = table_html[tablehtmlloc:tableendhtmlloc+len("</tbody>")]
         
+    elif(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) :
+        
+        thead = table_html.find("<thead>")
+        tend  = table_html.find("</table>")
+    
+        table_html = table_html[thead:(tend-1)]
+    
     else :
         # check for no header tables
         if(table_html.find("<thead") == -1) :
@@ -754,46 +762,34 @@ def get_scroll_table_html(tableid,direction) :
 #--------------------------------------------------------------------------
 """           
 def scroll_table(parms) :
-
+    
     tableid     =   parms[0]
     direction   =   int(parms[1])
     
     new_table_html  = get_scroll_table_html(tableid,direction)
+
     change_table_js = "$("
     if( (new_table_html.find("<thead") == -1) or (tableid == "dfschemaTable") ) :
         change_table_js = change_table_js + "'#" + tableid + "').html('"
+        
+    elif(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) :
+        change_table_js = change_table_js + "'#" + tableid + "').html('"    
+        
     else :
         change_table_js = change_table_js + "'#" + tableid + "container').html('"
+        
+        
+        
     change_table_js = change_table_js + new_table_html + "');"
     
-    run_jscript(change_table_js,
-                "fail scroll_table parms : "+tableid+" "+str(direction),
-                 "scroll_table")
+    run_jscript(change_table_js,"fail scroll_table parms : "+tableid+" "+str(direction))
  
-    if(0):#tableid == "dcsubsetcolnamesTable") :
-        buttons     =   ["downarrow","uparrow"]
-        for i in range(len(buttons)) :
+    refresh_bg_js = "$('#" + tableid + "_thr')..css({'background-color':'#6FA6DA'});"
+    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
     
-            import datetime 
-            tstamp = datetime.datetime.now().time()
-
-            change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
-                                 "'./graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
-        
-            #print("refresh_images",change_help_js)
-            run_jscript(change_cols_js,
-                        "fail to refresh sroll table : ",
-                        "get_dfsubset_vals")
-
-    refresh_bg_js = "$('#" + tableid + "_sth').css('background-color','#4891D5');"
-    run_jscript(refresh_bg_js,
-                "fail scroll_sample_rows : "+tableid+" "+str(direction),
-                 "scroll_sample_rows")
-    
-    refresh_bg_js = "$('#" + tableid + "_sth').css('color','#E3DEDE');"
-    run_jscript(refresh_bg_js,
-                "fail scroll_sample_rows : "+tableid+" "+str(direction),
-                 "scroll_sample_rows")
+    refresh_bg_js = "$('#" + tableid + "_thr').css({'color','white'});"
+    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+ 
     
 """
 #--------------------------------------------------------------------------
@@ -847,7 +843,6 @@ def get_fullparms(parms) :
     if(formid == "arcgisgeocoder")      :   display_geocoders(sugm.ArcGISId,True)
     elif(formid == "googlegeocoder")    :   display_geocoders(sugm.GoogleId,True)
     elif(formid == "binggeocoder")      :   display_geocoders(sugm.BingId,True)
-    elif(formid == "databcgeocoder")    :   display_geocoders(sugm.DataBCId,True)
     elif(formid == "mapquestgeocoder")  :   display_geocoders(sugm.OpenMapQuestId,True)
     elif(formid == "nomingeocoder")     :   display_geocoders(sugm.NominatimId,True)
         
@@ -856,9 +851,7 @@ def get_fullparms(parms) :
         change_input_js = "$('#" + formid + "').html('"
         change_input_js = change_input_js + new_input_html + "');"
     
-        run_jscript(change_input_js,
-                    "fail to get full parms for : " + formid,
-                    "scroll_table")
+        run_jscript(change_input_js,"fail to get full parms for : " + formid)
  
     
 """
@@ -880,7 +873,16 @@ def scroll_sample_rows(parms) :
     print("scroll_sample_rows",tableid,direction)
     
     from dfcleanser.common.display_utils import display_more_sample_rows
-    table_html = display_more_sample_rows(get_dfc_dataframe(),tableid,direction)
+    df_delim    =   tableid.find("_search_")
+    if(df_delim > -1) :
+        df_title  =   tableid[:df_delim]
+    else :
+        df_title  =   None
+    
+    print("df_title",df_title)
+    
+    
+    table_html = display_more_sample_rows(get_dfc_dataframe(df_title),tableid,direction)
     
     thead = table_html.find("<thead>")
     tend  = table_html.find("</table>")
@@ -893,19 +895,15 @@ def scroll_sample_rows(parms) :
     change_table_js = change_table_js + "'#" + tableid + "').html('"
     change_table_js = change_table_js + new_table_html + "');"
     
-    run_jscript(change_table_js,
-                "fail scroll_sample_rows : "+tableid+" "+str(direction),
-                 "scroll_sample_rows")
+    run_jscript(change_table_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
 
-    refresh_bg_js = "$('#" + tableid + "_sth').css('background-color','#4891D5');"
-    run_jscript(refresh_bg_js,
-                "fail scroll_sample_rows : "+tableid+" "+str(direction),
-                 "scroll_sample_rows")
+    refresh_bg_js = "$('#" + tableid + "_thr').css({'background-color':'#6FA6DA'});"
+    print("refresh_bg_js",refresh_bg_js)
+    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
     
-    refresh_bg_js = "$('#" + tableid + "_sth').css('color','#E3DEDE');"
-    run_jscript(refresh_bg_js,
-                "fail scroll_sample_rows : "+tableid+" "+str(direction),
-                 "scroll_sample_rows")
+    refresh_bg_js = "$('#" + tableid + "_thr').css({'color':'white'});"
+    print("refresh_bg_js",refresh_bg_js)
+    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
 
 """
 #--------------------------------------------------------------------------
@@ -942,9 +940,7 @@ def get_sample_row(parms) :
     change_table_js = change_table_js + "'#" + tableId + "').html('"
     change_table_js = change_table_js + new_table_html + "');"
 
-    run_jscript(change_table_js,
-                "fail get_sample_row parms : "+tableId,
-                 "get_sample_row")
+    run_jscript(change_table_js,"fail get_sample_row parms : "+tableId)
     
 
 """
@@ -977,74 +973,8 @@ def scroll_single_row(parms) :
     change_table_js = change_table_js + "'#" + tableid + "').html('"
     change_table_js = change_table_js + new_table_html + "');"
     
-    run_jscript(change_table_js,
-                "fail scroll_single_row : "+tableid+" "+str(direction),
-                 "scroll_single_row")
+    run_jscript(change_table_js,"fail scroll_single_row : " + tableid + str(direction))
 
-
-"""
-#--------------------------------------------------------------------------
-#   get full input html
-#
-#       inputid     - input form id
-##
-#   return new input html
-#
-#--------------------------------------------------------------------------
-""" 
-def get_generic_function_html(gt_title) :
-    
-    from dfcleanser.data_transform.data_transform_widgets import get_generic_function
-    gt_html = get_generic_function(gt_title)
-    
-    return(gt_title,gt_html)
-
-    
-"""
-#--------------------------------------------------------------------------
-#   get full parms for an input
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
-def select_generic_function(parms) :
-
-    formnum     =   parms[0]
-    gt_title    =   parms[1]
-
-    if(formnum == 0) : 
-        formid = "addColumncode"    
-    else :        
-        formid = "gtcode"
-        
-    title,code  = get_generic_function_html(gt_title)
-    
-    print("select_generic_function",parms,title,code)
-    code = code.replace("\n","<br/>")
-    new_input_html = patch_html(code)#,False)
-    
-    change_input_js = "$('#" + formid + "').val('"
-    change_input_js = change_input_js + new_input_html + "');"
-    
-    run_jscript(change_input_js,
-                "fail to get gen transform for : " + formid,
-                 "select_generic_function")
-
-    if(formnum == 1) : 
-        formid = "gttitle"
-        
-        new_input_html = patch_html(title)
-    
-        change_input_js = "$('#" + formid + "').val('"
-        change_input_js = change_input_js + new_input_html + "');"
-    
-        run_jscript(change_input_js,
-                    "fail to get gen transform title for : " + formid,
-                    "select_generic_function")
- 
     
 """
 #--------------------------------------------------------------------------
@@ -1118,9 +1048,7 @@ def get_dfsubset_vals(parms) :
     change_table_js = "$('#dcsubsetcolnamesTablePanelHeading').html('"
     change_table_js = change_table_js + new_panel_html + "');"
             
-    run_jscript(change_table_js,
-                "fail to get unique vals for : ",
-                 "get_gs_uniques")
+    run_jscript(change_table_js,"fail to get unique vals for : ")
     
     cols_html   =   cols_html.replace("&","&amp;")
     new_cols_html = patch_html(cols_html)
@@ -1128,9 +1056,7 @@ def get_dfsubset_vals(parms) :
     change_table_js = "$('#dcsubsetcolnamesTable').html('"
     change_table_js = change_table_js + new_cols_html + "');"
             
-    run_jscript(change_table_js,
-                "fail to get unique vals for : ",
-                 "get_gs_uniques")
+    run_jscript(change_table_js,"fail to get unique vals for : ")
 
     buttons     =   ["downarrow","uparrow"]
     
@@ -1143,20 +1069,14 @@ def get_dfsubset_vals(parms) :
         change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
                                  "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) +"');")
         
-        run_jscript(change_cols_js,
-                    "fail to refresh sroll table : ",
-                    "get_dfsubset_vals")
+        run_jscript(change_cols_js,"fail to refresh sroll table : ")
     
     if(filters == -1) : 
         change_title_js = "$('#dcsubsetcolnamesTableTitle').text('Column Values')"
-        run_jscript(change_title_js,
-                    "fail to get unique vals for : ",
-                    "get_gs_uniques")
+        run_jscript(change_title_js,"fail to get unique vals for : ")
     else :
         change_title_js = "$('#dcsubsetcolnamesTableTitle').text('Column Names')"
-        run_jscript(change_title_js,
-                    "fail to get unique vals for : ",
-                    "get_gs_uniques")
+        run_jscript(change_title_js,"fail to get unique vals for : ")
  
 
 
@@ -1369,9 +1289,8 @@ def get_column_samples(parms) :
     change_table_js = "$('#datetimecolnamesTableContainer').html('"
     change_table_js = change_table_js + new_cols_html + "');"
             
-    run_jscript(change_table_js,
-                "fail to get sample values for : ",
-                 "get_column_samples")
+    run_jscript(change_table_js,"fail to get sample values for : ")
+
 
 
 """
@@ -1459,9 +1378,7 @@ def get_datetime_formats(parms) :
     change_input_js = "$('#" + formid + "').html('"
     change_input_js = change_input_js + new_table_html + "');"
     
-    run_jscript(change_input_js,
-                "fail to get datatime format strings : ",
-                 "get_datetime_formats")
+    run_jscript(change_input_js,"fail to get datatime format strings : ")
 
     buttons     =   ["downarrow","uparrow"]
     for i in range(len(buttons)) :
@@ -1473,9 +1390,7 @@ def get_datetime_formats(parms) :
                                  "'./graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
         
         #print("refresh_images",change_help_js)
-        run_jscript(change_cols_js,
-                    "fail to refresh sroll table : ",
-                    "get_dfsubset_vals")
+        run_jscript(change_cols_js,"fail to refresh sroll table : ")
 
 """
 #--------------------------------------------------------------------------
@@ -2497,10 +2412,7 @@ def make_dir(path) :
 #------------------------------------------------------------------
 """ 
 def alert_user(text) :
-    
-    run_jscript('window.alert(' + '"' + text + '"' + ');',
-                "fail to get datatime format strings : ",
-                 "get_datetime_formats")
+    run_jscript('window.alert(' + '"' + text + '"' + ');',"fail to get datatime format strings : ")
     
 
 NO_CFG_FILE_ID              =   1000
@@ -2508,10 +2420,7 @@ CORRUPTED_CFG_FILE_ID       =   1001
    
     
 def confirm_user(text,confirmID) :
-    
-    run_jscript('displayconfirm(' + '"' + text + '",' + str(confirmID) + ');',
-                "fail display confirm : ",
-                 str(confirmID))
+    run_jscript('displayconfirm(' + '"' + text + '",' + str(confirmID) + ');',"fail display confirm : ")
     
     
     
