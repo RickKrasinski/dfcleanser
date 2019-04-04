@@ -19,33 +19,49 @@ import dfcleanser.common.cfg as cfg
 
 from dfcleanser.common.common_utils import (opStatus, display_exception, read_text_file)
 
-"""
-# -------------------------------------------------------------
-# -------------------------------------------------------------
-# Install the dfcleanser package
-# -------------------------------------------------------------
-# -------------------------------------------------------------
-"""
+
 def install_dfcleanser() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : install dfcleanser package
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
     install_dfc_custom()
     install_dfc_notebook_widgets()
 
-"""
-# -----------------------------------------------------------------------
-# components for installing the Jupyter notebook extensions 
-# -----------------------------------------------------------------------
-"""    
+
 def install_dfc_notebook_widgets() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : install dfcleanser widgets
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
     return()    
     
-"""
-# -------------------------------------------------------------
-# -------------------------------------------------------------
-# Install the dfcleanser package
-# -------------------------------------------------------------
-# -------------------------------------------------------------
-"""
+
 def uninstall_dfcleanser() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : uninstall dfcleanser package
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()  
     
@@ -67,6 +83,7 @@ def uninstall_dfcleanser() :
     except Exception as e:
         opstat.store_exception("uninstall dfcleanser " + custom_js_path + custom_css_path,e)
         display_exception(opstat)
+
     
 """
 # -----------------------------------------------------------------------
@@ -96,12 +113,19 @@ css_require_text_postamble = ("\n/*\n" +
                               "// --------------------------\n" +
                               "*/")
 
-"""
-# -----------------------------------------------------------------------
-# remove the dfcleanser jasvascript from Jupyter custom.js
-# -----------------------------------------------------------------------
-"""
+
 def remove_existing_dfcleanser_js(custom_js_path) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : remove the dfcleanser jasvascript from Jupyter custom.js
+    * 
+    * parms :
+    *  custom_js_path   - path of custom js
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     
@@ -145,12 +169,19 @@ def remove_existing_dfcleanser_js(custom_js_path) :
         opstat.store_exception("remove dfcleanser js " + custom_js_path,e)
         display_exception(opstat)
 
-"""
-# -----------------------------------------------------------------------
-# remove the dfcleanser css from Jupyter custom.css
-# -----------------------------------------------------------------------
-"""
+
 def remove_existing_dfcleanser_css(custom_css_path) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : remove the dfcleanser css from Jupyter custom.css
+    * 
+    * parms :
+    *  custom_css_path   - path of custom css
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     
@@ -194,12 +225,18 @@ def remove_existing_dfcleanser_css(custom_css_path) :
         opstat.store_exception("remove dfcleanser css " + custom_css_path,e)
         display_exception(opstat)
 
-"""
-# -----------------------------------------------------------------------
-# install the dfcleanser css from Jupyter custom.css
-# -----------------------------------------------------------------------
-"""
+
 def install_dfc_custom_css() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : install the dfcleanser css from Jupyter custom.css
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()  
     
@@ -242,18 +279,20 @@ def install_dfc_custom_css() :
     except Exception as e:
         opstat.store_exception("[writng custom css file]["+ custom_css_path +"]",e)
         display_exception(opstat)
-    
-    
-    
-    
 
-"""
-# -------------------------------------------------------------
-# Install the dfcleanser js and css components in the 
-# Jupyter custom.js and custom.css files
-# -------------------------------------------------------------
-"""
+
 def install_dfc_custom() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : Install the dfcleanser js and css components in the 
+    *            Jupyter custom.js and custom.css files
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
 
     opstat  =   opStatus()  
     
@@ -327,6 +366,16 @@ def install_dfc_custom() :
     
 
 def setup_dfcleanser() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : setup dfcleanser
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     
@@ -337,7 +386,7 @@ def setup_dfcleanser() :
     from dfcleanser.common.common_utils import run_jscript
     celltext    =  "setup_dfcleanser" 
     jscript     =   ("select_cell_from_text(" +  "'" + celltext + "'" + ")")
-    run_jscript(jscript,"Error setting dfc Cell","setup_dfcleanser") 
+    run_jscript(jscript,"Error setting dfc Cell") 
     
     # insert working cell 
     title_html = get_dfc_cells_text(DC_PANDAS_TITLE)

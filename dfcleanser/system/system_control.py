@@ -35,27 +35,90 @@ def display_main_tb() :
 
     sysw.display_system_main_taskbar()
         
-def load_dfcleanser_from_toolbar() :
+def load_dfcleanser_from_toolbar(nbname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : load dfcleanser from a notebook toolbar
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
     from dfcleanser.system.load import load_dfcleanser_from_toolbar
-    load_dfcleanser_from_toolbar()
+    load_dfcleanser_from_toolbar(nbname)
+
     
 def load_dfCleanser() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : load dfcleanser from a code cell
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
     from dfcleanser.system.load import load_dfcleanser
     load_dfcleanser()
 
+
 def install_common_css() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : install custo css xhanges for dfcleanser
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
     from dfcleanser.system.install import install_dfc_custom_css
     install_dfc_custom_css()
+
+
+def unload_dfCleanser() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : unload the dfcleanser notebook cells and cfg values
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
-"""            
-#------------------------------------------------------------------
-#   display_system_environment
-#
-#   chapters    -   chapters option flag
-#
-#------------------------------------------------------------------
-"""
+    cfg.drop_config_value(cfg.CORE_CBS_KEY)
+    cfg.drop_config_value(cfg.UTILITIES_CBS_KEY)
+    cfg.drop_config_value(cfg.SCRIPTING_CBS_KEY)
+    cfg.drop_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
+    cfg.drop_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
+    cfg.drop_config_value(cfg.CURRENT_DF_DISPLAYED_KEY)
+    cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
+    cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF)
+    cfg.drop_config_value(cfg.CURRENT_TRANSFORM_DF)
+
+    
 def display_system_environment(funcId,parms=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display system environment screens
+    * 
+    * parms :
+    *  funcId   - display func id
+    *  parms    - associated parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     if(not (cfg.check_if_dc_init()) ) :
         if(funcId == sysm.DISPLAY_ABBR_MAIN) :
@@ -126,12 +189,8 @@ def display_system_environment(funcId,parms=None) :
                 else :
                     scriptcbs.append(0)
             
-            cfg.set_config_value(cfg.CORE_CBS_KEY,corecbs)
-            cfg.set_config_value(cfg.UTILITIES_CBS_KEY,utilscbs)
-            cfg.set_config_value(cfg.SCRIPTING_CBS_KEY,scriptcbs)
-            
             from dfcleanser.system.load import reload_dfcleanser
-            reload_dfcleanser()
+            reload_dfcleanser([corecbs,utilscbs,scriptcbs])
             
             clear_cell()
         
@@ -206,18 +265,23 @@ def display_system_environment(funcId,parms=None) :
         return
     
 def clear_cell() :  
-    run_jscript("process_system_tb_callback(0)","Javascript Error","Unable to clear cell")
-     
+    run_jscript("process_system_tb_callback(0)","Javascript Error : clear_cell")
      
 
-"""            
-#------------------------------------------------------------------
-#   initialize_notebook
-#
-#   initialize the current notebook to default screens - leave dataframe
-#------------------------------------------------------------------
-"""
+
 def initialize_notebook() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : initialize dfcleanser notebooj cells
+    * 
+    * parms :
+    *  funcId   - display func id
+    *  parms    - associated parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     from dfcleanser.data_cleansing.data_cleansing_control import clear_data_cleansing_data
     clear_data_cleansing_data()
@@ -241,14 +305,19 @@ def initialize_notebook() :
     clear_system_data()
     
     import matplotlib.pyplot as plt
-"""            
-#------------------------------------------------------------------
-#   drop_dataframe
-#
-#   drop the current datframe and release memory
-#------------------------------------------------------------------
-"""
+    
+    
 def clear_data() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : clear data
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     cfg.drop_dfc_dataframe()
     from dfcleanser.scripting.data_scripting_widgets import drop_current_script, set_script_logging 
@@ -264,6 +333,8 @@ def clear_data() :
                 "fail to clear data : ",
                  "system clear data")
 
+
+
 """ 
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -275,6 +346,18 @@ def clear_data() :
 
 
 def verify_file_parms(parms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : verify the file operations parms
+    * 
+    * parms :
+    *   parms   - operation parms
+    *   opstat  - operation status 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     if(len(parms[0]) == 0) :
         opstat.set_status(False)
@@ -284,12 +367,20 @@ def verify_file_parms(parms,opstat) :
             opstat.set_status(False)
             opstat.set_errorMsg("New Notebook Name is invalid")
 
-""" 
-#------------------------------------------------------------------
-#   copy dfc files and _files dir
-#------------------------------------------------------------------
-"""
+
 def copy_dfc_files(parms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : copy dfc files and _files dir
+    * 
+    * parms :
+    *   parms   - operation parms
+    *   opstat  - operation status 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     cfg_data        =   {}  
     script_data     =   {}
@@ -361,12 +452,20 @@ def copy_dfc_files(parms,opstat) :
             script_file_path = os.path.join(cfg.get_notebook_path(),newnbname + "_files",newnbname + "_scriptlog.json")
             write_json_file(script_file_path,script_data,opstat)
 
-""" 
-#------------------------------------------------------------------
-#   rebame dfc files and _files dir
-#------------------------------------------------------------------
-"""
+
 def rename_dfc_files(parms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : rename dfc files and _files dir
+    * 
+    * parms :
+    *   parms   - operation parms
+    *   opstat  - operation status 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     cfg_data            =   {}
     config_file_path    =   ""
@@ -414,12 +513,20 @@ def rename_dfc_files(parms,opstat) :
         #new_dfc_files_path = os.path.join(get_notebook_path(),newnbname +"_files")
         os.rename(nbname +"_files",newnbname +"_files")  
         
-""" 
-#------------------------------------------------------------------
-#   delete dfc files and _files dir
-#------------------------------------------------------------------
-"""
+
 def delete_dfc_files(parms,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : delete dfc files and _files dir
+    * 
+    * parms :
+    *   parms   - operation parms
+    *   opstat  - operation status 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     nbname      =   parms[0]
     
@@ -444,12 +551,20 @@ def delete_dfc_files(parms,opstat) :
             opstat.set_status(False)
             opstat.opstat.set_errorMsg("[no _files dir for ][" + dfc_files_path +"]")    
         
-""" 
-#------------------------------------------------------------------
-#   process dfc files and _files dir
-#------------------------------------------------------------------
-"""    
+
 def process_dfc_files(funcid,parms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process dfc files functions
+    * 
+    * parms :
+    *   funcid  - function id
+    *   parms   - operation parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     opstat          =   opStatus()
 
@@ -479,7 +594,8 @@ def process_dfc_files(funcid,parms) :
         else :
             display_exception(opstat)
         
-  
+ 
+    
 """ 
 #------------------------------------------------------------------
 #------------------------------------------------------------------

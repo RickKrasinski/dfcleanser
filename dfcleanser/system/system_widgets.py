@@ -16,7 +16,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.system.system_model as sysm
 
 from dfcleanser.common.html_widgets import (get_button_tb_form, maketextarea, display_composite_form, ButtonGroupForm, 
-                                            displayHeading, get_checkbox_form, CheckboxGroupForm, InputForm, get_html_spaces)
+                                            displayHeading, get_checkbox_form, CheckboxGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
@@ -190,7 +190,7 @@ system_chapters_tb_doc_title           =   "Chapters"
 system_chapters_tb_doc_id              =   "chaptersoptions"
 system_chapters_tb_title               =   None
 
-system_chapters_tb_keyTitleList        =   ["Select Chapters</br>To Load","Return"]
+system_chapters_tb_keyTitleList        =   ["Load Chapters</br>Selected","Return"]
 
 system_chapters_tb_jsList              =   ["process_system_tb_callback("+str(sysm.PROCESS_CHAPTERS)+")",
                                             "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")"]
@@ -267,7 +267,7 @@ def get_current_checkboxes(cbtype) :
     """
 
     if(cbtype == sysm.CORE) :
-        if(cfg.get_config_value(cfg.CORE_CBS_KEY) == None) :
+        if(1):#cfg.get_config_value(cfg.CORE_CBS_KEY) == None) :
             return([1,1,1,1,1])
         else :
             return(cfg.get_config_value(cfg.CORE_CBS_KEY))
@@ -303,13 +303,13 @@ def display_system_chapters_taskbar() :
                                                      dfc_core_modules_checkbox_idList,
                                                      dfc_core_modules_checkbox_labelList,
                                                      dfc_core_modules_checkbox_jsList,
-                                                     get_current_checkboxes(sysm.CORE),
+                                                     [1,1,1,1,1],#get_current_checkboxes(sysm.CORE),
                                                      [1,1,1,1,1])
     
-    dfc_core_modules_heading_html       =   "<p>" + get_html_spaces(62) + "dfcleanser Core Modules</p>"
+    dfc_core_modules_heading_html       =   "<div>dfcleanser Core Modules</div>"
     dfc_core_modules_checkbox_html      =   dfc_core_modules_checkbox.get_html()
     
-    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [dfc_core_modules_heading_html,dfc_core_modules_checkbox_html]
     
     print("\n")
@@ -322,10 +322,10 @@ def display_system_chapters_taskbar() :
                                                     get_current_checkboxes(sysm.UTILITIES),
                                                     [0,0,0,0,0])
     
-    dfc_utils_modules_heading_html       =   "<p>" + get_html_spaces(68) + "dfcleanser Utilities</p>"
+    dfc_utils_modules_heading_html       =   "<div>dfcleanser Utilities</div>"
     dfc_utils_modules_checkbox_html      =   dfc_utils_modules_checkbox.get_html()
         
-    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [dfc_utils_modules_heading_html,dfc_utils_modules_checkbox_html]
     
     display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
@@ -337,10 +337,10 @@ def display_system_chapters_taskbar() :
                                                          get_current_checkboxes(sysm.SCRIPTING),
                                                          [0])
     
-    dfc_script_modules_heading_html       =   "<p>" + get_html_spaces(70) + "dfcleanser Scripting</p>"
+    dfc_script_modules_heading_html       =   "<div>dfcleanser Scripting</div>"
     dfc_script_modules_checkbox_html      =   dfc_script_modules_checkbox.get_html()
         
-    gridclasses     =   ["dfcleanser-chapters-wrapper-header","dfc-footer"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [dfc_script_modules_heading_html,dfc_script_modules_checkbox_html]
     
     display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
@@ -561,9 +561,9 @@ def display_df_dataframes(title=None) :
         
         dfmgr_input_html = dfmanager_input_form.get_html()
     
-        dfmgr_heading_html       =   "<p>" + get_html_spaces(58) + "Current dfCleanser dataframes </p>"
+        dfmgr_heading_html       =   "<div>Current dfCleanser dataframes </div>"
         
-        gridclasses     =   ["dfcleanser-dfmgr-wrapper-header","df-left","dfc-right"]
+        gridclasses     =   ["dfcleanser-common-grid-header","df-left","dfc-right"]
         gridhtmls       =   [dfmgr_heading_html,df_names_html,dfmgr_input_html]
     
         print("\n")
@@ -608,11 +608,11 @@ def display_dfc_files_form() :
         
         #print("dfc_files_input_html\n",dfc_files_input_html)
         
-        dfc_files_heading_html  =   "<p>" + get_html_spaces(64) + "Notebook : '" + str(nbname) + "' Files  </p>"
+        dfc_files_heading_html  =   "<div>Notebook : '" + str(nbname) + "' Files  </div>"
         dfc_files_list_html     =   get_dfcleanser_notebooks()
         dfc_files_input_html    =   dfc_files_input_form.get_html()
         
-        gridclasses     =   ["dfcleanser-files-wrapper-header","df-left","dfc-right"]
+        gridclasses     =   ["dfcleanser-common-grid-header","df-left","dfc-right"]
         gridhtmls       =   [dfc_files_heading_html,dfc_files_list_html,dfc_files_input_html]
     
         print("\n")
@@ -924,7 +924,6 @@ def show_libs_info():
     libs_table.set_small(True)
     libs_table.set_smallwidth(80)
     libs_table.set_smallmargin(80)
-    libs_table.set_smallfsize(12)
     libs_table.set_checkLength(False)
     libs_table.set_border(False)
 
@@ -951,7 +950,6 @@ def show_setup_notes():
     print("\n")
     
     setupNotes = []
-    from dfcleanser.common.html_widgets import get_html_spaces
     nbname = cfg.get_notebook_name()
     if(not (nbname == None)) :
         setupNotes.append("Notebook Name" + get_html_spaces(22) + ":&nbsp;&nbsp;" + str(nbname))
