@@ -104,7 +104,7 @@ def process_rename_column(colname,parms,display=True) :
     opstat = opStatus()
     
     try :
-        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().rename(columns=namesdict))
+        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).rename(columns=namesdict))
         
     except Exception as e:
         opstat.store_exception("Rename Column Error",e)
@@ -131,7 +131,7 @@ def process_rename_column(colname,parms,display=True) :
 """
 def add_column(colname,colList,opstat,display=True) :
     
-    if(is_existing_column(cfg.get_dfc_dataframe(),colname)) :
+    if(is_existing_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)) :
         opstat.set_status(False)
         opstat.set_errorMsg("Column to Add : "+colname + " already exists")
         return()
@@ -140,8 +140,8 @@ def add_column(colname,colList,opstat,display=True) :
         namesdict = {}
         namesdict.update({"newcolname" : colname})
 
-        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().assign(newcolname=colList))
-        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe().rename(columns=namesdict))
+        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).assign(newcolname=colList))
+        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).rename(columns=namesdict))
         
     except Exception as e:
         opstat.store_exception("Add New Column Error",e)
@@ -192,7 +192,7 @@ def process_add_column(parms,display=True) :
                     opstat.store_exception("Unable to load col list file",e)
                     display_exception(opstat)
 
-                if( not (len(colList) == len(cfg.get_dfc_dataframe())) ) :
+                if( not (len(colList) == len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))) ) :
                     opstat.set_status(False)
                     opstat.set_errorMsg("Unable to add column : column list values not equal df column length")
                     display_exception(opstat)
@@ -245,7 +245,7 @@ def save_deleted_column(colname,fname,df) :
     opstat = opStatus()
     
     try :
-        collist = cfg.get_dfc_dataframe()[colname].tolist()
+        collist = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].tolist()
         with open(fname, 'w') as col_list_file :
             json.dump(collist,col_list_file)
                     
@@ -271,7 +271,7 @@ def process_drop_column(colname,parms,display=True) :
         
     if(not (fname == None))  :
         
-        opstat = save_deleted_column(colname,fname,cfg.get_dfc_dataframe())
+        opstat = save_deleted_column(colname,fname,cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))
         
         if(not opstat.get_status()) :
             display_exception(opstat)
@@ -279,7 +279,7 @@ def process_drop_column(colname,parms,display=True) :
     if(opstat.get_status()) :
         
         try :
-            tdf     =   cfg.get_dfc_dataframe().drop([colname],axis=1)
+            tdf     =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop([colname],axis=1)
             cfg.set_current_dfc_dataframe(tdf)
             
         except Exception as e:
@@ -318,7 +318,7 @@ def process_save_column(colname,parms,display=True) :
     if(not (fname == None))  :
     
         try :
-            collist = cfg.get_dfc_dataframe()[colname].tolist()
+            collist = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].tolist()
             with open(fname, 'w') as col_list_file :
                 json.dump(collist,col_list_file)
                     
@@ -353,7 +353,7 @@ def process_reorder_columns(parms,display=True) :
     movecol         = fparms[0]
     moveaftercol    = fparms[1]
 
-    df_cols     = cfg.get_dfc_dataframe().columns.tolist() 
+    df_cols     = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist() 
     
     new_cols = []
     
@@ -369,7 +369,7 @@ def process_reorder_columns(parms,display=True) :
             final_cols.append(movecol) 
     
     try :        
-        cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe()[final_cols])       
+        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[final_cols])       
         
     except Exception as e:
         opstat.store_exception("Reorder Columns Error",e)
@@ -403,7 +403,7 @@ def process_copy_column(parms,display=True) :
     copyfromcol    = fparms[1]
 
     try : 
-        df = cfg.get_dfc_dataframe()
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
         df[copytocol] = df[copyfromcol]
         cfg.set_current_dfc_dataframe(df)       
         
@@ -441,7 +441,7 @@ def process_sort_by_column(parms,display=True) :
     print(coltosort,sortorder,resetrowids)
 
     try : 
-        df = cfg.get_dfc_dataframe()
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
         df.sort_values(coltosort,sortorder)
         
         if(resetrowids) :
@@ -596,7 +596,8 @@ def process_map_transform(colname,parms,display=True) :
         else :
             handlenan = 'ignore'
     
-        opstat = make_col_categorical_from_map(cfg.get_dfc_dataframe(), colname, mapDict, handlenan)
+        opstat = make_col_categorical_from_map(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF), 
+                                               colname, mapDict, handlenan)
         
         if(opstat.get_status()) :
             
@@ -625,7 +626,7 @@ def process_map_transform(colname,parms,display=True) :
         
     if(opstat.get_status()) :
         if(display) :
-            dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
+            dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
 
 """
 #--------------------------------------------------------------------------
@@ -642,7 +643,8 @@ def process_dummy_transform(colname,parms,display=True) :
         if(fparms[0] == "False") :
             removecol = False
     
-    opstat = make_col_categorical_from_dummies(cfg.get_dfc_dataframe(), colname, removecol) 
+    opstat = make_col_categorical_from_dummies(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                               colname, removecol) 
 
     if(opstat.get_status()) :
         
@@ -670,13 +672,14 @@ def process_dummy_transform(colname,parms,display=True) :
         display_exception(opstat)
     
     if(display) :
-        display_df_sizing_info(cfg.get_dfc_dataframe())
+        display_df_sizing_info(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))
         print("\n")        
 
     if(opstat.get_status()) :
         if(display) :
             if(not removecol) :
-                dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
+                dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                                     colname)
 
     if(not opstat.get_status()) : 
         if(display) :
@@ -709,13 +712,13 @@ def process_cat_transform(colname,parms,display=True) :
     
     else :
         if(makecat) :       
-            opstat = make_col_categorical(cfg.get_dfc_dataframe(), colname) 
+            opstat = make_col_categorical(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname) 
     
     if(opstat.get_status()) :
         
         if(changedatatype) :
             try :
-                cfg.get_dfc_dataframe()[colname] = cfg.get_dfc_dataframe()[colname].astype('category')
+                cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname] = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].astype('category')
             except Exception as e:
                 opstat.store_exception("Change to category datatype",e)
                 display_exception(opstat)
@@ -747,7 +750,7 @@ def process_cat_transform(colname,parms,display=True) :
     
         displayParms("Column " + colname + " Category Transform Parms",labellist,valuelist,cfg.DataTransform_ID)
         
-        dtcw.display_column_transform_status(cfg.get_dfc_dataframe(),colname)
+        dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
 
     if(not opstat.get_status()) : 
         if(display) :

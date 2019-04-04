@@ -27,6 +27,7 @@ from dfcleanser.common.common_utils import (get_datatype_str, display_generic_gr
                                             get_datatype_id, is_numeric_col, whitecolor)
 
 from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
+from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
 
 """
 * -----------------------------------------------------
@@ -432,8 +433,7 @@ def display_datetime_convert(parms=None) :
     if(parms == None) :
         cfg.drop_config_value(datetime_format_input_id+"Parms")
         
-        from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
-        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_datetime_col",None,True)
+        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_datetime_col",None,None,True)
     else :
         if(len(parms) == 1) :
             if(parms[0] == 0) :
@@ -446,7 +446,7 @@ def display_datetime_convert(parms=None) :
             cfg.drop_config_value(datetime_format_input_id+"Parms")
         
             from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
-            list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_datetime_col",None,True)
+            list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_datetime_col",None,None,True)
     
         else :
             dtid        =   11
@@ -471,12 +471,13 @@ def display_datetime_convert(parms=None) :
     dt_datetime_custom_form.set_shortForm(False)
     dt_datetime_custom_form.set_gridwidth(640)    
     dt_datetime_custom_form.set_fullparms(True)    
+    dt_datetime_custom_form.set_custombwidth(120)
     
     dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-    dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Datetime Convert Parms </p>"
+    dt_datetime_title_html  =   "<div>Datetime Convert Parms</div>"
         
-    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
     
     display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
@@ -493,11 +494,13 @@ def display_datetime_timedelta(parms)  :
                                            timedelta_radio_idList,
                                            timedelta_radio_labelList)
     timedelta_radio.set_checked(4)
-    display_composite_form([get_radio_button_form(timedelta_radio)])
-    print("\n")
     
-    from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
-    list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_deltat_col",None,True)
+    timedelta_radio_html    =   timedelta_radio.get_html()
+    
+    #display_composite_form([get_radio_button_form(timedelta_radio)])
+    #print("\n")
+    
+    list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_deltat_col",None,None,True)
 
     dt_datetime_custom_form = InputForm(datetime_tdelta_input_id,
                                         datetime_tdelta_input_idList,
@@ -507,17 +510,21 @@ def display_datetime_timedelta(parms)  :
                                         datetime_tdelta_input_jsList,
                                         datetime_tdelta_input_reqList)
     
-    dt_datetime_custom_form.set_shortForm(False) 
-    dt_datetime_custom_form.set_gridwidth(640)
+    dt_datetime_custom_form.set_shortForm(False)
+    dt_datetime_custom_form.set_gridwidth(620)
+    dt_datetime_custom_form.set_custombwidth(120)
     dt_datetime_custom_form.set_fullparms(True) 
+    
     dt_datetime_custom_html = dt_datetime_custom_form.get_html()
     
-    dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Calculate Datetime.timedelta </p>"
+    dt_datetime_title_html  =   "<div>Calculate Datetime.timedelta</div>"
         
-    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
-    gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-top",
+                         "dfc-left","dfc-right"]
+    gridhtmls       =   [dt_datetime_title_html,timedelta_radio_html,
+                         list_html,dt_datetime_custom_html]
     
-    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
+    display_generic_grid("dtformat-delta-wrapper",gridclasses,gridhtmls)
 
 
 """
@@ -527,24 +534,25 @@ def display_datetime_timedelta(parms)  :
 """     
 def display_datetime_split_merge(parms,action) :
     
-    from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
     if(action == dtm.SPLIT) :
-        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_split_col",None,True)
+        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_split_col",None,None,True)
     else :
-        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_merge_col",None,True)
+        list_html = get_df_col_names_table("datetimecolnamesTable",cfg.DataTransform_ID,"get_merge_col",None,None,True)
 
-    dt_datetime_custom_form = InputForm(datetime_tdelta_input_id,
-                                        datetime_tdelta_input_idList,
-                                        datetime_tdelta_input_labelList,
-                                        datetime_tdelta_input_typeList,
-                                        datetime_tdelta_input_placeholderList,
-                                        datetime_tdelta_input_jsList,
-                                        datetime_tdelta_input_reqList)
+#    dt_datetime_custom_form = InputForm(datetime_tdelta_input_id,
+#                                        datetime_tdelta_input_idList,
+#                                        datetime_tdelta_input_labelList,
+#                                        datetime_tdelta_input_typeList,
+#                                        datetime_tdelta_input_placeholderList,
+#                                        datetime_tdelta_input_jsList,
+#                                        datetime_tdelta_input_reqList)
     
-    dt_datetime_custom_form.set_shortForm(False) 
-    dt_datetime_custom_form.set_gridwidth(640)
-    dt_datetime_custom_form.set_fullparms(True) 
-    dt_datetime_custom_html = dt_datetime_custom_form.get_html()
+#    dt_datetime_custom_form.set_shortForm(False) 
+#    dt_datetime_custom_form.set_gridwidth(620)
+#    dt_datetime_custom_form.set_custombwidth(120)
+#    dt_datetime_custom_form.set_fullparms(True) 
+    
+#    dt_datetime_custom_html = dt_datetime_custom_form.get_html()
     
     if(action == dtm.SPLIT) :
         
@@ -557,11 +565,13 @@ def display_datetime_split_merge(parms,action) :
                                             datetime_split_input_reqList)
         
         dt_datetime_custom_form.set_shortForm(False)
-        dt_datetime_custom_form.set_gridwidth(640)
+        dt_datetime_custom_form.set_gridwidth(620)
         dt_datetime_custom_form.set_fullparms(True)
+        dt_datetime_custom_form.set_custombwidth(120)
+        
         dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-        dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Split Datetime Column Parameters </p>"
+        dt_datetime_title_html  =   "<div>Split Datetime Column Parameters</div>"
         
     else :
         
@@ -574,13 +584,15 @@ def display_datetime_split_merge(parms,action) :
                                             datetime_merge_input_reqList)
         
         dt_datetime_custom_form.set_shortForm(False)
-        dt_datetime_custom_form.set_gridwidth(640)
+        dt_datetime_custom_form.set_gridwidth(620)
         dt_datetime_custom_form.set_fullparms(True)
+        dt_datetime_custom_form.set_custombwidth(120)
+        
         dt_datetime_custom_html = dt_datetime_custom_form.get_html()
         
-        dt_datetime_title_html  =   "<p>" + get_html_spaces(50) + "Merge Datetime Column </p>"
+        dt_datetime_title_html  =   "<div>Merge Datetime Columns</div>"
         
-    gridclasses     =   ["dtformat-wrapper-header","dfc-right","dfc-left"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [dt_datetime_title_html,list_html,dt_datetime_custom_html]
     
     display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
@@ -660,7 +672,8 @@ def display_main_option(parms,clear=False) :
                 dfschema_table = dcTable("Dataframe Schema","dfschemaTable",cfg.DataTransform_ID)
                 dfschema_table.set_colsperrow(6)
             
-            display_df_schema(cfg.get_dfc_dataframe(),dfschema_table,direction)
+            display_df_schema(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                              dfschema_table,direction)
 
         elif(funcid == dtm.DFC_TRANSFORM_RETURN) :
                     
@@ -746,7 +759,7 @@ def display_col_data(df,colname,display=True) :
         stats_table.set_small(True)
         stats_table.set_smallwidth(30)
         stats_table.set_smallmargin(32)
-    stats_table.set_smallfsize(12)
+
     stats_table.set_border(False)
     stats_table.set_checkLength(False)
     
@@ -795,8 +808,6 @@ def get_df_schema_table(df,table) :
     dfchrefsList    =   []
 
     dfRow   =   []
-    
-    print("get_df_schema_table : colstart",colstart)
     
     from dfcleanser.common.table_widgets import get_df_schema_table_col
     for i in range(table.get_colsperrow()) :

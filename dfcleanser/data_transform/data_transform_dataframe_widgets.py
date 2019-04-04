@@ -361,7 +361,7 @@ def display_common_df_options(header_html,grid_input_form) :
     grid_input_form.set_fullparms(True) 
     grid_input_html   =   grid_input_form.get_html()
     
-    gridclasses     =   ["df-common-df-wrapper-header","dfc-footer"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [header_html,grid_input_html]
     
     display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
@@ -383,7 +383,7 @@ def display_dataframe_options(parms) :
                                                                    dataframe_transform_tb_jsList,
                                                                    False))])
 
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Save Column Names </p>"
+        common_dataframe_heading_html       =   "<div>Save Column Names </div>"
         
         filename = cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
         filename = filename.replace('.','_')
@@ -404,7 +404,7 @@ def display_dataframe_options(parms) :
         grid_input_form.set_fullparms(True)    
         grid_input_html   =   grid_input_form.get_html()
     
-        gridclasses     =   ["df-save-col-names-wrapper-header","df-save-col-names-wrapper-note","dfc-footer"]
+        gridclasses     =   ["dfcleanser-common-grid-header","df-save-col-names-wrapper-note","dfc-footer"]
         gridhtmls       =   [common_dataframe_heading_html,save_col_note_html,grid_input_html]
     
         display_generic_grid("df-save-col-names-wrapper",gridclasses,gridhtmls)
@@ -413,7 +413,7 @@ def display_dataframe_options(parms) :
     # add column names row
     elif(funcid == dtm.ADD_COLUMN_NAMES_ROW) :
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Add Column Names </p>"
+        common_dataframe_heading_html       =   "<div>Add Column Names </div>"
         
         grid_input_form                     =   InputForm(df_add_row_transform_input_id,
                                                           df_add_row_transform_input_idList,
@@ -428,12 +428,12 @@ def display_dataframe_options(parms) :
  
     elif(funcid == dtm.CHANGE_COLUMN_NAMES) :
         
-        colslist    =   cfg.get_dfc_dataframe().columns.tolist()
+        colslist    =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist()
         import json
         cliststr    =   json.dumps(colslist)#str(colslist)
         cfg.set_config_value(df_change_row_transform_input_id+"Parms",[cliststr])
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Change Column Names </p>"
+        common_dataframe_heading_html       =   "<div>Change Column Names </div>"
         
         grid_input_form                     =   InputForm(df_change_row_transform_input_id,
                                                           df_change_row_transform_input_idList,
@@ -448,7 +448,7 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.RESET_ROW_IDS) :
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Reset Index Column </p>"
+        common_dataframe_heading_html       =   "<div>Reset Index Column </div>"
         
         grid_input_form                     =   InputForm(df_reset_col_transform_input_id,
                                                           df_reset_col_transform_input_idList,
@@ -472,11 +472,11 @@ def display_dataframe_options(parms) :
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> Select a Column to use for Row Ids by clicking on Column Name above.")
         col_names_table.set_refParm(str(30))
             
-        display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dfsnriccol")
+        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dfsnriccol")
 
     elif(funcid == dtm.SET_NEW_ROW_IDS_COL_SEL) :
 
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Set Index Column </p>"
+        common_dataframe_heading_html       =   "<div>Set Index Column </div"
         
         cfg.set_config_value(df_set_new_col_transform_input_id+"Parms",[parms[1]])        
         
@@ -492,7 +492,7 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.DROP_ROW_IDS_COL) :
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Drop Index Column </p>"
+        common_dataframe_heading_html       =   "<div>Drop Index Column </div>"
         
         grid_input_form                     =   InputForm(df_drop_row_ids_transform_input_id,
                                                           df_drop_row_ids_transform_input_idList,
@@ -507,7 +507,7 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.SORT_ROWS) :
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Sort Index Column </p>"
+        common_dataframe_heading_html       =   "<div>Sort Index Column </div>"
         
         grid_input_form                     =   InputForm(df_sort_row_ids_transform_input_id,
                                                           df_sort_row_ids_transform_input_idList,
@@ -541,9 +541,9 @@ def display_dataframe_options(parms) :
         print("\n")
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
-        display_column_names(cfg.get_dfc_dataframe(),col_names_table,"dtdcrcol")
+        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dtdcrcol")
         
-        common_dataframe_heading_html       =   "<p>" + get_html_spaces(50) + "Drop Duplicate Rows </p>"
+        common_dataframe_heading_html       =   "<div>Drop Duplicate Rows </div>"
         
         grid_input_form                     =   InputForm(df_drop_dups_transform_input_id,
                                                           df_drop_dups_transform_input_idList,

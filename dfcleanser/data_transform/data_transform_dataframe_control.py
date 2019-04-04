@@ -59,7 +59,7 @@ def save_column_names_row(fname):
     # see if save col names row 
     if(len(fname) > 0) :
                         
-        colids = cfg.get_dfc_dataframe().columns.tolist()
+        colids = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist()
 
         # save the index row as file
         try :
@@ -91,13 +91,13 @@ def change_column_names(parms):
     fparms  =   fparms.replace("'","")
     collist =   fparms.split(",")
     
-    if(not (len(cfg.get_dfc_dataframe().columns) == len(collist)) ) :
+    if(not (len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns) == len(collist)) ) :
         opstat.set_status(False)
         opstat.set_errorMsg("Number of column names does not match number of columns in dataframe")
     else :
     
         try :
-            cfg.get_dfc_dataframe().columns = collist    
+            cfg.cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns = collist    
         except Exception as e:
             opstat.store_exception("Unable to change column names ",e)
         
@@ -130,7 +130,7 @@ def add_column_names_row(fname,colslist):
     
     if(opstat.get_status())  :               
         try :
-            cfg.get_dfc_dataframe().columns = colids
+            cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns = colids
         except Exception as e: 
             opstat.store_exception("Unable to open column names file" + fname,e)
         
@@ -146,7 +146,8 @@ def reset_row_ids_column(startid):
     opstat = opStatus() 
 
     try :
-        cfg.get_dfc_dataframe().index = range(startid,len(cfg.get_dfc_dataframe().index)+startid)
+        cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).index = range(startid,
+                                  len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).index)+startid)
     except Exception as e:
         opstat.store_exception("Unable to reset row ids",e)
 
@@ -162,7 +163,7 @@ def set_row_ids_column(colname):
     opstat = opStatus()
     
     try :
-        cfg.get_dfc_dataframe().set_index(colname, inplace=True)
+        cfg.cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).set_index(colname, inplace=True)
     except Exception as e: 
         opstat.store_exception("Unable to set row ids from : " + colname,e)
 
@@ -178,7 +179,7 @@ def drop_row_ids_column():
     opstat = opStatus()
 
     try :
-        cfg.get_dfc_dataframe().reset_index(drop=True)
+        cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).reset_index(drop=True)
     except Exception as e: 
         opstat.store_exception("Unable to drop row ids column",e)
 
@@ -210,9 +211,9 @@ def drop_duplicate_rows(colkeys):
 
     try :
         if(len(colkeys) > 0) :
-            cfg.get_dfc_dataframe().drop_duplicates(colkeys,inplace=True) 
+            cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop_duplicates(colkeys,inplace=True) 
         else :
-            cfg.get_dfc_dataframe().drop_duplicates(inplace=True) 
+            cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop_duplicates(inplace=True) 
     except Exception as e:
         opstat.store_exception("Unable to drop drop duplicate rows",e)
 
@@ -356,7 +357,7 @@ def process_df_transform(parms,display=True) :
                 display_status("Column Names Changed Successfully")
                 col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
                 col_names_table.set_note(" ")
-                display_column_names(cfg.get_dfc_dataframe(),col_names_table,None)    
+                display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,None)    
                 
             else :
                 

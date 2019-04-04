@@ -137,8 +137,9 @@ COPYING_DETAILS         =   32
 
 SORTING_DETAILS         =   34
 APPLYING_DETAILS        =   35
-        
-ADD_COLUMN_RETURN       =   4
+
+ADD_COLUMN_CLEAR        =   4        
+ADD_COLUMN_RETURN       =   5
 
 """
 #--------------------------------------------------------------------------
@@ -151,8 +152,6 @@ DISPLAY_ADD_FROM_CODE_OPTION        =   1
    
 PROCESS_FILE_OPTION                 =   13
 PROCESS_MAKE_NEW_CODE_OPTION        =   14
-PROCESS_GET_NEW_CODE_OPTION         =   15
-PROCESS_SAVE_NEW_CODE_OPTION        =   16
-PROCESS_ADD_NEW_CODE_OPTION         =   17
-PROCESS_SELECT_FUNC_OPTION          =   18
+PROCESS_ADD_NEW_CODE_OPTION         =   15
+PROCESS_SELECT_FUNC_OPTION          =   16
 

@@ -58,6 +58,22 @@ def display_data_transform(option,parms=None) :
 
     else :
         
+        if( (option == dtm.DISPLAY_DATAFRAME_TRANSFORM) or 
+            (option == dtm.DISPLAY_COLUMNS_TRANSFORM) or 
+            (option == dtm.DISPLAY_DATETIME_TRANSFORM) or 
+            (option == dtm.DISPLAY_DF_SCHEMA_TRANSFORM) ) :
+        
+            if(not(parms==None)) :
+            
+                from dfcleanser.data_inspection.data_inspection_widgets import data_transform_df_input_id
+                if(len(parms) > 1) :
+                    fparms          =   get_parms_for_input(parms[1],data_transform_df_input_id)
+                    if(len(fparms) > 0) :
+                        selected_df     =   fparms[0]
+            
+                        if(not (len(selected_df) == 0) ) :
+                            cfg.set_config_value(cfg.CURRENT_TRANSFORM_DF,selected_df)
+       
         # go ahead and process the command
         if(option == dtm.MAIN_OPTION) :
 
@@ -78,7 +94,8 @@ def display_data_transform(option,parms=None) :
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
 
-            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
+            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                     uniques_table,colname)
            
             dtw.display_single_column_taskbar() 
             
@@ -96,9 +113,11 @@ def display_data_transform(option,parms=None) :
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
             
-            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
+            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                     uniques_table,colname)
             
-            dtcw.display_mapping_col(cfg.get_dfc_dataframe(),colname) 
+            dtcw.display_mapping_col(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                     colname) 
 
         elif(option == dtm.DISPLAY_DUMMY_OPTION) :
 
@@ -114,7 +133,8 @@ def display_data_transform(option,parms=None) :
                 uniques_table = dcTable("Unique Values and Counts for Column " + colname,
                                         colname+"uvalsTable",
                                         cfg.DataTransform_ID)
-                display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
+                display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                         uniques_table,colname)
                 
             dtw.display_dummies_column_input()
 
@@ -131,7 +151,9 @@ def display_data_transform(option,parms=None) :
             uniques_table = dcTable("Unique Values and Counts for Column " + colname,
                                     colname+"uvalsTable",
                                     cfg.DataTransform_ID)
-            display_df_unique_column(cfg.get_dfc_dataframe(),uniques_table,colname)
+            
+            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                     uniques_table,colname)
 
             dtw.display_cats_column_input()
 
