@@ -16,14 +16,12 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_export.data_export_model as dem
 
 from dfcleanser.common.html_widgets import (display_composite_form, maketextarea,
-                                            get_button_tb_form, get_input_form, displayHeading,
-                                            get_html_spaces, ButtonGroupForm, InputForm)
+                                            get_button_tb_form, get_input_form, 
+                                            ButtonGroupForm, InputForm)
 
 from dfcleanser.common.common_utils import (opStatus, display_exception, 
                                             display_notes, display_status, display_inline_help, get_parms_for_input,
                                             get_formatted_time, display_generic_grid, get_select_defaults) 
-
-from dfcleanser.common.display_utils import display_df_sizing_info
 
 from dfcleanser.common.db_utils import (parse_connector_parms, get_stored_con_Parms, get_db_connector_list)
 
@@ -904,7 +902,7 @@ def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
         export_sql_input_html = ""
         export_sql_input_html = export_sql_input_form.get_html()
         
-        export_sql_heading_html     =   "<p>" + get_html_spaces(11) + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</p>"
+        export_sql_heading_html     =   "<div>" + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</div>"
 
         if( not (exportparms == None) ) :
             cfg.set_config_value(pandas_export_sqltable_id+"Parms",fparms)
