@@ -377,6 +377,17 @@ def display_data_cleansing_main_taskbar() :
                                                                data_cleansing_tb_keyTitleList,
                                                                data_cleansing_tb_jsList,
                                                                data_cleansing_tb_centered))]) 
+    
+def display_data_select_df() :
+    
+        from dfcleanser.data_inspection.data_inspection_widgets import get_select_df_form
+        select_df_form              =   get_select_df_form("Cleanse")
+    
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [select_df_form.get_html()]
+    
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+    
 
 def get_change_row_values_inputs(parms) :
     return(get_parms_for_input(parms[1],change_row_values_input_idList))
@@ -394,7 +405,7 @@ def get_change_row_values_inputs(parms) :
 def     display_column_header_data(df,colname) :
 
     print("\n")
-    display_col_stats(df,colname, False)
+    display_col_stats(df,colname, False, True, False)
 
 """            
 #------------------------------------------------------------------
@@ -448,7 +459,7 @@ def get_header_widths(labels,values) :
 #
 #------------------------------------------------------------------
 """
-def display_col_stats(df,colname, numeric=True) :
+def display_col_stats(df,colname, numeric=True, display=True, full_size=False) :
 
     df_col = df[colname]
 
@@ -592,25 +603,30 @@ def display_col_stats(df,colname, numeric=True) :
     stats_table.set_colorList(colorList)
     stats_table.set_small(True)
     
-    stats_table.set_smallwidth(headerdata[0])
-    stats_table.set_smallmargin(32)
-    stats_table.set_smallfsize(12)
+    if(not (full_size)) :
+        stats_table.set_smallwidth(headerdata[0])
+        stats_table.set_smallmargin(32)
     
     stats_table.set_border(False)
     stats_table.set_checkLength(False)
     
-    stats_table.display_table()
+    if(display) :
+        stats_table.display_table()
+    else :
+        return(stats_table.get_html())
 
 
-"""            
-#------------------------------------------------------------------
-#   display numeric column data
-#
-#   df          -   dataframe
-#
-#------------------------------------------------------------------
-"""
+
 def display_numeric_col_data(df) :
+    """            
+    #------------------------------------------------------------------
+    #   display numeric column data
+    #
+    #   parms :
+    #     df          -   dataframe
+    #
+    #------------------------------------------------------------------
+    """  
     
     colname         =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
     
@@ -623,7 +639,7 @@ def display_numeric_col_data(df) :
         showuniques = False
 
     print("\n")
-    display_col_stats(df,colname)
+    display_col_stats(df,colname,False,True,False)
     
     
     
@@ -844,14 +860,14 @@ def display_unique_col_data(df) :
                                                 nn_col_uniques_change_tb_centered)
             
     
-    unique_column_heading_html      =   "<p>" + get_html_spaces(36) + dfcol + " Unique Column Values</p>"
+    unique_column_heading_html      =   "<div>" + dfcol + " Unique Column Values</div>"
     cleansing_text_input_html       =   cleansing_text_inputs.get_html() 
     col_uniques_tb.set_gridwidth(860)
     cleansing_text_tb_html          =   col_uniques_tb.get_html() 
     
     if(toomanyUniques) :  
         
-        gridclasses     =   ["display-df-unique-columns-notes-wrapper-header", 
+        gridclasses     =   ["dfcleanser-common-grid-header", 
                              "dfc-top-centered",
                              "dfc-main",
                              "dfc-bottom",
@@ -868,7 +884,7 @@ def display_unique_col_data(df) :
         
     else :
         
-        gridclasses     =   ["display-df-unique-columns-wrapper-header", 
+        gridclasses     =   ["dfcleanser-common-grid-header", 
                              "dfc-main",
                              "dfc-bottom",
                              "dfc-footer"]
@@ -906,9 +922,9 @@ def display_change_objects(df,formid,dtypeId,colList=None) :#,skipactionbar=Fals
     
     # numeric datatypes
     if(is_numeric_datatype_id(dtypeId))  : 
-        display_df_describe(df,change_objects_table,True,typeparm,colList)#,True)
+        display_df_describe(df,change_objects_table,typeparm,colList,True)
     else :
-        display_non_numeric_df_describe(df,change_objects_table,typeparm,colList)#,True)
+        display_non_numeric_df_describe(df,change_objects_table,typeparm,colList,True)#,True)
         
     cfg.set_config_value(cfg.OBJ_TYPE_PARM_KEY,dtypeId)     
 
@@ -1053,7 +1069,7 @@ def display_row_data(df,rowid,colid) :
         
         print("\n")
         
-        df_row_cleanser_heading_html    =   "<p>" + get_html_spaces(42) + " dataframe Row Cleanser : Row " + str(rowid) + "</p>"
+        df_row_cleanser_heading_html    =   "<div>dataframe Row Cleanser : Row " + str(rowid) + "</div>"
         
         df_row_cleanser_input_html      =   InputForm(change_row_values_input_id,
                                                       change_row_values_input_idList,
@@ -1063,8 +1079,8 @@ def display_row_data(df,rowid,colid) :
                                                       change_row_values_input_jsList,
                                                       change_row_values_input_reqList).get_html()
         
-        gridclasses     =   ["display-df-row-cleanser-wrapper-header", 
-                             "dfc-top-centered",
+        gridclasses     =   ["dfcleanser-common-grid-header", 
+                             "dfc-top",
                              "dfc-footer"]
 
         gridhtmls       =   [df_row_cleanser_heading_html,
@@ -1091,7 +1107,7 @@ def display_row_data(df,rowid,colid) :
 #
 #------------------------------------------------------------------
 """
-def display_non_numeric_df_describe(df,table,datatype,colList=None) :#,checkboxes=False) : 
+def display_non_numeric_df_describe(df,table,datatype=None,colList=None,display=True,) :#,checkboxes=False) : 
 
     import pandas
     import datetime
@@ -1270,7 +1286,10 @@ def display_non_numeric_df_describe(df,table,datatype,colList=None) :#,checkboxe
 
     #table.dump()
 
-    get_mult_table(table,SCROLL_NEXT)
+    if(display) :
+        get_mult_table(table,SCROLL_NEXT)
+    else :
+        return(get_mult_table(table,SCROLL_NEXT,False))
 
 
 """            

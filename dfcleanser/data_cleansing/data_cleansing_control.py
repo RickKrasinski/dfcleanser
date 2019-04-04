@@ -19,14 +19,13 @@ import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
 from dfcleanser.common.common_utils import (RunningClock, display_status, display_exception, 
                                             opStatus, single_quote, is_numeric_col, is_numeric_col_int,
-                                            display_generic_grid)
+                                            display_generic_grid, get_parms_for_input)
 
 from dfcleanser.common.html_widgets import (displayHeading)
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables)
 from dfcleanser.common.display_utils import (display_df_describe) 
 
 from IPython.display import clear_output
-
 
 
 """            
@@ -41,31 +40,33 @@ from IPython.display import clear_output
 def display_data_cleansing(option,parms=None) :
     
     clear_output()
-    
+
+    #print("display_data_cleansing",option,parms)    
     if(not cfg.check_if_dc_init()) :
         dcw.display_no_data_heading()
         return
     
     # setup the button bar form
     dcw.display_data_cleansing_main_taskbar()
+    
+    if(not(parms==None)) :
+        if(option == dcm.DISPLAY_COLS_OPTION) :
+            
+            from dfcleanser.data_inspection.data_inspection_widgets import data_cleansing_df_input_id
+            fparms          =   get_parms_for_input(parms[1],data_cleansing_df_input_id)
+            if(len(fparms) > 0) :
+                selected_df     =   fparms[0]
+            
+                if(not (len(selected_df) == 0) ) :
+                    cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,selected_df)
 
-    if(cfg.is_a_dfc_dataframe_loaded() ) :
-    
-        from dfcleanser.data_inspection.data_inspection_widgets import get_select_df_form
-        select_df_form              =   get_select_df_form("Cleanse")
-    
-        gridclasses     =   ["dfc-footer"]
-        gridhtmls       =   [select_df_form.get_html()]
-    
-        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
-
-    
     if(cfg.is_a_dfc_dataframe_loaded()) :
         
         cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
         if(option == dcm.MAIN_OPTION) :
             clear_data_cleansing_data()
+            dcw.display_data_select_df()
             
         elif(option == dcm.CHANGE_COLUMN_OPTION) :
 
@@ -73,7 +74,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = change_unique_col_data(cfg.get_dfc_dataframe(),parms)
+            opstat = change_unique_col_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),parms)
             cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
             
             clock.stop()
@@ -103,18 +104,26 @@ def display_data_cleansing(option,parms=None) :
             
             if(funcid == 0) :
                 
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numeric Columns",4)
-                
+                cols_heading_html  =   "<div>Numeric Columns</div>"
+
                 clock = RunningClock()
                 clock.start()
 
                 try :
+                    
                     num_col_names_table = dcTable("Numeric Column Names ",
                                                   "dcgendfdesc",
                                                   cfg.DataCleansing_ID)
                     
-                    display_df_describe(cfg.get_dfc_dataframe(),num_col_names_table)
-                
+                    col_table_html  =   display_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
+                                                            num_col_names_table,None,None,False)
+                    
+                    
+                    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                    gridhtmls       =   [cols_heading_html,col_table_html]
+    
+                    display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
+               
                 except Exception as e: 
                     opstat = opStatus()
                     opstat.store_exception("Unable to display numeric column names",e)
@@ -124,20 +133,26 @@ def display_data_cleansing(option,parms=None) :
 
             elif(funcid == 1) :
                 
-                displayHeading("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non Numeric Columns",4)
+                cols_heading_html  =   "<div>Non Numeric Columns</div>"
                 
                 clock = RunningClock()
                 clock.start()
 
                 try :
+                    
                     nn_col_names_table  = dcTable("Non Numeric Column Names ",
                                                   "dcnngendfdesc",
                                                   cfg.DataCleansing_ID)
                     
-                    df_cols             =   cfg.get_dfc_dataframe().columns.tolist()
+                    df_cols         =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF).columns.tolist()
                     df_cols.sort()
-                    dcw.display_non_numeric_df_describe(cfg.get_dfc_dataframe(),
-                                                        nn_col_names_table,None,None) 
+                    nn_cols_html    =   dcw.display_non_numeric_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
+                                                                            nn_col_names_table,None,df_cols,False) 
+                    
+                    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                    gridhtmls       =   [cols_heading_html,nn_cols_html]
+    
+                    display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
                     
                 except Exception as e:
                     opstat = opStatus()
@@ -148,7 +163,7 @@ def display_data_cleansing(option,parms=None) :
                     
             elif(funcid == 2) :
                 cfg.set_config_value(cfg.CLEANSING_ROW_KEY,0)
-                dcw.display_row_data(cfg.get_dfc_dataframe(),0,0)
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
     
             elif(funcid == 3) :
                 return()
@@ -160,7 +175,7 @@ def display_data_cleansing(option,parms=None) :
             
             rowid = int(parms)
             cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
-            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
+            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
             
         elif(option == dcm.GENERIC_COL_OPTION) :
             
@@ -177,7 +192,7 @@ def display_data_cleansing(option,parms=None) :
             
             cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
             cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF))
 
         elif(option == dcm.DROP_COL_OPTION ) : 
             
@@ -204,7 +219,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = drop_value_rows(cfg.get_dfc_dataframe(),
+            opstat = drop_value_rows(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
                                      cfg.get_config_value(cfg.CLEANSING_COL_KEY),
                                      parms[1])
             
@@ -224,7 +239,8 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = drop_col_nans(cfg.get_dfc_dataframe(),cfg.get_config_value(cfg.CLEANSING_COL_KEY))
+            opstat = drop_col_nans(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
+                                   cfg.get_config_value(cfg.CLEANSING_COL_KEY))
             
             clock.stop()
             
@@ -238,7 +254,7 @@ def display_data_cleansing(option,parms=None) :
         elif(option == dcm.DISPLAY_OUTLIERS_OPTION ) : 
             
             cfg.set_config_value(cfg.OUTLIERS_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF))
             
         elif(option ==  dcm.DISPLAY_ROUND_COLUMN_OPTION  ) : 
             
@@ -252,7 +268,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = round_column_data(cfg.get_dfc_dataframe(),parms)
+            opstat = round_column_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),parms)
             
             clock.stop()
             
@@ -280,7 +296,7 @@ def display_data_cleansing(option,parms=None) :
             clock = RunningClock()
             clock.start()
             
-            opstat = remove_whitespace(cfg.get_dfc_dataframe(),parms)
+            opstat = remove_whitespace(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),parms)
             
             clock.stop()
             
@@ -294,38 +310,42 @@ def display_data_cleansing(option,parms=None) :
         elif(option ==  dcm.DISPLAY_GRAPHS_OPTION  ) :
             
             cfg.set_config_value(cfg.GRAPHS_FLAG_KEY,True)
-            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF))
             
         elif(option ==  dcm.DISPLAY_UNIQUES_OPTION  ) :
             
             cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_numeric_col_data(cfg.get_dfc_dataframe())
+            dcw.display_numeric_col_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF))
             
         elif(option ==  dcm.DISPLAY_NEW_ROW) :
 
             rowid = int(parms)
             cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
             cfg.set_config_value(cfg.CLEANSING_COL_KEY,0)
-            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
+            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
 
         elif(option ==  dcm.UPDATE_ROW_COL) :
             
             colname     =   parms
+            
+            #print("UPDATE_ROW_COL",colname,len(colname))
             rowid       =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
             
-            column_names = list(cfg.get_dfc_dataframe().columns.values)
+            column_names = list(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF).columns.values)
+            
             found = -1
             for i in range(len(column_names)) :
                 if(column_names[i] == colname) :
                     found = i
-            if(found > 0) :
+            
+            if(found > -1) :
                 colid = found
-            cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
+                cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
             
             chval = cfg.get_dfc_dataframe().iloc[rowid,colid]
 
-            cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[chval,""])           
-            dcw.display_row_data(cfg.get_dfc_dataframe(),rowid,0)
+            cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[str(chval),""])           
+            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
 
         elif(option ==  dcm.PROCESS_ROW_COL) :
             
@@ -341,8 +361,8 @@ def display_data_cleansing(option,parms=None) :
                 
                 col_id      =   int(cfg.get_config_value(cfg.CLEANSING_COL_KEY))
                 
-                if(is_numeric_col(cfg.get_dfc_dataframe(), col_id)) :
-                    if(is_numeric_col_int(cfg.get_dfc_dataframe(), col_id)) :
+                if(is_numeric_col(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
+                    if(is_numeric_col_int(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
                         new_value       =   int(new_value)
                     else :
                         new_value       =   float(new_value)
@@ -350,11 +370,11 @@ def display_data_cleansing(option,parms=None) :
                 if(len(new_value) > 0) :
                     cfg.get_dfc_dataframe().iloc[row_id,col_id] = new_value
 
-                dcw.display_row_data(cfg.get_dfc_dataframe(),row_id,0)
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),row_id,0)
                 
             elif(func_id == 1) :
-                drop_row(cfg.get_dfc_dataframe(),row_id)
-                dcw.display_row_data(cfg.get_dfc_dataframe(),0,0)
+                drop_row(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),row_id)
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
                 
     else :
         
