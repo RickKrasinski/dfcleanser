@@ -8,7 +8,7 @@
  // 
  //
  window.debug_flag = true;
- window.debug_dev_flag = false;
+ window.debug_dev_flag = true;
 
  window.NEW_LINE = "\n";
 
@@ -52,28 +52,26 @@
  window.DC_GENFUNC_UTILITY_ID = 9;
  window.DC_GEOCODE_UTILITY_ID = 10;
  window.DC_DFSUBSET_UTILITY_ID = 11;
- window.DC_DFCONCAT_UTILITY_ID = 12;
- window.DC_SCRIPTING_ID = 13;
- window.DC_DATA_SCRIPT_ID = 14;
- window.DC_WORKING_ID = 15;
+ window.DC_SCRIPTING_ID = 12;
+ window.DC_DATA_SCRIPT_ID = 13;
+ window.DC_WORKING_ID = 14;
 
- window.SYSTEM_TASK_BAR_ID = 16;
- window.IMPORT_TASK_BAR_ID = 17;
- window.IMPORT_CUSTOM_CODE_ID = 18;
- window.INSPECTION_TASK_BAR_ID = 19;
- window.CLEANSING_TASK_BAR_ID = 20;
- window.TRANSFORM_TASK_BAR_ID = 21;
- window.TRANSFORM_ADD_COLUMN_ID = 22;
- window.EXPORT_TASK_BAR_ID = 23;
- window.EXPORT_CUSTOM_CODE_ID = 24;
- window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 25;
- window.SW_UTILS_GENFUNC_TASK_BAR_ID = 26;
- window.SW_UTILS_GENFUNC_CODECELL_ID = 27;
- window.SW_UTILS_GEOCODE_TASK_BAR_ID = 28;
- window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 29;
- window.SW_UTILS_DFCONCAT_TASK_BAR_ID = 30;
- window.SCRIPT_TASK_BAR_ID = 31;
- window.WORKING_CELL_ID = 32;
+ window.SYSTEM_TASK_BAR_ID = 15;
+ window.IMPORT_TASK_BAR_ID = 16;
+ window.IMPORT_CUSTOM_CODE_ID = 17;
+ window.INSPECTION_TASK_BAR_ID = 18;
+ window.CLEANSING_TASK_BAR_ID = 19;
+ window.TRANSFORM_TASK_BAR_ID = 20;
+ window.TRANSFORM_ADD_COLUMN_ID = 21;
+ window.EXPORT_TASK_BAR_ID = 22;
+ window.EXPORT_CUSTOM_CODE_ID = 23;
+ window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 24;
+ window.SW_UTILS_GENFUNC_TASK_BAR_ID = 25;
+ window.SW_UTILS_GENFUNC_CODECELL_ID = 26;
+ window.SW_UTILS_GEOCODE_TASK_BAR_ID = 27;
+ window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 28;
+ window.SCRIPT_TASK_BAR_ID = 29;
+ window.WORKING_CELL_ID = 30;
 
  const DC_BLANK_LINE_ID = 1000;
 
@@ -81,17 +79,19 @@
  const MAX_CELL_ID = WORKING_CELL_ID;
  const total_ids = ((MAX_CELL_ID - MIN_CELL_ID) + 1);
 
- const WORKING_CELL = "# Working Cell "
+ const WORKING_CELL = "# Working Cell ";
 
  window.empty_cell_id = null;
 
  var dfc_cell_ids = ["PandasdfcleanserTitle", "DCSystemTitle", "DCDataImportTitle", "DCDataInspectionTitle", "DCDataCleansingTitle",
      "DCDataTransformTitle", "DCDataExportTitle", "SWUtilities", "DCListUtilityTitle", "DCGenFunctionUtilityTitle",
-     "DCGeocodeUtilityTitle", "DCDFSubsetUtilityTitle", "DCDFConcatUtilityTitle", "ScriptingMode", "DCDataScriptingTitle", "DCWorkingTitle",
+     "DCGeocodeUtilityTitle", "DCDFSubsetUtilityTitle", "ScriptingMode", "DCDataScriptingTitle", "DCWorkingTitle",
      "DCSystem", "DCDataImport", "DCDataImportCustom", "DCDataInspection", "DCDataCleansing", "DCDataTransform",
      "DCDataTransformAddCol", "DCDataExport", "DCDataExportCustom", "DCListUtility", "DCGenFunctionUtility",
-     "DCGenFunctionCodeCell", "DCGeocodeUtility", "DCDFSubsetUtility", "DCDFConcatUtility", "DCDataScripting", "DCWorking"
+     "DCGenFunctionCodeCell", "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking"
  ];
+
+ window.log_prefix = '[' + "dfcleanser" + ']';
 
  window.get_dfc_cellid_for_cell_id = function(cellid) {
      return (dfc_cell_ids[cellid]);
@@ -111,7 +111,7 @@
 
      var workingcell = get_cell_for_id(WORKING_CELL_ID);
      if (workingcell != null)
-         sync_notebook();
+         window.sync_notebook();
 
      window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
      window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
@@ -127,7 +127,6 @@
      window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
      window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
      window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0"));
-     window.run_code_in_cell(window.SW_UTILS_DFCONCAT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFCONCAT_LIB, "display_dfconcat_utility", "0"));
      window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
 
      if (workingcell != null)
@@ -219,6 +218,8 @@
  };
 
  window.select_before_cell = function(id) {
+
+     console.log("select_before_cell", id);
      var cell_to_select = window.get_cell_for_before_id(id);
      select_current_cell(cell_to_select);
  };
@@ -238,6 +239,10 @@
  // set the cell based on metadata 
  // -------------------------------------------------------
  window.select_cell_from_metadata = function(metadata, offset = 0) {
+
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     select_cell_from_metadata", metadata, offset);
+
      var cells = IPython.notebook.get_cells();
      var cellIndex = null;
 
@@ -277,10 +282,13 @@
                  IPython.notebook.select(cellIndex, true);
                  IPython.notebook.focus_cell();
                  cell.select(true);
+
+                 console.log("select_cell_from_text", text, cellIndex);
                  return (true);
              }
          }
      }
+     console.log("select_cell_from_text False", text);
      return (false);
  };
 
@@ -321,6 +329,8 @@
      if (runCell != null) {
          if (id == window.WORKING_CELL_ID) {
              runCode = WORKING_CELL + "- please do not remove" + NEW_LINE + code;
+             if (window.debug_dev_flag)
+                 console.log(log_prefix + "\n" + "     run_code_in_cell : ", runCode);
              run_code(runCell, runCode);
          } else { run_code(runCell, runCode); }
      } else { if (window.debug_dev_flag) console.log("  [Cell to run in not found]", id, code, id); }
@@ -364,7 +374,7 @@
  // -------------------------------------------------------
  window.add_dfc_cell = function(ctype, ctext, dfcid, afterid = -1) {
      if (window.debug_dev_flag)
-         console.log("\nadd_dfc_cell", ctype, ctext, dfcid, afterid);
+         console.log(log_prefix + "\n" + "     add_dfc_cell", ctype, ctext, dfcid, afterid);
 
      // if first cell to load find correct 
      // cell to start loading after
@@ -417,13 +427,30 @@
  }
 
  // -------------------------------------------------------
+ // delete the dfc cell
+ // ------------------------------------------------------
+ //   cell_to_delete - dfc cell to delete
+ // -------------------------------------------------------
+ window.delete_dfc_cell = function(cell_to_delete) {
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     delete_dfc_cell", cell_to_delete);
+
+     var cellid = select_cell_from_metadata(cell_to_delete);
+     //if (window.debug_dev_flag)
+     //    console.log(log_prefix + "\n" + "     delete_dfc_cell", cellid);
+
+     IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cellid));
+ }
+
+ // -------------------------------------------------------
  // delete the dfc chapter
  // ------------------------------------------------------
  //   chaptertitle - dfc chapter to delete
  // -------------------------------------------------------
  window.delete_dfc_chapter = function(chaptertitle) {
 
-     console.log("delete_dfc_chapter", chaptertitle);
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     delete_dfc_chapter", chaptertitle);
 
      var cell_to_delete = null;
      var next_cell = null;
@@ -436,22 +463,8 @@
          IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cell_to_delete));
      }
 
-     // delete the help cell 
-     cell_to_delete = next_cell;
-     select_current_cell(cell_to_delete);
-     next_cell = IPython.notebook.select_next().get_selected_cell();
-
-     var dfc_metadata = get_dfc_metadata(cell_to_delete);
-
-     if (dfc_metadata != undefined) {
-         dfcid = dfc_metadata["dfc_cellid"];
-         if (dfcid != undefined) {
-             if (containsSubstring(dfcid, "Help"))
-                 IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cell_to_delete));
-             else
-                 next_cell = cell_to_delete;
-         }
-     }
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     delete_dfc_chapter : delete title", cell_to_delete);
 
      // delete the code cell 
      cell_to_delete = next_cell;
@@ -469,7 +482,7 @@
      select_current_cell(cell_to_delete);
      next_cell = IPython.notebook.select_next().get_selected_cell();
 
-     dfc_metadata = get_dfc_metadata(cell_to_delete);
+     var dfc_metadata = get_dfc_metadata(cell_to_delete);
 
      if (dfc_metadata != undefined) {
          var dfcid = dfc_metadata["dfc_cellid"];
@@ -505,6 +518,7 @@
      }
  };
 
+
  window.WORKING_CODE_CELL = '# working cell- please do not remove';
  window.WORKING_TITLE_CELL = '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>';
  window.WORKING_BLANK_LINE = '<br></br>';
@@ -513,18 +527,18 @@
  // load dfcleanser cells from toolbar
  // ------------------------------------------------------
  window.load_dfcleanser_from_toolbar = function() {
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     load_dfcleanser_from_toolbar");
 
      add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
      add_dfc_cell(MARKDOWN, window.WORKING_TITLE_CELL, 'DCWorkingTitle', -1);
      add_dfc_cell(CODE, window.WORKING_CODE_CELL, 'DCWorking', -1);
      add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
 
-     window.getNotebookLocation();
-
-     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar"));
+     var nbname = IPython.notebook.get_notebook_name();
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar", JSON.stringify(nbname)));
 
  }
-
 
  // -------------------------------------------------------
  // unload dfcleanser cells
@@ -535,8 +549,8 @@
 
      while (ctry < max_trys) {
          if (get_num_dfcleanser_cells() > 0) {
-
-             console.log("unload_dfcleanser", ctry, get_num_dfcleanser_cells());
+             if (window.debug_dev_flag)
+                 console.log(log_prefix + "\n" + "     unload_dfcleanser", ctry, get_num_dfcleanser_cells());
              ctry++;
              delete_dfcleanser_cells();
          } else { ctry = max_trys; }
@@ -731,8 +745,6 @@
  // 
  window.get_input_form_parms = function(id) {
 
-     console.log("get_input_form_parms", id);
-
      var inputs = new Array();
      var ids = new Array();
 
@@ -837,11 +849,12 @@
  // ---------------------------------------------------
  // 
  window.onChangefileselect = function(inputid, fileid) {
-     if (window.debug_flag) {
-         console.log("[onChangefileselect]");
-         console.log("  [inputid] [", inputid, "] ", inputid.value);
-         console.log("  [inputid.id] [", inputid, "] ", inputid.id);
-         console.log("  [fileid ] [", fileid, "] ", fileid.value);
+
+     if (window.debug_dev_flag) {
+         console.log(log_prefix + "\n" + "     onChangefileselect");
+         console.log(log_prefix + "\n" + "     [inputid] [", inputid, "] ", inputid.value);
+         console.log(log_prefix + "\n" + "     [inputid.id] [", inputid, "] ", inputid.id);
+         console.log(log_prefix + "\n" + "     [fileid ] [", fileid, "] ", fileid.value);
      }
 
      if (inputid.id == "csvFileName")
@@ -868,9 +881,12 @@
  // get the current notebook location
  // 
  window.getNotebookLocation = function() {
+     console.log(log_prefix + "\n" + "    getNotebookLocation");
+
      window.getNotebookPath();
      window.getNotebookName();
  };
+
 
  //
  // get the current notebook name
@@ -891,9 +907,31 @@
  // get the current notebook path
  // 
  window.getNotebookPath = function() {
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     getNotebookPath");
+
      var code = "dcpath = %pwd" + NEW_LINE;
      code = code + "from dfcleanser.common.cfg import set_notebookPath" + NEW_LINE;
      code = code + "set_notebookPath(dcpath)";
+     if (window.get_cell_for_id(window.WORKING_CELL_ID) == null) {
+         window.add_dfc_cell(1, "# Temporary Working Cell", "DCWorking");
+         window.run_code_in_cell(window.WORKING_CELL_ID, code);
+         window.delete_output_cell(window.WORKING_CELL_ID);
+     } else {
+         window.run_code_in_cell(window.WORKING_CELL_ID, code);
+     }
+ };
+
+ window.getNotebookPathBeforeLoad = function() {
+     if (window.debug_dev_flag)
+         console.log(log_prefix + "\n" + "     getNotebookPathBeforeLoad");
+
+     var code = "dcpath = %pwd" + NEW_LINE;
+     code = code + "from dfcleanser.common.cfg import set_notebookPath" + NEW_LINE;
+     code = code + "set_notebookPath(dcpath)" + NEW_LINE;
+     code = code + "from dfcleanser.system.load import load_dfcleanser_cells" + NEW_LINE;
+     code = code + "load_dfcleanser_cells()";
+
      if (window.get_cell_for_id(window.WORKING_CELL_ID) == null) {
          window.add_dfc_cell(1, "# Temporary Working Cell", "DCWorking");
          window.run_code_in_cell(window.WORKING_CELL_ID, code);
@@ -931,6 +969,8 @@
      var cells = IPython.notebook.get_cells();
      var cell = window.empty_cell_id;
      var cellsloaded = [];
+     for (var j = 0; j < dfc_cell_ids.length; j++)
+         cellsloaded.push(0);
 
      // search through the cells 
      for (var i = 0; i < (IPython.notebook.ncells()); i++) {
@@ -941,23 +981,18 @@
 
          if (dfc_mdata != undefined) {
              if (dfc_mdata["dfc_cellid"] != "DCBlankline")
-                 cellsloaded.push(dfc_mdata["dfc_cellid"]);
+                 for (var k = 0; k < dfc_cell_ids.length; k++) {
+                     if (dfc_mdata["dfc_cellid"] == dfc_cell_ids[k])
+                         cellsloaded[k] = 1;
+                 }
          }
      }
 
-     var chaptersloaded = [];
+     //var chaptersloaded = [];
+     if (window.debug)
+         console.log(log_prefix + "\n" + "     cellsloaded", cellsloaded);
 
-     for (var i = 16; i < dfc_cell_ids.length; i++) {
-
-         var found = 0;
-         for (var j = 0; j < cellsloaded.length; j++) {
-             if (cellsloaded[j] == dfc_cell_ids[i])
-                 found = 1;
-         }
-         chaptersloaded.push(found);
-     }
-
-     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(chaptersloaded)));
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(cellsloaded)));
  };
 
 
@@ -1039,18 +1074,13 @@
  // display help section by dfc help id
  //
  window.sync_notebook = function() {
-     console.log("sync_notebook");
      var nbname = IPython.notebook.get_notebook_name();
-     console.log("nbname", nbname);
      var inputs = new Array();
      inputs.push(nbname);
 
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "sync_with_js", JSON.stringify(inputs)));
-     //window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.CFG_LIB, "reset_cfg_data"));
 
-
-
-     console.log("sync_notebook complete");
+     console.log(log_prefix + "\n" + "sync_notebook complete", nbname);
  };
 
 

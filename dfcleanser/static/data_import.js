@@ -92,12 +92,17 @@ function pandas_details_clear_callback(id) {
     window.scroll_to('DCDataImport');
 }
 
-function pandas_details_return_callback() {
+function pandas_details_return_callback(ownerid) {
     /**
      * Pandas Details Import return callback.
      */
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "1"));
-    window.scroll_to('DCDataImport');
+    if (ownerid == 0) {
+        window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "1"));
+        window.scroll_to('DCDataImport');
+    } else {
+        window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "1"));
+        window.scroll_to('DCDataExport');
+    }
 }
 
 function pandas_sql_import_callback(itype, dbid) {

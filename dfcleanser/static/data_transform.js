@@ -8,7 +8,7 @@
 
 const PROCESS = 0
 const RETURN = 1
-const HELP = 2
+    //const HELP = 2
 
 function transform_task_bar_callback(fid) {
     /**
@@ -25,6 +25,10 @@ function transform_task_bar_callback(fid) {
         case 4:
             var inputs = new Array();
             inputs.push([fid]);
+            var inputParms = window.get_input_form_parms("datatransformdf");
+            inputs.push(inputParms);
+            console.log("transform_task_bar_callback", inputs);
+
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0" + "," + JSON.stringify(inputs)));
             break;
         case 5:
@@ -73,9 +77,9 @@ function df_process_cmd_callback(optionId, fid) {
      *  fId          - function id
      */
     var opcode = PROCESS;
-    if ((fid >= 30) && (fid < 40)) {
-        opcode = HELP;
-    }
+    //if ((fid >= 30) && (fid < 40)) {
+    //    opcode = HELP;
+    //}
     switch (optionId) {
         case 0:
             if (fid == 2) { opcode = RETURN; }
@@ -181,8 +185,6 @@ function data_transform_add_cols_callback(optionId) {
     var inputs = new Array();
     var fparms = ["None", 2, optionId];
     inputs.push(fparms);
-    var dtvals = getradioValues("dtconvertdatatype");
-    if (dtvals != null) { inputs.push(dtvals); } else { inputs.push("-1") }
 
     var formid = "";
     switch (optionId) {
@@ -217,8 +219,10 @@ function data_transform_add_cols_callback(optionId) {
         case 2:
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataTransform');
             break;
         case 4:
+        case 5:
             window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
@@ -229,45 +233,22 @@ function data_transform_add_cols_callback(optionId) {
             window.scroll_to('DCDataTransform');
             break;
         case 14:
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
-            window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
-            var tcell = window.get_cell_for_id(window.TRANSFORM_TASK_BAR_ID);
-            window.select_cell(TRANSFORM_TASK_BAR_ID);
-
-            IPython.notebook.insert_cell_below('code');
-            var cell = IPython.notebook.select_next().get_selected_cell();
-            var celltext = "# add column code" + window.NEW_LINE;
-            celltext = celltext + "from dfcleanser.common.cfg import get_dfc_dataframe" + window.NEW_LINE;
-            celltext = celltext + "df = get_dfc_dataframe()" + window.NEW_LINE;
-            celltext = celltext + "from dfcleanser.data_transform.data_transform_columns_widgets import set_NewColumnValues" + window.NEW_LINE;
-            celltext = celltext + "NewColumnValues = []" + window.NEW_LINE;
-            celltext = celltext + "# Add your custom code here" + window.NEW_LINE + window.NEW_LINE + window.NEW_LINE;
-            celltext = celltext + "set_NewColumnValues(NewColumnValues)" + window.NEW_LINE;
-            cell.set_text(celltext);
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "1"));
+            window.scroll_to('DCGenFunctionUtility');
             break;
-        case 15:
-            var tcell = window.get_cell_for_id(window.TRANSFORM_ADD_COLUMN_ID);
-            if (tcell != null) {
-                var code = tcell.get_text();
-                if (code.indexOf("# add column code") != -1) {
-                    code = code.replace("# add column code", "# function title");
-                }
-                $('#addColumncode').val(code);
-            }
-            window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
-            break;
-        case 16:
-        case 17: // add new column from code
+        case 15: // add new column from code
             if (inputs.indexOf("# add column code") != -1) {
                 inputs = inputs.replace("# add column code", "");
             }
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataTransform');
             break;
         case 21:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataTransform');
             break;
     }
-    window.scroll_to('DCDataTransform');
+
 }
 
 function data_transform_add_cols_generic(funcid, gtid) {
@@ -358,6 +339,13 @@ function data_transform_cols_callback(funcid, optionId) {
             window.scroll_to('DCDataTransform');
             break;
         case 1:
+            var colname = $("#applyColumnname");
+            var applyinputs = [];
+            applyinputs.push([colname.val(), 35]);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
+            window.scroll_to('DCDataTransform');
+            break;
+        case 2:
             window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
@@ -430,7 +418,7 @@ function select_addcol_gen_function(genid) {
      *  genid       - generic function id
      */
     var inputs = new Array();
-    var fparms = ["None", 2, 18];
+    var fparms = ["None", 2, 16];
     inputs.push(fparms);
     inputs.push(genid);
     window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));

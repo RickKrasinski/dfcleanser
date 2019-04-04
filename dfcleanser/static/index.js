@@ -15,10 +15,10 @@ define([
 ], function(Jupyter, $, utils, dialog) {
 
     var log_prefix = '[' + "dfcleanser" + ']';
-    
-    Jupyter.notebook.events.on('notebook_renamed.Notebook',callback_notebook_renamed);
-    Jupyter.notebook.events.on('app_initialized.NotebookApp',callback_app_initialized);
-    Jupyter.notebook.events.on('notebook_loaded.Notebook',callback_notebook_loaded);
+
+    Jupyter.notebook.events.on('notebook_renamed.Notebook', callback_notebook_renamed);
+    Jupyter.notebook.events.on('app_initialized.NotebookApp', callback_app_initialized);
+    Jupyter.notebook.events.on('notebook_loaded.Notebook', callback_notebook_loaded);
 
     function load_buttons() {
         if (!Jupyter.toolbar) {
@@ -30,86 +30,87 @@ define([
             icon: 'fa-database',
             callback: toggle_dfcleanser
         }])
-        
+
         Jupyter.toolbar.add_buttons_group([{
             label: 'Reset',
             icon: 'fa-window-restore',
             callback: reset_dfcleanser
         }])
-        
-        
+
+
         // setup things to run on loading config/notebook
         //Jupyter.notebook.config.loaded
-            //.then(function update_options_from_config () {
-            //    $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
-            //}, function (reason) {
-            //    console.warn(log_prefix, 'error loading config:', reason);
-            //})
-            //.then(function () {
-            //    if (Jupyter.notebook._fully_loaded) {
-            //        callback_notebook_loaded();
-            //    }
-            //    events.on('notebook_loaded.Notebook', callback_notebook_loaded);
-            //}).catch(function (reason) {
-            //    console.error(log_prefix, 'unhandled error:', reason);
-            //});        
+        //.then(function update_options_from_config () {
+        //    $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
+        //}, function (reason) {
+        //    console.warn(log_prefix, 'error loading config:', reason);
+        //})
+        //.then(function () {
+        //    if (Jupyter.notebook._fully_loaded) {
+        //        callback_notebook_loaded();
+        //    }
+        //    events.on('notebook_loaded.Notebook', callback_notebook_loaded);
+        //}).catch(function (reason) {
+        //    console.error(log_prefix, 'unhandled error:', reason);
+        //});        
 
     }
-    
+
     //var options = { // updated from server's config & nb metadata
     //    run_on_kernel_ready: true,
     //};
-    
+
     function toggle_dfcleanser() {
-        
-        if(window.is_dfcleanser_loaded()){
+
+        if (window.is_dfcleanser_loaded()) {
+            console.log(log_prefix + "\n" + "toggle_dfcleanser : unload");
             window.unload_dfcleanser();
-        }
-        else{
+        } else {
+            console.log(log_prefix + "\n" + "toggle_dfcleanser : load");
             window.load_dfcleanser_from_toolbar();
         }
-        console.log(log_prefix + "\n" + "toggle_dfcleanser");
+
     }
 
     function reset_dfcleanser() {
-        if(window.is_dfcleanser_loaded()){
+        console.log(log_prefix + "\n" + "reset_dfcleanser");
+        if (window.is_dfcleanser_loaded()) {
             window.initialize_dc();
         }
-        console.log(log_prefix +  "\n" + "reset_dfcleanser");
     }
 
-    function callback_notebook_renamed(){
-        console.log(log_prefix +  "\n" + "callback_notebook_renamed");
-            
+    function callback_notebook_renamed() {
+        console.log(log_prefix + "\n" + "callback_notebook_renamed");
+
         // rename the config files
-        window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID,window.getJSPCode(window.SYSTEM_LIB,"display_system_environment","12"));
+        window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "12"));
     }
-       
+
     function callback_notebook_loaded() {
-        console.log(log_prefix +  "\n" + "callback_notebook_loaded");
+        console.log(log_prefix + "\n" + "callback_notebook_loaded");
     }
-    
+
     function callback_app_initialized() {
-        
-        console.log(log_prefix +  "\n" + "callback_app_initialized");    
-        if(window.is_dfcleanser_loaded()){
-        
+
+        console.log(log_prefix + "\n" + "callback_app_initialized");
+        if (window.is_dfcleanser_loaded()) {
+
             // reset the system chapter
-            window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID,window.getJSPCode(window.SYSTEM_LIB,"display_system_environment","0"));
+            window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
 
             // reset working chapter
             var workingcell = get_cell_for_id(WORKING_CELL_ID);
-            if(workingcell != null)
+            if (workingcell != null)
                 workingcell.set_text(WORKING_CELL + "- please do not remove");
-                window.delete_output_cell(window.WORKING_CELL_ID);
-         }
-        
+            window.delete_output_cell(window.WORKING_CELL_ID);
+        }
+
         // set the notebook name and path
         window.getNotebookLocation();
-                
+
         // set chapters loaded
         window.getdfCChaptersLoaded();
-    
+
     }
 
     function load_ipython_extension() {

@@ -95,33 +95,48 @@ function select_list(key) {
 // ------------------------------------------------------
 //
 
-function process_geomain_callback(fid) {
+function process_geoutils_callback(fid) {
     /**
      * geocodong main taskbar callback.
      *
      * Parameters:
      *  fid - function id
      */
-    console.log("process_geomain_callback", fid);
+    console.log("process_geoutils_callback", fid);
+
+    var inputId = "";
+
     switch (fid) {
-        case 0:
-        case 1:
-        case 5:
-        case 7:
-        case 11:
-        case 12:
-        case 27:
+        case 40:
+        case 41:
+        case 43:
+        case 45:
+        case 47:
+        case 49:
             window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid));
             window.scroll_to('DCGeocodeUtility');
             break;
-        case 3:
-        case 4:
-            var inId = "";
-            if (fid == 3) { inId = "addrconvertparmsid"; } else { inId = "coordconvertparmsid"; }
-            var inputs = window.get_input_form_parms(inId);
-            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid + "," + JSON.stringify(inputs)));
-            window.scroll_to('DCGeocodeUtility');
+        case 42:
+            inputId = "addrdist";
             break;
+        case 44:
+            inputId = "addrdfdist";
+            break;
+        case 46:
+            inputId = "addrcenter";
+            break;
+        case 48:
+            inputId = "addrdfcenter";
+            break;
+        case 50:
+            inputId = "bulktune";
+            break;
+    }
+
+    if (inputId != "") {
+        var inputs = window.get_input_form_parms(inputId);
+        window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid + "," + JSON.stringify(inputs)));
+        window.scroll_to('DCGeocodeUtility');
     }
 }
 
@@ -176,6 +191,9 @@ function select_geocoder(gcid) {
         case ("ArcGIS"):
             id = 0;
             break;
+        case ("Baidu"):
+            id = 1;
+            break;
         case ("Bing"):
             id = 2;
             break;
@@ -208,6 +226,9 @@ function select_bulk_geocoder(gcid) {
 
         case ("ArcGIS"):
             id = 0;
+            break;
+        case ("Baidu"):
+            id = 1;
             break;
         case ("Bing"):
             id = 2;
@@ -242,6 +263,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                     case 0:
                         id = "arcgisgeocoder";
                         break;
+                    case 1:
+                        id = "baidugeocoder";
+                        break;
                     case 2:
                         id = "binggeocoder";
                         break;
@@ -263,6 +287,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                     case 0:
                         id = "arcgisquery";
                         break;
+                    case 1:
+                        id = "baiduquery";
+                        break;
                     case 2:
                         id = "bingquery";
                         break;
@@ -283,6 +310,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                 switch (gcid) {
                     case 0:
                         id = "arcgisreverse";
+                        break;
+                    case 1:
+                        id = "baidureverse";
                         break;
                     case 2:
                         id = "bingreverse";
@@ -306,6 +336,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                     case 0:
                         id = "arcgisbatchgeocoder";
                         break;
+                    case 1:
+                        id = "baidubulkgeocoder";
+                        break;
                     case 2:
                         id = "bingbulkgeocoder";
                         break;
@@ -327,17 +360,14 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                     case 0:
                         id = "arcgisbatchquery";
                         break;
+                    case 1:
+                        id = "baidubulkquery";
+                        break;
                     case 2:
                         id = "bingbulkquery";
                         break;
                     case 7:
                         id = "googlebulkquery";
-                        break;
-                    case 9:
-                        id = "mapquestbulkquery";
-                        break;
-                    case 11:
-                        id = "nominatimbulkquery";
                         break;
                 }
                 break;
@@ -345,6 +375,12 @@ function get_geocode_form_id(gcid, gtype, gmode) {
             case (2):
 
                 switch (gcid) {
+                    case 1:
+                        id = "baidubulkreverse";
+                        break;
+                    case 2:
+                        id = "bingbulkreverse";
+                        break;
                     case 7:
                         id = "googlebulkreverse";
                         break;
@@ -465,31 +501,6 @@ function get_geocoding_table(tableid, gcid, gtype, gmode) {
     var inputs = [tableid, gcid, gtype, gmode, fparms];
 
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "6" + ", " + JSON.stringify(inputs)));
-    window.scroll_to('DCGeocodeUtility');
-}
-
-
-
-function process_addr_dist(fid) {
-    /**
-     * geocoder address processing.
-     *
-     * Parameters:
-     *  fid- function id
-     */
-    switch (fid) {
-        case 8:
-        case 10:
-            var fparms = get_input_form_parms("addrdist");
-            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid + ", " + JSON.stringify(fparms)));
-            break;
-        case 0:
-        case 5:
-        case 7:
-        case 9:
-            window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", fid));
-            break;
-    }
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -686,18 +697,51 @@ function report_geocode_run_error(cmd, msg) {
 // ------------------------------------------------------
 // dynamic html functions 
 // ------------------------------------------------------
-function gb_google_add_df_column(colid) {
-    var addr = $("#bgqaddress");
-    var addrtext = "";
-    if (addr.val().length > 0) { addrtext = addr.val() + " + " + colid; } else { addrtext = colid; }
-    addr.val(addrtext);
-}
+function bg_add_df_column(colid, addparms) {
 
-function gb_arcgis_add_df_column(colid) {
-    var addr = $("#baqaddress");
-    var addrtext = "";
-    if (addr.val().length > 0) { addrtext = addr.val() + " + " + colid; } else { addrtext = colid; }
-    addr.val(addrtext);
+    var coladdr = null;
+    var colval = null;
+    var parms = addparms.split(",");
+    var geocid = parseInt(parms[0]);
+    var geotype = parseInt(parms[1]);
+
+    switch (geocid) {
+        case 0:
+            if (geotype == 1) {
+                coladdr = $("#bagaddrcomps");
+            }
+            break;
+        case 2:
+            if (geotype == 1) {
+                coladdr = $("#bbqaddress");
+            } else {
+                coladdr = $("#bbrcolumnname");
+            }
+            break;
+        case 7:
+            if (geotype == 1) {
+                coladdr = $("#bgqaddress");
+            } else {
+                coladdr = $("#bgrcolumnname");
+            }
+            break;
+    }
+
+    if (coladdr.val() != null) {
+        var colval = coladdr.val();
+        var newcolval = ""
+        if (geotype == 1) {
+            if (colval.length > 0) { newcolval = colval + " + " + colid; } else { newcolval = colid; }
+        } else {
+            if (colval.length > 0) {
+                var endlist = colval.indexOf("]");
+                var collist = colval.slice(0, endlist);
+                newcolval = collist + ", " + colid + "]";
+            } else { newcolval = "[" + colid + "]"; }
+        }
+
+        coladdr.val(newcolval);
+    }
 }
 
 function gb_select_language(lang) {
@@ -724,22 +768,27 @@ function gbr_google_add_addrcomp(addrcomp) {
 
     console.log("gbr_google_add_addrcomp", addrcomp);
     var acomps = $("#bgraddresscomponents");
+    var colnames = $('#bgrcolumnnames');
+
     var aval = acomps.val();
+    var cval = colnames.val();
 
     if (aval != undefined) {
         if (aval.length > 0) {
 
-            var enddict = aval.indexOf("}");
-            var adict = aval.slice(0, enddict);
-            adict = adict + ", '" + addrcomp + "': '" + addrcomp + "'}";
+            var enddict = aval.indexOf("]");
+            var alist = aval.slice(0, enddict);
+            alist = alist + ", " + addrcomp + "]";
+
         } else {
-            var adict = "{'" + addrcomp + "': '" + addrcomp + "'}";
+            var alist = "[" + addrcomp + "]";
         }
     } else {
-        var adict = "{'" + addrcomp + "': '" + addrcomp + "'}";
+        var alist = "[" + addrcomp + "]";
     }
-    console.log("adict", adict);
-    acomps.val(adict.toString());
+
+    acomps.val(alist.toString());
+    colnames.val(alist.toString());
 }
 
 function gbr_add_location_type(loctype) {
@@ -1051,36 +1100,100 @@ function generic_function_callback(fid) {
      *  fid - function id
      */
 
+    console.log("generic_function_callback", fid);
     var inputs = new Array();
     switch (fid) {
         case 0:
-            inputs.push(0)
+
             window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+
+            var tcell = window.get_cell_for_id(window.SW_UTILS_GENFUNC_TASK_BAR_ID);
+            window.select_cell(SW_UTILS_GENFUNC_TASK_BAR_ID);
 
             IPython.notebook.insert_cell_below('code');
             var cell = IPython.notebook.select_next().get_selected_cell();
 
-            var code = "# generic function code cell" + NEW_LINE
+            var code = "def dfcleanser_generic_function(parm1, parm2) : " + window.NEW_LINE;
+            code = code + '    """' + window.NEW_LINE;
+            code = code + "    * ------------------------------------------------------------------------" + window.NEW_LINE;
+            code = code + "    * function : description" + window.NEW_LINE;
+            code = code + "    *" + window.NEW_LINE;
+            code = code + "    * parms :" + window.NEW_LINE;
+            code = code + "    *  parm1   - description" + window.NEW_LINE;
+            code = code + "    *  parm2   - description" + window.NEW_LINE;
+            code = code + "    *" + window.NEW_LINE;
+            code = code + "    * returns :" + window.NEW_LINE;
+            code = code + "    *     description" + window.NEW_LINE;
+            code = code + "    *" + window.NEW_LINE;
+            code = code + "    * Notes :" + window.NEW_LINE;
+            code = code + "    *    dfcleanser generic function" + window.NEW_LINE;
+            code = code + "    * -------------------------------------------------------------------------" + window.NEW_LINE;
+            code = code + '    """' + window.NEW_LINE;
             cell.set_text(code);
 
             // add the cellid metadata
             var dfcellDict = { "dfc_cellid": "DCGenFunctionCodeCell" };
-            var dfcleanserDict = { "dfcleanser_metadata": dfcellDict };
-            var newcellDict = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
+            //var dfcleanserDict = { "dfcleanser_metadata": dfcellDict };
+            //var newcellDict = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
             cell.metadata = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
+
+            inputs.push(0, [code])
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+
             break;
+
         case 1:
+            var codecell = get_cell_for_id(window.SW_UTILS_GENFUNC_CODECELL_ID);
+            window.select_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
+            console.log("codecell", codecell)
+            if (codecell != null) {
+                var codecelltext = codecell.get_text();
+                console.log("codecelltext", codecelltext)
+            } else {
+                var codecelltext = "";
+            }
+
+            window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
+
+            var gtmodule = $('#gtmodule').val();
+            if (gtmodule == null) gtmodule = "";
+            var gttitle = $('#gttitle').val();
+            if (gttitle == null) gttitle = "";
+
+            inputs.push(fid, gtmodule, gttitle, codecelltext);
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+            break;
+
         case 2:
-        case 3:
+
             var fparms = get_input_form_parms("genfuncform");
             inputs.push(fid, fparms);
             window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
             break;
+
+        case 3:
         case 4:
+
+            var gtmodule = $('#gtmodule').val();
+            if (gtmodule == null) gtmodule = "";
+            var gttitle = $('#gttitle').val();
+            if (gttitle == null) gttitle = "";
+
+            inputs.push(fid, gtmodule, gttitle);
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+            break;
+
+        case 5:
             window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
             window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
             break;
+
+        case 7:
+            inputs.push(fid);
+            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+            break;
+
+
     }
     window.scroll_to('DCGenFunctionUtility');
 }
@@ -1112,7 +1225,7 @@ function select_gen_function(genid) {
      *  genid - gen function id
      */
     var inputs = new Array();
-    inputs.push(5, genid);
+    inputs.push(6, genid);
     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2," + JSON.stringify(inputs)));
     window.scroll_to('DCGenFunctionUtility');
 }
