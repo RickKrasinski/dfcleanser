@@ -17,7 +17,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_import.data_import_model as dim
 
 from dfcleanser.common.html_widgets import (maketextarea, get_button_tb_form, 
-                                            get_input_form, display_composite_form, get_html_spaces,
+                                            get_input_form, display_composite_form,
                                             opStatus, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
@@ -696,10 +696,29 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                     dbutils.display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),conparms,dbutils.SQL_QUERY)
                 
             else :
+                
                 pandas_input_form  =   get_pandas_import_input_form(detid)
                 
-                display_composite_form([get_input_form(pandas_input_form,
-                                                       get_pandas_import_input_title(detid))])
+                pandas_input_form.set_gridwidth(720)
+                pandas_input_form.set_custombwidth(120)
+    
+                pandas_input_html = ""
+                pandas_input_html = pandas_input_form.get_html() 
+    
+                pandas_input_heading_html =   "<div>" + get_pandas_import_input_title(detid) + "</div>"
+
+                gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                gridhtmls       =   [pandas_input_heading_html,pandas_input_html]
+
+                #print("\n")
+                display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
+                
+                
+                
+                
+                
+                #display_composite_form([get_input_form(pandas_input_form,
+                #                                       get_pandas_import_input_title(detid))])
                 
         else :
  
@@ -1206,7 +1225,7 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
         import_sql_input_html = ""
         import_sql_input_html = pandas_import_sqltable_form.get_html()
         
-        import_sql_heading_html     =   "<p>" + get_html_spaces(11) + get_pandas_import_input_title(dim.SQLTABLE_IMPORT,dbid) + "</p>"
+        import_sql_heading_html     =   "<div>" + get_pandas_import_input_title(dim.SQLTABLE_IMPORT,dbid) + "</div>"
 
     else :
         
@@ -1228,7 +1247,7 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
         import_sql_input_html = ""
         import_sql_input_html = import_sql_input_form.get_html()
         
-        import_sql_heading_html     =   "<p>" + get_html_spaces(11) + get_pandas_import_input_title(dim.SQLQUERY_IMPORT,dbid) + "</p>"
+        import_sql_heading_html     =   "<div>" + get_pandas_import_input_title(dim.SQLQUERY_IMPORT,dbid) + "</div>"
     
     if( not (importparms == None) ) :
         inparms = get_parms_for_input(importparms,pandas_import_sqltable_common_idList)
@@ -1247,18 +1266,6 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
     
     display_generic_grid("data-import-sql-table-wrapper",gridclasses,gridhtmls)
     
-    #else :
-
-    #    gridclasses     =   ["geocode-final-header",
-    #                         "dfc-left",
-    #                         "dfc-right"]
-    
-    #    gridhtmls       =   [import_sql_heading_html,
-    #                         listHtml,
-    #                         import_sql_input_html]
-    
-    #    display_generic_grid("data-import-sql-table-wrapper",gridclasses,gridhtmls)
-        
     if( not (opstat.get_status())) :
         display_exception(opstat)
 
