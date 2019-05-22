@@ -76,8 +76,10 @@ function pandas_details_import_callback(id) {
 
     // get the input values
     var importVals = get_input_form_parms(formid);
+    console.log("pandas_details_import_callback");
     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", id + ", " + importVals));
-    reset_dependents([false, true, true, true, true, true]);
+    if (get_dfc_mode() == 0)
+        reset_dependents([false, true, true, true, true, true]);
     window.scroll_to('DCDataImport');
 }
 
@@ -150,66 +152,17 @@ function custom_import_callback(fid) {
      */
 
     switch (fid) {
-        case 0:
-            window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", 3));
-
-            IPython.notebook.insert_cell_below('code');
-            var cell = IPython.notebook.select_next().get_selected_cell();
-
-            var code = "# custom import" + NEW_LINE +
-                "df = None" + NEW_LINE + NEW_LINE +
-                "from dfcleanser.common.cfg import set_current_dfc_dataframe" + NEW_LINE +
-                "set_current_dfc_dataframe(df)";
-
-            window.run_code(cell, code);
-            break;
-        case 1:
+        case 8:
+        case 9:
             var inputs = new Array();
             inputs.push(fid)
 
-            var parms = new Array();
-            var ids = ["customImportCode"];
-            var code = document.getElementById("customImportCode").value;
-            if (code.indexOf("# custom import") != -1) {
-                code = code.replace("# custom import\n", "");
-            }
-
-            parms.push(ids);
-            parms.push([code]);
-            inputs.push(JSON.stringify(parms));
-
-            window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", "7," + JSON.stringify(inputs)));
-            break;
-        case 2:
-            var inputs = new Array();
-            inputs.push(fid);
-
-            var parms = new Array();
-            var ids = ["customImportCode"];
-            var custom_cell = window.get_cell_for_id(IMPORT_CUSTOM_CODE_ID);
-            var custom_code = custom_cell.get_text();
-            if (custom_code.indexOf("# custom import") != -1) {
-                custom_code = custom_code.replace("# custom import\n", "");
-            }
-
-            parms.push(ids);
-            parms.push([custom_code]);
+            var parms = get_input_form_parms("customImport");
             inputs.push(JSON.stringify(parms));
 
             window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", "7," + JSON.stringify(inputs)));
             break;
-        case 3:
-            var inputs = new Array();
-            inputs.push(fid);
-
-            window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", "7," + JSON.stringify(inputs)));
-            break;
-        case 4:
-
-            window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
+        case 10:
             window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", 0));
             break;
     }
@@ -269,14 +222,25 @@ function pandas_details_get_columns_callback() {
     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_columns", sqlinputparms));
 }
 
-function pandas_details_get_strftime_callback() {
+function pandas_details_get_strftime_callback(sqltype) {
     /**
      * get format time list callback.
      */
     var sqlinputparms = [];
-    sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_datetimeformats", sqlinputparms));
+
+    if (sqltype == 0)
+        sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
+    else
+        sqlinputparms = window.get_input_form_parms("importPandasSQLQuery");
+
+    var inputs = new Array();
+    inputs.push(sqltype);
+    inputs.push(sqlinputparms);
+
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_datetimeformats", sqltype + ", " + sqlinputparms));
+
     window.scroll_to('DCDataImport');
+
 }
 
 function select_db(dblibid) {
@@ -307,7 +271,13 @@ function select_table(tablename) {
      *  tablename - table name
      */
     var table_name = $("#sqltablecommontableName");
-    table_name.val(tablename);
+
+    var inputs = [
+        ["sqltablecommontableName"],
+        [table_name.val()]
+    ]
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_columns", JSON.stringify(inputs)));
+    window.scroll_to('DCDataImport');
 }
 
 function select_column(columnname) {
@@ -317,7 +287,50 @@ function select_column(columnname) {
      * Parameters:
      *  columnname - column name
      */
+
     var column = $("#sqltablecommoncolumns");
+    if (column.val() == "") {
+        column.val("[" + columnname + "]");
+    } else {
+        var slen = column.val().length;
+        var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
+        column.val(newstring);
+    }
+}
+
+function select_date_column(columnname) {
+
+    var selected_format = $('#sqltablecommonparsedateformats option:selected').val();
+
+    if (selected_format == "None") {
+        var column = $("#sqltablecommonparsedates");
+        if (column.val() == "") {
+            column.val("[" + columnname + "]");
+        } else {
+            var slen = column.val().length;
+            var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
+            column.val(newstring);
+        }
+    } else {
+        var column = $("#sqltablecommonparsedates");
+        if (column.val() == "") {
+            column.val("{" + columnname + ":" + selected_format + "}");
+        } else {
+            var slen = column.val().length;
+            var newstring = column.val().substr(0, slen - 1) + ", " + columnname + ":" + selected_format + "}";
+            column.val(newstring);
+        }
+    }
+
+}
+
+function select_dtformat(columnname) {
+    console.log("select_dtformat", columnname);
+
+    var column = $("#sqltablecommonparsedates");
+    if (column == null)
+        column = $("#sqlquerycommonparsedates");
+
     if (column.val() == "") {
         console.log("empty")
         column.val("[" + columnname + "]");
@@ -326,6 +339,7 @@ function select_column(columnname) {
         var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
         column.val(newstring);
     }
+
 }
 
 function pandas_import_sql_callback(fid) {

@@ -17,6 +17,7 @@ function transform_task_bar_callback(fid) {
      * Parameters:
      *  fid - function id
      */
+
     switch (fid) {
         case 0:
         case 1:
@@ -76,10 +77,9 @@ function df_process_cmd_callback(optionId, fid) {
      *  optionId     - option id
      *  fId          - function id
      */
+
     var opcode = PROCESS;
-    //if ((fid >= 30) && (fid < 40)) {
-    //    opcode = HELP;
-    //}
+
     switch (optionId) {
         case 0:
             if (fid == 2) { opcode = RETURN; }
@@ -149,6 +149,7 @@ function cols_transform_tb_callback(fid) {
      * Parameters:
      *  fId          - function id
      */
+
     switch (fid) {
         case 0:
         case 1:
@@ -243,6 +244,10 @@ function data_transform_add_cols_callback(optionId) {
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataTransform');
             break;
+        case 17: // add new column from code display gen functions
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataTransform');
+            break;
         case 21:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataTransform');
@@ -259,6 +264,7 @@ function data_transform_add_cols_generic(funcid, gtid) {
      *  funcid       - function id
      *  gtid         - generic type id
      */
+
     var inputs = new Array();
     var fparms = ["None", 2, funcid];
     inputs.push(fparms);
@@ -281,6 +287,8 @@ function data_transform_cols_callback(funcid, optionId) {
      *  funcid       - function id
      *   optionId    - option id
      */
+
+    console.log("data_transform_cols_callback", funcid, optionId);
     var inputs = new Array();
     var element = document.getElementById("ucolscolumnname");
     if (element != null) { inputs.push(element.value); } else { inputs.push("None"); }
@@ -355,6 +363,14 @@ function data_transform_cols_callback(funcid, optionId) {
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", 11 + "," + JSON.stringify("[0]")));
             break;
+        case 8:
+            var colname = $("#applyColumnname");
+            var applyinputs = [];
+            applyinputs.push([colname.val(), 36]);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
+            window.scroll_to('DCDataTransform');
+            break;
+
     }
 }
 
@@ -417,6 +433,7 @@ function select_addcol_gen_function(genid) {
      * Parameters:
      *  genid       - generic function id
      */
+
     var inputs = new Array();
     var fparms = ["None", 2, 16];
     inputs.push(fparms);
@@ -454,6 +471,7 @@ function display_map_inputs_callback(colId) {
      * Parameters:
      *  optionId    - option id
      */
+
     var fparms = [5];
     var cparms = colId;
     var inputs = new Array();
@@ -471,6 +489,7 @@ function dtctcol(colid, option) {
      *  colid    - column id
      *  option   - option
      */
+
     if (option == 30) { var fparms = ["3", colid, option]; } else { var fparms = [colid, option]; }
     var inputs = new Array();
     inputs.push(fparms);
@@ -581,6 +600,7 @@ function process_datetime_format_transform_callback(fid) {
      * Parameters:
      *  fid    - function id
      */
+
     switch (fid) {
         case 0:
             var inputs = new Array();
@@ -594,7 +614,11 @@ function process_datetime_format_transform_callback(fid) {
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "14" + "," + JSON.stringify(inputs)));
             break;
         case 1:
-            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_datetime_formats", "0"));
+            var inputs = new Array();
+            inputs.push(0);
+            inputs.push(3);
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "13" + "," + JSON.stringify(inputs)));
             break;
         case 2:
             var formatstring = $("#formatstring");
@@ -603,6 +627,13 @@ function process_datetime_format_transform_callback(fid) {
         case 3:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
             break;
+        case 4:
+            var inputs = new Array();
+            inputs.push(0);
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "13" + "," + JSON.stringify(inputs)));
+            break;
+
     }
     window.scroll_to('DCDataTransform');
 }
@@ -656,12 +687,11 @@ function process_datetime_tdelta_callback(optionId) {
      * Parameters:
      *  colname  - column name
      */
+
     switch (optionId) {
         case 0:
             var inputs = new Array();
             inputs.push(optionId);
-            var unitsValue = getradioValues("timedeltaselect");
-            inputs.push(unitsValue);
             var formatVals = get_input_form_parms("datetimetdeltainput");
             inputs.push(formatVals);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "15" + "," + JSON.stringify(inputs)));
@@ -691,6 +721,7 @@ function process_datetime_merge_split_callback(optionId, funcid) {
      *  optionId  - option
      *  funcid    - function id
      */
+
     switch (optionId) {
         case 0:
             var inputs = new Array();
@@ -807,6 +838,20 @@ function select_datetime_dt(dtid) {
     if (dtid == 1) dttype.val("datetime.date");
     if (dtid == 2) dttype.val("datetime.time");
     if (dtid == 3) dttype.val("datetime.timedelta");
+}
+
+
+function dtselect_dropna_change(dropid) {
+
+    var dropflag = $("#dtdropflag");
+
+    if (dropflag.val() == "True") {
+        $("#dtfilmethod").prop('disabled', true);
+        $("#dtfillna").prop('disabled', true);
+    } else {
+        $("#dtfilmethod").prop('disabled', false);
+        $("#dtfillna").prop('disabled', false);
+    }
 }
 
 /*

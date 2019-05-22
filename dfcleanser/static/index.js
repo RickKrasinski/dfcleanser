@@ -1,8 +1,11 @@
 define([
-    'base/js/namespace',
+    'require',
     'jquery',
+    'base/js/namespace',
     'base/js/utils',
     'base/js/dialog',
+    'base/js/events',
+    'notebook/js/codecell',
     './js_utils',
     './data_cleansing',
     './data_export',
@@ -11,8 +14,11 @@ define([
     './data_scripting',
     './data_transform',
     './sw_utilities',
-    './system'
-], function(Jupyter, $, utils, dialog) {
+    './system',
+    './pop_up_cell'
+], function(requirejs, $, Jupyter, utils, dialog, events, codecell) {
+
+    "use strict";
 
     var log_prefix = '[' + "dfcleanser" + ']';
 
@@ -20,56 +26,60 @@ define([
     Jupyter.notebook.events.on('app_initialized.NotebookApp', callback_app_initialized);
     Jupyter.notebook.events.on('notebook_loaded.Notebook', callback_notebook_loaded);
 
+    var CodeCell = codecell.CodeCell;
+
     function load_buttons() {
         if (!Jupyter.toolbar) {
             $([Jupyter.notebook.events]).on("app_initialized.NotebookApp", place_button);
             return;
         }
         Jupyter.toolbar.add_buttons_group([{
-            label: 'Load/Unload',
-            icon: 'fa-database',
+            label: 'dfc',
+            icon: 'fa-table',
             callback: toggle_dfcleanser
         }])
 
-        Jupyter.toolbar.add_buttons_group([{
-            label: 'Reset',
-            icon: 'fa-window-restore',
-            callback: reset_dfcleanser
-        }])
+        //Jupyter.toolbar.add_buttons_group([{
+        //    label: 'Reset dfc',
+        //    icon: 'fa-window-restore',
+        //    callback: reset_dfcleanser
+        //}])
 
-
-        // setup things to run on loading config/notebook
-        //Jupyter.notebook.config.loaded
-        //.then(function update_options_from_config () {
-        //    $.extend(true, options, Jupyter.notebook.config.data[mod_name]);
-        //}, function (reason) {
-        //    console.warn(log_prefix, 'error loading config:', reason);
-        //})
-        //.then(function () {
-        //    if (Jupyter.notebook._fully_loaded) {
-        //        callback_notebook_loaded();
-        //    }
-        //    events.on('notebook_loaded.Notebook', callback_notebook_loaded);
-        //}).catch(function (reason) {
-        //    console.error(log_prefix, 'unhandled error:', reason);
-        //});        
+        setup_popupcodecell();
 
     }
-
-    //var options = { // updated from server's config & nb metadata
-    //    run_on_kernel_ready: true,
-    //};
 
     function toggle_dfcleanser() {
 
         if (window.is_dfcleanser_loaded()) {
-            console.log(log_prefix + "\n" + "toggle_dfcleanser : unload");
-            window.unload_dfcleanser();
+            if (get_dfc_mode() == 1) {
+                if (is_pop_up_visible()) {
+                    console.log(log_prefix + "\n" + "     toggle_dfcleanser : unload");
+                    toggle_popupcodecell();
+                    window.unload_dfcleanser();
+                } else {
+                    toggle_popupcodecell();
+                }
+            } else {
+                console.log(log_prefix + "\n" + "     toggle_dfcleanser : unload");
+                window.unload_dfcleanser();
+            }
         } else {
-            console.log(log_prefix + "\n" + "toggle_dfcleanser : load");
-            window.load_dfcleanser_from_toolbar();
-        }
 
+            var dfcmode = 0;
+
+            if (window.confirm("Load dfcleanser Inline?")) {
+                console.log(log_prefix + "\n" + "     toggle_dfcleanser : load inline");
+            } else {
+                if (window.confirm("Load dfcleanser as PopUp?")) {
+                    console.log(log_prefix + "\n" + "     toggle_dfcleanser : load as popup");
+                    dfcmode = 1;
+                }
+            }
+
+            set_dfcmode(dfcmode);
+            window.load_dfcleanser_from_toolbar(dfcmode);
+        }
     }
 
     function reset_dfcleanser() {
@@ -80,19 +90,22 @@ define([
     }
 
     function callback_notebook_renamed() {
-        console.log(log_prefix + "\n" + "callback_notebook_renamed");
+        if (window.debug_detail_flag)
+            console.log(log_prefix + "\n" + "callback_notebook_renamed");
 
         // rename the config files
         window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "12"));
     }
 
     function callback_notebook_loaded() {
-        console.log(log_prefix + "\n" + "callback_notebook_loaded");
+        if (window.debug_detail_flag)
+            console.log(log_prefix + "\n" + "callback_notebook_loaded");
     }
 
     function callback_app_initialized() {
+        if (window.debug_detail_flag)
+            console.log(log_prefix + "\n" + "callback_app_initialized");
 
-        console.log(log_prefix + "\n" + "callback_app_initialized");
         if (window.is_dfcleanser_loaded()) {
 
             // reset the system chapter
@@ -114,7 +127,21 @@ define([
     }
 
     function load_ipython_extension() {
+        // add css
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = requirejs.toUrl("./dfcleanser.css");
+        document.getElementsByTagName("head")[0].appendChild(link);
+
         load_buttons();
+
+        if (Jupyter.notebook.kernel) {
+            sync_notebook();
+        } else {
+            events.on('kernel_ready.Kernel', sync_notebook);
+        }
+
     }
 
     return {

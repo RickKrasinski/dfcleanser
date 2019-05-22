@@ -8,7 +8,7 @@
  // 
  //
  window.debug_flag = true;
- window.debug_dev_flag = true;
+ window.debug_detail_flag = false;
 
  window.NEW_LINE = "\n";
 
@@ -57,21 +57,24 @@
  window.DC_WORKING_ID = 14;
 
  window.SYSTEM_TASK_BAR_ID = 15;
- window.IMPORT_TASK_BAR_ID = 16;
- window.IMPORT_CUSTOM_CODE_ID = 17;
- window.INSPECTION_TASK_BAR_ID = 18;
- window.CLEANSING_TASK_BAR_ID = 19;
- window.TRANSFORM_TASK_BAR_ID = 20;
- window.TRANSFORM_ADD_COLUMN_ID = 21;
- window.EXPORT_TASK_BAR_ID = 22;
- window.EXPORT_CUSTOM_CODE_ID = 23;
- window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 24;
- window.SW_UTILS_GENFUNC_TASK_BAR_ID = 25;
- window.SW_UTILS_GENFUNC_CODECELL_ID = 26;
- window.SW_UTILS_GEOCODE_TASK_BAR_ID = 27;
- window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 28;
- window.SCRIPT_TASK_BAR_ID = 29;
- window.WORKING_CELL_ID = 30;
+ window.SYSTEM_ADD_DF_ID = 16;
+ window.IMPORT_TASK_BAR_ID = 17;
+ window.IMPORT_CUSTOM_CODE_ID = 18;
+ window.INSPECTION_TASK_BAR_ID = 19;
+ window.CLEANSING_TASK_BAR_ID = 20;
+ window.TRANSFORM_TASK_BAR_ID = 21;
+ window.TRANSFORM_ADD_COLUMN_ID = 22;
+ window.EXPORT_TASK_BAR_ID = 23;
+ window.EXPORT_CUSTOM_CODE_ID = 24;
+ window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 25;
+ window.SW_UTILS_GENFUNC_TASK_BAR_ID = 26;
+ window.SW_UTILS_GENFUNC_CODECELL_ID = 27;
+ window.SW_UTILS_GEOCODE_TASK_BAR_ID = 28;
+ window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 29;
+ window.SCRIPT_TASK_BAR_ID = 30;
+ window.WORKING_CELL_ID = 31;
+
+ window.POPUP_CELL_ID = 32;
 
  const DC_BLANK_LINE_ID = 1000;
 
@@ -83,66 +86,62 @@
 
  window.empty_cell_id = null;
 
+
+ window.log_prefix = '[' + "dfcleanser" + ']';
+
+
  var dfc_cell_ids = ["PandasdfcleanserTitle", "DCSystemTitle", "DCDataImportTitle", "DCDataInspectionTitle", "DCDataCleansingTitle",
      "DCDataTransformTitle", "DCDataExportTitle", "SWUtilities", "DCListUtilityTitle", "DCGenFunctionUtilityTitle",
      "DCGeocodeUtilityTitle", "DCDFSubsetUtilityTitle", "ScriptingMode", "DCDataScriptingTitle", "DCWorkingTitle",
-     "DCSystem", "DCDataImport", "DCDataImportCustom", "DCDataInspection", "DCDataCleansing", "DCDataTransform",
+     "DCSystem", "DCSystemAdddf", "DCDataImport", "DCDataImportCustom", "DCDataInspection", "DCDataCleansing", "DCDataTransform",
      "DCDataTransformAddCol", "DCDataExport", "DCDataExportCustom", "DCListUtility", "DCGenFunctionUtility",
-     "DCGenFunctionCodeCell", "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking"
+     "DCGenFunctionCodeCell", "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
  ];
 
- window.log_prefix = '[' + "dfcleanser" + ']';
+ window.WORKING_CODE_CELL = '# working cell- please do not remove';
+ window.WORKING_TITLE_CELL = '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>';
+ window.WORKING_BLANK_LINE = '<br></br>';
+
+
+ //
+ // ---------------------------------------------------
+ // ---------------------------------------------------
+ //               cell control functions 
+ // ---------------------------------------------------
+ // ---------------------------------------------------
+ //
+
+ /*
+  *
+  *  get dfc cell pointed to by dfc id 
+  * 
+  *  @function get_dfc_cellid_for_cell_id 
+  * 
+  *    @param : cellId - cell id to select
+  * 
+  */
 
  window.get_dfc_cellid_for_cell_id = function(cellid) {
      return (dfc_cell_ids[cellid]);
  };
 
- //
- // ---------------------------------------------------
- // dataframe cleanser initialization method
- // ---------------------------------------------------
- //
- window.initialize_dc = function() {
-
-     // get the current cells 
-     var cells = IPython.notebook.get_cells();
-     var cellText = "";
-     var nbbcellId = null;
-
-     var workingcell = get_cell_for_id(WORKING_CELL_ID);
-     if (workingcell != null)
-         window.sync_notebook();
-
-     window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
-     window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
-     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
-     window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
-     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
-     window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
-     window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
-     window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-     window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
-     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
-     window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
-     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
-     window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0"));
-     window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
-
-     if (workingcell != null)
-         workingcell.set_text(WORKING_CELL + "- please do not remove");
- };
-
- // -------------------------------------------------------
- // get notebook cell object for the logical cell id
- // ------------------------------------------------------
- //      cellId - logical cell index
- //      return : notebook cell object for logical id
- // -------------------------------------------------------
+ /*
+  *
+  *  get cell pointed to by logical id 
+  * 
+  *  @function get_cell_for_id
+  * 
+  *    @param : cellId - cell id to select
+  * 
+  */
  window.get_cell_for_id = function(cellId) {
      // get the current cells 
      var cells = IPython.notebook.get_cells();
      var cell = null;
+
+     if (cellId == POPUP_CELL_ID) {
+         return (get_popupcodecell());
+     }
 
      // search through the cells 
      for (var i = 0; i < (IPython.notebook.ncells()); i++) {
@@ -154,8 +153,11 @@
              // get the cell metadata 
              var cell_mdata = cell.metadata;
 
+
+
              if (cell_mdata != undefined) {
                  if ("dfcleanser_metadata" in cell_mdata) {
+
                      var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
                      if ("dfc_cellid" in dfc_cell_mdata) {
                          var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
@@ -170,12 +172,15 @@
      return (cell);
  };
 
- // -------------------------------------------------------
- // get notebook cell object before the logical cell id
- // ------------------------------------------------------
- //      cellId - logical cell index
- //      return : notebook cell object for logical id
- // -------------------------------------------------------
+ /*
+  *
+  *  get cell before cell pointed to by logical id 
+  * 
+  *  @function get_cell_for_before_id
+  * 
+  *    @param : cellId - cell id to select
+  * 
+  */
  window.get_cell_for_before_id = function(cellId) {
 
      // get the current cells 
@@ -208,26 +213,48 @@
      return (cell);
  };
 
- // -------------------------------------------------------
- // set the cell pointed to by logical id 
- // as the currently selected ipyhton cell with focus
- // -------------------------------------------------------
+ /*
+  *
+  *  select cell pointed to by logical id 
+  * 
+  *  @function select_cell
+  * 
+  *    @param : id - cell id to select
+  * 
+  */
  window.select_cell = function(id) {
      var cell_to_select = window.get_cell_for_id(id);
      select_current_cell(cell_to_select);
  };
 
+
+ /*
+  *
+  *  selectthe cell before cell pointed to by logical id 
+  * 
+  *  @function select_before_cell
+  * 
+  *    @param : id - cell id to select
+  * 
+  */
  window.select_before_cell = function(id) {
 
-     console.log("select_before_cell", id);
+     if (window.debug_detail_flag)
+         console.log("select_before_cell", id);
      var cell_to_select = window.get_cell_for_before_id(id);
      select_current_cell(cell_to_select);
  };
 
- // -------------------------------------------------------
- // set the cell pointed to by logical id 
- // as the currently selected ipyhton cell with focus
- // -------------------------------------------------------
+ /*
+  *
+  *  set the cell pointed to by logical id 
+  *  as the currently selected ipyhton cell with focus
+  * 
+  *  @function select_current_cell
+  * 
+  *  @param : cell_to_select - cell to focus
+  * 
+  */
  window.select_current_cell = function(cell_to_select) {
      var cellIndex = IPython.notebook.find_cell_index(cell_to_select);
      IPython.notebook.select(cellIndex, true);
@@ -235,12 +262,18 @@
      cell_to_select.select(true);
  };
 
- // -------------------------------------------------------
- // set the cell based on metadata 
- // -------------------------------------------------------
+ /*
+  *
+  *  select cell from its metadata
+  * 
+  *  @function select_cell_from_metadata
+  * 
+  *  @param : metadata - cell metadata to search for
+  * 
+  */
  window.select_cell_from_metadata = function(metadata, offset = 0) {
 
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     select_cell_from_metadata", metadata, offset);
 
      var cells = IPython.notebook.get_cells();
@@ -266,9 +299,15 @@
      }
  };
 
- // -------------------------------------------------------
- // set the cell based on text 
- // -------------------------------------------------------
+ /*
+  *
+  *  set the cell based on text
+  * 
+  *  @function select_cell_from_text
+  * 
+  *  @param : text - cell text to search for
+  * 
+  */
  window.select_cell_from_text = function(text) {
      var cells = IPython.notebook.get_cells();
 
@@ -282,28 +321,32 @@
                  IPython.notebook.select(cellIndex, true);
                  IPython.notebook.focus_cell();
                  cell.select(true);
-
-                 console.log("select_cell_from_text", text, cellIndex);
+                 if (window.debug_detail_flag)
+                     console.log(log_prefix + "\n" + "     select_cell_from_text", text, cellIndex);
                  return (true);
              }
          }
      }
-     console.log("select_cell_from_text False", text);
+     if (window.debug_detail_flag)
+         console.log(log_prefix + "\n" + "     select_cell_from_text not found", text);
+
      return (false);
  };
 
- //
- // ---------------------------------------------------
- // cell control functions 
- // ---------------------------------------------------
- //
-
- // -------------------------------------------------------
- // delete the cell pointed to by logical id
- // ------------------------------------------------------
- //      id - logical cell to delete
- // -------------------------------------------------------
+ /*
+  *
+  *  delete the dfcleanser cell by id.
+  * 
+  *  @function delete_output_cell
+  * 
+  *  @param : id - cell id
+  * 
+  */
  window.delete_output_cell = function(id) {
+
+     if (get_dfc_mode() == 1)
+         return;
+
      var cell_to_delete = null;
      var cell_to_return_to = null;
      cell_to_delete = window.get_cell_for_id(id);
@@ -316,64 +359,430 @@
      IPython.notebook.select(cell_to_return_to);
  };
 
- // -------------------------------------------------------
- // run code in specified cell
- // ------------------------------------------------------
- ///      id      -   logical nbb cell id ro run in 
- //      code    -   code to run in cell
- // -------------------------------------------------------
+ /*
+  *
+  *  run code in the dfcleanser cell
+  * 
+  *  @function run_code_in_cell
+  * 
+  *   @param : id   - cell id
+  *   @param : code - python code to run
+  * 
+  */
  window.run_code_in_cell = function(id, code) {
-     var runCell = window.get_cell_for_id(id);
+
+     var runCell = null;
+
+     if (get_dfc_mode() == 1) {
+         if (id == WORKING_CELL_ID)
+             runCell = window.get_cell_for_id(id);
+         else
+             runCell = get_popupcodecell();
+     } else {
+         runCell = window.get_cell_for_id(id);
+     }
+
      var runCode = code;
+
+     if (id == POPUP_CELL_ID)
+         if (window.debug_detail_flag)
+             console.log("run_code_in_cell", runCell, runCode);
 
      if (runCell != null) {
          if (id == window.WORKING_CELL_ID) {
              runCode = WORKING_CELL + "- please do not remove" + NEW_LINE + code;
-             if (window.debug_dev_flag)
+             if (window.debug_detail_flag)
                  console.log(log_prefix + "\n" + "     run_code_in_cell : ", runCode);
              run_code(runCell, runCode);
          } else { run_code(runCell, runCode); }
-     } else { if (window.debug_dev_flag) console.log("  [Cell to run in not found]", id, code, id); }
+     } else {
+         if (window.debug_detail_flag)
+             console.log(log_prefix + "\n" + "     Cell to run in not found", id, code);
+     }
  };
 
- // -------------------------------------------------------
- // insert a new cell below current cell and run code
- // ------------------------------------------------------
- //      id          -   logical nbb cell id to run below 
- //      outputid    -   logical nbb cell id for new cell 
- //      code        -   code to run in cell
- // -------------------------------------------------------
+ /*
+  *
+  *  run code in the dfcleanser cell
+  * 
+  *  @function insert_cell_and_run_code_in_output_cell
+  * 
+  *   @param : id         - cell id
+  *   @param : outputid   - cell id for new cell
+  *   @param : code       - python code to run
+  * 
+  */
  window.insert_cell_and_run_code_in_output_cell = function(id, outputid, code) {
      window.delete_output_cell(outputid);
      window.select_cell(id);
      IPython.notebook.insert_cell_below('code');
      var cell = IPython.notebook.select_next().get_selected_cell();
      window.run_code(cell, code);
-     if (window.debug_dev_flag) { console.log("\n    [insert_cell_and_run_code_in_output_cell][end]"); }
+     if (window.debug_detail_flag) {
+         console.log(log_prefix + "\n" + "     insert_cell_and_run_code_in_output_cell", id, outputid, code);
+     }
  };
 
- // -------------------------------------------------------
- // clear the output of a cell by the logical id
- // ------------------------------------------------------
- //      id          -   logical cell id to run below 
- // -------------------------------------------------------
+ /*
+  *
+  *  clear cell output in the dfcleanser cell
+  * 
+  *  @function clear_cell_output
+  * 
+  *   @param : id         - cell id
+  * 
+  */
  window.clear_cell_output = function(id) {
-     var cell_to_clear = window.get_cell_for_id(id);
-     if (cell_to_clear != window.empty_cell_id) { IPython.notebook.clear_output(IPython.notebook.find_cell_index(cell_to_clear)); } else { if (window.debug_dev_flag) console.log("   [unable to clear cell for] : " + id.toString()); }
+
+     if (get_dfc_mode() == 1)
+         var cell_to_clear = get_popupcodecell();
+     else
+         var cell_to_clear = window.get_cell_for_id(id);
+
+     if (cell_to_clear != window.empty_cell_id) {
+         IPython.notebook.clear_output(IPython.notebook.find_cell_index(cell_to_clear));
+     } else {
+         if (window.debug_detail_flag)
+             console.log(log_prefix + "\n" + "     clear_cell_output : fail", id);
+     }
+ };
+
+ /*
+  *
+  *  run code in noteboook cell
+  * 
+  *  @function run_code
+  * 
+  *   @param : cell          -   noteboook cell to run code in
+  *   @param : code          -   code to run in cell
+  * 
+  */
+ window.run_code = function(cell, code) {
+     cell.set_text(code);
+     cell.execute();
+ };
+
+ /*
+  *
+  *  set code cell content
+  * 
+  *  @function set_code
+  * 
+  *   @param : id          -   noteboook cell to run code in
+  *   @param : code        -   code to run in cell
+  * 
+  */
+ window.set_code = function(id, code) {
+     var Cell = window.get_cell_for_id(id);
+     Cell.set_text(code);
+ };
+
+ /*
+  *
+  *  reset dependent cells when code cell changes
+  *  impact other chapters in notebook
+  * 
+  *  @function reset_dependents
+  * 
+  *   @param : deplist     -   dependent list
+  * 
+  */
+ window.reset_dependents = function(deplist) {
+
+     if (window.debug_detail_flag)
+         console.log(log_prefix + "\n" + "     reset_dependents");
+
+     if (get_dfc_mode() == 1)
+         return;
+
+     if (deplist[0]) {
+         window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
+         window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
+     }
+     if (deplist[1]) { window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0")); }
+     if (deplist[2]) { window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0")); }
+     if (deplist[3]) { window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0")); }
+     if (deplist[4]) {
+         window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
+         window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
+     }
+     if (deplist[5]) { window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0")); }
+ };
+
+
+ function process_pop_up_cmd(chid) {
+     /**
+      * pop up main task bar calls.
+      *
+      * Parameters:
+      *  fid
+      *      System Environment function id
+      */
+
+     if (window.debug_detail_flag)
+         console.log(log_prefix + "\n" + "     process_pop_up_cmd", chid);
+
+     var code = null;
+
+     switch (chid) {
+         case 0:
+             code = "from dfcleanser.system.system_control import display_system_environment" + window.NEW_LINE;
+             code = code + "display_system_environment(0)";
+             break;
+         case 1:
+             code = "from dfcleanser.data_import.data_import_control import display_import_forms" + window.NEW_LINE;
+             code = code + "display_import_forms(0)";
+             break;
+         case 2:
+             code = "from dfcleanser.data_inspection.data_inspection_control import display_data_inspection" + window.NEW_LINE;
+             code = code + "display_data_inspection(0)";
+             break;
+         case 3:
+             code = "from dfcleanser.data_cleansing.data_cleansing_control import display_data_cleansing" + window.NEW_LINE;
+             code = code + "display_data_cleansing(0)";
+             break;
+         case 4:
+             code = "from dfcleanser.data_transform.data_transform_control import display_data_transform" + window.NEW_LINE;
+             code = code + "display_data_transform(0)";
+             break;
+         case 5:
+             code = "from dfcleanser.data_export.data_export_control import display_export_forms" + window.NEW_LINE;
+             code = code + "display_export_forms(0)";
+             break;
+         case 6:
+             if (get_dfc_mode() == 0) {
+                 initialize_dc();
+                 return;
+             } else {
+                 code = "from dfcleanser.system.load import load_pop_up_startup" + NEW_LINE;
+                 code = code + "load_pop_up_startup()";
+             }
+             break;
+     }
+
+     window.delete_output_cell(window.POPUP_CELL_ID);
+     var cell = get_cell_for_id(window.POPUP_CELL_ID);
+     run_code(cell, code);
+
+     window.shut_off_autoscroll();
+
+ }
+
+ //
+ // ---------------------------------------------------
+ // end cell control functions 
+ // ---------------------------------------------------
+ //
+
+ window.set_textarea = function(formid, istring) {
+     var mstring = istring.replace(/dfc_new_line/g, '\n');
+     $("#" + formid).val(mstring);
+ };
+
+
+ /* 
+ // -------------------------------------------------------
+ // -------------------------------------------------------
+ //         dfcleanser load and unload functions
+ // ------------------------------------------------------
+ // -------------------------------------------------------
+ */
+
+ var dfc_mode = 0;
+
+ window.get_dfc_mode = function() {
+     return (dfc_mode);
+ };
+
+ /*
+  *
+  *  Load the dfcleanser utility in inline mode
+  *  @function initialize_dc
+  * 
+  */
+ window.initialize_dc = function() {
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     initialize_dc");
+
+     // get the current cells 
+     var cells = IPython.notebook.get_cells();
+     var cellText = "";
+     var nbbcellId = null;
+
+     var workingcell = get_cell_for_id(WORKING_CELL_ID);
+     if (workingcell != null)
+         window.sync_notebook();
+
+     window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
+     window.delete_output_cell(window.SYSTEM_ADD_DF_ID);
+     window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
+     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
+     window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
+     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
+     window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
+     window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
+     window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
+     window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
+     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
+     window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
+     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
+     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
+     window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0"));
+     window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
+
+     if (workingcell != null)
+         workingcell.set_text(WORKING_CELL + "- please do not remove");
+
+     window.shut_off_autoscroll();
+ };
+
+ /*
+  *
+  *  Load the dfcleanser utility from the toolbar icon.
+  *  @function load_dfcleanser_from_toolbar
+  * 
+  *  @param : dfcmode
+  *      0 - load inline
+  *      1 - load as pop up
+  */
+ window.load_dfcleanser_from_toolbar = function(dfcmode) {
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     load_dfcleanser_from_toolbar", dfcmode);
+
+     if (dfcmode == 1) {
+         var cells = IPython.notebook.get_cells();
+
+         var cell = cells[(IPython.notebook.ncells() - 1)];
+         var cellIndex = IPython.notebook.find_cell_index(cell);
+         IPython.notebook.select(cellIndex, true);
+         IPython.notebook.focus_cell();
+         cell.select(true);
+     }
+
+     add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
+     add_dfc_cell(MARKDOWN, window.WORKING_TITLE_CELL, 'DCWorkingTitle', -1);
+     add_dfc_cell(CODE, window.WORKING_CODE_CELL, 'DCWorking', -1);
+     add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
+
+     window.shut_off_autoscroll();
+
+     var nbname = IPython.notebook.get_notebook_name();
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar", JSON.stringify([nbname, dfc_mode])));
+ }
+
+ /*
+  *
+  *  UnLoad the dfcleanser utility 
+  *  @function unload_dfcleanser
+  * 
+  */
+ window.unload_dfcleanser = function() {
+
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     unload_dfcleanser");
+
+     var max_trys = 5;
+     var ctry = 0;
+
+     if (get_dfc_mode() == 1)
+         delete_popupcodecell();
+
+     while (ctry < max_trys) {
+         if (get_num_dfcleanser_cells() > 0) {
+             if (window.debug_detail_flag)
+                 console.log(log_prefix + "\n" + "     unload_dfcleanser", ctry, get_num_dfcleanser_cells());
+             ctry++;
+             delete_dfcleanser_cells();
+         } else { ctry = max_trys; }
+     }
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     dfcleanser unloaded");
+ };
+
+ /*
+  *
+  *  preload the dfcleanser utility before loading cells
+  *  @function preloaddfcleanser
+  * 
+  */
+ window.preloaddfcleanser = function() {
+     if (debug_flag)
+         console.log(log_prefix + "\n" + "     preloaddfcleanser");
+
+     var code = "dcpath = %pwd" + NEW_LINE;
+     code = code + "from dfcleanser.common.cfg import set_notebookPath" + NEW_LINE;
+     code = code + "set_notebookPath(dcpath)" + NEW_LINE;
+     code = code + "from dfcleanser.system.load import load_dfcleanser_cells" + NEW_LINE;
+     code = code + "load_dfcleanser_cells()";
+
+     if (window.get_cell_for_id(window.WORKING_CELL_ID) == null) {
+         window.add_dfc_cell(1, "# Temporary Working Cell", "DCWorking");
+         window.run_code_in_cell(window.WORKING_CELL_ID, code);
+         window.delete_output_cell(window.WORKING_CELL_ID);
+     } else {
+         window.run_code_in_cell(window.WORKING_CELL_ID, code);
+     }
+ };
+
+ /*
+  *
+  *  load the dfcleanser utility as a pop up
+  *  @function loaddfcleanserpopup
+  * 
+  */
+ window.loaddfcleanserpopup = function() {
+     if (debug_flag)
+         console.log(log_prefix + "\n" + "     loaddfcleanserpopup");
+
+     window.setup_popupcodecell();
+     window.toggle_popupcodecell();
+
+     var code = "from dfcleanser.system.load import load_pop_up_startup" + NEW_LINE;
+     code = code + "load_pop_up_startup()";
+
+     window.run_code_in_cell(window.POPUP_CELL_ID, code);
+
+ };
+
+ /*
+  *
+  *  check if dfcleanser is currently loaded
+  *  @function is_dfcleanser_loaded
+  * 
+  */
+ window.is_dfcleanser_loaded = function() {
+
+     var cells = IPython.notebook.get_cells();
+
+     // search through the cells 
+     for (var i = 0; i < (IPython.notebook.ncells()); i++) {
+
+         var cell = cells[i];
+         var cmdata = cell.metadata;
+         var dfc_mdata = cmdata["dfcleanser_metadata"];
+
+         if (dfc_mdata != undefined) { return (true); }
+     }
+
+     return (false);
  };
 
  const MARKDOWN = 0
  const CODE = 1
 
- // -------------------------------------------------------
- // add a dfcleanser cell to the notebook
- // ------------------------------------------------------
- //      ctype          -   cell type 
- //      ctext          -   cell text
- //      dfcid          -   cell metadata id 
- // -------------------------------------------------------
+ /*
+  *
+  *  add a dfcleanser cell to the notebook
+  * 
+  *  @function add_dfc_cell
+  * 
+  *   @param : ctype    - cell type
+  *   @param : ctext    - cell text
+  *   @param : dfcid    - dfcleanser metadata id
+  * 
+  */
  window.add_dfc_cell = function(ctype, ctext, dfcid, afterid = -1) {
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     add_dfc_cell", ctype, ctext, dfcid, afterid);
 
      // if first cell to load find correct 
@@ -396,9 +805,13 @@
      if (ctype == MARKDOWN) { cell_to_add.execute(); } else { cell_to_add.execute(); }
  };
 
- // -------------------------------------------------------
- // find the number of dfcleanser cells
- // -------------------------------------------------------
+ /*
+  *
+  *  find the number of dfcleanser cells
+  * 
+  *  @function get_num_dfcleanser_cells
+  * 
+  */
  window.get_num_dfcleanser_cells = function() {
 
      var cells = IPython.notebook.get_cells();
@@ -414,11 +827,15 @@
      return (total_dfc_cells);
  };
 
- // -------------------------------------------------------
- // get the metadata for a dfc cell
- // -------------------------------------------------------
- //   cell - notebook cell
- // -------------------------------------------------------
+ /*
+  *
+  *  get the metadata for a dfc cell
+  * 
+  *  @function get_dfc_metadata
+  * 
+  *   @param : cell    - cell to get metadata from
+  * 
+  */
  window.get_dfc_metadata = function(cell) {
      var cmdata = cell.metadata;
      var dfc_mdata = cmdata["dfcleanser_metadata"];
@@ -426,30 +843,36 @@
      else return (undefined);
  }
 
- // -------------------------------------------------------
- // delete the dfc cell
- // ------------------------------------------------------
- //   cell_to_delete - dfc cell to delete
- // -------------------------------------------------------
+ /*
+  *
+  *  delete the dfc cell
+  * 
+  *  @function delete_dfc_cell
+  * 
+  *   @param : cell_to_delete    - cell to delete
+  * 
+  */
+
  window.delete_dfc_cell = function(cell_to_delete) {
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     delete_dfc_cell", cell_to_delete);
 
      var cellid = select_cell_from_metadata(cell_to_delete);
-     //if (window.debug_dev_flag)
-     //    console.log(log_prefix + "\n" + "     delete_dfc_cell", cellid);
-
      IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cellid));
  }
 
- // -------------------------------------------------------
- // delete the dfc chapter
- // ------------------------------------------------------
- //   chaptertitle - dfc chapter to delete
- // -------------------------------------------------------
+ /*
+  *
+  *  delete the dfc chapter cells
+  * 
+  *  @function delete_dfc_chapter
+  * 
+  *   @param : chaptertitle    - chapter cells to delete
+  * 
+  */
  window.delete_dfc_chapter = function(chaptertitle) {
 
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     delete_dfc_chapter", chaptertitle);
 
      var cell_to_delete = null;
@@ -463,7 +886,7 @@
          IPython.notebook.delete_cell(IPython.notebook.find_cell_index(cell_to_delete));
      }
 
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     delete_dfc_chapter : delete title", cell_to_delete);
 
      // delete the code cell 
@@ -495,10 +918,17 @@
      IPython.notebook.select(next_cell);
  };
 
- // -------------------------------------------------------
- // delete dfcleanser cells
- // -------------------------------------------------------
+ /*
+  *
+  *  delete all dfc cells
+  * 
+  *  @function delete_dfcleanser_cells
+  * 
+  */
  window.delete_dfcleanser_cells = function() {
+     if (window.debug_detail_flag)
+         console.log(log_prefix + "\n" + "     delete_dfcleanser_cells");
+
      var cells = IPython.notebook.get_cells();
      var cell = window.empty_cell_id;
 
@@ -518,99 +948,17 @@
      }
  };
 
+ /* 
+  // -------------------------------------------------------
+  // end dfcleanser load and unload functions
+  // ------------------------------------------------------
+  */
 
- window.WORKING_CODE_CELL = '# working cell- please do not remove';
- window.WORKING_TITLE_CELL = '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>';
- window.WORKING_BLANK_LINE = '<br></br>';
-
- // -------------------------------------------------------
- // load dfcleanser cells from toolbar
- // ------------------------------------------------------
- window.load_dfcleanser_from_toolbar = function() {
-     if (window.debug_dev_flag)
-         console.log(log_prefix + "\n" + "     load_dfcleanser_from_toolbar");
-
-     add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
-     add_dfc_cell(MARKDOWN, window.WORKING_TITLE_CELL, 'DCWorkingTitle', -1);
-     add_dfc_cell(CODE, window.WORKING_CODE_CELL, 'DCWorking', -1);
-     add_dfc_cell(MARKDOWN, window.WORKING_BLANK_LINE, 'DCBlankline', -1);
-
-     var nbname = IPython.notebook.get_notebook_name();
-     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.SYSTEM_LIB, "load_dfcleanser_from_toolbar", JSON.stringify(nbname)));
-
- }
-
- // -------------------------------------------------------
- // unload dfcleanser cells
- // ------------------------------------------------------
- window.unload_dfcleanser = function() {
-     var max_trys = 5;
-     var ctry = 0;
-
-     while (ctry < max_trys) {
-         if (get_num_dfcleanser_cells() > 0) {
-             if (window.debug_dev_flag)
-                 console.log(log_prefix + "\n" + "     unload_dfcleanser", ctry, get_num_dfcleanser_cells());
-             ctry++;
-             delete_dfcleanser_cells();
-         } else { ctry = max_trys; }
-     }
- };
-
- // -------------------------------------------------------
- // run code in noteboook cell
- // ------------------------------------------------------
- //
- //      cell          -   noteboook cell to run code in 
- //      code          -   code to run in cell 
- //
- // -------------------------------------------------------
- window.run_code = function(cell, code) {
-     cell.set_text(code);
-     cell.execute();
- };
-
- // -------------------------------------------------------
- // set code cell content
- // ------------------------------------------------------
- //
- //      cell          -   noteboook cell to run code in 
- //      code          -   code to run in cell 
- //
- // -------------------------------------------------------
- window.set_code = function(id, code) {
-     var Cell = window.get_cell_for_id(id);
-     Cell.set_text(code);
- };
-
- // -------------------------------------------------------
- // reset dependent cells when code cell changes
- // impact other chapters in notebook
- // ------------------------------------------------------
- //
- //      deplist       -   list of chapters to update 
- //
- // -------------------------------------------------------
- window.reset_dependents = function(deplist) {
-
-     if (deplist[0]) {
-         window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
-         window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
-     }
-     if (deplist[1]) { window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0")); }
-     if (deplist[2]) { window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0")); }
-     if (deplist[3]) { window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0")); }
-     if (deplist[4]) {
-         window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-         window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
-     }
-     if (deplist[5]) { window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0")); }
- };
 
  //
  // ---------------------------------------------------
  // ---------------------------------------------------
- // common uility functions
+ //           common uility functions
  // ---------------------------------------------------
  // ---------------------------------------------------
  //
@@ -626,9 +974,9 @@
 
  //
  //
- // ---------------------------------------------------
+ // -----------------------------------------------------
  // helper functions for running python methods from js
- // ---------------------------------------------------
+ // -----------------------------------------------------
  // 
  //
  window.getJCode = function(code) {
@@ -673,7 +1021,8 @@
      var formd = document.getElementById(id);
 
      if (formd == null) {
-         if (window.debug_dev_flag) console.log("no checkbox ", id, " not found");
+         if (window.debug_detail_flag)
+             console.log("no checkbox ", id, " not found");
          return (null);
      }
 
@@ -694,7 +1043,8 @@
      var formd = document.getElementById(id);
 
      if (formd == null) {
-         if (window.debug_dev_flag) console.log("no radio ", id, " not found");
+         if (window.debug_detail_flag)
+             console.log("no radio ", id, " not found");
          return (null);
      }
 
@@ -750,6 +1100,7 @@
 
      $('#' + id + ' :input').each(function() {
          var type = $(this).attr("type");
+
          if (type != "file") {
              if (String($(this).val()).length > 0) {
                  inputs.push(String($(this).val()));
@@ -780,8 +1131,19 @@
      return (JSON.stringify(inputs));
  };
 
+ window.get_selected_value = function(selectid) {
+
+     var selected_value = $("#" + selectid + " :selected").text();
+     console.log("get_selected_value", selectid, selected_value);
+
+     var inputs = new Array();
+     inputs.push(selectid);
+     inputs.push(selected_value);
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_gen_func_values", JSON.stringify(inputs)));
+ };
+
  //
- // functions to request a full list of parms for an inout form
+ // function to request a full list of parms for an inout form
  //
  window.getfullparms = function(inputid) {
 
@@ -790,6 +1152,7 @@
          case "arcgisgeocoder":
          case "googlegeocoder":
          case "binggeocoder":
+         case "baidugeocoder":
          case "mapquestgeocoder":
          case "nomingeocoder":
          case "arcgisquery":
@@ -803,6 +1166,7 @@
          case "nominreverse":
          case "googlereverse":
          case "arcgisbatchgeocoder":
+         case "baidubulkgeocoder":
          case "googlebulkgeocoder":
          case "bingbulkgeocoder":
          case "mapquestbulkgeocoder":
@@ -825,7 +1189,8 @@
 
              var tableid = $('#gegdfltypesTable');
 
-             console.log("tableid", tableid);
+             if (window.debug_detail_flag)
+                 console.log("tableid", tableid);
              if (tableid == null)
                  inputs.push(String(0));
              else
@@ -842,31 +1207,31 @@
      }
  };
 
+ window.set_select_select = function(selectid, option) {
+
+ };
+
+ window.set_select_disable = function(selectid, option) {
+     if (option == "Enable") {
+         $('#' + selectid).removeAttr('disabled');
+     } else {
+         $('#' + selectid).attr('disabled', 'disabled');
+     }
+ };
+
+
  //
- // ---------------------------------------------------
+ // ----------------------------------------------------------
  // file selection directory - dirs restricted to local only
  // Note : adhere to the browser security usage of fakepath
- // ---------------------------------------------------
+ // ---------------------------------------------------------
  // 
  window.onChangefileselect = function(inputid, fileid) {
 
-     if (window.debug_dev_flag) {
-         console.log(log_prefix + "\n" + "     onChangefileselect");
-         console.log(log_prefix + "\n" + "     [inputid] [", inputid, "] ", inputid.value);
-         console.log(log_prefix + "\n" + "     [inputid.id] [", inputid, "] ", inputid.id);
-         console.log(log_prefix + "\n" + "     [fileid ] [", fileid, "] ", fileid.value);
-     }
+     var input = document.getElementById(inputid);
+     var file = document.getElementById(fileid);
 
-     if (inputid.id == "csvFileName")
-         inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
-     else
-     if ((inputid.id == "startlistfile") || (inputid.id == "listfilename"))
-         inputid.value = fileid.value.replace("C:\\fakepath\\", "lists/");
-     else
-     if ((inputid.id == "startdictfile") || (inputid.id == "dictfilename"))
-         inputid.value = fileid.value.replace("C:\\fakepath\\", "dicts/");
-     else
-         inputid.value = fileid.value.replace("C:\\fakepath\\", "datasets/");
+     input.value = file.value.replace("C:\\fakepath\\", "datasets/");
  };
 
  //
@@ -881,7 +1246,8 @@
  // get the current notebook location
  // 
  window.getNotebookLocation = function() {
-     console.log(log_prefix + "\n" + "    getNotebookLocation");
+     if (window.debug_detail_flag)
+         console.log(log_prefix + "\n" + "    getNotebookLocation");
 
      window.getNotebookPath();
      window.getNotebookName();
@@ -907,7 +1273,7 @@
  // get the current notebook path
  // 
  window.getNotebookPath = function() {
-     if (window.debug_dev_flag)
+     if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     getNotebookPath");
 
      var code = "dcpath = %pwd" + NEW_LINE;
@@ -920,45 +1286,6 @@
      } else {
          window.run_code_in_cell(window.WORKING_CELL_ID, code);
      }
- };
-
- window.getNotebookPathBeforeLoad = function() {
-     if (window.debug_dev_flag)
-         console.log(log_prefix + "\n" + "     getNotebookPathBeforeLoad");
-
-     var code = "dcpath = %pwd" + NEW_LINE;
-     code = code + "from dfcleanser.common.cfg import set_notebookPath" + NEW_LINE;
-     code = code + "set_notebookPath(dcpath)" + NEW_LINE;
-     code = code + "from dfcleanser.system.load import load_dfcleanser_cells" + NEW_LINE;
-     code = code + "load_dfcleanser_cells()";
-
-     if (window.get_cell_for_id(window.WORKING_CELL_ID) == null) {
-         window.add_dfc_cell(1, "# Temporary Working Cell", "DCWorking");
-         window.run_code_in_cell(window.WORKING_CELL_ID, code);
-         window.delete_output_cell(window.WORKING_CELL_ID);
-     } else {
-         window.run_code_in_cell(window.WORKING_CELL_ID, code);
-     }
- };
-
- //
- // check if dfcleanser is loaded
- // 
- window.is_dfcleanser_loaded = function() {
-
-     var cells = IPython.notebook.get_cells();
-
-     // search through the cells 
-     for (var i = 0; i < (IPython.notebook.ncells()); i++) {
-
-         var cell = cells[i];
-         var cmdata = cell.metadata;
-         var dfc_mdata = cmdata["dfcleanser_metadata"];
-
-         if (dfc_mdata != undefined) { return (true); }
-     }
-
-     return (false);
  };
 
  //
@@ -995,14 +1322,23 @@
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(cellsloaded)));
  };
 
-
  //
+ // set dfc mode
+ //
+ window.set_dfcmode = function(dfcmode) {
+     if (window.debug)
+         console.log('\n[' + "dfcleanser" + ']' + "\n" + "     set_dfcmode ", dfcmode, "\n");
+
+     dfc_mode = dfcmode;
+ };
+
+
  //
  // -----------------------------------------------------
  // functions for scrolling tables in dataframe cleanser
  // -----------------------------------------------------
- // 
  //
+
  window.scrollSampleRow = function(tableid, direction) {
      var inputs = new Array();
      inputs.push(String(tableid));
@@ -1045,11 +1381,9 @@
  }
 
  //
- //
  // ---------------------------------------------------
- // common help functions
+ //            common help functions
  // ---------------------------------------------------
- //
  //
 
  //
@@ -1080,7 +1414,8 @@
 
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "sync_with_js", JSON.stringify(inputs)));
 
-     console.log(log_prefix + "\n" + "sync_notebook complete", nbname);
+     if (debug_flag)
+         console.log('\n[' + "dfcleanser" + ']' + "\n" + "     sync_notebook complete ", nbname, "\n");
  };
 
 

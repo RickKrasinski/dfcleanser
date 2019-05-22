@@ -13,6 +13,7 @@ function inspection_task_bar_callback(fid) {
      * Parameters:
      *  fid - function id
      */
+
     switch (fid) {
         case 0:
             var inputParms = window.get_input_form_parms("datainspectdf");
@@ -34,6 +35,7 @@ function srow(rowid) {
      * Parameters:
      *  rowid - row id
      */
+
     var goodrowid = true;
     try {
         if (rowid.length > 0) {
@@ -54,6 +56,7 @@ function display_objects_callback(id) {
      * @param:
      *  rowid - row id
      */
+
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "16," + id));
     window.scroll_to('DCDataCleansing');
 }
@@ -65,6 +68,7 @@ function ucol(colid) {
      * Parameters:
      *  colid - column id
      */
+
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "1" + "," + JSON.stringify(colid)));
     window.scroll_to('DCDataCleansing');
 }
@@ -76,6 +80,7 @@ function ncol(colid) {
      * Parameters:
      *  colid - column id
      */
+
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(colid)));
     window.scroll_to('DCDataCleansing');
 }
@@ -87,6 +92,7 @@ function scol(colid) {
      * Parameters:
      *  colid - column id
      */
+
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(colid)));
     window.scroll_to('DCDataCleansing');
 }
@@ -98,6 +104,7 @@ function scatcol(colid) {
      * Parameters:
      *  colid - column id
      */
+
     var fparms = [colid, 27];
     var inputs = new Array();
     inputs.push(fparms);
@@ -109,6 +116,7 @@ function disrowInputIdcallback() {
     /**
      * Data Inspection display rows 
      */
+
     var element = document.getElementById("disrowInputId");
     window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "2" + "," + JSON.stringify(element.value)));
     window.scroll_to('DCDataInspection');
@@ -121,6 +129,7 @@ function dc_drop_rows_callback(valtype) {
      * Parameters:
      *  valtype - threshold type
      */
+
     var parms = new Array();
     parms.push(valtype);
     var inputs = window.get_input_form_parms("droprowsinput");
@@ -137,6 +146,7 @@ function dc_drop_cols_callback(valtype) {
      * Parameters:
      *  valtype - threshold type
      */
+
     var parms = new Array();
     parms.push(valtype);
     var inputs = window.get_input_form_parms("dropcolsinput");
@@ -145,3 +155,40 @@ function dc_drop_cols_callback(valtype) {
     window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "4" + ", " + JSON.stringify(parms)));
     window.scroll_to('DCDataInspection');
 }
+
+window.change_dataframes_to_select = function(optionsDict, selected) {
+    /**
+     * Update datframe select input forms.
+     *
+     * Parameters:
+     *  optionsDict - select options dict
+     *  selected    - option selected
+     */
+
+    if ($('#dfmgrform').length > 0) {
+        process_system_tb_callback(3);
+    }
+
+    var selectdfs = new Array();
+    selectdfs.push('datainspectdf');
+    selectdfs.push('datacleansedf');
+    selectdfs.push('datatransformdf');
+
+    var dfOptions = jQuery.parseJSON(JSON.stringify(optionsDict));
+
+    for (var i = 0; i < 3; i++) {
+
+        var nextSelect = $("#" + selectdfs[i]);
+        if (nextSelect.length > 0) {
+            nextSelect.empty();
+            $.each(dfOptions, function(key, value) {
+                if (value == selected)
+                    nextSelect.append($("<option style='text-align:left; font-size:11px;' selected ></option>")
+                        .attr("value", value).text(key));
+                else
+                    nextSelect.append($("<option style='text-align:left; font-size:11px;'></option>")
+                        .attr("value", value).text(key));
+            });
+        }
+    }
+};

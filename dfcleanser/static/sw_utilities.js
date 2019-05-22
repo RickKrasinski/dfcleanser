@@ -19,6 +19,7 @@ function build_utility_callback(id) {
      * Parameters:
      *  id - function id - list or dict
      */
+
     window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", id));
     window.scroll_to('DCListUtility');
@@ -28,6 +29,7 @@ function build_utility_clear_callback() {
     /**
      * data structures utility clear inputs.
      */
+
     window.clear_cell_output(SW_UTILS_DATASTRUCT_TASK_BAR_ID);
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
     window.scroll_to('DCListUtility');
@@ -40,6 +42,7 @@ function sw_utilities_delete_callback(id) {
      * Parameters:
      *  id - function id - list or dict
      */
+
     var iname = ""
     if (id == 4) { iname = $("#listname").val() } else { iname = $("#dictname").val() }
     window.clear_cell_output(SW_UTILS_DATASTRUCT_TASK_BAR_ID);
@@ -50,6 +53,7 @@ function sw_utilities_list_add_callback() {
     /**
      * data structures utility add list.
      */
+
     var importVals = get_input_form_parms("buildlistparms");
     window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", (3 + ", " + importVals)));
@@ -60,6 +64,7 @@ function sw_utilities_dict_add_callback() {
     /**
      * data structures utility add dict.
      */
+
     var importVals = get_input_form_parms("builddictparms");
     window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", (5 + ", " + importVals)));
@@ -73,6 +78,7 @@ function select_dict(key) {
      * Parameters:
      *  key - dict to display
      */
+
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "10, " + JSON.stringify(key)));
     window.scroll_to('DCListUtility');
 }
@@ -84,6 +90,7 @@ function select_list(key) {
      * Parameters:
      *  key - dict to display
      */
+
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "9, " + JSON.stringify(key)));
     window.scroll_to('DCListUtility');
 }
@@ -102,7 +109,6 @@ function process_geoutils_callback(fid) {
      * Parameters:
      *  fid - function id
      */
-    console.log("process_geoutils_callback", fid);
 
     var inputId = "";
 
@@ -251,7 +257,6 @@ function select_bulk_geocoder(gcid) {
 
 function get_geocode_form_id(gcid, gtype, gmode) {
 
-    console.log("get_geocode_form_id", gcid, gtype, gmode);
     var id = ""
 
     if (gmode == 0) {
@@ -404,8 +409,6 @@ function process_geocoding_callback(gcid, gtype, gmode) {
      *  gmode - geocoding mode
      */
 
-    console.log("process_geocoding_callback", gcid, gtype, gmode);
-
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, gtype, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
 
@@ -422,8 +425,6 @@ function display_geocoding_callback(gcid, gtype, gmode) {
      *  gtype - geocoding type
      *  gmode - geocoding mode
      */
-
-    console.log("display_geocoding", gcid, gtype, gmode);
 
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
@@ -456,6 +457,7 @@ function display_geocoders(gid, gmode) {
      *  gid   - geocoder id
      *  gmode - geocode mode
      */
+
     var inputs = [gid, gmode];
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "3" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
@@ -470,6 +472,7 @@ function clear_geocode_form(gid, gtype, gmode) {
      *  gtype - geocode type
      *  gmode - geocode mode
      */
+
     var inputs = [gid, gtype, gmode];
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "2" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
@@ -480,6 +483,7 @@ function geocode_return() {
      * clear a geocoder form.
      *
      */
+
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
     window.scroll_to('DCGeocodeUtility');
 }
@@ -494,8 +498,6 @@ function get_geocoding_table(tableid, gcid, gtype, gmode) {
      *  gtype   - geocoding type
      *  gmode   - geocoding mode
      */
-
-    console.log("get_geocoding_table", tableid, gcid, gtype, gmode);
 
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, gtype, gmode));
     var inputs = [tableid, gcid, gtype, gmode, fparms];
@@ -521,33 +523,6 @@ function process_batch_geocoder(fid, geotype) {
     window.scroll_to('DCGeocodeUtility');
 }
 
-//function process_bulk_query(fid, gcid) {
-/**
- * geocoder bulk query processing.
- *
- * Parameters:
- *  fid- function id
- *  gcid - geocoder id
- */
-
-//var formid = "";
-//switch (gcid) {
-//    case 0:
-//        formid = "arcgisbatchquery";
-//        break;
-//    case 7:
-//        formid = "googlebulkquery";
-//        break;
-//}
-//var fparms = get_input_form_parms(formid);
-//console.log("process_bulk_query", formid, fparms);
-//var inputs = [fid, gcid, 0, fparms];
-
-//window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("13, " + JSON.stringify(inputs))));
-//window.reset_dependents([false, true, false, false, false, false]);
-//window.scroll_to('DCGeocodeUtility');
-//}
-
 function display_bulk_geocoding_results(fid) {
     /**
      * geocoder bulk reverse processing.
@@ -555,8 +530,6 @@ function display_bulk_geocoding_results(fid) {
      * Parameters:
      *  fid- function id
      */
-
-    console.log("display_bulk_geocoding_results", fid);
 
     var inputs = [fid];
 
@@ -577,8 +550,6 @@ function process_bulk_geocoding_results(fid) {
      * Parameters:
      *  fid- function id
      */
-
-    console.log("process_bulk_geocoding_results", fid);
 
     var formid = "";
     switch (fid) {
@@ -641,7 +612,6 @@ function set_bulk_progress_bar(barid, barvalue) {
      *  barvalue - progress bar value
      */
 
-    console.log("set_bulk_progress_bar", barid, barvalue, barvalue.toString() + "%");
     var progressbar = $("#" + barid);
     progressbar.text(barvalue.toString() + "%");
     progressbar.attr('aria-valuenow', barvalue).css('width', barvalue + "%");
@@ -653,8 +623,6 @@ function view_geocode_errors() {
      *
      * Parameters:
      */
-
-    console.log("view_geocode_errors");
 
     var ids = new Array("didfdataframe");
     var inputs = new Array("Current_Geocoding_Error_Log_df");
@@ -683,7 +651,6 @@ function report_geocode_run_error(cmd, msg) {
      *  msg     - error message
      */
 
-    console.log("report_geocode_run_error", cmd, msg);
 
     var parms = new Array();
     parms.push(cmd);
@@ -695,7 +662,7 @@ function report_geocode_run_error(cmd, msg) {
 
 
 // ------------------------------------------------------
-// dynamic html functions 
+// Geocoding dynamic html functions 
 // ------------------------------------------------------
 function bg_add_df_column(colid, addparms) {
 
@@ -766,7 +733,6 @@ function gb_select_category(category) {
 
 function gbr_google_add_addrcomp(addrcomp) {
 
-    console.log("gbr_google_add_addrcomp", addrcomp);
     var acomps = $("#bgraddresscomponents");
     var colnames = $('#bgrcolumnnames');
 
@@ -793,7 +759,6 @@ function gbr_google_add_addrcomp(addrcomp) {
 
 function gbr_add_location_type(loctype) {
 
-    console.log("gbr_add_location_type", loctype);
     var ltype = $("#bgqloctypes");
     var loc = ltype.val();
     var llist = "";
@@ -809,7 +774,6 @@ function gbr_add_location_type(loctype) {
     } else {
         llist = "[" + loctype + "]";
     }
-    console.log("llist", llist);
     ltype.val(llist);
 }
 
@@ -832,6 +796,7 @@ function get_subset_callback(fid) {
      *  fid- function id
      *  gcid - geocoder id
      */
+
     switch (fid) {
         case 0:
         case 1:
@@ -947,7 +912,7 @@ function set_filter_colname(colname) {
      * Parameters:
      *  colname - column name
      */
-    console.log("set_filter_colname", colname);
+
     var colnamefield = $('#gscolname');
     colnamefield.val(colname);
     $('#gscoloper').val("");
@@ -967,14 +932,15 @@ function select_filter(ftitle) {
      * Parameters:
      *  colname - column name
      */
+
     var parms = new Array();
     parms.push(ftitle);
     window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", ("14" + ", " + JSON.stringify(parms))));
 }
 
-//
+// --------------------------
 // DF Subset dhtml functions 
-//
+// --------------------------
 function getgsval(uval) {
     var operfield = $('#gscoloper');
     if (operfield.val().length == 0) {
@@ -1078,7 +1044,7 @@ function set_filter_oper(logical) {
 
 // 
 // ------------------------------------------------------
-// Generic Functions Utility functions 
+// Generic Functions Utility methods 
 // ------------------------------------------------------
 //
 function genfunction_task_bar_callback(fid) {
@@ -1088,6 +1054,7 @@ function genfunction_task_bar_callback(fid) {
      * Parameters:
      *  fid - function id
      */
+
     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", fid));
     window.scroll_to('DCGenFunctionUtility');
 }
