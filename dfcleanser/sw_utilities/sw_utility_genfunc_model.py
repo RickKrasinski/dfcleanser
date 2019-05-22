@@ -36,12 +36,12 @@ FOR_ADD_COLUMNS                     =   0
 FOR_APPLY_FN                        =   1
 FOR_GEN_FUNC                        =   2
 
-reservedfunctions                   =   ["normalize_list","normalize_df_column","upperCase_column",
-                                         "get_trigonometric_column_values",
-                                         "convert_to_degrees_or_radians","convert_df_to_degrees_or_radians",
-                                         "absolute_df_column","absolute_values",
-                                         "round_float","to_numeric_column",
-                                         "to_string_column","get_df_geocode_center","get_geocode_center"]
+reservedfunctions                   =   ["to_int_df_column","to_float_df_column","to_string_df_column","upperCase_df_column",
+                                         "normalize_df_column","normalize_list","get_trig_values_for_column",
+                                         "get_trigonometric_values","convert_df_column_to_degrees_or_radians",
+                                         "convert_to_degrees_or_radians","absolute_df_column",
+                                         "absolute_values","round_df_col_float","get_df_geocode_center",
+                                         "get_geocode_center"]
 
 reservedfunctionsmodule             =    "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
 
@@ -49,33 +49,6 @@ reservedfunctionsmodule             =    "dfcleanser.sw_utilities.sw_utility_gen
 Red     = "#FAA78F"
 Green   = "#8FFAC0"
 Yellow  = "#FAFB95"
-
-"""
-numpy.exp
-log
-
-square
-sqrt
-
-DataFrame[colname].values
-Return a Numpy representation of the DataFrame
-
-nparray to df column
-df= DataFrame(test)
-df['preds']=preds
-"""
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -283,6 +283,10 @@ def add_generic_function(genfunc) :
     GenericFunctions.add_function(genfunc)
 
 def get_generic_function(ftitle) :
+    if(not (ftitle in gfm.reservedfunctions)) :
+        return(GenericFunctions.get_function(ftitle))
+    
+def get_generic_function_desc(ftitle) :
     
     if(ftitle in gfm.reservedfunctions) :
         from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_help_doc
@@ -290,7 +294,7 @@ def get_generic_function(ftitle) :
         return(get_function_help_doc(module_name,ftitle))
         
     else :
-        return(GenericFunctions.get_function(ftitle))
+        return(ftitle)
 
 def delete_generic_function(title) :
     GenericFunctions.delete_function(title)

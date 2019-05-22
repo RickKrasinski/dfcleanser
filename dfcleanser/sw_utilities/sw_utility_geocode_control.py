@@ -89,8 +89,6 @@ def get_geocid_from_formid(formid) :
           (formid == "baidubulkgeocoder") or (formid == "baidubulkquery") ) :                                       return(sugm.BaiduId)
     elif( (formid == "binggeocoder")  or (formid == "bingquery") or (formid == "bingreverse") or 
           (formid == "bingbulkgeocoder") or (formid == "bingbulkquery") ) :                                         return(sugm.BingId)
-    elif( (formid == "baidugeocoder")  or (formid == "baiduquery") or (formid == "baidureverse") or 
-          (formid == "baidubulkgeocoder") or (formid == "baidubulkquery") ) :                                       return(sugm.BaiduId)
     elif( (formid == "mapquestgeocoder")  or (formid == "mapquestquery") or (formid == "mapquestreverse") ) :       return(sugm.OpenMapQuestId)
     elif( (formid == "nomingeocoder")  or (formid == "nominquery") or (formid == "nominreverse") ) :                return(sugm.NominatimId)
     else :                                                                                                          return(None)
@@ -299,11 +297,8 @@ def display_geocode_utility(optionId,parms=None) :
         inputs  =   get_geocoding_connect_parms(geocid,gmode,parms[2])
         
         if(gmode == sugm.INTERACTIVE) :
-            
             test_geocoder(geocid,inputs)
-            
         else :
-            
             subgc.test_bulk_geocoder(geocid,inputs)
    
     elif(optionId == sugm.CLEAR_GEOCODE_FORM) :
@@ -543,7 +538,7 @@ def get_geocoder_engine(geocid,opstat) :
     *  geocoder engine 
     * --------------------------------------------------------
     """
-
+    
     geolocator  =   None
     
     try :
@@ -568,8 +563,8 @@ def get_geocoder_engine(geocid,opstat) :
             
             print("get_geocoder_engine",geocinitparms)
             from geopy.geocoders import Baidu
-            if(1):#geocinitparms == None) :
-                geolocator = Baidu("NaKYPfQCGqrGdX8pR77rdWLuGyiGCu4E")#secret_key = "d3UWh3WGWTxvmm897KQoczVfHmZzyMOR") 
+            if(geocinitparms == None) :
+                geolocator = Baidu() 
             else :
                 geolocator = Baidu(**geocinitparms)
             
@@ -609,9 +604,7 @@ def get_geocoder_engine(geocid,opstat) :
 """
 
 
-def test_geocoder(geocid,gcparms) :
-    
-    print("test_geocoder",geocid,gcparms)
+def test_geocoder(geocid,gcparms,gmode=sugm.INTERACTIVE) :
     """
     * ---------------------------------------------------------
     * function : test the geocoder connection and run sample
@@ -671,8 +664,11 @@ def test_geocoder(geocid,gcparms) :
             
         clock.stop()
         
-        sugw.display_geocoders(geocid) 
-        
+        if(gmode == sugm.INTERACTIVE) :
+            sugw.display_geocoders(geocid) 
+        else :
+            subgw.display_bulk_geocoders(geocid) 
+            
         if(opstat.get_status()) :
             
             display_status("geocoder ran successfully")

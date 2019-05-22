@@ -731,7 +731,7 @@ bulk_baidu_query_input_placeholderList    =  ["dataframe to geocode",
                                               "failure limit (default - 5%)",
                                                None,None,None,None,None]
 
-bulk_baidu_query_input_jsList             =   [None,None,None,None,None,None,None,None,None,None,
+bulk_baidu_query_input_jsList             =   [None,None,None,None,None,None,
                                                "process_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
@@ -1524,7 +1524,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
 
     else :
         
-        display_generic_grid("geocode-reverse-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("geocode-query-wrapper",gridclasses,gridhtmls)
         
 
 def display_bulk_geocoding(geocid,geotype) :
@@ -1703,7 +1703,7 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                             selectDicts)
         
     geocode_input_form.set_gridwidth(720)
-    geocode_input_form.set_custombwidth(100)
+    geocode_input_form.set_custombwidth(90)
     
     if(showfull) :
         geocode_input_form.set_fullparms(True)

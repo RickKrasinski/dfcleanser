@@ -13,8 +13,7 @@ this = sys.modules[__name__]
 
 import dfcleanser.sw_utilities.sw_utility_model as swum
 import dfcleanser.common.help_utils as dfchelp
-from dfcleanser.common.html_widgets import (display_composite_form, maketextarea,
-                                            get_html_spaces, get_button_tb_form, ButtonGroupForm)
+from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
@@ -37,14 +36,15 @@ build_utility_tb_doc_title        =   "Build Utility Options"
 build_utility_tb_title            =   "Build Options"
 build_utility_tb_id               =   "buildutilityoptionstb"
 
-build_utility_tb_keyTitleList     =   ["Lists","Dicts","Clear","Help"]
+build_utility_tb_keyTitleList     =   ["Lists","Dicts","Clear","Reset","Help"]
 
 build_utility_tb_jsList           =   ["build_utility_callback("+str(swum.LIST_OPTION)+")",
                                        "build_utility_callback("+str(swum.DICT_OPTION)+")",
                                        "build_utility_clear_callback()",
+                                       "process_pop_up_cmd(6)",
                                        "displayhelp(" + str(dfchelp.LIST_UTILITY_MAIN_TASKBAR_ID) + ")"]
 
-build_utility_tb_centered         =   False
+build_utility_tb_centered         =   True
 
 """
 #--------------------------------------------------------------------------
@@ -53,23 +53,23 @@ build_utility_tb_centered         =   False
 """
 build_list_utility_input_title          =   "Build List Utility"
 build_list_utility_input_id             =   "buildlistparms"
-build_list_utility_input_idList         =   ["startlistfile","listname","listitems",
+build_list_utility_input_idList         =   ["listname","listitems","startlistfile",
                                              None,None,None,None,None]
 
-build_list_utility_input_labelList      =   ["list_file_to_start_With",
-                                             "list_name",
+build_list_utility_input_labelList      =   ["list_name",
                                              "list_value(s)",
+                                             "list_file_to_start_with",
                                              "Delete</br>From</br>Lists",
                                              "Save</br> To </br>Lists",
                                              "Clear","Return","Help"]
 
-build_list_utility_input_typeList       =   ["file","text",maketextarea(10),
+build_list_utility_input_typeList       =   ["text",maketextarea(10),"file",
                                              "button","button",
                                              "button","button","button"]
 
-build_list_utility_input_placeholderList = ["select file to start with (default None)",
-                                            "enter list name in 'Notebook' lists (default None)",
+build_list_utility_input_placeholderList = ["enter list name in 'Notebook' lists (default None)",
                                             "enter new list value(s) example (&#39;1&#39;, 2, a, &#39;b&#39;, [3,4] ...)",
+                                            "select file to start with (default None)",
                                             None,None,None,None,None]
 
 build_list_utility_input_jsList         =    [None,None,None,
@@ -79,7 +79,7 @@ build_list_utility_input_jsList         =    [None,None,None,
                                               "build_utility_clear_callback()",
                                               "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_LIST_ID) + ")"]
 
-build_list_utility_input_reqList        =   [0,1,2]
+build_list_utility_input_reqList        =   [0,1]
 
 build_list_utility_input_form           =   [build_list_utility_input_id,
                                              build_list_utility_input_idList,
@@ -97,25 +97,25 @@ build_list_utility_input_form           =   [build_list_utility_input_id,
 """
 build_dict_utility_input_title          =   "Build Dict Utility"
 build_dict_utility_input_id             =   "builddictparms"
-build_dict_utility_input_idList         =   ["startdictfile",
-                                             "dictname",
+build_dict_utility_input_idList         =   ["dictname",
                                              "dictpairs",
+                                             "startdictfile",
                                              None,None,None,None,None]
 
-build_dict_utility_input_labelList      =   ["dict_file_to_start_With",
-                                             "dict_name",
+build_dict_utility_input_labelList      =   ["dict_name",
                                              "dict_values",
+                                             "dict_file_to_start_with",
                                              "Delete</br>From</br>Dicts",
                                              "Save</br> To </br>Dicts",
                                              "Clear","Return","Help"]
 
-build_dict_utility_input_typeList       =   ["file","text",maketextarea(10),
+build_dict_utility_input_typeList       =   ["text",maketextarea(10),"file",
                                              "button","button",
                                              "button","button","button"]
 
-build_dict_utility_input_placeholderList = ["select file to start with (default None)",
-                                            "enter dict name in 'Notebook' dicts (default None)",
+build_dict_utility_input_placeholderList = ["enter dict name in 'Notebook' dicts (default None)",
                                             "enter new dict pairs(s) (&#39;&#39;{key:value}&#39;&#39;,&#39;&#39;.....{key:value})",
+                                            "select file to start with (default None)",
                                             None,None,None,None,None]
 
 build_dict_utility_input_jsList         =    [None,None,None,
@@ -125,7 +125,7 @@ build_dict_utility_input_jsList         =    [None,None,None,
                                               "build_utility_clear_callback()",
                                               "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_DICT_ID) + ")"]
 
-build_dict_utility_input_reqList        =   [0,1,2]
+build_dict_utility_input_reqList        =   [0,1]
 
 build_dict_utility_input_form           =   [build_dict_utility_input_id,
                                              build_dict_utility_input_idList,
@@ -145,10 +145,13 @@ build_dict_utility_input_form           =   [build_dict_utility_input_id,
 """
 
 def get_sw_utilities_main_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(build_utility_tb_id,
-                                                               build_utility_tb_keyTitleList,
-                                                               build_utility_tb_jsList,
-                                                               build_utility_tb_centered))])
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(build_utility_tb_id,
+                                               build_utility_tb_keyTitleList,
+                                               build_utility_tb_jsList,
+                                               build_utility_tb_centered),False)
+
 
 def get_sw_utilities_list_inputs(parms) :
         return(get_parms_for_input(parms,build_list_utility_input_idList))
@@ -182,23 +185,22 @@ def display_list_dict(id) :
                                           list_dict_form[6],
                                           shortForm=False) 
       
-    list_dict_input_form.set_gridwidth(660)
-
+    list_dict_input_form.set_gridwidth(700)
+    list_dict_input_form.set_custombwidth(120)
+    
     list_dictcustom_html = ""
     list_dictcustom_html = list_dict_input_form.get_html()
         
     if(id==swum.DICT_ID)  :
-        list_title_html =   "<div>" + build_dict_utility_input_title + "</div>"
-        wrapper = "dict-table-wrapper"
+        list_title_html =   "<div>" + build_dict_utility_input_title + "</div><br></br>"
     else : 
         list_title_html =   "<div>" + build_list_utility_input_title + "</div><br></br>"
-        wrapper = "list-table-wrapper"
     
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [list_title_html,list_html,list_dictcustom_html]
     
     print("\n")
-    display_generic_grid(wrapper,gridclasses,gridhtmls)
+    display_generic_grid("sw-utils-wrapper",gridclasses,gridhtmls)
 
 
 

@@ -85,7 +85,7 @@ def process_sw_utilities(optionId,parms=None) :
             else :
                 listtext    =   str(sellist)
         
-            listparms = ["", parms, listtext]
+            listparms = [parms, listtext, ""]
             cfg.set_config_value(suww.build_list_utility_input_id+"Parms",listparms)
         
         suww.get_sw_utilities_main_taskbar()
@@ -115,7 +115,7 @@ def process_sw_utilities(optionId,parms=None) :
             else :
                 dicttext = (dicttext + "}")
         
-        dictparms = ["", parms, dicttext]
+        dictparms =  [parms, dicttext,""]
         cfg.set_config_value(suww.build_dict_utility_input_id+"Parms",dictparms)
         suww.get_sw_utilities_main_taskbar()
         suww.display_list_dict(swum.DICT_ID)
@@ -127,8 +127,8 @@ def process_sw_utilities(optionId,parms=None) :
     if (optionId == swum.ADD_LIST_OPTION) :
         fparms = suww.get_sw_utilities_list_inputs(parms)
 
-        filename = fparms[0]
-        listname = fparms[1]
+        filename = fparms[2]
+        listname = fparms[0]
         
         if(len(listname) > 0) :
             
@@ -143,7 +143,7 @@ def process_sw_utilities(optionId,parms=None) :
                 except Exception as e:
                     opstat.store_exception("Unable to open list file" + str(id),e)
             else :
-                inlist  =   fparms[2].lstrip("[")
+                inlist  =   fparms[1].lstrip("[")
                 inlist  =   inlist.rstrip("]")
                 newlist =   inlist.split(",") 
             
@@ -169,8 +169,8 @@ def process_sw_utilities(optionId,parms=None) :
     if (optionId == swum.ADD_DICT_OPTION) :
         fparms = suww.get_sw_utilities_dict_inputs(parms)
         
-        filename = fparms[0]
-        dictname = fparms[1]
+        filename = fparms[2]
+        dictname = fparms[0]
 
         if(len(dictname) > 0) :
             
@@ -185,9 +185,9 @@ def process_sw_utilities(optionId,parms=None) :
                 except Exception as e:
                     opstat.store_exception("Unable to open dict file" + str(id),e)
             else :
-                newdict =  fparms[2]
+                newdict =  fparms[1]
                 
-                if(len(fparms[2]) > 0) :
+                if(len(fparms[1]) > 0) :
                     try :
                         newdict = newdict.replace("'", "\"")
                         sdict = json.loads(newdict)

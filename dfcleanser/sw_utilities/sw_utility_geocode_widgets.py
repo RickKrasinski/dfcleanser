@@ -17,8 +17,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
-from dfcleanser.common.html_widgets import (get_button_tb_form, display_composite_form, maketextarea, 
-                                            ButtonGroupForm, InputForm)
+from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
 
@@ -49,13 +48,14 @@ geocode_main_tb_keyTitleList            =   ["Interactive</br>Geocoding",
                                              "Bulk</br>Geocoding",
                                              "Select</br>Geocoder",
                                              "Geocode</br>Utilities",
-                                             "Clear","Help"]
+                                             "Clear","Reset","Help"]
 
 geocode_main_tb_jsList                  =   ["display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
                                              "display_geocoders(-1," + str(sugm.BULK) + ")",
                                              "display_geocoders(-1," + str(sugm.INTERACTIVE) + ")",
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_GEOUTILS) + ")",
                                              "geocode_return()",
+                                             "process_pop_up_cmd(6)",
                                              "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
 
 geocode_main_tb_centered                =   False
@@ -488,6 +488,12 @@ baidu_APP_Name      =   "MyTestGeocoder"
 baidu_ID            =   "15870017"
 baidu_API_Key       =   "GISxFUnzA8jFfzYF7pVcKWig"
 baidu_Secret_Key    =   "d3UWh3WGWTxvmm897KQoczVfHmZzyMOR"
+
+baidu_second_key    =   "NaKYPfQCGqrGdX8pR77rdWLuGyiGCu4E"
+baidu_second_SK     =   "1KMkueNu8jycuv45fShY6FgZK8BdAty0"
+
+baidu_third_key     =   "vt0XM0d6t28kDS9Rm9Bf7nNF9kE5lOfh"
+baidu_third_SK      =   "ltseOWxtoa2Mz3odxSUTovgGPSGLU3EZ"
 
 
 """
@@ -1353,15 +1359,22 @@ bulk_tune_utility_input_reqList                 =   [0,1]
 #--------------------------------------------------------------------------
 """
 def display_geocode_main_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(geocode_main_tb_id,
-                                                               geocode_main_tb_keyTitleList,
-                                                               geocode_main_tb_jsList,
-                                                               geocode_main_tb_centered))]) 
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(geocode_main_tb_id,
+                                               geocode_main_tb_keyTitleList,
+                                               geocode_main_tb_jsList,
+                                               geocode_main_tb_centered),False)
+
+
 def display_geocode_utils_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(geocode_utilities_tb_id,
-                                                               geocode_utilities_tb_keyTitleList,
-                                                               geocode_utilities_tb_jsList,
-                                                               geocode_utilities_tb_centered))]) 
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(geocode_utilities_tb_id,
+                                               geocode_utilities_tb_keyTitleList,
+                                               geocode_utilities_tb_jsList,
+                                               geocode_utilities_tb_centered),False)
+    
     
 def display_calc_distance_input_form() :
 
@@ -1388,7 +1401,7 @@ def display_calc_distance_input_form() :
                         selectDicts)
 
     dist_addr_form.set_gridwidth(720)
-    dist_addr_form.set_custombwidth(120)
+    dist_addr_form.set_custombwidth(100)
     
     dist_addr_form.set_fullparms(True)
     
@@ -1719,13 +1732,10 @@ def validate_geocode_connect_parms(geocid) :
         
     fparms    =   cfg.get_config_value(form+"Parms")
     
-    print("connectparms",fparms)
-    
     opstat  =   opStatus()
     
     if(not(fparms == None)) :
         
-        print("fparms",fparms)        
         if(geocid == sugm.ArcGISId)              :
             validate_arcgis_geocoder_parms(fparms,opstat,False)
 
@@ -1842,7 +1852,7 @@ def validate_bing_geocoder_parms(gparms,opstat,getfparms=True) :
     """
 
     if(getfparms) :
-        fparms  =   get_parms_for_input(gparms,arcgis_geocoder_idList)
+        fparms  =   get_parms_for_input(gparms,bing_geocoder_idList)
     else :
         fparms  =   gparms
     
@@ -2294,7 +2304,8 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
     *  N?A
     * --------------------------------------------------------
     """
-    
+ 
+    print("display_geocode_inputs",geocid,gtype)
     if(geocid == None) :
         geocid = sugm.GoogleId
         cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
@@ -2367,6 +2378,7 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                 [googsel])
             
     geofunc_input_form.set_gridwidth(620)
+    geofunc_input_form.set_custombwidth(100) 
     
     if(showfull) :
         geofunc_input_form.set_fullparms(True)    
@@ -2558,7 +2570,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
                                    shortForm=False)
     
     geocode_input_form.set_gridwidth(720)
-    geocode_input_form.set_custombwidth(100)
+    geocode_input_form.set_custombwidth(90)
     
     if(showfull) :
         geocode_input_form.set_fullparms(True)

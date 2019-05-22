@@ -18,8 +18,7 @@ import dfcleanser.common.cfg as cfg
 from dfcleanser.common.table_widgets import  (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT, 
                                               get_df_describe_table, get_stats_table)   
 from dfcleanser.common.html_widgets import   (addattribute, addstyleattribute, new_line, 
-                                              InputForm, ButtonGroupForm, display_composite_form, 
-                                              get_button_tb_form)
+                                              InputForm, ButtonGroupForm)
 
 from dfcleanser.common.common_utils import  (display_generic_grid, get_select_defaults,  displayParms,
                                              run_jscript, display_status)
@@ -290,13 +289,12 @@ reverse_results_bar_text     =   "Total Locations Geocoded &nbsp;&nbsp;&nbsp;: &
 errors_bar_text              =   "Total Geocode Errors &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;"
 
 def display_base_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(bulk_geocode_process_tb_id,
-                                                               bulk_geocode_process_tb_keyTitleList,
-                                                               bulk_geocode_process_tb_jsList,
-                                                               bulk_geocode_process_tb_centered))]) 
     
-    
-
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(bulk_geocode_process_tb_id,
+                                               bulk_geocode_process_tb_keyTitleList,
+                                               bulk_geocode_process_tb_jsList,
+                                               bulk_geocode_process_tb_centered),False)
 
 
 def set_progress_bar_value(geocid,geotype,barid,countvalue,barvalue) :
@@ -708,16 +706,16 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
         
         if(optionid == sugm.DISPLAY_BULK_RESULTS) :
         
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
 
         elif(optionid == sugm.DISPLAY_BULK_RESULTS_CONCAT) :
@@ -816,8 +814,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                                                     bulk_geocode_export_input_form[6])
         
             proc_command_input_form.set_gridwidth(860)
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
             proc_command_input_form.set_custombwidth(90)
 
@@ -853,8 +851,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
         
         elif(optionid == sugm.DISPLAY_BULK_RESULTS_DF) :
@@ -865,8 +863,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
         
         elif(optionid == sugm.DISPLAY_BULK_ERRORS_DF) :
@@ -877,15 +875,15 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
         elif(optionid == sugm.DISPLAY_BULK_RESULTS_RETURN) :
             proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                           bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-            custom_keys     =   {"keywidth":110,"leftmargin":100}
-            proc_command_input_form.set_custom(custom_keys)
+            custom_keys     =   {"width":110,"left-margin":100}
+            proc_command_input_form.set_buttonstyle(custom_keys)
 
         #proc_command_input_form.dump()
         proc_command_input_html     =   proc_command_input_form.get_html()
@@ -912,8 +910,8 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
         proc_command_input_form   =   ButtonGroupForm(bulk_geocode_process_tb_form[0],bulk_geocode_process_tb_form[1],
                                                       bulk_geocode_process_tb_form[2],bulk_geocode_process_tb_form[3])
     
-        custom_keys     =   {"keywidth":110,"leftmargin":100}
-        proc_command_input_form.set_custom(custom_keys)
+        custom_keys     =   {"width":110,"left-margin":100}
+        proc_command_input_form.set_buttonstyle(custom_keys)
         
         proc_command_input_html     =   proc_command_input_form.get_html()  
         

@@ -193,10 +193,10 @@ def test_bulk_geocoder(geocid,inputs) :
         test_google_bulk_connector(inputs)  
     elif(geocid == sugm.BingId) :
         from dfcleanser.sw_utilities.sw_utility_geocode_control import test_geocoder
-        test_geocoder(geocid,inputs)
+        test_geocoder(geocid,inputs,sugm.BULK)
     elif(geocid == sugm.BaiduId) :
         from dfcleanser.sw_utilities.sw_utility_geocode_control import test_geocoder
-        test_geocoder(geocid,inputs)
+        test_geocoder(geocid,inputs,sugm.BULK)
 
     return()
 
