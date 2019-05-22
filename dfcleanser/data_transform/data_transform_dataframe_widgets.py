@@ -15,7 +15,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_transform.data_transform_model as dtm
 
-from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form, get_html_spaces,
+from dfcleanser.common.html_widgets import (display_composite_form, get_html_spaces,
                                             get_input_form, get_header_form, maketextarea, ButtonGroupForm, InputForm) 
 
 from dfcleanser.common.table_widgets import dcTable
@@ -57,6 +57,44 @@ dataframe_transform_tb_jsList               =   ["df_transform_task_bar_callback
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
 
+dataframe_transform_tb_centered             =   True
+
+dataframe_transform_tbA_doc_title           =   "DataFrame Transform Options"
+dataframe_transform_tbA_title               =   "DataFrame Transform Options"
+dataframe_transform_tbA_id                  =   "dftransformoptionstbA"
+
+dataframe_transform_tbA_keyTitleList        =   ["Save </br>Column</br> Names",
+                                                 "Add </br>Column</br> Names",
+                                                 "Change</br>Column </br>Names",
+                                                 "Reset</br> Index</br>Column",
+                                                 "Set </br> Index </br>Column"]
+
+dataframe_transform_tbA_jsList              =   ["df_transform_task_bar_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.ADD_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.CHANGE_COLUMN_NAMES)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.RESET_ROW_IDS)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.SET_NEW_ROW_IDS_COL)+")"]
+
+dataframe_transform_tbA_centered            =   True
+
+dataframe_transform_tbB_doc_title           =   "DataFrame Transform Options"
+dataframe_transform_tbB_title               =   "DataFrame Transform Options"
+dataframe_transform_tbB_id                  =   "dftransformoptionstbB"
+
+dataframe_transform_tbB_keyTitleList        =   ["Drop</br> Index</br> Column",
+                                                 "Sort </br>Index</br> Column",
+                                                 "Drop</br>Duplicate</br> Rows",
+                                                 "Return","Help"]
+
+dataframe_transform_tbB_jsList              =   ["df_transform_task_bar_callback("+str(dtm.DROP_ROW_IDS_COL)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.SORT_ROWS)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DROP_DUPLICATE_ROWS)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
+                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
+
+dataframe_transform_tbB_centered            =   True
+
+
 """
 #--------------------------------------------------------------------------
 #    dataframe remove column id row inputs
@@ -65,22 +103,20 @@ dataframe_transform_tb_jsList               =   ["df_transform_task_bar_callback
 df_save_row_transform_input_title           =   "Save Column Names Row"
 df_save_row_transform_input_id              =   "savecidrowtransform"
 df_save_row_transform_input_idList          =   ["filesavename",
-                                                 None,None,None,None]
+                                                 None,None,None]
 
 df_save_row_transform_input_labelList       =   ["column_names_file_name",
                                                  "Save Column</br> Names",
-                                                 "Set Default</br>File Name",
                                                  "Return","Help"]
 
 df_save_row_transform_input_typeList        =   ["file",
-                                                 "button","button","button","button"]
+                                                 "button","button","button"]
 
 df_save_row_transform_input_placeholderList     = ["enter File name to save column names to or browse to file below (default use df name)",
-                                                 None,None,None,None]
+                                                   None,None,None]
 
 df_save_row_transform_input_jsList          =    [None,
                                                  "df_process_cmd_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+",0)",
-                                                 "df_process_cmd_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+",1)",
                                                  "df_process_cmd_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+",2)",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_SAVE_COL_NAME_ID) + ")"]
 
@@ -307,10 +343,37 @@ df_drop_dups_transform_input_reqList        =   [0]
 #--------------------------------------------------------------------------
 """
 def display_dataframe_transform_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                               dataframe_transform_tb_keyTitleList,
-                                                               dataframe_transform_tb_jsList,
-                                                               False))])
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+
+        from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+        display_dfcleanser_taskbar(ButtonGroupForm(dataframe_transform_tb_id,
+                                                   dataframe_transform_tb_keyTitleList,
+                                                   dataframe_transform_tb_jsList,
+                                                   dataframe_transform_tb_centered))
+    else :
+        
+        transform_tb_A     =   ButtonGroupForm(dataframe_transform_tbA_id,
+                                               dataframe_transform_tbA_keyTitleList,
+                                               dataframe_transform_tbA_jsList,
+                                               dataframe_transform_tbA_centered)
+        
+        transform_tb_A.set_gridwidth(480)
+        transform_tb_A_html    =   transform_tb_A.get_html()
+        
+        transform_tb_B     =   ButtonGroupForm(dataframe_transform_tbB_id,
+                                               dataframe_transform_tbB_keyTitleList,
+                                               dataframe_transform_tbB_jsList,
+                                               dataframe_transform_tbB_centered)
+        
+        transform_tb_B.set_gridwidth(480)
+        transform_tb_B_html    =   transform_tb_B.get_html()
+        
+        gridclasses     =   ["dfc-top-","dfc-footer"]
+        gridhtmls       =   [transform_tb_A_html,transform_tb_B_html]
+    
+        display_generic_grid("dfcleanser-system-tb-pop-up-wrapper",gridclasses,gridhtmls)
+        
 
 def display_save_colnames_row_input() :
     display_composite_form([get_input_form(InputForm(df_save_row_transform_input_id,
@@ -351,20 +414,22 @@ def get_drop_duplicate_rows_input_parms(inparms) :
 
 def display_common_df_options(header_html,grid_input_form) :
     
-    display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                               dataframe_transform_tb_keyTitleList,
-                                                               dataframe_transform_tb_jsList,
-                                                               False))])
+    display_dataframe_transform_taskbar()
     
-    grid_input_form.set_custombwidth(160)
-    grid_input_form.set_gridwidth(740)
-    grid_input_form.set_fullparms(True) 
+    grid_input_form.set_shortForm(True)
+    grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+    grid_input_form.set_gridwidth(480)
+    grid_input_form.set_fullparms(True)  
+    
     grid_input_html   =   grid_input_form.get_html()
     
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [header_html,grid_input_html]
     
-    display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("df-common-df-pop-up-wrapper",gridclasses,gridhtmls)
 
    
 """
@@ -378,19 +443,14 @@ def display_dataframe_options(parms) :
 
     if(funcid == dtm.SAVE_COLUMN_NAMES_ROW) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
-
+        display_dataframe_transform_taskbar()
+        
         common_dataframe_heading_html       =   "<div>Save Column Names </div>"
         
         filename = cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
         filename = filename.replace('.','_')
         filename = filename.replace('datasets/','')
 
-        save_col_note_html                  =   "<p>" + get_html_spaces(45) + "* Default File Name is " + filename + "_" + "column_names.json</p>"
-            
         grid_input_form                     =   InputForm(df_save_row_transform_input_id,
                                                           df_save_row_transform_input_idList,
                                                           df_save_row_transform_input_labelList,
@@ -398,17 +458,23 @@ def display_dataframe_options(parms) :
                                                           df_save_row_transform_input_placeholderList,
                                                           df_save_row_transform_input_jsList,
                                                           df_save_row_transform_input_reqList)
-            
-        grid_input_form.set_custombwidth(160)
-        grid_input_form.set_gridwidth(740)
-        grid_input_form.set_fullparms(True)    
+        
+        cfg.set_config_value(df_save_row_transform_input_id+"Parms",[filename + "_" + "column_names.json"])
+        
+        grid_input_form.set_shortForm(True)
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_form.set_fullparms(True)  
+        
         grid_input_html   =   grid_input_form.get_html()
     
-        gridclasses     =   ["dfcleanser-common-grid-header","df-save-col-names-wrapper-note","dfc-footer"]
-        gridhtmls       =   [common_dataframe_heading_html,save_col_note_html,grid_input_html]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [common_dataframe_heading_html,grid_input_html]
     
-        display_generic_grid("df-save-col-names-wrapper",gridclasses,gridhtmls)
-            
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("df-save-col-names-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("df-save-col-names-pop-up-wrapper",gridclasses,gridhtmls)
 
     # add column names row
     elif(funcid == dtm.ADD_COLUMN_NAMES_ROW) :
@@ -463,10 +529,7 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.SET_NEW_ROW_IDS_COL) :
         
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dataframe_transform_tb_id,
-                                                                   dataframe_transform_tb_keyTitleList,
-                                                                   dataframe_transform_tb_jsList,
-                                                                   False))])
+        display_dataframe_transform_taskbar()
         
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> Select a Column to use for Row Ids by clicking on Column Name above.")
@@ -538,11 +601,6 @@ def display_dataframe_options(parms) :
 
     elif(funcid == dtm.DROP_DUPLICATE_ROWS) :
         
-        print("\n")
-        col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
-        col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
-        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dtdcrcol")
-        
         common_dataframe_heading_html       =   "<div>Drop Duplicate Rows </div>"
         
         grid_input_form                     =   InputForm(df_drop_dups_transform_input_id,
@@ -562,9 +620,29 @@ def display_dataframe_options(parms) :
                             df_drop_dups_transform_input_idList,
                             df_drop_dups_transform_input_typeList,
                             selectDicts)
+
+        display_dataframe_transform_taskbar()
         
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        print("\n")
         
+        col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
+        col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
+        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dtdcrcol")
+    
+        grid_input_form.set_shortForm(True)
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_form.set_fullparms(True)  
+    
+        grid_input_html   =   grid_input_form.get_html()
+    
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [common_dataframe_heading_html,grid_input_html]
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("df-common-df-pop-up-wrapper",gridclasses,gridhtmls)
 
     elif(funcid == dtm.DF_TRANSFORM_RETURN) :
                     

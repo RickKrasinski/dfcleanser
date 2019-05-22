@@ -36,6 +36,10 @@ PROCESS_DATETIME_MERGESPLIT_OPTION          =   16
 
 PROCESS_DF_SCHEMA_TRANSFORM_OPTION          =   17
 
+DISPLAY_TRANSFORM_COLS_FROM_CLEANSE_OPTION  =   18
+
+
+
 DISPLAY_DATAFRAME_TRANSFORM                 =   0
 DISPLAY_COLUMNS_TRANSFORM                   =   1
 DISPLAY_DATETIME_TRANSFORM                  =   2
@@ -51,6 +55,10 @@ DISPLAY_DATETIME_MERGE                      =   5
 
 SPLIT                                       =   0
 MERGE                                       =   1
+
+DISPLAY_NO_FUNCTIONS                        =   0
+DISPLAY_FUNCTIONS                           =   1
+
 
 """
 #--------------------------------------------------------------------------
@@ -102,6 +110,7 @@ DATETIME_DATATYPE_COLUMN        =   13
 
 SORT_COLUMN                     =   14
 APPLY_COLUMN                    =   15
+APPLY_COLUMN_GF                 =   16
         
 """
 #--------------------------------------------------------------------------
@@ -137,6 +146,7 @@ COPYING_DETAILS         =   32
 
 SORTING_DETAILS         =   34
 APPLYING_DETAILS        =   35
+APPLYING_DETAILS_GF     =   36
 
 ADD_COLUMN_CLEAR        =   4        
 ADD_COLUMN_RETURN       =   5
@@ -154,4 +164,5 @@ PROCESS_FILE_OPTION                 =   13
 PROCESS_MAKE_NEW_CODE_OPTION        =   14
 PROCESS_ADD_NEW_CODE_OPTION         =   15
 PROCESS_SELECT_FUNC_OPTION          =   16
+DISPLAY_GENERIC_FUNCTIONS_OPTION    =   17
 

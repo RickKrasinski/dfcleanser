@@ -257,7 +257,7 @@ def process_df_transform(parms,display=True) :
                     
                     #make scriptable
                     add_to_script(["# save column names row",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_widgets save_column_names_row",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control save_column_names_row",
                                    "save_column_names_row(" + str(filename) + ")"],opstat)
                 
                 clear_output()
@@ -316,7 +316,7 @@ def process_df_transform(parms,display=True) :
                         
                         #make scriptable
                         add_to_script(["# Add Column Names Row",
-                                       "from dfcleanser.data_transform.data_transform_dataframe_widgets add_column_names_row",
+                                       "from dfcleanser.data_transform.data_transform_dataframe_control add_column_names_row",
                                        "add_column_names_row(" + single_quote(filename) +"," + json.dumps(collist) + ")"],opstat)
 
                     clear_output()
@@ -347,7 +347,7 @@ def process_df_transform(parms,display=True) :
             if(display) :
                 #make scriptable
                 add_to_script(["# change column names",
-                               "from dfcleanser.data_transform.data_transform_dataframe_widgets change_column_names",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control change_column_names",
                                "change_column_names("+",False)"],opstat)
                 
                 clear_output()
@@ -386,7 +386,7 @@ def process_df_transform(parms,display=True) :
                 if(display) :
                     #make scriptable
                     add_to_script(["# reset row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_widgets reset_row_ids_column",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control reset_row_ids_column",
                                    "reset_row_ids_column(" + str(startid) + ")"],opstat)
 
                 clear_output()
@@ -416,7 +416,7 @@ def process_df_transform(parms,display=True) :
                     if(display) :
                         #make scriptable
                         add_to_script(["# set row ids column",
-                                       "from dfcleanser.data_transform.data_transform_dataframe_widgets set_row_ids_column",
+                                       "from dfcleanser.data_transform.data_transform_dataframe_control set_row_ids_column",
                                        "set_row_ids_column(" + single_quote(colname) + ")"],opstat)
 
                     clear_output()
@@ -450,7 +450,7 @@ def process_df_transform(parms,display=True) :
                 if(display) :
                     #make scriptable
                     add_to_script(["# set row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_widgets drop_row_ids_column",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control drop_row_ids_column",
                                    "drop_row_ids_column()"],opstat)
                 
                 clear_output()
@@ -477,7 +477,7 @@ def process_df_transform(parms,display=True) :
                 if(display) :
                     #make scriptable
                     add_to_script(["# set row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_widgets sort_row_ids_column",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control sort_row_ids_column",
                                    "sort_row_ids_column()"],opstat)
                 
                 clear_output()
@@ -508,7 +508,7 @@ def process_df_transform(parms,display=True) :
                 if(display) :
                     #make scriptable
                     add_to_script(["# drop duplicate rows",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_widgets drop_duplicate_rows",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control drop_duplicate_rows",
                                    "drop_duplicate_rows("+ json.dumps(collist) + ")"],opstat)
 
                 clear_output()

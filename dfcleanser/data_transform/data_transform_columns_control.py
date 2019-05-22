@@ -17,10 +17,11 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.data_transform.data_transform_columns_widgets as dtcw
 import dfcleanser.data_transform.data_transform_model as dtm
 
-from dfcleanser.common.common_utils import (displayParms, single_quote, 
-                                            display_exception, display_status, 
-                                            opStatus, RunningClock, is_existing_column,
-                                            get_col_uniques)
+from dfcleanser.common.common_utils import (displayParms, single_quote, get_parms_for_input,
+                                            display_exception, display_status, does_col_contain_nan, 
+                                            opStatus, RunningClock, is_existing_column, is_numeric_col,
+                                            get_datatype, get_datatype_str, is_numeric_col_int,
+                                            get_col_uniques, get_datatype_id_from_str)
 
 from dfcleanser.common.display_utils import (display_df_sizing_info)        
 
@@ -57,11 +58,23 @@ def set_NewColumnValues(ncv) :
 #--------------------------------------------------------------------------
 """
 def process_column_option(parms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     dtcw.display_data_transform_columns_taskbar()
     
     if(type(parms) != str) :
         optionid    = parms[2]
+    print("process_column_option",parms,optionid)
         
     colname = cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY)
         
@@ -87,13 +100,24 @@ def process_column_option(parms) :
         process_sort_by_column(parms)
     elif(optionid == dtm.APPLY_COLUMN) :
         process_apply_fn_to_column(parms)
+    elif(optionid == dtm.DATATYPE_COLUMN) :
+        process_datatype_column(colname,parms) 
+
         
-"""
-#--------------------------------------------------------------------------
-#    rename column transform option
-#--------------------------------------------------------------------------
-"""
 def process_rename_column(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : rename column transform option
+    * 
+    * parms :
+    *   colname -   cokumn name
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     fparms = dtcw.get_rename_column_inputs(parms)
     newname = fparms[0]
@@ -116,7 +140,7 @@ def process_rename_column(colname,parms,display=True) :
             
             #make scriptable
             add_to_script(["# Rename column " + colname + " to " + newname,
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_rename_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_rename_column",
                            "process_rename_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -124,14 +148,27 @@ def process_rename_column(colname,parms,display=True) :
             display_status("Column " + colname + " renamed to " + newname + " successfully")
         
 
-"""
-#--------------------------------------------------------------------------
-#    add column with column list 
-#--------------------------------------------------------------------------
-"""
-def add_column(colname,colList,opstat,display=True) :
+def add_column(dftitle,colname,colList,opstat,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add column with column list
+    * 
+    * parms :
+    *   dftitle -   dataframe title
+    *   colname -   column name
+    *   collist -   column values
+    *   opstat  -   op status var
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
-    if(is_existing_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)) :
+    from dfcleanser.common.cfg import get_dfc_dataframe
+    df = get_dfc_dataframe(dftitle) 
+    
+    if(is_existing_column(df,colname)) :
         opstat.set_status(False)
         opstat.set_errorMsg("Column to Add : "+colname + " already exists")
         return()
@@ -149,12 +186,19 @@ def add_column(colname,colList,opstat,display=True) :
             display_exception(opstat)
 
 
-"""
-#--------------------------------------------------------------------------
-#    process add column option 
-#--------------------------------------------------------------------------
-"""    
 def process_add_column(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process add column option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     optionid        =   parms[0]
 
@@ -198,7 +242,7 @@ def process_add_column(parms,display=True) :
                     display_exception(opstat)
 
                 else :
-                    add_column(newcolname,colList,opstat)
+                    add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,colList,opstat)
                 
                     if(not (opstat.get_status())) :
                         display_exception(opstat) 
@@ -212,7 +256,7 @@ def process_add_column(parms,display=True) :
             try :
                 exec(code)
                 #print("NewColumnValues",len(NewColumnValues))
-                add_column(newcolname,NewColumnValues,opstat)
+                add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,NewColumnValues,opstat)
                
             except Exception as e:
                 opstat.store_exception("Unable to add new column column list from code error",e)
@@ -227,7 +271,7 @@ def process_add_column(parms,display=True) :
             
             #make scriptable
             add_to_script(["# Add new column " + newcolname,
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_add_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_add_column",
                            "process_add_column(" + json.dumps(parms) + ",False)"],opstat)
 
             clear_output()
@@ -235,12 +279,20 @@ def process_add_column(parms,display=True) :
             display_status("New Column " + newcolname + " Added Successfully")
             
 
-"""
-#--------------------------------------------------------------------------
-#    save column being deleted 
-#--------------------------------------------------------------------------
-""" 
 def save_deleted_column(colname,fname,df) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : save column being deleted to a file
+    * 
+    * parms :
+    *   colname   -   column name
+    *   fname     -   filename
+    *   df        -   dataframe
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     
@@ -254,12 +306,21 @@ def save_deleted_column(colname,fname,df) :
 
     return(opstat)
 
-"""
-#--------------------------------------------------------------------------
-#    drop column 
-#--------------------------------------------------------------------------
-"""     
+
 def process_drop_column(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : drop column transform option
+    * 
+    * parms :
+    *   colname -   cokumn name
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     fparms = dtcw.get_drop_column_inputs(parms)
@@ -292,7 +353,7 @@ def process_drop_column(colname,parms,display=True) :
             
             #make scriptable
             add_to_script(["# drop column " + colname,
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_drop_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_drop_column",
                            "process_drop_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -300,12 +361,20 @@ def process_drop_column(colname,parms,display=True) :
             display_status("Column " + colname + " dropped Successfully")
 
  
-"""
-#--------------------------------------------------------------------------
-#    save column 
-#--------------------------------------------------------------------------
-""" 
 def process_save_column(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : save column transform option
+    * 
+    * parms :
+    *   colname -   cokumn name
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     fparms = dtcw.get_save_column_inputs(parms)
@@ -331,7 +400,7 @@ def process_save_column(colname,parms,display=True) :
             
             #make scriptable
             add_to_script(["# save column " + colname,
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_save_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_save_column",
                            "process_save_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             clear_output()
             dtcw.display_base_data_transform_columns_taskbar()
@@ -340,12 +409,19 @@ def process_save_column(colname,parms,display=True) :
     return(opstat)
 
     
-"""
-#--------------------------------------------------------------------------
-#    reorder columns 
-#--------------------------------------------------------------------------
-"""      
 def process_reorder_columns(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : reorder column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =    opStatus()
     fparms  =    dtcw.get_reorder_column_inputs(parms)
@@ -381,7 +457,7 @@ def process_reorder_columns(parms,display=True) :
             
             #make scriptable
             add_to_script(["# reorder columns ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_reorder_columns",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_reorder_columns",
                            "process_reorder_columns(" + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -389,12 +465,20 @@ def process_reorder_columns(parms,display=True) :
             display_status("Column " + movecol + " moved Successfully")
 
     
-"""
-#--------------------------------------------------------------------------
-#    reorder columns 
-#--------------------------------------------------------------------------
-"""      
+      
 def process_copy_column(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : copy column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     fparms  =   dtcw.get_copy_column_inputs(parms)
@@ -417,7 +501,7 @@ def process_copy_column(parms,display=True) :
             
             #make scriptable
             add_to_script(["# copy column ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_copy_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control_widgets import process_copy_column",
                            "process_copy_column(" + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -425,12 +509,19 @@ def process_copy_column(parms,display=True) :
             display_status("Column " + copyfromcol + " copied to " + copytocol + " Successfully")
 
 
-"""
-#--------------------------------------------------------------------------
-#    sort by column 
-#--------------------------------------------------------------------------
-"""      
 def process_sort_by_column(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : sort by column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
 
@@ -458,7 +549,7 @@ def process_sort_by_column(parms,display=True) :
             
             #make scriptable
             add_to_script(["# sort by column ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_sort_by_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_sort_by_column",
                            "process_sort_by_column(" + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -467,12 +558,20 @@ def process_sort_by_column(parms,display=True) :
     
     cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
 
-"""
-#--------------------------------------------------------------------------
-#    apply fn to column 
-#--------------------------------------------------------------------------
-"""      
+
 def process_apply_fn_to_column(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : apply fn to column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat  =   opStatus()
     
@@ -513,7 +612,7 @@ def process_apply_fn_to_column(parms,display=True) :
             
             #make scriptable
             add_to_script(["# apply fn to column ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_apply_fn_to_column",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_apply_fn_to_column",
                            "process_apply_fn_to_column(" + json.dumps(parms) + ",False)"],opstat)
             
             clear_output()
@@ -523,13 +622,131 @@ def process_apply_fn_to_column(parms,display=True) :
     #et_dc_dataframe()[coltoapply].apply(fncode)
     cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
 
+
+def process_datatype_column(colname,parms,display=True)  :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : apply fn to column transform option
+    * 
+    * parms :
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
+    print("process_datatype_column",colname,parms)
     
-"""
-#--------------------------------------------------------------------------
-#    mapping transform
-#--------------------------------------------------------------------------
-"""
+    opstat          =   opStatus()
+    fillnamethod    =   None
+    fillnavalue     =   None
+    
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    nans_flag   =   does_col_contain_nan(df,colname)
+    
+    if(nans_flag) :
+        fparms  =   get_parms_for_input(parms[3],dtcw.dt_data_type_input_idList)
+        datatype        =   fparms[0]
+        fillnamethod    =   fparms[1]
+        fillnavalue     =   fparms[2]
+    else :
+        fparms  =   get_parms_for_input(parms[3],dtcw.dt_nn_data_type_input_idList)
+        datatype        =   fparms[0]
+    
+    datatype_id     =   get_datatype_id_from_str(datatype)
+        
+    print("process_datatype_column",datatype,datatype_id,fillnamethod,fillnavalue)
+    
+    if(nans_flag) :
+        if(not(fillnamethod is None)) :
+            if(fillnamethod.find("None") < -1) :
+                if(fillnamethod == "mean") :
+                    if(is_numeric_col(df,colname)) :
+                        fillnavalue     =   df[colname].mean() 
+                    else :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("can not define a mean value for a non numeric column")
+                        fillnavalue     =   None
+                else :
+                    if( (not (fillnamethod == "ffill")) and (not (fillnamethod == "bfill")) ) :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("invalid na fill method " + fillnamethod)
+                        fillnamethod     =   None
+            else :
+                fillnamethod     =   None    
+                        
+    if(is_numeric_col(df,colname)) :
+
+        try :
+            if(is_numeric_col_int(df,colname)) :
+                fillnavalue     =   int(fillnavalue) 
+            else :
+                fillnavalue     =   float(fillnavalue)    
+        except :                   
+            opstat.set_status(False)
+            opstat.set_errorMsg("invalid na fill value " + fillnavalue)
+    
+    if(opstat.get_status()) :   
+        
+        if(nans_flag) :
+        
+            try :
+                df[colname] = df[colname].fillna(fillnavalue,method=fillnamethod)#value=fillnavalue,method=fillnamethod,axis=None,inplace=True)    
+            except :                    
+                opstat.set_status(False)
+                if(not (fillnamethod is None) ) :
+                    opstat.set_errorMsg("fillna failure for column " + colname + " : method = " + fillnamethod + " : value = " + str(fillnavalue) + " : " + str(sys.exc_info()[0]))
+                else :
+                    opstat.set_errorMsg("fillna failure for column " + colname + " : value = " + str(fillnavalue) + " : " + str(sys.exc_info()[0]))
+
+    if(opstat.get_status()) : 
+        
+        if( (datatype_id == 11) or 
+            (datatype_id == 12) or
+            (datatype_id == 13) or
+            (datatype_id == 14) ) :
+            
+            convparms = [get_datatype_str(datatype_id),colname,fillnavalue]
+            from dfcleanser.data_transform.data_transform_widgets import display_datetime_convert
+            display_datetime_convert(convparms)
+            return()
+
+        try :
+            print("convert astype",colname,datatype,datatype_id,get_datatype(datatype_id))
+            import numpy
+            df[colname] = df[colname].astype(get_datatype(datatype_id),copy=True)
+        except :
+            opstat.set_status(False)
+            opstat.set_errorMsg("error changing data type ")
+    
+    if(opstat.get_status()) :
+        
+        print("\n")
+        if(display) :
+            display_status("Column [" + colname + "] datatype changed successfully")
+            
+            print("new dtype",df[colname].dtype)
+            
+    else :
+        display_exception(opstat)
+
+ 
+    
 def process_map_transform(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : mapping transform
+    * 
+    * parms :
+    *   colname -   associated parms
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
     
     opstat  =   opStatus()
     fparms  =   dtcw.get_map_column_inputs(parms)
@@ -612,9 +829,8 @@ def process_map_transform(colname,parms,display=True) :
             if(display) :
                 #make scriptable
                 add_to_script(["# Make col map for " + colname,
-                               "from dfcleanser.data_transform.data_transform_columns_widgets import process_map_transform",
-                               "from dfcleanser.common.cfg import get_dfc_dataframe",
-                               "process_map_transform(get_dfc_dataframe()," + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+                               "from dfcleanser.data_transform.data_transform_columns_control import process_map_transform",
+                               "process_map_transform(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
         else :
             display_exception(opstat)
@@ -628,12 +844,21 @@ def process_map_transform(colname,parms,display=True) :
         if(display) :
             dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
 
-"""
-#--------------------------------------------------------------------------
-#    dummies transform
-#--------------------------------------------------------------------------
-"""
+
 def process_dummy_transform(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : dummies transform
+    * 
+    * parms :
+    *   colname -   associated parms
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
     
     opstat  =   opStatus()
     fparms  =   dtcw.get_dummies_column_inputs(parms)
@@ -651,9 +876,8 @@ def process_dummy_transform(colname,parms,display=True) :
         if(display) :
             #make scriptable
             add_to_script(["# Make dummies for " + colname,
-                           "from dfcleanser.data_transform.data_transform_column_widgets import process_dummy_transform",
-                           "from dfcleanser.common.cfg import get_dfc_dataframe",
-                           "process_dummy_transform(get_dfc_dataframe()," + single_quote(colname) + "," + json.dumps(parms)  + ",False)"],opstat)
+                           "from dfcleanser.data_transform.data_transform_column_control import process_dummy_transform",
+                           "process_dummy_transform(" + single_quote(colname) + "," + json.dumps(parms)  + ",False)"],opstat)
         
         if(display) :
             display_status("Column [" + colname + "] dummies created successfully")
@@ -686,12 +910,21 @@ def process_dummy_transform(colname,parms,display=True) :
             if(not removecol) :
                 dtcw.display_transform_cols_option([[colname,26]])
 
-"""
-#--------------------------------------------------------------------------
-#    categorical transform
-#--------------------------------------------------------------------------
-"""
+
 def process_cat_transform(colname,parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : categorical transform
+    * 
+    * parms :
+    *   colname -   associated parms
+    *   parms   -   associated parms
+    *   display -   display results flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
     
     opstat  =   opStatus()
     fparms  =   dtcw.get_cat_column_inputs(parms)
@@ -741,8 +974,7 @@ def process_cat_transform(colname,parms,display=True) :
         
         #make scriptable
         add_to_script(["# Make categories for " + colname,
-                       "from dfcleanser.data_transform.data_transform_columns_widgets import process_cat_transform",
-                       "from dfcleanser.common.cfg import get_dfc_dataframe",
+                       "from dfcleanser.data_transform.data_transform_columns_control import process_cat_transform",
                        "process_cat_transform(" +  single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
 
         labellist = [dtcw.transform_category_input_labelList[0],dtcw.transform_category_input_labelList[1]]
@@ -755,33 +987,22 @@ def process_cat_transform(colname,parms,display=True) :
     if(not opstat.get_status()) : 
         if(display) :
             dtcw.display_transform_cols_option([[colname,27]])
-        
 
 
-
-"""            
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-#
-#   column Transform Methods
-#
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-"""
-
-"""            
-#------------------------------------------------------------------
-#   make a column ordinal in place using categories 
-#
-#   return : (NA) df is changed in place
-#
-#   df              -   dataframe
-#   columnName      -   column name
-#   reverse         -   reverse the order of the values befor categorize 
-#
-#------------------------------------------------------------------
-"""
 def make_col_categorical(df, columnName, reverse=None)  :   
+    """
+    * -------------------------------------------------------------------------- 
+    * function : make a column ordinal in place using categories
+    * 
+    * parms :
+    *   df              -   dataframe
+    *   columnName      -   column name
+    *   reverse         -   reverse the order of the values befor categorize
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
 
     opstat = opStatus()
 
@@ -817,19 +1038,21 @@ def make_col_categorical(df, columnName, reverse=None)  :
 
     return(opstat)
     
-"""            
-#------------------------------------------------------------------
-#   make a column categorical in place using dummies 
-#
-#   return : (NA) df is changed in place
-#
-#   df              -   dataframe
-#   columnName      -   column name
-#   removeCol       -   remove the original column 
-#
-#------------------------------------------------------------------
-"""
-def make_col_categorical_from_dummies(df, columnName, removeCol)  :   
+
+def make_col_categorical_from_dummies(df, columnName, removeCol)  : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : make a column categorical in place using dummies
+    * 
+    * parms :
+    *   df              -   dataframe
+    *   columnName      -   column name
+    *   removeCol       -   remove the original column
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
     
     opstat = opStatus()
     
@@ -854,24 +1077,26 @@ def make_col_categorical_from_dummies(df, columnName, removeCol)  :
     
     return(opstat)
 
-"""            
-#------------------------------------------------------------------
-#   make a column categorical in place using map 
-#
-#   return : (NA) df is changed in place
-#
-#   df              -   dataframe
-#   columnName      -   column name
-#   cmpa            -   column value map
-#                       ( {'Man': 0, 'Woman': 1} )
-#
-#   handleNA        -   how to handle nas
-#                       'ignore' - ignore errors
-#                       None     - no handling at all 
-#
-#------------------------------------------------------------------
-"""
+
 def make_col_categorical_from_map(df, columnName, cmap, handleNA)  :   
+    """
+    * -------------------------------------------------------------------------- 
+    * function : make a column categorical in place using map
+    * 
+    * parms :
+    *   df              -   dataframe
+    *   columnName      -   column name
+    *   cmpa            -   column value map
+    *                       ( {'Man': 0, 'Woman': 1} )
+    *
+    *   handleNA        -   how to handle nas
+    *                       'ignore' - ignore errors
+    *                       None     - no handling at all 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """ 
 
     collist = df[columnName]
     opstat = opStatus()
@@ -897,18 +1122,32 @@ def clear_dataframe_columns_transform_cfg_values() :
     
     cfg.drop_config_value(dtcw.transform_map_input_id+"Parms")
     cfg.drop_config_value(dtcw.transform_map_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.transform_dummy_input_id+"Parms")
+    cfg.drop_config_value(dtcw.transform_dummy_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.transform_category_input_id+"Parms")
+    cfg.drop_config_value(dtcw.transform_category_input_id+"ParmsProtect")
+    
     cfg.drop_config_value(dtcw.add_column_input_id+"Parms")
     cfg.drop_config_value(dtcw.add_column_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.add_column_file_input_id+"Parms")
     cfg.drop_config_value(dtcw.add_column_file_input_id+"ParmsProtect")
-    cfg.drop_config_value(dtcw.add_column_code_input_id+"Parms")
-    cfg.drop_config_value(dtcw.add_column_code_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_code_gf_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_code_gf_input_id+"ParmsProtect")
+    
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"Parms")
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
     cfg.drop_config_value(dtcw.sort_column_input_id+"ParmsProtect")
-    cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
-    cfg.drop_config_value(dtcw.apply_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.apply_column_gf_input_id+"Parms")
+    cfg.drop_config_value(dtcw.apply_column_gf_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.copy_columns_input_id+"Parms")
+    cfg.drop_config_value(dtcw.copy_columns_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.rename_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.rename_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.drop_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.drop_column_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.save_column_input_id+"Parms")
+    cfg.drop_config_value(dtcw.save_column_input_id+"ParmsProtect")
     
     cfg.drop_config_value(cfg.ADD_COL_CODE_KEY)
     cfg.drop_config_value(cfg.COPY_COL_TO_KEY)
@@ -922,6 +1161,7 @@ def clear_dataframe_columns_transform_cfg_values() :
     cfg.drop_config_value(cfg.COPY_COL_TO_KEY)
     cfg.drop_config_value(cfg.COPY_COL_FROM_KEY)
     
+
 
 
     

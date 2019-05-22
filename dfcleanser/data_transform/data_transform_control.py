@@ -27,7 +27,7 @@ from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables, get_tab
 from dfcleanser.common.common_utils import (display_status, display_exception, opStatus, single_quote, 
                                             get_parms_for_input, RunningClock, is_datetime_column, 
                                             get_datatype_id, is_existing_column, get_datatype_str, 
-                                            is_datetime_datatype, convert_df_cols, get_datatype)
+                                            get_units_id, convert_df_cols, get_datatype)
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
@@ -44,6 +44,18 @@ from IPython.display import clear_output
 """
 
 def display_data_transform(option,parms=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : main data transform processing
+    * 
+    * parms :
+    *   option  -   display option
+    *   parms   -   associated parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     from IPython.display import clear_output
     clear_output()
@@ -55,6 +67,7 @@ def display_data_transform(option,parms=None) :
             display_inspection_data()
         
         clear_data_transform_data()
+        
 
     else :
         
@@ -65,9 +78,9 @@ def display_data_transform(option,parms=None) :
         
             if(not(parms==None)) :
             
-                from dfcleanser.data_inspection.data_inspection_widgets import data_transform_df_input_id
+                from dfcleanser.data_inspection.data_inspection_widgets import data_inspection_df_input_idList
                 if(len(parms) > 1) :
-                    fparms          =   get_parms_for_input(parms[1],data_transform_df_input_id)
+                    fparms          =   get_parms_for_input(parms[1],data_inspection_df_input_idList)
                     if(len(fparms) > 0) :
                         selected_df     =   fparms[0]
             
@@ -169,6 +182,10 @@ def display_data_transform(option,parms=None) :
         
         elif(option == dtm.DISPLAY_TRANSFORM_COLS_OPTION) :
             dtcw.display_transform_cols_option(parms)
+        
+        elif(option == dtm.DISPLAY_TRANSFORM_COLS_FROM_CLEANSE_OPTION) :
+            cfg.set_config_value(cfg.CURRENT_TRANSFORM_DF,selected_df,cfg.get_config_value(cfg.CURRENT_CLEANSE_DF))
+            dtcw.display_transform_cols_option(parms)
 
         elif(option == dtm.DISPLAY_DATETIME_TRANSFORM_OPTION) :
             dtw.display_datetime_column_taskbar()
@@ -196,7 +213,7 @@ def display_data_transform(option,parms=None) :
             process_datetime_merge_split_transform(parms)
             
         elif(option == dtm.PROCESS_DF_SCHEMA_TRANSFORM_OPTION) :
-            process_datatype_transform(parms)
+            process_dfschema_datatype_transform(parms)
             
             
 """
@@ -227,7 +244,7 @@ def process_datetime_datatype_transform(parms,display=True) :
     else :
         dtype = fparms[1]
         
-    df          =   cfg.get_dfc_dataframe()
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
     df_cols     =   df.columns.tolist()
     
     import pandas as pd
@@ -240,54 +257,24 @@ def process_datetime_datatype_transform(parms,display=True) :
         clock.start()
     
     try :
-        if(dtype == "datetime.timedelta") :
-            df[colname] = df[colname].apply(lambda x: pd.Timedelta(x))
-        elif(dtype == "datetime.datetime") :
+        
+        if(dtype == "datetime.datetime") :
             if(len(fparms[3]) > 0) :
                 df[colname] = pd.to_datetime(df[colname], format=fparms[3])
             else :
                 df[colname] = pd.to_datetime(df[colname])
         else :
-            datatype = 0
-            if(not (is_datetime_datatype(datatype)) ) :
+            if(not (get_datatype_id(df[colname].dtype) == 11) ) :
                 if(len(fparms[3]) > 0) :
                     df[colname] = pd.to_datetime(df[colname], format=fparms[3])
                 else :
                     df[colname] = pd.to_datetime(df[colname])
             
-            #TODO set using lambda
-            dtcomps = []
-            for i in range(len(df[colname])) :
-                if(dtype == "datetime.date") :
-                    dtcomps.append(df[colname][i].date())
-                else :
-                    dtcomps.append(df[colname][i].time())
-            
-            # rename current column 
-            namesdict = {}
-            namesdict.update({colname:colname+"temp"})
-            
-            try :
-                cfg.set_current_dfc_dataframe(df.rename(columns=namesdict))
-            except Exception as e:
-                opstat.store_exception("Error renaming " + colname + " to " + colname+"temp",e)
-            
-            if(opstat.get_status()) :
-                dtcw.add_column(colname,dtcomps,opstat)
-                
-                df = cfg.get_dfc_dataframe()
-                if(opstat.get_status()) :
-                    try :
-                        
-                        if(dtype == "datetime.date") :
-                            df[colname] = df[colname].astype(datetime.date)
-                        else :
-                            df[colname] =df[colname].astype(datetime.time)
-                                                
-                        cfg.set_current_dfc_dataframe(df.drop([colname+"temp"],axis=1))
-                    except Exception as e:
-                        opstat.store_exception("Error dropping " + colname+"temp",e)
-        
+            if(dtype == "datetime.date") :
+                df[colname] = df[colname].apply(lambda x: datetime.datetime.date(x))
+            else :
+                df[colname] = df[colname].apply(lambda x: datetime.datetime.time(x))
+         
         # restore the original cols order  
         cfg.set_current_dfc_dataframe(cfg.get_dfc_dataframe()[df_cols])       
 
@@ -303,20 +290,19 @@ def process_datetime_datatype_transform(parms,display=True) :
             
             #make scriptable
             add_to_script(["# change column datatype ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_datetime_datatype_transform",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_datetime_datatype_transform",
                            "process_datetime_datatype_transform(" + single_quote(colname) + "," + json.dumps(fparms) + ",False)"],
                             opstat)
 
             dtw.display_main_taskbar()
             print("\n")
             display_status("Column " + colname +" data type changed successfully to " + dtype)
-            dtw.display_col_data(cfg.get_dfc_dataframe(),colname)
+            dtw.display_transform_col_data(cfg.get_dfc_dataframe(),colname)
         
     else :
         
         if(display) :
             clear_output()
-        
             dtw.display_main_taskbar()
             display_exception(opstat)
 
@@ -329,14 +315,16 @@ def process_datetime_timedelta_transform(parms,display=True) :
     
     opstat  =   opStatus()
     
-    fparms  =   get_parms_for_input(parms[2],dtw.datetime_tdelta_input_idList)
+    fparms  =   get_parms_for_input(parms[1],dtw.datetime_tdelta_input_idList)
 
-    units       =   int(parms[1])
+    
     colname     =   fparms[0]
     colname1    =   fparms[1]
     tdcolname   =   fparms[2] 
+    units       =   fparms[3]
+    units       =   get_units_id(units)
     
-    df          =   cfg.get_dfc_dataframe()
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
     found       =   False
     found1      =   False
     
@@ -385,7 +373,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
             import pandas as pd
             
             timedeltacol = df[colname] - df[colname1]
-            dtcw.add_column(tdcolname,timedeltacol,opstat)
+            dtcc.add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),tdcolname,timedeltacol,opstat)
 
             df = cfg.get_dfc_dataframe()
             
@@ -425,7 +413,7 @@ def process_datetime_timedelta_transform(parms,display=True) :
         
             #make scriptable
             add_to_script(["# calculate timedelta values ",
-                           "from dfcleanser.data_transform.data_transform_columns_widgets import process_datetime_timedelta_transform",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_datetime_timedelta_transform",
                            "process_datetime_timedelta_transform(" + json.dumps(parms) + ",False)"],opstat)
             
             dtw.display_main_taskbar()
@@ -493,8 +481,8 @@ def process_datetime_merge_split_transform(parms,display=True) :
                 splitdate = df[datetimecolumn].apply(lambda x: x.date())            
                 splittime = df[datetimecolumn].apply(lambda x: x.time())            
         
-                dtcw.add_column(datecolumn,splitdate,opstat)
-                dtcw.add_column(timecolumn,splittime,opstat)
+                dtcw.add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),datecolumn,splitdate,opstat)
+                dtcw.add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),timecolumn,splittime,opstat)
         
             # convert to .date or .time         
             except Exception as e:
@@ -509,15 +497,15 @@ def process_datetime_merge_split_transform(parms,display=True) :
                     
                     #make scriptable
                     add_to_script(["# split date time columns ",
-                                   "from dfcleanser.data_transform.data_transform_widgets import process_datetime_merge_split_transform",
+                                   "from dfcleanser.data_transform.data_transform_columns_control import process_datetime_merge_split_transform",
                                    "process_datetime_merge_split_transform(" + json.dumps(parms) + ",False)"],opstat)
                 
                     dtw.display_main_taskbar()
                     print("\n")
                     display_status("Column " + datetimecolumn + " split successfully to " + datecolumn +" : " + timecolumn)
-                    dtw.display_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
-                    dtw.display_col_data(cfg.get_dfc_dataframe(),datecolumn)
-                    dtw.display_col_data(cfg.get_dfc_dataframe(),timecolumn)
+                    dtw.display_transform_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
+                    dtw.display_transform_col_data(cfg.get_dfc_dataframe(),datecolumn)
+                    dtw.display_transform_col_data(cfg.get_dfc_dataframe(),timecolumn)
 
             else :
         
@@ -552,7 +540,7 @@ def process_datetime_merge_split_transform(parms,display=True) :
                 for i in range(len(df[datecolumn])) :
                     mergeddatetime.append(datetime.datetime.combine(df[datecolumn][i],df[timecolumn][i]))
         
-                dtcw.add_column(datetimecolumn,mergeddatetime,opstat)
+                dtcc.add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),datetimecolumn,mergeddatetime,opstat)
         
             # convert to .date or .time         
             except Exception as e:
@@ -567,13 +555,13 @@ def process_datetime_merge_split_transform(parms,display=True) :
                     
                     #make scriptable
                     add_to_script(["# merge date time columns ",
-                                   "from dfcleanser.data_transform.data_transform_widgets import process_datetime_merge_split_transform",
+                                   "from dfcleanser.data_transform.data_transform_columns_control import process_datetime_merge_split_transform",
                                    "process_datetime_merge_split_transform(" + json.dumps(parms) + ",False)"],opstat)
                     
                     dtw.display_main_taskbar()
                     print("\n")
                     display_status("Columns " + datecolumn + ":" + timecolumn +" merged successfully to " + datetimecolumn)
-                    dtw.display_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
+                    dtw.display_transform_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
         
             else :
         
@@ -602,18 +590,19 @@ def convert_nan_value(dtype,nanvalue,opstat) :
     except :
         opstat.set_status(False)
         opstat.set_errorMsg("Nan fill value is invalid")
+
+
     
-
-
-
 """
 #--------------------------------------------------------------------------
 #    change column datatype
 #--------------------------------------------------------------------------
 """
-def process_datatype_transform(parms,display=True) :
+def process_dfschema_datatype_transform(parms,display=True) :
 
     opstat  =   opStatus()
+
+    print("process_dfschema_datatype_transform",parms)
 
     colname     =   parms[0]
     dtid        =   int(parms[1])
@@ -692,6 +681,7 @@ def process_datatype_transform(parms,display=True) :
         else :
         
             display_exception(opstat)
+
         
 
 def clear_data_transform_data() :
@@ -703,8 +693,7 @@ def clear_data_transform_cfg_values() :
     
     cfg.drop_config_value(dtw.datetime_format_input_id+"Parms")
     cfg.drop_config_value(dtw.datetime_format_input_id+"ParmsProtect")
-
-    
+    cfg.drop_config_value(cfg.CURRENT_TRANSFORM_DF)
     
     dtdc.clear_dataframe_transform_cfg_values()
     dtcc.clear_dataframe_columns_transform_cfg_values()
