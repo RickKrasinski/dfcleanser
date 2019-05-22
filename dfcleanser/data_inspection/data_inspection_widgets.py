@@ -20,8 +20,7 @@ from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock,
                                             display_exception, display_generic_grid,
                                             get_select_defaults, displayParms, new_line)
 
-from dfcleanser.common.html_widgets import (get_button_tb_form, InputForm, 
-                                            CheckboxGroupForm, ButtonGroupForm)
+from dfcleanser.common.html_widgets import (InputForm, CheckboxGroupForm, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT)
 
@@ -122,10 +121,11 @@ data_inspection_tb_doc_title       =   "Inspection Options"
 data_inspection_tb_title           =   "Inspection Options"
 data_inspection_tb_id              =   "inspectionoptionstb"
 
-data_inspection_tb_keyTitleList    =   ["Inspect Data","Clear","Help"]
+data_inspection_tb_keyTitleList    =   ["Inspect Data","Clear","Reset","Help"]
 
 data_inspection_tb_jsList          =   ["inspection_task_bar_callback(0)",
                                         "inspection_task_bar_callback(1)",
+                                        "process_pop_up_cmd(6)",
                                         "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
 
 data_inspection_tb_centered        =   False
@@ -160,6 +160,7 @@ data_inspection_df_input_form             =   [data_inspection_df_input_id,
 
 data_cleansing_df_input_id                =   "datacleansedf"
 data_transform_df_input_id                =   "datatransformdf"
+data_export_df_input_id                   =   "dataexportdf"
 
 
 """
@@ -229,7 +230,7 @@ drop_columns_input_idList               =   ["dropcolthreshold",None,None]
 
 drop_columns_input_labelList            =   ["Nan_Threshold",
                                              "Drop Columns </br> with % of Rows</br>  > Threshold",
-                                             "Drop Columns </br> with Nan Row Count</br>  > Threshold"]
+                                             "Drop Columns </br> with Nan</br>Row Count</br>  > Threshold"]
 
 drop_columns_input_typeList             =   ["text","button","button"]
 
@@ -266,17 +267,21 @@ data_inspection_dfschema_tb_centered        =   True
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-def get_inspection_main_taskbar() :
-    return(get_button_tb_form(ButtonGroupForm(data_inspection_tb_id,
-                                              data_inspection_tb_keyTitleList,
-                                              data_inspection_tb_jsList,
-                                              data_inspection_tb_centered)))
+def display_inspection_main_taskbar() :
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(data_inspection_tb_id,
+                                               data_inspection_tb_keyTitleList,
+                                               data_inspection_tb_jsList,
+                                               data_inspection_tb_centered))
+
 
 def get_inspection_dfschema_taskbar() :
+    
     return(ButtonGroupForm(data_inspection_dfschema_tb_id,
-                                              data_inspection_dfschema_tb_keyTitleList,
-                                              data_inspection_dfschema_tb_jsList,
-                                              data_inspection_dfschema_tb_centered))
+                           data_inspection_dfschema_tb_keyTitleList,
+                           data_inspection_dfschema_tb_jsList,
+                           data_inspection_dfschema_tb_centered))
 
 
 def get_select_df_form(title="Inspect") :
@@ -291,17 +296,18 @@ def get_select_df_form(title="Inspect") :
     """
     
     if(title == "Cleanse") :
-        formid      =   data_cleansing_df_input_id
         labellist   =   ["dataframe_to_cleanse"]
         formid      =   "datacleansedf"
 
     elif(title == "Transform") :
-        formid      =   data_transform_df_input_id
         labellist   =   ["dataframe_to_transform"]
         formid      =   "datatransformdf"
 
+    elif(title == "Export") :
+        labellist   =   ["dataframe_to_export"]
+        formid      =   "dataexportdf"
+
     else :
-        formid      =   data_transform_df_input_id
         labellist   =   data_inspection_df_input_labelList
         formid      =   data_inspection_df_input_id
     
@@ -329,7 +335,10 @@ def get_select_df_form(title="Inspect") :
                         data_inspection_df_input_typeList,
                         selectDicts)
 
-    select_df_form.set_gridwidth(780)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        select_df_form.set_gridwidth(780)
+    else :
+        select_df_form.set_gridwidth(480)
     
     return(select_df_form)
 
@@ -367,6 +376,9 @@ def get_colsearch_form() :
                         selectDicts)
 
     colsearch_form.set_shortForm(True)
+    colsearch_form.set_gridwidth(240)
+    colsearch_form.set_custombwidth(240)
+    colsearch_form.set_buttonstyle({"font-size":12})
     
     return(colsearch_form)
 
@@ -417,6 +429,10 @@ def get_main_checkbox_form(current_checkboxes) :
                                                     main_inspection_checkbox_jsList,
                                                     current_checkboxes,
                                                     [0,0,0,0,0])
+    
+    if(not (cfg.get_dfc_mode() == cfg.INLINE_MODE)) :
+        inspection_checkboxForm.set_rows_count([3,2])   
+    
     return(inspection_checkboxForm)
 
 
@@ -484,19 +500,22 @@ def display_drop_rows() :
     * --------------------------------------------------------
     """
     
-    return(InputForm(drop_rows_input_id,
-                             drop_rows_input_idList,
-                             drop_rows_input_labelList,
-                             drop_rows_input_typeList,
-                             drop_rows_input_placeholderList,
-                             drop_rows_input_jsList,
-                             drop_rows_input_reqList,
-                             drop_rows_input_short).get_html())
+    drop_form   =   InputForm(drop_rows_input_id,
+                              drop_rows_input_idList,
+                              drop_rows_input_labelList,
+                              drop_rows_input_typeList,
+                              drop_rows_input_placeholderList,
+                              drop_rows_input_jsList,
+                              drop_rows_input_reqList)
     
-
+    drop_form.set_buttonstyle({"font-size":12})
+    drop_form.set_gridwidth(240)
+    return(drop_form.get_html())
+    
+    
 def display_drop_cols() :
     """
-    * -------------------------------------------------------------------------- 
+    * -------------------------------------------------------- 
     * function : display drop nan cols threshold form
     * 
     * Parms :
@@ -505,14 +524,17 @@ def display_drop_cols() :
     * --------------------------------------------------------
     """
     
-    return(InputForm(drop_columns_input_id,
-                     drop_columns_input_idList,
-                     drop_columns_input_labelList,
-                     drop_columns_input_typeList,
-                     drop_columns_input_placeholderList,
-                     drop_columns_input_jsList,
-                     drop_columns_input_reqList,
-                     True).get_html())
+    drop_form   =   InputForm(drop_columns_input_id,
+                              drop_columns_input_idList,
+                              drop_columns_input_labelList,
+                              drop_columns_input_typeList,
+                              drop_columns_input_placeholderList,
+                              drop_columns_input_jsList,
+                              drop_columns_input_reqList)
+    
+    drop_form.set_buttonstyle({"font-size":12,"height":85})
+    drop_form.set_gridwidth(240)    
+    return(drop_form.get_html())
 
 """
 #------------------------------------------------------------------
@@ -585,8 +607,6 @@ def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,dis
     table.set_checkLength(True) 
     table.set_textLength(21) 
     
-    table.set_note("<b>*</b> To perform group actions on a specific data type click on the data type above.")
-    
     if(display) :
         table.display_table()
     else :
@@ -646,35 +666,47 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
             display_row_nan_stats(df)
         else : 
         
-            row_nans_header_html    =   "<p>Row Nans</p>"
+            row_nans_header_html    =   "<div>Row Nans</div>"
             rowswithnulls, rowcounts, row_nan_stats_html = display_row_nan_stats(df,False)
             row_nans_html           =   display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50,False)
             drop_row_nans_html      =   display_drop_rows()
             
             gridclasses     =   ["dfcleanser-common-grid-header",
-                                 "df-inspection-nan-wrapper-content",
-                                 "df-inspection-nan-wrapper-content1",
-                                 "df-inspection-nan-wrapper-footer"]
+                                 "dfc-top",
+                                 "dfc-main",
+                                 "dfc-footer"]
                 
             gridhtmls       =   [row_nans_header_html,
                                  row_nan_stats_html,
                                  row_nans_html,
                                  drop_row_nans_html]
-                    
-            display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
+            
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
+                display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("df-inspection-nan-pop-up-wrapper",gridclasses,gridhtmls)
+                
             print("\n")
 
-            col_nans_header_html    =   "<p>Column Nans</p>"
+            col_nans_header_html    =   "<div>Column Nans</div>"
             col_nan_stats_html      =   display_col_nan_stats(df,False)
             col_nans_html           =   display_df_col_nans(df,colnantable,False)
             drop_col_nans_html      =   display_drop_cols()
+            
+            gridclasses     =   ["dfcleanser-common-grid-header",
+                                 "dfc-top",
+                                 "dfc-main",
+                                 "dfc-footer"]
             
             gridhtmls       =   [col_nans_header_html,
                                  col_nan_stats_html,
                                  col_nans_html,
                                  drop_col_nans_html]
             
-            display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
+                display_generic_grid("df-inspection-nan-col-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("df-inspection-nan-pop-up-wrapper",gridclasses,gridhtmls)
             
 
     except Exception as e:
@@ -727,8 +759,9 @@ def display_row_nan_stats(df,display=True) :
 
     nan_stats_table.set_rowspertable(len(nanstatsRows))
     nan_stats_table.set_small(True)
-    nan_stats_table.set_smallwidth(35)
-    nan_stats_table.set_smallmargin(32)
+    nan_stats_table.set_smallwidth(99)
+    nan_stats_table.set_smallmargin(2)
+    nan_stats_table.set_table_column_parms({"font":12})
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
@@ -736,7 +769,10 @@ def display_row_nan_stats(df,display=True) :
         nan_stats_table.display_table()
         return(rowswithnulls , rowcounts)
     else :
-        return(rowswithnulls , rowcounts, nan_stats_table.get_html())
+        table_html  =   nan_stats_table.get_html()
+        #nan_stats_table.dump()
+        #print(table_html)
+        return(rowswithnulls , rowcounts, table_html)
 
 
 def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows,display=True) :
@@ -780,13 +816,9 @@ def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows,display=True) 
     #nanRefs     =   []
     
     nanRows     =   []
-    nanHeaders  =   ["% Nan<br>Cols","Rows<br> Count","% of <br>Rows","Sample Row Ids"]
-    nanWidths   =   [10,10,10,70]
+    nanHeaders  =   ["% Nan<br>Cols","Rows<br>Count","% of <br>Rows","Sample Row Ids"]
+    nanWidths   =   [15,13,13,59]
     nanAligns   =   ["center","center","center","left"]
-    
-    table.set_colsperrow(5)
-    table.set_rowspertable(10)
-    table.set_maxtables(1)
     
     for i in range(len(pctilecounts)) :
 
@@ -806,14 +838,16 @@ def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows,display=True) 
     table.set_alignList(nanAligns)
     table.set_note("<b>*</b> To drop all rows greater than a threshold set Nan Threshold.")
     
-    table.set_tabletype(ROW_MAJOR)
-    table.set_rowspertable(20)
-    #table.set_lastrowdisplayed(-1)
+    table.set_rowspertable(len(nanRows))
+    table.set_small(True)
+    table.set_smallwidth(99)
+    table.set_smallmargin(2)
 
     if(display) :
-        get_row_major_table(table,SCROLL_NEXT)
+        table.display_table()
     else :
-        return(get_row_major_table(table,SCROLL_NEXT,False))
+        table_html = table.get_html()#get_row_major_table(table,SCROLL_NEXT,False)
+        return(table_html)
 
 
 def display_col_nan_stats(df,display=True) :
@@ -857,8 +891,9 @@ def display_col_nan_stats(df,display=True) :
 
     nan_stats_table.set_rowspertable(len(nanstatsRows))
     nan_stats_table.set_small(True)
-    nan_stats_table.set_smallwidth(35)
-    nan_stats_table.set_smallmargin(32)
+    nan_stats_table.set_smallwidth(99)
+    nan_stats_table.set_smallmargin(2)
+    nan_stats_table.set_table_column_parms({"font":12})
     nan_stats_table.set_border(False)
     nan_stats_table.set_checkLength(False)
     
@@ -919,7 +954,7 @@ def display_df_col_nans(df,table,display=True) :
             nanrow.append("{0:.2f}".format(100*(df_nulls_sorted[i]/numrows))+"%")
             nanRows.append(nanrow)
             nanrow = []
-
+    
     table.set_colsperrow(3)
     table.set_rowspertable(10)
     table.set_maxtables(1)
@@ -996,8 +1031,9 @@ def display_row_stats(df,dftitle,display=True) :
 
     row_stats_table.set_rowspertable(len(rowstatsRows))
     row_stats_table.set_small(True)
-    row_stats_table.set_smallwidth(50)
-    row_stats_table.set_smallmargin(32)
+    row_stats_table.set_smallwidth(95)
+    row_stats_table.set_smallmargin(2)
+    row_stats_table.set_table_column_parms({"font":12})
     row_stats_table.set_border(False)
     row_stats_table.set_checkLength(False)
     
@@ -1132,8 +1168,12 @@ def display_df_categories(df,cattable,catcandidatetable) :
                                  "White</br>Space","Unique</br>Count","Unique Values"]
         catcandRows         =   []
         catcandHrefs        =   []
-
-        catcandWidths       =   [15,15,10,7,8,45]
+            
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            catcandWidths       =   [15,15,10,7,8,45]
+        else :    
+            catcandWidths       =   [20,15,10,10,10,35]
+            
         catcandAligns       =   ["left","center","center","center","center","left",]
 
         catcandrow          =   []
@@ -1169,13 +1209,13 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
         if(len(catcandRows) > 0) :
             
-            gridclasses     =   ["dfcleanser-common-grid-header",
-                                 "df-inspection-category-data-wrapper-footer"]
-                
-            gridhtmls       =   ["<p>Categorical Candidate Columns</p>",
-                                 catcandidatetable.get_html()]
-                    
-            display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
+            gridclasses     =   ["dfcleanser-common-grid-header","df-inspection-category-data-wrapper-footer"]
+            gridhtmls       =   ["<div>Categorical Candidate Columns</div>",catcandidatetable.get_html()]
+             
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("df-inspection-category-data-pop-up-wrapper",gridclasses,gridhtmls)
             
             #catcandidatetable.display_table()
         else :

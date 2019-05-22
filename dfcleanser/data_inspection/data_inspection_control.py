@@ -17,8 +17,6 @@ import dfcleanser.data_inspection.data_inspection_widgets as diw
 
 from dfcleanser.common.table_widgets import drop_owner_tables, dcTable
 
-from dfcleanser.common.html_widgets import display_composite_form
-
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
 from dfcleanser.common.common_utils import (RunningClock, opStatus, display_exception, 
@@ -36,8 +34,19 @@ from dfcleanser.common.display_utils import (get_df_datatypes_data, display_colu
 """
 
 
-def display_data_inspection(id, parms=None) :
-    
+def display_data_inspection(option, parms=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : main data inspection processing
+    * 
+    * parms :
+    *   option  -   function option
+    *   parms   -   associated parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     from IPython.display import clear_output
     clear_output()
@@ -46,19 +55,16 @@ def display_data_inspection(id, parms=None) :
     
     opstat  =   opStatus()  
       
-    # setup the button bar form
-    inspection_tbForm   =   diw.get_inspection_main_taskbar()
-
     # setup the checkbox form 
     current_checkboxes      =  []
     
     # display the default insoection data
-    if(id == dim.MAIN_OPTION) :
+    if(option == dim.MAIN_OPTION) :
         current_checkboxes     =   [False, False, False, False, False] 
         clear_data_inspection_data()
         
     # refresh the current insoection data     
-    elif (id == dim.REFRESH_OPTION) : 
+    elif (option == dim.REFRESH_OPTION) : 
         
         # check if parms have checkbox flags
         if(not(parms==None)) :
@@ -91,19 +97,33 @@ def display_data_inspection(id, parms=None) :
         parms = []
         diw.get_inspection_check_form_parms(parms,current_checkboxes)  
 
-    display_composite_form([inspection_tbForm])
+    diw.display_inspection_main_taskbar()
     
     if(cfg.is_a_dfc_dataframe_loaded() ) :
     
         select_df_form              =   diw.get_select_df_form()
-        inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
-    
-        gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
-        gridhtmls       =   [select_df_form.get_html(),
-                             inspection_checkboxForm.get_html()]
-    
-        display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
         
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        
+            inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
+    
+            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
+            gridhtmls       =   [select_df_form.get_html(),
+                                 inspection_checkboxForm.get_html()]
+        
+            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
+    
+            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
+            gridhtmls       =   [select_df_form.get_html(),
+                                 inspection_checkboxForm.get_html()]
+            
+            
+            display_generic_grid("df-inspection-pop-up-wrapper",gridclasses,gridhtmls)
+            
     else :
         
         inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
@@ -113,22 +133,22 @@ def display_data_inspection(id, parms=None) :
     
         display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
         
-
+        cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
     
     import matplotlib.pyplot as plt
     
     # parse the input parms
-    if( (id == dim.DISPLAY_ROW_OPTION) or 
-        (id == dim.DROP_ROWS_OPTION) or 
-        (id == dim.DROP_COLS_OPTION) ) :
+    if( (option == dim.DISPLAY_ROW_OPTION) or 
+        (option == dim.DROP_ROWS_OPTION) or 
+        (option == dim.DROP_COLS_OPTION) ) :
         
-        if( id == dim.DISPLAY_ROW_OPTION ) :
+        if( option == dim.DISPLAY_ROW_OPTION ) :
             rowid = inparm
         else :
             
             thresholdType = inparm[0]
             
-            if(id == dim.DROP_ROWS_OPTION) :
+            if(option == dim.DROP_ROWS_OPTION) :
                 fparms = diw.get_drop_rows_input_parms(inparm[1])
             else :
                 fparms = diw.get_drop_cols_input_parms(inparm[1])
@@ -138,25 +158,25 @@ def display_data_inspection(id, parms=None) :
         parms = diw.get_drop_cbox_flags()
         parms = []
         
-        if( id == dim.DISPLAY_ROW_OPTION ) :
+        if( option == dim.DISPLAY_ROW_OPTION ) :
             parms.append(rowid)
         
-        if (id == dim.DROP_ROWS_OPTION) :
+        if (option == dim.DROP_ROWS_OPTION) :
             
             drop_nan_rows(cfg.get_dfc_dataframe(),threshold,thresholdType,opstat)
             
             if(not(opstat.get_status())) :
                 display_exception(opstat)    
             
-        if (id == dim.DROP_COLS_OPTION) :
+        if (option == dim.DROP_COLS_OPTION) :
             
             drop_nan_cols(cfg.get_dfc_dataframe(),threshold,thresholdType,opstat) 
             
             if(not(opstat.get_status())) :
                 display_exception(opstat)   
                 
-    if( (id == dim.REFRESH_OPTION)   or (id == dim.DISPLAY_ROW_OPTION) or 
-        (id == dim.DROP_ROWS_OPTION) or (id == dim.DROP_COLS_OPTION) ) :
+    if( (option == dim.REFRESH_OPTION)   or (option == dim.DISPLAY_ROW_OPTION) or 
+        (option == dim.DROP_ROWS_OPTION) or (option == dim.DROP_COLS_OPTION) ) :
 
         if( (cfg.is_a_dfc_dataframe_loaded()) and
             (not (no_df_selected)) ) :
@@ -190,16 +210,18 @@ def display_data_inspection(id, parms=None) :
                                                "datatypesTable",
                                                cfg.DataInspection_ID)
                     data_types_html         =   diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2],False) 
-                    data_types_schema_html  =   diw.get_inspection_dfschema_taskbar().get_html()
+                    data_types_schema_tb    =   diw.get_inspection_dfschema_taskbar()
+                    data_types_schema_tb.set_custombwidth(240)
+                    data_types_schema_html  =   data_types_schema_tb.get_html()
 
 
-                    gridclasses     =   ["df-inspection-data-type-wrapper-content",
-                                         "df-inspection-data-type-wrapper-footer"]
-                
-                    gridhtmls       =   [data_types_html,
-                                         data_types_schema_html]
+                    gridclasses     =   ["dfc-main","dfc-footer"]
+                    gridhtmls       =   [data_types_html,data_types_schema_html]
                     
-                    display_generic_grid("df-inspection-data-type-wrapper",gridclasses,gridhtmls)
+                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                        display_generic_grid("df-inspection-data-type-wrapper",gridclasses,gridhtmls)
+                    else :
+                        display_generic_grid("df-inspection-data-type-pop-up-wrapper",gridclasses,gridhtmls)
 
                     print("\n")
                     import matplotlib.pyplot as plt
@@ -272,16 +294,13 @@ def display_data_inspection(id, parms=None) :
                                                                     rows_table,0,0,opstat,False)  
                     searchcols_html     =   diw.get_colsearch_form().get_html()
                     
-                    gridclasses     =   ["df-inspection-row-data-wrapper-content",
-                                         "df-inspection-row-data-wrapper-content1",
-                                         "df-inspection-row-data-wrapper-footer"]
-                
-                    gridhtmls       =   [row_stats_html,
-                                         sample_row_html,
-                                         searchcols_html]
+                    gridclasses     =   ["dfc-top","dfc-main","dfc-footer"]
+                    gridhtmls       =   [row_stats_html,sample_row_html,searchcols_html]
                     
-                    display_generic_grid("df-inspection-row-data-wrapper",gridclasses,gridhtmls)
-                    
+                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                        display_generic_grid("df-inspection-row-data-wrapper",gridclasses,gridhtmls)
+                    else :
+                        display_generic_grid("df-inspection-row-data-pop-up-wrapper",gridclasses,gridhtmls)
              
                 except Exception as e:
                     opstat.store_exception("Error displaying row data\n ",e)
@@ -321,25 +340,27 @@ def display_data_inspection(id, parms=None) :
                             break
                     
                     if(found_numeric) :
-                        num_col_names_table =   dcTable("Numeric Column Stats ","gendfdesc",cfg.DataInspection_ID)
+                        num_col_names_table =   dcTable("Numeric Column Stats Numeric Column Stats","gendfdesc",cfg.DataInspection_ID)
                         num_col_stats_html  =   display_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
                                                                     num_col_names_table,None,None,False)
                 
-                        gridclasses     =   ["df-inspection-column-data-wrapper-content",
-                                             "df-inspection-column-data-wrapper-footer"]
-                
-                        gridhtmls       =   [column_names_html,
-                                             num_col_stats_html]
+                        gridclasses     =   ["dfc-header","dfc-footer"]
+                        gridhtmls       =   [column_names_html,num_col_stats_html]
     
-                        display_generic_grid("df-inspection-numeric-column-data-wrapper",gridclasses,gridhtmls)
+                        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                            display_generic_grid("df-inspection-numeric-column-data-wrapper",gridclasses,gridhtmls)
+                        else :
+                            display_generic_grid("df-inspection-numeric-pop-up-column-data-wrapper",gridclasses,gridhtmls)
                     
                     else :
                     
-                        gridclasses     =   ["df-inspection-column-data-wrapper-content"]
-                
+                        gridclasses     =   ["dfc-header"]
                         gridhtmls       =   [column_names_html]
     
-                        display_generic_grid("df-inspection-nn-column-data-wrapper",gridclasses,gridhtmls)
+                        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                            display_generic_grid("df-inspection-nn-column-data-wrapper",gridclasses,gridhtmls)
+                        else :
+                            display_generic_grid("df-inspection-nn-pop-up-column-data-wrapper",gridclasses,gridhtmls)
                     
                 except Exception as e:
                     opstat.store_exception("Error displaying column data\n ",e)
@@ -381,20 +402,28 @@ def display_data_inspection(id, parms=None) :
                 
                 if(not (opstat.get_status())) :
                     display_exception(opstat)
+                
         else :
             display_status("No Dataframe seleted for inspection", 1) 
 
+    from dfcleanser.common.display_utils import  display_pop_up_buffer   
+    display_pop_up_buffer()
 
-"""            
-#------------------------------------------------------------------
-#   drop rows with nans greater than threshold 
-#
-#   df        -   dataframe
-#   threshold -   threshold 
-#
-#------------------------------------------------------------------
-"""
+
 def drop_nan_rows(df,threshold,ttype,opstat,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : drop rows with nans greater than threshold
+    * 
+    * parms :
+    *   df        -   dataframe
+    *   threshold -   threshold value
+    *   ttype     -   threshold type
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     if(display) :
             
@@ -421,19 +450,24 @@ def drop_nan_rows(df,threshold,ttype,opstat,display=True) :
         
         #make scriptable
         add_to_script(["# Drop NAN Rows ",
-                       "from dfcleanser.data_inspection.data_inspection_widgets import drop_nan_rows",
+                       "from dfcleanser.data_inspection.data_inspection_control import drop_nan_rows",
                        "drop_nan_rows(" + str(threshold) + ",False)"],opstat)
 
-"""            
-#------------------------------------------------------------------
-#   drop cols with nans greater than threshold 
-#
-#   df        -   dataframe
-#   threshold -   threshold 
-#
-#------------------------------------------------------------------
-"""
+
 def drop_nan_cols(df,threshold,ttype,opstat,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : drop cols with nans greater than threshold
+    * 
+    * parms :
+    *   df        -   dataframe
+    *   threshold -   threshold value
+    *   ttype     -   threshold type
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     if(display) :
             
@@ -467,7 +501,7 @@ def drop_nan_cols(df,threshold,ttype,opstat,display=True) :
         
         #make scriptable try catch
         add_to_script(["# Drop NAN Cols ",
-                       "from dfcleanser.data_inspection.data_inspection_widgets import drop_nan_cols",
+                       "from dfcleanser.data_inspection.data_inspection_control import drop_nan_cols",
                        "drop_nan_cols(" + str(threshold) + ",False)"],opstat)
 
 """
