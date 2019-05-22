@@ -16,20 +16,19 @@ this = sys.modules[__name__]
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
-from dfcleanser.common.html_widgets import (display_composite_form, get_button_tb_form,
-                                            displayHeading, get_html_spaces, ButtonGroupForm, 
+from dfcleanser.common.html_widgets import (displayHeading, get_html_spaces, ButtonGroupForm, 
                                             InputForm, DEFAULT_PAGE_WIDTH)
 
 from dfcleanser.common.table_widgets import (dcTable, MULTIPLE, SCROLL_NEXT, get_mult_table) 
 
-from dfcleanser.common.common_utils import (is_numeric_col_int, get_datatype, get_datatype_title, 
+from dfcleanser.common.common_utils import (is_numeric_col_int, get_select_defaults, run_javaScript,
                                             display_exception, opStatus, get_parms_for_input, is_numeric_col, 
                                             is_datatype_numeric, RunningClock, get_col_uniques_by_id, displayParms,
-                                            display_notes, get_datatype_str, is_numeric_datatype_id, display_generic_grid,
+                                            display_notes, display_generic_grid,
                                             is_datetime_datatype, whitecolor, yellowcolor, redcolor, greencolor)
 
-from dfcleanser.common.display_utils import (display_df_describe, get_df_datatypes_data, 
-                                             display_df_unique_column, display_single_row)
+from dfcleanser.common.display_utils import (get_df_datatypes_data, display_df_unique_column, display_single_row,
+                                             display_dfcleanser_taskbar)
 
 """
 #--------------------------------------------------------------------------
@@ -39,31 +38,37 @@ from dfcleanser.common.display_utils import (display_df_describe, get_df_datatyp
 #--------------------------------------------------------------------------
 """
 
-def     get_options_flag(id) :
+def     get_options_flag(key) :
     
-    if(id == dcm.UNIQUES_FLAG) :
+    if(key == dcm.UNIQUES_FLAG) :
         if(cfg.get_config_value(cfg.UNIQUES_FLAG_KEY) == None)  :
             return(False)
         else :
             return(cfg.get_config_value(cfg.UNIQUES_FLAG_KEY))
             
-    elif(id == dcm.OUTLIERS_FLAG) :
+    elif(key == dcm.OUTLIERS_FLAG) :
         if(cfg.get_config_value(cfg.OUTLIERS_FLAG_KEY) == None)  :
             return(False)
         else :
             return(cfg.get_config_value(cfg.OUTLIERS_FLAG_KEY))
             
-    elif(id == dcm.DATA_TYPES_FLAG) :
+    elif(key == dcm.DATA_TYPES_FLAG) :
         if(cfg.get_config_value(cfg.DATA_TYPES_FLAG_KEY) == None)  :
             return(False)
         else :
             return(cfg.get_config_value(cfg.DATA_TYPES_FLAG_KEY))
         
-    elif(id == dcm.ROUNDING_FLAG) :
+    elif(key == dcm.ROUNDING_FLAG) :
         if(cfg.get_config_value(cfg.ROUNDING_FLAG_KEY) == None)  :
             return(False)
         else :
             return(cfg.get_config_value(cfg.ROUNDING_FLAG_KEY))
+    
+    elif(key == dcm.FILLNA_FLAG) :
+        if(cfg.get_config_value(cfg.FILLNA_FLAG_KEY) == None)  :
+            return(False)
+        else :
+            return(cfg.get_config_value(cfg.FILLNA_FLAG_KEY))
 
     else :
         return(False)
@@ -89,39 +94,46 @@ data_cleansing_tb_id                    =   "cleanseionoptionstb"
 data_cleansing_tb_keyTitleList          =   ["Cleanse</br>Numeric Column",
                                              "Cleanse</br>Non Numeric</br> Column",
                                              "Cleanse Row",
-                                             "Clear","Help"]
+                                             "Clear","Reset","Help"]
 
 data_cleansing_tb_jsList                =   ["cleansing_tb_callback(0)",
                                              "cleansing_tb_callback(1)",
                                              "cleansing_tb_callback(2)",
                                              "cleansing_tb_callback(3)",
+                                             "process_pop_up_cmd(6)",
                                              "displayhelp(" + str(dfchelp.CLEANSE_MAIN_TASKBAR_ID) + ")"]
 
-data_cleansing_tb_centered              =   False
+data_cleansing_tb_centered              =   True
 
+data_cleansing_pu_tb_keyTitleList       =   ["Cleanse</br>Numeric</br>Column",
+                                             "Cleanse</br>Non</br>Numeric</br>Column",
+                                             "Cleanse</br>Row",
+                                             "Clear","Reset","Help"]
 
 """
 #--------------------------------------------------------------------------
 #    columns uniques change values input
 #--------------------------------------------------------------------------
 """
-change_values_input_title               =   "Change Data Type Parameters"
+change_values_input_title               =   "Change Data Value Parameters"
 change_values_input_id                  =   "dcchangevalsinput"
-change_values_input_idList              =   ["changecval","changenval",None,None,None]
+change_values_input_idList              =   ["changecval","changenval",None,None,None,None]
 
 change_values_input_labelList           =   ["Current_Value",
                                              "New_Value",
-                                             "Change Values",
-                                             "Find Values",
+                                             "Change</br>Values",
+                                             "Find</br>Values",
+                                             "Return",
                                              "Help"]
 
-change_values_input_typeList            =   ["text","text","button","button","button"]
+change_values_input_typeList            =   ["text","text","button","button","button","button"]
 
-change_values_input_placeholderList     =   ["","",None,None,None]
+change_values_input_placeholderList     =   ["","",None,None,None,None]
 
 change_values_input_jsList              =   [None,None,
                                              "change_uvals_callback()",
                                              "find_uvals_callback()",
+                                             "cleansing_tb_callback(3)",
                                              "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
 
 change_values_input_reqList             =   [0,1]
@@ -132,21 +144,23 @@ change_values_input_short               =   True
 #    non numeric columns uniques change values input
 #--------------------------------------------------------------------------
 """
-nn_change_values_input_title            =   "Change Data Type Parameters"
+nn_change_values_input_title            =   "Change Data Value Parameters"
 nn_change_values_input_id               =   "dcchangevalsinput"
-nn_change_values_input_idList           =   ["changecval","changenval",None,None]
+nn_change_values_input_idList           =   ["changecval","changenval",None,None,None]
 
 nn_change_values_input_labelList        =   ["Current_Value",
                                              "New_Value",
-                                             "Change Values",
+                                             "Change</br>Values",
+                                             "Return",
                                              "Help"]
 
-nn_change_values_input_typeList         =   ["text","text","button","button"]
+nn_change_values_input_typeList         =   ["text","text","button","button","button"]
 
-nn_change_values_input_placeholderList  =   ["","",None,None]
+nn_change_values_input_placeholderList  =   ["","",None,None,None]
 
 nn_change_values_input_jsList           =   [None,None,
                                              "change_uvals_callback()",
+                                             "cleansing_tb_callback(3)",
                                              "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
 
 nn_change_values_input_reqList          =   [0,1]
@@ -157,23 +171,25 @@ nn_change_values_input_short            =   True
 #    change row values input
 #--------------------------------------------------------------------------
 """
-change_row_values_input_title            =   "Change Data Type Parameters"
+change_row_values_input_title            =   "Change Data Value Parameters"
 change_row_values_input_id               =   "changerowinput"
-change_row_values_input_idList           =   ["changercval","changernval",None,None,None]
+change_row_values_input_idList           =   ["changercval","changernval",None,None,None,None]
 
 change_row_values_input_labelList        =   ["Current_Value",
                                              "New_Value",
                                              "Change</br>Value",
                                              "Drop</br>Row",
+                                             "Return",
                                              "Help"]
 
-change_row_values_input_typeList         =   ["text","text","button","button","button"]
+change_row_values_input_typeList         =   ["text","text","button","button","button","button"]
 
-change_row_values_input_placeholderList  =   ["","",None,None,None]
+change_row_values_input_placeholderList  =   ["","",None,None,None,None]
 
 change_row_values_input_jsList           =   [None,None,
                                              "change_rowvals_callback(0)",
                                              "change_rowvals_callback(1)",
+                                             "cleansing_tb_callback(3)",
                                              "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
 
 change_row_values_input_reqList          =   [0,1]
@@ -186,19 +202,58 @@ change_row_values_input_short            =   True
 """
 col_round_input_title                   =   ""
 col_round_input_id                      =   "columnroundinput"
-col_round_input_idList                  =   ["columnround",None]
+col_round_input_idList                  =   ["columnround",None,None,None]
 
 col_round_input_labelList               =   ["Number_Of_Decimals",
-                                             "Round Column"]
+                                             "Round</br>Column",
+                                             "Return",
+                                             "Help"]
 
-col_round_input_typeList                =   ["text","button"]
+col_round_input_typeList                =   ["text","button","button","button"]
 
-col_round_input_placeholderList         =   ["",None]
+col_round_input_placeholderList         =   ["",None,None,None]
 
-col_round_input_jsList                  =   [None,"round_col_vals_callback()"]
+col_round_input_jsList                  =   [None,
+                                             "round_col_vals_callback()",
+                                             "cleansing_tb_callback(3)",
+                                             "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
 
 col_round_input_reqList                 =   [0]
 col_round_input_short                   =   True
+
+"""
+#--------------------------------------------------------------------------
+#    round column input text
+#--------------------------------------------------------------------------
+"""
+col_fillna_input_title                  =   ""
+col_fillna_input_id                     =   "colfillnainput"
+col_fillna_input_idList                 =   ["fncolname",
+                                             "fnoption",
+                                             "fnvalue",
+                                             None,None,None]
+
+col_fillna_input_labelList              =   ["column_name",
+                                             "fillna_algorithm",
+                                             "fillna_value",
+                                             "fillna",
+                                             "Return",
+                                             "Help"]
+
+col_fillna_input_typeList               =   ["text","select","text","button","button","button"]
+
+col_fillna_input_placeholderList        =   ["column name",
+                                             "fillna algorithm",
+                                             "fillna value",
+                                             None,None,None]
+
+col_fillna_input_jsList                 =   [None,None,None,
+                                             "fillna_col_vals_callback()",
+                                             "cleansing_tb_callback(3)",
+                                             "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
+
+col_fillna_input_reqList                =   [0,1,2]
+col_fillna_input_short                  =   True
 
 """
 #--------------------------------------------------------------------------
@@ -209,23 +264,30 @@ col_uniques_round_tb_title              =   ""
 col_uniques_round_tb_title              =   ""
 col_uniques_round_tb_id                 =   "coluniquesnormaloptionstb"
 
-col_uniques_round_tb_keyTitleList       =   ["Drop Column",
-                                             "Drop</br>Current Value</br>Rows",
+col_uniques_round_tb_keyTitleList       =   ["Drop</br>Column",
+                                             "Drop</br>Current</br>Value Rows",
                                              "Drop</br>Column</br>Nan Rows",
-                                             "Transform</br>Column",
-                                             "Round Column</br>Values",
-                                             "Change</br>Data Type",
-                                             "Return"]
+                                             "Round </br>Column</br>Values",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data Type"]
 
-col_uniques_round_tb_jsList             =   ["drop_column_callback()",
-                                             "drop_rows_callback()",
-                                             "drop_col_nans_callback()",
-                                             "transform_column_callback()",
-                                             "display_round_column_callback()",
-                                             "convert_datatype_callback()",
-                                             "cleansing_tb_callback(3)"]
+col_uniques_round_tb_jsList             =   ["process_cols_callback(" + str(dcm.DROP_COL_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_ROWS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_COL_NANS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DISPLAY_ROUND_COLUMN_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.FILLNA_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DATATYPE_OPTION) + ")"]
 
 col_uniques_round_tb_centered           =   True
+
+col_uniques_round_pu_tb_keyTitleList    =   ["Drop</br>Column",
+                                             "Drop</br>Current</br>Value</br>Rows",
+                                             "Drop</br>Column</br>Nan</br>Rows",
+                                             "Round </br>Column</br>Values",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data</br>Type"]
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -236,21 +298,26 @@ col_uniques_int_tb_title                =   ""
 col_uniques_int_tb_title                =   ""
 col_uniques_int_tb_id                   =   "coluniquesroundoptionstb"
 
-col_uniques_int_tb_keyTitleList         =   ["Drop Column",
-                                             "Drop</br>Current Value</br>Rows",
+col_uniques_int_tb_keyTitleList         =   ["Drop</br>Column",
+                                             "Drop</br>Current</br>Value Rows",
                                              "Drop</br>Column</br>Nan Rows",
-                                             "Transform</br>Column",
-                                             "Change</br>Data Type",
-                                             "Return"]
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data Type"]
 
-col_uniques_int_tb_jsList               =   ["drop_column_callback()",
-                                             "drop_rows_callback()",
-                                             "drop_col_nans_callback()",
-                                             "transform_column_callback()",
-                                             "convert_datatype_callback()",
-                                             "cleansing_tb_callback(3)"]
+col_uniques_int_tb_jsList               =   ["process_cols_callback(" + str(dcm.DROP_COL_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_ROWS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_COL_NANS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.FILLNA_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DATATYPE_OPTION) + ")"]
 
 col_uniques_int_tb_centered             =   True
+
+col_uniques_int_pu_tb_keyTitleList      =   ["Drop</br>Column",
+                                             "Drop</br>Current</br>Value</br>Rows",
+                                             "Drop</br>Column</br>Nan</br>Rows",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data</br>Type"]
+
 
 """
 #--------------------------------------------------------------------------
@@ -261,21 +328,25 @@ col_uniques_change_tb_doc_title         =   ""
 col_uniques_change_tb_title             =   ""
 col_uniques_change_tb_id                =   "coluniqueschangeoptionstb"
 
-col_uniques_change_tb_keyTitleList      =   ["Drop Column",
+col_uniques_change_tb_keyTitleList      =   ["Drop</br>Column",
                                              "Drop</br>Column</br>Nan Rows",
-                                             "Transform</br>Column",
                                              "Change Column</br>Values",
-                                             "Change</br>Data Type",
-                                             "Return"]
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data Type"]
 
-col_uniques_change_tb_jsList            =   ["drop_column_callback()",
-                                             "drop_col_nans_callback()",
-                                             "transform_column_callback()",
-                                             "display_change_column_callback()",
-                                             "convert_datatype_callback()",
-                                             "cleansing_tb_callback(3)"]
+col_uniques_change_tb_jsList            =   ["process_cols_callback(" + str(dcm.DROP_COL_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_COL_NANS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DISPLAY_COL_CHANGE_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.FILLNA_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DATATYPE_OPTION) + ")"]
 
 col_uniques_change_tb_centered          =   True
+
+col_uniques_change_pu_tb_keyTitleList   =   ["Drop</br>Column",
+                                             "Drop</br>Column</br>Nan</br>Rows",
+                                             "Change</br>Column</br>Values",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data</br>Type"]
 
 """
 #--------------------------------------------------------------------------
@@ -287,20 +358,28 @@ nn_col_uniques_change_tb_title          =   ""
 nn_col_uniques_change_tb_id             =   "coluniqueschoptionstb"
 
 nn_col_uniques_change_tb_keyTitleList   =   ["Drop</br> Column",
-                                             "Drop</br>Current Value</br>Rows",
+                                             "Drop</br>Current</br>Value Rows",
                                              "Drop</br>Column</br>Nan Rows",
-                                             "Transform</br>Column",
-                                             "Remove</br>Whitespace",
-                                             "Return"]
+                                             "Remove</br>White</br>Space",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data Type"]
 
-nn_col_uniques_change_tb_jsList         =   ["drop_column_callback()",
-                                             "drop_rows_callback()",
-                                             "drop_col_nans_callback()",
-                                             "transform_column_callback()",
-                                             "remove_whitespace_callback()",
-                                             "cleansing_tb_callback(3)"]
+nn_col_uniques_change_tb_jsList         =   ["process_cols_callback(" + str(dcm.DROP_COL_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_ROWS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DROP_COL_NANS_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.REMOVE_WHITESPACE_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.FILLNA_OPTION) + ")",
+                                             "process_cols_callback(" + str(dcm.DATATYPE_OPTION) + ")"]
 
 nn_col_uniques_change_tb_centered       =   True
+
+nn_col_uniques_change_pu_tb_keyTitleList =   ["Drop</br>Column",
+                                             "Drop</br>Current</br>Value</br>Rows",
+                                             "Drop</br>Column</br>Nan</br>Rows",
+                                             "Remove</br>White</br>Space",
+                                             "Fill</br>NaN</br>Values",
+                                             "Change</br>Data</br>Type"]
+
 
 """
 #--------------------------------------------------------------------------
@@ -312,9 +391,9 @@ conv_datatype_title                     =   ""
 conv_datatype_id                        =   "convdatatype"
 
 conv_datatype_keyTitleList              =   ["Convert DataType"]
-conv_datatype_jsList                    =   ["convert_datatype_callback()"]
+conv_datatype_jsList                    =   ["process_cols_callback(" + str(dcm.DATATYPE_OPTION) + ")",]
 
-conv_datatype_centered                  =   False
+conv_datatype_centered                  =   True
 
 """
 #--------------------------------------------------------------------------
@@ -325,10 +404,10 @@ list_unique_doc_title                   =   ""
 list_unique_title                       =   ""
 list_unique_id                          =   "listuniques"
 
-list_unique_keyTitleList                =   ["Show Unique Values"]
+list_unique_keyTitleList                =   ["Cleanse Column"]
 list_unique_jsList                      =   ["show_uniques_callback()"]
 
-list_unique_centered                    =   False
+list_unique_centered                    =   True
 
 """
 #--------------------------------------------------------------------------
@@ -337,12 +416,21 @@ list_unique_centered                    =   False
 """
 show_graphs_doc_title                   =   ""
 show_graphs_title                       =   ""
-show_graphs_id                          =   "listuniques"
+show_graphs_id                          =   "showgraphs"
 
 show_graphs_keyTitleList                =   ["Show Column Graphs"]
 show_graphs_jsList                      =   ["show_graphs_callback()"]
 
-show_graphs_centered                    =   False
+show_graphs_centered                    =   True
+
+add_graph_doc_title                     =   ""
+add_graph_title                         =   ""
+add_graph_id                            =   "addgraph"
+
+add_graph_keyTitleList                  =   ["Add User Graphs"]
+add_graph_jsList                        =   ["add_graph_callback()"]
+
+add_graph_centered                      =   True
 
 """
 #--------------------------------------------------------------------------
@@ -354,10 +442,9 @@ outliers_tb_title                       =   ""
 outliers_tb_id                          =   "outlierstb"
 
 outliers_tb_keyTitleList                =   ["Show Outliers"]
-
 outliers_tb_jsList                      =   ["show_outliers_callback()"]
 
-outliers_tb_centered                    =   False
+outliers_tb_centered                    =   True
 
 """
 #--------------------------------------------------------------------------
@@ -373,10 +460,18 @@ def display_no_data_heading() :
     display_inspection_data()
 
 def display_data_cleansing_main_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(data_cleansing_tb_id,
-                                                               data_cleansing_tb_keyTitleList,
-                                                               data_cleansing_tb_jsList,
-                                                               data_cleansing_tb_centered))]) 
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_dfcleanser_taskbar(ButtonGroupForm(data_cleansing_tb_id,
+                                                   data_cleansing_tb_keyTitleList,
+                                                   data_cleansing_tb_jsList,
+                                                   data_cleansing_tb_centered))
+    else :
+        display_dfcleanser_taskbar(ButtonGroupForm(data_cleansing_tb_id,
+                                                   data_cleansing_pu_tb_keyTitleList,
+                                                   data_cleansing_tb_jsList,
+                                                   data_cleansing_tb_centered))
+    
     
 def display_data_select_df() :
     
@@ -386,48 +481,15 @@ def display_data_select_df() :
         gridclasses     =   ["dfc-footer"]
         gridhtmls       =   [select_df_form.get_html()]
     
-        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
     
-
 def get_change_row_values_inputs(parms) :
     return(get_parms_for_input(parms[1],change_row_values_input_idList))
 
-
-"""            
-#------------------------------------------------------------------
-#   display column data heading 
-#
-#   df          -   dataframe
-#   colname     -   column name 
-#
-#------------------------------------------------------------------
-"""
-def     display_column_header_data(df,colname) :
-
-    print("\n")
-    display_col_stats(df,colname, False, True, False)
-
-"""            
-#------------------------------------------------------------------
-#   display column data
-#
-#------------------------------------------------------------------
-"""
-def display_col_data() :
     
-    df = cfg.get_dfc_dataframe()
-
-    colname = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-    
-    if(is_numeric_col(df,colname)) :
-        display_numeric_col_data(df)
-    else :
-        #if(not(showuniques)) :
-#        display_convert_datatype_data(True)
-
-        display_unique_col_data(df)
-
-
 def get_header_widths(labels,values) :
 
     maxlabellength = 0
@@ -449,18 +511,23 @@ def get_header_widths(labels,values) :
 
     return([width,pctlabels,pctvalues])    
     
-"""            
-#------------------------------------------------------------------
-#   display_col_stats
-#
-#   df          -   dataframe
-#   colname     -   column name 
-#   numeric     -   numeric column flag
-#
-#------------------------------------------------------------------
-"""
-def display_col_stats(df,colname, numeric=True, display=True, full_size=False) :
 
+def display_col_stats(df,colname,display=True,full_size=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display column statistics
+    * 
+    * parms :
+    *   df          -   dataframe
+    *   colname     -   column name 
+    *   numeric     -   numeric column flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    numeric     =   is_numeric_col(df,colname)
+    
     df_col = df[colname]
 
     num_stats = []
@@ -606,7 +673,10 @@ def display_col_stats(df,colname, numeric=True, display=True, full_size=False) :
     if(not (full_size)) :
         stats_table.set_smallwidth(headerdata[0])
         stats_table.set_smallmargin(32)
-    
+    else :
+        stats_table.set_smallwidth(99)
+        stats_table.set_smallmargin(1)
+
     stats_table.set_border(False)
     stats_table.set_checkLength(False)
     
@@ -616,17 +686,180 @@ def display_col_stats(df,colname, numeric=True, display=True, full_size=False) :
         return(stats_table.get_html())
 
 
+def display_cleanse_console(df,colname) :
+    
+    numeric     =   is_numeric_col(df,colname)
+    
+    console_stats_html  =   display_col_stats(df,colname,False,True)
 
-def display_numeric_col_data(df) :
-    """            
-    #------------------------------------------------------------------
-    #   display numeric column data
-    #
-    #   parms :
-    #     df          -   dataframe
-    #
-    #------------------------------------------------------------------
-    """  
+    
+    console_unitb_form  =   ButtonGroupForm(list_unique_id,
+                                            list_unique_keyTitleList,
+                                            list_unique_jsList,
+                                            list_unique_centered)
+    console_unitb_form.set_custombwidth(260)
+    console_unitb_form.set_gridwidth(480)
+    console_unitb_html  =   console_unitb_form.get_html() 
+
+    
+    console_graph_form  =   ButtonGroupForm(show_graphs_id,
+                                            show_graphs_keyTitleList,
+                                            show_graphs_jsList,
+                                            show_graphs_centered)
+    console_graph_form.set_custombwidth(260)
+    console_graph_form.set_gridwidth(480)
+    console_graph_html  =   console_graph_form.get_html() 
+    
+    console_outls_form  =   ButtonGroupForm(outliers_tb_id,
+                                            outliers_tb_keyTitleList,
+                                            outliers_tb_jsList,
+                                            outliers_tb_centered)
+    console_outls_form.set_custombwidth(260)
+    console_outls_form.set_gridwidth(480)
+    console_outls_html  =   console_outls_form.get_html() 
+    
+    if(numeric) :
+        console_tb_html     =   ("<div style='margin-left: 2px;'>" + console_unitb_html + console_graph_html + console_outls_html + "</div>")
+    else :
+        console_tb_html     =   ("<div style='margin-left: 2px;'>" + console_unitb_html + "</div>")
+
+    console_heading_html      =   "<div>Column '" + colname + "' Data Cleansing</div><br>"
+
+    gridclasses     =   ["dfcleanser-common-grid-header", 
+                         "dfc-top",
+                         "dfc-footer"]
+        
+    gridhtmls       =   [console_heading_html,
+                         console_stats_html,
+                         console_tb_html]
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("display-dfcleansing-console-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("display-dfcleansing-console-pop-up-wrapper",gridclasses,gridhtmls)
+    
+    print("\n")
+
+
+def display_pop_up_graphs(colname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display numeric column data
+    * 
+    * parms :
+    *   dftitle     -   dataframe title
+    *   colname     -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    code    =   "from dfcleanser.data_cleansing.data_cleansing_widgets import display_common_graphs" + "\\n"
+    code    =   code + "display_common_graphs('"+str(colname)+"')"
+
+    print("\n\ncode",code)
+    cmd     =   'run_code_in_popupcodecell("'+code+'");'
+    
+    print("\n\ncmd",cmd)
+    run_javaScript(cmd)
+
+def display_common_graphs(colname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display numeric column data
+    * 
+    * parms :
+    *   colname     -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    clock = RunningClock()
+    clock.start()
+
+    try :
+        
+        try :
+            import os
+            os.remove("hist.png")
+            os.remove("zscore.png")
+        except :
+            df = None   
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            
+        import numpy as np
+        counts      =   df[colname].value_counts().to_dict()
+        dfuniques   =   list(counts.keys())
+        uniques     =   np.asarray(dfuniques)
+        ucounts     =   list(counts.values())
+        ucounts     =   np.asarray(ucounts)
+
+        import matplotlib.pyplot as plt
+        fig     =   plt.figure()
+        plt.style.use('ggplot')
+        plt.hist(uniques,weights=ucounts)
+        plt.title("'" + colname + "'" + " Histogram")
+        fig.savefig("hist.png")
+        plt.close()
+            
+        cmean       =   df[colname].mean() 
+        cstd        =   df[colname].std()
+
+        zscores      =   []
+        for i in range(len(dfuniques)) :
+            zscores.append((dfuniques[i]-cmean)/cstd)
+        
+        # dictionary of lists  
+        zdict = {'ZScore': zscores, 'Frequency': ucounts}  
+    
+        import pandas as pd
+        zdf     =   pd.DataFrame(zdict)     
+        ax = zdf.plot(x='ZScore', y='Frequency', kind='kde', figsize=(10, 6))
+        fig1    =   ax.get_figure()
+        arr = ax.get_children()[0]._x
+        plt.xticks(np.linspace(arr[0], arr[-1]), rotation=90)
+        plt.title("'" + colname + "'" + " ZScores")
+        fig1.savefig("zscore.png")
+        plt.close()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        
+        title_html      =   "<div>Column Graphs</div>"
+        hist_html       =   "<br><br><img src='hist.png' alt='Histogram' height='400' width='400'>"
+        zscore_html     =   "<img src='zscore.png' alt='ZScores' height='480' width='640'>"
+        
+        gridhtmls       =   [title_html,hist_html,zscore_html]
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("display-dfcleansing-graphs-wrapper",gridclasses,gridhtmls)
+        else :
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+            display_generic_grid("display-dfcleansing-graphs-pop-up-wrapper",gridclasses,gridhtmls)
+        
+    except Exception as e: 
+        opstat = opStatus()
+        opstat.store_exception("Unable to plot column",e)
+        display_exception(opstat)
+
+    clock.stop()
+
+
+   
+def display_col_data() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display numeric column data
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    df = cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
     
     colname         =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
     
@@ -638,91 +871,42 @@ def display_numeric_col_data(df) :
     if(showuniques == None) : 
         showuniques = False
 
-    print("\n")
-    display_col_stats(df,colname,False,True,False)
-    
-    
-    
-    if (showuniques == False) :
-        
-        displayHeading("Column Uniques",4)
-        
-        display_composite_form([get_button_tb_form(ButtonGroupForm(list_unique_id,
-                                                                   list_unique_keyTitleList,
-                                                                   list_unique_jsList,
-                                                                   list_unique_centered))])
-
-    else :
+    if (showuniques) :
        #print("\n")
-       display_unique_col_data(df)#,colname)
+       display_unique_col_data(df)
        print("\n")
-
-    displayHeading("Column Graphs",4)
-    
-    if(cfg.get_config_value(cfg.GRAPHS_FLAG_KEY) == None) :
-        display_composite_form([get_button_tb_form(ButtonGroupForm(show_graphs_id,
-                                                                   show_graphs_keyTitleList,
-                                                                   show_graphs_jsList,
-                                                                   show_graphs_centered))])
-    else :
-    
-        clock = RunningClock()
-        clock.start()
-
-        try :
-            
-            import numpy as np
-            counts  =   df[colname].value_counts().to_dict()
-            uniques =   list(counts.keys())
-            uniques =   np.asarray(uniques)
-            ucounts =   list(counts.values())
-            ucounts =   np.asarray(ucounts)
-
-            import matplotlib.pyplot as plt
-            plt.style.use('ggplot')
-            plt.hist(uniques,weights=ucounts)
-            plt.title("'" + colname + "'" + " Histogram") 
-            plt.show()
-            
-        except Exception as e: 
-            opstat = opStatus()
-            opstat.store_exception("Unable to plot column",e)
-            display_exception(opstat)
-
-        clock.stop()
-        
-    displayHeading("Outliers",4)
-    
-    if(outliers == False) :
-    
-        display_composite_form([get_button_tb_form(ButtonGroupForm(outliers_tb_id,
-                                                                   outliers_tb_keyTitleList,
-                                                                   outliers_tb_jsList,
-                                                                   outliers_tb_centered))])
-        print("\n")
        
     else :
+        display_cleanse_console(df,colname)
+
+    if(not (cfg.get_config_value(cfg.GRAPHS_FLAG_KEY) == None)) :
+
+        display_common_graphs(colname)
+        print("\n")
         
+    if(outliers) :
+        displayHeading("Outliers",4)
         get_simple_outliers(df,cfg.get_config_value(cfg.CLEANSING_COL_KEY))
 
-"""            
-#------------------------------------------------------------------
-#   display unique vals for a column
-#
-#   df          -   dataframe
-#
-#------------------------------------------------------------------
-"""
-def display_unique_col_data(df) :
     
-    dfcol = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+def display_unique_col_data(df) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display unique vals for a column
+    * 
+    * parms :
+    *   df          -   dataframe
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    colname = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
 
     opstat          =   opStatus()
     toomanyUniques  =   False    
     
-    if not (is_numeric_col(df,dfcol) ) :
-        display_column_header_data(df,dfcol)
-
     if(cfg.get_config_value(cfg.UNIQUES_RANGE_KEY) != None) :
 
         minmax = cfg.get_config_value(cfg.UNIQUES_RANGE_KEY)
@@ -733,29 +917,27 @@ def display_unique_col_data(df) :
             opstat.set_errorMsg("Find values input values are invalid")
             display_exception(opstat)
             
-            parmslabels = ["Min Value","Max Value"]
+            parmslabels = ["Min_Value","Max_Value"]
             parmsvals   = [minmax[1],minmax[2]]
             displayParms("Find Values Inputs",parmslabels,parmsvals,cfg.DataCleansing_ID)
             cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
             
-            #return()
-    
     try :
-        counts      =   df[dfcol].value_counts().to_dict()
+        counts      =   df[colname].value_counts().to_dict()
         uniques     =   list(counts.keys())
     
     except :
         try :
-            uniques     =   list(map(list, set(map(lambda i: tuple(i), df[dfcol]))))
+            uniques     =   list(map(list, set(map(lambda i: tuple(i), df[colname]))))
             counts      =   {}
         
-            uniques_length  =  len(df[dfcol])
+            uniques_length  =  len(df[colname])
             if(uniques_length > 250) :
                 uniques_length = 250
                 
             import json
             for i in range(uniques_length) :
-                ukey    =   json.dumps(df[dfcol][i])
+                ukey    =   json.dumps(df[colname][i])
                 uniques_count   =   counts.get(ukey,0)
                 counts.update({ukey : uniques_count + 1})
         except :
@@ -767,7 +949,7 @@ def display_unique_col_data(df) :
 
     try :
         
-        col_uniques_table = dcTable("Unique Values and Counts for Column " + dfcol,
+        col_uniques_table = dcTable("Unique Values and Counts",
                                     "uvalsTbl",
                                     cfg.DataCleansing_ID)
         
@@ -779,11 +961,11 @@ def display_unique_col_data(df) :
                                                            "* To find a subset of unique values hit 'Find Values' and enter 'Min Value' and 'Max Value' and hit 'Find Values' again"],False)
                 toomanyUniques          =   True
                 
-            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,dfcol,True,counts,False)
+            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,colname,True,counts,False)
             
         else :
 
-            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,dfcol,True,counts,False)
+            unique_cols_html    =   display_df_unique_column(df,col_uniques_table,colname,True,counts,False)
             
     except Exception as e:
         
@@ -801,8 +983,30 @@ def display_unique_col_data(df) :
                                               col_round_input_jsList,
                                               col_round_input_reqList)
         
+    elif(get_options_flag(dcm.FILLNA_FLAG) == True) : 
+        cleansing_text_inputs   =   InputForm(col_fillna_input_id,
+                                              col_fillna_input_idList,
+                                              col_fillna_input_labelList,
+                                              col_fillna_input_typeList,
+                                              col_fillna_input_placeholderList,
+                                              col_fillna_input_jsList,
+                                              col_fillna_input_reqList)
+        
+        selectDicts     =   []
+            
+        fillnaopts         =   {"default":"None","list":["None","mean","bfill","ffill"]}
+        selectDicts.append(fillnaopts)
+
+        get_select_defaults(cleansing_text_inputs,
+                            col_fillna_input_id,
+                            col_fillna_input_idList,
+                            col_fillna_input_typeList,
+                            selectDicts)
+        
+        cfg.set_config_value(col_fillna_input_id+"Parms",[colname,"",""])
+        
     else :
-        if(is_numeric_col(df,dfcol)) :
+        if(is_numeric_col(df,colname)) :
             cleansing_text_inputs   =   InputForm(change_values_input_id,
                                                   change_values_input_idList,
                                                   change_values_input_labelList,
@@ -830,45 +1034,85 @@ def display_unique_col_data(df) :
     
     if(get_options_flag(dcm.ROUNDING_FLAG) == True) :
         
-        col_uniques_tb  =   ButtonGroupForm(col_uniques_change_tb_id,
-                                            col_uniques_change_tb_keyTitleList,
-                                            col_uniques_change_tb_jsList,
-                                            col_uniques_change_tb_centered)
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            col_uniques_tb  =   ButtonGroupForm(col_uniques_change_tb_id,
+                                                col_uniques_change_tb_keyTitleList,
+                                                col_uniques_change_tb_jsList,
+                                                col_uniques_change_tb_centered)
+        else :
+            col_uniques_tb  =   ButtonGroupForm(col_uniques_change_tb_id,
+                                                col_uniques_change_pu_tb_keyTitleList,
+                                                col_uniques_change_tb_jsList,
+                                                col_uniques_change_tb_centered)
+            
         
     else :
         
-        if (is_numeric_col(df,dfcol) ) :
-            if(is_numeric_col_int(df,dfcol)) :
+        if (is_numeric_col(df,colname) ) :
+            if(is_numeric_col_int(df,colname)) :
                 
-                col_uniques_tb  =   ButtonGroupForm(col_uniques_int_tb_id,
-                                                    col_uniques_int_tb_keyTitleList,
-                                                    col_uniques_int_tb_jsList,
-                                                    col_uniques_int_tb_centered)
+                if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                    col_uniques_tb  =   ButtonGroupForm(col_uniques_int_tb_id,
+                                                        col_uniques_int_tb_keyTitleList,
+                                                        col_uniques_int_tb_jsList,
+                                                        col_uniques_int_tb_centered)
+                else :
+                    col_uniques_tb  =   ButtonGroupForm(col_uniques_int_tb_id,
+                                                        col_uniques_int_pu_tb_keyTitleList,
+                                                        col_uniques_int_tb_jsList,
+                                                        col_uniques_int_tb_centered)
+                    
                 
             else :
         
-                col_uniques_tb  =   ButtonGroupForm(col_uniques_round_tb_id,
-                                                    col_uniques_round_tb_keyTitleList,
-                                                    col_uniques_round_tb_jsList,
-                                                    col_uniques_round_tb_centered)
+                if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                    col_uniques_tb  =   ButtonGroupForm(col_uniques_round_tb_id,
+                                                        col_uniques_round_tb_keyTitleList,
+                                                        col_uniques_round_tb_jsList,
+                                                        col_uniques_round_tb_centered)
+                else :
+                    col_uniques_tb  =   ButtonGroupForm(col_uniques_round_tb_id,
+                                                        col_uniques_round_pu_tb_keyTitleList,
+                                                        col_uniques_round_tb_jsList,
+                                                        col_uniques_round_tb_centered)
+                    
 
         else :
             
-            col_uniques_tb  =   ButtonGroupForm(nn_col_uniques_change_tb_id,
-                                                nn_col_uniques_change_tb_keyTitleList,
-                                                nn_col_uniques_change_tb_jsList,
-                                                nn_col_uniques_change_tb_centered)
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                col_uniques_tb  =   ButtonGroupForm(nn_col_uniques_change_tb_id,
+                                                    nn_col_uniques_change_tb_keyTitleList,
+                                                    nn_col_uniques_change_tb_jsList,
+                                                    nn_col_uniques_change_tb_centered)
+            else :
+                col_uniques_tb  =   ButtonGroupForm(nn_col_uniques_change_tb_id,
+                                                    nn_col_uniques_change_pu_tb_keyTitleList,
+                                                    nn_col_uniques_change_tb_jsList,
+                                                    nn_col_uniques_change_tb_centered)
+                
             
     
-    unique_column_heading_html      =   "<div>" + dfcol + " Unique Column Values</div>"
+    unique_column_heading_html      =   "<div>" + colname + " Cleansing Parms</div><br>"
+    
+    cleansing_text_inputs.set_buttonstyle({"font-size":13, "height":50, "width":90, "left-margin":0})
+    cleansing_text_inputs.set_gridwidth(360)
+    cleansing_text_inputs.set_shortForm(True)
+
     cleansing_text_input_html       =   cleansing_text_inputs.get_html() 
-    col_uniques_tb.set_gridwidth(860)
-    cleansing_text_tb_html          =   col_uniques_tb.get_html() 
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        col_uniques_tb.set_gridwidth(980)
+    else :
+        col_uniques_tb.set_gridwidth(480)
+        col_uniques_tb.set_custombwidth(80)
+        
+    cleansing_text_tb_html          =   col_uniques_tb.get_html()
+    cleansing_text_tb_html          =   "<br>" + cleansing_text_tb_html
     
     if(toomanyUniques) :  
         
         gridclasses     =   ["dfcleanser-common-grid-header", 
-                             "dfc-top-centered",
+                             "dfc-top",
                              "dfc-main",
                              "dfc-bottom",
                              "dfc-footer"]
@@ -878,15 +1122,17 @@ def display_unique_col_data(df) :
                              unique_cols_html,
                              cleansing_text_input_html,
                              cleansing_text_tb_html]
-    
-        display_generic_grid("display-df-unique-columns-notes-wrapper",
-                             gridclasses,gridhtmls)
+
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("display-df-unique-columns-notes-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("display-df-unique-columns-notes-pop-up-wrapper",gridclasses,gridhtmls)
         
     else :
         
         gridclasses     =   ["dfcleanser-common-grid-header", 
+                             "dfc-top-",
                              "dfc-main",
-                             "dfc-bottom",
                              "dfc-footer"]
         
         gridhtmls       =   [unique_column_heading_html,
@@ -894,51 +1140,28 @@ def display_unique_col_data(df) :
                              cleansing_text_input_html,
                              cleansing_text_tb_html]
     
-        display_generic_grid("display-df-unique-columns-wrapper",
-                             gridclasses,gridhtmls)
-        
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("display-df-unique-columns-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("display-df-unique-columns-pop-up-wrapper",gridclasses,gridhtmls)
 
-"""            
-#------------------------------------------------------------------
-#   display the objects that change
-#
-#   df          -   dataframe
-#   formid      -   from to read
-#   dtype       -   data type
-#   colList     -   column list
-#
-#------------------------------------------------------------------
-"""
-def display_change_objects(df,formid,dtypeId,colList=None) :#,skipactionbar=False) :
-    
-    typeparm = get_datatype(dtypeId)
-    
-    print("display_change_objects",formid,dtypeId,colList)
-    print(get_datatype_str(dtypeId),typeparm)
-    
-    change_objects_table = dcTable("Columns for Data Type " + get_datatype_title(dtypeId), 
-                                   formid,
-                                   cfg.DataCleansing_ID)
-    
-    # numeric datatypes
-    if(is_numeric_datatype_id(dtypeId))  : 
-        display_df_describe(df,change_objects_table,typeparm,colList,True)
-    else :
-        display_non_numeric_df_describe(df,change_objects_table,typeparm,colList,True)#,True)
-        
-    cfg.set_config_value(cfg.OBJ_TYPE_PARM_KEY,dtypeId)     
+    from dfcleanser.common.display_utils import display_pop_up_buffer
+    display_pop_up_buffer()
 
-     
-"""            
-#------------------------------------------------------------------
-#   get simple outliers
-#
-#   df         -   dataframe
-#   colname    -   column name
-#
-#------------------------------------------------------------------
-"""   
+
 def get_simple_outliers(df,colname) :  
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get simple outliers
+    * 
+    * parms :
+    *   df          -   dataframe
+    *   colname    -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     opstat = opStatus()
     
@@ -1035,26 +1258,38 @@ def get_simple_outliers(df,colname) :
            
     return(opstat)    
         
-"""            
-#------------------------------------------------------------------
-#   display row data
-#
-#   df          -   dataframe
-#   rowid       -   row id 
-#   colid       -   column id 
-#
-#------------------------------------------------------------------
-"""
+
 def display_row_data(df,rowid,colid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display row data
+    * 
+    * parms :
+    *   df          -   dataframe
+    *   rowid       -   row id 
+    *   colid       -   column id 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     rows_table = dcTable("Sample Row","dcdisrow",cfg.DataCleansing_ID)
     
     refList = []
     
-    for i in range(3) :
-        refList.append([None,None,None,None,None,None,None,None,None,None])
-        refList.append(["frval","frval","frval","frval","frval",
-                        "frval","frval","frval","frval","frval"])
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        
+        for i in range(3) :
+            refList.append([None,None,None,None,None,None,None,None,None,None])
+            refList.append(["frval","frval","frval","frval","frval",
+                            "frval","frval","frval","frval","frval"])
+            
+    else :
+        
+        for i in range(6) :
+            refList.append([None,None,None,None,None])
+            refList.append(["frval","frval","frval","frval","frval"])
         
     rows_table.set_refList(refList)
     
@@ -1087,8 +1322,10 @@ def display_row_data(df,rowid,colid) :
                              df_row_cleanser_table_html,
                              df_row_cleanser_input_html]
     
-        display_generic_grid("display-df-row-cleanser-wrapper",
-                             gridclasses,gridhtmls)
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("display-df-row-cleanser-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("display-df-row-cleanser-pop-up-wrapper",gridclasses,gridhtmls)
 
 
 """ 
@@ -1099,15 +1336,22 @@ def display_row_data(df,rowid,colid) :
 #------------------------------------------------------------------
 """ 
 
-"""          
-#------------------------------------------------------------------
-#   display non numeric column descriptive data
-#
-#   df              -   dataframe
-#
-#------------------------------------------------------------------
-"""
 def display_non_numeric_df_describe(df,table,datatype=None,colList=None,display=True,) :#,checkboxes=False) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display non numeric column descriptive data
+    * 
+    * parms :
+    *   df          -   dataframe
+    *   table       -   table
+    *   datatype    -   datatype
+    *   colList     -   list of columns
+    *   display     -   Boolean flag
+    *
+    * returns : 
+    *  N/A for display - True table html display - False
+    * --------------------------------------------------------
+    """
 
     import pandas
     import datetime
@@ -1193,7 +1437,11 @@ def display_non_numeric_df_describe(df,table,datatype=None,colList=None,display=
     dfAlignsList    =   []
     dfchrefsList    =   []
     
-    table.set_colsperrow(7)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        table.set_colsperrow(7)
+    else :
+        table.set_colsperrow(3)
+        
     table.set_rowspertable(5)
     table.set_maxtables(1)
     
@@ -1305,6 +1553,21 @@ def display_non_numeric_df_describe(df,table,datatype=None,colList=None,display=
 #------------------------------------------------------------------
 """
 def get_nn_rows(formId,nans,uniques,maxlens,alphanums) :#,checkboxes) :    
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get non numeric data and form table rows
+    * 
+    * parms :
+    *   formId     -   form id
+    *   nans       -   nans list
+    *   uniques    -   uniques list
+    *   maxlens    -   max lens list
+    *   alphanums  -   alphanumerics list
+    *
+    * returns : 
+    *  table rows
+    * --------------------------------------------------------
+    """
 
     currentRow  =   []
     allrows     =   []
@@ -1333,19 +1596,19 @@ def get_nn_rows(formId,nans,uniques,maxlens,alphanums) :#,checkboxes) :
     return(allrows)
     
 
-"""            
-#------------------------------------------------------------------
-#   get a simplelist of outliers based on stddev from means
-#
-#   return : list of lists [[count,[vals]]]
-#
-#   df              -   dataframe
-#   threshold       -   the number of std devs away from the mean 
-#   getvals         -   boolean flag to retrieve vals as well as counts
-#
-#------------------------------------------------------------------
-"""
 def get_simple_col_outliers(df,colname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get a simplelist of outliers based on stddev from means
+    * 
+    * parms :
+    *   df       -   dataframe
+    *   colname  -   column name
+    *
+    * returns : 
+    *  outliers
+    * --------------------------------------------------------
+    """
 
     outliers        =   []
     outlierscount   =   []
