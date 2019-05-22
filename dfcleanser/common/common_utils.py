@@ -26,7 +26,17 @@ SECONDS         =   4
 MICROSECONDS    =   5
 TIMEDELTA       =   6
 
+def get_units_id(unit) :
 
+    if(unit == "Years")                 :   return(YEARS) 
+    elif(unit == "Days")                :   return(DAYS)
+    elif(unit == "Hours")               :   return(HOURS)
+    elif(unit == "Minutes")             :   return(MINUTES)
+    elif(unit == "Seconds")             :   return(SECONDS)
+    elif(unit == "MicroSeconds")        :   return(MICROSECONDS)
+    elif(unit == "datetime.timedelta")  :   return(TIMEDELTA)
+    
+    return(None)
 
 whitecolor      =   "#FFFFFF"
 yellowcolor     =   "#FAF6BE"
@@ -137,16 +147,6 @@ def display_windows_MessageBox(msg,title) :
         print(msg,title)    
     
     
-"""
-#--------------------------------------------------------------------------
-#   get a formatted representation of delta time
-#
-#       seconds    - number of seonds
-##
-#   return formatted time delta
-#
-#--------------------------------------------------------------------------
-"""  
 def get_formatted_time(seconds) :
     """
     * ---------------------------------------------------------
@@ -286,7 +286,6 @@ def is_numeric_col_int(df,colname) :
     
     df_cols     = df.columns.tolist()
     df_dtypes   = df.dtypes.tolist()
-    
 
     for i in range(len(df_cols)) :
         if(df_cols[i] == colname) :
@@ -301,6 +300,14 @@ def is_numeric_col_int(df,colname) :
     else :
         return(False)
 
+def does_col_contain_nan(df,colname) :
+
+    totnans =  df[colname].isnull().sum() 
+    if(totnans > 0) :
+        return(True)
+    else :
+        return(False)
+        
 
 def is_string_a_float(string) : 
     try :
@@ -355,8 +362,16 @@ def is_datatype_numeric(datatype) :
     else :
         return(True)
 
+def is_column_in_df(df,colname) :
+    df_cols     =   df.columns
+    df_cols     =   df_cols.tolist()
 
-            
+    if(colname in df_cols)  :
+        return(True) 
+    else :
+        return(False)
+
+         
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -479,7 +494,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     #--------------------------------------------------------------------------
     """
 
-    #print("get_select_defaults",formid,parmids,parmtypes,len(selectDicts))
+    #print("\nget_select_defaults",formid,parmids,parmtypes,len(selectDicts))
     
     numselects  =   0
     
@@ -494,7 +509,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
             numselects  =   numselects + 1
 
  
-def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True) :
+def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True,font=None) :
     """
     #--------------------------------------------------------------------------
     #   display a list of parms as a table
@@ -545,18 +560,21 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True)
         print("\n")        
     
     import math
-    labelwidth = int(math.ceil((maxllabels / (maxllabels + maxlvalues)) * 100)) - 6
-    valuewidth = (100 - 6) - labelwidth
+    labelwidth = int(math.ceil((maxllabels / (maxllabels + maxlvalues)) * 100)) 
+    if(labelwidth < 20) :
+        labelwidth  =   20
     
-    parmsHeader    =   ["","","",""]
-    parmsRows      =   []
+    valuewidth = (100 - 4) - labelwidth
+    
     if( (len(labels) == 1) and (len(labels[0]) == 1) ) :
         parmsWidths    =   [1,labelwidth,1,valuewidth+4]
     else :
-        parmsWidths    =   [2,labelwidth,4,valuewidth]
+        parmsWidths    =   [1,labelwidth,3,valuewidth]
     parmsAligns    =   ["center","left","center","left"]
     
     colorList = []    
+    
+    parmsRows      =   []
     
     for i in range(len(labels)) : 
         if( (len(labels[i]) > 0) and (len(values[i]) > 0) ) :
@@ -566,25 +584,29 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True)
                 parmsRows.append([" ",labels[i],"<b>:</b>",values[i]])
             colorList.append([whitecolor,whitecolor,whitecolor,whitecolor])
     
+    parmsHeader    =   ["","","",""]
     parms_table = tblw.dcTable(title,"parmsTable",tblid,
                                parmsHeader,parmsRows,parmsWidths,parmsAligns)
 
     parms_table.set_rowspertable(len(labels))
     parms_table.set_small(True)
     
-    if(not (width == None)) :
+    if(not (width is None)) :
         parms_table.set_smallwidth(width)
-    else :
-        fontsize = 4
-        width = ((maxllabels + maxlvalues) + 6) * fontsize
-        from dfcleanser.common.html_widgets import DEFAULT_PAGE_WIDTH
-        
-        width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100)) + 20
-        parms_table.set_smallwidth(width+6)
+    #else :
+    #    fontsize = 4
+    #    width = ((maxllabels + maxlvalues) + 6) * fontsize
+    #    from dfcleanser.common.html_widgets import DEFAULT_PAGE_WIDTH
+    #    width = int(math.ceil((width / DEFAULT_PAGE_WIDTH) * 100)) + 20
+    #    print("width",width)
+
+    #    parms_table.set_smallwidth(width+6)
 
     parms_table.set_smallmargin(leftMargin)
     parms_table.set_border(False)
     parms_table.set_checkLength(False)
+    if(not(font is None)) :
+        parms_table.set_table_column_parms({"font":font})
 
     if(display) :
         parms_table.display_table()
@@ -699,18 +721,19 @@ def patch_html(htmlin,replaceNewline=True) :
     return(new_table_html)
 
 
-"""
-#--------------------------------------------------------------------------
-#   get a scrolled dc table html
-#
-#       parms[0]    - table id
-#       parms[1]    - scroll direction
-#
-#   return scrolled table html
-#
-#--------------------------------------------------------------------------
-""" 
 def get_scroll_table_html(tableid,direction) :
+    """
+    * ---------------------------------------------------------
+    * function : get a scrolled dc table html
+    * 
+    * Parms :
+    *  tableid    - table id
+    *  direction  - scroll direction
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     print("get_scroll_table_html",tableid,direction,tblw.get_table_value(tableid).get_tabletype())
     
@@ -752,22 +775,26 @@ def get_scroll_table_html(tableid,direction) :
     return(new_table_html)
 
 
-"""
-#--------------------------------------------------------------------------
-#   scroll a dc table
-#
-#       parms[0]    - table id
-#       parms[1]    - scroll direction
-#
-#--------------------------------------------------------------------------
-"""           
 def scroll_table(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : scroll a dc table
+    * 
+    * Parms :
+    *  tableid    - table id
+    *  direction  - scroll direction
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     tableid     =   parms[0]
     direction   =   int(parms[1])
     
     new_table_html  = get_scroll_table_html(tableid,direction)
 
+    print("scroll_table",new_table_html)
     change_table_js = "$("
     if( (new_table_html.find("<thead") == -1) or (tableid == "dfschemaTable") ) :
         change_table_js = change_table_js + "'#" + tableid + "').html('"
@@ -778,30 +805,44 @@ def scroll_table(parms) :
     else :
         change_table_js = change_table_js + "'#" + tableid + "container').html('"
         
-        
-        
     change_table_js = change_table_js + new_table_html + "');"
     
     run_jscript(change_table_js,"fail scroll_table parms : "+tableid+" "+str(direction))
  
-    refresh_bg_js = "$('#" + tableid + "_thr')..css({'background-color':'#6FA6DA'});"
+    refresh_bg_js = "$('#" + tableid + "_thr').css({'background-color':'#6FA6DA'});"
     run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
-    
-    refresh_bg_js = "$('#" + tableid + "_thr').css({'color','white'});"
+    refresh_bg_js = "$('#" + tableid + "_thr').css({'color':'white'});"
     run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
- 
+    refresh_bg_js = "$('#" + tableid + "buttons').css({'margin-right':'1%'});"
+    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+
+    buttons     =   ["downarrow","uparrow","leftarrow","rightarrow"]
     
-"""
-#--------------------------------------------------------------------------
-#   get full input html
-#
-#       inputid     - input form id
-##
-#   return new input html
-#
-#--------------------------------------------------------------------------
-""" 
+    import datetime 
+    tstamp = datetime.datetime.now().time()
+    
+    for i in range(len(buttons)) :
+    
+        button_id       =   tableid + buttons[i]+"img"
+        change_html     =   ("'#" + button_id + "').attr('src'," + 
+                             "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) + "'")
+        change_cols_js = ("$(" + change_html + ");")
+
+        run_jscript(change_cols_js,"fail to refresh sroll table : ")
+    
+
 def get_full_parms_html(inputid) :
+    """
+    * ---------------------------------------------------------
+    * function : get full input html
+    * 
+    * Parms :
+    *  inputid     - input form id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     from dfcleanser.common.html_widgets import get_Input
     inputlist = get_Input(inputid)
@@ -819,17 +860,19 @@ def get_full_parms_html(inputid) :
     
     return(newhtml)
     
-"""
-#--------------------------------------------------------------------------
-#   get full parms for an input
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
+
 def get_fullparms(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : get full parms for an input
+    * 
+    * Parms :
+    *  parms    - input id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     formid     =   parms[0]
     
@@ -853,19 +896,20 @@ def get_fullparms(parms) :
     
         run_jscript(change_input_js,"fail to get full parms for : " + formid)
  
-    
-"""
-#--------------------------------------------------------------------------
-#   scroll the sample table
-#
-#       parms[0]    - table id
-#       parms[1]    - scroll direction
-#
-#   return arg list to be passed into a function
-#
-#--------------------------------------------------------------------------
-"""           
+         
 def scroll_sample_rows(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : scroll the sample table
+    * 
+    * Parms :
+    *  parms[0]    - table id
+    *  parms[1]    - scroll direction
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     tableid     =   parms[0]
     direction   =   int(parms[1])
@@ -905,18 +949,20 @@ def scroll_sample_rows(parms) :
     print("refresh_bg_js",refresh_bg_js)
     run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
 
-"""
-#--------------------------------------------------------------------------
-#   get a sample row
-#
-#       parms[0]    - table id
-#       parms[1]    - row id
-#
-#   return arg list to be passed into a function
-#
-#--------------------------------------------------------------------------
-"""           
+
 def get_sample_row(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : get a sample row for df browser
+    * 
+    * Parms :
+    *  parms[0]    - table id
+    *  parms[1]    - row id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     opstat      =   opStatus()
     
@@ -943,18 +989,19 @@ def get_sample_row(parms) :
     run_jscript(change_table_js,"fail get_sample_row parms : "+tableId)
     
 
-"""
-#--------------------------------------------------------------------------
-#   scroll the sample table
-#
-#       parms[0]    - table id
-#       parms[1]    - scroll direction
-#
-#   return arg list to be passed into a function
-#
-#--------------------------------------------------------------------------
-"""           
 def scroll_single_row(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : get a simgle row for df browser
+    * 
+    * Parms :
+    *  parms[0]    - table id
+    *  parms[1]    - scroll direction
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
     tableid     =   parms[0]
     direction   =   int(parms[1])
@@ -976,17 +1023,18 @@ def scroll_single_row(parms) :
     run_jscript(change_table_js,"fail scroll_single_row : " + tableid + str(direction))
 
     
-"""
-#--------------------------------------------------------------------------
-#   get full parms for an input
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
 def get_dfsubset_vals_html(filters,colname) :
+    """
+    * ---------------------------------------------------------
+    * function : get full parms for an input
+    * 
+    * Parms :
+    *  parms    - input id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_subset_input_id, get_subset_input_labelList
     import dfcleanser.common.cfg as cfg
@@ -1018,19 +1066,18 @@ def get_dfsubset_vals_html(filters,colname) :
     return([title_html,table_html])
 
 
-"""
-#--------------------------------------------------------------------------
-#   get full parms for an input
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
 def get_dfsubset_vals(parms) :
-
-    print("get_dfsubset_vals",parms)
+    """
+    * ---------------------------------------------------------
+    * function : get dfsubset vals
+    * 
+    * Parms :
+    *  parms    - input id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     filters     =   parms[0]
     colname     =   parms[1]
@@ -1059,7 +1106,6 @@ def get_dfsubset_vals(parms) :
     run_jscript(change_table_js,"fail to get unique vals for : ")
 
     buttons     =   ["downarrow","uparrow"]
-    
     
     for i in range(len(buttons)) :
     
@@ -1183,20 +1229,19 @@ def get_select_concat_df_vals(parms) :
     run_jscript(update_row_js,"update_row_js","update_row_js")
     
 
-
-"""
-#--------------------------------------------------------------------------
-#   get column samples
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
 def get_column_samples_html(colname) :
+    """
+    * ---------------------------------------------------------
+    * function : get column samples
+    * 
+    * Parms :
+    *  colname    - column name
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
-    print("get_column_samples_html",colname)
     columnsamplesHeader      =   [""]
 
     columnsamplesRows        =   []
@@ -1268,17 +1313,18 @@ def get_column_samples_html(colname) :
     return(tablehtml[startinner:endinner])
 
 
-"""
-#--------------------------------------------------------------------------
-#   get sample values for a colummn
-#
-#       parms    - input id
-# 
-#   update the input form
-#
-#--------------------------------------------------------------------------
-"""           
 def get_column_samples(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : get sample values for a colummn
+    * 
+    * Parms :
+    *  parms    - input id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
 
     colname     =   parms
     print("get_column_samples",parms,colname)
@@ -1292,6 +1338,40 @@ def get_column_samples(parms) :
     run_jscript(change_table_js,"fail to get sample values for : ")
 
 
+def select_df(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : select a df
+    * 
+    * Parms :
+    *  parms    - formid, title
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    formid     =   parms[0]
+    title      =   parms[1]
+    
+    from dfcleanser.common.cfg import get_dfc_dataframe_object
+    dfcdf   =   get_dfc_dataframe_object(title)
+    
+    newdf       =   dfcdf.get_df()
+    numrows     =   len(newdf)
+    numcols     =   len(newdf.columns)
+    notes       =   dfcdf.get_notes()
+    
+    change_input_js = "$('#dfnumrows').val(" + str(numrows) + ");"
+    run_jscript(change_input_js,"fail to set df parms : " + formid)
+
+    change_input_js = "$('#dfnumcols').val(" + str(numcols) + ");"
+    run_jscript(change_input_js,"fail to set df parms : " + formid)
+
+    change_input_js = "$('#dfnotes').val('" + notes + "');"
+    run_jscript(change_input_js,"fail to set df parms : " + formid)
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -1303,11 +1383,12 @@ def get_column_samples(parms) :
 #
 #--------------------------------------------------------------------------
 """ 
+"""
 def get_datetime_formats_html() :
-    
+    print("get_datetime_formats_html")    
     formatslist = []
     
-    from dfcleanser.sw_utilities.sw_utility_widgets import get_Dict
+    from dfcleanser.sw_utilities.sw_utility_control import get_Dict
     formats = get_Dict("strftime")
 
     keys = list(formats.keys())
@@ -1333,7 +1414,7 @@ def get_datetime_formats_html() :
         
     formats_table = None
                 
-    formats_table = tblw.dcTable("strftime Formats","dtdatetimeformatsTable",DataTransform_ID,
+    formats_table = tblw.dcTable("Formats","dtdatetimeformatsTable",DataTransform_ID,
                             formatslistHeader,formatslistRows,
                             formatslistWidths,formatslistAligns)
             
@@ -1341,7 +1422,7 @@ def get_datetime_formats_html() :
     
     formats_table.set_small(True)
     formats_table.set_smallwidth(98)
-    formats_table.set_smallmargin(10)
+    formats_table.set_smallmargin(2)
 
     formats_table.set_border(True)
         
@@ -1356,7 +1437,7 @@ def get_datetime_formats_html() :
     formats_html = tblw.get_row_major_table(formats_table,tblw.SCROLL_NEXT,False)
     
     return(formats_html)
- 
+""" 
     
 """
 #--------------------------------------------------------------------------
@@ -1367,8 +1448,11 @@ def get_datetime_formats_html() :
 #   update the input form
 #
 #--------------------------------------------------------------------------
-"""           
+""" 
+"""          
 def get_datetime_formats(parms) :
+    
+    print("get_datetime_formats",parms)
 
     formats_html    =   get_datetime_formats_html()
     formid          =   "datetimecolnamesTableContainer"
@@ -1387,10 +1471,205 @@ def get_datetime_formats(parms) :
         tstamp = datetime.datetime.now().time()
 
         change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
-                                 "'./graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
+                                 "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
         
         #print("refresh_images",change_help_js)
         run_jscript(change_cols_js,"fail to refresh sroll table : ")
+"""
+
+"""
+#--------------------------------------------------------------------------
+#   get full input html
+#
+#       inputid     - input form id
+##
+#   return new input html
+#
+#--------------------------------------------------------------------------
+""" 
+"""
+def get_cand_cols_html() :
+    
+    from dfcleanser.data_transform.data_transform_widgets import get_possible_datetime_cols
+    import dfcleanser.common.cfg as cfg
+    cands_html  =   get_possible_datetime_cols("datetimecolnamesTable",cfg.DataTransform_ID,"get_datetime_col",None)
+    
+    return(cands_html)
+""" 
+    
+"""
+#--------------------------------------------------------------------------
+#   get full parms for an input
+#
+#       parms    - input id
+# 
+#   update the input form
+#
+#--------------------------------------------------------------------------
+""" 
+"""          
+def get_cand_cols(parms) :
+    
+    print("get_cand_cols",parms)
+
+    cols_html    =   get_cand_cols_html()
+    formid       =   "datetimecolnamesTableContainer"
+   
+    new_table_html = patch_html(cols_html)
+    
+    change_input_js = "$('#" + formid + "').html('"
+    change_input_js = change_input_js + new_table_html + "');"
+    
+    run_jscript(change_input_js,"fail to get datatime format strings : ")
+
+    buttons     =   ["downarrow","uparrow"]
+    for i in range(len(buttons)) :
+    
+        import datetime 
+        tstamp = datetime.datetime.now().time()
+
+        change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
+                                 "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i]+".png?timestamp=" + str(tstamp) +"');")
+        
+        #print("refresh_images",change_help_js)
+        run_jscript(change_cols_js,"fail to refresh sroll table : ")
+"""
+
+
+def get_gen_func_values(parms) :
+
+    """
+    * ---------------------------------------------------------
+    * function : get generic function values for a form
+    * 
+    * Parms :
+    *  formid    - form id
+    *  ftitle    - genfunc title
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    formid      =   parms[0]
+    ftitle      =   parms[1]
+    
+    import dfcleanser.common.cfg as cfg
+    dftitle     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+    
+    import dfcleanser.common.cfg as cfg
+    
+    if(formid == "addcolfuncs") :
+        
+        from dfcleanser.data_transform.data_transform_columns_widgets import add_column_code_gf_input_id
+        addparms    =   cfg.get_config_value(add_column_code_gf_input_id+"Parms")
+        if(not (addparms is None)) :
+            newcolname  =   addparms[0]
+        else :
+            newcolname  =   "USER VALUE"
+        
+        dfcolname   =   "USER VALUE"
+        
+    else :
+
+        from dfcleanser.data_transform.data_transform_columns_widgets import apply_column_gf_input_id
+        addparms    =   cfg.get_config_value(apply_column_gf_input_id+"Parms")
+        if(not (addparms is None)) :
+            dfcolname  =   addparms[0]
+        else :
+            dfcolname  =   "USER VALUE"
+        
+        newcolname   =   "None"
+
+    from dfcleanser.sw_utilities.sw_utility_genfunc_control import get_generic_function, get_generic_function_desc
+    gt_func         =   get_generic_function(ftitle)
+    
+    if(gt_func is None) :
+        
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule
+        gfmodule    =   reservedfunctionsmodule
+        
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctions
+        if(ftitle == reservedfunctions[0])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[1])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[2])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[3])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[4])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[5])  :    kwvals  =   {"inlist":"USER VALUE"}
+        if(ftitle == reservedfunctions[6])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"trigfunc":"","opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[7])  :    kwvals  =   {"invalue":"USER VALUE","trigfunc":"USER VALUE"}
+        if(ftitle == reservedfunctions[8])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"degrees":"","opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[9])  :    kwvals  =   {"invalue":"USER VALUE","degrees":"USER VALUE"}
+        if(ftitle == reservedfunctions[10]) :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[11]) :    kwvals  =   {"invalue":"USER VALUE"}
+        if(ftitle == reservedfunctions[12]) :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"decimals":"","opstat":"opstat","newcolname":newcolname}
+        if(ftitle == reservedfunctions[13]) :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"opstat":"opstat"}
+        if(ftitle == reservedfunctions[14]) :    kwvals  =   {"geocoords":"USER VALUE","opstat":"opstat"}
+         
+        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_kwargs
+        gfcode      =   get_function_kwargs(gfmodule,ftitle,kwvals)
+        gfcode      =   gfcode.replace("\n","dfc_new_line")
+        gfcode      =   gfcode.replace("'",'"')
+
+        gfdesc      =   get_generic_function_desc(ftitle)
+        gfdesc      =   gfdesc.replace("\n","dfc_new_line")
+        gfdesc      =   gfdesc.replace("'",'"')
+        
+    else :
+        gfmodule    =   gt_func.get_func_module()
+        gfcode      =   gt_func.get_func_code()
+        gfcode      =   gfcode.replace("\n","dfc_new_line")
+        gfcode      =   gfcode.replace("'",'"')
+
+        gfdesc      =   get_generic_function_desc(ftitle)        
+        gfdesc      =   gfdesc.replace("\n","dfc_new_line")
+        gfdesc      =   gfdesc.replace("'",'"')
+    
+    if(formid == "addcolfuncs") :
+        
+        change_val_js = "$('#addcolmodule').val('"
+        change_val_js = change_val_js + gfmodule + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+
+        change_val_js = "$('#addcolname').val('"
+        change_val_js = change_val_js + ftitle + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+
+        change_val_js = "set_textarea('addcolcodefcode', '"
+        change_val_js = change_val_js + gfcode + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+        
+        change_val_js = "set_textarea('addcoldesc', '"
+        change_val_js = change_val_js + gfdesc + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+
+    if(formid == "fnselect") :
+        
+        change_val_js = "$('#fmodule').val('"
+        change_val_js = change_val_js + gfmodule + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+
+        change_val_js = "$('#fnname').val('"
+        change_val_js = change_val_js + ftitle + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+
+        change_val_js = "set_textarea('fntoapply', '"
+        change_val_js = change_val_js + gfcode + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+        
+        change_val_js = "set_textarea('fndesc', '"
+        change_val_js = change_val_js + gfdesc + "');"
+        run_jscript(change_val_js,"fail to get sample values for : ")
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
 """
 #--------------------------------------------------------------------------
@@ -1670,6 +1949,22 @@ def is_numeric_datatype_id(dtypeId) :
     else :
         return(False)        
 
+def is_integer_datatype_id(dtypeId) :
+    
+    if((dtypeId == 0) or (dtypeId == 1) or (dtypeId == 2) or (dtypeId == 3) or 
+       (dtypeId == 4) or (dtypeId == 5) or (dtypeId == 6) or (dtypeId == 7) or 
+       (dtypeId == 17) )  : 
+        return(True)
+    else :
+        return(False)        
+
+def is_datetime_datatype_id(dtypeId) :
+    
+    if((dtypeId == 11) or (dtypeId == 12) or (dtypeId == 13) or (dtypeId == 14) )  : 
+        return(True)
+    else :
+        return(False)        
+
 def get_datatype_id(dt) :
     
     import numpy
@@ -1708,29 +2003,54 @@ def get_datatype_id(dt) :
 
 def get_datatype_str(dt_id) :
 
-    if(dt_id == 0)      : return("	numpy.uint8")
+    if(dt_id == 0)      : return("numpy.uint8")
     elif(dt_id == 1)    : return("numpy.uint16")
     elif(dt_id == 2)    : return("numpy.uint32")
-    elif(dt_id == 3)    : return("	numpy.uint64")
-    elif(dt_id == 4)    : return("	numpy.int8")
-    elif(dt_id == 5)    : return("	numpy.int16")
-    elif(dt_id == 6)    : return("	numpy.int32")
-    elif(dt_id == 7)    : return("	numpy.int64")
-    elif(dt_id == 8)    : return("	numpy.float16")
-    elif(dt_id == 9)    : return("	numpy.float32")
-    elif(dt_id == 10)   : return("	numpy.float64")
+    elif(dt_id == 3)    : return("numpy.uint64")
+    elif(dt_id == 4)    : return("numpy.int8")
+    elif(dt_id == 5)    : return("numpy.int16")
+    elif(dt_id == 6)    : return("numpy.int32")
+    elif(dt_id == 7)    : return("numpy.int64")
+    elif(dt_id == 8)    : return("numpy.float16")
+    elif(dt_id == 9)    : return("numpy.float32")
+    elif(dt_id == 10)   : return("numpy.float64")
     elif(dt_id == 11)   : return("datetime.datetime")
     elif(dt_id == 12)   : return("datetime.date")
     elif(dt_id == 13)   : return("datetime.time")
-    elif(dt_id == 14)   : return("	datetime.timedelta")
+    elif(dt_id == 14)   : return("datetime.timedelta")
     elif(dt_id == 15)   : return("str")
-    elif(dt_id == 16)   : return("	object")
+    elif(dt_id == 16)   : return("object")
     elif(dt_id == 17)   : return("int")
-    elif(dt_id == 18)   : return("	float")
-    elif(dt_id == 19)   : return("	category")
+    elif(dt_id == 18)   : return("float")
+    elif(dt_id == 19)   : return("category")
     
     return("unknown")
 
+
+def get_datatype_id_from_str(dt_str) :
+
+    if(dt_str == "numpy.uint8")             :   return(0)
+    elif(dt_str == "numpy.uint16")          :   return(1)
+    elif(dt_str == "numpy.uint32")          :   return(2)
+    elif(dt_str == "numpy.uint64")          :   return(3)
+    elif(dt_str == "numpy.int8")            :   return(4)
+    elif(dt_str == "numpy.int16")           :   return(5)
+    elif(dt_str == "numpy.int32")           :   return(6)
+    elif(dt_str == "numpy.int64")           :   return(7)
+    elif(dt_str == "numpy.float16")         :   return(8)
+    elif(dt_str == "numpy.float32")         :   return(9)
+    elif(dt_str == "numpy.float64")         :   return(10)
+    elif(dt_str == "datetime.datetime")     :   return(11)
+    elif(dt_str == "datetime.date")         :   return(12)
+    elif(dt_str == "datetime.time")         :   return(13)
+    elif(dt_str == "datetime.timedelta")    :   return(14)
+    elif(dt_str == "str")                   :   return(15)
+    elif(dt_str == "object")                :   return(16)
+    elif(dt_str == "int")                   :   return(17)
+    elif(dt_str == "float")                 :   return(18)
+    elif(dt_str == "category")              :   return(19)
+
+    return(None)
 
 
 """
@@ -1824,15 +2144,19 @@ def display_exception(opstat,display=True) :
     else :
         return(exception_html)
 
-def display_status(msg, skipLines = 0) :
+def display_status(msg, skipLines = 0, display=True) :
     
     status_html = ""
     
     if(skipLines > 0) :
         for i in range(skipLines) :
             status_html = (status_html + new_line) 
-            
-    status_html = (status_html + '<div class="container" style="width:80%; margin-left:30px; margin-bottom:5px;">' + new_line)
+    
+    if(display) :        
+        status_html = (status_html + '<div class="container" style="width:80%; margin-left:30px; margin-bottom:5px;">' + new_line)
+    else :
+        status_html = (status_html + '<div class="container" style="width:480px; margin-bottom:5px;">' + new_line)
+        
     status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
     status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
     status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
@@ -1862,13 +2186,20 @@ def display_status(msg, skipLines = 0) :
     status_html = (status_html + '</div>')
     
     #print(status_html)
-    displayHTML(status_html)
+    if(display) :
+        displayHTML(status_html)
+    else :
+        return(status_html)
 
 
 def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     
     notes_html = ""
-    notes_html = (notes_html + '<div class="container" style="width:80%; margin-left:' + str(margin) + 'px; border:1px;">' + new_line)
+    if(display) :
+        notes_html = (notes_html + '<div class="container" style="width:80%; margin-left:' + str(margin) + 'px; border:1px;">' + new_line)
+    else :
+        notes_html = (notes_html + '<div class="container" style="width:480px; border:1px;">' + new_line)
+        
     notes_html = (notes_html + '    <div class="row">' + new_line)
     if(color) :
         if(helpmsg) :
@@ -1905,11 +2236,24 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     else :
         return(notes_html)
 
-
 def display_notes(notes,display=True) :
     
     if(display) :
-        display_msgs(notes,"Notes :")
+        
+        import dfcleanser.common.cfg as cfg
+        
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            
+            display_msgs(notes,"Notes :")
+            
+        else :
+            
+            notes_html      =   display_msgs(notes,"Notes :",color=False,margin=30,helpmsg=False,display=False) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [notes_html]
+    
+            display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+            
     else :
         return(display_msgs(notes,"Notes :",color=False,margin=30,helpmsg=False,display=False))
         
@@ -2003,17 +2347,17 @@ wrapper_start1  = """'>
 
 wrapper_end     = """</div>"""
 
-header_start    = """<div class="box header" style="color:black;">
-  """
-sidebar_start   = """<div class="box sidebar">"""
-sidebar1_start  = """<div class="box sidebar1">"""
+#header_start    = """<div class="box header" style="color:black;">
+#  """
+#sidebar_start   = """<div class="box sidebar">"""
+#sidebar1_start  = """<div class="box sidebar1">"""
 
 
-content_start   = """<div class="box content" style="color:black">"""
-footer_start    = """<div class="box footer">"""
+#content_start   = """<div class="box content" style="color:black">"""
+#footer_start    = """<div class="box footer">"""
 
-section_end     = """</div>
-""" 
+#section_end     = """</div>
+#""" 
 
 
 GRID_HEADER     =   0

@@ -142,7 +142,37 @@ def get_dfc_dataframe_titles_list() :
 * --------------------------------------
 """    
 def add_dfc_dataframe(dfcdf) :
+    """
+    * ---------------------------------------------------------------------
+    * function : add a dataframe cleanser dataframe object to available list
+    * 
+    * parms :
+    *  dfcdf     - dfc_dataframe object
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------------------
+    """
     DCdf.add_dataframe(dfcdf)
+    dftitles    =   get_dfc_dataframes_titles_list()
+    dftitles.sort()
+    
+    for i in range(len(dftitles)) :
+        dftitles[0] =   dftitles[0].replace('"',"'")
+    
+    dftitlesDict    =   {}
+    
+    for i in range(len(dftitles)) :
+        dftitlesDict.update({dftitles[i] : dftitles[i]})    
+    
+    dftitlesStr     =   json.dumps(dftitlesDict)
+    dftitlesStr =   dftitlesStr.replace('"',"'")
+    script      =   "change_dataframes_to_select(" + dftitlesStr + ",'temp');"
+    run_javascript(script, "get df titles error") 
+ 
+    
+def get_dfc_dataframe_object(title=None) :
+    return(DCdf.get_dfc_dataframe(title))
 def get_dfc_dataframe(title=None) :
     return(DCdf.get_dataframe(title))
 def get_dfc_dataframe_notes(title=None) :
@@ -190,6 +220,19 @@ def get_dfc_df(title) :
 #--------------------------------------------------------------------------
 """
 class dfc_dataframe :
+    """
+    * ---------------------------------------------------------
+    * class : dataframe cleanser dataframe object
+    * 
+    * attributes :
+    *  title     - datframe title : get_title()
+    *  df        - pandas dataframe object : get_df()
+    *  notes     - dataframe descriptive notes : get_notes()
+    *
+    * returns : 
+    *  dataframe cleanser dataframe object 
+    * --------------------------------------------------------
+    """
     
     dfc_df    =   []
     
@@ -457,13 +500,10 @@ UNIQUES_RANGE_KEY                       =   "columnUniquesRange"
 OUTLIERS_FLAG_KEY                       =   "columnOutliersDisplay"
 DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
 ROUNDING_FLAG_KEY                       =   "roundcolumn"
+FILLNA_FLAG_KEY                         =   "fillnacolumn"
 
 CLEANSING_COL_KEY                       =   "datacleansingcolumn"
 CLEANSING_ROW_KEY                       =   "datacleansingrow"
-
-OBJ_TYPE_PARM_KEY                       =   "objtypeparm"
-OBJ_DATA_TYPES_FLAG_KEY                 =   "colsDataTypeChange"
-OBJ_ROUNDING_FLAG_KEY                   =   "colsroundcolumn"
 
 GRAPHS_FLAG_KEY                         =   "graphcolumn"
 
@@ -481,7 +521,7 @@ CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
 """
 CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
 CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
-
+CURRENT_IMPORT_START_TIME               =   "importStartTime"
 #MYSQL_IMPORT_PARMS_KEY                  =   "MySqlImportParms"
 #MSSQL_IMPORT_PARMS_KEY                  =   "MSSqlServerImportParms"
 #SQLITE_IMPORT_PARMS_KEY                 =   "SqliteImportParms"
@@ -605,11 +645,9 @@ def get_current_notebook_name() :
     return(DataframeCleanserCfgData.get_notebookname())
     
 def sync_with_js(parms) :
-    print("sync_with_js")
     DataframeCleanserCfgData.sync_js(parms)    
 
 def send_sync_request() :
-    print("send_sync_request")
     try :
         run_javascript("window.sync_notebook();",
                        "Unable to sync with js")
@@ -680,7 +718,7 @@ class DataframeCleansercfg :
             
             if(not self.sync_request_sent) :
                 self.sync_request_sent  =   True
-                send_sync_request()
+                #send_sync_request()
             
             return()
         
@@ -1083,7 +1121,37 @@ def check_notebook_dir_and_cfg_files(notebookname) :
 """    
 df_schema_dict    =   {}
     
-    
-    
 
+"""
+* ----------------------------------------------------
+# dfcleanser mode - inline or popup
+* ----------------------------------------------------
+""" 
+
+INLINE_MODE     =   0
+POP_UP_MODE     =   1
+     
+def set_dfc_mode(mode) :
+    dfcMode.set_mode(mode)
+
+def get_dfc_mode() :   
+    return(dfcMode.get_mode())
+
+class dfc_mode :
     
+    # instance variables
+    mode                    =   INLINE_MODE
+    
+    # full constructor
+    def __init__(self) :
+        self.mode               =   INLINE_MODE
+        
+    def set_mode(self,inmode) :
+        self.mode  =   inmode
+        run_javascript("set_dfcmode(" + str(inmode) + ");","Unable to set mode")
+
+    def get_mode(self) :
+        return(self.mode)
+   
+
+dfcMode     =   dfc_mode()    

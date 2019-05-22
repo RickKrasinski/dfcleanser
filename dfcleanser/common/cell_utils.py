@@ -30,21 +30,22 @@ DC_DATA_SCRIPT_ID                   =   13
 DC_WORKING_ID                       =   14
 
 SYSTEM_TASK_BAR_ID                  =   15
-IMPORT_TASK_BAR_ID                  =   16
-IMPORT_CUSTOM_CODE_ID               =   17
-INSPECTION_TASK_BAR_ID              =   18
-CLEANSING_TASK_BAR_ID               =   19
-TRANSFORM_TASK_BAR_ID               =   20
-TRANSFORM_ADD_COLUMN_ID             =   21
-EXPORT_TASK_BAR_ID                  =   22
-EXPORT_CUSTOM_CODE_ID               =   23
-SW_UTILS_DATASTRUCT_TASK_BAR_ID     =   24
-SW_UTILS_GENFUNC_TASK_BAR_ID        =   25
-SW_UTILS_GENFUNC_CODECELL_ID        =   26
-SW_UTILS_GEOCODE_TASK_BAR_ID        =   27
-SW_UTILS_DFSUBSET_TASK_BAR_ID       =   28
-SCRIPT_TASK_BAR_ID                  =   29
-WORKING_CELL_ID                     =   30
+SYSTEM_ADD_DF_ID                    =   16
+IMPORT_TASK_BAR_ID                  =   17
+IMPORT_CUSTOM_CODE_ID               =   18
+INSPECTION_TASK_BAR_ID              =   19
+CLEANSING_TASK_BAR_ID               =   20
+TRANSFORM_TASK_BAR_ID               =   21
+TRANSFORM_ADD_COLUMN_ID             =   22
+EXPORT_TASK_BAR_ID                  =   23
+EXPORT_CUSTOM_CODE_ID               =   24
+SW_UTILS_DATASTRUCT_TASK_BAR_ID     =   25
+SW_UTILS_GENFUNC_TASK_BAR_ID        =   26
+SW_UTILS_GENFUNC_CODECELL_ID        =   27
+SW_UTILS_GEOCODE_TASK_BAR_ID        =   28
+SW_UTILS_DFSUBSET_TASK_BAR_ID       =   29
+SCRIPT_TASK_BAR_ID                  =   30
+WORKING_CELL_ID                     =   31
 
 
 """
@@ -113,6 +114,7 @@ DC_PANDAS_TITLE                 =   "PandasdfcleanserTitle"
 
 DC_SYSTEM_TITLE                 =   "DCSystemTitle"
 DC_SYSTEM                       =   "DCSystem"
+DC_SYSTEM_ADD_DF                =   "DCSystemAdddf"
 
 DC_DATA_IMPORT_TITLE            =   "DCDataImportTitle"
 DC_DATA_IMPORT                  =   "DCDataImport"
@@ -186,6 +188,7 @@ def get_cells_title_index(cellTitle) :
     if (DC_PANDAS_TITLE == cellTitle)                     :   return(DC_TITLE_ID)
     elif (DC_SYSTEM_TITLE == cellTitle)                   :   return(DC_SYSTEM_ID)
     elif (DC_SYSTEM == cellTitle)                         :   return(SYSTEM_TASK_BAR_ID)
+    elif (DC_SYSTEM_ADD_DF == cellTitle)                  :   return(SYSTEM_ADD_DF_ID)
     elif (DC_DATA_IMPORT_TITLE == cellTitle)              :   return(DC_DATA_IMPORT_ID)
     elif (DC_DATA_IMPORT == cellTitle)                    :   return(IMPORT_TASK_BAR_ID)
     elif (DC_DATA_CUSTOM_IMPORT == cellTitle)             :   return(IMPORT_CUSTOM_CODE_ID)

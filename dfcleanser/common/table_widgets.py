@@ -11,20 +11,56 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
+
 def addattribute(name,value) :
-    
-    #print("addattribute",name,value)
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add attribute
+    * 
+    * parms :
+    *   namw        -   attribute name
+    *   value       -   attribute value 
+    *
+    * returns : 
+    *  html attribute
+    * --------------------------------------------------------
+    """
     attribute = ""
     attribute = attribute + " " + name + "=" + '"' + str(value) + '"'
     return(attribute)
 
+
 def addstyleattribute(name,value) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add style attribute
+    * 
+    * parms :
+    *   namw        -   style attribute name
+    *   value       -   style attribute value 
+    *
+    * returns : 
+    *  html style attribute
+    * --------------------------------------------------------
+    """
     
     styleattribute = ""
     styleattribute = styleattribute + " " + name + ":" + value + "; "
     return(styleattribute)
 
+
 def strip_leading_blanks(instr) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : stripleading blanks
+    * 
+    * parms :
+    *   instr  - input string
+    *
+    * returns : 
+    *  stripped string
+    * --------------------------------------------------------
+    """
     
     outstr = instr.replace("&nbsp;","")
     return(outstr)
@@ -155,7 +191,7 @@ table_form_end = """</div>
 """
 
 table_container_start = """
-<div class='container dc-tbl-container'"""
+<div class='container dc-table-container'"""
 
 table_container_middle = """
     <div class="row">
@@ -207,13 +243,18 @@ table_title_div_start = """                    <div class='input-group-btn'>
 table_title_div_end = """                    </div>
 """
 
-table_title_start = """                    <p class="dc-table-title pull-left" """
+table_title_start = """                      <p class="dc-table-title pull-left" """
 table_title_end = """</p>
 """
 
-table_more_div_start = """                    <div class="input-group-btn" align="right" style="margin-right:1%;">
+table_more_div_start = """                    <div class="input-group-btn" """
+table_more_div_start1 = """ style="padding-right:0px; text-align:right">
 """
-table_short_more_div_start = """                    <div class="input-group-btn dc-table-title" style="padding-right:0px; padding-left:2%;" >
+table_more_short_div_start1 = """ style="padding-right:25px; text-align:right;">
+"""
+#table_short_more_div_start = """                    <div class="input-group-btn dc-table-title" style="padding-right:0px; padding-left:2%;" >
+#"""
+table_short_more_div_start = """                    <div class="input-group-btn" style="padding-right:0px; padding-left:2%;" >
 """
 
 table_more_div_end = """                    </div>
@@ -222,16 +263,32 @@ table_more_div_end = """                    </div>
 table_next_start = """                        <button class="btn btn-primary" """
 search_table_next_start = """                        <button class="btn btn-primary" """
 table_next_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/rightarrow.png' height="20px" width="20px" id='"""
-table_next_final_end   = """leftarrowimg'></img>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/rightarrow.png' """
+table_next_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
 
 table_prev_start = """                        <button class="btn btn-primary" """
 search_table_prev_start = """                        <button class="btn btn-primary" id="morePrev" """
 table_prev_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/leftarrow.png' height="20px" width="20px" id='"""
-table_prev_final_end   = """rightarrowimg'></img>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/leftarrow.png' """
+table_prev_final_end   = """ height="20px" width="20px"></img>
+                        </button>
+"""
+
+table_down_start = """                        <button class="btn btn-primary" """
+search_table_down_start = """                        <button class="btn btn-primary" """
+table_down_end   = """>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/downarrow.png' """
+table_down_final_end   = """ height="20px" width="20px"></img>
+                        </button>
+"""
+
+table_up_start = """                        <button class="btn btn-primary" """
+search_up_down_start = """                        <button class="btn btn-primary" """
+table_up_end   = """>
+                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/uparrow.png' """
+table_up_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
 
@@ -246,15 +303,21 @@ table_short_prev_end          = """>-</button>
 table_short_button_end = """                        </button>
 """
 
-table_note_start = """<div class="table-note">
-    <p> """
-table_note_end   = """</div>
-"""                     
+table_note_start = """        <div class="table-note">
+            <p> """
+table_note_end   = """        </div>"""                     
 
 table_note_color_start = """<span style='background-color:"""
               
 table_start = """
              <table class="table dc-table" """
+table_start11 = """
+             <table class="table dc-table11" """
+table_start12 = """
+             <table class="table dc-table12" """
+table_start13 = """
+             <table class="table dc-table13" """
+             
 table_end = """
              </table>
             </div>"""
@@ -309,18 +372,22 @@ table_button_end   = """</button>
 * -----------------------------------------------------------------------*
 """
 
-"""
-* -----------------------------------------------------------------------*
-*  A mult_table is a set of tables stacked like sheets with only one
-*  displayed at a time
-* -----------------------------------------------------------------------*
-*   
-*   table           -   dcTable object
-*   direction       -   direction to scroll in 
-*   displayTable    -   display the html flag  
-* -----------------------------------------------------------------------*
-"""
+
 def get_mult_table(table,direction,displayTable=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : A mult_table is a set of tables stacked like sheets with only one
+    *            displayed at a tim
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   direction       -   direction to scroll in 
+    *   displayTable    -   display the html flag  
+    *
+    * returns : 
+    *  html table
+    * --------------------------------------------------------
+    """
 
     if(direction == SCROLL_NEXT) :
         table.set_lasttabledisplayed(table.get_lasttabledisplayed()+1)    
@@ -355,17 +422,21 @@ def get_mult_table(table,direction,displayTable=True) :
         temp_table.display_table() 
         drop_table_value("tempmulttable")
         
-"""
-* -----------------------------------------------------------------------*
-*  A row_major_table is a single table that displays a subset of rows 
-*  at a time
-* -----------------------------------------------------------------------*
-*   table           -   dcTable object
-*   direction       -   direction to scroll in 
-*   displayTable    -   display the html flag  
-* -----------------------------------------------------------------------*
-"""
+
 def get_row_major_table(table,direction,displayTable=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : A row_major_table is a single table that displays a subset of rows at a time
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   direction       -   direction to scroll in 
+    *   displayTable    -   display the html flag  
+    *
+    * returns : 
+    *  html table
+    * --------------------------------------------------------
+    """
 
     if(not(displayTable)) :
         
@@ -391,17 +462,21 @@ def get_row_major_table(table,direction,displayTable=True) :
     else :
         table.display_table() 
         
-"""
-* -----------------------------------------------------------------------*
-*  A col_major_table is a single table that displays a subset of cols 
-*  at a time
-* -----------------------------------------------------------------------*
-*   table           -   dcTable object
-*   direction       -   direction to scroll in 
-*   displayTable    -   display the html flag  
-* -----------------------------------------------------------------------*
-"""
+
 def get_col_major_table(table,direction,displayTable=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : A col_major_table is a single table that displays a subset of cols at a time
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   direction       -   direction to scroll in 
+    *   displayTable    -   display the html flag  
+    *
+    * returns : 
+    *  html table
+    * --------------------------------------------------------
+    """
 
     if(not(displayTable)) :
         
@@ -436,8 +511,6 @@ def get_col_major_table(table,direction,displayTable=True) :
         table.display_table() 
 
 
-
-
 TABLE_TITLE_FONTSIZE    =   0
 TABLE_TITLE_FONTCOLOR   =   1
 TABLE_TITLE_FONTFAMILY  =   2
@@ -461,56 +534,61 @@ TABLE_COLUMN_BGCOLOR     =   4
 * class for defining dataframe cleanser html based tables 
 * -----------------------------------------------------------------------*
 """
-"""
-*
-*   ATTRIBUTES
-*
-*   title               -   table title
-*   tableid             -   html id for table
-*   owner               -   owner id to drop or build tables
-*   headerList          -   list of <th> fields
-*   rowList             -   list of <tr> fields
-*   widthList           -   list of column widths in percents
-*   alignList           -   list of column alignmments ("Center", "Left", "Right")
-*   refList             -   list of <th> OnClick callbacks
-*   hhrefList           -   list of <tr> OnClick callbacks
-*   refParm             -   list of <tr> OnClick callback parms
-*   buttonList          -   list of <tr> buttons
-*   hiddensList         -   list of hidden elements associated with table
-*
-*   tabletype           -   table type (ROW_MAJOR, COLUMN_MAJOR, MULTIPLE) 
-*   colsperrow          -   number of columns per row
-*   rowspertable        -   number of rows per table
-*   maxtables           -   max tables in MULTIPLE table
-*   lastrowdisplayed    -   last row displayed in ROW_MAJOR table
-*   numtables           -   number of MULTIPLE tables generated 
-*   lasttabledisplayed  -   last MULTIPLE table displayed
-*
-*   searchable          -   flag to make table searchable
-*   searchtext          -   text for search box
-*   searchcallback      -   search callback function
-*
-*   color               -   flag to make table colored
-*   colorList           -   list of colors for each column 
-*
-*   border              -   flag to draw border
-*
-*   small               -   flag to make table small
-*   smallwidth          -   small table width in percent
-*   smallmargin         -   small table left margin
-*   smallfsize          -   small table font size
-*
-*   shorthead           -   list of colors for each column 
-*   shortrow            -   flag to draw border
-*   note                -   note below table
-*   notecolor           -   note below table
-*   checkLength         -   flag to check <th> and <tr> lengths and use popover
-*   firstcolpadding     -   list of left padding for first column in rows
-*
-"""
+
 
 class dcTable :
+    
+    """
+    * -------------------------------------------------------------------------- 
+    * Class Description : class for defining html tables for display
+    * 
+    * attributes :
+    *   title               -   table title
+    *   tableid             -   html id for table
+    *   owner               -   owner id to drop or build tables
+    *   headerList          -   list of <th> fields
+    *   rowList             -   list of <tr> fields
+    *   widthList           -   list of column widths in percents
+    *   alignList           -   list of column alignmments ("Center", "Left", "Right")
+    *   refList             -   list of <th> OnClick callbacks
+    *   hhrefList           -   list of <tr> OnClick callbacks
+    *   refParm             -   list of <tr> OnClick callback parms
+    *   buttonList          -   list of <tr> buttons
+    *   hiddensList         -   list of hidden elements associated with table
+    *
+    *   tabletype           -   table type (ROW_MAJOR, COLUMN_MAJOR, MULTIPLE) 
+    *   colsperrow          -   number of columns per row
+    *   rowspertable        -   number of rows per table
+    *   maxtables           -   max tables in MULTIPLE table
+    *   lastrowdisplayed    -   last row displayed in ROW_MAJOR table
+    *   numtables           -   number of MULTIPLE tables generated 
+    *   lasttabledisplayed  -   last MULTIPLE table displayed
+    *
+    *   searchable          -   flag to make table searchable
+    *   searchtext          -   text for search box
+    *   searchcallback      -   search callback function
+    *
+    *   color               -   flag to make table colored
+    *   colorList           -   list of colors for each column 
+    *
+    *   border              -   flag to draw border
+    *
+    *   small               -   flag to make table small
+    *   smallwidth          -   small table width in percent
+    *   smallmargin         -   small table left margin
+    *   smallfsize          -   small table font size
+    *
+    *   shorthead           -   list of colors for each column 
+    *   shortrow            -   flag to draw border
+    *   note                -   note below table
+    *   notecolor           -   note below table
+    *   checkLength         -   flag to check <th> and <tr> lengths and use popover
+    *   firstcolpadding     -   list of left padding for first column in rows
+    *
+    * --------------------------------------------------------
 
+    """
+    
     # full constructor
     def __init__(self,    
                  title           =   "",
@@ -579,8 +657,8 @@ class dcTable :
         
         # attributes for small table     
         self.small           =   False
-        self.smallwidth      =   92
-        self.smallmargin     =   40
+        self.smallwidth      =   99
+        self.smallmargin     =   0
         self.smallfsize      =   12
         self.smallheader     =   True
         
@@ -736,7 +814,7 @@ class dcTable :
         self.table_title_parms      =   table_title_parms_in 
     def set_table_header_parms(self,table_header_parms_in) :        
         self.table_header_parms     =   table_header_parms_in 
-    def set_table_column_parms(self,table_column_parms_in) :        
+    def set_table_column_parms(self,table_column_parms_in) :  
         self.table_column_parms     =   table_column_parms_in
         
         
@@ -869,16 +947,13 @@ class dcTable :
 
     def get_table_column_parm(self,column_parm_id) :
         try :
-            return(self.get_table_column_parms(self)[column_parm_id])
+            parm    =   self.get_table_column_parms().get(column_parm_id,None)
+            return(parm)
         except :
             return(None)
 
-
-        
-        
-
     def get_html(self,fulltable=True) :
-        
+
         more = False
         prev = False
     
@@ -891,7 +966,17 @@ class dcTable :
         else :
             tableHTML = (tableHTML + get_non_search_table_header(self,more,prev,fulltable))
 
-        tableHTML = (tableHTML + table_start) 
+        fsize   =   self.get_table_column_parm("font")
+        if(fsize is None) :
+            tableHTML = (tableHTML + table_start)
+        elif(fsize == 11) :
+            tableHTML = (tableHTML + table_start11)
+        elif(fsize == 12) :
+            tableHTML = (tableHTML + table_start12)
+        elif(fsize == 13) :
+            tableHTML = (tableHTML + table_start13)
+        else :
+            tableHTML = (tableHTML + table_start)
     
         if(self.get_tableid() != None) :
             tableHTML = (tableHTML + addattribute("id",self.get_tableid()))
@@ -998,7 +1083,7 @@ class dcTable :
             if(len(self.get_note()) > 0 ) :
                 
                 tableHTML = (tableHTML + table_note_start)
-                tableHTML = (tableHTML + addattribute("id",self.get_tableid()+"note") + ">" + new_line)
+                #tableHTML = (tableHTML + addattribute("id",self.get_tableid()+"note") + ">" + new_line)
 
                 if(not (self.get_notecolor() is None)) :
                     tableHTML = (tableHTML + table_note_color_start)
@@ -1047,11 +1132,12 @@ class dcTable :
         """
         
         #debug 
-        if(self.get_title() != None)  :  
-            if( (self.get_title() == "#df Browser") or 
-               (self.get_title() == "#Generic Functions") or 
-               ("#Column Stats" in self.get_title()) ) :   
-               print(tableHTML)
+        if(1):#self.get_title() != None)  :  
+            if( (self.get_title() == "#Column Stats") or 
+               (self.get_title() == "#Columns with most NaNs") or 
+               ("#Sample Column Values for" in self.get_title()) ) :  
+                self.dump()
+                print(tableHTML)
                
         return(tableHTML)
 
@@ -1147,8 +1233,6 @@ class dcTable :
 
         if(not(self.get_note() == "")) :
             print("\nnote           : ",self.get_note())
-            
-
 
 
 """
@@ -1159,16 +1243,21 @@ class dcTable :
 *
 """
 
-"""
-* -----------------------------------------------------------------------*
-* add callback function to table item 
-*   
-*   table           -   dcTable object
-*   direction       -   direction to scroll in 
-*   displayTable    -   display the html flag  
-* -----------------------------------------------------------------------*
-"""
+
 def add_callback_to_item(table,headerrow,rowflag,value,func,parm=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add callback function to table item
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   direction       -   direction to scroll in 
+    *   displayTable    -   display the html flag  
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     item_html = ""
 
@@ -1255,18 +1344,23 @@ def add_callback_to_item(table,headerrow,rowflag,value,func,parm=None) :
         
     return(item_html)
 
-"""
-* -----------------------------------------------------------------------*
-* add table column header 
-*
-*   table           -   dcTable object
-*   coltext         -   text to display in column header 
-*   width           -   width in pixels  
-*   align           -   text alignment ("left" : default "center") 
-*   href            -   call hrefon click
-* -----------------------------------------------------------------------*
-"""
+
 def add_table_head_column(table,coltext,width,align,href=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add table header column
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   coltext         -   text to display in column header 
+    *   width           -   width in pixels  
+    *   align           -   text alignment ("left" : default "center") 
+    *   href            -   call hrefon click
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     colHTML = ""
     colHTML = (colHTML + "                      <th" + 
@@ -1302,16 +1396,21 @@ def add_table_head_column(table,coltext,width,align,href=None) :
 
     return(colHTML)
 
-"""
-* -----------------------------------------------------------------------*
-* table item shorten and put pop up around 
-*
-*   table           -   dcTable object
-*   element         -   text to check on 
-*   row             -   row flag or headerflag 
-* -----------------------------------------------------------------------*
-"""
+
 def shorten_element(table,element,row=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : table item shorten and put pop up around
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   element         -   text to check on 
+    *   row             -   row flag or headerflag 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     if(not table.get_checkLength()) :
         return(element)
@@ -1334,15 +1433,20 @@ def shorten_element(table,element,row=True) :
         
     return(shortelement)
 
-"""
-* -----------------------------------------------------------------------*
-* get individual row element
-*
-*   table           -   dcTable object
-*   rowElement      -   row element (column) 
-* -----------------------------------------------------------------------*
-"""
+
 def get_row_element(table,rowElement) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get individual row element
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   rowElement      -   row element (column) 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     rowHtml = ""
     
@@ -1369,17 +1473,22 @@ def get_row_element(table,rowElement) :
 
     return(rowHtml)
 
-"""
-* -----------------------------------------------------------------------*
-* add table body row
-*
-*   table           -   dcTable object
-*   index           -   row index 
-*   rowElement      -   row element (column) 
-*   href            -   anchor 
-* -----------------------------------------------------------------------*
-"""
+
 def add_table_body_row(table,index,rowElement,href) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add table body row
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   index           -   row index 
+    *   rowElement      -   row element (column) 
+    *   href            -   anchor 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     rowHTML = ""
     
@@ -1414,11 +1523,10 @@ def add_table_body_row(table,index,rowElement,href) :
             rowHTML = (rowHTML + "                        <td" + 
                        addattribute("style",addstyleattribute("width", str(table.get_widthList()[i])+"%")))
         
-        if( table.get_alignList()[i] == "left") :    
-            rowHTML = (rowHTML + addattribute("class","dccolleft dccolwrap")) 
+        if( table.get_alignList()[i] == "left") :  
+            rowHTML = (rowHTML + addattribute("class","dccolleft dccolwrap"))
         else :    
             rowHTML = (rowHTML + addattribute("class","dccolwrap"))
-            #rowHTML = (rowHTML + " style='font-size: 10px; font-family: Arial;' ")
 
         if(href == None) :
             if("_cb" in str(rowElement[i])) :
@@ -1470,15 +1578,20 @@ def add_table_body_row(table,index,rowElement,href) :
 
     return(rowHTML)
 
-"""
-* -----------------------------------------------------------------------*
-* get table start container wrapper
-*
-*   table           -   dcTable object
-*   tableDisplay    -   display table flag 
-* -----------------------------------------------------------------------*
-"""
+
 def get_table_container_start(table,tableDisplay=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get table start container wrapper
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   tableDisplay    -   display table flag 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     tableHTML = ""
 
@@ -1495,7 +1608,7 @@ def get_table_container_start(table,tableDisplay=True) :
     else :
         if(tableDisplay) :
             tableHTML = (tableHTML + table_container_start)
-            tableHTML = (tableHTML + addattribute("id",table.get_tableid()+"container")  + ">")
+            tableHTML = (tableHTML + addattribute("id",table.get_tableid()+"container")  + " style='width:99%; margin-left:2px;'" + ">")
         
         tableHTML = (tableHTML + table_container_middle + ">")
     
@@ -1556,16 +1669,22 @@ search_table_button_end           = """                            </button>
 * Search Table helper functions
 * -----------------------------------------------------------------------*
 """
-"""
-* -----------------------------------------------------------------------*
-* get searchable table buttons
-*
-*   table           -   dcTable object
-*   searchParms     -   search parameters
-*   direction       -   button direction 
-* -----------------------------------------------------------------------*
-"""                                                                                                                                                
+
+                                                                                                                                            
 def get_search_table_button(table,searchParms,direction) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get searchable table buttons
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   searchParms     -   search parameters
+    *   direction       -   button direction 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     if(direction == 0) : 
         imgname     =   "https://rickkrasinski.github.io/dfcleanser/graphics/uparrow.png"
@@ -1591,22 +1710,27 @@ def get_search_table_button(table,searchParms,direction) :
     button_html = (button_html + search_table_button_start + ' OnClick="' + callback + '">' + new_line) 
     button_html = (button_html + search_table_button_img_start)
     button_html = (button_html + imgname + "'")
+    button_html = (button_html + addattribute("id",(table.get_tableid() + imgid)))
     button_html = (button_html + addattribute("height","20px"))
-    button_html = (button_html + addattribute("width","20px"))
-    button_html = (button_html + addattribute("id",(table.get_tableid() + imgid)) + "></img>" + new_line)
+    button_html = (button_html + addattribute("width","20px")  + "></img>" + new_line)
     button_html = (button_html + search_table_button_end) 
     
     return(button_html)
 
-"""
-* -----------------------------------------------------------------------*
-* get search table header 
-*
-*   table           -   dcTable object
-*   tableDisplay    -   display table flag 
-* -----------------------------------------------------------------------*
-"""
+
 def get_search_table_header(table,fulltable) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get search table header
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   tableDisplay    -   display table flag 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     tableHTML = ""
     
@@ -1683,17 +1807,22 @@ def get_search_table_header(table,fulltable) :
     
     return(tableHTML)
 
-"""
-* -----------------------------------------------------------------------*
-* get non search table header 
-*
-*   table           -   dcTable object
-*   more            -   more flag
-*   prev            -   previous flag
-*   tableDisplay    -   display table flag 
-* -----------------------------------------------------------------------*
-"""
+
 def get_non_search_table_header(table,more,prev,fulltable) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get non search table header
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   more            -   more flag
+    *   prev            -   previous flag
+    *   tableDisplay    -   display table flag 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     tableHTML = ""
 
@@ -1705,7 +1834,7 @@ def get_non_search_table_header(table,more,prev,fulltable) :
         tableHTML = (tableHTML + get_hiddens(table.get_tableid(),table.get_hiddensList()))
         
     tableHTML = (tableHTML + get_table_container_start(table))
-        
+    
     if(table.get_small()) :
         if(table.get_smallheader()) :
             if( (more) or (prev) ) :
@@ -1721,11 +1850,9 @@ def get_non_search_table_header(table,more,prev,fulltable) :
     
     if(table.get_title() != None) :
         if(table.get_small()) :
-            tableHTML = (tableHTML + table_title_short_div_start)
             tableHTML = (tableHTML + table_title_div_start + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" + table.get_title() + table_title_end + table_title_div_end)
-            tableHTML = (tableHTML + table_title_div_end)
         else :
-            tableHTML = (tableHTML + table_title_div_start + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" +table.get_title() + table_title_end + table_title_div_end)
+            tableHTML = (tableHTML + table_title_div_start + table_title_start + addattribute("id",table.get_tableid()+"Title") + ">" + table.get_title() + table_title_end + table_title_div_end)
 
     if( (more) or (prev) ) :  
 
@@ -1753,24 +1880,43 @@ def get_non_search_table_header(table,more,prev,fulltable) :
             
             
         else :
-            tableHTML = (tableHTML + table_more_div_start)
             
-            tableHTML = (tableHTML + table_next_start)
-            tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'" + table.get_tableid()+"',0" + ")")))
-            tableHTML = (tableHTML + table_next_end + table.get_tableid() + table_next_final_end)
+            if(table.get_tabletype() == ROW_MAJOR) :
+                
+                tableHTML = (tableHTML + table_more_div_start)
+                tableHTML = (tableHTML + addattribute("id",table.get_tableid() + "buttons"))
+                if(table.get_smallheader()) :
+                    tableHTML = (tableHTML + table_more_short_div_start1)
+                else :
+                    tableHTML = (tableHTML + table_more_div_start1)
+                
+                tableHTML = (tableHTML + table_down_start)
+                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'" + table.get_tableid()+"',0" + ")")))
+                tableHTML = (tableHTML + table_down_end + addattribute("id",table.get_tableid()+"downarrowimg") + table_down_final_end)
         
-            tableHTML = (tableHTML + table_prev_start)
-            tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',1" + ")")))
-            tableHTML = (tableHTML + table_prev_end + table.get_tableid() + table_prev_final_end)
+                tableHTML = (tableHTML + table_up_start)
+                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',1" + ")")))
+                tableHTML = (tableHTML + table_up_end + addattribute("id",table.get_tableid()+"uparrowimg") + table_up_final_end)
+                
+            else :
+            
+                tableHTML = (tableHTML + table_more_div_start)
+                tableHTML = (tableHTML + addattribute("id",table.get_tableid() + "buttons"))
+                tableHTML = (tableHTML + table_more_div_start1)
+            
+                tableHTML = (tableHTML + table_next_start)
+                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'" + table.get_tableid()+"',0" + ")")))
+                tableHTML = (tableHTML + table_next_end + addattribute("id",table.get_tableid()+"rightarrowimg") + table_next_final_end)
+        
+                tableHTML = (tableHTML + table_prev_start)
+                tableHTML = (tableHTML + addattribute("OnClick",("scrollTable("+ "'"+table.get_tableid()+"',1" + ")")))
+                tableHTML = (tableHTML + table_prev_end + addattribute("id",table.get_tableid()+"leftarrowimg") + table_prev_final_end)
         
         tableHTML = (tableHTML + table_more_div_end)
     
-    #if(table.get_small()) :
-        #tableHTML = (tableHTML + table_input_group_end) 
-        
     tableHTML = (tableHTML + table_input_group_end)
     tableHTML = (tableHTML + table_header_end) 
-
+    
     return(tableHTML)
 
 
@@ -1782,14 +1928,19 @@ def get_non_search_table_header(table,more,prev,fulltable) :
 *
 """
 
-"""
-* -----------------------------------------------------------------------*
-* determine if table needs scroll buttons defined and included
-* -----------------------------------------------------------------------*
-*   table           -   table object
-* -----------------------------------------------------------------------*
-"""
+
 def get_table_scrolls(table) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : determine if table needs scroll buttons defined and included
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     more = False
     prev = False
@@ -1821,14 +1972,19 @@ def get_table_scrolls(table) :
 
     return(more, prev)
 
-"""
-* -----------------------------------------------------------------------*
-* get the start and end indices for scrollable tables
-* -----------------------------------------------------------------------*
-*   table           -   table object
-* -----------------------------------------------------------------------*
-"""
+
 def get_row_indices(table) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the start and end indices for scrollable tables
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     startrowIndex   =   0
     rowcount        =   0
@@ -1873,15 +2029,19 @@ def get_row_indices(table) :
     return(startrowIndex, rowcount)
 
 
-"""
-* -----------------------------------------------------------------------*
-* get hiddens associated with a table
-*
-*   fid             -   form id - table
-*   hiddensList     -   list of hidden elements 
-* -----------------------------------------------------------------------*
-"""
 def get_hiddens(fid,hiddensList) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get hiddens associated with a table
+    * 
+    * parms :
+    *   fid             -   form id - table
+    *   hiddensList     -   list of hidden elements 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     newHTML = ""
  
@@ -1889,16 +2049,14 @@ def get_hiddens(fid,hiddensList) :
     newHTML = (newHTML + addattribute("id",fid + "hiddens") + ">" )#+ new_line)
        
     for i in range(len(hiddensList)) :
-        newHTML = (newHTML + '  <input type="hidden" ' + 
+        newHTML = (newHTML + new_line +'    <input type="hidden" ' + 
                      addattribute("id",hiddensList[i][0]) + 
                      addattribute("value",str(hiddensList[i][1])) + 
-                     "></input>" )#+ new_line)
+                     "></input>" + new_line)
            
     newHTML = (newHTML + "</div> ")
     
     return(newHTML)
-
-
 
         
 """
@@ -1976,17 +2134,26 @@ schema_col_button_end = """
                                     </tr>
 """ 
 schema_col_button_chdt_start = """
-                                            <button type="button" class="btn btn-grp dc-schema-button" style='font-size: 12px; height: 30px; color:white; background-color: #67a1f3;'"""
-schema_col_button_chdt_end = """ >Change Schema</button>"""
+                                            <button type="button" class="btn btn-grp dc-schema-button" style='font-size: 12px; height: 50px; color:white; background-color: #67a1f3;'"""
+schema_col_button_chdt_end = """ >Change</br>Datatype</button>"""
 
 num_dtypes      =   19
 
-"""
-* -----------------------------------------------------------------------*
-* Dataframe Schema Table methods 
-* -----------------------------------------------------------------------*
-"""
+
 def get_df_schema_table_col(col_name,datatypeId,nancount) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get dataframe schema table
+    * 
+    * parms :
+    *   col_name       -   column name
+    *   datatypeId     -   col datatype 
+    *   nancount       -   col nancount 
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     df_schema_HTML  =   ""
     df_schema_HTML  =   (df_schema_HTML + schema_col_table_start)
@@ -1997,6 +2164,7 @@ def get_df_schema_table_col(col_name,datatypeId,nancount) :
     df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_label_start)
     df_schema_HTML  =   (df_schema_HTML + addattribute("for","dfschsel"+col_name))
     df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_label_end)
+
     df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_select_start)
     df_schema_HTML  =   (df_schema_HTML + addattribute("id","dfschsel"+col_name) + ">" + new_line)
 
@@ -2047,7 +2215,26 @@ def get_df_schema_table_col(col_name,datatypeId,nancount) :
     if(nancount < 1) :
         df_schema_HTML  =   (df_schema_HTML +"disabled ")
     df_schema_HTML  =   (df_schema_HTML + schema_col_input_form_end)    
-    df_schema_HTML  =   (df_schema_HTML + schema_col_input_end)    
+    df_schema_HTML  =   (df_schema_HTML + schema_col_input_end)
+
+    df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_select_start)
+    if(nancount < 1) :
+        df_schema_HTML  =   (df_schema_HTML +" disabled ")
+    
+    df_schema_HTML  =   (df_schema_HTML + addattribute("id","dfillnasel"+col_name) + ">" + new_line)
+
+    fillnas     =   ["Nan Fill Value","mean","bfill","ffill"]
+    for i in range(len(fillnas)) :
+        df_schema_HTML  =   (df_schema_HTML + "                                                    <option ")
+        if(i == 0) :
+            df_schema_HTML  =   (df_schema_HTML + "selected ") 
+        df_schema_HTML  =   (df_schema_HTML + addattribute("value",str(i))+">")
+        df_schema_HTML  =   (df_schema_HTML + fillnas[i] + "</option>" + new_line)
+    
+    df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_select_end)    
+    df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_div_end)
+    df_schema_HTML  =   (df_schema_HTML + schema_col_dlist_end + "<br></br>")
+    
     
     # df schema buttons
     df_schema_HTML  =   (df_schema_HTML + schema_col_button_start)
@@ -2062,8 +2249,6 @@ def get_df_schema_table_col(col_name,datatypeId,nancount) :
         print(df_schema_HTML)
         
     return(df_schema_HTML)
-
-
 
 
         

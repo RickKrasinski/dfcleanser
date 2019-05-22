@@ -23,7 +23,6 @@ from dfcleanser.common.common_utils import  (is_numeric_col_int, is_numeric_col,
                                              get_first_non_nan_value, get_datatype_id, opStatus,
                                              get_datatype_title, is_numeric, display_generic_grid)
 
-from dfcleanser.common.html_widgets import (get_html_spaces) 
 
 """            
 #------------------------------------------------------------------
@@ -74,22 +73,43 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
 
     if(totnans > 0) :
         counts.update({"nan":totnans}) 
+    else :
+        if(totnans > 0) :
+            import pandas as pd
+            pd.Series(uniques).fillna("nan").tolist()
+        else :
+            uniques.sort()
     
-    table.set_colsperrow(5)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        table.set_colsperrow(5)
+    
+        uniqueHeader    =   ["Value","Count","Value","Count","Value","Count",
+                             "Value","Count","Value","Count"]
+        uniqueRows      =   []
+        uniqueWidths    =   [14,6,14,6,14,6,14,6,14,6]
+        uniqueAligns    =   ["center","center","center","center","center",
+                             "center","center","center","center","center"]
+        
+    else :
+        table.set_colsperrow(3)
+        
+        uniqueHeader    =   ["Value","Count","Value","Count","Value","Count"]
+        uniqueRows      =   []
+        uniqueWidths    =   [22,12,28,12,28,18]
+        uniqueAligns    =   ["center","center","center","center","center","center"]
+        
+        
     if(table.get_rowspertable() == 0) :
-        table.set_rowspertable(15)
+        table.set_rowspertable(8)
     table.set_maxtables(1)
 
-    uniqueHeader    =   ["Value","Count","Value","Count","Value","Count",
-                         "Value","Count","Value","Count"]
-    uniqueRows      =   []
-    uniqueWidths    =   [14,6,14,6,14,6,14,6,14,6]
-    uniqueAligns    =   ["center","center","center","center","center",
-                         "center","center","center","center","center"]
     
     if(sethrefs) :
-        uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None,
-                             "chgval",None,"chgval",None]
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None,
+                                 "chgval",None,"chgval",None]
+        else :
+            uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None]
     else :
         uniquehrefs     =   None
     
@@ -101,7 +121,7 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
     
     totaluniques = len(uniques)
     
-    if(totaluniques > 250) :
+    if(totaluniques > 100) :
         if(cfg.get_config_value(cfg.UNIQUES_RANGE_KEY) == None) :
 
             if(totnans > 0) :
@@ -175,15 +195,19 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
 
     table.set_hiddensList(hiddens)
     if(sethrefs) :
-        table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand. To select range of values click 'Find Values'")
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand. To select range of values click 'Find Values'")
+        else :
+            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand.<br>&nbsp;&nbsp; To select range of values click 'Find Values'")
+            
 
     #table.dump()
     
-    table_html  =   table.get_html()
+    table_html  =   table.get_html(False)
     
     if(display) :
     
-        unique_column_heading_html      =   "<p>" + get_html_spaces(36) + "Unique Column Values</p>"
+        unique_column_heading_html      =   "<div>Unique Column Values</div>"
             
         gridclasses     =   ["display-df-unique-columns-base-wrapper-header", "dfc-top-centered"]
         gridhtmls       =   [unique_column_heading_html, table_html]
@@ -406,7 +430,11 @@ def display_df_describe(df,table,datatype=None,colList=None,display=True) :
     dfAlignsList    =   []
     dfchrefsList    =   []
     
-    table.set_colsperrow(7)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        table.set_colsperrow(7)
+    else :
+        table.set_colsperrow(4)
+        
     table.set_rowspertable(8)
     table.set_maxtables(1)
 
@@ -609,15 +637,29 @@ def display_column_names(df,table,callback,display=True) :
 
     cnames      =    df.columns.values.tolist() 
     
-    table.set_colsperrow(8)
-    table.set_rowspertable(8)
-    table.set_maxtables(1)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        
+        table.set_colsperrow(8)
+        table.set_rowspertable(8)
+        table.set_maxtables(1)
 
-    colsHeader    =   ["","","","","","","",""]
-    colsRows      =   []
-    colsWidths    =   [12,12,12,12,12,12,12,12]
-    colsAligns    =   ["center","center","center","center",
-                       "center","center","center","center"]
+        colsHeader    =   ["","","","","","","",""]
+        colsRows      =   []
+        colsWidths    =   [12,12,12,12,12,12,12,12]
+        colsAligns    =   ["center","center","center","center",
+                           "center","center","center","center"]
+        
+    else :
+        
+        table.set_colsperrow(4)
+        table.set_rowspertable(16)
+        table.set_maxtables(1)
+
+        colsHeader    =   ["","","",""]
+        colsRows      =   []
+        colsWidths    =   [24,25,25,25]
+        colsAligns    =   ["center","center","center","center"]
+        
     colsHrefs     =   []
     
     for i in range(len(colsHeader)) :
@@ -650,6 +692,11 @@ def display_column_names(df,table,callback,display=True) :
         table.set_refList(colsHrefs)
     if(table.get_note() == "") :
         table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above.")
+    
+    table.set_small(True)
+    table.set_smallwidth(98)
+    table.set_smallmargin(5)
+
     
     if(display) :
         table.display_table()
@@ -883,7 +930,7 @@ forward_direction       =   3
 
 max_rows                =   10
 max_cols                =   10
-
+popup_max_cols          =   5
 
 """            
 #------------------------------------------------------------------
@@ -975,7 +1022,12 @@ def setup_sample_row_lists(df,table,rowid,colid,opstat) :
     column_names    =   list(df.columns.values)
     num_cols        =   len(column_names)
     
-    if(num_cols < max_cols) :
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        maxCols     =   max_cols
+    else :
+        maxCols     =   popup_max_cols
+    
+    if(num_cols < maxCols) :
         
         #if first column is numeric make narrow
         from dfcleanser.common.common_utils import is_numeric_col
@@ -994,11 +1046,18 @@ def setup_sample_row_lists(df,table,rowid,colid,opstat) :
         
     else :
         
-        dfWidths            =   [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-        dfAligns            =   ['center', 'center', 'center', 'center', 'center', 
-                                 'center', 'center', 'center', 'center', 'center']
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         
-        numcolsdisplayed    =   max_cols
+            dfWidths            =   [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+            dfAligns            =   ['center', 'center', 'center', 'center', 'center', 
+                                     'center', 'center', 'center', 'center', 'center']
+            
+        else :
+            
+            dfWidths            =   [10, 10, 10, 10, 10]
+            dfAligns            =   ['center', 'center', 'center', 'center', 'center'] 
+        
+        numcolsdisplayed    =   maxCols
 
     return([dfWidths, dfAligns, numcolsdisplayed])
 
@@ -1151,8 +1210,13 @@ def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) :
     
     searchParms = {}
     
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        title   =   "df Browser"
+    else :
+        title   =   "df"
+        
     setup_sample_row_table(table,
-                           "df Browser",
+                           title,
                            tnote,
                            numcols,
                            num_rows,
@@ -1192,4 +1256,27 @@ def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) :
         return(table_html)
 
 
-   
+def display_dfcleanser_taskbar(tbform,checkInline=True) :
+    
+    tb_html     =   tbform.get_html()
+    #print("display_dfcleanser_taskbar",tb_html)
+    #print(tbform.dump())
+    
+    gridclasses     =   ["dfcleanser-common-grid-header"]
+    gridhtmls       =   [tb_html]
+
+    if(checkInline) :
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("dfc-taskbar-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("dfc-taskbar-pop-up-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-taskbar-wrapper",gridclasses,gridhtmls)
+        
+        
+def display_pop_up_buffer() :
+    
+    if(not(cfg.get_dfc_mode() == cfg.INLINE_MODE)) :
+        print("\n")
+        print("\n")
+    
