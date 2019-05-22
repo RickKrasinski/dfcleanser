@@ -63,7 +63,7 @@ def add_dfc_cell(ctype,cellid,celltext=None,afterid=-1) :
     run_jscript(jscript,"Error Loading dfc Cell " + str(cellid)) 
 
 
-def load_dfcleanser_from_toolbar(nbname) :
+def load_dfcleanser_from_toolbar(nbname, dfcmode) :
     """
     * -------------------------------------------------------------------------- 
     * function : load the dfcleanser from the toolar - load cell before working cell
@@ -75,22 +75,115 @@ def load_dfcleanser_from_toolbar(nbname) :
     * --------------------------------------------------------
     """
 
+    cfg.set_dfc_mode(dfcmode)
+    
     # select starting cell
     celltext    =  "DCWorkingTitle" 
     jscript     =   ("select_before_cell(" +  "'" + celltext + "'" + ")")
     run_jscript(jscript,"Error setting dfc Cell " + "load_dfcleanser_from_toolbar") 
     
     import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm       
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"load_dfcleanser_from_toolbar " + nbname)        
+    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"load_dfcleanser_from_toolbar " + nbname + " " + str(dfcmode))        
     
     cfg.set_notebookName(nbname)
     
     try :
-        run_jscript("window.getNotebookPathBeforeLoad();","Unable to get notebook path")
+        run_jscript("preloaddfcleanser();","Unable to preload dfcleanser")
     except :
         print("get_notebook_path error")
 
-           
+
+
+panda_title   =   """<div align="center" id="DCLogopubtn">
+    <img src="https://rickkrasinski.github.io/dfcleanser/graphics/dfcLogoSmall.png" height="81px" width="440px">
+</div>'
+"""
+
+system_html          =   """<div id="DCSystem" />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/SystemPopUp.png" width="60px" height="60px" align="left" title="System Environment" onclick="process_pop_up_cmd(0)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;System Environment</h3>
+        <a name="SystemEnvironment"></a>
+    </div>
+    </div>
+"""
+
+import_html          =   """<div align="left" id="DCDataImport"  />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ImportPopUp.png" width="60px" height="60px" align="left" title="Data Import" onclick="process_pop_up_cmd(1)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;Data Import</h3>
+        <a name="DataImport"></a>
+    </div>
+    </div>
+"""
+
+inspect_html          =   """<div align="left" id="DCDataInspection" />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/InspectionPopUp.png" width="60px" height="60px" align="left" title="Data Inspection" onclick="process_pop_up_cmd(2)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;Data Inspection</h3>
+        <a name="DataInspection"></a>
+    </div>
+    </div>
+"""
+
+cleansing_html          =   """<div align="left" id="DCDataCleansing" />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/CleansingPopUp.png" width="60px" height="60px" align="left" title="Data Cleansing" onclick="process_pop_up_cmd(3)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;Data Cleansing</h3>
+        <a name="DataCleansing"></a>
+    </div>
+    </div>
+"""
+
+transform_html          =   """<div align="left" id="DCDataTransform" />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/TransformPopUp.png" width="60px" height="60px" align="left" title="Data Transform" onclick="process_pop_up_cmd(4)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;Data Transform</h3>
+        <a name="DataTransform"></a>
+    </div>
+    </div>
+"""
+
+export_html          =   """<div align="left" id="DCDataExport" />
+    <div style="margin-left:60px;"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ExportPopUp.png" width="60px" height="60px" align="left" title="Data Export" onclick="process_pop_up_cmd(5)" /></div>
+    <div>
+        <image width="10">
+    </div>
+    <div>
+        <h3>&nbsp;&nbsp;&nbsp;Data Export</h3>
+        <a name="DataExport"></a>
+    </div>
+    </div>
+"""
+
+
+def load_pop_up_startup() :
+
+    from dfcleanser.common.common_utils import display_generic_grid
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[panda_title])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[system_html])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[import_html])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[inspect_html])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[cleansing_html])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[transform_html])
+    display_generic_grid("dfcleanser-main-pop-up-title-wrapper",["dfc-header"],[export_html])
+
+         
 def load_dfcleanser() :
     """
     * -------------------------------------------------------------------------- 
@@ -129,10 +222,12 @@ def load_dfcleanser_cells() :
     *  N?A
     * --------------------------------------------------------
     """
+    import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm       
+    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"load_dfcleanser_cells "  + str(cfg.get_dfc_mode()))        
     
     showutilities   =   False
     
-    corecbs     =   cfg.get_config_value(cfg.CORE_CBS_KEY)
+    #corecbs     =   cfg.get_config_value(cfg.CORE_CBS_KEY)
     utilcbs     =   cfg.get_config_value(cfg.UTILITIES_CBS_KEY)
     scriptcbs   =   cfg.get_config_value(cfg.SCRIPTING_CBS_KEY)
     
@@ -148,44 +243,53 @@ def load_dfcleanser_cells() :
     if(scriptcbs == None) :
         scriptcbs   =   [0]
     
-    # insert main title 
-    add_dfc_cell(cells.MARKDOWN,cells.DC_PANDAS_TITLE)
-    add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
     
-    # insert system cells 
-    add_dfc_cell(cells.MARKDOWN,cells.DC_SYSTEM_TITLE)
-    add_dfc_cell(cells.CODE,cells.DC_SYSTEM)
-    add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-
-    # insert import cells
-    if(corecbs[0]) :
-        add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_IMPORT_TITLE)
-        add_dfc_cell(cells.CODE,cells.DC_DATA_IMPORT)
-        add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-
-    # insert inspection cells
-    if(corecbs[1]) :
-        add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_INSPECTION_TITLE)
-        add_dfc_cell(cells.CODE,cells.DC_DATA_INSPECTION)
-        add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-
-    # insert cleansing cells
-    if(corecbs[2]) :
-        add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_CLEANSING_TITLE)
-        add_dfc_cell(cells.CODE,cells.DC_DATA_CLEANSING)
+    
+        # insert main title 
+        add_dfc_cell(cells.MARKDOWN,cells.DC_PANDAS_TITLE)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
-    # insert transform cells
-    if(corecbs[3]) :
-        add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_TRANSFORM_TITLE)
-        add_dfc_cell(cells.CODE,cells.DC_DATA_TRANSFORM)
+        # insert system cells 
+        add_dfc_cell(cells.MARKDOWN,cells.DC_SYSTEM_TITLE)
+        add_dfc_cell(cells.CODE,cells.DC_SYSTEM)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+
+        # insert import cells
+        if(corecbs[0]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_IMPORT_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_DATA_IMPORT)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+
+        # insert inspection cells
+        if(corecbs[1]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_INSPECTION_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_DATA_INSPECTION)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+
+        # insert cleansing cells
+        if(corecbs[2]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_CLEANSING_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_DATA_CLEANSING)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
-    # insert export cells 
-    if(corecbs[4]) :
-        add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_EXPORT_TITLE)
-        add_dfc_cell(cells.CODE,cells.DC_DATA_EXPORT)
-        add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+        # insert transform cells
+        if(corecbs[3]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_TRANSFORM_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_DATA_TRANSFORM)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+    
+        # insert export cells 
+        if(corecbs[4]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_EXPORT_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_DATA_EXPORT)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+            
+    else :
+        
+        jscript     =   ("loaddfcleanserpopup();")
+        run_jscript(jscript,"Error loading dfc cleanser popup ") 
+        
     
     if(showutilities) :
         
@@ -352,9 +456,8 @@ def reload_dfcleanser(chaptersToLoad) :
         load_dfcleanser()
     else :
         
-        corecbs         =   chaptersToLoad[0]
-        utilscbs        =   chaptersToLoad[1]
-        scriptcbs       =   chaptersToLoad[2]
+        utilscbs        =   chaptersToLoad[0]
+        scriptcbs       =   chaptersToLoad[1]
         
         chapters_loaded         =   cfg.get_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
         
@@ -427,7 +530,6 @@ def reload_dfcleanser(chaptersToLoad) :
 
         cfg.get_loaded_cells()
 
-        cfg.set_config_value(cfg.CORE_CBS_KEY,corecbs)
         cfg.set_config_value(cfg.UTILITIES_CBS_KEY,utilscbs)
         cfg.set_config_value(cfg.SCRIPTING_CBS_KEY,scriptcbs)
 

@@ -26,6 +26,7 @@ DISPLAY_DATAFRAMES          =   3
 DISPLAY_SYSTEM              =   4
 DISPLAY_DFC_FILES           =   5
 DISPLAY_ABOUT               =   6
+DISPLAY_ADD_DATAFRAME       =   7
 
 PROCESS_DFC_FILES           =   10
 
@@ -40,6 +41,7 @@ DISPLAY_ABBR_MAIN           =   16
 EXIT_SETUP                  =   17
 
 PROCESS_DATAFRAME           =   18
+PROCESS_ADD_DATAFRAME       =   19
 
 
 CORE                        =   0
@@ -54,5 +56,5 @@ DROP_DATAFRAME              =   0
 SET_DATAFRAME               =   1
 UPDATE_DATAFRAME            =   2
 RENAME_DATAFRAME            =   3
-
-
+ADD_DATAFRAME               =   4
+RETURN_DATAFRAME            =   5

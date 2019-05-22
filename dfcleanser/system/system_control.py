@@ -35,7 +35,7 @@ def display_main_tb() :
 
     sysw.display_system_main_taskbar()
         
-def load_dfcleanser_from_toolbar(nbname) :
+def load_dfcleanser_from_toolbar(parms) :
     """
     * -------------------------------------------------------------------------- 
     * function : load dfcleanser from a notebook toolbar
@@ -47,8 +47,12 @@ def load_dfcleanser_from_toolbar(nbname) :
     * --------------------------------------------------------
     """
 
+    nbname      =   parms[0]
+    dfcmode     =   parms[1]
+    
+    print("load_dfcleanser_from_toolbar",parms)
     from dfcleanser.system.load import load_dfcleanser_from_toolbar
-    load_dfcleanser_from_toolbar(nbname)
+    load_dfcleanser_from_toolbar(nbname,dfcmode)
 
     
 def load_dfCleanser() :
@@ -121,18 +125,11 @@ def display_system_environment(funcId,parms=None) :
     """
 
     if(not (cfg.check_if_dc_init()) ) :
-        if(funcId == sysm.DISPLAY_ABBR_MAIN) :
-            sysw.display_system_main_abbr_taskbar()
-        else :
-            sysw.display_system_main_taskbar()
+        sysw.display_system_main_taskbar()
 
         return
         
     else :
-        
-        if(funcId == sysm.DISPLAY_ABBR_MAIN) :
-            sysw.display_system_main_abbr_taskbar()
-            return
         
         if(funcId == sysm.DISPLAY_MAIN) :
             display_main_tb()
@@ -156,26 +153,18 @@ def display_system_environment(funcId,parms=None) :
         if(funcId == sysm.PROCESS_CHAPTERS) :
             #display_main_tb()
             
+            print("PROCESS_CHAPTERS",parms)
+            
             parms[0]    =   parms[0].replace("[","") 
             parms[0]    =   parms[0].replace("]","")
             parms[1]    =   parms[1].replace("[","") 
             parms[1]    =   parms[1].replace("]","")
-            parms[2]    =   parms[2].replace("[","") 
-            parms[2]    =   parms[2].replace("]","")
             
-            core_cbs    =   parms[0].split(",")
-            utils_cbs   =   parms[1].split(",")
-            script_cbs  =   parms[2].split(",")
+            utils_cbs   =   parms[0].split(",")
+            script_cbs  =   parms[1].split(",")
             
-            corecbs     =   []
             utilscbs    =   []
             scriptcbs   =   []
-            
-            for i in range(len(core_cbs)) :
-                if(core_cbs[i] == '"True"') :
-                    corecbs.append(1)
-                else :
-                    corecbs.append(0)
             
             for i in range(len(utils_cbs)) :
                 if(utils_cbs[i] == '"True"') :
@@ -190,11 +179,12 @@ def display_system_environment(funcId,parms=None) :
                     scriptcbs.append(0)
             
             from dfcleanser.system.load import reload_dfcleanser
-            reload_dfcleanser([corecbs,utilscbs,scriptcbs])
+            reload_dfcleanser([utilscbs,scriptcbs])
             
             clear_cell()
         
         elif(funcId == sysm.DISPLAY_DATAFRAMES) :
+            
             if(not(parms is None)) :
                 title = parms[0]
             else :
@@ -202,6 +192,12 @@ def display_system_environment(funcId,parms=None) :
                 
             sysw.display_system_main_taskbar()
             sysw.display_df_dataframes(title)
+
+        elif(funcId == sysm.DISPLAY_ADD_DATAFRAME) :
+                
+            sysw.display_system_main_taskbar()
+            cfg.drop_config_value(sysw.dfmgr_add_input_id+"Parms")
+            sysw.display_add_df_input()
             
         elif(funcId == sysm.PROCESS_DATAFRAME) :
             
@@ -227,6 +223,46 @@ def display_system_environment(funcId,parms=None) :
                 
             sysw.display_system_main_taskbar()
             sysw.display_df_dataframes(dftitle)
+            
+        elif(funcId == sysm.PROCESS_ADD_DATAFRAME) :
+            
+            opstat  =   opStatus()
+            
+            from dfcleanser.common.common_utils import get_parms_for_input
+            fparms  =   get_parms_for_input(parms[1],sysw.dfmgr_add_input_idList)
+            
+            dftitle     =   fparms[0]
+            dfobject    =   fparms[1]
+            dfnotes     =   fparms[2]
+            
+            print("\nPROCESS_ADD_DATAFRAME",dftitle,dfobject,dfnotes)
+            
+            if(not (len(dftitle)) > 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("Invalid df title parm")
+            
+            else :
+                
+                if(len(dfobject) > 0) :
+
+                    try :
+
+                        add_df_js = ("add_new_dfc_df('" + dftitle + "', '" +  dfobject + "', '" + dfnotes + "');")
+                        run_jscript(add_df_js,"fail to add dataframe : ")
+                        
+                    except Exception :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("Unable to add df to dfc manager : " + str(sys.exc_info()[0].__name__))
+               
+                else :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("Invalid df name parm")
+            
+            if(opstat.get_status()) :
+                sysw.display_df_dataframes(dftitle)
+            else :
+                display_status(opstat.get_errorMsg())
+                sysw.display_add_df_input()
             
         elif(funcId == sysm.DISPLAY_SYSTEM) :
             display_main_tb()
@@ -619,7 +655,54 @@ def clear_system_cfg_values() :
     return(True)
     
     
+"""
+* ----------------------------------------------------
+# dfcleanser crypto class 
+* ----------------------------------------------------
+""" 
+
+#from Crypto.Cipher import AES
+import base64
+     
+def encode(clear_text) :
     
+    key     =   crypto_key.get_cryptokey()
+    enc     =   []
+    for i in range(len(clear_text)):
+        key_c = key[i % len(key)]
+        enc_c = chr((ord(clear_text[i]) + ord(key_c)) % 256)
+        enc.append(enc_c)
+    return base64.urlsafe_b64encode("".join(enc).encode()).decode()
+
+def decode(enc_text) :   
+    
+    key     =   crypto_key.get_cryptokey()
+    dec     =   []
+    enc = base64.urlsafe_b64decode(enc_text).decode()
+    for i in range(len(enc_text)):
+        key_c = key[i % len(key)]
+        dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
+        dec.append(dec_c)
+    return "".join(dec)
+    
+
+class Crypto_Key :
+    
+    # instance variables
+    cryptokey                   =   None
+    
+    # full constructor
+    def __init__(self) :
+        self.cryptokey          =   None
+        
+    def set_cryptokey(self,cryptokey) :
+        self.cryptokey  =   cryptokey
+
+    def get_cryptokey(self) :
+        return(self.cryptokey)
+   
+
+crypto_key     =   Crypto_Key()        
 
 
 
