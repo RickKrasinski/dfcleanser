@@ -39,13 +39,16 @@ dc_script_tb_id                        =   "scriptingoptionstb"
 dc_script_tb_keyTitleList              =   ["Show Current Script",
                                             "Add to Current Script",
                                             "Clear Current Script",
-                                            "Clear ","Help"]
+                                            "Clear","Reset","Help"]
 
 dc_script_tb_jsList                    =   ["scripting_tb_callback(" + str(dsm.SHOW_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.ADD_TO_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.DELETE_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.RETURN_CURRENT_SCRIPT) + ")",
+                                            "process_pop_up_cmd(6)",
                                             "displayhelp(" + str(SCRIPTING_MAIN_TASKBAR_ID) + ")"]
+
+dc_script_tb_centered                  =   True
 
 """
 #--------------------------------------------------------------------------
@@ -159,20 +162,24 @@ def display_dc_data_scripting(optionId,parms=None) :
     
     from dfcleanser.common.cfg import check_if_dc_init
     if(not check_if_dc_init()) :
-        display_composite_form([get_button_tb_form(ButtonGroupForm(dc_script_tb_id,
-                                                                   dc_script_tb_keyTitleList,
-                                                                   dc_script_tb_jsList,
-                                                                   False))])
+        
+        from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+        display_dfcleanser_taskbar(ButtonGroupForm(dc_script_tb_id,
+                                                   dc_script_tb_keyTitleList,
+                                                   dc_script_tb_jsList,
+                                                   dc_script_tb_centered))
+
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
         clear_data_scripting_data()
 
         return
+
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    display_dfcleanser_taskbar(ButtonGroupForm(dc_script_tb_id,
+                                               dc_script_tb_keyTitleList,
+                                               dc_script_tb_jsList,
+                                               dc_script_tb_centered))
     
-    display_composite_form([get_button_tb_form(ButtonGroupForm(dc_script_tb_id,
-                                                               dc_script_tb_keyTitleList,
-                                                               dc_script_tb_jsList,
-                                                               False))])
- 
     if(parms == None ) :
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
         clear_data_scripting_data()
