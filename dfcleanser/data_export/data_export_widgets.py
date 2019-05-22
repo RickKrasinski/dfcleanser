@@ -16,7 +16,7 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_export.data_export_model as dem
 
 from dfcleanser.common.html_widgets import (display_composite_form, maketextarea,
-                                            get_button_tb_form, get_input_form, 
+                                            get_input_form, 
                                             ButtonGroupForm, InputForm)
 
 from dfcleanser.common.common_utils import (opStatus, display_exception, 
@@ -48,15 +48,19 @@ export_task_bar_doc_title       =   "Export Options"
 export_task_bar_title           =   "Export Options"
 export_task_bar_id              =   "exportoptions"
 
-export_task_bar_keyTitleList    =   ["Pandas Dataframe","Custom",
-                                     "Clear","Help"]
+export_task_bar_keyTitleList    =   ["Pandas</br>Dataframe","Custom",
+                                     "Clear","Reset","Help"]
 
 export_task_bar_jsList          =   ["export_taskbar_callback(0)",
                                      "export_taskbar_callback(1)",
                                      "export_taskbar_callback(2)",
+                                     "process_pop_up_cmd(6)",
                                      "displayhelp(" + str(dfchelp.EXPORT_MAIN_TASKBAR_ID) + ")"]
 
 export_task_bar_centered        =   False
+
+export_task_bar_pu_keyTitleList =   ["Pandas</br>Dataframe","Custom",
+                                     "Clear","Reset","Help"]
 
 """
 #--------------------------------------------------------------------------
@@ -77,7 +81,24 @@ pandas_export_task_bar_jsList        =   ["pandas_export_tb_select_callback("+st
                                           "pandas_export_tb_select_callback("+str(dem.SQLTABLE_EXPORT)+")",
                                           "pandas_export_tb_return_callback()"]
 
-pandas_export_task_bar_centered      =   False
+pandas_export_task_bar_centered      =   True
+
+pandas_export_task_bar_pu_doc_title     =  "Pandas Dataframe Export Options"
+pandas_export_task_bar_pu_title         =  "Pandas Dataframe Export Options"
+pandas_export_task_bar_pu_id            =  "pandasexportdataframe"
+
+pandas_export_task_bar_pu_keyTitleList  =   ["CSV","Excel</br>File","JSON","HTML",
+                                          "SQL</br>Table","Return"]
+
+pandas_export_task_bar_pu_jsList        =   ["pandas_export_tb_select_callback("+str(dem.CSV_EXPORT)+")",
+                                          "pandas_export_tb_select_callback("+str(dem.EXCEL_EXPORT)+")",
+                                          "pandas_export_tb_select_callback("+str(dem.JSON_EXPORT)+")",
+                                          "pandas_export_tb_select_callback("+str(dem.HTML_EXPORT)+")",
+                                          "pandas_export_tb_select_callback("+str(dem.SQLTABLE_EXPORT)+")",
+                                          "pandas_export_tb_return_callback()"]
+
+pandas_export_task_bar_pu_centered      =   True
+
 
 """
 #--------------------------------------------------------------------------
@@ -99,7 +120,7 @@ pandas_export_csv_labelList     =   ["dataframe_to_export",
                                      "na_rep",
                                      "header","index",
                                      "Additional Parm(s)",
-                                     "Export CSV File","Clear","Return","Help"]
+                                     "Export</br>CSV File","Clear","Return","Help"]
 
 pandas_export_csv_typeList      =   ["select","file","text","select",
                                      "select",maketextarea(6),
@@ -146,7 +167,7 @@ pandas_export_excel_labelList   =   ["dataframe_to_export",
                                      "header ",
                                      "index",
                                      "Additional Parm(s)",
-                                     "Export Excel File","Clear","Return","Help"]
+                                     "Export</br>Excel File","Clear","Return","Help"]
 
 pandas_export_excel_typeList    =   ["select","file","text","text",
                                      "select","select",
@@ -191,7 +212,7 @@ pandas_export_json_labelList    =   ["dataframe_to_export",
                                      "orient",
                                      "date_format",
                                      "Additional Parm(s)",
-                                     "Export JSON File","Clear","Return","Help"]
+                                     "Export</br>JSON File","Clear","Return","Help"]
 
 pandas_export_json_typeList     =   ["select","file","text","text",
                                      maketextarea(6),
@@ -237,7 +258,7 @@ pandas_export_html_labelList    =   ["dataframe_to_export",
                                      "index",
                                      "na_rep",
                                      "Additional Parm(s)",
-                                     "Export HTML File","Clear","Return","Help"]
+                                     "Export</br>HTML File","Clear","Return","Help"]
 
 pandas_export_html_typeList     =   ["select","file","text","select",
                                      "select","text",
@@ -358,10 +379,48 @@ custom_export_reqList           =   [0]
 """
 
 def display_export_main_taskbar() :
-    display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
-                                                               export_task_bar_keyTitleList,
-                                                               export_task_bar_jsList,
-                                                               export_task_bar_centered))])
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_dfcleanser_taskbar(ButtonGroupForm(export_task_bar_id,
+                                                   export_task_bar_keyTitleList,
+                                                   export_task_bar_jsList,
+                                                   export_task_bar_centered))
+    else :
+        display_dfcleanser_taskbar(ButtonGroupForm(export_task_bar_id,
+                                                   export_task_bar_pu_keyTitleList,
+                                                   export_task_bar_jsList,
+                                                   export_task_bar_centered))
+
+
+def display_pandas_export_taskbar() :
+    
+    from dfcleanser.common.display_utils import display_dfcleanser_taskbar
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_dfcleanser_taskbar(ButtonGroupForm(pandas_export_task_bar_id,
+                                                   pandas_export_task_bar_keyTitleList,
+                                                   pandas_export_task_bar_jsList,
+                                                   pandas_export_task_bar_centered))
+    else :
+        display_dfcleanser_taskbar(ButtonGroupForm(pandas_export_task_bar_pu_id,
+                                                   pandas_export_task_bar_pu_keyTitleList,
+                                                   pandas_export_task_bar_pu_jsList,
+                                                   pandas_export_task_bar_pu_centered))
+
+
+def display_data_select_df() :
+    
+        from dfcleanser.data_inspection.data_inspection_widgets import get_select_df_form
+        select_df_form              =   get_select_df_form("Export")
+    
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [select_df_form.get_html()]
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
+    
 
 def get_csv_export_inputs(parms) :
     return(get_parms_for_input(parms,pandas_export_csv_idList))
@@ -678,11 +737,8 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
     # add the main import task bar
     if (exid == dem.EXPORT_TB_ONLY) :
 
-        display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
-                                                                   export_task_bar_keyTitleList,
-                                                                   export_task_bar_jsList,
-                                                                   export_task_bar_centered))])
-    
+        display_export_main_taskbar()  
+        display_data_select_df()
 
     # add the pandas import task bar or pandas details form 
     elif ( (exid == dem.EXPORT_PANDAS_TB_ONLY) or 
@@ -690,11 +746,7 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
         
         if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
-            display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
-                                                                       export_task_bar_keyTitleList,
-                                                                       export_task_bar_jsList,
-                                                                       export_task_bar_centered))])
-            
+            display_export_main_taskbar()            
             display_inspection_data() 
 
         else :
@@ -743,28 +795,41 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
                 
                 else :
                     
-                    current_export_form     =   get_pandas_export_input_form(detid)
+                    display_export_main_taskbar()
+                
+                    pandas_export_form     =   get_pandas_export_input_form(detid)
+
+                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                        pandas_export_form.set_shortForm(True)
+                        pandas_export_form.set_gridwidth(640)
+                        pandas_export_form.set_custombwidth(110)
+                    else :
+                        pandas_export_form.set_gridwidth(480)
+                        pandas_export_form.set_custombwidth(100)
                     
-                    # display the composite form
-                    display_composite_form([get_input_form(current_export_form,
-                                                           get_pandas_export_input_title(detid))])
-                    
+    
+                    pandas_input_html = ""
+                    pandas_input_html = pandas_export_form.get_html() 
+    
+                    pandas_input_heading_html =   "<div>" + get_pandas_export_input_title(detid) + "</div>"
+
+                    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                    gridhtmls       =   [pandas_input_heading_html,pandas_input_html]
+
+                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                        display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
+                    else :
+                        display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+
             else :
                 
                 # display the composite form
-                display_composite_form([get_button_tb_form(ButtonGroupForm(pandas_export_task_bar_id,
-                                                                           pandas_export_task_bar_keyTitleList,
-                                                                           pandas_export_task_bar_jsList,
-                                                                           pandas_export_task_bar_centered))])
-                
+                display_pandas_export_taskbar()              
     else :
         
         if(not (cfg.is_a_dfc_dataframe_loaded())) :
             
-            display_composite_form([get_button_tb_form(ButtonGroupForm(export_task_bar_id,
-                                                                       export_task_bar_keyTitleList,
-                                                                       export_task_bar_jsList,
-                                                                       export_task_bar_centered))])
+            display_export_main_taskbar()
             display_inspection_data() 
             
         else : 

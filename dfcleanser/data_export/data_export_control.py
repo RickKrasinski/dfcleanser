@@ -95,6 +95,7 @@ def process_export_form(formid, parms, display=True) :
         if(display) :
             clear_output()
             dew.display_export_main_taskbar()
+            
             clock = RunningClock()
             clock.start()
     
@@ -379,7 +380,7 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Export CSV File ",
-                             "from dfcleanser.data_export.data_export_widgets import export_pandas_csv",
+                             "from dfcleanser.data_export.data_export_control import export_pandas_csv",
                              "export_pandas_csv(" + json.dumps(fparms) + "," +
                              str(exportId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -463,7 +464,7 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Export Excel File ",
-                             "from dfcleanser.data_export.data_export_widgets import export_pandas_excel",
+                             "from dfcleanser.data_export.data_export_control import export_pandas_excel",
                              "export_pandas_excel(" + json.dumps(fparms) + "," +
                              str(exportId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -547,7 +548,7 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Export JSON File ",
-                             "from dfcleanser.data_export.data_export_widgets import export_pandas_json",
+                             "from dfcleanser.data_export.data_export_control import export_pandas_json",
                              "export_pandas_json(" + json.dumps(fparms) + "," +
                              str(exportId) + "," + json.dumps(labellist) + ",False)"]
 
@@ -631,7 +632,7 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Export HTML File ",
-                             "from dfcleanser.data_export.data_export_widgets import export_pandas_html",
+                             "dfcleanser.data_export.data_export_control import export_pandas_html",
                              "export_pandas_html(" + json.dumps(fparms) + "," +
                              str(exportId) + "," + json.dumps(labellist) + ",False)"]
                              
@@ -672,7 +673,7 @@ def process_custom_export(fparms,exportId,display=True) :
         if(display) :
             #make scriptable
             script      =   ["# Export Custom ",
-                             "from dfcleanser.data_export.data_export_widgets import process_custom_export",
+                             "from dfcleanser.data_export.data_export_control import process_custom_export",
                              "process_custom_export(" + json.dumps(fparms) + "," +
                              str(exportId) + ",False)"]
                              
@@ -785,50 +786,6 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
                             except Exception as e:
                                 opstat.store_exception("Unable to export to sql table",e)
         
-        
-        """        
-        
-        
-        if(sqltableparms[0] == "") :
-            opstat.set_status(False)
-            opstat.set_errorMsg("No dataframe slected")
-        else :
-            df = cfg.get_dfc_dataframe(sqltableparms[0])            
-        
-        if(sqltableparms[1] == "") :
-            opstat.set_status(False)
-            opstat.set_errorMsg("Invalid Table Name")
-        
-        if(sqltableparms[2] == "") :
-            sqltableparms[2] = None
-        
-        if(sqltableparms[3] == "") :
-            sqltableparms[3] = None
-        
-        if(sqltableparms[4] == "") :
-            sqltableparms[4] = 'fail'
-        
-        if(sqltableparms[5] == "") :
-            sqltableparms[5] = True
-         
-        if(sqltableparms[6] == "") :
-            sqltableparms[6] = None
-        
-        if(sqltableparms[7] == "") :
-            sqltableparms[7] = None
-        else :
-            sqltableparms[7] = int(sqltableparms[6])
-        
-        if(opstat.get_status()) :  
-
-            try :
-                df.to_sql(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
-                          sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7])
-                
-            except Exception as e:
-                opstat.store_exception("Unable to export sql table",e)
-        """
-
     export_notes    =   ""
 
     if(opstat.get_status()) : 
