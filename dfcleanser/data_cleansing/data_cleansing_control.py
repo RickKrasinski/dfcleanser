@@ -18,7 +18,7 @@ import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
 from dfcleanser.common.common_utils import (RunningClock, display_status, display_exception, is_column_in_df, 
-                                            opStatus, single_quote, is_numeric_col, is_numeric_col_int,
+                                            opStatus, single_quote, is_numeric_col, is_int_col,
                                             display_generic_grid, get_parms_for_input, get_numeric_from_string)
 
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables)
@@ -43,6 +43,8 @@ def display_data_cleansing(option,parms=None) :
     """
     
     clear_output()
+    
+    opstat  =   opStatus()
 
     if(not cfg.check_if_dc_init()) :
         dcw.display_no_data_heading()
@@ -70,6 +72,16 @@ def display_data_cleansing(option,parms=None) :
         if(option == dcm.MAIN_OPTION) :
             clear_data_cleansing_data()
             dcw.display_data_select_df()
+            
+        elif(option == dcm.DFS_CLEANSE_COL) :
+
+            cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF))
+            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
+            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
+
+            cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
+            
+            dcw.display_col_data()
 
         elif(option == dcm.CHANGE_COLUMN_OPTION) :
 
@@ -91,13 +103,21 @@ def display_data_cleansing(option,parms=None) :
         elif(option == dcm.FIND_COLUMN_OPTION) :
             cfg.set_config_value(cfg.UNIQUES_RANGE_KEY,parms)
             dcw.display_col_data()
+        
+        elif(option == dcm.GENERIC_COL_OPTION) :
+            
+            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
+            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
+
+            if(parms != None) :
+                cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
+            
+            dcw.display_col_data()
             
         elif(option == dcm.DISPLAY_COLS_OPTION) :
             cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
             cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
             cfg.drop_config_value(cfg.DATA_TYPES_FLAG_KEY)            
-            cfg.drop_config_value(cfg.ROUNDING_FLAG_KEY)
-            cfg.drop_config_value(cfg.FILLNA_FLAG_KEY)
             
             cfg.drop_config_value(cfg.CLEANSING_COL_KEY)
             cfg.drop_config_value(cfg.CLEANSING_ROW_KEY)
@@ -185,24 +205,6 @@ def display_data_cleansing(option,parms=None) :
             cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
             dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
             
-        elif(option == dcm.GENERIC_COL_OPTION) :
-            
-            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
-            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
-            cfg.drop_config_value(cfg.ROUNDING_FLAG_KEY)
-            cfg.drop_config_value(cfg.FILLNA_FLAG_KEY)
-
-            if(parms != None) :
-                cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
-            
-            dcw.display_col_data()
-    
-        elif(option == dcm.ALL_COL_OPTION) :
-            
-            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
-            cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_col_data()
-
         elif(option == dcm.DROP_COL_OPTION ) : 
             
             opstat = drop_column(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
@@ -246,23 +248,6 @@ def display_data_cleansing(option,parms=None) :
             
             dcw.display_col_data()
 
-        elif(option == dcm.DROP_COL_NANS_OPTION ) :
-            
-            clock = RunningClock()
-            clock.start()
-            
-            opstat = drop_col_nans(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
-                                   cfg.get_config_value(cfg.CLEANSING_COL_KEY))
-            
-            clock.stop()
-            
-            if(opstat.get_status()) :
-                display_status("Column nan rows dropped successfully")
-            else :
-                display_exception(opstat)                
-            
-            dcw.display_col_data()
-            
         elif(option == dcm.DISPLAY_OUTLIERS_OPTION ) : 
             
             cfg.set_config_value(cfg.OUTLIERS_FLAG_KEY, True)
@@ -270,8 +255,10 @@ def display_data_cleansing(option,parms=None) :
             
         elif(option ==  dcm.DISPLAY_ROUND_COLUMN_OPTION  ) : 
             
-            cfg.set_config_value(cfg.ROUNDING_FLAG_KEY,True)
-            dcw.display_col_data()
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+            dcw.display_round_option(df,colname)            
         
         elif(option ==  dcm.PROCESS_ROUND_COLUMN_OPTION  ) :
             
@@ -286,7 +273,6 @@ def display_data_cleansing(option,parms=None) :
             
             if(opstat.get_status()) :
                 display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " rounded successfully")
-                cfg.set_config_value(cfg.ROUNDING_FLAG_KEY,False)
             else :
                 display_exception(opstat)                
             
@@ -294,15 +280,21 @@ def display_data_cleansing(option,parms=None) :
             
         elif(option ==  dcm.DISPLAY_COL_CHANGE_OPTION  ) :
             
-            cfg.set_config_value(cfg.ROUNDING_FLAG_KEY,False)
             dcw.display_col_data()
             
-        elif(option ==  dcm.REMOVE_WHITESPACE_OPTION  ) :
+            
+        elif(option ==  dcm.DISPLAY_REM_WHTSPC_OPTION  ) : 
+
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            dcw.display_whitespace_option(df,colname)
+            
+        elif(option ==  dcm.PROCESS_REM_WHTSPC_OPTION  ) :
             
             clock = RunningClock()
             clock.start()
             
-            opstat = remove_whitespace(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms)
+            remove_whitespace(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms,opstat)
             
             clock.stop()
             
@@ -367,7 +359,7 @@ def display_data_cleansing(option,parms=None) :
                 col_id      =   int(cfg.get_config_value(cfg.CLEANSING_COL_KEY))
                 
                 if(is_numeric_col(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
-                    if(is_numeric_col_int(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
+                    if(is_int_col(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
                         new_value       =   int(new_value)
                     else :
                         new_value       =   float(new_value)
@@ -381,35 +373,57 @@ def display_data_cleansing(option,parms=None) :
                 drop_row(cfg.CURRENT_CLEANSE_DF,row_id)
                 dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
         
-        elif(option ==  dcm.FILLNA_OPTION ) :
-            cfg.drop_config_value(cfg.ROUNDING_FLAG_KEY)
-            cfg.set_config_value(cfg.FILLNA_FLAG_KEY,True)
-            dcw.display_col_data()
+        elif(option == dcm.DISPLAY_DROP_NA_OPTION ) :
+            
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            dcw.display_dropna_option(df,colname)
+            
+        elif(option == dcm.PROCESS_DROP_NA_OPTION ) :
+            
+            print("PROCESS_DROP_NA_OPTION",parms) 
+            
+        elif(option ==  dcm.DISPLAY_FILLNA_OPTION ) :
+            
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            dcw.display_fillna_option(df,colname)
             
         elif(option ==  dcm.PROCESS_FILLNA_OPTION) :
             
-            clock = RunningClock()
-            clock.start()
-            
             print("PROCESS_FILLNA_OPTION",parms)
-            #opstat = round_column_data(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
-            #                           cfg.get_config_value(cfg.CLEANSING_COL_KEY),
-            #                           parms)
             
-            opstat  =   opStatus()
+        elif(option ==  dcm.DISPLAY_DATA_TYPE_OPTION) :
             
-            clock.stop()
+            print("dcm.DISPLAY_DATA_TYPE_OPTION",parms) 
             
-            if(opstat.get_status()) :
-                display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " nans filled successfully")
-                cfg.set_config_value(cfg.FILLNA_FLAG_KEY,False)
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+            from dfcleanser.data_transform.data_transform_columns_widgets import display_convert_datatype
+            display_convert_datatype(df,colname,True,False,cfg.DataCleansing_ID)
+
+        elif(option ==  dcm.PROCESS_DATA_TYPE_OPTION) :
+            print("dcm.PROCESS_DATA_TYPE_OPTION",parms) 
+            
+            
+        elif(option ==  dcm.CHANGE_NA_OPTION) :
+            
+            print("dcm.CHANGE_NA_OPTION",parms)             
+            
+            if(parms[0] == 'fillna') :
+                dropflag    =   False
             else :
-                display_exception(opstat)                
-            
-            clear_data_cleansing_cfg_values(False)            
-            dcw.display_col_data()
-            
+                dropflag    =   True
                 
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+            from dfcleanser.data_transform.data_transform_columns_widgets import display_convert_datatype
+            display_convert_datatype(df,colname,dropflag,False,cfg.DataCleansing_ID)
+
+            
+
     else :
         cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF)
         clear_data_cleansing_data()
@@ -700,14 +714,14 @@ def fillna_column_data(dftitle,colname,parms) :
     return(opstat)
 
 
-def remove_whitespace(dftitle,colname) :
+def remove_whitespace(dftitle,parms,opstat,display=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : remove leading and trailing blanks and tabs
     * 
     * parms :
     *   dftitle         -   dataframe title
-    *   colname         -   column name
+    *   parms           -   column name
     *   display         -   true  : add to script log : 
     *                       false : running from script log 
     *
@@ -716,36 +730,95 @@ def remove_whitespace(dftitle,colname) :
     * --------------------------------------------------------
     """
     
-    opstat = opStatus()
+    opstat      =   opStatus()
     
+    df          =   cfg.get_dfc_dataframe(dftitle) 
     
-    try :  
-        
-        df  =   cfg.get_dfc_dataframe(dftitle) 
+    colname     =   colname = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+    leadflag    =   parms[0] 
+    whtspcopts  =   parms[1] 
     
-        dfcolnames = df.columns.values.tolist()
-        for i in range(len(dfcolnames)) :
-            if(dfcolnames[i] == colname) :
-                colindex = i
-
-        for i in range(len(df)) :
+    print("remove_whitespace",colname,leadflag,whtspcopts) 
+    
+    uniques     =   df[colname].unique()
+    foundList   =   []
+    
+    try :
+    
+        for i in range(len(whtspcopts)) :
         
-            cvalue = str(df.iloc[i,colindex]) 
-            nvalue = cvalue.strip()
-            nvalue = nvalue.strip("\t")
-            nvalue = cvalue.strip()
+            founduniques   =   []
         
-            if(len(cvalue) != len(nvalue)) :
-                df.iloc[i,colindex] = nvalue 
+            if(whtspcopts[i] == "true") :
+    
+                for j in range(len(uniques)) :
                 
+                    index   =  uniques[j].find(dcm.whitespace_chars[i])
+                
+                    if(not (leadflag == "All")) :
+                        lastchar =  uniques[j][(len(uniques[j])-1)]
+                        if(lastchar == dcm.whitespace_chars[i]) :
+                            lindex  =  len(uniques[j])-1
+                        else :
+                            lindex  =   -1
+        
+                    if(not (leadflag == "All")) :
+                    
+                        if( (index == 0) or (lindex == len(uniques[j])) ) :
+                            founduniques.append(j)
+        
+                    else :
+                        if(index > -1) :
+                            founduniques.append(j)
+                        
+                if(len(founduniques) > 0) :
+                    foundList.append(founduniques)
+                else :
+                    foundList.append(None)
+
+    except Exception as e :
+        opstat.store_exception("Unable to parse whitespace chars",e)
+        
+    if(opstat.get_status()) :
+        
+        import pandas as pd
+        truth_table         =   pd.Series()
+        
+        try :
+                
+            # go though the found list 
+            for i in range(len(foundList)) :
+        
+                if(not(foundList[i] is None)) :
+            
+                    criteria   =   ""
+            
+                    for j in range(len(foundList[i])) :
+                
+                        if(not (j ==0)) :
+                            criteria   =   criteria + " or "
+                    
+                        criteria   =   (criteria + "(df['" + colname + "'] == '" + uniques[foundList[i][j]] + "')")
+                
+                    from dfcleanser.sw_utilities.sw_utility_dfsubset_control import get_truth_table
+                    truth_table     =   get_truth_table(dftitle,criteria,opstat)
+
+                    if(not (leadflag == "All")) :
+                        df[truth_table].replace(dcm.whitespace_chars[i],"")
+                    else :
+                        df[truth_table].lstrip(dcm.whitespace_chars[i])
+                        df[truth_table].rstrip(dcm.whitespace_chars[i])
+
+        except Exception as e :
+            opstat.store_exception("Unable to remove whitespace from  " + colname,e)
+
+    if(opstat.get_status()) :
+               
         #make scriptable
         add_to_script(["# Remove Whitespace for " + colname,
                        "from dfcleanser.data_cleansing.data_cleansing_control remove_whitespace",
-                       "remove_whitespace(" + single_quote(dftitle) + "," + single_quote(colname) +",False)"],opstat)
+                       "remove_whitespace(" + single_quote(dftitle) + "," + json.dumps(parms) +",False)"],opstat)
                 
-    except Exception as e:
-        opstat.store_exception("Unable to remove whitespace from  " + colname,e)
-
     return(opstat)
                 
 
@@ -779,7 +852,7 @@ def change_unique_col_data(dftitle,parms) :
 
             try :
                 if(is_numeric_col(df,colname)) :
-                    if(is_numeric_col_int(df,colname)) :
+                    if(is_int_col(df,colname)) :
                         toval       =   int(changeto)
                     else :
                         toval       =   float(changeto)
@@ -796,7 +869,7 @@ def change_unique_col_data(dftitle,parms) :
             
             try     :
                 if(is_numeric_col(df,colname)) :
-                    if(is_numeric_col_int(df,colname)) :
+                    if(is_int_col(df,colname)) :
                         fromval     =   int(changefrom)
                         toval       =   int(changeto)
                     else :
@@ -836,13 +909,12 @@ def clear_data_cleansing_data() :
     clear_data_cleansing_cfg_values()
     
 def clear_data_cleansing_cfg_values(allValues=True) :
- 
+    
+    cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF) 
     cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
     cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
     cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
     cfg.drop_config_value(cfg.DATA_TYPES_FLAG_KEY)
-    cfg.drop_config_value(cfg.ROUNDING_FLAG_KEY)
-    cfg.drop_config_value(cfg.FILLNA_FLAG_KEY)
     cfg.drop_config_value(cfg.GRAPHS_FLAG_KEY)
     
     if(allValues) :
@@ -850,7 +922,6 @@ def clear_data_cleansing_cfg_values(allValues=True) :
     cfg.drop_config_value(cfg.CLEANSING_ROW_KEY)
     
     cfg.drop_config_value("changerowinputParms")
-    cfg.drop_config_value(dcw.col_fillna_input_id+"Parms")
     cfg.drop_config_value(dcw.col_round_input_id+"Parms")
     cfg.drop_config_value(dcw.change_values_input_id+"Parms")
     cfg.drop_config_value(dcw.nn_change_values_input_id+"Parms")
