@@ -25,13 +25,11 @@ import dfcleanser.data_transform.data_transform_dataframe_widgets as dtdw
 from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables, get_table_value)
 
 from dfcleanser.common.common_utils import (display_status, display_exception, opStatus, single_quote, 
-                                            get_parms_for_input, RunningClock, is_datetime_column, 
+                                            get_parms_for_input, RunningClock, is_datetime_col, 
                                             get_datatype_id, is_existing_column, get_datatype_str, 
-                                            get_units_id, convert_df_cols, get_datatype)
+                                            get_units_id, convert_df_cols, get_datatype, is_numeric_col)
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
-
-from dfcleanser.common.display_utils import display_df_unique_column
 
 from IPython.display import clear_output
 
@@ -59,7 +57,7 @@ def display_data_transform(option,parms=None) :
     
     from IPython.display import clear_output
     clear_output()
-    
+
     if(not (cfg.is_a_dfc_dataframe_loaded()) ) :
         dtw.display_no_dataframe()
         if(not(parms==None)) :
@@ -71,10 +69,7 @@ def display_data_transform(option,parms=None) :
 
     else :
         
-        if( (option == dtm.DISPLAY_DATAFRAME_TRANSFORM) or 
-            (option == dtm.DISPLAY_COLUMNS_TRANSFORM) or 
-            (option == dtm.DISPLAY_DATETIME_TRANSFORM) or 
-            (option == dtm.DISPLAY_DF_SCHEMA_TRANSFORM) ) :
+        if(option == dtm.DISPLAY_DF_SCHEMA_TRANSFORM) :
         
             if(not(parms==None)) :
             
@@ -94,83 +89,6 @@ def display_data_transform(option,parms=None) :
             if(parms==None) :
                 clear_data_transform_data()
       
-        elif(option == dtm.EXTERNAL_MAP_OPTION) :
-            
-            if(type(parms) != str) :
-                colname = parms[0]
-            else :
-                colname = parms
- 
-            print("\n")
-
-            uniques_table = dcTable("Unique Values and Counts for Column " + colname,
-                                    colname+"uvalsTable",
-                                    cfg.DataTransform_ID)
-
-            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                     uniques_table,colname)
-           
-            dtw.display_single_column_taskbar() 
-            
-        elif(option == dtm.DISPLAY_MAP_OPTION) :
-
-            if(type(parms) != str) :
-                colname = parms[0]
-            else :
-                colname = parms
-                
-            dtw.display_mapping_column_taskbar()
-            print("\n")
-            
-            uniques_table = dcTable("Unique Values and Counts for Column " + colname,
-                                    colname+"uvalsTable",
-                                    cfg.DataTransform_ID)
-            
-            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                     uniques_table,colname)
-            
-            dtcw.display_mapping_col(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                     colname) 
-
-        elif(option == dtm.DISPLAY_DUMMY_OPTION) :
-
-            if(type(parms) != str) :
-                colname = parms[0]
-            else :
-                colname = parms
-                
-            dtw.display_dummies_column_taskbar()
-            print("\n")
-
-            if(colname != "List") :
-                uniques_table = dcTable("Unique Values and Counts for Column " + colname,
-                                        colname+"uvalsTable",
-                                        cfg.DataTransform_ID)
-                display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                         uniques_table,colname)
-                
-            dtw.display_dummies_column_input()
-
-        elif(option == dtm.DISPLAY_CATEGORY_OPTION) :
-            
-            if(type(parms) != str) :
-                colname = parms[0]
-            else :
-                colname = parms
-                
-            dtw.display_cats_column_taskbar()
-            print("\n")
-
-            uniques_table = dcTable("Unique Values and Counts for Column " + colname,
-                                    colname+"uvalsTable",
-                                    cfg.DataTransform_ID)
-            
-            display_df_unique_column(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                     uniques_table,colname)
-
-            dtw.display_cats_column_input()
-
-
         elif(option == dtm.TRANSFORM_OPTION) :
             dtcc.process_column_option(parms)
 
@@ -183,11 +101,7 @@ def display_data_transform(option,parms=None) :
         elif(option == dtm.DISPLAY_TRANSFORM_COLS_OPTION) :
             dtcw.display_transform_cols_option(parms)
         
-        elif(option == dtm.DISPLAY_TRANSFORM_COLS_FROM_CLEANSE_OPTION) :
-            cfg.set_config_value(cfg.CURRENT_TRANSFORM_DF,selected_df,cfg.get_config_value(cfg.CURRENT_CLEANSE_DF))
-            dtcw.display_transform_cols_option(parms)
-
-        elif(option == dtm.DISPLAY_DATETIME_TRANSFORM_OPTION) :
+        elif(option == dtm.DISPLAY_DATETIME_OPTION) :
             dtw.display_datetime_column_taskbar()
             
             funcid = parms[0]
@@ -202,8 +116,10 @@ def display_data_transform(option,parms=None) :
                 dtw.display_datetime_split_merge(parms,dtm.SPLIT)
             elif(funcid == dtm.DISPLAY_DATETIME_MERGE) : 
                 dtw.display_datetime_split_merge(parms,dtm.MERGE)
-
-        elif(option == dtm.PROCESS_DATETIME_TRANSFORM_OPTION) :
+            elif(funcid == dtm.DISPLAY_DATETIME_COMPONENTS) : 
+                dtw.display_datetime_components(parms)
+    
+        elif(option == dtm.PROCESS_DATETIME_OPTION) :
             process_datetime_datatype_transform(parms)
             
         elif(option == dtm.PROCESS_DATETIME_TIMEDELTA_OPTION) :
@@ -212,10 +128,92 @@ def display_data_transform(option,parms=None) :
         elif(option == dtm.PROCESS_DATETIME_MERGESPLIT_OPTION) :
             process_datetime_merge_split_transform(parms)
             
-        elif(option == dtm.PROCESS_DF_SCHEMA_TRANSFORM_OPTION) :
+        elif(option == dtm.PROCESS_DF_SCHEMA_OPTION) :
             process_dfschema_datatype_transform(parms)
             
+        elif(option == dtm.CHANGE_NA_OPTION) :
+            if(parms[0] == 'fillna') :
+                dropflag    =   False
+            else :
+                dropflag    =   True
+                
+            df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+            dtcw.display_convert_datatype(df,
+                                          cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY),
+                                          dropflag,True,cfg.DataTransform_ID) 
+
+        elif(option == dtm.DISPLAY_DROP_NA_OPTION) :
+            print("dtm.DISPLAY_DROP_NA_OPTION",parms)
+
+            if(parms[0] == cfg.DataCleansing_ID) :
+                df      =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
             
+            dtcw.display_dropna(df,colname)
+
+        elif(option == dtm.DISPLAY_FILL_NA_OPTION) :
+            print("dtm.DISPLAY_FILL_NA_OPTION",parms)    
+            
+            if(parms[0] == cfg.DataCleansing_ID) :
+                df      =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+            dtcw.display_fillna(df,colname)
+
+        elif(option == dtm.DISPLAY_DATATYPE_OPTION) :
+            print("dtm.DISPLAY_FILL_NA_OPTION",parms)    
+            
+            if(parms[0] == cfg.DataCleansing_ID) :
+                df      =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+            dtcw.display_convert_datatype(df,colname)
+
+        elif(option == dtm.PROCESS_DROP_NA_OPTION) :
+            print("dtm.PROCESS_DROP_NA_OPTION",parms)
+
+
+        elif(option == dtm.PROCESS_FILL_NA_OPTION) :
+            print("dtm.PROCESS_FILL_NA_OPTION",parms)    
+
+        elif(option == dtm.PROCESS_DATATYPE_OPTION) :            
+            print("dtm.PROCESS_DATATYPE_OPTION",parms)
+            
+            df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+            colname     =   cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY)
+            dt          =   parms[1]
+            naoption    =   int(parms[2])
+            
+            if(naoption == dtm.DROP_NA_OPTION) :
+                
+                fparms      =   get_parms_for_input(parms[3],dtcw.dt_data_type_dn_input_idList)
+                
+            elif(naoption == dtm.FILL_NA_OPTION) :
+                
+                if(is_numeric_col(df,colname)) :
+                    print("parms",dtcw.dt_data_type_fn_input_idList)
+                    fparms      =   get_parms_for_input(parms[3],dtcw.dt_data_type_fn_input_idList)
+                else :
+                    fparms      =   get_parms_for_input(parms[3],dtcw.dt_nn_fn_data_type_input_idList)
+                
+            else :
+                fparms  =   None
+            
+            print("dtm.PROCESS_DATATYPE_OPTION : colname ",colname)
+            print("dtm.PROCESS_DATATYPE_OPTION : dt ",dt)
+            print("dtm.PROCESS_DATATYPE_OPTION : naoption ",naoption)
+            print("dtm.PROCESS_DATATYPE_OPTION : fparms ",fparms)
+        
+        elif(option == dtm.PROCESS_CHECK_NUMERIC) :
+            print("dtm.PROCESS_CHECK_NUMERIC",parms)
+            process_dfchknum_transform(parms)
+
+        elif(option == dtm.PROCESS_DATETIME_COMPONNETS_OPTION) :
+            print("dtm.PROCESS_DATETIME_COMPONNETS_OPTION",parms)
+            process_get_datetime_component(parms)
+
+
+                             
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -230,6 +228,18 @@ def display_data_transform(option,parms=None) :
 #--------------------------------------------------------------------------
 """
 def process_datetime_datatype_transform(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : convert column to datetime datatype
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
     
     import datetime
     
@@ -312,6 +322,18 @@ def process_datetime_datatype_transform(parms,display=True) :
 #--------------------------------------------------------------------------
 """
 def process_datetime_timedelta_transform(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get datetime delta from columns
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
     
     opstat  =   opStatus()
     
@@ -354,11 +376,8 @@ def process_datetime_timedelta_transform(parms,display=True) :
         elif(not found1) :
             opstat.set_errorMsg(colname1 + " is not a dataframe column")
             opstat.set_status(False)
-        elif(not ((is_datetime_column(df,colname)) or (get_datatype_id(df[colname].dtype) == 11) ) ):
+        elif(not ((is_datetime_col(df,colname)) or (get_datatype_id(df[colname].dtype) == 11) ) ):
             opstat.set_errorMsg(colname + " is not a datetime column")
-            opstat.set_status(False)
-        elif(0):#not is_datetime_column(colname1) ) :
-            opstat.set_errorMsg(colname1 + " is not a datetime column")
             opstat.set_status(False)
         
     if(opstat.get_status()) :
@@ -436,6 +455,18 @@ def process_datetime_timedelta_transform(parms,display=True) :
 #--------------------------------------------------------------------------
 """
 def process_datetime_merge_split_transform(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : merge or split a datetime column
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
     print("process_datetime_merge_split_transform",parms)    
     
     import datetime
@@ -579,7 +610,92 @@ def process_datetime_merge_split_transform(parms,display=True) :
             display_exception(opstat)
 
 
+def process_get_datetime_component(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the datatime component into a column
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    
+    
+    print("process_get_datetime_component",parms)    
+    
+    import datetime
+    opstat  =   opStatus()
+    
+    #year = datetime.date.today().year
+    #month = datetime.date.today().month
+    #hour = datetime.date.today().hour
+
+    #today.get_weekday()
+    
+    action = parms[1]
+
+    if(action == 0) :
+        fparms  =   get_parms_for_input(parms[2],dtw.datetime_split_input_idList)
+    else :
+        fparms  =   get_parms_for_input(parms[2],dtw.datetime_merge_input_idList)
+    
+    colname = fparms[0]
+
+    df = cfg.get_dfc_dataframe()
+    
+    if(display) :
+        clock = RunningClock()
+        clock.start()
+    
+    if(display) :
+        clock.stop()
+        
+    if(opstat.get_status()) : 
+                
+        if(display) :
+                    
+            #make scriptable
+            add_to_script(["# merge date time columns ",
+                           "from dfcleanser.data_transform.data_transform_columns_control import process_datetime_merge_split_transform",
+                           "process_datetime_merge_split_transform(" + json.dumps(parms) + ",False)"],opstat)
+                    
+            dtw.display_main_taskbar()
+            print("\n")
+            #display_status("Columns " + datecolumn + ":" + timecolumn +" merged successfully to " + datetimecolumn)
+            #dtw.display_transform_col_data(cfg.get_dfc_dataframe(),datetimecolumn)
+        
+        else :
+        
+            if(display) :
+                clear_output()
+                dtw.display_main_taskbar()
+                display_exception(opstat)
+
+    else :
+        
+        if(display) :
+            clear_output()
+        
+        dtw.display_main_taskbar()
+        display_exception(opstat)
+
+
 def convert_nan_value(dtype,nanvalue,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : convert a nan value to ok data type
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
     
     try :
                 
@@ -592,6 +708,43 @@ def convert_nan_value(dtype,nanvalue,opstat) :
         opstat.set_errorMsg("Nan fill value is invalid")
 
 
+def get_nan_value(dtid, nanmethod, nanval, opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get a nan value for a data type
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+     
+    if(nanmethod == 0) :
+        if(len(nanval) > 0) :
+            
+            if( ((dtid >= 0) and (dtid <= 7)) or (dtid == 17) ) :
+                try :
+                    nanvalue    =   int(nanval)
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("Nan fill value is not an int")
+                    
+            elif( ((dtid >= 8) and (dtid <= 10)) or (dtid == 18) ) :
+                try :
+                    nanvalue    =   float(nanval)
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("Nan fill value is not a float")
+                    
+        else :
+            nanvalue    =   None
+    else :
+        nanvalue    =   None 
+        
+    return(nanvalue)
+
     
 """
 #--------------------------------------------------------------------------
@@ -599,6 +752,17 @@ def convert_nan_value(dtype,nanvalue,opstat) :
 #--------------------------------------------------------------------------
 """
 def process_dfschema_datatype_transform(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : process the datatype change from dfschema
+    * 
+    * parms :
+    *   parms     -   change parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
 
     opstat  =   opStatus()
 
@@ -608,21 +772,13 @@ def process_dfschema_datatype_transform(parms,display=True) :
     dtid        =   int(parms[1])
     nafunc      =   parms[2]
     
-    if(len(parms[3]) > 0) :
-        nanvalue    =   float(parms[3])
-    else :
-        nanvalue    =   None
-
-    col_nans     =   cfg.get_dfc_dataframe()[colname].isnull().sum() 
+    nanmethod   =   parms[4]  
+    
+    col_nans    =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].isnull().sum() 
 
     if(col_nans > 0) :
         if(nafunc == "fillna") :
-
-            if(nanvalue is None) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("No Nan fill value is specified")
-            else : 
-                nanvalue    =   convert_nan_value(dtid,nanvalue,opstat)        
+            nanvalue    =   get_nan_value(dtid, nanmethod, parms[3], opstat)        
         else :
             nanvalue = None
             
@@ -683,18 +839,77 @@ def process_dfschema_datatype_transform(parms,display=True) :
             display_exception(opstat)
 
         
+def process_dfchknum_transform(parms,display=True) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : drop cols with nans greater than threshold
+    * 
+    * parms :
+    *   parms     -   cheknum parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    print("process_dfchknum_transform",parms)
+
+    colname     =   parms[0]
+    dtid        =   int(parms[1])
+ 
+    uniques         =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].unique().tolist()
+    
+    numericOK   =   True
+    
+    for i in range(len(uniques)) :
+        
+        import pandas as pd
+        if(pd.notnull(uniques[i])) :
+        
+            if(dtid == 0) :
+                try :
+                    if(not (uniques[i].isdigit()) ) :
+                        numericOK=  False
+                        i = len(uniques) + 1
+                except :
+                    numericOK=  False
+                    i = len(uniques) + 1
+                
+            else :
+                try :
+                    float(uniques[i]) 
+                except :
+                    numericOK=  False
+                    i = len(uniques) + 1
+                
+    if(numericOK) :
+    
+        if(dtid == 0) :
+            dtm.checknum_status.set_col_status(colname,dtm.INT_STATUS) 
+        else :
+            dtm.checknum_status.set_col_status(colname,dtm.FLOAT_STATUS) 
+
+    else :
+
+        if(dtid == 0) :
+            dtm.checknum_status.set_col_status(colname,dtm.NOT_INT_STATUS) 
+        else :
+            dtm.checknum_status.set_col_status(colname,dtm.NOT_FLOAT_STATUS) 
+            
+    dtw.display_transform_df_schema(None)
 
 def clear_data_transform_data() :
     
     drop_owner_tables(cfg.DataTransform_ID)
     clear_data_transform_cfg_values()
+    dtm.checknum_status.clear_chknum_status()    
     
 def clear_data_transform_cfg_values() :
     
     cfg.drop_config_value(dtw.datetime_format_input_id+"Parms")
     cfg.drop_config_value(dtw.datetime_format_input_id+"ParmsProtect")
     cfg.drop_config_value(cfg.CURRENT_TRANSFORM_DF)
-    
+   
     dtdc.clear_dataframe_transform_cfg_values()
     dtcc.clear_dataframe_columns_transform_cfg_values()
     

@@ -20,7 +20,7 @@ import dfcleanser.data_transform.data_transform_model as dtm
 from dfcleanser.common.common_utils import (displayParms, single_quote, get_parms_for_input,
                                             display_exception, display_status, does_col_contain_nan, 
                                             opStatus, RunningClock, is_existing_column, is_numeric_col,
-                                            get_datatype, get_datatype_str, is_numeric_col_int,
+                                            get_datatype, get_datatype_str, is_int_col,
                                             get_col_uniques, get_datatype_id_from_str)
 
 from dfcleanser.common.display_utils import (display_df_sizing_info)        
@@ -29,20 +29,6 @@ from IPython.display import clear_output
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#    global list for column values
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-NewColumnValues = []
-
-def get_NewColumnValues() :
-    return()
-def set_NewColumnValues(ncv) :
-    global NewColumnValues
-    NewColumnValues = ncv
 
 """
 #--------------------------------------------------------------------------
@@ -70,11 +56,10 @@ def process_column_option(parms) :
     * --------------------------------------------------------
     """
     
-    dtcw.display_data_transform_columns_taskbar()
+    dtcw.display_base_data_transform_columns_taskbar()
     
     if(type(parms) != str) :
         optionid    = parms[2]
-    print("process_column_option",parms,optionid)
         
     colname = cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY)
         
@@ -119,7 +104,7 @@ def process_rename_column(colname,parms,display=True) :
     * --------------------------------------------------------
     """
     
-    fparms = dtcw.get_rename_column_inputs(parms)
+    fparms = get_parms_for_input(parms[3],dtcw.rename_column_input_idList)
     newname = fparms[0]
     
     namesdict = {}
@@ -323,7 +308,7 @@ def process_drop_column(colname,parms,display=True) :
     """
     
     opstat = opStatus()
-    fparms = dtcw.get_drop_column_inputs(parms)
+    fparms = get_parms_for_input(parms[3],dtcw.drop_column_input_idList)
     
     if(len(fparms) > 0) :
         fname = fparms[0]
@@ -377,7 +362,7 @@ def process_save_column(colname,parms,display=True) :
     """
     
     opstat = opStatus()
-    fparms = dtcw.get_save_column_inputs(parms)
+    fparms = get_parms_for_input(parms[3],dtcw.save_column_input_idList)
     
     if(len(fparms) > 0) :
         fname = fparms[0]
@@ -424,7 +409,7 @@ def process_reorder_columns(parms,display=True) :
     """
     
     opstat  =    opStatus()
-    fparms  =    dtcw.get_reorder_column_inputs(parms)
+    fparms  =    get_parms_for_input(parms[3],dtcw.reorder_columns_input_idList)
 
     movecol         = fparms[0]
     moveaftercol    = fparms[1]
@@ -481,7 +466,7 @@ def process_copy_column(parms,display=True) :
     """
     
     opstat  =   opStatus()
-    fparms  =   dtcw.get_copy_column_inputs(parms)
+    fparms  =   get_parms_for_input(parms[3],dtcw.copy_columns_input_idList)
     
     copytocol      = fparms[0]
     copyfromcol    = fparms[1]
@@ -525,7 +510,7 @@ def process_sort_by_column(parms,display=True) :
     
     opstat  =   opStatus()
 
-    fparms      =   dtcw.get_sort_by_column_inputs(parms)
+    fparms      =   get_parms_for_input(parms[3],dtcw.sort_column_input_idList)
     coltosort   =   fparms[0]
     sortorder   =   fparms[1]
     resetrowids =   fparms[2]
@@ -575,7 +560,7 @@ def process_apply_fn_to_column(parms,display=True) :
     
     opstat  =   opStatus()
     
-    fparms = dtcw.get_apply_fn_to_column_inputs(parms)
+    fparms = get_parms_for_input(parms[3],dtcw.apply_column_gf_input_idList)
 
     coltoapply      =   fparms[0]
     lambdaflag      =   fparms[1]
@@ -623,6 +608,48 @@ def process_apply_fn_to_column(parms,display=True) :
     cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
 
 
+def convert_fill_na_value(dtid,nafillvalue,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : convert the na fill value to correct type
+    * 
+    * parms :
+    *   dtid        -   datatype id
+    *   nafillvalue -   na fiull value
+    *   opstat      -   op status var
+    *
+    * returns : 
+    *  na fill value of correct format
+    * --------------------------------------------------------
+    """ 
+    
+    if( ((dtid >= 0) and (dtid <= 7)) or (dtid == 17) )  :  
+        
+        try :
+            fillnavalue     =   int(nafillvalue) 
+        except :                   
+            opstat.set_status(False)
+            opstat.set_errorMsg("invalid integer na fill value " + fillnavalue)
+            
+    elif( ((dtid >= 8) and (dtid <= 10)) or (dtid == 18) ) :
+        
+        try :
+            fillnavalue     =   float(nafillvalue) 
+        except :                   
+            opstat.set_status(False)
+            opstat.set_errorMsg("invalid float na fill value " + fillnavalue)
+        
+    elif( (dtid >= 15) and (dtid <= 16) ) :
+        fillnavalue     =   nafillvalue
+        
+    elif( (dtid >= 11) and (dtid <= 14) ) :
+        print("datetime component")        
+        
+    else :
+        opstat.set_status(False)
+        opstat.set_errorMsg("unknown datatype na fill value " + fillnavalue)
+        
+
 def process_datatype_column(colname,parms,display=True)  :
     """
     * -------------------------------------------------------------------------- 
@@ -636,28 +663,115 @@ def process_datatype_column(colname,parms,display=True)  :
     *  N/A
     * --------------------------------------------------------
     """ 
-    print("process_datatype_column",colname,parms)
-    
+
     opstat          =   opStatus()
-    fillnamethod    =   None
+    fillnaoption    =   parms[1]
     fillnavalue     =   None
     
     df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
     nans_flag   =   does_col_contain_nan(df,colname)
     
+    nafillvalue     =   None
+    nafillmethod    =   None    
+    nafillinplace   =   None 
+    nafilllimit     =   None 
+    
+    nadropanyall    =   "any" 
+    nadropthreshold =   None    
+    nadropinplace   =   False    
+    
     if(nans_flag) :
-        fparms  =   get_parms_for_input(parms[3],dtcw.dt_data_type_input_idList)
-        datatype        =   fparms[0]
-        fillnamethod    =   fparms[1]
-        fillnavalue     =   fparms[2]
+        
+        if(fillnaoption == dtm.FILL_NA__OPTION) :
+            
+            if(is_numeric_col(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)) :
+                
+                fparms          =   get_parms_for_input(parms[2],dtcw.dt_data_type_fn_input_idList)
+                datatype        =   fparms[0]
+                fillnavalue     =   fparms[2]
+                fillnamethod    =   fparms[3]
+                fillnainplace   =   fparms[4]
+                fillnalimit     =   fparms[5]
+                
+                if(fillnamethod.find("None") > -1) :
+                    nafillmethod    =  fillnamethod
+                else :
+                    nafillmethod    =  None
+                 
+            else :
+                
+                fparms          =   get_parms_for_input(parms[2],dtcw.dt_nn_fn_data_type_input_idList)
+                datatype        =   fparms[0]
+                fillnavalue     =   fparms[2]
+                fillnainplace   =   fparms[3]
+                fillnalimit     =   fparms[4]
+            
+            if(len(fillnavalue) > 0) :
+                nafillvalue    =   convert_fill_na_value(datatype,fillnavalue,opstat)
+            else :
+                nafillvalue    =   None
+            
+            if(fillnainplace == "True") :
+                nafillinplace   =   True
+            else :
+                nafillinplace   =   False
+
+            if(len(fillnalimit) > 0) :
+                
+                try :
+                    nafilllimit     =   int(fillnalimit)    
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("invalid limit value")
+                    
+            else :
+                nafilllimit     =   None     
+                
+        else :
+            
+            fparms          =   get_parms_for_input(parms[2],dtcw.dt_data_type_dn_input_idList)
+            datatype        =   fparms[0]
+            dropnaanyall    =   fparms[2]
+            dropnathreshold =   fparms[3]
+            dropnainplace   =   fparms[4]
+
+            if(len(dropnaanyall) > 0) :
+                if(dropnaanyall == "all") :
+                    nadropanyall   =   "all"
+                else :
+                    nadropanyall   =   "any"
+            else :
+                nadropanyall   =   "any" 
+                
+            if(len(dropnathreshold) > 0) :
+                
+                try :
+                    nadropthreshold     =   int(dropnathreshold)    
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("invalid drop threshold value")
+                    
+            else :
+                nadropthreshold     =   None    
+                
+            if(dropnainplace == "True") :
+                nadropinplace   =   True
+            else :
+                nadropinplace   =   False
+            
     else :
-        fparms  =   get_parms_for_input(parms[3],dtcw.dt_nn_data_type_input_idList)
+        
+        fparms          =   get_parms_for_input(parms[2],dtcw.dt_nonans_data_type_input_idList)
         datatype        =   fparms[0]
     
     datatype_id     =   get_datatype_id_from_str(datatype)
-        
-    print("process_datatype_column",datatype,datatype_id,fillnamethod,fillnavalue)
-    
+
+    print("process_datatype_column",colname,parms,fparms)
+
+    # validate the input parms
+
+
+       
     if(nans_flag) :
         if(not(fillnamethod is None)) :
             if(fillnamethod.find("None") < -1) :
@@ -676,10 +790,10 @@ def process_datatype_column(colname,parms,display=True)  :
             else :
                 fillnamethod     =   None    
                         
-    if(is_numeric_col(df,colname)) :
+    if(is_numeric_col(df,colname) and (nans_flag)) :
 
         try :
-            if(is_numeric_col_int(df,colname)) :
+            if(is_int_col(df,colname)) :
                 fillnavalue     =   int(fillnavalue) 
             else :
                 fillnavalue     =   float(fillnavalue)    
@@ -713,8 +827,6 @@ def process_datatype_column(colname,parms,display=True)  :
             return()
 
         try :
-            print("convert astype",colname,datatype,datatype_id,get_datatype(datatype_id))
-            import numpy
             df[colname] = df[colname].astype(get_datatype(datatype_id),copy=True)
         except :
             opstat.set_status(False)
@@ -724,9 +836,9 @@ def process_datatype_column(colname,parms,display=True)  :
         
         print("\n")
         if(display) :
-            display_status("Column [" + colname + "] datatype changed successfully")
+            display_status("Column [" + colname + "] datatype changed successfully to " + get_datatype_str(datatype_id))
             
-            print("new dtype",df[colname].dtype)
+            #print("new dtype",df[colname].dtype)
             
     else :
         display_exception(opstat)
@@ -749,7 +861,7 @@ def process_map_transform(colname,parms,display=True) :
     """ 
     
     opstat  =   opStatus()
-    fparms  =   dtcw.get_map_column_inputs(parms)
+    fparms  =   get_parms_for_input(parms[3],dtcw.transform_map_input_idList)
 
     mapDict         = None
     map_file_name   = fparms[0]
@@ -861,7 +973,7 @@ def process_dummy_transform(colname,parms,display=True) :
     """ 
     
     opstat  =   opStatus()
-    fparms  =   dtcw.get_dummies_column_inputs(parms)
+    fparms  =   get_parms_for_input(parms[3],dtcw.transform_dummy_input_idList)
 
     removecol = True
     if(len(fparms) > 0) :
@@ -927,7 +1039,7 @@ def process_cat_transform(colname,parms,display=True) :
     """ 
     
     opstat  =   opStatus()
-    fparms  =   dtcw.get_cat_column_inputs(parms)
+    fparms  =   get_parms_for_input(parms[3],dtcw.transform_category_input_idList)
     
     makecat = True
     if(len(fparms) > 0 ) :
@@ -1133,6 +1245,8 @@ def clear_dataframe_columns_transform_cfg_values() :
     cfg.drop_config_value(dtcw.add_column_file_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.add_column_code_gf_input_id+"Parms")
     cfg.drop_config_value(dtcw.add_column_code_gf_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_df_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_df_input_id+"ParmsProtect")
     
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"Parms")
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"ParmsProtect")
@@ -1140,6 +1254,11 @@ def clear_dataframe_columns_transform_cfg_values() :
     cfg.drop_config_value(dtcw.sort_column_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.apply_column_gf_input_id+"Parms")
     cfg.drop_config_value(dtcw.apply_column_gf_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.apply_column_lambda_input_id+"Parms")
+    cfg.drop_config_value(dtcw.apply_column_lambda_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.apply_column_gf_det_input_id+"Parms")
+    cfg.drop_config_value(dtcw.apply_column_gf_det_input_id+"ParmsProtect")
+
     cfg.drop_config_value(dtcw.copy_columns_input_id+"Parms")
     cfg.drop_config_value(dtcw.copy_columns_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.rename_column_input_id+"Parms")

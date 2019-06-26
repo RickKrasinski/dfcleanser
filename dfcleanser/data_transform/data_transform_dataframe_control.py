@@ -275,8 +275,8 @@ def process_df_transform(parms,display=True) :
         # use fefault file name
         elif(funcid == GET_DEFAULT_FILE_NAME) :
              
-             # for remove column names row
-             if(cfg.get_config_value(dftw.df_save_row_transform_input_id + "Parms") == None) :
+            # for remove column names row
+            if(cfg.get_config_value(dftw.df_save_row_transform_input_id + "Parms") == None) :
             
                 fname = ""
                 fname = cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
@@ -286,7 +286,9 @@ def process_df_transform(parms,display=True) :
 
                     cfg.set_config_value(dftw.df_save_row_transform_input_id + "Parms",fname)
 
-             dftw.display_save_colnames_row_input()
+                funcid = parms[0][0]
+
+            dftw.display_dataframe_options([[dtm.SAVE_COLUMN_NAMES_ROW]])
             
     # add column names row
     elif(optionid == dtm.ADD_COLUMN_NAMES_ROW) :
