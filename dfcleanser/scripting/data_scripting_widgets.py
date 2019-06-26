@@ -16,13 +16,10 @@ this = sys.modules[__name__]
 import dfcleanser.common.cfg as cfg
 import dfcleanser.scripting.data_scripting_model as dsm
 
-from dfcleanser.common.html_widgets import (maketextarea, get_input_form, new_line,
-                                            display_composite_form, get_button_tb_form,
-                                            ButtonGroupForm, InputForm)
+from dfcleanser.common.html_widgets import (maketextarea, new_line, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.common_utils import (display_status, get_parms_for_input, 
                                             opStatus, display_exception, display_notes)
-
 
 from dfcleanser.common.help_utils import (SCRIPTING_MAIN_TASKBAR_ID, SCRIPTING_SHOW_CURRENT_ID)
 
@@ -36,9 +33,9 @@ dc_script_tb_doc_title                 =   "Scripting Options"
 dc_script_tb_title                     =   "Scripting Options"
 dc_script_tb_id                        =   "scriptingoptionstb"
 
-dc_script_tb_keyTitleList              =   ["Show Current Script",
-                                            "Add to Current Script",
-                                            "Clear Current Script",
+dc_script_tb_keyTitleList              =   ["Show</br>Current Script",
+                                            "Add to</br>Current Script",
+                                            "Delete</br>Current Script",
                                             "Clear","Reset","Help"]
 
 dc_script_tb_jsList                    =   ["scripting_tb_callback(" + str(dsm.SHOW_CURRENT_SCRIPT) + ")",
@@ -128,14 +125,28 @@ def display_scripting_forms() :
     notes.append("The step numbers are cmmentary only and order is insignificant")
     display_notes(notes)
         
-    display_composite_form([get_input_form(InputForm(dc_script_input_id,
-                                                     dc_script_input_idList,
-                                                     dc_script_input_labelList,
-                                                     dc_script_input_typeList,
-                                                     dc_script_input_placeholderList,
-                                                     dc_script_input_jsList,
-                                                     dc_script_input_reqList))])
+    script_form  =   InputForm(dc_script_input_id,
+                               dc_script_input_idList,
+                               dc_script_input_labelList,
+                               dc_script_input_typeList,
+                               dc_script_input_placeholderList,
+                               dc_script_input_jsList,
+                               dc_script_input_reqList)
     
+    script_form.set_shortForm(True)
+    script_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":70})
+    script_form.set_gridwidth(880)
+    script_form.set_fullparms(True)
+        
+    script_form_html     =   script_form.get_html()
+    script_title_html    =   "<div>Scripting</div><br>"
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridhtmls       =   [script_title_html,script_form_html]
+    
+    from dfcleanser.common.common_utils import display_generic_grid
+    display_generic_grid("data-scripting-wrapper",gridclasses,gridhtmls)
+
     cfg.drop_config_value(dc_script_input_id+"Parms")
     
     print("\n")
@@ -167,7 +178,7 @@ def display_dc_data_scripting(optionId,parms=None) :
         display_dfcleanser_taskbar(ButtonGroupForm(dc_script_tb_id,
                                                    dc_script_tb_keyTitleList,
                                                    dc_script_tb_jsList,
-                                                   dc_script_tb_centered))
+                                                   dc_script_tb_centered),False)
 
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
         clear_data_scripting_data()
@@ -178,7 +189,7 @@ def display_dc_data_scripting(optionId,parms=None) :
     display_dfcleanser_taskbar(ButtonGroupForm(dc_script_tb_id,
                                                dc_script_tb_keyTitleList,
                                                dc_script_tb_jsList,
-                                               dc_script_tb_centered))
+                                               dc_script_tb_centered),False)
     
     if(parms == None ) :
         from dfcleanser.scripting.data_scripting_control import clear_data_scripting_data
@@ -192,13 +203,27 @@ def display_dc_data_scripting(optionId,parms=None) :
             display_scripting_forms()
         
         if(funcid == dsm.ADD_TO_CURRENT_SCRIPT) :
-            display_composite_form([get_input_form(InputForm(dc_add_code_input_id,
-                                                             dc_add_code_input_idList,
-                                                             dc_add_code_input_labelList,
-                                                             dc_add_code_input_typeList,
-                                                             dc_add_code_input_placeholderList,
-                                                             dc_add_code_input_jsList,
-                                                             dc_add_code_input_reqList))])
+            script_form  =   InputForm(dc_add_code_input_id,
+                                       dc_add_code_input_idList,
+                                       dc_add_code_input_labelList,
+                                       dc_add_code_input_typeList,
+                                       dc_add_code_input_placeholderList,
+                                       dc_add_code_input_jsList,
+                                       dc_add_code_input_reqList)
+    
+            script_form.set_shortForm(True)
+            script_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":70})
+            script_form.set_gridwidth(880)
+            script_form.set_fullparms(True)
+        
+            script_form_html     =   script_form.get_html()
+            script_title_html    =   "<div>Scripting</div><br>"
+        
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+            gridhtmls       =   [script_title_html,script_form_html]
+    
+            from dfcleanser.common.common_utils import display_generic_grid
+            display_generic_grid("data-scripting-wrapper",gridclasses,gridhtmls)
 
         if(funcid == dsm.ADD_CODE_SCRIPT) :
             from dfcleanser.scripting.data_scripting_control import add_code_to_script
