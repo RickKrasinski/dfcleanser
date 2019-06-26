@@ -34,6 +34,8 @@ def isEULA_read() :
 def display_main_tb() :
 
     sysw.display_system_main_taskbar()
+
+    cfg.get_loaded_cells()
         
 def load_dfcleanser_from_toolbar(parms) :
     """
@@ -69,45 +71,6 @@ def load_dfCleanser() :
 
     from dfcleanser.system.load import load_dfcleanser
     load_dfcleanser()
-
-
-def install_common_css() :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : install custo css xhanges for dfcleanser
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    from dfcleanser.system.install import install_dfc_custom_css
-    install_dfc_custom_css()
-
-
-def unload_dfCleanser() :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : unload the dfcleanser notebook cells and cfg values
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    cfg.drop_config_value(cfg.CORE_CBS_KEY)
-    cfg.drop_config_value(cfg.UTILITIES_CBS_KEY)
-    cfg.drop_config_value(cfg.SCRIPTING_CBS_KEY)
-    cfg.drop_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
-    cfg.drop_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
-    cfg.drop_config_value(cfg.CURRENT_DF_DISPLAYED_KEY)
-    cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
-    cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF)
-    cfg.drop_config_value(cfg.CURRENT_TRANSFORM_DF)
 
     
 def display_system_environment(funcId,parms=None) :
@@ -151,20 +114,13 @@ def display_system_environment(funcId,parms=None) :
             initialize_notebook()
         
         if(funcId == sysm.PROCESS_CHAPTERS) :
-            #display_main_tb()
-            
-            print("PROCESS_CHAPTERS",parms)
             
             parms[0]    =   parms[0].replace("[","") 
             parms[0]    =   parms[0].replace("]","")
-            parms[1]    =   parms[1].replace("[","") 
-            parms[1]    =   parms[1].replace("]","")
             
             utils_cbs   =   parms[0].split(",")
-            script_cbs  =   parms[1].split(",")
-            
+
             utilscbs    =   []
-            scriptcbs   =   []
             
             for i in range(len(utils_cbs)) :
                 if(utils_cbs[i] == '"True"') :
@@ -172,14 +128,8 @@ def display_system_environment(funcId,parms=None) :
                 else :
                     utilscbs.append(0)
             
-            for i in range(len(script_cbs)) :
-                if(script_cbs[i] == '"True"') :
-                    scriptcbs.append(1)
-                else :
-                    scriptcbs.append(0)
-            
             from dfcleanser.system.load import reload_dfcleanser
-            reload_dfcleanser([utilscbs,scriptcbs])
+            reload_dfcleanser([utilscbs])
             
             clear_cell()
         
@@ -651,7 +601,7 @@ def clear_system_cfg_values() :
 
     cfg.drop_config_value(sysw.dfmgr_input_id+"Parms")
     cfg.drop_config_value(sysw.dfmgr_input_id+"ParmsProtect") 
-    
+
     return(True)
     
     

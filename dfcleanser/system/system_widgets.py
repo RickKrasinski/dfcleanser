@@ -233,10 +233,10 @@ dfc_core_modules_checkbox_jsList     =   [None,None,None,None,None]
 dfc_utils_modules_checkbox_title      =   "dfcleanser Utilities"
 dfc_utils_modules_checkbox_id         =   "dfc_utils_cb"
 
-dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgenfunc","dfcutilgeocode","dfcutildfsubset"]
-dfc_utils_modules_checkbox_labelList  =   ["Data Structures","Generic Function","Geocoding","Dataframe Subset"]
+dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgeocode","dfcutildfsubset","dfcscripting"]
+dfc_utils_modules_checkbox_labelList  =   ["Common","Geocoding","df Subset","Scripting"]
 
-dfc_utils_modules_checkbox_jsList     =   [None,None,None,None,None]
+dfc_utils_modules_checkbox_jsList     =   [None,None,None,None]
 
 dfc_script_modules_checkbox_title      =   "dfcleanser Scripting"
 dfc_script_modules_checkbox_id         =   "dfc_script_cb"
@@ -330,15 +330,6 @@ def display_system_main_taskbar() :
       
 def display_add_df_input() :
     
-    #from dfcleanser.common.html_widgets import new_line
-    #df_addcode  =   "from dfcleanser.common.cfg import dfc_dataframe, add_dfc_dataframe" + new_line
-    #df_addcode  =   (df_addcode + "new_dfc_df = dfc_dataframe(*df_title, USER DF, *df_notes)" + new_line)
-    #df_addcode  =   (df_addcode + "add_dfc_dataframe(new_dfc_df)")
-    
-    #fparms  =   ["",df_addcode,""]
-    #cfg.set_config_value(dfmgr_add_input_id+"Parms",fparms)
-    #cfg.drop_config_value(dfmgr_add_input_id+"ParmsProtect")
-            
     from dfcleanser.common.html_widgets import InputForm
     dfmanager_input_form = InputForm(dfmgr_add_input_id,
                                      dfmgr_add_input_idList,
@@ -388,23 +379,14 @@ def get_current_checkboxes(cbtype) :
     """
 
     if(cbtype == sysm.CORE) :
-        if(1):#cfg.get_config_value(cfg.CORE_CBS_KEY) == None) :
-            return([1,1,1,1,1])
-        else :
-            return(cfg.get_config_value(cfg.CORE_CBS_KEY))
+        return([1,1,1,1,1])
             
-    elif(cbtype == sysm.UTILITIES) :
+    else :
         if(cfg.get_config_value(cfg.UTILITIES_CBS_KEY) == None) :
-            return([0,0,0,0,0])
+            return([0,0,0,0])
         else :
             return(cfg.get_config_value(cfg.UTILITIES_CBS_KEY))
     
-    else :
-        if(cfg.get_config_value(cfg.SCRIPTING_CBS_KEY) == None) :
-            return([0])
-        else :
-            return(cfg.get_config_value(cfg.SCRIPTING_CBS_KEY))
-        
     return(None)
 
 
@@ -426,37 +408,17 @@ def display_system_chapters_taskbar() :
                                                     dfc_utils_modules_checkbox_labelList,
                                                     dfc_utils_modules_checkbox_jsList,
                                                     get_current_checkboxes(sysm.UTILITIES),
-                                                    [0,0,0,0,0])
+                                                    [0,0,0,0])
     
     if(not (cfg.get_dfc_mode() == cfg.INLINE_MODE)) :
         dfc_utils_modules_checkbox.set_rows_count([2,2])
     
-    dfc_utils_modules_heading_html       =   "<div>dfcleanser Utilities</div>"
+    dfc_utils_modules_heading_html       =   "<div>dfcleanser Utilities</div><br>"
     dfc_utils_modules_checkbox_html      =   dfc_utils_modules_checkbox.get_html()
         
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [dfc_utils_modules_heading_html,dfc_utils_modules_checkbox_html]
 
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("dfcleanser-chapters-pop-up-wrapper",gridclasses,gridhtmls)
-    
-    dfc_script_modules_checkbox     =  CheckboxGroupForm(dfc_script_modules_checkbox_id,
-                                                         dfc_script_modules_checkbox_idList,
-                                                         dfc_script_modules_checkbox_labelList,
-                                                         dfc_script_modules_checkbox_jsList,
-                                                         get_current_checkboxes(sysm.SCRIPTING),
-                                                         [0])
-    
-    print("\n")
-    dfc_script_modules_heading_html       =   "<div>dfcleanser Scripting</div>"
-    
-    dfc_script_modules_checkbox_html      =   dfc_script_modules_checkbox.get_html()
-
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [dfc_script_modules_heading_html,dfc_script_modules_checkbox_html]
-    
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
     else :
@@ -797,11 +759,11 @@ def show_libs_info():
                                      "pyodbc","pymssql","SQLite3","psycopg2","cx-oracle",
                                      "geopy","googlemaps","arcgis"]
     
-    testedmoduleVersions        =   ["3.7.0","7.2.0","7.4.2","5.1.0","5.7.2",
-                                     "0.23.4","0.20.1","3.0.2","1.15.4","1.1.0",
-                                     "2.0.9","1.2.14","0.9.2","8.0.12",
-                                     "4.0.22","2.1.4","3.8.6","2.7.5","6.4.1",
-                                     "1.17.0","2.5.1","1.5.1"]
+    testedmoduleVersions        =   ["3.7.3","7.4.0","7.4.2","5.1.0","5.7.8",
+                                     "0.24.2","0.20.3","3.0.3","1.16.2","1.2.1",
+                                     "2.0.9","1.3.1","0.9.3","8.0.16",
+                                     "4.0.26","2.1.4","3.8.6","2.8.2","7.1.3",
+                                     "1.19.0","2.5.1","1.6.1"]
 
     installedmoduleVersions     =   []
 
@@ -934,6 +896,9 @@ def show_libs_info():
         libsrow = []
         libsrow.append(str(testedModules[i]))
         libsrow.append(str(testedmoduleVersions[i]))
+        if(installedmoduleVersions[i] == "-1") :
+            installedmoduleVersions[i] = "not installed"
+
         libsrow.append(str(installedmoduleVersions[i]))
         
         libsRows.append(libsrow)
@@ -941,9 +906,9 @@ def show_libs_info():
     colorList = []    
     for i in range(len(testedModules)) :
         colorRow = []
-        if(installedmoduleVersions[i] == "-1") :
-            installedmoduleVersions[i] == "not installed"
-            colorRow = [sysm.Yellow,sysm.Yellow,sysm.Yellow]
+        if(installedmoduleVersions[i] == "not installed") :
+            print("not installed",i,installedmoduleVersions[i])
+            colorRow = [sysm.Yellow,sysm.Yellow,sysm.Red]
         elif(installedmoduleVersions[i] == "unknown") :
             colorRow = [sysm.Green,sysm.Green,sysm.Yellow]
         elif(testedmoduleVersions[i] > installedmoduleVersions[i]) :
@@ -964,8 +929,14 @@ def show_libs_info():
     libs_table.set_color(True)
     libs_table.set_colorList(colorList)
     libs_table.set_small(True)
-    libs_table.set_smallwidth(99)
-    libs_table.set_smallmargin(2)
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        libs_table.set_smallwidth(99)
+        libs_table.set_smallmargin(2)
+    else :
+        libs_table.set_smallwidth(98)
+        libs_table.set_smallmargin(2)
+        
     libs_table.set_checkLength(False)
     libs_table.set_border(False)
 
@@ -987,9 +958,15 @@ def show_setup_notes():
     * --------------------------------------------------------
     """
     
-    #displayHeading("dfcleanser Notes",4)
-    #print("\n")
+    title       =   "Setup Notes"
+    ptitles     =   ["Notebook Name","Notebook Path","dfcleanser path"]
+    pvalues     =   [cfg.get_notebook_name(),cfg.get_notebook_path(),cfg.get_dfcleanser_location()]
     
+    from dfcleanser.common.common_utils import displayParms
+    parms_html      =   displayParms(title,ptitles,pvalues,cfg.System_ID,None,0,False,11)
+    
+    return(parms_html)
+   
     setupNotes = []
     nbname = cfg.get_notebook_name()
     if(not (nbname == None)) :
@@ -997,7 +974,7 @@ def show_setup_notes():
     nbpath = cfg.get_notebook_path()    
     if(not (nbpath == None)) :
         setupNotes.append("Notebook Path" + get_html_spaces(23) + ":&nbsp;&nbsp;" + str(nbpath))
-    import jupyter_core
+    #import jupyter_core
     setupNotes.append("Notebook Path" + get_html_spaces(2) + ":&nbsp;&nbsp;</br>&nbsp;&nbsp;" + cfg.get_notebookPath())
     setupNotes.append("Notebook Name" + get_html_spaces(24) + ":&nbsp;&nbsp;" + cfg.get_notebookName())
     setupNotes.append("dfcleanser path" + get_html_spaces(12) + ":&nbsp;&nbsp;" + cfg.get_dfcleanser_location())
