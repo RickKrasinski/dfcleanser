@@ -15,7 +15,7 @@ import dfcleanser.sw_utilities.sw_utility_bulk_geocode_control as subgc
 
 import dfcleanser.common.cfg as cfg
 
-from dfcleanser.common.table_widgets import  (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT, 
+from dfcleanser.common.table_widgets import  (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_DOWN, 
                                               get_df_describe_table, get_stats_table)   
 from dfcleanser.common.html_widgets import   (addattribute, addstyleattribute, new_line, 
                                               InputForm, ButtonGroupForm)
@@ -566,7 +566,7 @@ def get_bulk_parms_table_html(geocid,geotype,runParms) :
     parms_table.set_tabletype(ROW_MAJOR)
     parms_table.set_rowspertable(28)
 
-    listHtml = get_row_major_table(parms_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(parms_table,SCROLL_DOWN,False)
 
     return(listHtml)
 

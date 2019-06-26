@@ -19,7 +19,7 @@ import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
 from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, ROW_MAJOR)
 
 from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid, is_numeric_col, 
                                             display_exception, opStatus, get_select_defaults)
@@ -2285,7 +2285,7 @@ def get_df_col_names_table(tableid,owner,callback,callbackParms=None,colsList=No
     if(not (callbackParms == None)) :
         colnames_table.set_refParm(str(callbackParms))
 
-    listHtml = get_row_major_table(colnames_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(colnames_table,SCROLL_DOWN,False)
     #print(listHtml)   
     return(listHtml)
     

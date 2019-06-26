@@ -289,7 +289,7 @@ def get_generic_function(ftitle) :
 def get_generic_function_desc(ftitle) :
     
     if(ftitle in gfm.reservedfunctions) :
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_help_doc
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_function_help_doc
         module_name   =   "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
         return(get_function_help_doc(module_name,ftitle))
         

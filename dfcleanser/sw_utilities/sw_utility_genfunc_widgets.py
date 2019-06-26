@@ -18,7 +18,7 @@ import dfcleanser.sw_utilities.sw_utility_genfunc_model as gfm
 
 from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (SCROLL_NEXT, dcTable, ROW_MAJOR, get_row_major_table)
+from dfcleanser.common.table_widgets import (SCROLL_DOWN, dcTable, ROW_MAJOR, get_row_major_table)
 
 from dfcleanser.common.common_utils import (display_generic_grid, get_parms_for_input)
 
@@ -243,7 +243,7 @@ def get_genfunc_html(forfunc=gfm.FOR_GEN_FUNC) :
     gt_table.set_notecolor(gfm.Yellow)
     
     #gt_table.dump()
-    listHtml = get_row_major_table(gt_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(gt_table,SCROLL_DOWN,False)
     
     return(listHtml)
 

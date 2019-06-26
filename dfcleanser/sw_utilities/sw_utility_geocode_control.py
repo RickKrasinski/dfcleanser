@@ -999,7 +999,10 @@ def clear_sw_utility_geocode_cfg_values() :
  
     cfg.drop_config_value(cfg.BULK_GEOCODE_MODE_KEY)
     cfg.drop_config_value("geocodeprocresultsParms")
-    cfg.drop_config_value("geocodeprocresultsParmsProtect")    
+    cfg.drop_config_value("geocodeprocresultsParmsProtect")  
+    cfg.drop_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY)
+    cfg.drop_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY)
+    cfg.drop_config_value(cfg.BULK_GEOCODE_MODE_KEY)    
     
     return
 

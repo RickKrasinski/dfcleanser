@@ -13,13 +13,15 @@ import sys
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
+import dfcleanser.sw_utilities.sw_utility_dfsubset_model as dfsm
 import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as dfsw
+
 
 from dfcleanser.common.table_widgets import drop_owner_tables
 from dfcleanser.common.html_widgets import new_line
 
 from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, get_parms_for_input,  
-                                            is_numeric_col, is_numeric_col_int, single_quote, RunningClock)
+                                            is_numeric_col, is_int_col, single_quote, RunningClock)
 
    
 """
@@ -42,69 +44,75 @@ def display_dfsubset_utility(optionId,parms=None) :
         from IPython.display import clear_output
         clear_output()
     
-        if(optionId == dfsw.DISPLAY_MAIN) :
+        if(optionId == dfsm.DISPLAY_MAIN) :
             dfsw.get_dfsubset_main_taskbar()
             clear_sw_utility_dfsubsetdata()
     
-        if(optionId == dfsw.DISPLAY_GET_SUBSET) :
+        if(optionId == dfsm.DISPLAY_GET_SUBSET) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             if(len(parmslist) > 0) :
                 cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
             dfsw.display_df_subset(get_subset_df(),False) 
         
-        elif(optionId ==  dfsw.PROCESS_GET_SUBSET) :
+        elif(optionId ==  dfsm.PROCESS_GET_SUBSET) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             if(len(parmslist) > 0) :
                 cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
             get_df_subset(parms)
             
-        elif(optionId ==  dfsw.DISPLAY_GET_SUBSET_FILTER) :
+        elif(optionId ==  dfsm.DISPLAY_GET_SUBSET_FILTER) :
             parmslist = dfsw.get_dfsubset_input_parms(parms)
             if(len(parmslist) > 0) :
                 cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
             dfsw.display_df_subset(get_subset_df(),True) 
 
-        elif(optionId ==  dfsw.DISPLAY_GET_COL_VALUES) :
+        elif(optionId ==  dfsm.DISPLAY_GET_COL_VALUES) :
             dfsw.display_df_subset(get_subset_df(),True,parms) 
 
-        elif(optionId ==  dfsw.PROCESS_GET_SUBSET_FILTERED) :
+        elif(optionId ==  dfsm.PROCESS_GET_SUBSET_FILTERED) :
             get_df_subset(parms,True)
         
-        elif(optionId ==  dfsw.DISPLAY_FILTERS) :
+        elif(optionId ==  dfsm.DISPLAY_FILTERS) :
             dfsw.display_filters(get_subset_df())
 
-        elif(optionId ==  dfsw.ADD_FILTER) :
+        elif(optionId ==  dfsm.ADD_FILTER) :
 
-            colname     =   parms[0]
-            newfilter   =   parms[1]
-            newfilter   =   newfilter.lstrip("(")
+            newfilter   =   parms[0]
             
             filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
             
             if(filtersDict == None) :
-                title   =   colname + " - filter 0"
+                title   =   "filter 0"
                 filtersDict     =   {}
-                newfilterDict   =   {"title":title, "code":newfilter}
+                newfilterDict   =   {"title":title, "code": "( " + newfilter + " )"}
                 filtersDict.update({"0":newfilterDict})
             else :
                 fid  =   len(filtersDict)
-                title   =   colname + " - filter " + str(len(filtersDict))
-                newfilterDict   =   {"title":title, "code":newfilter}
+                title   =   "filter " + str(len(filtersDict))
+                newfilterDict   =   {"title":title, "code": "( " + newfilter + " )"}
                 filtersDict.update({str(fid):newfilterDict})
             
             cfg.set_config_value(cfg.CURRENT_SUBSET_FILTERS,filtersDict)
-
-            criteria    =   cfg.get_config_value(dfsw.get_subset_filter_input_id+"Parms")
-            if(criteria == None) :
-                newcriteria = "( " + title + " )"
-            else :
-                newcriteria = criteria[4] + " AND \n" + "( " + title + " )"
+            
+            filter_keys =   list(filtersDict)
+            
+            filter_keys.sort()
+            
+            newcriteria     =   ""
+            
+            for i in range(len(filter_keys)) :
+                if(not(i==0)) :
+                    newcriteria     =   newcriteria + " & " + new_line
                 
-            #newcriteria         =   criteria.replace(newfilter,title)
-            cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",["","","","",newcriteria])
+                cfilter     =  filtersDict.get(filter_keys[i]) 
+                newcriteria     =   newcriteria + cfilter.get("code")
+
+            #newcriteria     =   newcriteria + "()"
+
+            cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",["","",newcriteria])
             dfsw.display_df_subset(get_subset_df(),True)
             
-        elif(optionId ==  dfsw.EDIT_FILTER) :
+        elif(optionId ==  dfsm.EDIT_FILTER) :
             fparms  =   get_parms_for_input(parms,dfsw.get_subset_filters_idList)
             filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
             currentfilter   =   filtersDict.get(cfg.get_config_value(cfg.CURRENT_SUBSET_FILTER))
@@ -115,17 +123,16 @@ def display_dfsubset_utility(optionId,parms=None) :
             
             dfsw.display_filters(get_subset_df())            
         
-        elif(optionId ==  dfsw.DELETE_FILTER) :
+        elif(optionId ==  dfsm.DELETE_FILTER) :
             filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
             currentfilter   =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTER)
             filtersDict.pop(currentfilter)
             dfsw.display_filters(get_subset_df())        
         
-        elif(optionId ==  dfsw.EDIT_CRITERIA) :
-            print("EDIT_CRITERIA",parms)
+        elif(optionId ==  dfsm.EDIT_CRITERIA) :
             dfsw.display_filters(get_subset_df())        
         
-        elif(optionId ==  dfsw.SELECT_FILTER) :
+        elif(optionId ==  dfsm.SELECT_FILTER) :
             
             filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
             for key in filtersDict.keys() :
@@ -133,11 +140,16 @@ def display_dfsubset_utility(optionId,parms=None) :
                     newparms    =   [parms[0],filtersDict.get(key).get("code")]
                     
             cfg.set_config_value(dfsw.get_subset_filters_id+"Parms",newparms)
-            dfsw.display_filters(get_subset_df())            
+            dfsw.display_filters(get_subset_df()) 
+            
+        elif(optionId ==  dfsm.GET_COLUMN_NAMES) :
+            parmslist = get_parms_for_input(parms,dfsw.get_subset_filter_input_idList)
+            cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",parmslist)
+            dfsw.display_df_subset(get_subset_df(),True) 
          
     else :
         dfsw.get_dfsubset_main_taskbar()
-        if(not(optionId == dfsw.DISPLAY_MAIN)) :
+        if(not(optionId == dfsm.DISPLAY_MAIN)) :
             from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
             display_inspection_data()
         
@@ -412,7 +424,7 @@ def convert_value_datatype(df,colname,value) :
     ctype = 0
         
     if(is_numeric_col(df,colname)) :
-        if(is_numeric_col_int(df,colname)) :
+        if(is_int_col(df,colname)) :
             ctype = 1
         else :
             ctype = 2
@@ -457,7 +469,7 @@ class DataframeCriteria :
 dfCriteria = DataframeCriteria()
 
         
-def get_df_criteria(criteria,opstat) :
+def get_truth_table(df_title,criteria,opstat) :
     """            
     #------------------------------------------------------------------
     #  get a dataframe criteria
@@ -469,9 +481,9 @@ def get_df_criteria(criteria,opstat) :
     #     next criteria
     #------------------------------------------------------------------
     """       
-    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe" + new_line
-    ccode   =   (ccode + "df = get_dfc_dataframe()" + new_line)
-    ccode   =   (ccode + "from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import set_criteria" + new_line)
+    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe, update_dfc_dataframe" + new_line
+    ccode   =   (ccode + "df = get_dfc_dataframe('" + df_title +"')" + new_line)
+    ccode   =   (ccode + "from dfcleanser.sw_utilities.sw_utility_dfsubset_control import set_criteria" + new_line)
     ccode   =   (ccode + "new_criteria = " + criteria + new_line)
     ccode   =   (ccode + "set_criteria(new_criteria)" + new_line)
 
@@ -486,7 +498,7 @@ def get_df_criteria(criteria,opstat) :
 
  
 def dump_indexer(indexer,display_all=False) :
-    """            
+    """
     #------------------------------------------------------------------
     #  dump the truth values of the indexer
     #
@@ -494,7 +506,7 @@ def dump_indexer(indexer,display_all=False) :
     #   display_all     -   display truths table and counts 
     #
     #------------------------------------------------------------------
-    """  
+    """
     outtext = ""
     
     totalTrues      =   0
@@ -524,164 +536,177 @@ def dump_indexer(indexer,display_all=False) :
     print("Total Falses      : ",totalFalses)
 
 
-
-def build_boolean_criteria(df,filters,inneropers,outeropers,opstat) :
+def get_filter_connectors(criteria) :
     """            
     #------------------------------------------------------------------
-    #   build boolean search criteria
+    #   get the criteria connectors
     #
-    #   df          -   dataframe
-    #   filters     -   filters 
-    #   inneropers  -   inner operators 
-    #   outeropers  -   outer operators 
-    #   opstat      -   operation status 
+    #   criteria        -   boolean criteria 
     #
     #------------------------------------------------------------------
     """
-    from datetime import datetime
-    ctime   =  datetime.now()
     
-    filterscriteriaList     =   []
+    fconnectors         =   []
     
-    import pandas as pd
-    
-    try :
-    
-        for i in range(len(filters)) :
-            
-            equalvalslist       =   []
-            notequalvalslist    =   []
-            othervalslist       =   []
-            otheroperslist      =   []
-            otherindexlist      =   []
+    if( (criteria.find("and") > -1) or (criteria.find("or") > -1) ) :
         
-            equalcriteria       =   pd.Series()
-            notequalcriteria    =   pd.Series()
-        
-            colname     =   filters[i][0].replace("'","")
-            
-            colvals     =   filters[i][1]
-            colopers    =   filters[i][2]
-            
-            for j in range(len(colopers)) :
-                if(colopers[j] == "==") :
-                    equalvalslist.append(colvals[j]) 
-                elif(colopers[j] == "!=") :
-                    notequalvalslist.append(colvals[j])
-                else :
-                    othervalslist.append(colvals[j])
-                    otheroperslist.append(colopers[j])    
-                    otherindexlist.append(j)
-            
-            #print("\nbuild_boolean_criteria ",str(i)," : equalvalslist notequalvalslist othervalslist ","\n",equalvalslist,notequalvalslist,othervalslist)
-            #print("build_boolean_criteria ",str(i)," : otheroperslist otherindexlist","\n",otheroperslist,otherindexlist)
-                
-            if(len(equalvalslist) > 0) : 
-                for k in range(len(equalvalslist)) :
-                    equalvalslist[k]    =   convert_value_datatype(df,colname,equalvalslist[k])                  
-                equalcriteria   =   df[colname].isin(equalvalslist)
-            if(len(notequalvalslist) > 0) : 
-                for k in range(len(notequalvalslist)) :
-                    notequalvalslist[k]    =   convert_value_datatype(df,colname,notequalvalslist[k])                  
-                notequalcriteria   =  (~df[colname].isin(notequalvalslist))
-            
-            #if(not(equalcriteria.empty)) :
-                #print("\nequalcriteria")
-                #dump_indexer(equalcriteria)
-            #if(not(notequalcriteria.empty)) :
-                #print("\nnotequalcriteria")
-                #dump_indexer(notequalcriteria)
-                
-            current_criteria     =   pd.Series()
-        
-            if(not(equalcriteria.empty))        :  
-                if(not(notequalcriteria.empty))     :
-                    current_criteria    =  (equalcriteria & notequalcriteria)
-                else :
-                    current_criteria    =  equalcriteria
+        for i in range(len(criteria)) :
+            if(criteria[i] == "&") :
+                fconnectors.append("&")
             else :
-                if(not(notequalcriteria.empty))     :   
-                    current_criteria    =  notequalcriteria
-            
-            for j in range(len(othervalslist)) :
-            
-                nextcriteria            =   pd.Series()
-            
-                colval          =   convert_value_datatype(df,colname,othervalslist[j])
-                nextcriteria    =   get_df_criteria("( df[" + single_quote(colname) + "] " + otheroperslist[j] + " " + str(colval) + " )",opstat)
-                
-                if((j==0) or (current_criteria.empty)) :
-                    current_criteria = nextcriteria
-                else :
-                    if(inneropers[i][j-1] == "or") :
-                        current_criteria = current_criteria | nextcriteria
-                    elif(inneropers[i][j-1] == "and") :
-                        current_criteria = current_criteria & nextcriteria
-                    else :
-                        current_criteria = current_criteria | nextcriteria
-                        
-            filterscriteriaList.append(current_criteria)
-        
-        print("build_boolean_criteria : after get criteria list",df.shape,str(datetime.now()),get_diff_secs(ctime))
-        
-        for i in range(len(filterscriteriaList))  :
-            
-            if(i == 0) :
-                final_criteria = (filterscriteriaList[0])
-            else :
-                if(outeropers[i-1] == "OR") :
-                    final_criteria = (final_criteria | filterscriteriaList[i])
-                elif(outeropers[i-1] == "AND") :
-                    final_criteria = (final_criteria & filterscriteriaList[i])
-                elif(outeropers[i-1] == "OR NOT") :
-                    final_criteria = (final_criteria | ~(filterscriteriaList[i]))
-                elif(outeropers[i-1] == "AND NOT") :
-                    final_criteria = (final_criteria & ~(filterscriteriaList[i]))
-                else :
-                    final_criteria = (final_criteria | filterscriteriaList[i])
+                if(criteria[i] == "|") :
+                    fconnectors.append("|")  
                     
-        print("build_boolean_criteria : after build indexer",df.shape,str(datetime.now()),get_diff_secs(ctime))
-        
-        #print("\n\nfinal_criteria",opstat.get_status())
-        #dump_indexer(final_criteria)
-        print("build_boolean_criteria : after dump indexer",df.shape,str(datetime.now()),get_diff_secs(ctime))
+    return(fconnectors)
+            
 
-        return(final_criteria) 
-        
-    except Exception as e:
-        opstat.store_exception("Error build_boolean_criteria ",e)
-        return(None)
-        
 
-def get_subset_from_criteria(df,criteria,csv_file_name,opstat) :
+def get_filters_criteria(criteria,opstat) :
+    """            
+    #------------------------------------------------------------------
+    #   get the criteria for a filter
+    #
+    #   criteria        -   boolean criteria 
+    #   opstat          -   status variable 
+    #
+    #------------------------------------------------------------------
+    """
+    
+    filter_connectors   =   get_filter_connectors(criteria)
+    
+    filters_list        =   []
+    final_filters_list  =   []
+    filters_sub_list    =   []
+    
+    if(criteria.find("&") > -1) :
+        
+        filters_list    =   criteria.split("&") 
+    
+        for i in range(len(filters_list)) :
+        
+            if(filters_list[i].find("|") > -1) :
+                next_sub_list    =   filters_list[i].split("|")     
+                filters_sub_list.append(next_sub_list)
+            else :
+                filters_sub_list.append(None)
+                
+    else :
+        
+       if(criteria.find("|") > -1) :   
+           filters_list    =   criteria.split("|")    
+    
+    if(len(filters_list) > 0) : 
+        
+        for i in range(len(filters_list)) :
+            if(not (filters_sub_list[i] is None)) :
+                for j in range(len(filters_sub_list[i])) :
+                    final_filters_list.append(filters_sub_list[i][j])
+            else :
+                final_filters_list.append(filters_list[i]) 
+    else :
+        final_filters_list.append(criteria)
+        
+    for i in range(len(final_filters_list)) :
+        final_filters_list[i]   =   final_filters_list[i].replace(" and "," & ")
+        final_filters_list[i]   =   final_filters_list[i].replace(" or "," | ")
+        
+    return([final_filters_list,filter_connectors])       
+       
+
+def get_subset_from_criteria(df_title,filters,filters_flag,newdf_title,csv_file_name,opstat) :
     """            
     #------------------------------------------------------------------
     #   get the dataframe subset
     #
-    #   df              -   dataframe
+    #   df_title        -   source dataframe title
     #   criteria        -   boolean criteria 
+    #   newdf           -   new df name 
     #   csv_file_name   -   file name 
     #   opstat          -   operation status 
     #
     #------------------------------------------------------------------
     """
-    from datetime import datetime
+
+    dfssubset_parms     =   get_filters_criteria(filters,opstat)
+
+    import pandas as pd
+    df                  =   cfg.get_dfc_dataframe(df_title)
+
+    truth_table         =   pd.Series()
+    truth_table_list    =   []
+    final_truth         =   pd.Series()
     
     try :
-        print("get_subset_from_criteria : start",df.shape,str(datetime.now()))
-        df = df[criteria]
-        print("get_subset_from_criteria : end",df.shape,str(datetime.now()))
+        
+        if(not (filters_flag)) :
+            
+            if(newdf_title is None) :
+                df      =   df[filters]
+            else :
+                new_df  =   df[filters]    
+            
+        else : 
+            
+            criteria        =   dfssubset_parms[0]
+            criteria_ops    =   dfssubset_parms[1]
+            
+            for i in range(len(criteria)) :
+            
+                truth_table     =    get_truth_table(df_title,criteria[i],opstat)
+                truth_table_list.append(truth_table)
+                
+            for i in range(len(criteria)) :
+                if(i==0) :
+                    final_truth     =    truth_table_list[0] 
+                else :
+                    if(criteria_ops[(i-1)] == "&") :
+                        final_truth     =    final_truth & truth_table_list[i]
+                    else :
+                        final_truth     =    final_truth | truth_table_list[i]
+                        
+            if(newdf_title is None) :
+                #print("\n\nafter final truth before final apply to df")
+                #print("before final_truth",type(df),len(df),len(df.columns))
+                df[final_truth]
+                #print("after final_truth",type(df),len(df),len(df.columns))
+            else :
+                #print("before final truth apply : newdf ",type(df),len(df),len(df.columns))
+                new_df  =   df[final_truth].copy()
+                #print("after final truth apply : newdf ",type(new_df),len(new_df),len(new_df.columns))
+            
+                from dfcleanser.common.cfg import dfc_dataframe,add_dfc_dataframe
+                subsetparms     =   cfg.get_config_value(dfsw.get_subset_input_id + "Parms")
+            
+                new_dfcnotes    =   "Subset dataframe from " + subsetparms[0] + "\n criteria : \n" + filters
+                new_dfcdf       =   dfc_dataframe(newdf_title,new_df,new_dfcnotes)
+                add_dfc_dataframe(new_dfcdf)
 
-        if(not (csv_file_name == None)) :
-            df.to_csv(csv_file_name)
             
         return(df)
         
     except Exception as e:
         opstat.store_exception("Error getting subset from citeria\n ",e)
 
+    if(opstat.get_status()) :
+        
+        if(not (csv_file_name == None)) :
+            
+            try :
+                df.to_csv(csv_file_name)
+            except Exception as e:
+                opstat.store_exception("Error saving subset as csv file\n ",e)
+        
 
 def get_diff_secs(then) :
+    """            
+    #------------------------------------------------------------------
+    #   get datetime diff in secs
+    #
+    #   then       -   start time 
+    #
+    #------------------------------------------------------------------
+    """  
+
     from datetime import datetime
     now     =   datetime.now()
     diff    =   now-then 
@@ -701,190 +726,84 @@ def get_df_subset(parms,filtered=False,display=True) :
     #------------------------------------------------------------------
     """  
 
-    print("get_df_subset",parms)
-
-    timeit  =   True
+    from datetime import datetime
+    starttime   =  datetime.now()
     
-    dfsparms    =   cfg.get_config_value(dfsw.get_subset_input_id+"Parms")
-    df          =   cfg.get_dfc_dataframe(dfsparms[0])
-    
-    if(timeit) :
-        from datetime import datetime
-        starttime   =  datetime.now()
-        if(timeit) : print("\nget_df_subset : start",df.shape,str(starttime),"\n")
-
     opstat  =   opStatus()
 
-    # get the subset control parms
-    filter_parms    =   []
-    no_filters      =   True
-    
-    col_names       =   []
-    
-    if(not filtered) :
-        subsetparms     =   dfsw.get_dfsubset_input_parms(parms)
-        cfg.set_config_value(dfsw.get_subset_input_id+"Parms",subsetparms)
-    else :
-        subsetparms     =   cfg.get_config_value(dfsw.get_subset_input_id+"Parms")
-        criteria        =   dfsw.get_dfsubset_filter_input_parms(parms)[4]
-        criteria        =   criteria.replace('\n',' ')
+    subsetparms         =   cfg.get_config_value(dfsw.get_subset_input_id+"Parms")
+    filterparms         =   dfsw.get_dfsubset_filter_input_parms(parms)
+    filterparms[2]      =   filterparms[2].replace("\n","")
 
-        filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
-            
-
-        for key in filtersDict.keys():  
-            
-            sfilter         =   filtersDict.get(key)
-
-            criteria        =   criteria.replace(sfilter.get("title"),sfilter.get("code"))
-            final_criteria  =   criteria
-
-        filter_parms    =   parse_subset_filters(criteria,opstat)
-
-    if( (subsetparms == None) or (len(subsetparms) == 0) ):
-        col_names       =   None
-        keep_flag       =   True
-        csv_file_name   =   None
+    if(len(subsetparms[0]) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("input_dataframe is not set")
+        
     else :
         
-        col_names = cfg.get_cfg_parm_from_input_list(dfsw.get_subset_input_id,
-                                                     "column_names_list",
-                                                     dfsw.get_subset_input_labelList)
+        if(not filtered) :   
+            if(len(subsetparms[2]) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("columns_names_list is not set")
         
-        if(len(col_names) > 0) :  
-            col_names   =   col_names.rstrip(" ")
-            col_names   =   col_names.lstrip(" ")
-            col_names   =   col_names.replace("'","")
-            col_names   =   col_names.split(",")
-            
-            for i in range(len(col_names)) :
-                #col_names[i]    =   col_names[i].replace("'","")
-                col_names[i]    =   col_names[i].rstrip(" ")
-                col_names[i]    =   col_names[i].lstrip(" ")        
         else :
-            col_names   =   None
-
-        keepflag = cfg.get_cfg_parm_from_input_list(dfsw.get_subset_input_id,
-                                                    "keep_column_names_flag",
-                                                    dfsw.get_subset_input_labelList)
-        keep_flag   =   True
-        if(not (keepflag == None)) :
-            if(len(keepflag) > 0) :
-                if(keepflag == "False") :
-                    keep_flag       =   False
-        
-        filename = cfg.get_cfg_parm_from_input_list(dfsw.get_subset_input_id,
-                                                    "csv_file_name",
-                                                    dfsw.get_subset_input_labelList)
-        if(len(filename) > 0) :
-            csv_file_name   =   filename
-        else : 
-            csv_file_name   =   None
-        
-    if(len(filter_parms) > 0) :   
-        no_filters  =   False
-    
-    if(timeit) :    print("\nget_df_subset : get filter parms",df.shape,get_diff_secs(starttime),no_filters)
-
+            
+            if(len(filterparms[2]) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("subset_selection_criteria is not set")
+            
     if(opstat.get_status()) :
-    
+        
         if(display) :
+            
             clock = RunningClock()
             clock.start()
-    
+
         try :
-
-            if(opstat.get_status()) :
-                if(timeit) :    print("get_df_subset : drop cols ",df.shape,get_diff_secs(starttime))
-                # dfrop cols if requested
-                if(not (col_names == None)) :
-                    if(len(col_names) > 0) :
-                        drop_columns    =   []
-                        
-                        if(keep_flag) :
-
-                            columns = df.columns.tolist()
-
-                            for i in range(len(columns)) :
-                                if(not(columns[i] in col_names)) :
-                                    drop_columns.append(columns[i])
-                                    
-                        else :
-                            drop_columns = col_names
-                            
-                        for i in range(len(drop_columns)) :
-                            df = df.drop([drop_columns[i]],axis=1)#,inplace=True)
-                            
-                        if(timeit) :    print("get_df_subset : after drop cols ",df.shape,get_diff_secs(starttime))
+            
+            if(not filtered) :
+                subset_query    =   subsetparms[2]
+            
+            else :
+                subset_query    =   filterparms[2]
                 
-                if(not (no_filters)) :
-                    if(timeit) :    print("get_df_subset : build_and_validate_search_criteria",df.shape,get_diff_secs(starttime))
-                    goodFilters = build_and_validate_search_criteria(col_names,
-                                                                     keep_flag,
-                                                                     filter_parms[0],
-                                                                     filter_parms[1],
-                                                                     filter_parms[2],
-                                                                     opstat) 
-                    if(timeit) :    print("get_df_subset : after build_and_validate_search_criteria",df.shape,get_diff_secs(starttime))
-                    if(opstat.get_status()) :
-                
-                        if(timeit) :    print("get_df_subset : build_boolean_criteria ",df.shape,get_diff_secs(starttime))
-                        criteria = build_boolean_criteria(df,goodFilters,filter_parms[1],filter_parms[2],opstat) 
-                        if(timeit) :    print("get_df_subset : after build_boolean_criteria ",df.shape,get_diff_secs(starttime))
-                        
-                        if(opstat.get_status()) :
-                            
-                            if(timeit) :    print("get_df_subset : get_subset_from_criteria",df.shape,get_diff_secs(starttime))
-                            df = get_subset_from_criteria(df,criteria,csv_file_name,opstat)
-                            if(timeit) :    print("get_df_subset : after get_subset_from_criteria",df.shape,get_diff_secs(starttime))
-
-        except Exception as e:
-            opstat.store_exception("Error processing dataframe subset ",e)
+            if(len(subsetparms[1]) > 0) :
+                get_subset_from_criteria(subsetparms[0],subset_query,filtered,subsetparms[1],subsetparms[4],opstat)
+                out_df_title  =   subsetparms[1]
+            else :
+                get_subset_from_criteria(subsetparms[0],subset_query,filtered,None,subsetparms[4],opstat)
+                out_df_title  =   subsetparms[0]
+            
+        except Exception :
+            opstat.set_status(False)
+            opstat.set_errorMsg("unable to run df subset")
 
         if(display) :
             clock.stop()
-
-    
-    if(timeit) :    print("\nget_subset_data end",df.shape,get_diff_secs(starttime),"\n")
        
     if(opstat.get_status()) : 
         
-        out_df = cfg.get_cfg_parm_from_input_list(dfsw.get_subset_input_id,
-                                                  "output_dataframe",
-                                                   dfsw.get_subset_input_labelList)
-
-        if(len(out_df) > 0) :
-            outdf   =   cfg.dfc_dataframe(out_df,df)
-            cfg.add_dfc_dataframe(outdf)
-        else :
-            out_df = cfg.get_cfg_parm_from_input_list(dfsw.get_subset_input_id,
-                                                      "input_dataframe",
-                                                      dfsw.get_subset_input_labelList)
-            outdf   =   cfg.dfc_dataframe(out_df,df)
-            cfg.add_dfc_dataframe(outdf)
-        
         if(display) :
+            
             cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
             dfsw.get_dfsubset_main_taskbar()
 
             print("\n")
             display_status("Dataframe subset retrieved successfully ")
-            if(not(no_filters)) :
-                filters = final_criteria
-            else :
-                filters = None
-                
-            dfsw.display_df_subset_status(df,outdf.get_title(),csv_file_name,filters)
+
+            elapsed_time    =   get_diff_secs(starttime)
+            dfsw.display_df_subset_status(out_df_title,subsetparms[4],elapsed_time,subset_query)
         
     else :
         
         if(display) :
             from IPython.display import clear_output
-            if(not timeit) :    clear_output()
-        
+            clear_output()
+            
             cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
             dfsw.display_df_subset(cfg.get_dfc_dataframe(),False) 
             display_exception(opstat)
+
 
 """
 #------------------------------------------------------------------

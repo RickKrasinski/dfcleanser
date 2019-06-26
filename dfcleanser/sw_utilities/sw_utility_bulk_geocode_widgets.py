@@ -22,7 +22,7 @@ from dfcleanser.common.common_utils import (display_generic_grid, opStatus,
                                             get_parms_for_input, get_select_defaults)
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, 
-                                             SCROLL_NEXT, ROW_MAJOR)
+                                             SCROLL_DOWN, ROW_MAJOR)
 
 
 
@@ -865,7 +865,7 @@ def get_languages_table(tableid,owner,callback) :
     languages_table.set_tabletype(ROW_MAJOR)
     languages_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(languages_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(languages_table,SCROLL_DOWN,False)
 
     return(listHtml)
 
@@ -931,7 +931,7 @@ def get_regions_table(tableid,owner,callback,countriesFlag=False) :
     regions_table.set_tabletype(ROW_MAJOR)
     regions_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(regions_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(regions_table,SCROLL_DOWN,False)
 
     return(listHtml)
 
@@ -992,7 +992,7 @@ def get_categories_table(tableid,owner,callback) :
     categories_table.set_tabletype(ROW_MAJOR)
     categories_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(categories_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(categories_table,SCROLL_DOWN,False)
         
     return(listHtml)
 
@@ -1053,7 +1053,7 @@ def get_address_components_table(tableid,owner,callback) :
     addrcomps_table.set_tabletype(ROW_MAJOR)
     addrcomps_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(addrcomps_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(addrcomps_table,SCROLL_DOWN,False)
 
     return(listHtml)
 
@@ -1108,7 +1108,7 @@ def get_result_types_table(tableid,owner,callback) :
     restypes_table.set_tabletype(ROW_MAJOR)
     restypes_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(restypes_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(restypes_table,SCROLL_DOWN,False)
         
     return(listHtml)
 
@@ -1165,7 +1165,7 @@ def get_location_types_table(tableid,owner,callback) :
     loctypes_table.set_tabletype(ROW_MAJOR)
     loctypes_table.set_rowspertable(20)
 
-    listHtml = get_row_major_table(loctypes_table,SCROLL_NEXT,False)
+    listHtml = get_row_major_table(loctypes_table,SCROLL_DOWN,False)
 
     return(listHtml)
 

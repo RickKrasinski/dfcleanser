@@ -23,10 +23,27 @@ CLEAR_DICT_OPTION           =   8
 SELECT_LIST_OPTION          =   9
 SELECT_DICT_OPTION          =   10
 
+GENFUNC_OPTION              =   11
+SAVE_FUNCTION               =   12
+DELETE_FUNCTION             =   13
+CLEAR_FUNCTION              =   14
+RETURN_FUNCTION             =   15
+
+PROCESS_FUNCTION            =   16
+SELECT_FUNCTION             =   17
+
 DICT_ID         =   0
 LIST_ID         =   1
 
 ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes","ArcGIS_Categories"]
 ReservedLists   =   ["columnNames", "Google_Address_Components", "Google_Location_Types"]
 
+
+FOR_ADD_COLUMNS                     =   0
+FOR_APPLY_FN                        =   1
+FOR_GEN_FUNC                        =   2
+
+Red             =   "#FAA78F"
+Green           =   "#8FFAC0"
+Yellow          =   "#FAFB95"
 

@@ -15,8 +15,9 @@ this = sys.modules[__name__]
 import json 
 
 import dfcleanser.common.cfg as cfg
-import dfcleanser.sw_utilities.sw_utility_widgets as suww
+import dfcleanser.sw_utilities.sw_utility_widgets as swuw
 import dfcleanser.sw_utilities.sw_utility_model as swum
+import dfcleanser.sw_utilities.sw_utility_genfunc_functions as swgf
 
 from dfcleanser.common.html_widgets import (new_line)
 from dfcleanser.common.table_widgets import (drop_owner_tables)
@@ -43,25 +44,31 @@ def process_sw_utilities(optionId,parms=None) :
     clear_output()
 
     if(not cfg.check_if_dc_init()) :
-        suww.get_sw_utilities_main_taskbar()
+        swuw.get_sw_utilities_main_taskbar()
         clear_sw_utility_data()
         return
     
     opstat = opStatus()
     
     if (optionId == swum.MAIN_OPTION) :
-        suww.get_sw_utilities_main_taskbar()
+        swuw.get_sw_utilities_main_taskbar()
         clear_sw_utility_data()
         return
 
     if (optionId == swum.LIST_OPTION) :
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.LIST_ID)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.LIST_ID)
         return
         
     elif (optionId == swum.DICT_OPTION) :
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.DICT_ID)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.DICT_ID)
+        return
+
+    elif (optionId == swum.GENFUNC_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+        cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
+        swuw.display_generic_functions()
         return
 
     elif (optionId == swum.SELECT_LIST_OPTION) :
@@ -86,15 +93,15 @@ def process_sw_utilities(optionId,parms=None) :
                 listtext    =   str(sellist)
         
             listparms = [parms, listtext, ""]
-            cfg.set_config_value(suww.build_list_utility_input_id+"Parms",listparms)
+            cfg.set_config_value(swuw.build_list_utility_input_id+"Parms",listparms)
         
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.LIST_ID)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.LIST_ID)
         
         if(not(opstat.get_status())) :
             display_status(opstat.get_errorMsg())            
             
-        cfg.drop_config_value(suww.build_list_utility_input_id+"Parms")
+        cfg.drop_config_value(swuw.build_list_utility_input_id+"Parms")
         
         return
 
@@ -116,16 +123,16 @@ def process_sw_utilities(optionId,parms=None) :
                 dicttext = (dicttext + "}")
         
         dictparms =  [parms, dicttext,""]
-        cfg.set_config_value(suww.build_dict_utility_input_id+"Parms",dictparms)
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.DICT_ID)
+        cfg.set_config_value(swuw.build_dict_utility_input_id+"Parms",dictparms)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.DICT_ID)
         
-        cfg.drop_config_value(suww.build_dict_utility_input_id+"Parms")
+        cfg.drop_config_value(swuw.build_dict_utility_input_id+"Parms")
         
         return
         
     if (optionId == swum.ADD_LIST_OPTION) :
-        fparms = suww.get_sw_utilities_list_inputs(parms)
+        fparms = swuw.get_sw_utilities_list_inputs(parms)
 
         filename = fparms[2]
         listname = fparms[0]
@@ -154,8 +161,8 @@ def process_sw_utilities(optionId,parms=None) :
                 except Exception as e:
                     opstat.store_exception("Unable to save list " + str(id),e)
             
-            suww.get_sw_utilities_main_taskbar()
-            suww.display_list_dict(swum.LIST_ID)
+            swuw.get_sw_utilities_main_taskbar()
+            swuw.display_list_dict(swum.LIST_ID)
             
         else :
             opstat.set_status(False) 
@@ -167,7 +174,7 @@ def process_sw_utilities(optionId,parms=None) :
         return
         
     if (optionId == swum.ADD_DICT_OPTION) :
-        fparms = suww.get_sw_utilities_dict_inputs(parms)
+        fparms = swuw.get_sw_utilities_dict_inputs(parms)
         
         filename = fparms[2]
         dictname = fparms[0]
@@ -206,8 +213,8 @@ def process_sw_utilities(optionId,parms=None) :
                 except Exception as e:
                     opstat.store_exception("Unable to save dict " + str(id),e)
             
-            suww.get_sw_utilities_main_taskbar()
-            suww.display_list_dict(swum.DICT_ID)
+            swuw.get_sw_utilities_main_taskbar()
+            swuw.display_list_dict(swum.DICT_ID)
             
         else :
             opstat.set_status(False) 
@@ -234,8 +241,8 @@ def process_sw_utilities(optionId,parms=None) :
             else :
                 delete_List(parms)
 
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.LIST_ID)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.LIST_ID)
         
         if(not (opstat.get_status())) :
             display_exception(opstat)
@@ -258,13 +265,74 @@ def process_sw_utilities(optionId,parms=None) :
             else :
                 delete_Dict(parms)
                 
-        suww.get_sw_utilities_main_taskbar()
-        suww.display_list_dict(swum.DICT_ID)
+        swuw.get_sw_utilities_main_taskbar()
+        swuw.display_list_dict(swum.DICT_ID)
         
         if(not (opstat.get_status())) :
             display_exception(opstat)
             
         return
+
+    elif(optionId == swum.PROCESS_FUNCTION) : 
+        process_generic_function(parms)
+        return
+
+    elif(optionId == swum.SELECT_FUNCTION) : 
+        swuw.display_generic_function_inputs(parms)
+        return
+
+
+def process_generic_function(parms) :
+
+    funcid     =   parms[0]
+
+    if(funcid == swum.SAVE_FUNCTION) :
+        
+        #fparms      =   gfw.get_genfunc_input_parms(parms[1])
+        
+        gt_module   =   parms[1]
+        newcode     =   parms[3]
+        
+        gt_title_start      =   newcode.find("def ")
+        gt_title_end        =   newcode.find("(")
+        gt_title            =   newcode[(gt_title_start+4):(gt_title_end)]
+
+        if( (len(gt_title) > 0) ) : 
+            
+            if(not(gt_title in swum.reservedfunctions)) :
+
+                if(not(swgf.get_generic_function(gt_title) == None)) :
+                    swgf.delete_generic_function(gt_title)
+                
+                newfunc     =   swgf.genericFunction(gt_module,gt_title,newcode)
+                swgf.add_generic_function(newfunc)
+                #cfg.set_config_value(gfw.gen_function_input_id+"Parms",[gt_module,gt_title,newcode,""])
+            
+        swuw.display_generic_function_inputs(gt_title)
+    
+    elif(funcid == swum.DELETE_FUNCTION) :
+        print("DELETE_FUNCTION",parms)        
+        ftitle    =  parms[2]
+        
+        if(not (ftitle in swum.reservedfunctions)) :
+            swgf.delete_generic_function(ftitle)
+        
+        cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
+        cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)
+
+        swuw.display_generic_function_inputs(None)
+        
+        if(ftitle in swum.reservedfunctions) :
+            print("\n")
+            display_status("Can not delete system function " + ftitle)
+        
+    if(funcid == swum.CLEAR_FUNCTION) :
+        
+        print("CLEAR_FUNCTION",parms)
+        cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)    
+        cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
+        
+        swuw.display_generic_function_inputs(None)
 
 
 def clear_sw_utility_data() :
@@ -273,6 +341,8 @@ def clear_sw_utility_data() :
     clear_sw_utility_cfg_values()
     
 def clear_sw_utility_cfg_values() :
+    cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
+    cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)    
 
     return
 

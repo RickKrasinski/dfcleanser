@@ -12,7 +12,7 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, ROW_MAJOR)
 from dfcleanser.common.common_utils import (get_dfc_dataframe)
 import dfcleanser.common.cfg as cfg
 
@@ -855,7 +855,7 @@ class BulkGeocodeResults:
         results_table.set_tabletype(ROW_MAJOR)
         results_table.set_rowspertable(ERRORS_TABLE_SIZE)
 
-        listHtml = get_row_major_table(results_table,SCROLL_NEXT,False)
+        listHtml = get_row_major_table(results_table,SCROLL_DOWN,False)
 
         return(listHtml)
 
@@ -1033,7 +1033,7 @@ class BulkGeocodeErrorLog:
         errors_table.set_tabletype(ROW_MAJOR)
         errors_table.set_rowspertable(ERRORS_TABLE_SIZE)
 
-        listHtml = get_row_major_table(errors_table,SCROLL_NEXT,False)
+        listHtml = get_row_major_table(errors_table,SCROLL_DOWN,False)
 
         return(listHtml)
         
