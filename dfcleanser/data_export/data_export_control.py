@@ -24,9 +24,6 @@ from dfcleanser.common.common_utils import (get_function_parms, opStatus, Runnin
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
 
 
-from dfcleanser.common.html_widgets import (displayHeading)
-
-
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
 from IPython.display import clear_output
@@ -56,8 +53,12 @@ import time
 #   pass through to display widgets
 #--------------------------------------------------------------------------
 """
-def display_export_forms(id, detid=0, notes=False) :
-    dew.display_dc_export_forms(id, detid, notes)
+def display_export_forms(exportid, detid=0, notes=False) :
+    
+    if(exportid == 0) :
+        clear_data_export_data()    
+
+    dew.display_dc_export_forms(exportid, detid, notes)
     
 def display_export_sql_details_form(cmd,dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
@@ -98,8 +99,6 @@ def process_export_form(formid, parms, display=True) :
             
             clock = RunningClock()
             clock.start()
-    
-            displayHeading("Exporting",4)
     
         if (formid == dem.CSV_EXPORT) :
             fparms      =   dew.get_csv_export_inputs(parms)

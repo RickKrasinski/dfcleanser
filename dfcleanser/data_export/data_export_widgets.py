@@ -15,9 +15,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_export.data_export_model as dem
 
-from dfcleanser.common.html_widgets import (display_composite_form, maketextarea,
-                                            get_input_form, 
-                                            ButtonGroupForm, InputForm)
+from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.common_utils import (opStatus, display_exception, 
                                             display_notes, display_status, display_inline_help, get_parms_for_input,
@@ -347,28 +345,35 @@ pandas_export_sqltable_reqList      =   [0,1]
 custom_export_title             =   "Custom Export Code"
 custom_export_id                =   "customExport"
 
-custom_export_idList            =   ["customExportCode",None,None,None,None,None,None]
+custom_export_idList            =   ["customexporttitle",
+                                     "customexportcode",
+                                     "customexportscript",
+                                     None,None,None,None]
 
-custom_export_labelList         =   ["Custom Export Code",
-                                     "New </br>Custom </br>Export",
-                                     "Run </br>Custom </br>Export",
-                                     "Save </br>Custom </br>Export",
-                                     "Drop </br>Custom </br>Export",
+custom_export_labelList         =   ["dataframe_title",
+                                     "custom_export_code",
+                                     "add_to_script_file",
+                                     "Run Custom </br>Export Code",
+                                     "Clear",
                                      "Return","Help"]
 
-custom_export_typeList          =   [maketextarea(8),"button","button","button","button","button","button"]
+custom_export_typeList          =   ["select",
+                                     maketextarea(8),
+                                     "select",
+                                     "button","button","button","button"]
 
-custom_export_placeholderList   =   ["# custom export",None,None,None,None,None,None]
+custom_export_placeholderList   =   ["select dataframe to export",
+                                     "# custom export",
+                                     "add export to script",
+                                     None,None,None,None]
                                      
-custom_export_jsList            =   [None,
+custom_export_jsList            =   [None,None,None,
                                      "custom_export_callback(0)",
                                      "custom_export_callback(1)",
                                      "custom_export_callback(2)",
-                                     "custom_export_callback(3)",
-                                     "custom_export_callback(4)",
                                      "displayhelp"+str(dfchelp.EXPORT_CUSTOM_ID)+")"]
 
-custom_export_reqList           =   [0]
+custom_export_reqList           =   [0,1,2]
 
 """
 #--------------------------------------------------------------------------
@@ -737,8 +742,9 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
     # add the main import task bar
     if (exid == dem.EXPORT_TB_ONLY) :
 
-        display_export_main_taskbar()  
-        display_data_select_df()
+        display_export_main_taskbar()
+        if(cfg.is_a_dfc_dataframe_loaded()) :
+            display_data_select_df()
 
     # add the pandas import task bar or pandas details form 
     elif ( (exid == dem.EXPORT_PANDAS_TB_ONLY) or 
@@ -835,13 +841,13 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
         else : 
             
             # add the custom import form 
-            exportCustomDetailsForm     =   get_input_form(InputForm(custom_export_id,
-                                                                     custom_export_idList,
-                                                                     custom_export_labelList,
-                                                                     custom_export_typeList,
-                                                                     custom_export_placeholderList,
-                                                                     custom_export_jsList,
-                                                                     custom_export_reqList))
+            exportCustomDetailsForm     =   InputForm(custom_export_id,
+                                                      custom_export_idList,
+                                                      custom_export_labelList,
+                                                      custom_export_typeList,
+                                                      custom_export_placeholderList,
+                                                      custom_export_jsList,
+                                                      custom_export_reqList)
 
             if(notes) :
                 customNotes =  ["To create custom export code in the code cell below hit 'New Custom Export'",
@@ -856,8 +862,50 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
                 print("\n")
                 display_inline_help(customNotes,92)
         
-            # display the composite form
-            display_composite_form([exportCustomDetailsForm])
+            selectDicts     =   []
+            
+            df_list     =   cfg.get_dfc_dataframes_select_list()
+            selectDicts.append(df_list)
+            
+            flags  =   {"default":"False","list":["True","False"]}
+            selectDicts.append(flags)
+            
+            get_select_defaults(exportCustomDetailsForm,
+                                custom_export_id,
+                                custom_export_idList,
+                                custom_export_typeList,
+                                selectDicts)
+
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                exportCustomDetailsForm.set_shortForm(True)
+                exportCustomDetailsForm.set_gridwidth(640)
+                exportCustomDetailsForm.set_custombwidth(110)
+            else :
+                exportCustomDetailsForm.set_gridwidth(480)
+                exportCustomDetailsForm.set_custombwidth(100)
+
+            exportCustomDetailsForm.set_fullparms(True)
+        
+            from dfcleanser.common.html_widgets import new_line
+            custom_code     =   "# add USER CODE to export the df" + new_line + new_line
+            custom_code     =   (custom_code + "from dfcleanser.common.cfg import get_dfc_dataframe" + new_line)
+            custom_code     =   (custom_code + "df = get_dfc_dataframe(dataframe_title)" + new_line + new_line)
+            custom_code     =   (custom_code + "# USER CODE" + new_line )
+        
+            cfg.set_config_value(custom_export_id+"Parms",["",custom_code,""])                    
+    
+            custom_export_html = ""
+            custom_export_html = exportCustomDetailsForm.get_html() 
+    
+            custom_export_heading_html =   "<div>Custom Export</div><br>"
+
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+            gridhtmls       =   [custom_export_heading_html,custom_export_html]
+
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
 
 
 def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
