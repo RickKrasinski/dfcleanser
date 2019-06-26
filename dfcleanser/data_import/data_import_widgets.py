@@ -16,11 +16,9 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_import.data_import_model as dim
 
-from dfcleanser.common.html_widgets import (maketextarea,  
-                                            get_input_form, display_composite_form,
-                                            opStatus, ButtonGroupForm, InputForm)
+from dfcleanser.common.html_widgets import (maketextarea, opStatus, ButtonGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_NEXT, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, ROW_MAJOR)
 
 
 from dfcleanser.common.common_utils import (display_exception, display_status, 
@@ -846,7 +844,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         pandas_input_html = ""
         pandas_input_html = pandas_input_form.get_html() 
     
-        pandas_input_heading_html =   "<div>Custom Import</div>"
+        pandas_input_heading_html =   "<div>Custom Import</div><br>"
 
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
         gridhtmls       =   [pandas_input_heading_html,pandas_input_html]
@@ -856,9 +854,6 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         else :
             display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
             
-            
-        
-        #display_composite_form([get_input_form()])
 
 
 def display_dc_sql_connector_forms(sqlimportid,dblibid) :
@@ -1096,13 +1091,42 @@ def display_sql_table_custom_forms(sqlimportid) :
         
         display_import_main_taskbar() 
         
-        display_composite_form([get_input_form(InputForm(pandas_import_sqltable_custom_id,
-                                                         pandas_import_sqltable_custom_idList,
-                                                         pandas_import_sqltable_custom_labelList,
-                                                         pandas_import_sqltable_custom_typeList,
-                                                         pandas_import_sqltable_custom_placeholderList,
-                                                         pandas_import_sqltable_custom_jsList,
-                                                         pandas_import_sqltable_custom_reqList))])
+        custom_import_form  =   InputForm(pandas_import_sqltable_custom_id,
+                                          pandas_import_sqltable_custom_idList,
+                                          pandas_import_sqltable_custom_labelList,
+                                          pandas_import_sqltable_custom_typeList,
+                                          pandas_import_sqltable_custom_placeholderList,
+                                          pandas_import_sqltable_custom_jsList,
+                                          pandas_import_sqltable_custom_reqList)
+   
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            
+            custom_import_form.set_shortForm(True)
+            custom_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":8})
+            custom_import_form.set_gridwidth(640)
+            custom_import_form.set_fullparms(True)
+        
+        else :
+            
+            custom_import_form.set_shortForm(True)
+            custom_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":8})
+            custom_import_form.set_gridwidth(480)
+            custom_import_form.set_fullparms(True)
+    
+        custom_import_form_html     =   custom_import_form.get_html()
+        custom_import_title_html    =   "<div>Custom SQL Table Import</div><br>"
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [custom_import_title_html,custom_import_form_html]
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+
+        
+        
+        
 
 
 def display_data_import_notes(s,fname,dbnote=False,custom=False) :
@@ -1232,7 +1256,7 @@ def get_rows_html(rowslist,formtype,forExport=False) :
         table_names_table.set_rowspertable(14)
         #table_names_table.set_lastrowdisplayed(-1)
 
-        listHtml = get_row_major_table(table_names_table,SCROLL_NEXT,False)
+        listHtml = get_row_major_table(table_names_table,SCROLL_DOWN,False)
         
         return(listHtml)
         

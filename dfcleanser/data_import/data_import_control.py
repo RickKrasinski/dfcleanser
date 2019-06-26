@@ -48,10 +48,17 @@ import time
 #   pass through to display widgets
 #--------------------------------------------------------------------------
 """
-def display_import_forms(id, detid=0, notes=False) :
-    from dfcleanser.data_import.data_import_widgets import display_dc_import_forms
-    display_dc_import_forms(id, detid, notes)
+def display_import_forms(importid, detid=0, notes=False) :
     
+    if(importid == 0) :
+        clear_data_import_data()    
+    
+    from dfcleanser.data_import.data_import_widgets import display_dc_import_forms
+    display_dc_import_forms(importid, detid, notes)
+    
+    if(importid == 0) :
+        clear_data_import_data()    
+   
 
 def display_sql_details_form(sqlimportid,dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
@@ -119,45 +126,35 @@ def process_import_form(formid, parms, display=True) :
 
         if (formid == dim.CSV_IMPORT) :
             fparms      =   diw.get_csv_import_inputs(parms)
-            opstat      =   import_pandas_csv(fparms,
-                                              diw.pandas_import_csv_id,
-                                              diw.pandas_import_csv_labelList)
+            opstat      =   import_pandas_csv(fparms)
             
             parmstitle  =   "Pandas CSV Import Parms"
             parmslist   =   diw.pandas_import_csv_labelList[:6]
         
         if (formid == dim.FWF_IMPORT) :
             fparms      =   diw.get_fwf_import_inputs(parms)
-            opstat      =   import_pandas_fwf(fparms,
-                                              diw.pandas_import_fwf_id,
-                                              diw.pandas_import_fwf_labelList)
+            opstat      =   import_pandas_fwf(fparms)
             
             parmstitle  =   "Pandas FWF Import Parms"
             parmslist   =   diw.pandas_import_fwf_labelList[:7]
         
         elif (formid == dim.EXCEL_IMPORT) :
             fparms      =   diw.get_excel_import_inputs(parms)
-            opstat      =   import_pandas_excel(fparms,
-                                                diw.pandas_import_excel_id,
-                                                diw.pandas_import_excel_labelList)
+            opstat      =   import_pandas_excel(fparms)
             
             parmstitle  =   "Pandas Excel Import Parms"
             parmslist   =   diw.pandas_import_excel_labelList[:7]
         
         elif (formid == dim.JSON_IMPORT) : 
             fparms      =   diw.get_json_import_inputs(parms)
-            opstat      =   import_pandas_json(fparms,
-                                               diw.pandas_import_json_id,
-                                               diw.pandas_import_json_labelList)
+            opstat      =   import_pandas_json(fparms)
             
             parmstitle  =   "Pandas JSON Import Parms"
             parmslist   =   diw.pandas_import_json_labelList[:8]
         
         elif (formid == dim.HTML_IMPORT) : 
             fparms      =   diw.get_html_import_inputs(parms)
-            opstat      =   import_pandas_html(fparms,
-                                               diw.pandas_import_html_id,
-                                               diw.pandas_import_html_labelList)
+            opstat      =   import_pandas_html(fparms)
             
             parmstitle  =   "Pandas HTML Import Parms"
             parmslist   =   diw.pandas_import_html_labelList[:8]
@@ -197,6 +194,10 @@ def process_import_form(formid, parms, display=True) :
 
 def save_data_import_start() :
     cfg.set_config_value(cfg.CURRENT_IMPORT_START_TIME,time.time())    
+def drop_data_import_start() :
+    cfg.drop_config_value(cfg.CURRENT_IMPORT_START_TIME)    
+def get_data_import_start() :
+    return(cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME))   
 
 
 def display_data_import_parms(title,plist,fparms,importID,fname) :
@@ -228,12 +229,11 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     pvalues.append(str(len(cfg.get_dfc_dataframe().columns)))
     
     parms_html  =   displayParms(title,ptitles,pvalues,importID,90,20,False,11)
-    #stats_html  =   display_inspection_data(False)
-
     
     status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",0,False)
     importnotes     =   ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME)))+ " seconds"]
     notes_html      =   display_notes(importnotes,False)
+    drop_data_import_start()
 
     gridclasses     =   ["dfc-top","dfc-left","dfc-right"]
     gridhtmls       =   [parms_html,status_html,notes_html]
@@ -247,7 +247,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     #diw.display_data_import_notes(time.time(),fname)
     
 
-def import_sql_table(parms) :
+def import_sql_table(parms,display=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : import a sql table into pandas dataframe 
@@ -263,9 +263,10 @@ def import_sql_table(parms) :
     
     diw.display_import_main_taskbar() 
     
-    s = time.time()
-    clock = RunningClock()
-    clock.start()
+    if(display) :
+        save_data_import_start()
+        clock = RunningClock()
+        clock.start()
     
     dbid = cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
     dbcondict = set_dbcon_dict(dbid,get_stored_con_Parms(dbid))
@@ -297,13 +298,17 @@ def import_sql_table(parms) :
         display_notes(["DB Connector String : ",
                        "&nbsp;&nbsp;" + import_notes])
         
-        diw.display_data_import_notes(s,sqltableparms[0],True)
+        diw.display_data_import_notes(get_data_import_start(),sqltableparms[0],True)
         
     else :
         display_exception(opstat)
 
+    if(display) :
+        drop_data_import_start()
+        clock.stop()
+
     
-def import_sql_query(parms) :
+def import_sql_query(parms,display=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : import from sql query into pandas dataframe 
@@ -319,9 +324,10 @@ def import_sql_query(parms) :
     
     diw.display_import_main_taskbar() 
     
-    s = time.time()
-    clock = RunningClock()
-    clock.start()
+    if(display) :
+        save_data_import_start()
+        clock = RunningClock()
+        clock.start()
     
     dbid = cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
     dbcondict = set_dbcon_dict(dbid,get_stored_con_Parms(dbid))
@@ -342,10 +348,14 @@ def import_sql_query(parms) :
         display_notes(["DB Connector String : ",
                        "&nbsp;&nbsp;" + import_notes])
         
-        diw.display_data_import_notes(s,sqlqueryparms[0],True)
+        diw.display_data_import_notes(get_data_import_start(),sqlqueryparms[0],True)
         
     else :
         display_exception(opstat)
+        
+    if(display) :
+        drop_data_import_start()
+        clock.stop()
 
 
 def import_custom(parms) :
@@ -389,49 +399,61 @@ def import_custom(parms) :
 #
 #------------------------------------------------------------------
 """
-def import_pandas_csv(fparms,importId,labellist,display=True) : 
+def import_pandas_csv(fparms,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import csv file into pandas dataframe 
     * 
     * parms :
     *  fparms    -   associated import parms                      
-    *  importId  -   associated import parms                      
-    *  labellist -   label list                      
     *  display   -   display flag                      
     *
     * returns : N/A
     * --------------------------------------------------------
     """
     
-    opstat          =   opStatus()
+    opstat      =   opStatus()
     
-    save_data_import_start() 
+    importId    =   diw.pandas_import_csv_id
+    labellist   =   diw.pandas_import_csv_labelList
+    
+    
+    if(display) :
+        save_data_import_start() 
     
     if(len(fparms) == 0) :
+        
         opstat.set_status(False)
         opstat.set_errorMsg("No Import parameters defined")
+        
     else :
-        try :
+        
+        if(len(fparms[1]) == 0):
+            opstat.set_status(False)
+            opstat.set_errorMsg("No file_path defined")
+        else :
+        
+            try :
 
-            csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
-            csvvals         =   [fparms[2],fparms[3],fparms[4]]
-            csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
+                csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
+                csvvals         =   [fparms[2],fparms[3],fparms[4]]
+                csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
     
-            csvparms        =   {}
-            csvaddlparms    =   {}
+                csvparms        =   {}
+                csvaddlparms    =   {}
             
-        except Exception as e:
-            opstat.store_exception("Error parsing import parms",e)
+            except Exception as e:
+                opstat.store_exception("Error parsing import parms",e)
+                
+            if(opstat.get_status()) :
 
-    
-    if(len(fparms[3]) > 0) :
-        try :
-            with open(fparms[3], 'r') as col_names_file :
-                colNames = json.load(col_names_file)
-                csvvals[1] = colNames
-        except Exception as e: 
-            opstat.store_exception("Unable to open csv column names file " + fparms[3],e)
+                if(len(fparms[3]) > 0) :
+                    try :
+                        with open(fparms[3], 'r') as col_names_file :
+                            colNames = json.load(col_names_file)
+                            csvvals[1] = colNames
+                    except Exception as e: 
+                        opstat.store_exception("Unable to open csv column names file " + fparms[3],e)
     
     if(opstat.get_status()) :
         
@@ -459,7 +481,7 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            csv_title   =   "CurrentImportedData"
+            csv_title   =   "CurrentImportedDataSource"
             fparms[0]   =   csv_title
         else :
             csv_title   =   fparms[0]
@@ -472,63 +494,74 @@ def import_pandas_csv(fparms,importId,labellist,display=True) :
             #make scriptable
             script      =   ["# Import CSV File ",
                              "from dfcleanser.data_import.data_import_control import import_pandas_csv",
-                             "import_pandas_csv(" + json.dumps(fparms) + "," +
-                             str(importId) + "," + json.dumps(labellist) + ",False)"]
+                             "import_pandas_csv(" + json.dumps(fparms) + ",False)"]
 
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
-        
+    
     return(opstat)
 
     
-def import_pandas_fwf(fparms,importId,labellist,display=True) : 
+def import_pandas_fwf(fparms,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import fixed width file into pandas dataframe 
     * 
     * parms :
     *  fparms    -   associated import parms                      
-    *  importId  -   associated import parms                      
-    *  labellist -   label list                      
     *  display   -   display flag                      
     *
     * returns : N/A
     * --------------------------------------------------------
     """
     
-    opstat = opStatus()
+    opstat      =   opStatus()
+                                              
+    importId    =   diw.pandas_import_fwf_id
+    labellist   =   diw.pandas_import_fwf_labelList
     
-    save_data_import_start() 
+    if(display) :
+        save_data_import_start() 
     
     if(len(fparms) == 0) :
+        
         opstat.set_status(False)
         opstat.set_errorMsg("No Import parameters defined")
-    else :
-        try :
-
-            fwfkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5],labellist[6]] 
-            fwfvals         =   [fparms[2],fparms[3],fparms[4],fparms[5],fparms[6]]
-            fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
-    
-            fwfparms        =   {}
-            fwfaddlparms    =   {}
-            
-        except Exception as e:
-            opstat.store_exception("Error parsing import parms",e)
-
-    if(opstat.get_status()) :
-    
-        if(len(fparms[4]) > 0) :
         
+    else :
+        
+        if(len(fparms[1]) == 0):
+            
+            opstat.set_status(False)
+            opstat.set_errorMsg("No file_path defined")
+            
+        else :
+
             try :
-                with open(fparms[4], 'r') as col_names_file :
-                    colNames = json.load(col_names_file)
-                    fwfvals[3] = colNames
-            except Exception as e: 
-                opstat.store_exception("Unable to open fwf column names file" + fparms[4],e)
+
+                fwfkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5],labellist[6]] 
+                fwfvals         =   [fparms[2],fparms[3],fparms[4],fparms[5],fparms[6]]
+                fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
+    
+                fwfparms        =   {}
+                fwfaddlparms    =   {}
+            
+            except Exception as e:
+                opstat.store_exception("Error parsing import parms",e)
+
+            if(opstat.get_status()) :
+    
+                if(len(fparms[4]) > 0) :
+        
+                    try :
+                        with open(fparms[4], 'r') as col_names_file :
+                            colNames = json.load(col_names_file)
+                            fwfvals[3] = colNames
+                    except Exception as e: 
+                        opstat.store_exception("Unable to open fwf column names file" + fparms[4],e)
 
     if(opstat.get_status()) :
         
@@ -558,7 +591,7 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            fwf_title   =   "CurrentImportedData"
+            fwf_title   =   "CurrentImportedDataSource"
             fparms[0]   =   fwf_title
         else :
             fwf_title   =   fparms[0]
@@ -571,68 +604,80 @@ def import_pandas_fwf(fparms,importId,labellist,display=True) :
             #make scriptable
             script      =   ["# Import FWF File ",
                              "from dfcleanser.data_import.data_import_control import import_pandas_fwf",
-                             "import_pandas_fwf(" + json.dumps(fparms) + "," +
-                             str(importId) + "," + json.dumps(labellist) + ",False)"]
+                             "import_pandas_fwf(" + json.dumps(fparms) + ",False)"]
 
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
-        
+    
     return(opstat)
     
 
-def import_pandas_excel(fparms,importId,labellist,display=True) : 
+def import_pandas_excel(fparms,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import excel file into pandas dataframe 
     * 
     * parms :
     *  fparms    -   associated import parms                      
-    *  importId  -   associated import parms                      
-    *  labellist -   label list                      
     *  display   -   display flag                      
     *
     * returns : N/A
     * --------------------------------------------------------
     """
     
-    opstat = opStatus()
+    opstat      =   opStatus()
     
-    save_data_import_start() 
+    importId    =   diw.pandas_import_excel_id
+    labellist   =   diw.pandas_import_excel_labelList  
+    
+    if(display) :
+        save_data_import_start() 
     
     if(len(fparms) == 0) :
+        
         opstat.set_status(False)
         opstat.set_errorMsg("No Import parameters defined")
-    else :
-        try :
-            excelkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
-            excelvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-            exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
-
-            excelparms        =   {}
-            exceladdlparms    =   {}
-            
-        except Exception as e:
-            opstat.store_exception("Error parsing import parms",e)
-    
-    if(opstat.get_status()) :
         
-        try :
+    else :
+        
+        if(len(fparms[1]) == 0):
             
-            excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
+            opstat.set_status(False)
+            opstat.set_errorMsg("No file_path defined")
             
-            if(not (fparms[6] == "")) :
-                exceladdlparms    =   json.loads(fparms[6])
+        else :
+
+
+            try :
+                excelkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+                excelvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
+                exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
+
+                excelparms        =   {}
+                exceladdlparms    =   {}
             
-            if (len(exceladdlparms) > 0) :
-                addlparmskeys = exceladdlparms.keys()
-                for i in range(len(addlparmskeys)) : 
-                    excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
+            except Exception as e:
+                opstat.store_exception("Error parsing import parms",e)
+    
+            if(opstat.get_status()) :
+        
+                try :
             
-        except Exception as e:
-            opstat.store_exception("Unable to get additional parms",e)
+                    excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
+            
+                    if(not (fparms[6] == "")) :
+                        exceladdlparms    =   json.loads(fparms[6])
+            
+                    if (len(exceladdlparms) > 0) :
+                        addlparmskeys = exceladdlparms.keys()
+                        for i in range(len(addlparmskeys)) : 
+                            excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
+            
+                except Exception as e:
+                    opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :
     
@@ -647,7 +692,7 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            excel_title     =   "CurrentImportedData"
+            excel_title     =   "CurrentImportedDataSource"
             fparms[0]       =   excel_title
         else :
             excel_title     =   fparms[0]
@@ -660,69 +705,80 @@ def import_pandas_excel(fparms,importId,labellist,display=True) :
             #make scriptable
             script      =   ["# Import Excel File ",
                              "from dfcleanser.data_import.data_import_control import import_pandas_excel",
-                             "import_pandas_excel(" + json.dumps(fparms) + "," +
-                             str(importId) + "," + json.dumps(labellist) + ",False)"]
+                             "import_pandas_excel(" + json.dumps(fparms) + ",False)"]
 
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
-        
+    
     return(opstat)
 
   
-def import_pandas_json(fparms,importId,labellist,display=True) : 
+def import_pandas_json(fparms,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import json file into pandas dataframe 
     * 
     * parms :
     *  fparms    -   associated import parms                      
-    *  importId  -   associated import parms                      
-    *  labellist -   label list                      
     *  display   -   display flag                      
     *
     * returns : N/A
     * --------------------------------------------------------
     """
     
-    opstat = opStatus()
+    opstat      =   opStatus()
     
-    save_data_import_start() 
+    importId    =   diw.pandas_import_json_id
+    labellist   =   diw.pandas_import_json_labelList 
+    
+    if(display) :
+        save_data_import_start() 
     
     if(len(fparms) == 0) :
+        
         opstat.set_status(False)
         opstat.set_errorMsg("No Import parameters defined")
-    else :
-        try :
-
-            jsonkeys         =   [labellist[2],labellist[3],labellist[4]] 
-            jsonvals         =   [fparms[2],fparms[3],fparms[4]]
-            jsontypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
-    
-            jsonparms        =   {}
-            jsonaddlparms    =   {}
-
-        except Exception as e:
-            opstat.store_exception("Error parsing import parms",e)
-    
-    if(opstat.get_status()) :
         
-        try :
+    else :
+        
+        if(len(fparms[1]) == 0):
             
-            jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
+            opstat.set_status(False)
+            opstat.set_errorMsg("No file_path defined")
             
-            if(not (fparms[5] == "")) :
-                jsonaddlparms    =   json.loads(fparms[5])
+        else :
+
+            try :
+
+                jsonkeys         =   [labellist[2],labellist[3],labellist[4]] 
+                jsonvals         =   [fparms[2],fparms[3],fparms[4]]
+                jsontypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
+    
+                jsonparms        =   {}
+                jsonaddlparms    =   {}
+
+            except Exception as e:
+                opstat.store_exception("Error parsing import parms",e)
+    
+            if(opstat.get_status()) :
+        
+                try :
             
-            if (len(jsonaddlparms) > 0) :
-                addlparmskeys = jsonaddlparms.keys()
-                for i in range(len(addlparmskeys)) : 
-                    jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
+                    jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
             
-        except Exception as e:
-            opstat.store_exception("Unable to get additional parms",e)
+                    if(not (fparms[5] == "")) :
+                        jsonaddlparms    =   json.loads(fparms[5])
+            
+                    if (len(jsonaddlparms) > 0) :
+                        addlparmskeys = jsonaddlparms.keys()
+                        for i in range(len(addlparmskeys)) : 
+                            jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
+            
+                except Exception as e:
+                    opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :
     
@@ -738,7 +794,7 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            json_title     =   "CurrentImportedData"
+            json_title     =   "CurrentImportedDataSource"
             fparms[0]      =   json_title
         else :
             json_title     =   fparms[0]
@@ -751,70 +807,80 @@ def import_pandas_json(fparms,importId,labellist,display=True) :
             #make scriptable
             script      =   ["# Import JSON File ",
                              "from dfcleanser.data_import.data_import_control import import_pandas_json",
-                             "import_pandas_json(" + json.dumps(fparms) + "," +
-                             str(importId) + "," + json.dumps(labellist) + ",False)"]
+                             "import_pandas_json(" + json.dumps(fparms) + ",False)"]
 
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
-        
+    
     return(opstat)
 
    
-def import_pandas_html(fparms,importId,labellist,display=True) : 
+def import_pandas_html(fparms,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import html file into pandas dataframe 
     * 
     * parms :
     *  fparms    -   associated import parms                      
-    *  importId  -   associated import parms                      
-    *  labellist -   label list                      
     *  display   -   display flag                      
     *
     * returns : N/A
     * --------------------------------------------------------
     """
     
-    opstat = opStatus()
+    opstat      =   opStatus()
     
-    save_data_import_start() 
+    importId    =   diw.pandas_import_html_id
+    labellist   =   diw.pandas_import_html_labelList
+    
+    if(display) :
+        save_data_import_start() 
     
     if(len(fparms) == 0) :
+        
         opstat.set_status(False)
         opstat.set_errorMsg("No Import parameters defined")
-    else :
-        try :
-
-            htmlkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
-            htmlvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-            htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
-    
-            htmlparms        =   {}
-            htmladdlparms    =   {}
-
-        except Exception as e:
-            opstat.store_exception("Error parsing import parms",e)
-    
-    
-    if(opstat.get_status()) :
         
-        try :
+    else :
+        
+        if(len(fparms[1]) == 0):
             
-            htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
+            opstat.set_status(False)
+            opstat.set_errorMsg("No file_path defined")
             
-            if(not (fparms[6] == "")) :
-                htmladdlparms    =   json.loads(fparms[6])
+        else :
+
+            try :
+
+                htmlkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
+                htmlvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
+                htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
+    
+                htmlparms        =   {}
+                htmladdlparms    =   {}
+
+            except Exception as e:
+                opstat.store_exception("Error parsing import parms",e)
+    
+            if(opstat.get_status()) :
+        
+                try :
             
-            if (len(htmladdlparms) > 0) :
-                addlparmskeys = htmladdlparms.keys()
-                for i in range(len(addlparmskeys)) : 
-                    htmlparms.update({addlparmskeys[i]:htmladdlparms.get(addlparmskeys[i])})
+                    htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
             
-        except Exception as e:
-            opstat.store_exception("Unable to get additional parms",e)
+                    if(not (fparms[6] == "")) :
+                        htmladdlparms    =   json.loads(fparms[6])
+            
+                    if (len(htmladdlparms) > 0) :
+                        addlparmskeys = htmladdlparms.keys()
+                        for i in range(len(addlparmskeys)) : 
+                            htmlparms.update({addlparmskeys[i]:htmladdlparms.get(addlparmskeys[i])})
+            
+                except Exception as e:
+                    opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :  
     
@@ -829,7 +895,7 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            html_title     =   "CurrentImportedData"
+            html_title     =   "CurrentImportedDataSource"
             fparms[0]      =   html_title
         else :
             html_title     =   fparms[0]
@@ -842,8 +908,7 @@ def import_pandas_html(fparms,importId,labellist,display=True) :
             #make scriptable
             script      =   ["# Import HTML File ",
                              "from dfcleanser.data_import.data_import_control import import_pandas_html",
-                             "import_pandas_html(" + json.dumps(fparms) + "," +
-                             str(importId) + "," + json.dumps(labellist) + ",False)"]
+                             "import_pandas_html(" + json.dumps(fparms) + ",False)"]
 
             add_to_script(script,opstat)
 
@@ -1173,6 +1238,7 @@ def clear_data_import_cfg_values() :
     
     cfg.drop_config_value(cfg.CURRENT_DB_ID_KEY)
     cfg.drop_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY)
+    cfg.drop_config_value(cfg.CURRENT_IMPORT_START_TIME)    
 
     return(True)
 
