@@ -23,7 +23,7 @@ from dfcleanser.common.common_utils import (RunningClock, opStatus, display_exce
                                             get_parms_for_input, is_numeric_col,
                                             display_generic_grid, display_status)
 
-from dfcleanser.common.display_utils import (get_df_datatypes_data, display_column_names, display_df_describe)
+from dfcleanser.common.display_utils import (display_column_names, display_df_describe)
 
 """
 #--------------------------------------------------------------------------
@@ -97,46 +97,9 @@ def display_data_inspection(option, parms=None) :
         parms = []
         diw.get_inspection_check_form_parms(parms,current_checkboxes)  
 
-    diw.display_inspection_main_taskbar()
-    
-    if(cfg.is_a_dfc_dataframe_loaded() ) :
-    
-        select_df_form              =   diw.get_select_df_form()
-        
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        
-            inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
-    
-            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
-            gridhtmls       =   [select_df_form.get_html(),
-                                 inspection_checkboxForm.get_html()]
-        
-            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
-            
-        else :
-            
-            inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
-    
-            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
-            gridhtmls       =   [select_df_form.get_html(),
-                                 inspection_checkboxForm.get_html()]
-            
-            
-            display_generic_grid("df-inspection-pop-up-wrapper",gridclasses,gridhtmls)
-            
-    else :
-        
-        inspection_checkboxForm     =   diw.get_main_checkbox_form(current_checkboxes)
-        
-        gridclasses     =   ["dfc-footer"]
-        gridhtmls       =   [inspection_checkboxForm.get_html()]
-    
-        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
-        
-        cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
-    
-    import matplotlib.pyplot as plt
-    
+
+    diw.display_dfc_inspection_main(current_checkboxes)
+
     # parse the input parms
     if( (option == dim.DISPLAY_ROW_OPTION) or 
         (option == dim.DROP_ROWS_OPTION) or 
@@ -184,7 +147,7 @@ def display_data_inspection(option, parms=None) :
             clock = RunningClock()
             clock.start()
 
-            df_data_info = get_df_datatypes_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
+            df_data_info = dim.get_df_datatypes_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
 
             clock.stop() 
             
@@ -197,8 +160,11 @@ def display_data_inspection(option, parms=None) :
                 
                 opstat = opStatus()
                 
+                import matplotlib.pyplot as plt
+                
                 cfg.set_config_value(cfg.DATA_TYPES_CBOX_0_KEY,"True")
                 
+                print("\n")
                 diw.print_page_separator("Data Types",0)
                 
                 clock = RunningClock()
@@ -210,12 +176,13 @@ def display_data_inspection(option, parms=None) :
                                                "datatypesTable",
                                                cfg.DataInspection_ID)
                     data_types_html         =   diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2],False) 
+                    
                     data_types_schema_tb    =   diw.get_inspection_dfschema_taskbar()
-                    data_types_schema_tb.set_custombwidth(240)
+                    data_types_schema_tb.set_gridwidth(240)
+                    data_types_schema_tb.set_customstyle({"font-size":13, "height":40, "width":240, "left-margin":10})
                     data_types_schema_html  =   data_types_schema_tb.get_html()
 
-
-                    gridclasses     =   ["dfc-main","dfc-footer"]
+                    gridclasses     =   ["dfc-top","dfc-footer"]
                     gridhtmls       =   [data_types_html,data_types_schema_html]
                     
                     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
@@ -285,14 +252,14 @@ def display_data_inspection(option, parms=None) :
 
                 try :                
                 
-                    row_stats_html          =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
-                                                                      cfg.get_config_value(cfg.CURRENT_INSPECTION_DF),
-                                                                      False)
-                    
+                    row_stats_html      =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+                                                                  cfg.get_config_value(cfg.CURRENT_INSPECTION_DF),
+                                                                  False)
                     rows_table          =   dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
                     sample_row_html     =   diw.display_df_row_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
-                                                                    rows_table,0,0,opstat,False)  
-                    searchcols_html     =   diw.get_colsearch_form().get_html()
+                                                                    rows_table,0,0,opstat,False)
+                    searchcols_form     =   diw.get_colsearch_form(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
+                    searchcols_html     =   searchcols_form.get_html()
                     
                     gridclasses     =   ["dfc-top","dfc-main","dfc-footer"]
                     gridhtmls       =   [row_stats_html,sample_row_html,searchcols_html]
@@ -304,6 +271,8 @@ def display_data_inspection(option, parms=None) :
              
                 except Exception as e:
                     opstat.store_exception("Error displaying row data\n ",e)
+                    import traceback
+                    traceback.print_exc()
 
                 clock.stop()
                 
@@ -323,9 +292,9 @@ def display_data_inspection(option, parms=None) :
 
                 try : 
                     
-                    
-                    diw.print_page_separator("Columns Data",3)
                     print("\n")
+                    diw.print_page_separator("Columns Data",3)
+                    #print("\n")
                 
                     col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataInspection_ID)
                     column_names_html   =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
@@ -405,7 +374,92 @@ def display_data_inspection(option, parms=None) :
                 
         else :
             display_status("No Dataframe seleted for inspection", 1) 
-
+            
+    elif(option == dim.MATCH_VALS_OPTION) :
+        
+        opstat  =   opStatus()
+        
+        print("dim.MATCH_VALS_OPTION",inparm)
+        column_type     =   inparm[0]
+        
+        fparms          =   get_parms_for_input(inparm[1],diw.data_inspection_colsearch_idList)
+        
+        cols_string     =   fparms[0]
+        cols_list       =   cols_string.split(",")
+        
+        vals_string     =   fparms[1]
+        
+        if(len(vals_string) > 0) :
+            
+            vals_string     =   vals_string.replace("[","]")
+            vals_string     =   vals_string.replace("[","]")
+            vals_list       =   vals_string.split(",")
+        
+        else :
+            vals_list   =   []
+            
+        if(len(vals_list) > 0) :
+        
+            from dfcleanser.common.common_utils import is_int_col
+            df  =   cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF)        
+        
+            import pandas as pd
+            final_criteria  =   pd.Series()
+            
+            for i in range(len(cols_list)) :
+            
+                for j in range(len(vals_list)) :
+                
+                    final_vals_list     =   []
+                    
+                    if(column_type == 0) :
+                    
+                        if(is_int_col(df,cols_list[i])) : 
+                            try :
+                                final_vals_list.append(int(vals_list[j]))
+                            except :
+                                status  =   False
+                        else :
+                            try :
+                                final_vals_list.append(float(vals_list[j]))
+                            except :
+                                status  =   False
+                                
+                    else :
+                        try :
+                            final_vals_list.append(str(vals_list[j]))
+                        except :
+                            status  =   False
+                            
+                if(len(final_vals_list) > 0) :
+                    
+                    current_criteria    =   df[cols_list[i]].isin(final_vals_list)
+                    final_criteria      =   final_criteria | current_criteria
+                    
+                    
+                else :
+                    opstat.set_status(False) 
+                    opstat.set_errorMsg("no valid column_values entered for " + cols_list[i])
+            
+            # get the subset df
+            clock = RunningClock()
+            clock.start()
+            
+            search_df = df[final_criteria].copy()
+            
+            clock.stop() 
+                
+            from dfcleanser.common.cfg import dfc_dataframe,add_dfc_dataframe
+            
+            search_df_notes     =   "search subset from " + cfg.get_config_value(cfg.CURRENT_INSPECTION_DF)
+            search_df_title     =   cfg.get_config_value(cfg.CURRENT_INSPECTION_DF) + "search"
+            new_dfcdf           =   dfc_dataframe(search_df_title,search_df,search_df_notes)
+            add_dfc_dataframe(new_dfcdf)
+            
+        else :
+            opstat.set_status(False) 
+            opstat.set_errorMsg("no column_values entered")
+            
     from dfcleanser.common.display_utils import  display_pop_up_buffer   
     display_pop_up_buffer()
 
@@ -504,17 +558,22 @@ def drop_nan_cols(df,threshold,ttype,opstat,display=True) :
                        "from dfcleanser.data_inspection.data_inspection_control import drop_nan_cols",
                        "drop_nan_cols(" + str(threshold) + ",False)"],opstat)
 
+
+
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 #   general housekeeping functions
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-"""       
+"""  
+
+     
 def clear_data_inspection_data() :
     
     drop_owner_tables(cfg.DataInspection_ID)
     clear_data_inspection_cfg_values()
+    
     
 def clear_data_inspection_cfg_values() :
     

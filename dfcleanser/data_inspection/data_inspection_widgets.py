@@ -14,17 +14,20 @@ this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
+import dfcleanser.data_inspection.data_inspection_model as dim
 
-from dfcleanser.common.common_utils import (get_num_uniques_by_id, RunningClock, get_parms_for_input, 
-                                            get_col_uniques_by_id, display_status, opStatus, 
+from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, get_parms_for_input, 
+                                            get_col_uniques, display_status, opStatus, 
                                             display_exception, display_generic_grid,
                                             get_select_defaults, displayParms, new_line)
 
 from dfcleanser.common.html_widgets import (InputForm, CheckboxGroupForm, ButtonGroupForm)
 
-from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_NEXT)
+from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, 
+                                             SCROLL_DOWN, SCROLL_RIGHT, COLUMN_MAJOR, 
+                                             update_col_major_table_scroll, scroll_col_major_table)
 
-from dfcleanser.common.display_utils import (get_df_datatypes_data, display_sample_rows, get_datatype_id)
+from dfcleanser.common.display_utils import (display_sample_rows, get_datatype_id)
 
 """
 #--------------------------------------------------------------------------
@@ -172,20 +175,22 @@ data_inspection_colsearch_title            =   "Column Values To Search For"
 data_inspection_colsearch_id               =   "datainspectcolsearch"
 data_inspection_colsearch_idList           =   ["colsearchnames",
                                                 "colsearchvalues",
-                                                None]
+                                                None,None]
 
 data_inspection_colsearch_labelList        =   ["column_names",
                                                 "column_values",
-                                                "Get Rows Matching colunm_values"]
+                                                "Get Rows</br> Matching</br>Numeric</br>colunm_values",
+                                                "Get </br>Non Numeric</br>Colunms"]
 
-data_inspection_colsearch_typeList         =   ["select","text","button"]
+data_inspection_colsearch_typeList         =   ["selectmultiple","text","button","button","button"]
 
 data_inspection_colsearch_placeholderList  =   ["columns to search in",
-                                                "column values to search for [] ",
-                                                None]
+                                                "numeric column values list to search for [0, ...] ",
+                                                None,None]
 
 data_inspection_colsearch_jsList           =   [None,None,
-                                                "get_col_rows_callback()"]
+                                                "get_col_rows_callback(0)",
+                                                "get_col_rows_callback(1)"]
 
 data_inspection_colsearch_reqList          =   [0,1]
 
@@ -196,6 +201,39 @@ data_inspection_colsearch_form             =   [data_inspection_colsearch_id,
                                                data_inspection_colsearch_placeholderList,
                                                data_inspection_colsearch_jsList,
                                                data_inspection_colsearch_reqList]  
+
+
+data_inspection_nn_colsearch_title         =   "Column Values To Search For"
+data_inspection_nn_colsearch_id            =   "datainspectcolsearch"
+data_inspection_nn_colsearch_idList        =   ["colsearchnames",
+                                                "colsearchvalues",
+                                                None,None]
+
+data_inspection_nn_colsearch_labelList     =   ["column_names",
+                                                "column_values",
+                                                "Get Rows</br> Matching</br>string</br>colunm_values",
+                                                "Get </br>Numeric</br>Colunms"]
+
+data_inspection_nn_colsearch_typeList      =   ["selectmultiple","text","button","button"]
+
+data_inspection_nn_colsearch_placeholderList=   ["columns to search in",
+                                                "string column values list to search for [' ', ...] ",
+                                                None,None]
+
+data_inspection_nn_colsearch_jsList        =   [None,None,
+                                                "get_col_rows_callback(2)",
+                                                "get_col_rows_callback(3)"]
+
+data_inspection_nn_colsearch_reqList       =   [0,1]
+
+data_inspection_nn_colsearch_form          =   [data_inspection_colsearch_id,
+                                               data_inspection_colsearch_idList,
+                                               data_inspection_df_input_labelList,
+                                               data_inspection_colsearch_typeList,
+                                               data_inspection_colsearch_placeholderList,
+                                               data_inspection_colsearch_jsList,
+                                               data_inspection_colsearch_reqList]  
+
 
 
 
@@ -255,7 +293,7 @@ data_inspection_dfschema_tb_id              =   "inspectiondfschematb"
 data_inspection_dfschema_tb_keyTitleList    =   ["Show Dataframe Schema"]
 
 from dfcleanser.data_transform.data_transform_model import DISPLAY_DF_SCHEMA_TRANSFORM
-data_inspection_dfschema_tb_jsList          =   ["transform_task_bar_callback("+str(DISPLAY_DF_SCHEMA_TRANSFORM)+")"]
+data_inspection_dfschema_tb_jsList          =   ["transform_task_bar_callback("+str(-1)+")"]
 
 data_inspection_dfschema_tb_centered        =   True
 
@@ -282,6 +320,58 @@ def get_inspection_dfschema_taskbar() :
                            data_inspection_dfschema_tb_keyTitleList,
                            data_inspection_dfschema_tb_jsList,
                            data_inspection_dfschema_tb_centered))
+
+
+def display_dfc_inspection_main(current_checkboxes) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the dfc inspection taskbar and select forms
+    * 
+    * parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    display_inspection_main_taskbar()
+    
+    if(cfg.is_a_dfc_dataframe_loaded() ) :
+    
+        select_df_form              =   get_select_df_form()
+        
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        
+            inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
+    
+            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
+            gridhtmls       =   [select_df_form.get_html(),
+                                 inspection_checkboxForm.get_html()]
+        
+            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
+    
+            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
+            gridhtmls       =   [select_df_form.get_html(),
+                                 inspection_checkboxForm.get_html()]
+            
+            
+            display_generic_grid("df-inspection-pop-up-wrapper",gridclasses,gridhtmls)
+            
+    else :
+        
+        inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
+        
+        gridclasses     =   ["dfc-footer"]
+        gridhtmls       =   [inspection_checkboxForm.get_html()]
+    
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
+        
+        cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
+
+    import matplotlib.pyplot as plt
 
 
 def get_select_df_form(title="Inspect") :
@@ -334,7 +424,9 @@ def get_select_df_form(title="Inspect") :
                         data_inspection_df_input_idList,
                         data_inspection_df_input_typeList,
                         selectDicts)
-
+    
+    select_df_form.set_shortForm(True)
+    
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         select_df_form.set_gridwidth(780)
     else :
@@ -343,7 +435,7 @@ def get_select_df_form(title="Inspect") :
     return(select_df_form)
 
 
-def get_colsearch_form() :
+def get_colsearch_form(df,numeric=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : display column search form
@@ -353,36 +445,66 @@ def get_colsearch_form() :
     * returns : N/A
     * --------------------------------------------------------
     """
+
+    if(numeric) :
+        colsearch_form  =   InputForm(data_inspection_colsearch_id,
+                                      data_inspection_colsearch_idList,
+                                      data_inspection_colsearch_labelList,
+                                      data_inspection_colsearch_typeList,
+                                      data_inspection_colsearch_placeholderList,
+                                      data_inspection_colsearch_jsList,
+                                      data_inspection_colsearch_reqList)
+    else :
+        colsearch_form  =   InputForm(data_inspection_nn_colsearch_id,
+                                      data_inspection_nn_colsearch_idList,
+                                      data_inspection_nn_colsearch_labelList,
+                                      data_inspection_nn_colsearch_typeList,
+                                      data_inspection_nn_colsearch_placeholderList,
+                                      data_inspection_nn_colsearch_jsList,
+                                      data_inspection_nn_colsearch_reqList)
     
-    colsearch_form  =   InputForm(data_inspection_colsearch_id,
-                                  data_inspection_colsearch_idList,
-                                  data_inspection_colsearch_labelList,
-                                  data_inspection_colsearch_typeList,
-                                  data_inspection_colsearch_placeholderList,
-                                  data_inspection_colsearch_jsList,
-                                  data_inspection_colsearch_reqList)
+    colnames    =   df.columns.tolist()
+    col_names   =   []
     
-    col_names   =   cfg.get_dfc_dataframe().columns.tolist()
-    col_names.append("ALL")
-    cnames      =   {'default': "ALL", 'list': col_names}
+    from dfcleanser.common.common_utils import is_numeric_col, is_string_col, is_object_col
     
+    for i in range(len(colnames)) :
+        
+        if(numeric) :
+            if(is_numeric_col(df,colnames[i])) :
+                col_names.append(colnames[i])
+        else :
+            if( (is_string_col(df,colnames[i])) or (is_object_col(df,colnames[i])) ) :
+                col_names.append(colnames[i])    
+    
+    if(len(col_names) > 0) :   
+        cnames      =   {'default': col_names[0], 'list': col_names}
+    else :
+        cnames      =   {'default': "None", 'list': ["None"]}
+
     selectDicts     =   []
     selectDicts.append(cnames)
 
-    get_select_defaults(colsearch_form,
-                        data_inspection_colsearch_id,
-                        data_inspection_colsearch_idList,
-                        data_inspection_colsearch_typeList,
-                        selectDicts)
+    if(numeric) :
+        get_select_defaults(colsearch_form,
+                            data_inspection_colsearch_id,
+                            data_inspection_colsearch_idList,
+                            data_inspection_colsearch_typeList,
+                            selectDicts)
+    else :
+        get_select_defaults(colsearch_form,
+                            data_inspection_nn_colsearch_id,
+                            data_inspection_nn_colsearch_idList,
+                            data_inspection_nn_colsearch_typeList,
+                            selectDicts)
 
     colsearch_form.set_shortForm(True)
-    colsearch_form.set_gridwidth(240)
-    colsearch_form.set_custombwidth(240)
-    colsearch_form.set_buttonstyle({"font-size":12})
+    colsearch_form.set_gridwidth(360)
+    colsearch_form.set_buttonstyle({"font-size":12, "height":90, "width":150, "left-margin":12})
     
     return(colsearch_form)
 
-    
+
 def get_inspection_check_form_parms(parms,current_checkboxes) :
     """
     * -------------------------------------------------------------------------- 
@@ -846,7 +968,7 @@ def display_df_row_nans(df,table,rowsnulls,rowcounts,numworstRows,display=True) 
     if(display) :
         table.display_table()
     else :
-        table_html = table.get_html()#get_row_major_table(table,SCROLL_NEXT,False)
+        table_html = table.get_html()
         return(table_html)
 
 
@@ -970,9 +1092,9 @@ def display_df_col_nans(df,table,display=True) :
     table.set_tabletype(ROW_MAJOR)
 
     if(display) :
-        get_row_major_table(table,SCROLL_NEXT)
+        get_row_major_table(table,SCROLL_DOWN)
     else :
-        return(get_row_major_table(table,SCROLL_NEXT,False))
+        return(get_row_major_table(table,SCROLL_DOWN,False))
  
 
 def display_df_row_data(df,table,rowid,colId,opstat,display=True) : #,numworstRows) :
@@ -1031,12 +1153,12 @@ def display_row_stats(df,dftitle,display=True) :
 
     row_stats_table.set_rowspertable(len(rowstatsRows))
     row_stats_table.set_small(True)
-    row_stats_table.set_smallwidth(95)
-    row_stats_table.set_smallmargin(2)
+    row_stats_table.set_smallwidth(50)
+    row_stats_table.set_smallmargin(240)
     row_stats_table.set_table_column_parms({"font":12})
     row_stats_table.set_border(False)
     row_stats_table.set_checkLength(False)
-    
+
     if(display) :
         row_stats_table.display_table()
     else :
@@ -1058,18 +1180,18 @@ def display_df_categories(df,cattable,catcandidatetable) :
     """
 
     df_cols     = df.columns.tolist()
-    datatypesList, datatypesCountList, datatypesColsList = get_df_datatypes_data(df)
+    datatypesList, datatypesCountList, datatypesColsList = dim.get_df_datatypes_data(df)
 
     uniquesCountList = []
     for i in range(len(df_cols)) :
-        uniquesCountList.append(get_num_uniques_by_id(df, df_cols[i]))
+        uniquesCountList.append(get_col_num_uniques(df, df_cols[i]))
                     
     uniquesValsList = []
                 
     for i in range(len(df_cols)) :
         if( (uniquesCountList[i] < 25) and 
             (int((uniquesCountList[i]/len(df)*100)) < 20) ) :
-            uniquesVals = get_col_uniques_by_id(df,df_cols[i])
+            uniquesVals = get_col_uniques(df,df_cols[i])
             
             if(not (df[df_cols[i]].dtype.name == "category")) :
                 uniquesValsList.append(uniquesVals.tolist())
@@ -1226,7 +1348,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
     return(len(catcols), len(catcandidates))
 
-    
-    
+
+   
     
     
