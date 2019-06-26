@@ -111,11 +111,11 @@ SQLITE_CONNECTOR_SQLALC         =    "http://docs.sqlalchemy.org/en/latest/diale
 POSTGRESQL_CONNECTOR_SQLALC     =    "http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg2"
 ORACLE_CONNECTOR_SQLALC         =    "http://docs.sqlalchemy.org/en/latest/dialects/oracle.html#module-sqlalchemy.dialects.oracle.cx_oracle"
 
-CSV_IMPORT_URL                  =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html'
-FWF_IMPORT_URL                  =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_fwf.html'
-EXCEL_IMPORT_URL                =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_excel.html'
-JSON_IMPORT_URL                 =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_json.html'
-HTML_IMPORT_URL                 =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_html.html'
+CSV_IMPORT_URL                  =   'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_csv.html'
+FWF_IMPORT_URL                  =   'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_fwf.html'
+EXCEL_IMPORT_URL                =   'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_excel.html'
+JSON_IMPORT_URL                 =   'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_json.html'
+HTML_IMPORT_URL                 =   'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_html.html'
 SQLTABLE_IMPORT_URL             =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_sql_table.html'
 SQLQUERY_IMPORT_URL             =   'https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_sql_query.html'
 
@@ -162,6 +162,14 @@ INSPECT_CATS_ID                     =   INSPECT_HELP_BASE + 6
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
+SET_INDEX                           =    "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.set_index.html"
+RESET_INDEX                         =    "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.reset_index.html#pandas.DataFrame.reset_index"
+SORT_INDEX                          =    "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.sort_index.html"
+DROP_DUPS                           =    "http://pandas.pydata.org/pandas-docs/version/0.17/generated/pandas.DataFrame.drop_duplicates.html"
+
+PANDAS_DROPNA                       =    'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html'
+PANDAS_FILLNA                       =    'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.fillna.html'
 
 TRANSFORM_MAIN_TASKBAR_ID           =   TRANSFORM_HELP_BASE + 1
 TRANSFORM_DF_ID                     =   TRANSFORM_HELP_BASE + 2
@@ -213,6 +221,7 @@ TRANSFORM_DF_SORT_INDEX_ID              =   TRANSFORM_HELP_BASE + 42
 TRANSFORM_COLS_APPLY_FN_ID              =   TRANSFORM_HELP_BASE + 43
 
 TRANSFORM_DF_SCHEMA_ID                  =   TRANSFORM_HELP_BASE + 50
+
 
 """
 #--------------------------------------------------------------------------
@@ -399,16 +408,6 @@ DFSUBSET_FILTER_12_ID               =   DFSUBSET_HELP_BASE + 17
 DFSUBSET_GET_SUBSET_ID              =   DFSUBSET_HELP_BASE + 18
 DFSUBSET_GET_SUBSET_NO_FILTERS_ID   =   DFSUBSET_HELP_BASE + 19
 
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   common dfconcat utility help parms
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-DFCONCAT_MAIN_TASKBAR_ID            =   DFCONCAT_HELP_BASE + 1
-DFCONCAT_SIMPLE_INPUT_ID            =   DFCONCAT_HELP_BASE + 2
-DFCONCAT_FULL_INPUT_ID              =   DFCONCAT_HELP_BASE + 3
 
 
 """

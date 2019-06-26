@@ -9,19 +9,16 @@ Created on Tue Sept 13 22:29:22 2017
 @author: Rick
 """
 import sys
-import pandas
 
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
 
-from dfcleanser.common.table_widgets import (SCROLL_NEXT, ROW_MAJOR, MULTIPLE, 
+from dfcleanser.common.table_widgets import (SCROLL_DOWN, ROW_MAJOR, MULTIPLE, 
                                              get_mult_table, get_table_value) 
 
-from dfcleanser.common.common_utils import  (is_numeric_col_int, is_numeric_col, get_col_uniques_by_id,
-                                             is_datetime_value,is_date_value,is_time_value,is_str_value,
-                                             get_first_non_nan_value, get_datatype_id, opStatus,
-                                             get_datatype_title, is_numeric, display_generic_grid)
+from dfcleanser.common.common_utils import  (is_int_col, is_numeric_col, get_col_uniques,
+                                             get_datatype_id, opStatus, get_datatype_title, display_generic_grid)
 
 
 """            
@@ -58,7 +55,7 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
         minmax = cfg.get_config_value(cfg.UNIQUES_RANGE_KEY)
         
         if(is_numeric_col(df,colname) ) :
-            if(is_numeric_col_int(df,colname) ) :
+            if(is_int_col(df,colname) ) :
                 minvalue = int(minmax[1])
                 maxvalue = int(minmax[2])
             else :    
@@ -196,9 +193,9 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
     table.set_hiddensList(hiddens)
     if(sethrefs) :
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand. To select range of values click 'Find Values'")
+            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand. To select range of values enter min and max and click 'Find Values'")
         else :
-            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand.<br>&nbsp;&nbsp; To select range of values click 'Find Values'")
+            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand.<br>&nbsp;&nbsp; To select range of values enter min and max and click 'Find Values'")
             
 
     #table.dump()
@@ -225,107 +222,7 @@ def unique_list(inlist):
     outlist =   list(x)
     return outlist
             
-"""            
-#------------------------------------------------------------------
-#   get datatype info for a dataframe
-#
-#   df              -   dataframe
-#
-#   return : list of [[unique data types],
-#                     [column count for each datatype],
-#                     {dict of col names list for each unique datatype}]
-#
-#------------------------------------------------------------------
-"""
-def get_df_datatypes_data(df) : 
 
-    df_cols     = df.columns
-        
-    df_dtypes   = df.dtypes.tolist()
-    
-    df_udtypes      =   unique_list(df_dtypes)
-    df_cols         =   df_cols.tolist()
-    
-    dtypes_dict         = {}
-    dtypes_list         = []
-    dtypes_counts_list  = []
-    
-    non_null_values     =   []
-        
-    for i in range(len(df_cols)) :
-        non_null_values.append(get_first_non_nan_value(df,df_cols[i]))    
- 
-    dtfound     =   []
-    for i in range(len(df_cols)) :
-        dtfound.append(False)
-    
-    
-    for i in range(len(df_udtypes)) :
-        for j in range(len(df_cols)) :
-            
-            if(not(dtfound[j])) :
-                match           =   False
-                currentdtype    =   None
-            
-                if(type(df_udtypes[i]) == pandas.core.dtypes.dtypes.CategoricalDtype) :
-                    if(type(df_dtypes[j]) == type(df_udtypes[i])) :
-                        match = True
-                else :
-                
-                    if(get_datatype_id(df_udtypes[i]) == 16) :
-                    
-                        if(is_datetime_value(non_null_values[j])) :
-                            match = True
-                            currentdtype    =   "datetime.datetime"
-                        elif(is_date_value(non_null_values[j])) :
-                            match = True
-                            currentdtype    =   "datetime.date"
-                        elif(is_time_value(non_null_values[j])) :
-                            match = True
-                            currentdtype    =   "datetime.time"
-                        elif(is_str_value(non_null_values[j])) : 
-                            match = True
-                            currentdtype    =   "str"
-                        else :            
-                            if(df_dtypes[j] == df_udtypes[i]) :
-                                currentdtype    =   df_udtypes[i]
-                                match = True
-                    else : 
-                    
-                        if(df_dtypes[j] == df_udtypes[i]) :
-                            currentdtype    =   df_udtypes[i]
-                            match = True
-            
-                if(match) : 
-                
-                    dtfound[j] = True
-                
-                    #print(df_udtypes[i],"match found")
-                    if( not ((dtypes_dict.get(currentdtype)) == None ) ): 
-                        dtypes_list = dtypes_dict.get(currentdtype)
-                        dtypes_list.append(df_cols[j])
-                        dtypes_dict.update({currentdtype:dtypes_list})
-                    else :
-                        dtypes_list = []
-                        dtypes_list.append(df_cols[j])
-                        dtypes_dict.update({currentdtype:dtypes_list})
-                    
-                        if(isinstance(currentdtype,str)) :
-                            if( (currentdtype == "datetime.datetime") or 
-                                (currentdtype == "datetime.date") or 
-                                (currentdtype == "datetime.time") or 
-                                (currentdtype == "str") ) :
-                                df_udtypes.append(currentdtype) 
-    
-    df_final_udtypes = [] 
-      
-    for k in range(len(df_udtypes)) :
-        dtypes_vals_list    = dtypes_dict.get(df_udtypes[k])
-        if(not (dtypes_vals_list == None)) :
-            dtypes_counts_list.append(len(dtypes_vals_list))
-            df_final_udtypes.append(df_udtypes[k])
-
-    return([df_final_udtypes, dtypes_counts_list, dtypes_dict])
 
 
 """            
@@ -354,7 +251,7 @@ def get_num_stats(df,df_cols,i,num_stats) :
         num_stats.append(float("{0:.2f}".format(df[df_cols[i]].mean())))
         num_stats.append(float("{0:.2f}".format(df[df_cols[i]].std())))
                 
-        if(is_numeric_col_int(df,df_cols[i])) :
+        if(is_int_col(df,df_cols[i])) :
             num_stats.append(df[df_cols[i]].min())
             num_stats.append(df[df_cols[i]].max())
         else :    
@@ -366,6 +263,7 @@ def get_num_stats(df,df_cols,i,num_stats) :
                 
     except : 
         num_stats = [0, 0, 0, 0, 0]
+
         
 """            
 #------------------------------------------------------------------
@@ -392,7 +290,8 @@ def display_df_describe(df,table,datatype=None,colList=None,display=True) :
         dtstr = "Column Stats for datatype " + dtstr
     else :
         dtstr = "Numeric Column Stats"
-        
+    
+    
     # build the column stats for the columns list
     for i in range(len(df_cols)) :
         
@@ -524,9 +423,9 @@ def display_df_describe(df,table,datatype=None,colList=None,display=True) :
     table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above")
 
     if(display) :
-        get_mult_table(table,SCROLL_NEXT)
+        get_mult_table(table,SCROLL_DOWN)
     else :
-        mult_html   =   get_mult_table(table,SCROLL_NEXT,False)
+        mult_html   =   get_mult_table(table,SCROLL_DOWN,False)
         return(mult_html)
 
 """            
@@ -596,8 +495,8 @@ def display_df_column_data(df,table) :
     df_obj_indices  =   []
 
     for i in range(len(df_dtypes)) :
-        if( not (is_numeric(df[df_cols[i]].dtype)) ) :
-            currentuniques = len(get_col_uniques_by_id(df,df_cols[i]))
+        if( not (is_numeric_col(df,df_cols[i])) ) :
+            currentuniques = len(get_col_uniques(df,df_cols[i]))
             df_obj_indices.append(i)
             df_obj_counts.append(currentuniques)
         
@@ -612,7 +511,7 @@ def display_df_column_data(df,table) :
         uniqueRows.append([str(df_cols[df_obj_indices[i]]),
                            str(df_dtypes[df_obj_indices[i]]),
                            str(df_obj_counts[i]),
-                           str(get_col_uniques_by_id(df,df_cols[df_obj_indices[i]]))])
+                           str(get_col_uniques(df,df_cols[df_obj_indices[i]]))])
     
     print("\n")
     
@@ -694,8 +593,14 @@ def display_column_names(df,table,callback,display=True) :
         table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above.")
     
     table.set_small(True)
-    table.set_smallwidth(98)
-    table.set_smallmargin(5)
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        table.set_smallwidth(90)
+        table.set_smallmargin(45)
+    else :
+        table.set_smallwidth(94)
+        table.set_smallmargin(20)
+        
 
     
     if(display) :
@@ -745,7 +650,9 @@ def display_more_single_row(df,tableid,direction,opstat) :
     
     maxcol = len(df.columns)
     
-    if(sdirection == down_direction) :
+    from dfcleanser.common.table_widgets import SCROLL_DOWN, SCROLL_UP, SCROLL_LEFT
+    
+    if(sdirection == SCROLL_DOWN) :
         
         srow = srow + 1
         scol = 0
@@ -755,7 +662,7 @@ def display_more_single_row(df,tableid,direction,opstat) :
         
         cfg.set_config_value(cfg.CLEANSING_ROW_KEY,str(srow))
 
-    elif(sdirection == up_direction) :
+    elif(sdirection == SCROLL_UP) :
         
         srow = srow - 1
         scol = 0
@@ -765,7 +672,7 @@ def display_more_single_row(df,tableid,direction,opstat) :
         
         cfg.set_config_value(cfg.CLEANSING_ROW_KEY,str(srow))
             
-    elif(sdirection == back_direction) :
+    elif(sdirection == SCROLL_LEFT) :
         if(scol == maxcol) :
             lastbatch = scol % (max_single_rows*max_single_cols)
             scol = scol - (max_single_rows*max_single_cols + lastbatch)
@@ -887,16 +794,16 @@ def display_single_row(df,table,rowid,colid,opstat,displayTable=True,headscript=
     searchParms.update({"searchcallback":"getSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
     
     if(len(column_names) > (max_single_rows * max_single_cols)) :
-        searchParms.update({"upflag":True})
-        searchParms.update({"upcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
-        searchParms.update({"downflag":True})
-        searchParms.update({"downcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
+        searchParms.update({"SCROLL_UP":True})
+        searchParms.update({"SCROLL_UP_callback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
+        searchParms.update({"SCROLL_DOWN":True})
+        searchParms.update({"SCROLL_DOWN_callback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
     
     if(len(column_names) > (max_single_rows * max_single_cols)) :
-        searchParms.update({"moreflag":True})
-        searchParms.update({"morecallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
-        searchParms.update({"prevflag":True})
-        searchParms.update({"prevcallback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
+        searchParms.update({"SCROLL_RIGHT":True})
+        searchParms.update({"SCROLL_RIGHT_callback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
+        searchParms.update({"SCROLL_LEFT":True})
+        searchParms.update({"SCROLL_LEFT_callback":"scrollSingleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
     
     table.set_searchParms(searchParms)
     
@@ -922,11 +829,6 @@ def display_single_row(df,table,rowid,colid,opstat,displayTable=True,headscript=
 #
 #------------------------------------------------------------------
 """
-
-up_direction            =   0
-down_direction          =   1
-back_direction          =   2
-forward_direction       =   3
 
 max_rows                =   10
 max_cols                =   10
@@ -960,9 +862,11 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
         
     print("display_more_sample_rows",tableid,rowid,"srow - ",srow,"scol - ",scol) 
     
+    from dfcleanser.common.table_widgets import SCROLL_DOWN, SCROLL_UP, SCROLL_LEFT
+    
     if(rowid == -1) :
         
-        if(sdirection == up_direction) :
+        if(sdirection == SCROLL_UP) :
             
             if( (srow - (max_rows)-1) < 0) :
                 srow = 0
@@ -971,7 +875,7 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
                 
             #scol = scol - (max_cols -1)
         
-        elif(sdirection == down_direction) :
+        elif(sdirection == SCROLL_DOWN) :
             
             if((srow + max_rows) > len(df) ) :
                 srow = 0
@@ -980,7 +884,7 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
                 
             #scol = scol - (max_cols -1)
 
-        elif(sdirection == back_direction) :
+        elif(sdirection == SCROLL_LEFT) :
             if((scol - (max_cols-1)) < 0 ) :
                 scol = 0
             else :
@@ -994,8 +898,6 @@ def display_more_sample_rows(df,tableid,direction,rowid=-1) :
             else :
                 scol = scol + max_cols
                 
-            #srow = srow - (max_rows -1)
-    
     print("display_more_sample_rows after",tableid,rowid,srow,scol) 
     
     opstat  =   opStatus()    
@@ -1163,7 +1065,7 @@ def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) :
             if(numcols > max_cols) :
                 dfHeaderList.append("")
     
-    if(len(df >= max_rows)) :
+    if(len(df) >= max_rows) :
         num_rows    =   max_rows
     else :
         num_rows    =   len(df)
@@ -1196,6 +1098,13 @@ def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) :
     table.set_rowList(dfRowsList)
     table.set_widthList(dfWidths)
     table.set_alignList(dfAligns)
+    from dfcleanser.common.table_widgets import ROW_COL_MAJOR
+    table.set_tabletype(ROW_COL_MAJOR)
+    table.set_rowspertable(10)
+    table.set_colsperrow(10)
+    table.set_lastcoldisplayed(colid+9)
+    table.set_lastrowdisplayed(rowid+9)
+    
     
     if(not(dfhrefs == None)) :
         table.set_refList(dfhrefs)
@@ -1207,38 +1116,40 @@ def display_sample_rows(df,table,rowid,colid,opstat,displayTable=True) :
         tnote   =   "<b>*</b> To view a specific row enter the Row Id(index) and hit search icon."
     else :
         tnote   =   None
-    
-    searchParms = {}
+   
+    if(len(table.get_note()) == 0) :
+        if(not (tnote is None)) :
+            table.set_note(tnote)
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         title   =   "df Browser"
     else :
         title   =   "df"
         
-    setup_sample_row_table(table,
-                           title,
-                           tnote,
-                           numcols,
-                           num_rows,
-                           rowid,
-                           colid,
-                           searchParms,
-                           opstat) 
-       
+    table.set_title(title)
+    
+    
+    searchParms = {}
+    
+    table.set_searchable(True)
+    table.set_searchRow(rowid)
+    table.set_searchCol(colid)
+
     searchParms.update({"searchcallback":"getSampleRow('" + str(table.get_tableid()) + "')"})
-    searchParms.update({"searchcolcallback":"getColumnValueTow('" + str(table.get_tableid()) + "')"})
+    searchParms.update({"searchinputtext":"Row ID"})
+    searchParms.update({"searchinputId":"DIsamplerowsInputId"})
     
     if(num_rows >= max_rows) :
-        searchParms.update({"upflag":True})
-        searchParms.update({"upcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
-        searchParms.update({"downflag":True})
-        searchParms.update({"downcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
+        searchParms.update({"SCROLL_UP":True})
+        searchParms.update({"SCROLL_UP_callback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(0) + ")"})
+        searchParms.update({"SCROLL_DOWN":True})
+        searchParms.update({"SCROLL_DOWN_callback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(1) + ")"})
     
     if(num_cols > max_cols) :
-        searchParms.update({"moreflag":True})
-        searchParms.update({"morecallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
-        searchParms.update({"prevflag":True})
-        searchParms.update({"prevcallback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
+        searchParms.update({"SCROLL_RIGHT":True})
+        searchParms.update({"SCROLL_RIGHT_callback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(2) + ")"})
+        searchParms.update({"SCROLL_LEFT":True})
+        searchParms.update({"SCROLL_LEFT_callback":"scrollSampleRow('" + str(table.get_tableid()) + "'," + str(3) + ")"})
     
     table.set_searchParms(searchParms)
     

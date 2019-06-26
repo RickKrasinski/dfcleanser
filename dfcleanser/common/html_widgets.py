@@ -486,6 +486,8 @@ def get_regular_button(buttonGroup,index) :
 
     if(buttonGroup.get_customstyle() is None) :
         height, width, margin = getbuttonsizing(buttonGroup)
+        #print("get_regular_button",height, width, margin)
+        
     else :
         height = buttonGroup.get_customstyle().get("height")
         width  = str(buttonGroup.get_customstyle().get("width")) + "px"
@@ -608,7 +610,7 @@ class ButtonGroupForm :
         button_group_form_html = (button_group_form_html + button_group_form_div_end)
         button_group_form_html = (button_group_form_html + button_group_form_end)
     
-        if((self.get_formid() == "#chaptersoptions") or (self.get_formid() == "#inspectionoptionstb") ):
+        if((self.get_formid() == "#coluniquesnormaloptionstb") or (self.get_formid() == "#inspectionoptionstb") ):
             self.dump()
             print(button_group_form_html)
 
@@ -648,11 +650,11 @@ input_group_form_end = ("""
 input_group_grid_form_end     = """
 </div>"""
 
-input_group_form_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; border: 1px solid #428bca;'""")
-input_group_form_pop_up_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; border: 1px solid #428bca;'""")
+input_group_form_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; """)
+input_group_form_pop_up_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; """)
                         
-input_group_short_form_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; border: 0px solid #428bca;'""")
-input_group_short_form_pop_up_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; border: 0px solid #428bca;'""")
+input_group_short_form_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; """)
+input_group_short_form_pop_up_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; """)
 
 input_group_custom_form_top =   """  <div class="container dc-container" style='width: """ 
 input_group_custom_form_pop_up_top =   """  <div class='container dc-container' """ + addstyleattribute("background-color","#F8F5E1") + """style='width: """ 
@@ -677,10 +679,10 @@ input_group_form_small_label_end = """</label>"""
 #input_group_form_small_label_end = ("""</label>"""  + new_line + 
 #                                    tabs(3) + """</div>""")
    
-input_group_form_input_start = (new_line + tabs(3) + """<input """)
+input_group_form_input_start = (new_line + tabs(3) + """  <input """)
 input_group_form_input_end = "></input>"
 
-input_group_form_textarea_start = (new_line + tabs(3) + """<textarea """)
+input_group_form_textarea_start = (new_line + tabs(3) + """  <textarea """)
 input_group_form_textarea_end = "></textarea>"
 input_group_form_textarea1_end = "</textarea>"
 
@@ -699,6 +701,7 @@ input_group_fullparms_end = """)">Show All Parameters</button>
 """
 
 input_group_select_start = (new_line + tabs(2) + """        <select """)
+input_group_select_multiple_start = (new_line + tabs(2) + """        <select multiple """)
 input_group_select_middle = """  style="margin-left:1px; font-size: 11px;" class="form-control"> 
 """
 input_group_select_end = (tabs(2) + """        </select>""")
@@ -852,6 +855,7 @@ class InputForm :
         self.gridwidth          =   gridwidth
         self.custombwidth       =   custombwidth
         self.buttonstyle        =   buttonstyle
+        self.borderwidth        =   0
         
         self.selectDict         =   {}
 
@@ -903,6 +907,10 @@ class InputForm :
         return(self.buttonstyle)
     def set_buttonstyle(self,setParm) :
         self.buttonstyle = setParm
+    def get_borderwidth(self) :
+        return(self.borderwidth)
+    def set_borderwidth(self,width) :
+        self.borderwidth = width
         
     def get_select_default(self,idkey) :
         seldict     =   self.selectDict.get(idkey,None) 
@@ -983,6 +991,8 @@ class InputForm :
         
         if(debugFlag) : 
             self.dump()
+        if(self.get_formid() == "#datainspectcolsearch") :
+           self.dump()                  
         
         input_group_form_html = ""
         if(self.get_gridwidth() > 0) :
@@ -1010,13 +1020,30 @@ class InputForm :
             if(self.get_shortForm()) :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_short_form_top)
+                    if(self.get_borderwidth() == 0) :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                    else :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
                 else :
-                    input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_short_form_pop_up_top )    
+                    input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_short_form_pop_up_top ) 
+                    if(self.get_borderwidth() == 0) :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                    else :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
             else :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_form_top)
+                    if(self.get_borderwidth() == 0) :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                    else :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
                 else :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_form_pop_up_top)
+                    if(self.get_borderwidth() == 0) :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                    else :
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
+                    
         else :
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                 input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_custom_form_top + str(customWidth) + "%;")
@@ -1190,8 +1217,8 @@ class InputForm :
                     # end the div for each input line
                     input_group_form_html = (input_group_form_html + input_group_form_div_end)
             
-                elif(self.get_typeList()[i] == "select") :
-                    
+                elif( (self.get_typeList()[i] == "select") or (self.get_typeList()[i] == "selectmultiple") ):
+
                     # add the label for the select
                     input_group_form_html = (input_group_form_html + input_group_form_div_start)
                      
@@ -1217,8 +1244,11 @@ class InputForm :
                     else :
                         input_group_form_html = (input_group_form_html + input_group_form_small_label_end)
 
-                    input_group_form_html = (input_group_form_html + input_group_select_start)
-                    
+                    if(self.get_typeList()[i] == "select") :
+                        input_group_form_html = (input_group_form_html + input_group_select_start)
+                    else :
+                        input_group_form_html = (input_group_form_html + input_group_select_multiple_start)
+
                     # add onchange event handler
                     if(not (self.get_select_callback(self.get_idList()[i])) == None) :
                         input_group_form_html = (input_group_form_html + "onChange=" + '"' +
@@ -1248,8 +1278,8 @@ class InputForm :
                 
         # end the form
         input_group_form_html = (input_group_form_html + new_line + tabs(1) + "   </div>")
-        input_group_form_html = (input_group_form_html + new_line + input_group_form_bottom)
-
+        #input_group_form_html = (input_group_form_html + new_line + input_group_form_bottom)
+                    
         # check if need to append buttons at bottom
         if(bcount > 0) :
 
@@ -1260,13 +1290,14 @@ class InputForm :
                                                                              self.get_gridwidth(),
                                                                              self.get_custombwidth(),
                                                                              self.get_buttonstyle()).get_html())
+
+        input_group_form_html = (input_group_form_html + new_line + input_group_form_bottom)
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
-        if(self.get_gridwidth() > 0) :
-            input_group_form_html = (input_group_form_html + input_group_grid_form_end)
 
-        if((self.get_formid() == "#renamecolInput") or (self.get_formid() == "#dropcolInput") or (self.get_formid() == "$$addcolcodeInput") ) :   
+        if((self.get_formid() == "#importPandasCSV") or (self.get_formid() == "#setnewcoltransform") or (self.get_formid() == "$$addcolcodeInput") ) :   
             print(input_group_form_html)
+            self.dump()
 
         return(input_group_form_html)
 
@@ -1328,7 +1359,7 @@ checkbox_group_input_start  = """ <input type='checkbox' class='badgebox' """
 """
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
-* Common Checkbox Group Form class
+* Common Bootstrap Badgebox (checkbox) Group Form class
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
 *
@@ -1651,9 +1682,6 @@ class RadioGroupForm :
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
 """   
-def display_composite_form(forms) :
-    
-    displayHTML(get_composite_form_doc(forms))
     
 def displayHeading(text,level) :
     

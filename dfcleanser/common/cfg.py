@@ -55,30 +55,22 @@ def does_file_exist(path) :
             return(False)
 """
 #--------------------------------------------------------------------------
-#   dfcleanser javascript common notebook and path functions
+#   dfcleanser common notebook file and path functions
 #--------------------------------------------------------------------------
 """
 def get_notebook_name() :
-    try :
-        run_javascript("window.getNotebookName();","Unable to get notebook name")
-    except :
-        print("get_notebook_name error")
-        
+    return(DataframeCleanserCfgData.get_notebookname())
+       
 def get_notebook_path() :
-    try :
-        run_javascript("window.getNotebookPath();","Unable to get notebook path")
-    except :
-        print("get_notebook_path error")
-
+    return(DataframeCleanserCfgData.get_notebookpath())
+    
 def get_common_files_path() :
     common_files_path = os.path.join(get_dfcleanser_location(),"files")
     return(common_files_path + "\\")   
 
-
 def get_notebook_files_path() :
     notebook_files_path = os.path.join(get_dfcleanser_location(),"files","notebooks")
     return(notebook_files_path + "\\")   
-
 
 def get_dfcleanser_location()  :
 
@@ -181,7 +173,8 @@ def set_dfc_dataframe_notes(notes,title=None) :
      DCdf.set_dataframe_notes(notes,title)
 def rename_dfc_dataframe(oldname,newname) :
      DCdf.rename_dataframe(oldname,newname)
-    
+def update_dfc_dataframe(title,df) :
+    DCdf.update_dataframe(title,df)
 def drop_dfc_dataframe(title=None) :
     DCdf.drop_dataframe(title)
 
@@ -245,7 +238,9 @@ class dfc_dataframe :
 
     def set_title(self,title)   : self.dfc_df[0] = title       
     def set_df(self,df)         : self.dfc_df[1] = df     
-    def set_notes(self,notes)   : self.dfc_df[2] = notes   
+    def set_notes(self,notes)   : self.dfc_df[2] = notes  
+    
+    
 
 """
 #--------------------------------------------------------------------------
@@ -325,20 +320,28 @@ class DCDataframes :
     def get_dataframe(self,title=None) :
         if(title == None) :
             dfindex     =   self.get_df_index(self.current_df)
-            if(dfindex > -1) :            
-                return(self.dcdataframes[dfindex].get_df())
-            else :
-                return(None)
         else :
             dfindex     =   self.get_df_index(title)
-            if(dfindex > -1) :            
-                return(self.dcdataframes[dfindex].get_df())
-            else :
-                return(None)
+            
+        if(dfindex > -1) :            
+            return(self.dcdataframes[dfindex].get_df())
+        else :
+            return(None)
+    
+    def update_dataframe(self,title,df) :
+        if(title == None) :
+            dfindex     =   self.get_df_index(self.current_df)
+        else :
+            dfindex     =   self.get_df_index(title)
+            
+        if(dfindex > -1) :            
+            return(self.dcdataframes[dfindex].set_df(df))
+        else :
+            print("no dataframe found for " + title)
                 
     def get_dfc_dataframe(self,title) : 
         return(self.dcdataframes[self.get_df_index(title)])
-           
+    
     def get_dataframe_notes(self,title=None) :
         if(title == None) :
             dfindex     =   self.get_df_index(self.current_df)
@@ -406,6 +409,7 @@ DCdf = DCDataframes()
 CURRENT_INSPECTION_DF                   =   "currentinspectiondf"
 CURRENT_CLEANSE_DF                      =   "currentcleansedf"
 CURRENT_TRANSFORM_DF                    =   "currenttransformdf"
+CURRENT_EXPORT_DF                       =   "currentexportdf"
 
 def get_current_chapter_df(chapterdfId) :
 
@@ -499,8 +503,6 @@ UNIQUES_RANGE_KEY                       =   "columnUniquesRange"
 
 OUTLIERS_FLAG_KEY                       =   "columnOutliersDisplay"
 DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
-ROUNDING_FLAG_KEY                       =   "roundcolumn"
-FILLNA_FLAG_KEY                         =   "fillnacolumn"
 
 CLEANSING_COL_KEY                       =   "datacleansingcolumn"
 CLEANSING_ROW_KEY                       =   "datacleansingrow"
@@ -522,12 +524,6 @@ CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
 CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
 CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
 CURRENT_IMPORT_START_TIME               =   "importStartTime"
-#MYSQL_IMPORT_PARMS_KEY                  =   "MySqlImportParms"
-#MSSQL_IMPORT_PARMS_KEY                  =   "MSSqlServerImportParms"
-#SQLITE_IMPORT_PARMS_KEY                 =   "SqliteImportParms"
-#POSTGRESQL_IMPORT_PARMS_KEY             =   "PostgresqlImportParms"
-#ORACLE_IMPORT_PARMS_KEY                 =   "OracleImportParms"
-#CUSTOM_IMPORT_PARMS_KEY                 =   "CustomImportParms"
 
 """
 #--------------------------------------------------------------------------
@@ -585,9 +581,7 @@ CURRENT_SUBSET_FILTER                   =   "currentSubsetFilter"
 #   System config value keys
 #--------------------------------------------------------------------------
 """
-CORE_CBS_KEY                            =   "dfc_core_cbs"
 UTILITIES_CBS_KEY                       =   "dfc_utilities_cbs"
-SCRIPTING_CBS_KEY                       =   "dfc_scripting_cbs"
 EULA_FLAG_KEY                           =   "EULARead"
 SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
 DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
@@ -631,35 +625,43 @@ def is_global_parm(key) :
 #--------------------------------------------------------------------------
 #   dfcleanser generic cfg values methods
 #--------------------------------------------------------------------------
-def get_config_value(key, local=True) :
-    return(DataframeCleanserCfgData.get_config_value(key,local))
-def set_config_value(key, value, local=True) :
-    DataframeCleanserCfgData.set_config_value(key,value,local)
-def drop_config_value(key, local=True) :
-    DataframeCleanserCfgData.drop_config_value(key,local)
+def get_config_value(key) :
+    return(DataframeCleanserCfgData.get_config_value(key))
+def set_config_value(key, value) :
+    DataframeCleanserCfgData.set_config_value(key,value)
+def drop_config_value(key) :
+    DataframeCleanserCfgData.drop_config_value(key)
+
+#--------------------------------------------------------------------------
+#   dfcleanser generic cfg values methods for notebook copy 
+#--------------------------------------------------------------------------
 def get_config_data() :
     return(DataframeCleanserCfgData.get_config_data())
 def get_dfc_config_data() :
     return(DataframeCleanserCfgData.get_dfc_config_data())
 def get_current_notebook_name() :
     return(DataframeCleanserCfgData.get_notebookname())
-    
-def sync_with_js(parms) :
-    DataframeCleanserCfgData.sync_js(parms)    
-
-def send_sync_request() :
-    try :
-        run_javascript("window.sync_notebook();",
-                       "Unable to sync with js")
-    except :
-        print("exception send_sync_request")
-
-def sync_js() :
-    DataframeCleanserCfgData.set_sync_js()    
-    
 def reset_cfg_data() :
     print("reset_cfg_data")
     DataframeCleanserCfgData.load_cfg_file()    
+
+#--------------------------------------------------------------------------
+#   dfcleanser sync jupyter with js 
+#--------------------------------------------------------------------------
+def sync_with_js(parms) :
+    DataframeCleanserCfgData.sync_js(parms)    
+
+def get_notebookname() :
+    try :
+        run_javascript("window.getNotebookName();","Unable to get notebook name")
+    except :
+        print("get_get_notebookname error")
+        
+def get_notebookpath() :
+    try :
+        run_javascript("window.getNotebookPath();","Unable to get notebook path")
+    except :
+        print("get_notebook_path error")
 
 """
 #--------------------------------------------------------------------------
@@ -688,8 +690,6 @@ class DataframeCleansercfg :
     dfccfgfilename          =   ""
     
     # Jupyter synced flag
-    js_synced               =   False
-    sync_request_sent       =   False
     cfg_file_loaded         =   False
     
     
@@ -706,20 +706,12 @@ class DataframeCleansercfg :
         self.notebookPath           =   ""
         self.cfgfilename            =   ""
         self.dfccfgfilename         =   ""
-        self.js_synced              =   False
-        self.sync_request_sent      =   False
         self.cfg_file_loaded        =   False
     
     def init_cfg_file(self) :
         
         if( (self.notebookName == "") or (self.notebookPath == "") ) :
-            
             self.cfgfilename = ""
-            
-            if(not self.sync_request_sent) :
-                self.sync_request_sent  =   True
-                #send_sync_request()
-            
             return()
         
         if(self.cfgfilename == "")  :
@@ -799,13 +791,7 @@ class DataframeCleansercfg :
     def get_config_data(self) :
         return(self.cfg_data)            
     
-    def get_config_value(self,key,local) :
-        
-        if( not (self.js_synced) ) :
-            if(key == "EULARead") :
-                return("true")
-            else :
-                return(None)
+    def get_config_value(self,key) :
         
         if(not(is_global_parm(key))) :
             if(self.cfg_data.get(key) == None) :
@@ -816,7 +802,7 @@ class DataframeCleansercfg :
         else :
             return(self.get_dfc_config_value(key))
 
-    def set_config_value(self, key, value, local) :
+    def set_config_value(self, key, value) :
         
         if(not(is_global_parm(key))) :
             try :
@@ -830,9 +816,9 @@ class DataframeCleansercfg :
         else :
             self.set_dfc_config_value(key, value)    
             
-    def drop_config_value(self, key, local) :
+    def drop_config_value(self, key) :
 
-        if(local) :
+        if(not(is_global_parm(key))) :
             try :
                 self.cfg_data.pop(key,None)
             except :
@@ -853,6 +839,16 @@ class DataframeCleansercfg :
         self.notebookPath = nbpath
         self.init_cfg_file()
         self.init_dfc_cfg_file()
+        
+        if( (len(self.get_cfg_file_name()) > 0) and 
+            (len(self.get_dfc_cfg_file_name()) > 0) and 
+            (len(self.get_notebookname()) > 0) ) :
+            log_text =  "log_jupyter_msg('dfcleanser synced : successfully');"
+        else :
+            log_text =  "log_jupyter_msg('dfcleanser not synced : successfully');"
+            
+        run_javascript(log_text,"errmsg")
+        
         
     def get_notebookname(self) :
         return(self.notebookName) 
@@ -925,17 +921,10 @@ class DataframeCleansercfg :
         self.save_dfc_cfg_file()
         
     def sync_js(self,parms) :
-        print("sync_js",parms)
-        self.js_synced    =   True
 
         nbname  =   parms[0]
         self.set_notebookname(nbname)
-        get_notebook_path()
-
-    def set_sync_js(self) :
-        self.js_synced          =   True
-        self.sync_request_sent  =   False
-
+        get_notebookpath()
         
 """
 * ----------------------------------------------------
@@ -956,26 +945,16 @@ def get_chapters_loaded_cbs() :
     
     cellsList   =   get_config_value(DFC_CHAPTERS_LOADED_KEY)
 
-    corecbs     =   [0,0,0,0,0]
     utilcbs     =   [0,0,0,0]
-    scriptcbs   =   [0]
 
     if(not (cellsList == None)) :
         
-        if(cellsList[1])     :   corecbs[0] = 1
-        if(cellsList[2])     :   corecbs[1] = 1
-        if(cellsList[3])     :   corecbs[2] = 1
-        if(cellsList[4])     :   corecbs[3] = 1
-        if(cellsList[5])     :   corecbs[4] = 1
-    
-        if(cellsList[8])     :   utilcbs[0] = 1
-        if(cellsList[9])     :   utilcbs[1] = 1
-        if(cellsList[10])    :   utilcbs[2] = 1
-        if(cellsList[11])    :   utilcbs[3] = 1
-    
-        if(cellsList[13])    :   scriptcbs[0] = 1
+        if(cellsList[19])    :   utilcbs[0] = 1
+        if(cellsList[20])    :   utilcbs[1] = 1
+        if(cellsList[21])    :   utilcbs[2] = 1
+        if(cellsList[22])    :   utilcbs[3] = 1
 
-    return([corecbs,utilcbs,scriptcbs])
+    return([utilcbs])
     
 
 def set_chapters_loaded(cellsList) :
@@ -984,32 +963,20 @@ def set_chapters_loaded(cellsList) :
     
     cblist  =   get_chapters_loaded_cbs()
     
-    set_config_value(CORE_CBS_KEY,cblist[0])
-    set_config_value(UTILITIES_CBS_KEY,cblist[1])
-    set_config_value(SCRIPTING_CBS_KEY,cblist[2])
+    set_config_value(UTILITIES_CBS_KEY,cblist[0])
     set_config_value(DFC_CURRENTLY_LOADED_KEY,"True")
 
 def get_loaded_cells() :
-    run_javascript("window.getdfCChaptersLoaded();",
+
+    run_javascript("window.getdfcChaptersLoaded();",
                    "Unable to get cells loaded")
 
-def init_dc_data() :
-    
-    return()
-    if(DataframeCleanserCfgData.get_notebookname() == None) :
-        get_notebook_name()
-    if(DataframeCleanserCfgData.get_notebookpath() == None) :    
-        get_notebook_path()
-        
-    get_loaded_cells()
-    
 def check_if_dc_init() :
     
     if( not(DataframeCleanserCfgData.get_notebookname() == None) ) :
         if( not(DataframeCleanserCfgData.get_notebookpath() == None) ) :  
             return(True)
     else :
-        init_dc_data()
         return(False)
 
 
@@ -1029,7 +996,8 @@ def check_if_dc_init() :
 def set_notebookName(nbname) :
     DataframeCleanserCfgData.set_notebookname(nbname)
 def get_notebookName() :
-    return(DataframeCleanserCfgData.get_notebookname())  
+    return(DataframeCleanserCfgData.get_notebookname())
+    
 def set_notebookPath(nbpath) :
     DataframeCleanserCfgData.set_notebookpath(nbpath)
 def get_notebookPath() :
@@ -1112,15 +1080,6 @@ def check_notebook_dir_and_cfg_files(notebookname) :
             except Exception :
                 print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
 
-
-    
-"""
-* ----------------------------------------------------
-# static instantiation of the df schema dict
-* ----------------------------------------------------
-"""    
-df_schema_dict    =   {}
-    
 
 """
 * ----------------------------------------------------
