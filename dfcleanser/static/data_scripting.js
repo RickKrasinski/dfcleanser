@@ -1,4 +1,3 @@
-
 //
 // 
 // ------------------------------------------------------
@@ -9,11 +8,11 @@
 
 function scripting_tb_callback(fid) {
     /**
-    * scripting main taskbar callback.
-    *
-    * Parameters:
-    *  fid - function id
-    */
+     * scripting main taskbar callback.
+     *
+     * Parameters:
+     *  fid - function id
+     */
     var inputs = new Array();
     inputs.push(String(fid));
 
@@ -21,12 +20,12 @@ function scripting_tb_callback(fid) {
         case 0:
         case 1:
         case 2:
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting","0" + "," +JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataScripting');
             break;
         case 3:
             window.clear_cell_output(window.SCRIPT_TASK_BAR_ID);
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting","0"));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
             window.scroll_to('DCDataScripting');
             break;
     }
@@ -34,23 +33,23 @@ function scripting_tb_callback(fid) {
 
 function process_script_callback(fid) {
     /**
-    * scripting process callback.
-    *
-    * Parameters:
-    *  fid - function id
-    */
+     * scripting process callback.
+     *
+     * Parameters:
+     *  fid - function id
+     */
     switch (fid) {
         case 2:
             var inputs = new Array();
             inputs.push(String(fid));
             var importVals = window.get_input_form_parms("dcscripting");
             inputs.push(importVals);
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting","0" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0" + "," + JSON.stringify(inputs)));
             break;
         case 3:
             var inputs = new Array();
             inputs.push(String(3));
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting","0" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataScripting');
             break;
         case 4:
@@ -58,13 +57,12 @@ function process_script_callback(fid) {
             inputs.push(String(fid));
             var importVals = window.get_input_form_parms("dcscripting");
             inputs.push(importVals);
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting", "0" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataScripting');
             break;
         case 5:
-            window.delete_output_cell(SCRIPT_CODE_ID);
             window.clear_cell_output(window.SCRIPT_TASK_BAR_ID);
-            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID,window.getJSPCode(window.SCRIPT_LIB,"display_data_scripting", "0"));
+            window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
             window.scroll_to('DCDataScripting');
             break;
     }

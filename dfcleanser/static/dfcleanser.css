@@ -47,10 +47,16 @@ body {
 
 .dc-table-container {
     max-width: 100% !important;
-    margin-left: 0px;
-    /*overflow-x: hidden !important;*/
+    margin-left: 2px;
     overflow-x: hidden;
     overflow-y: hidden;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    text-align: center;
 }
 
 
@@ -118,6 +124,11 @@ Dataframe Cleanser table component style dependencies
 td.dccolleft {
     text-align: left;
     margin-left: 0px;
+}
+
+td.dccolright {
+    text-align: right;
+    margin-right: 0px;
 }
 
 td.dccolwrap {
@@ -200,16 +211,10 @@ div.panel-heading {
 
 .dc-table-title {
     font-size: 14px;
-    padding-top: 1px;
+    padding-top: 0px;
     padding-bottom: 11px;
-    margin-top: 1px;
+    margin-top: 0px;
     margin-bottom: 11px;
-}
-
-.dc-search-table-panel-body {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #428bca;
 }
 
 button.dc-table-button {
@@ -220,16 +225,23 @@ button.dc-table-button {
     font-weight: bold;
 }
 
-.panel-title {
-    font-size: 16px;
-}
-
 .btn-grp-center {
     text-align: center;
 }
 
 .btn-center {
     display: inline-block;
+}
+
+
+/* 
+------------------------------------------------------
+- dc table title panel styles  
+------------------------------------------------------
+*/
+
+.panel-title {
+    font-size: 16px;
 }
 
 
@@ -307,6 +319,69 @@ Dataframe Describe table component style dependencies
     font-family: Arial;
 }
 
+.dc-tbl-container {
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.dc-form-div {
+    margin-left: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.dchdr h6 {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.dchdr h5 {
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.dcrowhead {
+    color: white;
+    background-color: #6FA6DA
+}
+
+.dc-table-link {
+    color: white;
+}
+
+.dc-table-row-link {
+    color: #6FA6DA;
+    font-size: 12px;
+}
+
+.dccolhead {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+}
+
+.table-note {
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Arial;
+}
+
+
+/* 
+--------------------------------------------------- 
+---------------- End Table Styles ----------------- 
+---------------------------------------------------
+*/
+
 
 /* 
 --------------------------------------------------- 
@@ -336,6 +411,7 @@ Dataframe Describe table component style dependencies
 .dc-default-input-inner-div {
     margin-bottom: 10px;
     overflow-y: hidden;
+    background-color: #F8F5E1;
 }
 
 .dc-default-input-button-container {
@@ -344,13 +420,6 @@ Dataframe Describe table component style dependencies
 
 .dc-default-input-button-left-container {
     text-align: left;
-}
-
-.dc-show-full {
-    height: 25px;
-    font-family: Arial;
-    font-weight: bold;
-    font-size: 11px;
 }
 
 
@@ -380,39 +449,6 @@ input.dc-form-search-more-input {
     width: 80px;
 }
 
-.dc-btn-search {
-    height: 30px;
-    width: 30px;
-    background: #ABABAA;
-    color: #0F2D58;
-    font-weight: bold;
-    font-size: 16px;
-    text-align: center;
-    margin-right: 5px;
-    padding-right: 5px;
-}
-
-.dc-btn-search:hover {
-    background: #9FA99C;
-}
-
-.dc-form-more-input {
-    font-size: 12px;
-    height: 30px;
-    margin-left: 68%;
-    width: 80px;
-}
-
-.panel.noborder {
-    border: none;
-    box-shadow: none;
-}
-
-.panel.noborder>.panel-heading {
-    border: 1px solid #dddddd;
-    border-radius: 0;
-}
-
 .dc-doc-title {
     font-size: 14px;
     font-weight: bold;
@@ -424,15 +460,18 @@ input.dc-form-search-more-input {
     margin-top: 0px;
 }
 
-.dc-scroll-div {
-    padding-top: 1.0px;
-    padding-bottom: 11.0px;
-}
 
-.sm-form-control {
-    font-size: 12px;
-    width: 90%;
-    margin-left: 5%;
+/* 
+-------------------------------------------
+* ---------- Input full parms -------------
+-------------------------------------------
+*/
+
+.dc-show-full {
+    height: 25px;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 11px;
 }
 
 div.fullparms {
@@ -459,6 +498,14 @@ button.fullparms {
     height: 30px;
     width: 140px;
     margin-left: 5px;
+}
+
+.dc-btn-subset {
+    background: #e0e0d1;
+    color: #0F2D58;
+    font-weight: normal;
+    font-size: 13px;
+    font-family: Arial;
 }
 
 
@@ -497,11 +544,17 @@ dc-schema-dlist-div {
     color: white;
     height: 20px;
     margin-top: 5px;
+    font-weight: bold;
 }
 
 dc-schema-dlist-label {
     font-size: 13px;
     margin-top: 2px;
+}
+
+.custom-select {
+    font-size: 12px;
+    margin-top: 1px;
 }
 
 dc-schema-radio-div {
@@ -565,148 +618,9 @@ dfc-progress-bar {
 
 /* 
 --------------------------------------------------- 
------------- Search and Scroll styles -------------
+-------------- documentation styles ---------------
 --------------------------------------------------- 
 */
-
-button.moreNext {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    height: 30px;
-    width: 80px;
-    margin-left: 50%;
-}
-
-button.morePrev {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    height: 30px;
-    width: 80px;
-    margin-right: 10%;
-}
-
-button.shortmoreNext {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    padding-top: 0px;
-    padding-left: 5px;
-    padding-bottom: 5px;
-    margin-top: 0px;
-    margin-bottom: 5px;
-    height: 20px;
-    width: 22px;
-    font-weight: bold;
-    font-size: 16px;
-    margin-left: 2px;
-    margin-right: 8px;
-}
-
-button.shortmorePrev {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    height: 20px;
-    width: 20px;
-    margin-right: 5%;
-}
-
-button.search-moreNext {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    height: 30px;
-    width: 80px;
-    margin-left: 80%;
-}
-
-button.search-morePrev {
-    color: black;
-    background: #D3D2C4;
-    text-align: center;
-    height: 30px;
-    width: 80px;
-    margin-right: 1%;
-}
-
-.dc-search-panel-title {
-    font-size: 18px;
-    padding-top: 1.0px;
-}
-
-.dc-search-table-input-group-btn {
-    margin-bottom: 4px;
-    padding-bottom: 4px;
-}
-
-.dc-tbl-container {
-    /*width: 92%;*/
-    margin-left: 0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-}
-
-.dc-form-div {
-    margin-bottom: 1px;
-    margin-top: 1px;
-    margin-left: 1px;
-    margin-right: 1px;
-    padding-bottom: 1px;
-    padding-top: 1px;
-    padding-left: 1px;
-    padding-right: 1px;
-}
-
-.dchdr h6 {
-    font-size: 12px;
-    font-weight: bold;
-    font-style: normal;
-}
-
-.dchdr h5 {
-    font-size: 13px;
-    font-weight: bold;
-    font-style: normal;
-}
-
-.dc-sample-colhead {
-    font-size: 11px;
-    font-weight: bold;
-    font-style: normal;
-    font-family: Arial;
-}
-
-.dcrowhead {
-    color: white;
-    background-color: #6FA6DA
-}
-
-.dc-table-link {
-    color: white;
-}
-
-.dc-table-row-link {
-    color: #6FA6DA;
-    font-size: 12px;
-}
-
-.dccolhead {
-    font-size: 12px;
-    font-weight: bold;
-    font-style: normal;
-    font-family: Arial;
-}
-
-.table-note {
-    font-size: 13px;
-    font-weight: normal;
-    font-style: normal;
-    font-family: Arial;
-}
 
 p.DCTitleChapterstext {
     width: 80%;
@@ -748,12 +662,24 @@ div.exception-status-detail {
     border: 0px solid #428bca;
 }
 
+.dfc-notes-wrapper {
+    display: grid;
+    grid-template-columns: 880px;
+    grid-template-areas: 'top';
+    grid-gap: 0px;
+    background-color: #fff;
+    padding: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 .dfc-notes-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
     grid-template-areas: 'top';
     grid-gap: 0px;
-    background-color: #fff;
+    background-color: #F8F5E1;
     padding: 0px;
     justify-content: center;
     overflow-x: hidden;
@@ -822,6 +748,7 @@ th.a:link {
 
 .dfc-main {
     grid-area: main;
+    justify-content: center;
 }
 
 .dfc-top {
@@ -829,11 +756,9 @@ th.a:link {
     justify-content: center;
 }
 
-.dfc-top-centered {
-    margin-left: 100px;
-    grid-area: top;
+.dfc-middle {
+    grid-area: middle;
     justify-content: center;
-    align-items: center;
 }
 
 .dfc-top-center {
@@ -844,27 +769,17 @@ th.a:link {
 
 .dfc-bottom {
     grid-area: bottom;
+    justify-content: center;
 }
 
 .dfc-footer {
     grid-area: footer;
+    justify-content: center;
 }
 
 .dfc-header {
     grid-area: header;
-}
-
-.dfc-header1 {
-    grid-area: header1;
-    margin-left: 120px;
-}
-
-.grid_title {
-    margin-left: 2px;
-    font-weight: bold;
-    font-size: 24px;
-    text-align: center;
-    color: #444;
+    justify-content: center;
 }
 
 .dfcleanser-common-grid-header {
@@ -1355,7 +1270,7 @@ th.a:link {
     display: grid;
     overflow-x: hidden !important;
     grid-template-columns: 480px;
-    grid-template-areas: 'main' 'footer';
+    grid-template-areas: 'top' 'footer';
     grid-gap: 0px;
     background-color: #fff;
     padding: 0px;
@@ -1369,7 +1284,7 @@ th.a:link {
     display: grid;
     overflow-x: hidden !important;
     grid-template-columns: 480px;
-    grid-template-areas: 'main' 'footer';
+    grid-template-areas: 'top' 'footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -1434,7 +1349,7 @@ th.a:link {
     grid-template-areas: 'top' 'main' 'footer';
     grid-gap: 10px;
     background-color: #fff;
-    padding: 1px;
+    padding: 10px;
     margin-left: 5px;
     justify-content: center;
     overflow-x: hidden;
@@ -1583,7 +1498,7 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.display-df-unique-columns-notes-wrapper {
+.display-df-unique-columns-find-wrapper {
     display: grid;
     grid-template-columns: 980px;
     grid-template-areas: 'header' 'top' 'main' 'bottom' 'footer';
@@ -1596,10 +1511,88 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.display-df-unique-columns-notes-pop-up-wrapper {
+.display-df-unique-columns-find-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
     grid-template-areas: 'header' 'top' 'main' 'bottom' 'footer';
+    grid-gap: 1px;
+    background-color: #F8F5E1;
+    padding: 1px;
+    margin-left: 2px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-whitespace-wrapper {
+    display: grid;
+    grid-template-columns: 180px 300px;
+    grid-template-areas: 'top top' 'middle middle' 'header header' 'left right';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-whitespace-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 180px 300px;
+    grid-template-areas: 'top top' 'middle middle' 'header header' 'left right';
+    grid-gap: 10px;
+    background-color: #F8F5E1;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-cleanser-unique-columns-wrapper {
+    display: grid;
+    grid-template-columns: 920px;
+    grid-template-areas: 'top' 'main';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-cleanser-unique-columns-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top' 'main';
+    grid-gap: 2px;
+    background-color: #F8F5E1;
+    padding: 2px;
+    margin-left: 2px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-cleanser-input-wrapper {
+    display: grid;
+    grid-template-columns: 920px;
+    grid-template-areas: 'header' 'bottom' 'footer';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-cleanser-input-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'header' 'bottom' 'footer';
     grid-gap: 2px;
     background-color: #F8F5E1;
     padding: 2px;
@@ -1694,6 +1687,32 @@ th.a:link {
     overflow-y: hidden;
 }
 
+.df-common-df-cols-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top' 'header' 'footer';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.df-common-df-cols-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top' 'header' 'footer';
+    grid-gap: 0px;
+    background-color: #F8F5E1;
+    padding: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 
 /* 
 -------------- Generic Transform Grid --------------                 
@@ -1729,7 +1748,6 @@ th.a:link {
 }
 
 .generic-gf-transform-wrapper {
-    margin-left: 20px;
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 640px;
@@ -1744,7 +1762,6 @@ th.a:link {
 }
 
 .generic-gf-transform-pop-up-wrapper {
-    margin-left: 0px;
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 480px;
@@ -1753,6 +1770,34 @@ th.a:link {
     color: #444;
     padding: 10px;
     margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.generic-gf-transform-notes-wrapper {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top";
+    background-color: #fff;
+    color: #67a1f3;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.generic-gf-transform-notes-pop-up-wrapper {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top";
+    background-color: #F8F5E1;
+    color: #67a1f3;
+    padding: 2px;
+    margin-left: 1px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -1793,12 +1838,12 @@ th.a:link {
     color: #444;
 }
 
-.col-change_datatype-wrapper {
+.col-change-datatype-wrapper {
     margin-left: 0px;
     display: grid;
     grid-gap: 3px;
     grid-template-columns: 480px;
-    grid-template-areas: "header" "top" "left" "right";
+    grid-template-areas: "top" "middle" "header" "bottom";
     background-color: #fff;
     color: #444;
     justify-content: center;
@@ -1806,12 +1851,38 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.col-change_datatype-pop-up-wrapper {
+.col-change-datatype-fn-wrapper {
     margin-left: 0px;
     display: grid;
     grid-gap: 3px;
     grid-template-columns: 480px;
-    grid-template-areas: "header" "top" "left" "right";
+    grid-template-areas: "top" "middle" "header" "bottom" "footer";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top" "middle" "header" "bottom";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-fn-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top" "middle" "header" "bottom" "footer";
     background-color: #F8F5E1;
     color: #444;
     justify-content: center;
@@ -2148,6 +2219,16 @@ th.a:link {
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 260px 700px;
+    grid-template-areas: "header header" "left right" "bottom right";
+    background-color: #fff;
+    color: #444;
+}
+
+.sw-utils-filters-wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 260px 600px;
     grid-template-areas: "header header" "left right";
     background-color: #fff;
     color: #444;
@@ -2261,28 +2342,10 @@ th.a:link {
     margin-left: 10px;
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: 260px 70px 590px;
-    grid-template-areas: "header header header" "left main right";
+    grid-template-columns: 25% 74%;
+    grid-template-areas: "header header" "left right" "left top" "left main" "left bottom" "left footer";
     background-color: #fff;
     color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-
-/* 
---------------- Dataframe Concat Grids --------------                 
-*/
-
-.df-concat-wrapper {
-    display: grid;
-    grid-template-columns: 400px 400px;
-    grid-template-areas: 'header header' 'left right' 'footer footer';
-    grid-gap: 10px;
-    background-color: #fff;
-    padding: 10px;
-    margin-left: 5px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -2314,6 +2377,24 @@ th.a:link {
     background-color: #F8F5E1;
     padding: 10px;
     margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/* 
+--------------- Scripting Grids --------------                 
+*/
+
+.data-scripting-wrapper {
+    display: grid;
+    grid-template-columns: 880px;
+    grid-template-areas: 'header' 'footer';
+    grid-gap: 0px;
+    background-color: #fff;
+    padding: 0px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;

@@ -23,8 +23,6 @@ define([
     var log_prefix = '[' + "dfcleanser" + ']';
 
     Jupyter.notebook.events.on('notebook_renamed.Notebook', callback_notebook_renamed);
-    Jupyter.notebook.events.on('app_initialized.NotebookApp', callback_app_initialized);
-    Jupyter.notebook.events.on('notebook_loaded.Notebook', callback_notebook_loaded);
 
     var CodeCell = codecell.CodeCell;
 
@@ -38,12 +36,6 @@ define([
             icon: 'fa-table',
             callback: toggle_dfcleanser
         }])
-
-        //Jupyter.toolbar.add_buttons_group([{
-        //    label: 'Reset dfc',
-        //    icon: 'fa-window-restore',
-        //    callback: reset_dfcleanser
-        //}])
 
         setup_popupcodecell();
 
@@ -90,40 +82,11 @@ define([
     }
 
     function callback_notebook_renamed() {
-        if (window.debug_detail_flag)
+        if (window.debug_flag)
             console.log(log_prefix + "\n" + "callback_notebook_renamed");
 
         // rename the config files
         window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "12"));
-    }
-
-    function callback_notebook_loaded() {
-        if (window.debug_detail_flag)
-            console.log(log_prefix + "\n" + "callback_notebook_loaded");
-    }
-
-    function callback_app_initialized() {
-        if (window.debug_detail_flag)
-            console.log(log_prefix + "\n" + "callback_app_initialized");
-
-        if (window.is_dfcleanser_loaded()) {
-
-            // reset the system chapter
-            window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
-
-            // reset working chapter
-            var workingcell = get_cell_for_id(WORKING_CELL_ID);
-            if (workingcell != null)
-                workingcell.set_text(WORKING_CELL + "- please do not remove");
-            window.delete_output_cell(window.WORKING_CELL_ID);
-        }
-
-        // set the notebook name and path
-        window.getNotebookLocation();
-
-        // set chapters loaded
-        window.getdfCChaptersLoaded();
-
     }
 
     function load_ipython_extension() {
@@ -137,12 +100,18 @@ define([
         load_buttons();
 
         if (Jupyter.notebook.kernel) {
-            sync_notebook();
+            console.log(log_prefix + "[Load]\n" + "     dfcleanser extension loaded");
+            events.on('kernel_ready.Kernel', sync_notebook);
         } else {
             events.on('kernel_ready.Kernel', sync_notebook);
         }
-
     }
+
+    //$([IPython.events]).on('notebook_renamed.Notebook', function(){
+    //    console.log("Notebook name has been changed");
+    //   /* Here u can call your code */
+    //});
+
 
     return {
         load_ipython_extension: load_ipython_extension

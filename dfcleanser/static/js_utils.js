@@ -26,10 +26,8 @@
  window.EXPORT_LIB = "from dfcleanser.data_export.data_export_control import ";
  window.SCRIPT_LIB = "from dfcleanser.scripting.data_scripting_control import ";
  window.SW_UTILS_LIB = "from dfcleanser.sw_utilities.sw_utility_control import ";
- window.GEN_FUNCTION_LIB = "from dfcleanser.sw_utilities.sw_utility_genfunc_control import ";
  window.SW_UTILS_GEOCODE_LIB = "from dfcleanser.sw_utilities.sw_utility_geocode_control import ";
  window.SW_UTILS_DFSUBSET_LIB = "from dfcleanser.sw_utilities.sw_utility_dfsubset_control import ";
- window.SW_UTILS_DFCONCAT_LIB = "from dfcleanser.sw_utilities.sw_utility_dfconcat_control import ";
  window.CFG_LIB = "from dfcleanser.common.cfg import ";
  window.HELP_LIB = "from dfcleanser.common.help_utils import ";
 
@@ -49,32 +47,25 @@
  window.DC_DATA_EXPORT_ID = 6;
  window.DC_SW_UTILITIES_ID = 7;
  window.DC_DATASTRUCT_UTILITY_ID = 8;
- window.DC_GENFUNC_UTILITY_ID = 9;
- window.DC_GEOCODE_UTILITY_ID = 10;
- window.DC_DFSUBSET_UTILITY_ID = 11;
- window.DC_SCRIPTING_ID = 12;
- window.DC_DATA_SCRIPT_ID = 13;
- window.DC_WORKING_ID = 14;
+ window.DC_GEOCODE_UTILITY_ID = 9;
+ window.DC_DFSUBSET_UTILITY_ID = 10;
+ //window.DC_SCRIPTING_ID = 11;
+ window.DC_DATA_SCRIPT_ID = 11;
+ window.DC_WORKING_ID = 12;
 
- window.SYSTEM_TASK_BAR_ID = 15;
- window.SYSTEM_ADD_DF_ID = 16;
- window.IMPORT_TASK_BAR_ID = 17;
- window.IMPORT_CUSTOM_CODE_ID = 18;
- window.INSPECTION_TASK_BAR_ID = 19;
- window.CLEANSING_TASK_BAR_ID = 20;
- window.TRANSFORM_TASK_BAR_ID = 21;
- window.TRANSFORM_ADD_COLUMN_ID = 22;
- window.EXPORT_TASK_BAR_ID = 23;
- window.EXPORT_CUSTOM_CODE_ID = 24;
- window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 25;
- window.SW_UTILS_GENFUNC_TASK_BAR_ID = 26;
- window.SW_UTILS_GENFUNC_CODECELL_ID = 27;
- window.SW_UTILS_GEOCODE_TASK_BAR_ID = 28;
- window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 29;
- window.SCRIPT_TASK_BAR_ID = 30;
- window.WORKING_CELL_ID = 31;
+ window.SYSTEM_TASK_BAR_ID = 13;
+ window.IMPORT_TASK_BAR_ID = 14;
+ window.INSPECTION_TASK_BAR_ID = 15;
+ window.CLEANSING_TASK_BAR_ID = 16;
+ window.TRANSFORM_TASK_BAR_ID = 17;
+ window.EXPORT_TASK_BAR_ID = 18;
+ window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 19;
+ window.SW_UTILS_GEOCODE_TASK_BAR_ID = 20;
+ window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 21;
+ window.SCRIPT_TASK_BAR_ID = 22;
+ window.WORKING_CELL_ID = 23;
 
- window.POPUP_CELL_ID = 32;
+ window.POPUP_CELL_ID = 24;
 
  const DC_BLANK_LINE_ID = 1000;
 
@@ -91,11 +82,10 @@
 
 
  var dfc_cell_ids = ["PandasdfcleanserTitle", "DCSystemTitle", "DCDataImportTitle", "DCDataInspectionTitle", "DCDataCleansingTitle",
-     "DCDataTransformTitle", "DCDataExportTitle", "SWUtilities", "DCListUtilityTitle", "DCGenFunctionUtilityTitle",
-     "DCGeocodeUtilityTitle", "DCDFSubsetUtilityTitle", "ScriptingMode", "DCDataScriptingTitle", "DCWorkingTitle",
-     "DCSystem", "DCSystemAdddf", "DCDataImport", "DCDataImportCustom", "DCDataInspection", "DCDataCleansing", "DCDataTransform",
-     "DCDataTransformAddCol", "DCDataExport", "DCDataExportCustom", "DCListUtility", "DCGenFunctionUtility",
-     "DCGenFunctionCodeCell", "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
+     "DCDataTransformTitle", "DCDataExportTitle", "SWUtilities", "DCListUtilityTitle", "DCGeocodeUtilityTitle",
+     "DCDFSubsetUtilityTitle", "DCDataScriptingTitle", "DCWorkingTitle", "DCSystem", "DCDataImport",
+     "DCDataInspection", "DCDataCleansing", "DCDataTransform", "DCDataExport", "DCListUtility",
+     "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
  ];
 
  window.WORKING_CODE_CELL = '# working cell- please do not remove';
@@ -153,14 +143,13 @@
              // get the cell metadata 
              var cell_mdata = cell.metadata;
 
-
-
              if (cell_mdata != undefined) {
                  if ("dfcleanser_metadata" in cell_mdata) {
 
                      var dfc_cell_mdata = cell_mdata["dfcleanser_metadata"];
                      if ("dfc_cellid" in dfc_cell_mdata) {
                          var dfc_cell_id = dfc_cell_mdata["dfc_cellid"];
+
                          if (get_dfc_cellid_for_cell_id(cellId) == dfc_cell_id)
                              return (cell);
                      }
@@ -371,13 +360,21 @@
   */
  window.run_code_in_cell = function(id, code) {
 
+     if (window.debug_detail_flag)
+         console.log("run_code_in_cell", id, code, WORKING_CELL_ID, POPUP_CELL_ID, get_dfc_mode());
+
      var runCell = null;
 
      if (get_dfc_mode() == 1) {
          if (id == WORKING_CELL_ID)
              runCell = window.get_cell_for_id(id);
-         else
-             runCell = get_popupcodecell();
+         else {
+             if ((id == SW_UTILS_DATASTRUCT_TASK_BAR_ID) || (id == SW_UTILS_GEOCODE_TASK_BAR_ID) ||
+                 (id == SW_UTILS_DFSUBSET_TASK_BAR_ID) || (id == SCRIPT_TASK_BAR_ID))
+                 runCell = window.get_cell_for_id(id);
+             else
+                 runCell = get_popupcodecell();
+         }
      } else {
          runCell = window.get_cell_for_id(id);
      }
@@ -496,14 +493,12 @@
          return;
 
      if (deplist[0]) {
-         window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
          window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
      }
      if (deplist[1]) { window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0")); }
      if (deplist[2]) { window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0")); }
      if (deplist[3]) { window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0")); }
      if (deplist[4]) {
-         window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
          window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
      }
      if (deplist[5]) { window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0")); }
@@ -579,6 +574,10 @@
      $("#" + formid).val(mstring);
  };
 
+ window.set_dfcnotes = function(notes) {
+     var mstring = notes.replace(/dfc_new_line/g, '\n');
+     $("#" + formid).val(mstring);
+ };
 
  /* 
  // -------------------------------------------------------
@@ -614,18 +613,12 @@
          window.sync_notebook();
 
      window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", "0"));
-     window.delete_output_cell(window.SYSTEM_ADD_DF_ID);
-     window.delete_output_cell(window.IMPORT_CUSTOM_CODE_ID);
      window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", "0"));
      window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
      window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
-     window.delete_output_cell(window.TRANSFORM_ADD_COLUMN_ID);
      window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
-     window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
      window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
      window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
-     window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-     window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
      window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
      window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0"));
      window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
@@ -680,6 +673,12 @@
 
      if (window.debug_flag)
          console.log(log_prefix + "\n" + "     unload_dfcleanser");
+
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "unload_dfcleanser"));
+ };
+
+
+ window.complete_unload_dfcleanser = function() {
 
      var max_trys = 5;
      var ctry = 0;
@@ -1131,16 +1130,6 @@
      return (JSON.stringify(inputs));
  };
 
- window.get_selected_value = function(selectid) {
-
-     var selected_value = $("#" + selectid + " :selected").text();
-     console.log("get_selected_value", selectid, selected_value);
-
-     var inputs = new Array();
-     inputs.push(selectid);
-     inputs.push(selected_value);
-     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_gen_func_values", JSON.stringify(inputs)));
- };
 
  //
  // function to request a full list of parms for an inout form
@@ -1219,7 +1208,6 @@
      }
  };
 
-
  //
  // ----------------------------------------------------------
  // file selection directory - dirs restricted to local only
@@ -1243,18 +1231,6 @@
  //
 
  //
- // get the current notebook location
- // 
- window.getNotebookLocation = function() {
-     if (window.debug_detail_flag)
-         console.log(log_prefix + "\n" + "    getNotebookLocation");
-
-     window.getNotebookPath();
-     window.getNotebookName();
- };
-
-
- //
  // get the current notebook name
  // 
  window.getNotebookName = function() {
@@ -1273,7 +1249,7 @@
  // get the current notebook path
  // 
  window.getNotebookPath = function() {
-     if (window.debug_detail_flag)
+     if (window.debug_flag)
          console.log(log_prefix + "\n" + "     getNotebookPath");
 
      var code = "dcpath = %pwd" + NEW_LINE;
@@ -1288,14 +1264,16 @@
      }
  };
 
+
  //
  // set which dfc cells just got loaded
  // 
- window.getdfCChaptersLoaded = function() {
+ window.getdfcChaptersLoaded = function() {
 
      var cells = IPython.notebook.get_cells();
      var cell = window.empty_cell_id;
      var cellsloaded = [];
+
      for (var j = 0; j < dfc_cell_ids.length; j++)
          cellsloaded.push(0);
 
@@ -1315,8 +1293,7 @@
          }
      }
 
-     //var chaptersloaded = [];
-     if (window.debug)
+     if (window.debug_flag)
          console.log(log_prefix + "\n" + "     cellsloaded", cellsloaded);
 
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "set_chapters_loaded", JSON.stringify(cellsloaded)));
@@ -1345,19 +1322,22 @@
      inputs.push(String(direction));
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "scroll_sample_rows", JSON.stringify(inputs)));
  };
+
  window.scrollSingleRow = function(tableid, direction) {
      var inputs = new Array();
      inputs.push(String(tableid));
      inputs.push(String(direction));
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "scroll_single_row", JSON.stringify(inputs)));
  };
+
  window.scrollTable = function(tableid, direction) {
+
+     console.log("scrollTable", tableid, direction);
      var inputs = new Array();
 
      if (tableid == "dfschemaTable") {
-         inputs.push([3, direction])
+         inputs.push([4, direction])
          window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0" + "," + JSON.stringify(inputs)));
-         window.scroll_to('DCDataTransform');
          return;
      }
 
@@ -1387,7 +1367,7 @@
  //
 
  //
- // display help section by dfc hrlp id
+ // display help section by dfc help id
  //
  window.displayhelp = function(helpid) {
 
@@ -1405,18 +1385,19 @@
 
 
  //
- // display help section by dfc help id
+ // sync with Jupyter
  //
  window.sync_notebook = function() {
+
      var nbname = IPython.notebook.get_notebook_name();
      var inputs = new Array();
      inputs.push(nbname);
-
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.CFG_LIB, "sync_with_js", JSON.stringify(inputs)));
-
-     if (debug_flag)
-         console.log('\n[' + "dfcleanser" + ']' + "\n" + "     sync_notebook complete ", nbname, "\n");
  };
 
-
- sync_notebook();
+ //
+ // log Jupyter message
+ //
+ window.log_jupyter_msg = function(message) {
+     console.log(log_prefix + "\n" + "     " + message);
+ };

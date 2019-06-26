@@ -97,7 +97,7 @@ define([
         this.km.command_shortcuts.add_shortcuts(shortcuts);
         */
 
-        // finally, add me to the page
+        // add me to the notebook
         $("body").append(this.element);
     };
 
@@ -182,7 +182,7 @@ define([
 
     window.setup_popupcodecell = function() {
         if (debug_flag)
-            console.log(log_prefix + "\n" + "     setup_popupcodecell");
+            console.log(log_prefix + "[Load]\n" + "     dfcleanser popupcodecell created");
         PopUp = new PopUpCodeCell(Jupyter.notebook);
     }
 

@@ -106,6 +106,13 @@ function change_uvals_callback() {
 
 function find_uvals_callback() {
     /**
+     * data cleansing find non numeric values callback.
+     */
+
+}
+
+function find_uvals_callback() {
+    /**
      * data cleansing find values callback.
      */
 
@@ -158,14 +165,14 @@ function show_uniques_callback() {
     /**
      * data cleansing display uniques callback.
      */
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "21"));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "22"));
 }
 
 function show_outliers_callback() {
     /**
      * display col outliers.
      */
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "10"));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "20"));
     window.scroll_to('DCDataCleansing');
 }
 
@@ -238,9 +245,7 @@ function process_cols_callback(fid) {
             break;
 
         case 13:
-        case 17:
-        case 18:
-        case 25:
+        case 16:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + JSON.stringify(element.value)));
             window.scroll_to('DCDataCleansing');
             break;
@@ -249,17 +254,25 @@ function process_cols_callback(fid) {
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "1" + "," + JSON.stringify(element.value)));
             window.scroll_to('DCDataTransform');
             break;
+    }
+}
 
-        case 27:
+function process_cols_na_callback(fid) {
 
-            var inputs = new Array();
-            var colid = "DCCleanser"
-            inputs.push(colid);
-            inputs.push(28);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify([inputs])));
+    console.log("process_cols_na_callback", fid);
 
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
+    switch (fid) {
 
+        case 4:
+        case 8:
+        case 10:
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
+            window.scroll_to('DCDataCleansing');
+            break;
+        case 39:
+        case 40:
+        case 41:
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", fid));
             window.scroll_to('DCDataTransform');
             break;
     }
@@ -280,6 +293,41 @@ function round_col_vals_callback() {
     window.scroll_to('DCDataCleansing');
 }
 
+function whitespace_vals_callback() {
+    /**
+     * process rounding column.
+     */
+
+    console.log("whitespace_vals_callback");
+
+    var flag = $('#leadtrailflag').val();
+
+    var inputs = new Array();
+    inputs.push(flag);
+
+    console.log("whitespace_vals_callback", inputs);
+
+    var cbs = new Array();
+
+    if ($('#HTabcbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+    if ($('#LfeedcbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+    if ($('#FfeedcbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+    if ($('#CReturncbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+    if ($('#BspacecbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+    if ($('#VTabcbId').is(":checked")) cbs.push("true");
+    else cbs.push("false");
+
+    inputs.push(cbs);
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "17" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataCleansing');
+}
+
 function fillna_col_vals_callback() {
 
     var colname = document.getElementById("ucolscolumnname");
@@ -294,16 +342,16 @@ function fillna_col_vals_callback() {
 
 }
 
-function nncol(col) {
-    /**
-     * Data Cleansing display selected non numeric column.
-     *
-     * Parameters:
-     *   col - column name
-     */
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(col)));
-    window.scroll_to('DCDataCleansing');
-}
+//function nncol(col) {
+/**
+ * Data Cleansing display selected non numeric column.
+ *
+ * Parameters:
+ *   col - column name
+ */
+//    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(col)));
+//    window.scroll_to('DCDataCleansing');
+//}
 
 //
 // ----------------------------------------------------

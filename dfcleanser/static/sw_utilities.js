@@ -797,6 +797,7 @@ function get_subset_callback(fid) {
      *  gcid - geocoder id
      */
 
+    console.log("get_subset_callback", fid);
     switch (fid) {
         case 0:
         case 1:
@@ -822,10 +823,8 @@ function get_subset_callback(fid) {
             break;
         case 6:
             $('#gscolname').val("");
-            $('#gscoloper').val("");
-            $('#gscolvalue').val("");
-            $('#gscolandor').val("");
-            $('#gscolandor').val("");
+            $('#gsfilterselectstring').val("");
+            $('#gsselectstring').val("");
             var parms = new Array();
             parms.push(1);
             parms.push("");
@@ -833,61 +832,18 @@ function get_subset_callback(fid) {
             break;
 
         case 7:
-            var condcolname = $('#gscolname').val();
-            var condcoloper = $('#gscoloper').val();
-            if (condcoloper != null)
-                if (condcoloper.length > 0) {
-                    var condcoloperarray = condcoloper.split(",");
-                }
 
-            var condcolvals = $('#gscolvalue').val();
-            if (condcolvals != null)
-                if (condcolvals.length > 0) {
-                    var condcolvalsarray = condcolvals.split("  ,  ");
-                }
-
-            var condcolandor = $('#gscolandor').val();
-            var condcolandorarray = new Array();
-            if (condcolandor != null)
-                if (condcolandor.length > 0) {
-                    condcolandorarray = condcolandor.split(",");
-                }
-
-            var cselectandor = $('#gsselandor').val();
-            if (cselectandor != null)
-                if (cselectandor.length == 0) {
-                    cselectandor = " AND ";
-                }
-
-            var newcselectstring = "";
-            var cselectstring = $('#gsselectstring').val();
-            if (cselectstring != null)
-                if (cselectstring.length > 0) {
-                    newcselectstring = cselectstring + " " + cselectandor + " " + window.NEW_LINE;
-                } else {
-                    $('#gsselandor').val("AND");
-                    newcselectstring = newcselectstring;
-                }
-
-            var newcondition = "( ";
-            var i;
-            for (i = 0; i < condcolvalsarray.length; i++) {
-                newcondition = newcondition + "( " + "'" + condcolname + "'" + condcoloperarray[i] + condcolvalsarray[i] + " )";
-
-                if (i < (condcolvalsarray.length - 1)) {
-                    newcondition = newcondition + " " + condcolandorarray[i] + window.NEW_LINE;
-                }
-            }
-
-            $('#gscolname').val("");
-            $('#gscoloper').val("");
-            $('#gscolvalue').val("");
-            $('#gscolandor').val("");
+            var newcselectstring = $('#gsfilterselectstring').val();
 
             var parms = new Array();
-            parms.push(condcolname);
-            parms.push(newcondition);
+            parms.push(newcselectstring);
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid + ", " + JSON.stringify(parms)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+
+        case 9:
+            var inputs = window.get_input_form_parms("dcdfsubsetsearch");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
             window.scroll_to('DCDFSubsetUtility');
             break;
 
@@ -913,12 +869,19 @@ function set_filter_colname(colname) {
      *  colname - column name
      */
 
+    if (window.debug_flag)
+        console.log("set_filter_colname", colname);
+
     var colnamefield = $('#gscolname');
     colnamefield.val(colname);
-    $('#gscoloper').val("");
-    $('#gscolvalue').val("");
-    $('#gscolandor').val("");
-    $('#gscolandor').val("");
+
+    var filtersstring = $("#gsfilterselectstring");
+    var colselstring = filtersstring.val() + "( df['" + colname + "'] )"
+    filtersstring.val(colselstring);
+
+    var filtersnote = $('#addfilternote');
+    filtersnote.text("Select an operator for this filter.");
+
     var parms = new Array();
     parms.push(-1);
     parms.push(colname);
@@ -942,33 +905,31 @@ function select_filter(ftitle) {
 // DF Subset dhtml functions 
 // --------------------------
 function getgsval(uval) {
-    var operfield = $('#gscoloper');
-    if (operfield.val().length == 0) {
-        operfield.val('==');
-    } else {
-        var newstr = operfield.val() + ",==";
-        operfield.val(newstr);
 
-        var andorfield = $('#gscolandor');
-        if (andorfield.val().length == 0) {
-            andorfield.val("or");
-        } else {
-            var newstr1 = andorfield.val() + ",or";
-            andorfield.val(newstr1);
-        }
-    }
+    if (window.debug_flag)
+        console.log("getgsval", uval);
 
-    var uvalfield = $('#gscolvalue');
-    if (uvalfield.val().length == 0) {
-        uvalfield.val("'" + uval + "'");
-    } else {
-        var newstr = uvalfield.val() + "  ,  " + "'" + uval + "'";
-        uvalfield.val(newstr);
-    }
+    var filtersstring = $("#gsfilterselectstring");
+    var endfstring = get_last_close_paren(filtersstring.val());
+
+
+    var newfstring = filtersstring.val().slice(0, endfstring);
+    if (isNaN(uval))
+        newfstring = newfstring + "'" + uval + "'" + " )";
+    else
+        newfstring = newfstring + uval + " )";
+
+    filtersstring.val(newfstring);
+
+    var filtersnote = $('#addfilternote');
+    filtersnote.text("Select or enter values for this filter.");
 }
 
 function set_ds_colname(colname) {
-    console.log("set_ds_colname", colname);
+
+    if (window.debug_flag)
+        console.log("set_ds_colname", colname);
+
     var colnamefield = $('#gscolnames');
     if (colnamefield.val().length == 0) {
         colnamefield.val(colname);
@@ -979,85 +940,135 @@ function set_ds_colname(colname) {
     }
 }
 
-function set_col_oper(operator) {
-    var condcoloper = $('#gscoloper').val();
-    if (condcoloper != null)
-        if (condcoloper.length > 0) {
+function get_last_close_paren(selstring) {
 
-            var lastcomma = condcoloper.lastIndexOf(",");
+    var filtersstring = $("#gsfilterselectstring");
+    var filterselect = filtersstring.val();
 
-            if (lastcomma == -1) {
-                $('#gscoloper').val(operator);
-            } else {
-                $('#gscoloper').val(condcoloper.slice(0, lastcomma) + "," + operator);
-            }
-        } else {
-            var colvals = $('#gscolvalue').val();
-            if (colvals != null)
-                if (colvals.length > 0)
-                    $('#gscoloper').val(operator);
+    if (filterselect.indexOf(")", 0) > -1) {
+
+        var numchars = filterselect.length;
+
+        for (i = (numchars - 1); i - 1; i > -1) {
+
+            if (filterselect[i] == ")")
+                return (i);
         }
+        return (-1);
+
+    } else {
+        return (-1);
+    }
 }
 
-function set_clause_oper(logical) {
-    var condcolandor = $('#gscolandor').val();
-    if (condcolandor != null)
-        if (condcolandor.length > 0) {
+function keypad(keyvalue) {
+    /**
+     * dynamic html keypad entry.
+     *
+     * Parameters:
+     *  keyvalue - key value
+     */
 
-            var lastcomma = condcolandor.lastIndexOf(",");
+    if (window.debug_flag)
+        console.log("keypad", keyvalue);
 
-            var newcondcolandor = "";
-            if (lastcomma == -1) {
-                newcondcolandor = logical;
-            } else {
-                newcondcolandor = condcolandor.slice(0, lastcomma) + "," + logical;
-            }
+    var filtersstring = $("#gsfilterselectstring");
+    var endfstring = get_last_close_paren(filtersstring.val());
 
-            $('#gscolandor').val(newcondcolandor);
-        } else {
-            var colvals = $('#gscolvalue').val();
-            if (colvals != null)
-                if (colvals.length > 0)
-                    if (colvals.indexOf(",") > -1)
-                        $('#gscolandor').val(logical);
-        }
+    var newfstring = filtersstring.val().slice(0, endfstring);
+    newfstring = newfstring + " " + keyvalue + " )";
+    filtersstring.val(newfstring);
+
+    var filtersnote = $('#addfilternote');
+    filtersnote.text("Select or enter values for this filter.");
 }
 
-function set_filter_oper(logical) {
-    var condselandor = $('#gsselandor').val();
+function operpad(keyvalue) {
+    /**
+     * dynamic html operator keypad entry.
+     *
+     * Parameters:
+     *  keyvalue - key value
+     */
 
-    if (condselandor != null)
-        if (condselandor.length > 0) {
+    if (window.debug_flag)
+        console.log("operpad", keyvalue);
 
-            if (logical == "NOT") {
-                if (condselandor.indexOf("NOT") == -1)
-                    $('#gsselandor').val($('#gsselandor').val() + " NOT");
-            } else {
-                $('#gsselandor').val(logical);
-            }
+    if ((keyvalue == '.isnull()') || (keyvalue == '.notnull()')) {
+
+        var filtersstring = $("#gsfilterselectstring");
+        var endfstring = get_last_close_paren(filtersstring.val());
+
+        var newfstring = filtersstring.val().slice(0, (endfstring - 1));
+        newfstring = newfstring + keyvalue + " )";
+        console.log(newfstring);
+        filtersstring.val(newfstring);
+
+    } else {
+
+        var filtersstring = $("#gsfilterselectstring");
+        var endfstring = get_last_close_paren(filtersstring.val());
+        var newfstring = filtersstring.val().slice(0, endfstring);
+        var colname = $("#gscolname").val();
+
+        if (endfstring > -1) {
+            newfstring = newfstring + " " + keyvalue + " )";
+            filtersstring.val(newfstring);
+        }
+
+        //get_subset_callback(9);
+    }
+}
+
+
+function logicpad(keyvalue) {
+    /**
+     * dynamic html operator keypad entry.
+     *
+     * Parameters:
+     *  keyvalue - key value
+     */
+
+    if (window.debug_flag)
+        console.log("operpad", keyvalue);
+
+    if ((keyvalue == 'or') || (keyvalue == 'and')) {
+
+        var filtersstring = $("#gsfilterselectstring");
+        //var endfstring = get_last_close_paren(filtersstring.val());
+
+        var newfstring = filtersstring.val(); //.slice(0, endfstring);
+        newfstring = newfstring + " " + keyvalue + " ";
+        filtersstring.val(newfstring);
+
+        get_subset_callback(9);
+
+    } else {
+
+        if (keyvalue == 'not') {
+
         } else {
-            if (logical != "NOT") {
-                $('#gsselandor').val(logical);
+
+            var filtersstring = $("#gsfilterselectstring");
+            var endfstring = get_last_close_paren(filtersstring.val());
+            var newfstring = filtersstring.val();
+            var colname = $("#gscolname").val();
+
+            if (endfstring > -1) {
+                newfstring = newfstring + " " + keyvalue + " ";
+                filtersstring.val(newfstring);
             }
         }
+    }
+    //get_subset_callback(9);
 }
+
 
 // 
 // ------------------------------------------------------
 // Generic Functions Utility methods 
 // ------------------------------------------------------
 //
-function genfunction_task_bar_callback(fid) {
-    /**
-     * generic function main taskbar callback.
-     *
-     * Parameters:
-     *  fid - function id
-     */
-
-    window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", fid));
-    window.scroll_to('DCGenFunctionUtility');
-}
 
 function generic_function_callback(fid) {
     /**
@@ -1068,121 +1079,26 @@ function generic_function_callback(fid) {
      */
 
     console.log("generic_function_callback", fid);
-    var inputs = new Array();
+
     switch (fid) {
-        case 0:
-
-            window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-
-            var tcell = window.get_cell_for_id(window.SW_UTILS_GENFUNC_TASK_BAR_ID);
-            window.select_cell(SW_UTILS_GENFUNC_TASK_BAR_ID);
-
-            IPython.notebook.insert_cell_below('code');
-            var cell = IPython.notebook.select_next().get_selected_cell();
-
-            var code = "def dfcleanser_generic_function(parm1, parm2) : " + window.NEW_LINE;
-            code = code + '    """' + window.NEW_LINE;
-            code = code + "    * ------------------------------------------------------------------------" + window.NEW_LINE;
-            code = code + "    * function : description" + window.NEW_LINE;
-            code = code + "    *" + window.NEW_LINE;
-            code = code + "    * parms :" + window.NEW_LINE;
-            code = code + "    *  parm1   - description" + window.NEW_LINE;
-            code = code + "    *  parm2   - description" + window.NEW_LINE;
-            code = code + "    *" + window.NEW_LINE;
-            code = code + "    * returns :" + window.NEW_LINE;
-            code = code + "    *     description" + window.NEW_LINE;
-            code = code + "    *" + window.NEW_LINE;
-            code = code + "    * Notes :" + window.NEW_LINE;
-            code = code + "    *    dfcleanser generic function" + window.NEW_LINE;
-            code = code + "    * -------------------------------------------------------------------------" + window.NEW_LINE;
-            code = code + '    """' + window.NEW_LINE;
-            cell.set_text(code);
-
-            // add the cellid metadata
-            var dfcellDict = { "dfc_cellid": "DCGenFunctionCodeCell" };
-            //var dfcleanserDict = { "dfcleanser_metadata": dfcellDict };
-            //var newcellDict = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
-            cell.metadata = { "dfcleanser_metadata": dfcellDict, "scrolled": true, "trusted": true };
-
-            inputs.push(0, [code])
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
-
-            break;
-
-        case 1:
-            var codecell = get_cell_for_id(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            window.select_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            console.log("codecell", codecell)
-            if (codecell != null) {
-                var codecelltext = codecell.get_text();
-                console.log("codecelltext", codecelltext)
-            } else {
-                var codecelltext = "";
-            }
-
-            window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-
-            var gtmodule = $('#gtmodule').val();
-            if (gtmodule == null) gtmodule = "";
-            var gttitle = $('#gttitle').val();
-            if (gttitle == null) gttitle = "";
-
-            inputs.push(fid, gtmodule, gttitle, codecelltext);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
-            break;
-
-        case 2:
-
-            var fparms = get_input_form_parms("genfuncform");
-            inputs.push(fid, fparms);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
-            break;
-
-        case 3:
-        case 4:
-
-            var gtmodule = $('#gtmodule').val();
-            if (gtmodule == null) gtmodule = "";
-            var gttitle = $('#gttitle').val();
-            if (gttitle == null) gttitle = "";
-
-            inputs.push(fid, gtmodule, gttitle);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
-            break;
-
-        case 5:
-            window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "0"));
-            break;
-
-        case 7:
+        case 12:
+        case 13:
+            var inputs = new Array();
             inputs.push(fid);
-            window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "16" + "," + JSON.stringify(inputs)));
             break;
-
-
+        case 14:
+            $("#gtmodule").val("");
+            $("#gttitle").val("");
+            $("#gtcode").val("");
+            break;
+        case 15:
+            window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
+            break;
     }
-    window.scroll_to('DCGenFunctionUtility');
+    window.scroll_to('DCListUtility');
 }
 
-function delete_genfunc_test_code_cell() {
-    /**
-     * delete generic function test code cell.
-     *
-     */
-    window.delete_output_cell(window.SW_UTILS_GENFUNC_CODECELL_ID);
-    window.scroll_to('DCGenFunctionUtility');
-}
-
-function load_genfunc_test_code_cell(cellcode) {
-    /**
-     * delete generic function test code cell.
-     *
-     */
-    var generic_cell = window.get_cell_for_id(SW_UTILS_GENFUNC_CODECELL_ID);
-    generic_cell.set_text(cellcode);
-    window.scroll_to('DCGenFunctionUtility');
-}
 
 function select_gen_function(genid) {
     /**
@@ -1191,79 +1107,9 @@ function select_gen_function(genid) {
      * Parameters:
      *  genid - gen function id
      */
-    var inputs = new Array();
-    inputs.push(6, genid);
-    window.run_code_in_cell(window.SW_UTILS_GENFUNC_TASK_BAR_ID, window.getJSPCode(window.GEN_FUNCTION_LIB, "display_gen_function", "2," + JSON.stringify(inputs)));
-    window.scroll_to('DCGenFunctionUtility');
-}
-
-// 
-// ------------------------------------------------------
-// Dataframe Concat Utility functions 
-// ------------------------------------------------------
-//
-function process_concat_callback(fid) {
-    /**
-     * process dataframe concat callback.
-     *
-     * Parameters:
-     *  fid - function id
-     */
-    switch (fid) {
-        case 0:
-        case 1:
-            window.run_code_in_cell(window.SW_UTILS_DFCONCAT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFCONCAT_LIB, "display_dfconcat_utility", fid));
-            break;
-        case 2:
-        case 3:
-            var formid = "";
-            if (fid == 2) {
-                formid = "concatinput";
-            } else {
-                formid = "fconcatinput";
-            }
-            var fparms = get_input_form_parms(formid);
-            window.run_code_in_cell(window.SW_UTILS_DFCONCAT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFCONCAT_LIB, "display_dfconcat_utility", fid + ", " + JSON.stringify(fparms)));
-            break;
-    }
-    window.scroll_to('DCDFConcatUtility');
-}
-
-function select_concat_df(sid) {
-    /**
-     * process dataframe select callback.
-     *
-     * Parameters:
-     *  sid - select id
-     */
-
-    var parms = new Array();
-    if (sid == "dataframe1title")
-        var seldf = $('#dataframe1title').val();
-    else
-        var seldf = $('#dataframe2title').val();
-
-    var df1 = $('#dataframe1title').val();
-    var df2 = $('#dataframe2title').val();
-    parms.push(seldf, df1, df2);
-
-    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_select_concat_df_vals", JSON.stringify(parms)));
-
-}
-
-function set_concat_direction(direction) {
-    /**
-     * process dataframe concat direction.
-     *
-     * Parameters:
-     *  direction - to dataframe
-     */
-
-    if (direction == "df2") {
-        var dfselected = $('#dataframe2title').val();
-    } else {
-        var dfselected = $('#dataframe1title').val();
-    }
-
-    $('#dftoconcatto').val(dfselected);
+    //var inputs = new Array();
+    //inputs.push(6, genid);
+    var funcid = "'" + genid + "'";
+    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "17," + funcid));
+    window.scroll_to('DCListUtility');
 }

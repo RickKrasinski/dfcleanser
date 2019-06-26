@@ -21,7 +21,6 @@ function export_taskbar_callback(fid) {
             window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", 3));
             break;
         case 2:
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
             window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
             break;
     }
@@ -43,7 +42,6 @@ function pandas_export_tb_return_callback() {
     /**
      * Pandas Export return callback.
      */
-    window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
     window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "0"));
     window.scroll_to('DCDataExport');
 }
@@ -93,7 +91,6 @@ function pandas_details_export_return_callback() {
     /**
      * Pandas Export details return.
      */
-    window.delete_output_cell(window.window.EXPORT_CUSTOM_CODE_ID);
     window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", "1"));
     window.scroll_to('DCDataExport');
 }
@@ -138,53 +135,22 @@ function custom_export_callback(fid) {
      */
     switch (fid) {
         case 0:
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", 3));
-            window.select_cell(EXPORT_TASK_BAR_ID);
-            IPython.notebook.insert_cell_below('code');
-            var cell = IPython.notebook.select_next().get_selected_cell();
-            var code = "# custom export" + NEW_LINE +
-                "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE +
-                "df = get_dfc_dataframe()" + NEW_LINE + NEW_LINE;
-            window.run_code(cell, code);
+            var inputs = new Array();
+            var parms = get_input_form_parms("customExport");
+            inputs.push(JSON.stringify(parms));
+            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", "5," + JSON.stringify(inputs)));
             break;
         case 1:
-            var inputs = new Array();
-            inputs.push(1)
-            var code = document.getElementById("customExportCode").value;
-            if (code.indexOf("# custom export") != -1) {
-                code = code.replace("# custom export\n", "");
-            }
-            inputs.push(String(code));
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", "5," + JSON.stringify(inputs)));
+            var customexportcode = $('#customexportcode');
+            var custom_code = "# add USER CODE to export the df" + NEW_LINE + NEW_LINE;
+            custom_code = (custom_code + "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE);
+            custom_code = (custom_code + "df = get_dfc_dataframe(dataframe_title)" + NEW_LINE + NEW_LINE);
+            custom_code = (custom_code + "# USER CODE" + NEW_LINE);
+
+            customexportcode.val(custom_code);
             break;
         case 2:
-            var inputs = new Array();
-            inputs.push(2)
-            var custom_cell = window.get_cell_for_id(EXPORT_CUSTOM_CODE_ID);
-            var custom_code = custom_cell.get_text();
-            if (custom_code.indexOf("# custom export") != -1) {
-                custom_code = custom_code.replace("# custom export\n", "");
-            }
-            inputs.push(String(custom_code));
-            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", "5," + JSON.stringify(inputs)));
-            break;
-        case 3:
-            var inputs = new Array();
-            inputs.push(3);
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", "5," + JSON.stringify(inputs)));
-            break;
-        case 4:
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
             window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "display_export_forms", 0));
-            break;
-        case 5:
-            var inputs = new Array();
-            inputs.push(5);
-            window.delete_output_cell(window.EXPORT_CUSTOM_CODE_ID);
-            window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", "5," + JSON.stringify(inputs)));
             break;
     }
     window.scroll_to('DCDataExport');

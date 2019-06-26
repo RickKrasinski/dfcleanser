@@ -14,6 +14,8 @@ function inspection_task_bar_callback(fid) {
      *  fid - function id
      */
 
+    console.log("inspection_task_bar_callback", fid);
+
     switch (fid) {
         case 0:
             var inputParms = window.get_input_form_parms("datainspectdf");
@@ -24,6 +26,9 @@ function inspection_task_bar_callback(fid) {
             break;
         case 1:
             window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
+            break;
+        case 5:
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "5"));
             break;
     }
 }
@@ -81,7 +86,7 @@ function ncol(colid) {
      *  colid - column id
      */
 
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(colid)));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "12" + "," + JSON.stringify(colid)));
     window.scroll_to('DCDataCleansing');
 }
 
@@ -192,3 +197,33 @@ window.change_dataframes_to_select = function(optionsDict, selected) {
         }
     }
 };
+
+
+function get_col_rows_callback(option) {
+    /**
+     * get the df search rows.
+     *
+     * Parameters:
+     *  options - command options 
+     *   
+     * */
+
+    console.log("get_col_rows_callback", option);
+
+    switch (option) {
+        case 0:
+        case 2:
+            var inputParms = window.get_input_form_parms("datainspectcolsearch");
+            var inputs = new Array();
+            inputs.push(option);
+            inputs.push(inputParms);
+            window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "6" + ", " + JSON.stringify(inputs)));
+            break;
+        case 1:
+        case 3:
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_df_browser_search", JSON.stringify(option)));
+            break;
+    }
+    window.scroll_to('DCDataInspection');
+}
