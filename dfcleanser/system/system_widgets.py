@@ -18,7 +18,7 @@ import dfcleanser.system.system_model as sysm
 from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, 
                                             get_html_spaces, CheckboxGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable, SIMPLE)
 
 from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML, opStatus, 
                                             display_exception, display_generic_grid, get_select_defaults)
@@ -43,33 +43,31 @@ dfmgr_input_idList                =   ["dftitle",
                                        "dfnumrows",
                                        "dfnumcols",
                                        "dfnotes",
-                                       None,None,None,None,None,None]
+                                       None,None,None,None,None]
 
 dfmgr_input_labelList             =   ["df_title",
                                        "df_num_rows",
                                        "df_num_cols",
                                        "df_notes",
-                                       "Add</br>df</br>to dfc",
-                                       "Drop</br>df</br>from dfc",
-                                       "Update</br>df</br>in dfc",
-                                       "Set As</br>Current</br>dfc df",
+                                       "Add df</br>to</br>dfc mgr",
+                                       "Drop df</br>from</br>dfc mgr",
+                                       "Update df</br>in</br>dfc mgr",
                                        "Return",
                                        "Help"]
 
 dfmgr_input_typeList              =   ["select","text","text",maketextarea(5),
-                                       "button","button","button","button","button","button"]
+                                       "button","button","button","button","button"]
 
 dfmgr_input_placeholderList       =   ["dataframe title",
                                        "number of rows",
                                        "number of columns",
                                        "dataframe notes",
-                                       None,None,None,None,None,None]
+                                       None,None,None,None,None]
 
 dfmgr_input_jsList                =   [None,None,None,None,
                                        "dfmgr_callback("+str(sysm.DISPLAY_ADD_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.DROP_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.UPDATE_DATAFRAME)+")",
-                                       "dfmgr_callback("+str(sysm.SET_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.RETURN_DATAFRAME)+")",
                                        "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
 
@@ -233,18 +231,10 @@ dfc_core_modules_checkbox_jsList     =   [None,None,None,None,None]
 dfc_utils_modules_checkbox_title      =   "dfcleanser Utilities"
 dfc_utils_modules_checkbox_id         =   "dfc_utils_cb"
 
-dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgeocode","dfcutildfsubset","dfcscripting"]
-dfc_utils_modules_checkbox_labelList  =   ["Common","Geocoding","df Subset","Scripting"]
+dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgeocode","dfcutildfsubset","dfcutildfcensus","dfcscripting"]
+dfc_utils_modules_checkbox_labelList  =   ["Common","Geocoding","df Subset","Census","Scripting"]
 
-dfc_utils_modules_checkbox_jsList     =   [None,None,None,None]
-
-dfc_script_modules_checkbox_title      =   "dfcleanser Scripting"
-dfc_script_modules_checkbox_id         =   "dfc_script_cb"
-
-dfc_script_modules_checkbox_idList     =   ["dfcscripting"]
-dfc_script_modules_checkbox_labelList  =   ["Scripting"]
-
-dfc_script_modules_checkbox_jsList     =   [None]
+dfc_utils_modules_checkbox_jsList     =   [None,None,None,None,None]
 
 system_chapters_tb_doc_title           =   "Chapters"
 system_chapters_tb_doc_id              =   "chaptersoptions"
@@ -288,6 +278,11 @@ dfc_files_input_jsList              =    [None,None,
                                           "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_COPY_ID) + ")"]
 
 dfc_files_input_reqList             =   [0,1]
+
+
+system_inputs               =   [dfmgr_input_id,dfmgr_add_input_id,readme_input_id,
+                                 system_environment_doc_id,dfc_files_input_id]
+
 
 """
 #--------------------------------------------------------------------------
@@ -383,7 +378,7 @@ def get_current_checkboxes(cbtype) :
             
     else :
         if(cfg.get_config_value(cfg.UTILITIES_CBS_KEY) == None) :
-            return([0,0,0,0])
+            return([0,0,0,0,0])
         else :
             return(cfg.get_config_value(cfg.UTILITIES_CBS_KEY))
     
@@ -407,11 +402,10 @@ def display_system_chapters_taskbar() :
                                                     dfc_utils_modules_checkbox_idList,
                                                     dfc_utils_modules_checkbox_labelList,
                                                     dfc_utils_modules_checkbox_jsList,
-                                                    get_current_checkboxes(sysm.UTILITIES),
-                                                    [0,0,0,0])
+                                                    get_current_checkboxes(sysm.UTILITIES))
     
     if(not (cfg.get_dfc_mode() == cfg.INLINE_MODE)) :
-        dfc_utils_modules_checkbox.set_rows_count([2,2])
+        dfc_utils_modules_checkbox.set_rows_count([2,2,1])
     
     dfc_utils_modules_heading_html       =   "<div>dfcleanser Utilities</div><br>"
     dfc_utils_modules_checkbox_html      =   dfc_utils_modules_checkbox.get_html()
@@ -441,7 +435,7 @@ def display_system_chapters_taskbar() :
     print("\n")
 
 
-def display_df_dataframes(title=None) :  
+def display_df_dataframes(title) :  
     """
     * -------------------------------------------------------------------------- 
     * function : display dataframe manager form
@@ -455,32 +449,30 @@ def display_df_dataframes(title=None) :
  
     fparms  =   []
 
-    if(title == None) :
-        current_df  =   cfg.get_current_dfc_dataframe_title()
-    else :
-        current_df  =   title
+    if(title is None) :
 
-    cfg.set_config_value(cfg.CURRENT_DF_DISPLAYED_KEY,current_df)
+        if(cfg.is_a_dfc_dataframe_loaded()) :
+            df_titles   =   cfg.get_dfc_dataframes_titles_list()
+            fparms      =   [df_titles[0],str(len(cfg.get_dfc_dataframe_df(df_titles[0]))),
+                             str(len(cfg.get_dfc_dataframe_df(df_titles[0]).columns)),
+                             cfg.get_dfc_dataframe_notes(df_titles[0])]
+        else :
+            fparms  =   ["","","",""]
     
-    if(not(current_df == None)) :
-        cdf     =   cfg.get_dfc_dataframe(current_df)
-        cdfn    =   cfg.get_dfc_dataframe_notes(current_df)
-        
-        fparms.append(current_df)
-        
-        if(not(cdf is None)) :
-            fparms.append(str(len(cdf)))
-            fparms.append(str(len(cdf.columns)))
-        else :
-            fparms.append("")
-            fparms.append("")
-            
-        if(not(cdfn == None)) :
-            fparms.append(cdfn)
-        else :
-            fparms.append("")
     else :
-        fparms  =   ["","","",""]
+    
+        if(cfg.is_a_dfc_dataframe_loaded()) :
+            dfc_df  =   cfg.get_dfc_dataframe(title)
+        
+            print("display_df_dataframes",dfc_df)
+            if(dfc_df is None) :
+                fparms  =   ["","","",""] 
+            else :
+                fparms  =   [title,str(len(cfg.get_dfc_dataframe_df(title))),
+                             str(len(cfg.get_dfc_dataframe_df(title).columns)),
+                             cfg.get_dfc_dataframe_notes(title)]
+        else :
+            fparms  =   ["","","",""]    
         
     parmsProtect = [False,True,True,False]
         
@@ -497,12 +489,13 @@ def display_df_dataframes(title=None) :
                                      dfmgr_input_reqList)
                     
     selectDicts =   []
-    df_titles   =   cfg.get_dfc_dataframe_titles_list()
+    df_titles   =   cfg.get_dfc_dataframes_titles_list()
      
-    if(df_titles is None) :
+    #if(df_titles is None) :
+    if(not (cfg.is_a_dfc_dataframe_loaded())) :    
         dfs     =   {"default":" ","list":[" "]}
     else :   
-        dfs     =   {"default":str(df_titles[0]),"list":df_titles,"callback":"select_new_df"}
+        dfs     =   {"default":str(fparms[0]),"list":df_titles,"callback":"select_new_df"}
     selectDicts.append(dfs)
         
     get_select_defaults(dfmanager_input_form,
@@ -513,7 +506,7 @@ def display_df_dataframes(title=None) :
 
     dfmanager_input_form.set_shortForm(True)
     dfmanager_input_form.set_gridwidth(480)
-    dfmanager_input_form.set_custombwidth(70)
+    dfmanager_input_form.set_custombwidth(90)
     dfmanager_input_form.set_fullparms(True)
         
     dfmgr_input_html = dfmanager_input_form.get_html()
@@ -924,7 +917,7 @@ def show_libs_info():
                          cfg.System_ID,
                          libsHeader,libsRows,libsWidths,libsAligns)
 
-    libs_table.set_tabletype(ROW_MAJOR)
+    libs_table.set_tabletype(SIMPLE)
     libs_table.set_rowspertable(len(testedModules))
     libs_table.set_color(True)
     libs_table.set_colorList(colorList)

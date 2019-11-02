@@ -23,17 +23,6 @@ LOAD_CHAPTER                    =   1
 CHAPTER_NOT_LOADED              =   0
 CHAPTER_LOADED                  =   1
 
-DF_UTILS_DATA_STRUCTURE         =   0
-DF_UTILS_GEN_FUNCTION           =   1
-DF_UTILS_GEOCODING              =   2
-DF_UTILS_SUBSET                 =   3
-
-DF_CORES                        =   0
-DF_UTILS                        =   1
-DF_SCRIPT                       =   2
-
-
-
 
 """
 # -------------------------------------------------------------
@@ -309,8 +298,15 @@ def load_dfcleanser_cells() :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DFSUBSET_UTILITY_TITLE)
             add_dfc_cell(cells.CODE,cells.DC_DFSUBSET_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-            
+        
+        # insert dfsubset utility cells 
         if(utilcbs[3]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_CENSUS_UTILITY_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_CENSUS_UTILITY)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+            
+            
+        if(utilcbs[4]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_SCRIPTING_TITLE)
             add_dfc_cell(cells.CODE,cells.DC_DATA_SCRIPTING)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
@@ -428,7 +424,7 @@ def reload_dfcleanser(chaptersToLoad) :
     * --------------------------------------------------------
     """
     
-    dfc_loaded = cfg.get_config_value("dfcleanserCurrentlyLoaded")
+    dfc_loaded = cfg.get_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
     
     if(dfc_loaded is None) :
         load_dfcleanser()
@@ -458,6 +454,7 @@ def reload_dfcleanser(chaptersToLoad) :
                 if(chapters_loaded[cells.DC_DATASTRUCT_UTILITY_ID] == CHAPTER_LOADED)   :    delete_chapter(cells.DC_LIST_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_GEOCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_GEOCODE_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DFSUBSET_UTILITY_ID] == CHAPTER_LOADED)     :    delete_chapter(cells.DC_DFSUBSET_UTILITY_TITLE)
+                if(chapters_loaded[cells.DC_CENSUS_UTILITY_ID] == CHAPTER_LOADED)       :    delete_chapter(cells.DC_CENSUS_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DATA_SCRIPT_ID] == CHAPTER_LOADED)          :    delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)
             
             # add the utilities title bar
@@ -467,7 +464,8 @@ def reload_dfcleanser(chaptersToLoad) :
             if(utilscbs[0] == LOAD_CHAPTER) :   add_chapter(cells.DC_LIST_UTILITY_TITLE,cells.DC_LIST_UTILITY)   
             if(utilscbs[1] == LOAD_CHAPTER) :   add_chapter(cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_GEOCODE_UTILITY)   
             if(utilscbs[2] == LOAD_CHAPTER) :   add_chapter(cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_DFSUBSET_UTILITY)   
-            if(utilscbs[3] == LOAD_CHAPTER) :   add_chapter(cells.DC_DATA_SCRIPTING_TITLE,cells.DC_DATA_SCRIPTING)   
+            if(utilscbs[3] == LOAD_CHAPTER) :   add_chapter(cells.DC_CENSUS_UTILITY_TITLE,cells.DC_CENSUS_UTILITY)   
+            if(utilscbs[4] == LOAD_CHAPTER) :   add_chapter(cells.DC_DATA_SCRIPTING_TITLE,cells.DC_DATA_SCRIPTING)   
                     
         # no utils cbs to display
         else :
@@ -480,28 +478,9 @@ def reload_dfcleanser(chaptersToLoad) :
                 if(chapters_loaded[cells.DC_DATASTRUCT_UTILITY_ID] == CHAPTER_LOADED)   :    delete_chapter(cells.DC_LIST_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_GEOCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_GEOCODE_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DFSUBSET_UTILITY_ID] == CHAPTER_LOADED)     :    delete_chapter(cells.DC_DFSUBSET_UTILITY_TITLE)
+                if(chapters_loaded[cells.DC_CENSUS_UTILITY_ID] == CHAPTER_LOADED)       :    delete_chapter(cells.DC_CENSUS_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DATA_SCRIPT_ID] == CHAPTER_LOADED)          :    delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)
             
-        # check the scripting chapters
-        #if(scriptcbs[0] == LOAD_CHAPTER) :
-        #    if(chapters_loaded[cells.DC_SCRIPTING_ID] == CHAPTER_NOT_LOADED) :
-
-        #        if(len(utilscbs) > 0) :
-        #            if(utilscbs[2]   == LOAD_CHAPTER)    :   afterid   =   cells.DC_DFSUBSET_UTILITY  
-        #            elif(utilscbs[1] == LOAD_CHAPTER)    :   afterid   =   cells.DC_GEOCODE_UTILITY
-        #            elif(utilscbs[0] == LOAD_CHAPTER)    :   afterid   =   cells.DC_LIST_UTILITY
-                    
-        #        else :
-        #            afterid   =   cells.DC_DATA_EXPORT
-                
-        #        add_title_cell(cells.DC_SCRIPTING,afterid)
-        #        add_chapter(cells.DC_DATA_SCRIPTING_TITLE,cells.DC_DATA_SCRIPTING)
-                
-        #else :
-        #    if(chapters_loaded[cells.DC_SCRIPTING_ID] == CHAPTER_LOADED) :
-        #        delete_title_cell(cells.DC_SCRIPTING)
-        #        delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)                
-
         cfg.get_loaded_cells()
 
         cfg.set_config_value(cfg.UTILITIES_CBS_KEY,utilscbs)

@@ -72,6 +72,14 @@ def load_dfCleanser() :
     from dfcleanser.system.load import load_dfcleanser
     load_dfcleanser()
 
+def unload_dfCleanser() :
+    
+    from dfcleanser.system.load import unload_dfcleanser
+    unload_dfcleanser()
+    
+    jscript     =   ("complete_unload_dfcleanser()")
+    run_jscript(jscript,"Error Loading dfcleanser " + "Error unLoading dfcleanser")
+    
     
 def display_system_environment(funcId,parms=None) :
     """
@@ -160,11 +168,11 @@ def display_system_environment(funcId,parms=None) :
             if(fid == sysm.DROP_DATAFRAME) :
                 cfg.drop_dfc_dataframe(fparms[0])
                 
-            elif(fid == sysm.SET_DATAFRAME) :    
-                cfg.set_current_dfc_dataframe_title(fparms[0]) 
+            elif(fid == sysm.SET_DATAFRAME) :  
+                print("sysm.SET_DATAFRAME")
                 
             elif(fid == sysm.UPDATE_DATAFRAME) :    
-                cfg.set_dfc_dataframe_notes(fparms[3],fparms[0])
+                cfg.set_dfc_dataframe_notes(fparms[0],fparms[3])
                 dftitle     =   fparms[0]
             
             elif(fid == sysm.RENAME_DATAFRAME) :    
@@ -242,7 +250,7 @@ def display_system_environment(funcId,parms=None) :
             
         elif(funcId == sysm.PROCESS_EULA) :
             display_main_tb()
-            cfg.set_config_value(cfg.EULA_FLAG_KEY,"true",cfg.GLOBAL)
+            cfg.set_config_value(cfg.EULA_FLAG_KEY,"true")
             
         elif(funcId == sysm.EXIT_SETUP) :
             from dfcleanser.system.load import unload_dfcleanser
@@ -305,7 +313,6 @@ def clear_data() :
     * --------------------------------------------------------
     """
     
-    cfg.drop_dfc_dataframe()
     from dfcleanser.scripting.data_scripting_widgets import drop_current_script, set_script_logging 
     
     set_script_logging()
@@ -592,6 +599,9 @@ def process_dfc_files(funcid,parms) :
 def clear_system_data() :
     
     drop_owner_tables(cfg.System_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.System_ID,sysw.system_inputs)
+    delete_all_inputs(cfg.System_ID)
     clear_system_cfg_values()
     
 def clear_system_cfg_values() :
