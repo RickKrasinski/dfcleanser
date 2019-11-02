@@ -34,6 +34,8 @@ function transform_task_bar_callback(fid) {
         case 4:
             var inputs = new Array();
             inputs.push([fid]);
+            var inputParms = window.get_input_form_parms("datatransformdf");
+            inputs.push(inputParms);
             console.log("transform_task_bar_callback", inputs);
 
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0" + "," + JSON.stringify(inputs)));
@@ -41,6 +43,7 @@ function transform_task_bar_callback(fid) {
         case 5:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
             break;
+
     }
     window.scroll_to('DCDataTransform');
 }
@@ -72,15 +75,11 @@ function df_transform_task_bar_callback(optionId) {
      */
 
     switch (optionId) {
-        case 7:
-            window.delete_output_cell(window.TRANSFORM_GENERIC_ID);
+        case 108:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
             break;
         default:
-            var fparms = [optionId];
-            var inputs = new Array();
-            inputs.push(fparms);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "9" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId));
             break;
     }
     window.scroll_to('DCDataTransform');
@@ -96,35 +95,34 @@ function df_process_cmd_callback(optionId) {
      *  fId          - function id
      */
 
-    var inputs = new Array();
     var formid = null;
 
     switch (optionId) {
-        case 0:
-            formid = "savecidrowtransform";
+        case 110:
+            formid = "savecolnamestransform";
             break;
-        case 1:
-            formid = "addcidrowtransform";
+        case 111:
+            formid = "addcolnamestransform";
             break;
-        case 2:
-            formid = "changecidrowtransform";
+        case 112:
+            formid = "changecolnamestransform";
             break;
-        case 3:
-            formid = "setnewcoltransform";
+        case 113:
+            formid = "setnewindextransform";
             break;
-        case 4:
-            formid = "resetridcoltransform";
+        case 114:
+            formid = "resetindextransform";
             break;
-        case 5:
-            formid = "dropridcoltransform";
+        case 115:
+            formid = "appendindextransform";
             break;
-        case 6:
-            formid = "sortrowidcoltransform";
+        case 116:
+            formid = "sortindextransform";
             break;
-        case 7:
-            formid = "dropdridcoltransform";
+        case 117:
+            formid = "dropduplicatetransform";
             break;
-        case 8:
+        case 108:
             var fparms = [0];
             var inputs = new Array();
             inputs.push(fparms);
@@ -132,12 +130,15 @@ function df_process_cmd_callback(optionId) {
             break;
     }
 
+    var inputs = new Array();
+    //inputs.push(optionId);
+
     if (formid != null) {
         // get the input values
         transformVals = get_input_form_parms(formid);
         inputs.push(transformVals);
     }
-    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "10" + "," + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId + "," + JSON.stringify(inputs)));
 
     window.scroll_to('DCDataTransform');
 }
@@ -156,30 +157,54 @@ function cols_transform_tb_callback(fid) {
      *  fId          - function id
      */
 
+    console.log("cols_transform_tb_callback", fid);
+
     switch (fid) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-            var inputs = new Array();
-            inputs.push([fid]);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+        case 200:
+        case 201:
+        case 202:
+        case 203:
+        case 204:
+        case 205:
+        case 206:
+        case 207:
+        case 208:
+        case 209:
+        case 211:
+        case 212:
+        case 213:
+        case 214:
+        case 215:
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", fid));
             break;
-        case 9:
+        case 210:
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
+            break;
+        case 5:
+        case 216:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
             break;
     }
-    if (fid != 5) window.scroll_to('DCDataTransform');
+    window.scroll_to('DCDataTransform');
+}
+
+function data_transform_display_add_cols_callback(optionId) {
+
+    var inputs = new Array();
+
+    if (optionId == 412) {
+        window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", 0));
+        window.scroll_to('DCDataTransform');
+        return;
+    }
+
+    addvals = get_input_form_parms("addcolInput");
+    inputs.push(addvals);
+
+    window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
 }
 
 function data_transform_add_cols_callback(optionId) {
@@ -190,72 +215,81 @@ function data_transform_add_cols_callback(optionId) {
      *  optionId   - option id
      */
 
+    console.log("data_transform_add_cols_callback", optionId);
+
     var inputs = new Array();
     var fparms = ["None", 2, optionId];
     inputs.push(fparms);
 
     var formid = "";
     switch (optionId) {
-        case 0:
-        case 1:
-        case 2:
+        case 100:
+        case 102:
+        case 104:
+        case 107:
             formid = "addcolInput";
             break;
-        case 13:
+        case 101:
             formid = "addcolfileInput";
             break;
-        case 14:
-        case 15:
-        case 16:
-        case 17:
-        case 21:
+        case 103:
             formid = "addcolcodeInput";
+            break;
+        case 106:
+            formid = "addcoldfcfuncInput";
+            break;
+        case 108:
+            formid = "addcoldfInput";
             break;
     }
 
     if (formid != "") { var importVals = get_input_form_parms(formid); }
-    if ((optionId == 16) || (optionId == 17)) {
-        if (importVals.indexOf("# add column code") != -1) {
-            importVals = importVals.replace("# add column code", "");
-        }
-    }
 
     inputs.push(importVals);
+
     switch (optionId) {
-        case 0:
-        case 1:
-        case 2:
+        case 400:
+        case 402:
+        case 404:
+        case 407:
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataTransform');
             break;
-        case 4:
-        case 5:
+        case 411:
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId));
+            window.scroll_to('DCDataTransform');
+            break;
+        case 412:
             window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
             window.scroll_to('DCDataTransform');
             break;
-        case 13: // add new column from file
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+        case 401: // add new column from file
+        case 403: // add new column from user code
+        case 406: // add new column from dfc func
+        case 408: // add new column from df
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataTransform');
             break;
-        case 14:
-            break;
-        case 15: // add new column from code
-            if (inputs.indexOf("# add column code") != -1) {
-                inputs = inputs.replace("# add column code", "");
-            }
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
-            window.scroll_to('DCDataTransform');
-            break;
-        case 17: // add new column from code display gen functions
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
-            window.scroll_to('DCDataTransform');
-            break;
-        case 21:
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
-            window.scroll_to('DCDataTransform');
-            break;
+            //case 14:
+            //    break;
+            //case 15: // add new column from code
+            //    if (inputs.indexOf("# add column code") != -1) {
+            //        inputs = inputs.replace("# add column code", "");
+            //    }
+            //    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            //    window.scroll_to('DCDataTransform');
+            //    break;
+            //case 17: // add new column from code display gen functions
+            //    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            //    window.scroll_to('DCDataTransform');
+            //    break;
+            //case 21:
+            //    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+            //    window.scroll_to('DCDataTransform');
+            //    break;
     }
 
 }
@@ -283,7 +317,7 @@ function data_transform_add_cols_generic(funcid, gtid) {
 //----------------------------------------------------------------
 // Column Transform callbacks - mapping, dummies and categorical
 //----------------------------------------------------------------
-function data_transform_cols_callback(funcid, optionId) {
+function data_transform_process_cols_callback(optionId) {
     /**
      * Data Transform columns callback mapping, dummies and categorical.
      *
@@ -292,126 +326,105 @@ function data_transform_cols_callback(funcid, optionId) {
      *   optionId    - option id
      */
 
-    console.log("data_transform_cols_callback", funcid, optionId);
-    var inputs = new Array();
-    var element = document.getElementById("ucolscolumnname");
-    if (element != null) { inputs.push(element.value); } else { inputs.push("None"); }
-    inputs.push(funcid);
-    inputs.push(optionId);
+    console.log("data_transform_process_cols_callback", optionId);
 
-    switch (funcid) {
-        case 0:
-            var formid = "";
-            switch (optionId) {
-                case 1:
-                    formid = "renamecolInput";
-                    break;
-                case 2:
-                    formid = "addcolInput";
-                    break;
-                case 3:
-                    formid = "dropcolInput";
-                    break;
-                case 4:
-                    formid = "reordercolInput";
-                    break;
-                case 5:
-                    formid = "maptransformInput";
-                    break;
-                case 6:
-                    formid = "dummytransformInput";
-                    break;
-                case 7:
-                    formid = "categorytransformInput";
-                    break;
-                case 11:
-                    formid = "savecolInput";
-                    break;
-                case 12:
-                    formid = "copycolInput";
-                    break;
-                case 14:
-                    formid = "sortcolInput";
-                    break;
-                case 15:
-                    formid = "applycolInput";
-                    break;
-            }
-
-            // get the input values
-            var importVals = get_input_form_parms(formid);
-            inputs.push(importVals);
-
-            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", 5 + "," + JSON.stringify(inputs)));
-            window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
-            window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
-            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
-            window.scroll_to('DCDataTransform');
-            break;
-        case 1:
-            var colname = $("#applyColumnname");
-            var applyinputs = [];
-            applyinputs.push([colname.val(), 35]);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
-            window.scroll_to('DCDataTransform');
-            break;
-        case 2:
-            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
-            window.scroll_to('DCDataTransform');
-            break;
-        case 4:
-            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", 11 + "," + JSON.stringify("[0]")));
-            break;
-        case 8:
-            var colname = $("#applyColumnname");
-            var applyinputs = [];
-            applyinputs.push([colname.val(), 36]);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
-            window.scroll_to('DCDataTransform');
-            break;
-
+    if (optionId == 216) {
+        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", 0));
+        window.scroll_to('DCDataTransform');
+        return;
     }
-}
-
-
-function data_transform_apply_fn_callback(ftype, optionId) {
-    /**
-     * apply fn to column callback.
-     *
-     * Parameters:
-     *  ftype      - form type
-     *  optionId   - option id
-     */
 
     var inputs = new Array();
-    var fparms = null;
 
-    if (ftype == 0)
-        fparms = get_input_form_parms("applycolInput");
-    else {
-        if (ftype == 1)
-            fparms = get_input_form_parms("applylcolInput");
-        else
-            fparms = get_input_form_parms("applydcolInput");
+    var formid = "";
+
+    switch (optionId) {
+        case 259:
+            formid = "renamecolInput";
+            break;
+        case 251:
+            formid = "dropcolInput";
+            break;
+        case 252:
+            formid = "savecolInput";
+            break;
+        case 253:
+            formid = "reordercolInput";
+            break;
+        case 254:
+            formid = "copycolInput";
+            break;
+        case 255:
+            formid = "sortcolInput";
+            break;
+        case 256:
+            formid = "applylfntocolInput";
+            break;
+        case 217:
+        case 218:
+        case 257:
+            formid = "maptransformInput";
+            break;
+        case 258:
+            formid = "dummytransformInput";
+            break;
+        case 259:
+            formid = "categorytransformInput";
+            break;
     }
 
-    if ((ftype == 1) && (optionId == 8)) {
-        var applyinputs = [];
-        applyinputs.push([fparms[0], 37]);
-        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
-    } else {
-        inputs.push([ftype, optionId, fparms]);
-        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(fparms)));
-    }
+    // get the input values
+    var formVals = get_input_form_parms(formid);
+
+    console.log("formVals", formid, formVals);
+    inputs.push(formVals);
+
+    window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", optionId + "," + JSON.stringify(inputs)));
+    window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
+    window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
+    window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
     window.scroll_to('DCDataTransform');
 
 }
 
-window.get_selected_value = function(selectid) {
+
+function change_dt_col_callback(selectid) {
+    var selected_value = $("#" + selectid + " :selected").text();
+    var inputs = new Array();
+    inputs.push(selected_value);
+
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "208" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+}
+
+function change_na_option_callback(selectid) {
+
+    var colname = $("#dtcolname :selected").text();
+    var selected_value = $("#" + selectid + " :selected").text();
+    var inputs = new Array();
+    inputs.push(colname);
+    inputs.push(selected_value);
+
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "220" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+}
+
+//----------------------------------------------------------------
+// dynamic html for column transforms
+//----------------------------------------------------------------
+function change_col_stats_callback(selectid) {
+
+    var selected_value = $("#" + selectid + " :selected").text();
+    var inputs = new Array();
+    inputs.push(selectid);
+    inputs.push(selected_value);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_col_stats", JSON.stringify(inputs)));
+}
+
+window.get_dfc_func_value = function(selectid) {
     /**
      * get selected value
      *
@@ -419,16 +432,27 @@ window.get_selected_value = function(selectid) {
      *  selectid   - select form id
      */
 
-    var selected_value = $("#" + selectid + " :selected").text();
-    console.log("get_selected_value", selectid, selected_value);
+    console.log("get_dfc_func_value", selectid);
 
     var inputs = new Array();
+    var fparms = ["None", 2, 105];
+    inputs.push(fparms);
+
+    var importVals = get_input_form_parms("addcoldfcfuncInput");
+    inputs.push(importVals);
+
+    var selected_value = $("#" + selectid + " :selected").text();
+
     inputs.push(selectid);
     inputs.push(selected_value);
-    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_gen_func_values", JSON.stringify(inputs)));
-};
 
-function get_lambda_fn(selectid) {
+    window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+
+}
+
+function get_apply_fn(selectid) {
     /**
      * get lambda fn
      *
@@ -437,46 +461,69 @@ function get_lambda_fn(selectid) {
      */
 
     var select_form_value = $("#" + selectid + " :selected").text();
-    var df = $('#currentdf').val();
-    var colname = $('#applylColumnname').val();
-
-    var selected_value = "df[dfcolname] = ";
-    selected_value = selected_value + select_form_value;
-
-    console.log("get_selected_value", selectid, selected_value, colname);
-
-    $('#fntoapply').val(selected_value);
-}
-
-function data_transform_apply_fn_callback(ftype, optionId) {
-    /**
-     * apply fn to column callback.
-     *
-     * Parameters:
-     *  ftype      - form type
-     *  optionId   - option id
-     */
+    var colname = $("#" + "applycolname" + " :selected").text();
 
     var inputs = new Array();
-    var fparms = null;
+    inputs.push(colname);
+    inputs.push(select_form_value);
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "217" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+}
 
-    if (ftype == 0)
-        fparms = get_input_form_parms("applycolInput");
-    else {
-        if (ftype == 1)
-            fparms = get_input_form_parms("applylcolInput");
-        else
-            fparms = get_input_form_parms("applydcolInput");
-    }
+function add_df_col_change_df(selectid) {
+    /**
+     * get lambda fn
+     *
+     * Parameters:
+     *  selectid   - select form id
+     * 
+     */
 
-    if ((ftype == 1) && (optionId == 8)) {
-        var applyinputs = [];
-        applyinputs.push([fparms[0], 37]);
-        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(applyinputs)));
-    } else {
-        inputs.push([ftype, optionId, fparms]);
-        window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(fparms)));
-    }
+    var dfname = $("#" + selectid + " :selected").text();
+
+    var inputs = new Array();
+    inputs.push(selectid);
+    inputs.push(dfname);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_add_df_col_change", JSON.stringify(inputs)));
+}
+
+function add_df_col_change_source_df(selectid) {
+    /**
+     * get lambda fn
+     *
+     * Parameters:
+     *  selectid   - select form id
+     */
+
+    var select_form_value = $("#" + selectid + " :selected").text();
+    var dfname = $("#" + "addcoldftitle" + " :selected").text();
+
+    var inputs = new Array();
+    inputs.push(1);
+    inputs.push(dfname);
+    inputs.push(select_form_value);
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_add_df_col_change", JSON.stringify(inputs)));
+}
+
+function change_apply_fn_col(selectid) {
+    /**
+     * change the column to apply fn to
+     *
+     * Parameters:
+     *  formid   - form id
+     */
+
+    console.log("change_apply_fn_col", selectid);
+    var inputs = new Array();
+
+    var select_form_value = $("#" + selectid + " :selected").text();
+    var colname = $("#" + "applycolname" + " :selected").text();
+
+    inputs.push(colname);
+    inputs.push(35);
+
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify([inputs])));
     window.scroll_to('DCDataTransform');
 
 }
@@ -522,74 +569,80 @@ function process_cols_dropna_fillna_transform_callback(fid) {
 
 }
 
-function process_cols_datatype_transform_callback(naoption, fid, numflag, dfcid) {
+function process_transform_datatype_callback(naoption, fid) {
     /**
      * Data Transform columns process cmd.
      *
      * Parameters:
-     *  naoption  - na option
-     *  fid       - function id
-     *  numflag   - numflag
-     *  dfcid     - component id
+     *  naoption  - na option : none fill drop
+     *  fid       - function id : show uniques compat process return
      */
 
-    console.log("process_cols_datatype_transform_callback", naoption, fid, numflag, dfcid);
+    console.log("process_transform_datatype_callback", naoption, fid);
 
     var inputs = new Array();
-    var element = document.getElementById("ucolscolumnname");
-    if (element != null) { inputs.push(element.value); } else { inputs.push("None"); }
+    //var element = document.getElementById("ucolscolumnname");
+    //if (element != null) { inputs.push(element.value); } else { inputs.push("None"); }
 
-    var dtype = $("#dtdatatype :selected").text();
-    inputs.push(dtype);
+    //var dtype = $("#dtdatatype :selected").text();
+    //inputs.push(dtype);
+
+    var dtparms = null;
+
+    switch (naoption) {
+        case 0:
+            var dtparms = window.get_input_form_parms("dtdndatatypeinputt");
+            break;
+        case 1:
+            var dtparms = window.get_input_form_parms("dtfndatatypeinput");
+            break;
+        case 2:
+            var dtparms = window.get_input_form_parms("dtdatatypeinput");
+            break;
+    }
+
 
     switch (fid) {
         case 0:
 
             inputs.push(naoption);
+            inputs.push(dtparms);
 
-            switch (naoption) {
-                case 0:
-                    var dropnaparms = window.get_input_form_parms("dtdndatatypeinput");
-                    inputs.push(dropnaparms);
-                    break;
-                case 1:
-                    if (numflag == 1) {
-                        var fillnaparms = window.get_input_form_parms("dtfndatatypeinput");
-                        inputs.push(fillnaparms);
-                    } else {
-                        var fillnaparms = window.get_input_form_parms("dtnnfndatatypeinput");
-                        inputs.push(fillnaparms);
-                    }
-                    break;
-            }
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "221" + "," + JSON.stringify(inputs)));
 
-            switch (dfcid) {
-                case 'DataTransform':
-                    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "44" + "," + JSON.stringify(inputs)));
-                    window.scroll_to('DCDataTransform');
-                    break;
-                case 'DataCleansing':
-                    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "11" + "," + JSON.stringify(inputs)));
-                    window.scroll_to('DCDataCleansing');
-                    break;
-            }
             break;
 
         case 1:
 
-            switch (dfcid) {
-                case 'DataTransform':
-                    window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-                    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
-                    window.scroll_to('DCDataTransform');
-                    break;
-                case 'DataCleansing':
-                    window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
-                    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
-                    window.scroll_to('DCDataCleansing');
-                    break;
-            }
+            inputs.push(naoption);
+            inputs.push(dtparms);
+
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "222" + "," + JSON.stringify(inputs)));
+            break;
+
+        case 2:
+
+            inputs.push(naoption);
+            inputs.push(dtparms);
+
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "262" + "," + JSON.stringify(inputs)));
+            break;
+
+        case 3:
+
+            inputs.push(naoption);
+            inputs.push(dtparms);
+
+            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
+
+            break;
     }
+    window.scroll_to('DCDataTransform');
+
 }
 
 function col_checknum(colid) {
@@ -661,8 +714,6 @@ function get_gf_fn(genid) {
     window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
     window.scroll_to('DCDataTransform');
 }
-
-
 
 function single_col_categorical_callback(optionId) {
     /**
@@ -764,6 +815,43 @@ function dtctcol(colid, option) {
     }
 }
 
+function process_transform_check_compatability(fid) {
+    /**
+     * get check compatability.
+     *
+     * Parameters:
+     *  fid    - function id
+     */
+
+    switch (fid) {
+
+        case 0:
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "223"));
+            window.scroll_to('DCDataTransform');
+            break;
+
+        case 1:
+
+            var inputs = new Array();
+            var inputVals = get_input_form_parms("checkdtinput");
+            inputs.push(inputVals);
+
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "45" + "," + JSON.stringify(inputVals)));
+            window.scroll_to('DCDataTransform');
+            break;
+
+        case 2:
+            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0"));
+            window.scroll_to('DCDataTransform');
+            break;
+
+    }
+
+
+}
+
+
+
 //----------------------------------------------------------------
 // dynamic html functions
 //----------------------------------------------------------------
@@ -786,37 +874,52 @@ function dtscol(colid) {
     currentcolname.val(colid);
 }
 
-function dfsnriccol(colid) {
-    var currentcolname = $("#setnewcolid");
+function setindexcol(colid) {
+    var currentcolname = $("#newindex_colid");
     var current_columns = currentcolname.val();
 
-    console.log("dfsnriccol", colid, current_columns);
-    if (current_columns == null) console.log("dfsnriccol null");
-    if (current_columns.length == 0) {
-        current_columns = "[" + colid + "]";
-    } else {
-        current_columns = current_columns.replace("]", ",");
-        current_columns = current_columns + colid + "]";
+    console.log("setindexcol", colid, current_columns);
+    if (current_columns != null) {
+        if (current_columns.length == 0) {
+            current_columns = "[" + colid + "]";
+        } else {
+            current_columns = current_columns.replace("]", ",");
+            current_columns = current_columns + colid + "]";
+        }
     }
 
     currentcolname.val(current_columns);
-
-    //var fparms = [9];
-    //var inputs = new Array();
-    //inputs.push(fparms);
-    //inputs.push(colid);
-    //window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "9" + "," + JSON.stringify(inputs)));
 }
 
-function dtdcrcol(colid) {
-    var currentList = $("#dtddrcolumnids");
+function appendindexcol(colid) {
+    var currentcolname = $("#appendindex_colid");
+    var current_columns = currentcolname.val();
+
+    console.log("appendindexcol", colid, current_columns);
+    if (current_columns != null) {
+        if (current_columns.length == 0) {
+            current_columns = "[" + colid + "]";
+        } else {
+            current_columns = current_columns.replace("]", ",");
+            current_columns = current_columns + colid + "]";
+        }
+    }
+
+    currentcolname.val(current_columns);
+}
+
+function dropduplicatescol(colid) {
+    var currentList = $("#dropduplicate_colids");
     var current_columns = currentList.val();
 
-    if (current_columns.length == 0) {
-        current_columns = "[" + colid + "]";
-    } else {
-        current_columns = current_columns.replace("]", ",");
-        current_columns = current_columns + colid + "]";
+    console.log("dropduplicatescol", colid, current_columns);
+    if (current_columns != null) {
+        if (current_columns.length == 0) {
+            current_columns = "[" + colid + "]";
+        } else {
+            current_columns = current_columns.replace("]", ",");
+            current_columns = current_columns + colid + "]";
+        }
     }
 
     currentList.val(current_columns);
@@ -826,6 +929,18 @@ function setformat(fstring) {
     var formatstring = $("#dtformatstring");
     formatstring.val(fstring);
 }
+
+function change_col_for_check_callback(selectid) {
+
+    var selected_value = $("#" + selectid + " :selected").text();
+    var inputs = new Array();
+    inputs.push(selected_value);
+
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "222" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+
+}
+
 
 //
 //-------------------------------------------------------
@@ -1146,24 +1261,9 @@ function dtcselect_dropna_change(dropid) {
 
 /*
  --------------------------------------
- * dynamic html
+ * df schema dynamic html
  --------------------------------------
 */
-function dfsch_fillnaselect(id) {
-    $("#" + id).attr('disabled', false);
-}
-
-function dfsch_dropnaselect(id) {
-    /**
-     * Data Inspection drop nan dhtml.
-     *
-     * Parameters:
-     *  id - threshold type
-     */
-    $("#" + id).attr('disabled', true);
-    var col_id = id.slice("dfschinput".length);
-    $("#dfschinput" + col_id).val("");
-}
 
 function dfsch_changedt(colid) {
     /**
@@ -1176,34 +1276,25 @@ function dfsch_changedt(colid) {
     var inputs = new Array();
     inputs.push(colid);
 
-    var datatype_select = document.getElementById('dfschsel' + colid);
-    if (datatype_select == null)
-        inputs.push("-1");
-    else
-        inputs.push(datatype_select.value);
+    window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "208" + ", " + JSON.stringify(inputs)));
+    window.scroll_to('DCDataTransform');
+}
 
-    var fillna_option = document.getElementById('fillna' + colid);
-    if (fillna_option.checked)
-        inputs.push("fillna");
-    else {
-        var dropna_option = document.getElementById('dropna' + colid);
-        if (dropna_option.checked)
-            inputs.push("dropna");
-        else
-            inputs.push("None");
-    }
+dfsch_chkcompat
 
-    var nafill = document.getElementById('dfschinput' + colid);
-    if (nafill == null)
-        inputs.push("");
-    else
-        inputs.push(nafill.value);
+function dfsch_chkcompat(colid) {
+    /**
+     * Data Inspection check compatability.
+     *
+     * Parameters:
+     *  colid - column id
+     */
 
-    var fillnaopt = $("[id = 'dfillnasel" + colid + "'] :selected").val();
-    //console.log("fillnaopt", fillnaopt);
-    inputs.push(fillnaopt);
+    var inputs = new Array();
+    inputs.push(colid);
 
     window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "17" + ", " + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "222" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCDataTransform');
 }

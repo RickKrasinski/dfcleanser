@@ -28,6 +28,7 @@
  window.SW_UTILS_LIB = "from dfcleanser.sw_utilities.sw_utility_control import ";
  window.SW_UTILS_GEOCODE_LIB = "from dfcleanser.sw_utilities.sw_utility_geocode_control import ";
  window.SW_UTILS_DFSUBSET_LIB = "from dfcleanser.sw_utilities.sw_utility_dfsubset_control import ";
+ window.SW_UTILS_CENSUS_LIB = "from dfcleanser.sw_utilities.sw_utility_census_control import ";
  window.CFG_LIB = "from dfcleanser.common.cfg import ";
  window.HELP_LIB = "from dfcleanser.common.help_utils import ";
 
@@ -49,23 +50,24 @@
  window.DC_DATASTRUCT_UTILITY_ID = 8;
  window.DC_GEOCODE_UTILITY_ID = 9;
  window.DC_DFSUBSET_UTILITY_ID = 10;
- //window.DC_SCRIPTING_ID = 11;
- window.DC_DATA_SCRIPT_ID = 11;
- window.DC_WORKING_ID = 12;
+ window.DC_CENSUS_ID = 11;
+ window.DC_DATA_SCRIPT_ID = 12;
+ window.DC_WORKING_ID = 13;
 
- window.SYSTEM_TASK_BAR_ID = 13;
- window.IMPORT_TASK_BAR_ID = 14;
- window.INSPECTION_TASK_BAR_ID = 15;
- window.CLEANSING_TASK_BAR_ID = 16;
- window.TRANSFORM_TASK_BAR_ID = 17;
- window.EXPORT_TASK_BAR_ID = 18;
- window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 19;
- window.SW_UTILS_GEOCODE_TASK_BAR_ID = 20;
- window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 21;
- window.SCRIPT_TASK_BAR_ID = 22;
- window.WORKING_CELL_ID = 23;
+ window.SYSTEM_TASK_BAR_ID = 14;
+ window.IMPORT_TASK_BAR_ID = 15;
+ window.INSPECTION_TASK_BAR_ID = 16;
+ window.CLEANSING_TASK_BAR_ID = 17;
+ window.TRANSFORM_TASK_BAR_ID = 18;
+ window.EXPORT_TASK_BAR_ID = 19;
+ window.SW_UTILS_DATASTRUCT_TASK_BAR_ID = 20;
+ window.SW_UTILS_GEOCODE_TASK_BAR_ID = 21;
+ window.SW_UTILS_DFSUBSET_TASK_BAR_ID = 22;
+ window.SW_UTILS_CENSUS_TASK_BAR_ID = 23;
+ window.SCRIPT_TASK_BAR_ID = 24;
+ window.WORKING_CELL_ID = 25;
 
- window.POPUP_CELL_ID = 24;
+ window.POPUP_CELL_ID = 26;
 
  const DC_BLANK_LINE_ID = 1000;
 
@@ -83,9 +85,9 @@
 
  var dfc_cell_ids = ["PandasdfcleanserTitle", "DCSystemTitle", "DCDataImportTitle", "DCDataInspectionTitle", "DCDataCleansingTitle",
      "DCDataTransformTitle", "DCDataExportTitle", "SWUtilities", "DCListUtilityTitle", "DCGeocodeUtilityTitle",
-     "DCDFSubsetUtilityTitle", "DCDataScriptingTitle", "DCWorkingTitle", "DCSystem", "DCDataImport",
-     "DCDataInspection", "DCDataCleansing", "DCDataTransform", "DCDataExport", "DCListUtility",
-     "DCGeocodeUtility", "DCDFSubsetUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
+     "DCDFSubsetUtilityTitle", "DCDFCensusUtilityTitle", "DCDataScriptingTitle", "DCWorkingTitle",
+     "DCSystem", "DCDataImport", "DCDataInspection", "DCDataCleansing", "DCDataTransform", "DCDataExport", "DCListUtility",
+     "DCGeocodeUtility", "DCDFSubsetUtility", "DCCensusUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
  ];
 
  window.WORKING_CODE_CELL = '# working cell- please do not remove';
@@ -370,7 +372,7 @@
              runCell = window.get_cell_for_id(id);
          else {
              if ((id == SW_UTILS_DATASTRUCT_TASK_BAR_ID) || (id == SW_UTILS_GEOCODE_TASK_BAR_ID) ||
-                 (id == SW_UTILS_DFSUBSET_TASK_BAR_ID) || (id == SCRIPT_TASK_BAR_ID))
+                 (id == SW_UTILS_DFSUBSET_TASK_BAR_ID) || (id == SW_UTILS_CENSUS_TASK_BAR_ID) || (id == SCRIPT_TASK_BAR_ID))
                  runCell = window.get_cell_for_id(id);
              else
                  runCell = get_popupcodecell();
@@ -621,6 +623,7 @@
      window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "0"));
      window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "0"));
      window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "0"));
+     window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", "0"));
      window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0"));
 
      if (workingcell != null)
@@ -674,11 +677,13 @@
      if (window.debug_flag)
          console.log(log_prefix + "\n" + "     unload_dfcleanser");
 
-     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "unload_dfcleanser"));
+     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSCode(window.SYSTEM_LIB, "unload_dfCleanser"));
  };
 
 
  window.complete_unload_dfcleanser = function() {
+
+     console.log("complete_unload_dfcleanser");
 
      var max_trys = 5;
      var ctry = 0;
@@ -962,6 +967,12 @@
  // ---------------------------------------------------
  //
 
+ window.handlecbcheck = function(cb) {
+     console.log("handlecbcheck", cb);
+ };
+
+
+
  //
  // check if string contains a substring
  //
@@ -1219,6 +1230,8 @@
      var input = document.getElementById(inputid);
      var file = document.getElementById(fileid);
 
+     console.log("onChangefileselect", input, file);
+
      input.value = file.value.replace("C:\\fakepath\\", "datasets/");
  };
 
@@ -1373,7 +1386,7 @@
 
      var url = "https://rickkrasinski.github.io/dfcleanser/html/help/dfcleanser_help#dfc_" + String(helpid);
      window.open(url);
- }
+ };
 
  //
  // display help by url
@@ -1383,6 +1396,14 @@
      return true;
  };
 
+ //
+ // display inline help 
+ //
+ window.display_inline_help = function(noteid, txtmsg) {
+     var noteobj = noteid.text(txtmsg);
+     noteobj.html(noteobj.html().replace(/\n/g, '<br/>'));
+     noteid.css('color', '#67a1f3');
+ };
 
  //
  // sync with Jupyter

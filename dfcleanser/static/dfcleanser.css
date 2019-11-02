@@ -38,13 +38,6 @@ body {
     overflow-x: hidden !important;
 }
 
-.dc-sm-container {
-    width: 30%;
-    margin-left: 35%;
-    border: 1px;
-    border-color: #428bca;
-}
-
 .dc-table-container {
     max-width: 100% !important;
     margin-left: 2px;
@@ -126,7 +119,7 @@ td.dccolleft {
     margin-left: 0px;
 }
 
-td.dccolright {
+d.dccolright {
     text-align: right;
     margin-right: 0px;
 }
@@ -134,14 +127,6 @@ td.dccolright {
 td.dccolwrap {
     word-wrap: break-word;
     text-decoration: none;
-}
-
-td.dccol12 {
-    font-size: 12px;
-}
-
-td.dccol13 {
-    font-size: 13px;
 }
 
 th.dccolleft {
@@ -154,13 +139,6 @@ table.dcsearchtable th {
 
 table.dcsearchtable td {
     font-size: 9px;
-}
-
-.dc-table {
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 0px;
-    padding-top: 0px;
 }
 
 table.dc-table td {
@@ -244,6 +222,11 @@ button.dc-table-button {
     font-size: 16px;
 }
 
+table.inner {
+    display: inline-table;
+    width: auto;
+}
+
 
 /* 
 ------------------------------------------------------
@@ -282,28 +265,12 @@ Dataframe Describe table component style dependencies
     font-family: Arial;
 }
 
-.dc-describe-table-head-row {
-    font-size: 12px;
-    font-family: Arial;
-    height: 15px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 0px;
-    padding-top: 0px;
-}
-
 .dc-describe-table-body-row {
-    font-size: 10px;
-    font-family: Arial;
-    height: 15px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 0px;
-    padding-top: 0px;
+    background-color: #F8F5E1;
 }
 
-.dc-describe-table-body-row-small {
-    font-size: 10px;
+.dc-describe-table-body-row12 {
+    font-size: 12px;
     font-family: Arial;
     height: 15px;
     margin-bottom: 0px;
@@ -347,9 +314,9 @@ Dataframe Describe table component style dependencies
     font-style: normal;
 }
 
-.dcrowhead {
+tr.dcrowhead {
     color: white;
-    background-color: #6FA6DA
+    background-color: #6FA6DA;
 }
 
 .dc-table-link {
@@ -366,6 +333,14 @@ Dataframe Describe table component style dependencies
     font-weight: bold;
     font-style: normal;
     font-family: Arial;
+}
+
+.dccolheadleft {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    text-align: left;
 }
 
 .table-note {
@@ -515,56 +490,39 @@ button.fullparms {
 --------------------------------------------------- 
 */
 
-dc-schema-col-container {
-    margin-left: 10%;
-}
-
-dc-schema-button {
-    font-size: 11px;
-    height: 25px;
-    background-color: #67a1f3;
-}
-
-dc-schema-input-form {
+button.dc-schema-button {
     font-size: 10px;
-    height: 20px;
-    width: 60%;
-}
-
-dc-schema-input-div {
-    text-align: left;
-}
-
-dc-schema-dlist {
-    text-align: center;
-}
-
-dc-schema-dlist-div {
+    height: 50px;
+    width: 90px;
     background-color: #67a1f3;
     color: white;
-    height: 20px;
-    margin-top: 5px;
-    font-weight: bold;
+    margin-left: 10px;
 }
 
-dc-schema-dlist-label {
-    font-size: 13px;
-    margin-top: 2px;
+div.dc-schema-nanuniques-div {
+    height: 20px;
+    margin-top: 5px;
+    width: 60%;
+    margin-left: 25px;
+}
+
+div.dc-schema-chkdtype-div {
+    height: 20px;
+    margin-top: 5px;
+    width: 80%;
+    margin-left: 10px;
+}
+
+div.dc-schema-chkdtype-vals-div {
+    height: 20px;
+    margin-top: 5px;
+    width: 60%;
+    margin-left: 32px;
 }
 
 .custom-select {
     font-size: 12px;
     margin-top: 1px;
-}
-
-dc-schema-radio-div {
-    margin-top: 2px;
-    margin-left: 5px;
-    text-align: left;
-}
-
-dc-schema-radio-label {
-    text-align: left;
 }
 
 
@@ -615,6 +573,21 @@ dfc-progress-bar {
     height: 20px;
 }
 
+.df-display-wrapper {
+    display: grid;
+    grid-template-columns: 984px;
+    grid-template-areas: "header" "content";
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 1px;
+    margin-left: 20px;
+}
+
+.df-display-wrapper-content {
+    grid-area: content;
+    margin-left: 0px;
+}
+
 
 /* 
 --------------------------------------------------- 
@@ -644,22 +617,21 @@ h2.DCTitleChaptersh2 {
 
 div.exception-status {
     font-size: 13px;
-    width: 95%;
-    margin-left: 20px;
-    margin-top: 8px;
+    width: 60%;
+    margin: auto;
     font-weight: normal;
     font-style: normal;
-    border: 0px solid #428bca;
+    border: 1px solid #428bca;
 }
 
 div.exception-status-detail {
     font-size: 13px;
-    width: 790px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
     margin-left: 10px;
-    margin-top: 2px;
     font-weight: normal;
     font-style: normal;
-    border: 0px solid #428bca;
 }
 
 .dfc-notes-wrapper {
@@ -698,7 +670,7 @@ div.status-header {
 }
 
 div.status-line {
-    font-size: 12px;
+    font-size: 13px;
     height: 30px;
     margin-left: 10px;
     font-weight: normal;
@@ -710,7 +682,6 @@ div.status-line {
 /* note styles */
 
 div.note-line {
-    font-size: 12px;
     margin-left: 10px;
     font-weight: normal;
     font-style: normal;
@@ -792,6 +763,26 @@ th.a:link {
     margin-left: 0px;
 }
 
+.dfcleanser-sub-header-left {
+    grid-area: header-left;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    margin-left: 0px;
+}
+
+.dfcleanser-sub-header-right {
+    grid-area: header-right;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    margin-left: 0px;
+}
+
 .dfcleanser-common-grid-header-large {
     grid-area: header;
     text-align: center;
@@ -802,27 +793,36 @@ th.a:link {
     margin-left: 0px;
 }
 
+.dfcleanser-common-grid-note {
+    text-align: center;
+    margin-left: 17%;
+    width: 65%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #67a1f3;
+    background-color: #F8F5E1;
+}
+
+.dfcleanser-short-grid-note {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Arial;
+    margin-left: 25px;
+    width: 90%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #67a1f3;
+    background-color: #F8F5E1;
+}
+
 
 /* 
 ----------------------------------------------------                 
 -------------- dfcleanser Common Grids -------------                 
 ----------------------------------------------------                 
 */
-
-.df-display-wrapper {
-    display: grid;
-    grid-template-columns: 984px;
-    grid-template-areas: "header" "content";
-    grid-gap: 10px;
-    background-color: #fff;
-    padding: 1px;
-    margin-left: 20px;
-}
-
-.df-display-wrapper-content {
-    grid-area: content;
-    margin-left: 0px;
-}
 
 .dfc-taskbar-wrapper {
     display: grid;
@@ -1147,7 +1147,7 @@ th.a:link {
 .df-inspection-wrapper {
     display: grid;
     grid-template-columns: 780px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'main';
     grid-gap: 10px;
     background-color: #fff;
     padding: 0px;
@@ -1160,7 +1160,7 @@ th.a:link {
 .df-inspection-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'main';
     grid-gap: 10px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -1209,53 +1209,53 @@ th.a:link {
 ------- Data Inspection Column Data Grid ---------                 
 */
 
-.df-inspection-nn-column-data-wrapper {
+.df-inspection-column-data-wrapper {
     display: grid;
-    grid-template-columns: 980px;
-    grid-template-areas: 'header';
-    grid-gap: 10px;
+    grid-template-columns: 240px 360px;
+    grid-template-areas: 'left right';
+    grid-gap: 2px;
     background-color: #fff;
     padding: 1px;
-    margin-left: 5px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
 }
 
-.df-inspection-nn-pop-up-column-data-wrapper {
+.df-inspection-pop-up-column-data-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header';
-    grid-gap: 10px;
+    grid-template-areas: 'left' 'right';
+    grid-gap: 2px;
     background-color: #F8F5E1;
     padding: 1px;
-    margin-left: 5px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
 }
 
-.df-inspection-numeric-column-data-wrapper {
+.df-inspection-outliers-data-wrapper {
     display: grid;
-    grid-template-columns: 980px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
+    grid-template-columns: 720px;
+    grid-template-areas: 'main';
+    grid-gap: 2px;
     background-color: #fff;
     padding: 1px;
-    margin-left: 5px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
 }
 
-.df-inspection-pop-up-numeric-column-data-wrapper {
+.df-inspection-outliers-pop-up-data-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
+    grid-template-areas: 'main';
+    grid-gap: 2px;
     background-color: #F8F5E1;
     padding: 1px;
-    margin-left: 5px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -1346,7 +1346,7 @@ th.a:link {
 .df-inspection-row-data-wrapper {
     display: grid;
     grid-template-columns: 980px;
-    grid-template-areas: 'top' 'main' 'footer';
+    grid-template-areas: 'header' 'top' 'main' 'bottom' 'footer';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -1359,7 +1359,7 @@ th.a:link {
 .df-inspection-row-data-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'top' 'main' 'footer';
+    grid-template-areas: 'header' 'top' 'main' 'bottom' 'footer';
     grid-gap: 10px;
     background-color: #F8F5E1;
     padding: 1px;
@@ -1552,8 +1552,8 @@ th.a:link {
 
 .display-df-cleanser-unique-columns-wrapper {
     display: grid;
-    grid-template-columns: 920px;
-    grid-template-areas: 'top' 'main';
+    grid-template-columns: 540px 280px;
+    grid-template-areas: 'left header' 'left right' 'left footer';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -1566,7 +1566,7 @@ th.a:link {
 .display-df-cleanser-unique-columns-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'top' 'main';
+    grid-template-areas: 'top' 'main' 'footer';
     grid-gap: 2px;
     background-color: #F8F5E1;
     padding: 2px;
@@ -1578,8 +1578,8 @@ th.a:link {
 
 .display-df-cleanser-input-wrapper {
     display: grid;
-    grid-template-columns: 920px;
-    grid-template-areas: 'header' 'bottom' 'footer';
+    grid-template-columns: 320px 480px;
+    grid-template-areas: 'left header' 'left bottom' 'left footer';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -1664,7 +1664,7 @@ th.a:link {
 .df-common-df-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -1677,7 +1677,7 @@ th.a:link {
 .df-common-df-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -1687,10 +1687,10 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.df-common-df-cols-wrapper {
+.df-column-names-wrapper {
     display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'top' 'header' 'footer';
+    grid-template-columns: 920px;
+    grid-template-areas: 'top';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -1700,10 +1700,23 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.df-common-df-cols-pop-up-wrapper {
+.df-index-common-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'top' 'header' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.df-index-common-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top' 'header' 'main' 'footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -1749,13 +1762,13 @@ th.a:link {
 
 .generic-gf-transform-wrapper {
     display: grid;
-    grid-gap: 2px;
-    grid-template-columns: 640px;
-    grid-template-areas: "top" "header" "footer";
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "top" "main" "footer";
     background-color: #fff;
     color: #444;
-    padding: 10px;
-    margin-left: 5px;
+    padding: 0px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -1765,11 +1778,11 @@ th.a:link {
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 480px;
-    grid-template-areas: "top" "header" "footer";
+    grid-template-areas: "header" "top" "main" "footer";
     background-color: #F8F5E1;
     color: #444;
-    padding: 10px;
-    margin-left: 5px;
+    padding: 0px;
+    margin-left: 0px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -1841,9 +1854,9 @@ th.a:link {
 .col-change-datatype-wrapper {
     margin-left: 0px;
     display: grid;
-    grid-gap: 3px;
-    grid-template-columns: 480px;
-    grid-template-areas: "top" "middle" "header" "bottom";
+    grid-gap: 10px;
+    grid-template-columns: 420px 400px;
+    grid-template-areas: "top top" "middle header" "middle bottom";
     background-color: #fff;
     color: #444;
     justify-content: center;
@@ -1854,10 +1867,101 @@ th.a:link {
 .col-change-datatype-fn-wrapper {
     margin-left: 0px;
     display: grid;
-    grid-gap: 3px;
-    grid-template-columns: 480px;
-    grid-template-areas: "top" "middle" "header" "bottom" "footer";
+    grid-gap: 10px;
+    grid-template-columns: 400px;
+    grid-template-areas: "middle" "header" "footer";
     background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-fn-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 400px;
+    grid-template-areas: "middle" "header" "footer";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-transform-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "middle" "footer";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-transform-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "middle" "footer";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-uniques-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 560px 280px;
+    grid-template-areas: "left header" "left footer";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-uniques-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top" "header" "footer";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-dt-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 360px 480px;
+    grid-template-areas: "left header" "left footer";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-change-datatype-dt-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "top" "header" "footer";
+    background-color: #F8F5E1;
     color: #444;
     justify-content: center;
     overflow-x: hidden;
@@ -1883,6 +1987,58 @@ th.a:link {
     grid-gap: 3px;
     grid-template-columns: 480px;
     grid-template-areas: "top" "middle" "header" "bottom" "footer";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.check-compatability-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 400px 420px;
+    grid-template-areas: "left header" "left right";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.check-compatability-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 200px 280px;
+    grid-template-areas: "left header" "left right";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.check-compatability-status-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 820px;
+    grid-template-areas: "main";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.check-compatability-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main";
     background-color: #F8F5E1;
     color: #444;
     justify-content: center;
@@ -1933,28 +2089,13 @@ th.a:link {
 .dtformat-wrapper {
     display: grid;
     grid-gap: 2px;
-    grid-template-columns: 160px 320px;
-    grid-template-areas: "header header" "left right";
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "main";
     background-color: #fff;
     overflow-y: hidden;
     color: #444;
     padding: 2px;
     margin-left: 1px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.dtformat-delta-wrapper {
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: 160px 320px;
-    grid-template-areas: "header header" "left right";
-    background-color: #fff;
-    overflow-y: hidden;
-    color: #444;
-    padding: 10px;
-    margin-left: 5px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -2116,7 +2257,7 @@ th.a:link {
 .df-add-col-code-wrapper {
     display: grid;
     grid-template-columns: 540px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-gap: 0px;
     background-color: #fff;
     padding: 0px;
@@ -2129,7 +2270,7 @@ th.a:link {
 .df-add-col-code-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -2205,23 +2346,21 @@ th.a:link {
 
 /* 
 ----------------------------------------------------                 
------------------ Geoocoding Grids -----------------                 
+------------------ Common Grids --------------------                 
 ----------------------------------------------------                 
-*/
-
-
-/* 
------------------ Generic SW Utilities Table Grid -----------------                 
 */
 
 .sw-utils-wrapper {
     margin-left: 10px;
     display: grid;
     grid-gap: 2px;
-    grid-template-columns: 260px 700px;
-    grid-template-areas: "header header" "left right" "bottom right";
+    grid-template-columns: 700px;
+    grid-template-areas: "header" "bottom" "footer";
     background-color: #fff;
     color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .sw-utils-filters-wrapper {
@@ -2232,7 +2371,30 @@ th.a:link {
     grid-template-areas: "header header" "left right";
     background-color: #fff;
     color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
+
+.sw-utils-listdict-wrapper {
+    margin-left: 10px;
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 700px;
+    grid-template-areas: "header" "bottom" "footer";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/* 
+----------------------------------------------------                 
+----------------- Geoocoding Grids -----------------                 
+----------------------------------------------------                 
+*/
 
 
 /* 
@@ -2335,14 +2497,16 @@ th.a:link {
 
 
 /* 
---------------- Dataframe Subset Grids --------------                 
+----------------------------------------------------                 
+-------------- Dataframe Subset Grids --------------                 
+----------------------------------------------------                 
 */
 
 .dfsubset-wrapper {
     margin-left: 10px;
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: 25% 74%;
+    grid-template-columns: 240px 680px;
     grid-template-areas: "header header" "left right" "left top" "left main" "left bottom" "left footer";
     background-color: #fff;
     color: #444;
@@ -2353,7 +2517,148 @@ th.a:link {
 
 
 /* 
---------------- System Grids --------------                 
+----------------------------------------------------                 
+------------------- Census Grids -------------------                 
+----------------------------------------------------                 
+*/
+
+.dfcensus-download-data-wrapper {
+    display: grid;
+    grid-template-columns: 360px 480px;
+    grid-template-areas: 'header header' 'left right' 'main main' 'footer footer';
+    background-color: #ffffff;
+    grid-gap: 60px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-configure-data-wrapper {
+    display: grid;
+    grid-template-columns: 410px 410px;
+    grid-template-areas: 'header header' 'left right' 'main main' 'footer footer';
+    background-color: #ffffff;
+    grid-gap: 20px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-configure-single-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'left' 'main' 'footer';
+    background-color: #F8F5E1;
+    grid-gap: 20px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-colnames-data-wrapper {
+    display: grid;
+    grid-template-columns: 360px 480px;
+    grid-template-areas: 'left right' 'footer footer';
+    background-color: #ffffff;
+    grid-gap: 60px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-confirm-load-data-wrapper {
+    display: grid;
+    grid-template-columns: 620px;
+    grid-template-areas: 'main' 'bottom' 'footer';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-note-wrapper {
+    display: grid;
+    grid-template-columns: 620px;
+    grid-template-areas: 'main';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-short-note-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'main';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-load-data-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'main' 'footer' 'bottom';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-get-cols-wrapper {
+    display: grid;
+    grid-template-columns: 680px;
+    grid-template-areas: 'header' 'main' 'bottom';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-get-cols-load-data-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'header' 'main' 'footer' 'bottom';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-datasets-none-data-wrapper {
+    display: grid;
+    grid-template-columns: 360px;
+    grid-template-areas: 'header' 'main' 'footer' 'bottom';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/* 
+----------------------------------------------------                 
+------------------- System Grids -------------------                 
+----------------------------------------------------                 
 */
 
 .df-sys-info-wrapper {
@@ -2384,7 +2689,9 @@ th.a:link {
 
 
 /* 
---------------- Scripting Grids --------------                 
+----------------------------------------------------                 
+----------------- Scripting Grids ------------------                 
+----------------------------------------------------                 
 */
 
 .data-scripting-wrapper {

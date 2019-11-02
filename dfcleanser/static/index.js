@@ -48,7 +48,10 @@ define([
                 if (is_pop_up_visible()) {
                     console.log(log_prefix + "\n" + "     toggle_dfcleanser : unload");
                     toggle_popupcodecell();
-                    window.unload_dfcleanser();
+                    if (window.confirm("UnLoad dfcleanser?")) {
+                        console.log(log_prefix + "\n" + "     toggle_dfcleanser : unloaded");
+                        window.unload_dfcleanser();
+                    }
                 } else {
                     toggle_popupcodecell();
                 }

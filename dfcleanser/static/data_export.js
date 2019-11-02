@@ -143,8 +143,8 @@ function custom_export_callback(fid) {
         case 1:
             var customexportcode = $('#customexportcode');
             var custom_code = "# add USER CODE to export the df" + NEW_LINE + NEW_LINE;
-            custom_code = (custom_code + "from dfcleanser.common.cfg import get_dfc_dataframe" + NEW_LINE);
-            custom_code = (custom_code + "df = get_dfc_dataframe(dataframe_title)" + NEW_LINE + NEW_LINE);
+            custom_code = (custom_code + "from dfcleanser.common.cfg import get_dfc_dataframe_df" + NEW_LINE);
+            custom_code = (custom_code + "df = get_dfc_dataframe_df(dataframe_title)" + NEW_LINE + NEW_LINE);
             custom_code = (custom_code + "# USER CODE" + NEW_LINE);
 
             customexportcode.val(custom_code);

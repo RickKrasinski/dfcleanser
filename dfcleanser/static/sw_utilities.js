@@ -71,27 +71,35 @@ function sw_utilities_dict_add_callback() {
     window.scroll_to('DCListUtility');
 }
 
-function select_dict(key) {
+function select_dict(formid) {
     /**
      * data structures utility select dict.
      *
      * Parameters:
-     *  key - dict to display
+     *  formid - dict form
      */
 
-    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "10, " + JSON.stringify(key)));
+    var inputs = new Array();
+    var dictname = $("#dictname :selected").text();
+    inputs.push(dictname);
+
+    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "10, " + JSON.stringify(inputs)));
     window.scroll_to('DCListUtility');
 }
 
-function select_list(key) {
+function select_list(formid) {
     /**
      * data structures utility select list.
      *
      * Parameters:
-     *  key - dict to display
+     *  formid - list form
      */
 
-    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "9, " + JSON.stringify(key)));
+    var inputs = new Array();
+    var listname = $("#listname :selected").text();
+    inputs.push(listname);
+
+    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "9, " + JSON.stringify(inputs)));
     window.scroll_to('DCListUtility');
 }
 
@@ -800,9 +808,15 @@ function get_subset_callback(fid) {
     console.log("get_subset_callback", fid);
     switch (fid) {
         case 0:
-        case 1:
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid));
             window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 1:
+            var inputs = new Array();
+            var inputParms = window.get_input_form_parms("datasubsetdf");
+            inputs.push(inputParms);
+            console.log("get_subset_callback", inputs);
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "1" + "," + JSON.stringify(inputs)));
             break;
         case 2:
         case 3:
@@ -824,7 +838,7 @@ function get_subset_callback(fid) {
         case 6:
             $('#gscolname').val("");
             $('#gsfilterselectstring').val("");
-            $('#gsselectstring').val("");
+            //$('#gsselectstring').val("");
             var parms = new Array();
             parms.push(1);
             parms.push("");
@@ -904,25 +918,179 @@ function select_filter(ftitle) {
 // --------------------------
 // DF Subset dhtml functions 
 // --------------------------
+
+function iscolnamedefined() {
+
+    var filtersstring = getlastclause();
+
+    console.log("iscolnamedefined", filtersstring);
+
+    if ((filtersstring.indexOf('df[') > -1))
+        return (true);
+    else
+        return (false);
+}
+
+function isvaluedefined() {
+
+    var filtersstring = getlastclause();
+
+    console.log("isvaluedefined", filtersstring);
+
+    var operatoroffset = 0;
+    var operatorlength = 0;
+
+    if (filtersstring.indexOf('==') > -1) {
+        operatoroffset = filtersstring.indexOf('==');
+        operatorlength = 2;
+    } else {
+        if (filtersstring.indexOf('!=') > -1) {
+            operatoroffset = filtersstring.indexOf('!=');
+            operatorlength = 2;
+        } else {
+            if (filtersstring.indexOf('<') > -1) {
+                operatoroffset = filtersstring.indexOf('<');
+                operatorlength = 1;
+            } else {
+                if (filtersstring.indexOf('<=') > -1) {
+                    operatoroffset = filtersstring.indexOf('<=');
+                    operatorlength = 2;
+                } else {
+                    if (filtersstring.indexOf('>') > -1) {
+                        operatoroffset = filtersstring.indexOf('>');
+                        operatorlength = 1;
+                    } else {
+                        if (filtersstring.indexOf('>=') > -1) {
+                            operatoroffset = filtersstring.indexOf('>=');
+                            operatorlength = 2;
+                        } else {
+                            if (filtersstring.indexOf('isin') > -1) {
+                                operatoroffset = filtersstring.indexOf('isin');
+                                operatorlength = 6;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (operatoroffset > 0) {
+        //console.log("is value defined", filtersstring.charAt((operatoroffset + operatorlength + 1)));
+        //console.log("is value defined", filtersstring.charAt((operatoroffset + operatorlength + 2)));
+        if (filtersstring.charAt((operatoroffset + operatorlength + 1)) != ")") {
+            return (true);
+        }
+    }
+
+    return (false);
+
+}
+
+function isoperatordefined() {
+
+    var filtersstring = getlastclause();
+
+    console.log("isoperatordefined", filtersstring);
+
+    if ((filtersstring.indexOf('==') > -1) ||
+        (filtersstring.indexOf('!=') > -1) ||
+        (filtersstring.indexOf('<') > -1) ||
+        (filtersstring.indexOf('<=') > -1) ||
+        (filtersstring.indexOf('>') > -1) ||
+        (filtersstring.indexOf('>=') > -1) ||
+        (filtersstring.indexOf('isin') > -1) ||
+        (filtersstring.indexOf('isnull') > -1) ||
+        (filtersstring.indexOf('notnull') > -1))
+        return (true);
+    else
+        return (false);
+}
+
+function getlastclause() {
+
+    var filtersstring = $("#gsfilterselectstring");
+
+    console.log("getlastclause", filtersstring.val());
+
+    console.log("getlastclause", filtersstring.val().indexOf('or'));
+    console.log("getlastclause", filtersstring.val().indexOf('and'));
+
+
+    if ((filtersstring.val().indexOf('or') < 0) &&
+        (filtersstring.val().indexOf('and') < 0))
+        return (filtersstring.val());
+    else {
+
+        var last_clause = filtersstring.val();
+
+        console.log("getlastclause last_clause", last_clause);
+
+
+        var max_loop = 10;
+        var loop_count = 0;
+
+        while ((loop_count < max_loop) &&
+            ((last_clause.indexOf("or") > -1) ||
+                (last_clause.indexOf("and") > -1))) {
+
+            console.log("getlastclause loop", last_clause);
+
+            loop_count = loop_count + 1;
+
+            if (last_clause.indexOf("or") > -1)
+                last_clause = last_clause.slice(last_clause.indexOf("or") + 3);
+            else {
+                last_clause = last_clause.slice(last_clause.indexOf("and") + 4);
+                console.log("getlastclause and", last_clause);
+            }
+        }
+
+        return (last_clause);
+    }
+}
+
+
 function getgsval(uval) {
 
     if (window.debug_flag)
         console.log("getgsval", uval);
 
     var filtersstring = $("#gsfilterselectstring");
-    var endfstring = get_last_close_paren(filtersstring.val());
 
+    if ((iscolnamedefined()) &&
+        (isoperatordefined())) {
 
-    var newfstring = filtersstring.val().slice(0, endfstring);
-    if (isNaN(uval))
-        newfstring = newfstring + "'" + uval + "'" + " )";
-    else
-        newfstring = newfstring + uval + " )";
+        if (filtersstring.val().indexOf('isin') > -1) {
+            var endisin = filtersstring.val().indexOf("])");
+            newfstring = filtersstring.val().slice(0, (endisin));
 
-    filtersstring.val(newfstring);
+            console.log("newfstring", newfstring, endisin);
+            if (filtersstring.val().indexOf('[]') > -1)
+                newfstring = newfstring + uval + "]) )";
+            else
+                newfstring = newfstring + ", " + uval + "]) )";
+        } else {
 
-    var filtersnote = $('#addfilternote');
-    filtersnote.text("Select or enter values for this filter.");
+            var endfstring = get_last_close_paren(filtersstring.val());
+
+            var newfstring = filtersstring.val().slice(0, endfstring);
+            if (isNaN(uval))
+                newfstring = newfstring + "'" + uval + "'" + " )";
+            else
+                newfstring = newfstring + uval + " )";
+        }
+
+        filtersstring.val(newfstring);
+
+        if (filtersstring.val().indexOf('isin') > -1) {
+            display_inline_help($('#addfilternote'), "To add another 'Column Value' to the 'isin' list click on the value.\nTo add another list value from the keypad enter a comma first");
+        } else {
+            display_inline_help($('#addfilternote'), "To add another clause to the current filter hit the 'or' or 'and' buttons.\nTo add another filter and save the current filter hit 'Add Filter To Criteria'.\nHit 'Get Subset' to get a subset with current filters");
+        }
+
+    }
+
 }
 
 function set_ds_colname(colname) {
@@ -934,9 +1102,8 @@ function set_ds_colname(colname) {
     if (colnamefield.val().length == 0) {
         colnamefield.val(colname);
     } else {
-        var newstr = colnamefield.val() + " ," + colname;
+        var newstr = colnamefield.val() + "," + colname;
         colnamefield.val(newstr);
-
     }
 }
 
@@ -973,14 +1140,39 @@ function keypad(keyvalue) {
         console.log("keypad", keyvalue);
 
     var filtersstring = $("#gsfilterselectstring");
-    var endfstring = get_last_close_paren(filtersstring.val());
 
-    var newfstring = filtersstring.val().slice(0, endfstring);
-    newfstring = newfstring + " " + keyvalue + " )";
-    filtersstring.val(newfstring);
+    if ((iscolnamedefined()) &&
+        (isoperatordefined())) {
 
-    var filtersnote = $('#addfilternote');
-    filtersnote.text("Select or enter values for this filter.");
+        var endfstring = get_last_close_paren(filtersstring.val());
+        var newfstring = "";
+
+        if (filtersstring.val().indexOf('isin') > -1) {
+            var endisin = filtersstring.val().indexOf("])");
+            newfstring = filtersstring.val().slice(0, (endisin));
+
+            console.log("newfstring", newfstring, endisin);
+            if (keyvalue == ",")
+                newfstring = newfstring + keyvalue + "]) )";
+            else
+                newfstring = newfstring + keyvalue + "]) )";
+        } else {
+            if (keyvalue == ",")
+                newfstring = filtersstring.val();
+            else {
+                newfstring = filtersstring.val().slice(0, endfstring);
+                newfstring = newfstring + keyvalue + ")";
+            }
+        }
+
+        filtersstring.val(newfstring);
+    }
+
+    if (filtersstring.val().indexOf('isin') > -1) {
+        display_inline_help($('#addfilternote'), "Add to current number via the keypad or end current number with ',' for a list value. \nIf finished adding values hit 'Add Filter To Criteria' to complete the filter.");
+    } else {
+        display_inline_help($('#addfilternote'), "Continue adding to the current number via the keypad. \nIf finished defining a value hit 'Add Filter To Criteria' to complete the filter.");
+    }
 }
 
 function operpad(keyvalue) {
@@ -994,29 +1186,34 @@ function operpad(keyvalue) {
     if (window.debug_flag)
         console.log("operpad", keyvalue);
 
-    if ((keyvalue == '.isnull()') || (keyvalue == '.notnull()')) {
+    if (!isoperatordefined()) {
+        if ((keyvalue == '.isnull()') || (keyvalue == '.notnull()') || (keyvalue == '.isin()')) {
 
-        var filtersstring = $("#gsfilterselectstring");
-        var endfstring = get_last_close_paren(filtersstring.val());
+            var filtersstring = $("#gsfilterselectstring");
+            var endfstring = get_last_close_paren(filtersstring.val());
 
-        var newfstring = filtersstring.val().slice(0, (endfstring - 1));
-        newfstring = newfstring + keyvalue + " )";
-        console.log(newfstring);
-        filtersstring.val(newfstring);
-
-    } else {
-
-        var filtersstring = $("#gsfilterselectstring");
-        var endfstring = get_last_close_paren(filtersstring.val());
-        var newfstring = filtersstring.val().slice(0, endfstring);
-        var colname = $("#gscolname").val();
-
-        if (endfstring > -1) {
-            newfstring = newfstring + " " + keyvalue + " )";
+            var newfstring = filtersstring.val().slice(0, (endfstring - 1));
+            if (keyvalue == '.isin()')
+                newfstring = newfstring + "isin([])" + " )";
+            else
+                newfstring = newfstring + keyvalue + " )";
+            console.log(newfstring);
             filtersstring.val(newfstring);
-        }
 
-        //get_subset_callback(9);
+        } else {
+
+            var filtersstring = $("#gsfilterselectstring");
+            var endfstring = get_last_close_paren(filtersstring.val());
+            var newfstring = filtersstring.val().slice(0, endfstring);
+            var colname = $("#gscolname").val();
+
+            if (endfstring > -1) {
+                newfstring = newfstring + " " + keyvalue + " )";
+                filtersstring.val(newfstring);
+            }
+
+            display_inline_help($('#addfilternote'), "Select a value from the Column Values table or enter one by hand using the numeric keypad.");
+        }
     }
 }
 
@@ -1035,32 +1232,29 @@ function logicpad(keyvalue) {
     if ((keyvalue == 'or') || (keyvalue == 'and')) {
 
         var filtersstring = $("#gsfilterselectstring");
-        //var endfstring = get_last_close_paren(filtersstring.val());
-
-        var newfstring = filtersstring.val(); //.slice(0, endfstring);
-        newfstring = newfstring + " " + keyvalue + " ";
-        filtersstring.val(newfstring);
-
-        get_subset_callback(9);
-
+        var newfstring = filtersstring.val();
+        if ((iscolnamedefined()) && (isoperatordefined()) && (isvaluedefined())) {
+            if (newfstring[(newfstring.length - 1)] == ")") {
+                newfstring = newfstring + " " + keyvalue + " ";
+                filtersstring.val(newfstring);
+                get_subset_callback(9);
+            }
+        }
     } else {
 
         if (keyvalue == 'not') {
 
         } else {
 
-            var filtersstring = $("#gsfilterselectstring");
-            var endfstring = get_last_close_paren(filtersstring.val());
-            var newfstring = filtersstring.val();
-            var colname = $("#gscolname").val();
-
-            if (endfstring > -1) {
-                newfstring = newfstring + " " + keyvalue + " ";
+            var filtersstring = $("#gsselectstring");
+            if (filtersstring.val().length > 0) {
+                var newfstring = filtersstring.val() + " " + keyvalue + " ";
                 filtersstring.val(newfstring);
+
+                display_inline_help($('#addfilternote'), "Select a column name to use as the value for the filter.");
             }
         }
     }
-    //get_subset_callback(9);
 }
 
 
@@ -1112,4 +1306,335 @@ function select_gen_function(genid) {
     var funcid = "'" + genid + "'";
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "17," + funcid));
     window.scroll_to('DCListUtility');
+}
+
+
+// 
+// ------------------------------------------------------
+// Census Utility methods 
+// ------------------------------------------------------
+//
+
+function get_census_callback(fid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  fid - function id
+     */
+
+    console.log("get_census_callback", fid);
+
+    switch (fid) {
+
+        case 0:
+        case 1:
+        case 3:
+        case 5:
+        case 6:
+        case 7:
+        case 17:
+        case 18:
+        case 19:
+        case 20:
+        case 21:
+        case 23:
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", fid));
+            break;
+
+        case 2:
+
+            var inputs = new Array();
+            var datasetids = ["Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation"];
+            var datacontentcbs = new Array();
+
+
+            for (var i = 0; i < datasetids.length; i++) {
+                for (var j = 1; j < 6; j++) {
+
+                    var currentcb = $("#cb" + j.toString() + datasetids[i]).prop("checked");
+                    if (currentcb == true)
+                        datacontentcbs.push("True");
+                    else
+                        datacontentcbs.push("False");
+                }
+
+                inputs.push(datacontentcbs);
+                datacontentcbs = new Array();
+            }
+
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("2, " + JSON.stringify(inputs))));
+            break;
+
+        case 4:
+
+            var inputs = new Array();
+            var datasetids = ["Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation"];
+            var datasetcbs = new Array();
+
+            for (var i = 0; i < datasetids.length; i++) {
+                for (var j = 1; j < 6; j++) {
+
+                    var currentcb = $("#cb" + j.toString() + datasetids[i]).prop("checked");
+                    if (currentcb == true)
+                        datasetcbs.push("True");
+                    else
+                        datasetcbs.push("False");
+                }
+
+                inputs.push(datasetcbs);
+                datasetcbs = new Array();
+            }
+
+            //inputs.push(datasetcbs);
+
+            /*
+            var subdatacbs = new Array();
+            var subdatacount = [16, 12, 14, 17, 19, 9, 5, 5, 35, 11];
+
+            var subdataID = $('#SubdataHeading').text();
+
+            console.log("subdataID", subdataID);
+
+            var subid = -1
+
+            for (var i = 0; i < datasetids.length; i++) {
+                if (subdataID == datasetids[i])
+                    subid = i;
+            }
+
+            if (subid > -1) {
+
+                for (var j = 1; j < subdatacount[subid] + 1; j++) {
+
+                    ccb = "#CS" + datasetids[subid] + j.toString();
+                    console.log("ccb", ccb)
+
+                    var currentcb = $("#CS" + datasetids[subid] + j.toString()).prop("checked");
+
+                    if (currentcb == true)
+                        subdatacbs.push("True");
+                    else
+                        subdatacbs.push("False");
+                }
+            }
+
+            inputs.push(subdatacbs);
+            */
+
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("4, " + JSON.stringify(inputs))));
+            break;
+
+        case 24:
+        case 25:
+
+            var inputs = new Array();
+            var datasetids = ["Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation"];
+            var datacontentcbs = new Array();
+
+            for (var i = 0; i < datasetids.length; i++) {
+                for (var j = 1; j < 5; j++) {
+
+                    var currentcb = $("#cb" + j.toString() + datasetids[i]).prop("checked");
+                    if (currentcb == true)
+                        datacontentcbs.push("True");
+                    else
+                        datacontentcbs.push("False");
+                }
+
+                inputs.push(datacontentcbs);
+                datacontentcbs = new Array();
+            }
+
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + JSON.stringify(inputs))));
+            break;
+
+        case 28:
+
+            var selected_values = $('#subdatacolnames').val();
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + JSON.stringify(selected_values))));
+            break;
+    }
+
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_census_dataset_details(datasetid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     */
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("11, " + JSON.stringify(datasetid))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_census_subData_details(datasetid, subdataid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     *  subdataid - subset id
+     */
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subdataid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("13, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_load_cols_subData_details(datasetid, subdataid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     *  subdataid - subset id
+     */
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subdataid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("27, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_configure_subData_details(datasetid, subdataid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     *  subdataid - subset id
+     */
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subdataid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("22, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_configure_dataset_details(datasetid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     */
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("21, " + JSON.stringify(datasetid))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_df_census_dataset_details(dtid, datasetid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     */
+    var inputs = new Array();
+    inputs.push(dtid);
+    inputs.push(datasetid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("7, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function scroll_census_cols(datasetid, subdataid, colnameid, direction) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     *  subdataid - subset id
+     *  colnameid - subset id
+     *  direction - direction
+     */
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subdataid);
+    inputs.push(colnameid);
+    inputs.push(direction);
+
+    console.log("scroll_census_cols", inputs);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("15, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function set_census_cbs(cbid) {
+    /**
+     * census process checkbox callback.
+     *
+     * Parameters:
+     *  cbid - checkbox id
+     */
+
+    var idnum = 0;
+    var datasetid = "";
+    var i = 0;
+
+    if (cbid.indexOf("cb1") > -1) idnum = 1;
+    else if (cbid.indexOf("cb2") > -1) idnum = 2;
+    else if (cbid.indexOf("cb3") > -1) idnum = 3;
+    else if (cbid.indexOf("cb4") > -1) idnum = 4;
+    else if (cbid.indexOf("cb5") > -1) idnum = 5;
+    else if (cbid.indexOf("cb6") > -1) idnum = 6;
+    else idnum = 0;
+
+    if (cbid.indexOf("Economic") > -1) datasetid = "Economic";
+    else if (cbid.indexOf("Education") > -1) datasetid = "Education";
+    else if (cbid.indexOf("Employment") > -1) datasetid = "Employment";
+    else if (cbid.indexOf("Health_Insurance") > -1) datasetid = "Health_Insurance";
+    else if (cbid.indexOf("Housing") > -1) datasetid = "Housing";
+    else if (cbid.indexOf("Immigration") > -1) datasetid = "Immigration";
+    else if (cbid.indexOf("Internet") > -1) datasetid = "Internet";
+    else if (cbid.indexOf("Population") > -1) datasetid = "Population";
+    else if (cbid.indexOf("Social") > -1) datasetid = "Social";
+    else if (cbid.indexOf("Transportation") > -1) datasetid = "Transportation";
+    else datasetid = ""
+
+    if ($("#" + cbid).prop("checked") == true) {
+        if (idnum == 6) {
+            for (i = 1; i < 6; i++) {
+                $("#cb" + i.toString() + datasetid).prop("checked", false);
+            }
+        } else {
+            $("#cb6" + datasetid).prop("checked", false);
+        }
+    }
+}
+
+function get_census_cols(dtid) {
+
+    var fparms;
+
+    switch (dtid) {
+
+        case 0:
+            fparms = get_input_form_parms("dcdfcensusgetcolsinput");
+            break;
+        case 1:
+            fparms = get_input_form_parms("dcdfcensusgetcolscityinput");
+            break;
+        case 2:
+            fparms = get_input_form_parms("dcdfcensusgetcolscountyinput");
+            break;
+        case 3:
+            fparms = get_input_form_parms("dcdfcensusgetcolsstatesinput");
+            break;
+    }
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("8, " + JSON.stringify(fparms))));
+
 }

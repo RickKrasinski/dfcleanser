@@ -20,6 +20,10 @@ function import_taskbar_callback(fid) {
         case 1:
             window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", 3));
             break;
+        case 2:
+            window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_import_forms", 0));
+            break;
+
     }
     window.scroll_to('DCDataImport');
 }

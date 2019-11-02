@@ -62,8 +62,6 @@ function change_uvals_callback() {
     var labels = get_input_form_labels("dcchangevalsinput");
     labels = JSON.parse(labels)
 
-    console.log("change_uvals_callback", labels);
-    //;console.log("change_uvals_callback", labels[0].indexOf("* New Value"), labels[1].indexOf("* New Value"));
     if ((labels[0].indexOf("* New_Value") < 0) &&
         (labels[1].indexOf("* New_Value") < 0)) {
 
@@ -104,11 +102,15 @@ function change_uvals_callback() {
     }
 }
 
-function find_uvals_callback() {
+function find_nn_uvals_callback() {
     /**
      * data cleansing find non numeric values callback.
      */
 
+    var labels = get_input_form_labels("dcchangevalsinput");
+    labels = JSON.parse(labels)
+
+    console.log("find_nn_uvals_callback", labels);
 }
 
 function find_uvals_callback() {
@@ -119,39 +121,45 @@ function find_uvals_callback() {
     var labels = get_input_form_labels("dcchangevalsinput");
     labels = JSON.parse(labels)
 
-    if (labels[0].indexOf("* Min_Value") < 0) {
+    console.log("find_uvals_callback", labels);
 
-        var currentVal = $('#changecval');
-        var newVal = $('#changenval');
+    var forNumericColumn = true;
+    var inputs = new Array();
 
-        var $label = $("label[for='" + currentVal.attr('id') + "']")
-        $label.text("* Min_Value");
-        var $label = $("label[for='" + newVal.attr('id') + "']")
-        $label.text("* Max_Value");
+    if (labels[0].indexOf("* min_value") < 0)
+        forNumericColumn = false;
 
+    if (forNumericColumn) {
+        var minVal = $("#findmin"); //document.getElementById('findmin');
+        var maxVal = $("#findmax"); //document.getElementById('findmax');
+
+        if (minVal.val() == null)
+            minvalue = "";
+        else
+            minvalue = String(minVal.val());
+
+        if (maxVal.val() == null)
+            maxvalue = "";
+        else
+            maxvalue = String(maxVal.val());
+
+
+        console.log("minVal minVal", minvalue, maxvalue);
+        inputs.push(minvalue);
+        inputs.push(maxvalue);
     } else {
+        var strVal = $("#findcval"); //document.getElementById('findcval');
 
-        var colname = $("#ucolscolumnname");
-        var currentVal = document.getElementById('changecval');
-        var newVal = document.getElementById('changenval');
-        var cval = "";
-        var nval = "";
-        var cname = "";
+        if (strVal.val() == null)
+            strvalue = "";
+        else
+            strvalue = String(strVal.val());
 
-        if (currentVal.value.length > 0) { cval = currentVal.value; }
-        if (newVal.value.length > 0) { nval = newVal.value; }
-        if (window.has_Attribute(colname, "value")) {
-            if (colname.attr('value').length > 0) { cname = colname.attr('value'); }
-        }
-
-        var inputs = new Array();
-        inputs.push(String(cname));
-        inputs.push(String(cval));
-        inputs.push(String(nval));
-
-        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "20" + "," + JSON.stringify(inputs)));
-        window.scroll_to('DCDataCleansing');
+        inputs.push(strvalue);
     }
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "29" + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataCleansing');
 }
 
 function show_graphs_callback() {
@@ -159,13 +167,23 @@ function show_graphs_callback() {
      * data cleansing display graphs callback.
      */
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "19"));
+    window.scroll_to('DCDataCleansing');
+}
+
+function show_details_callback() {
+    /**
+     * data cleansing display uniques callback.
+     */
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "22"));
+    window.scroll_to('DCDataCleansing');
 }
 
 function show_uniques_callback() {
     /**
      * data cleansing display uniques callback.
      */
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "22"));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "29"));
+    window.scroll_to('DCDataCleansing');
 }
 
 function show_outliers_callback() {
@@ -214,19 +232,20 @@ function cleansing_task_bar_process_row_callback(option) {
 
 function process_cols_callback(fid) {
 
-    var element = document.getElementById("ucolscolumnname");
+    //var element = document.getElementById("ucolscolumnname");
+
+    console.log("process_cols_callback", fid);
 
     switch (fid) {
 
         case 6:
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "6" + "," + JSON.stringify(element.value)));
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "6"));
             window.reset_dependents([true, true, false, true, true, false]);
             window.scroll_to('DCDataCleansing');
             break;
 
         case 7:
             var inputs = new Array();
-            inputs.push(String(element.value));
 
             var currentVal = document.getElementById('changecval');
             var cval = "";
@@ -236,24 +255,17 @@ function process_cols_callback(fid) {
             window.scroll_to('DCDataCleansing');
             break;
 
-        case 15:
-            var inputs = new Array();
-            inputs.push(String(element.value));
-
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "15" + "," + JSON.stringify(inputs)));
-            window.scroll_to('DCDataCleansing');
-            break;
-
         case 13:
+        case 15:
         case 16:
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + JSON.stringify(element.value)));
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
             window.scroll_to('DCDataCleansing');
             break;
 
-        case 26:
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "1" + "," + JSON.stringify(element.value)));
-            window.scroll_to('DCDataTransform');
-            break;
+            //case 26:
+            //    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "1" + "," + JSON.stringify(element.value)));
+            //    window.scroll_to('DCDataTransform');
+            //    break;
     }
 }
 
@@ -265,12 +277,9 @@ function process_cols_na_callback(fid) {
 
         case 4:
         case 8:
-        case 10:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
             window.scroll_to('DCDataCleansing');
             break;
-        case 39:
-        case 40:
         case 41:
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", fid));
             window.scroll_to('DCDataTransform');
@@ -367,7 +376,7 @@ function dcdisrowInputIdcallback() {
     window.scroll_to('DCDataCleansing');
 }
 
-function getSingleRow(tableid, rowid) {
+function getSingleRow() {
     /**
      * get a single row to display - called from button key.
      *
@@ -375,7 +384,7 @@ function getSingleRow(tableid, rowid) {
      *  tableid - table identifier
      *  rowid - row id
      */
-    var element = document.getElementById("dcdisrowInputId");
+    var element = document.getElementById("DCsinglerowInputId");
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "3" + "," + JSON.stringify(element.value)));
     window.scroll_to('DCDataCleansing');
 }
@@ -387,7 +396,8 @@ function chrowval(colid) {
      * Parameters:
      *  colid - column id in current row
      */
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "23" + ", " + JSON.stringify(colid)));
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "24" + ", " + JSON.stringify(colid)));
 }
 
 function change_rowvals_callback(fid) {
@@ -405,7 +415,7 @@ function change_rowvals_callback(fid) {
     switch (fid) {
         case 0:
         case 1:
-            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "24" + ", " + JSON.stringify(parms)));
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "25" + ", " + JSON.stringify(parms)));
             break;
     }
     window.scroll_to('DCDataCleansing');
@@ -420,4 +430,60 @@ function getsrow(rowid) {
      */
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "22" + ", " + rowid));
     window.scroll_to('DCDataCleansing');
+}
+
+
+function process_cleanse_datatype_callback(naoption, fid, numflag, dfcid) {
+    /**
+     * Data Transform columns process cmd.
+     *
+     * Parameters:
+     *  naoption  - na option
+     *  fid       - function id
+     *  numflag   - numflag
+     *  dfcid     - component id
+     */
+
+    console.log("process_cleanse_datatype_callback", naoption, fid, numflag);
+
+    var inputs = new Array();
+    var element = document.getElementById("ucolscolumnname");
+    if (element != null) { inputs.push(element.value); } else { inputs.push("None"); }
+
+    var dtype = $("#dtdatatype :selected").text();
+    inputs.push(dtype);
+
+    switch (fid) {
+        case 0:
+
+            inputs.push(naoption);
+
+            switch (naoption) {
+                case 0:
+                    var dropnaparms = window.get_input_form_parms("dtdndatatypeinput");
+                    inputs.push(dropnaparms);
+                    break;
+                case 1:
+                    if (numflag == 1) {
+                        var fillnaparms = window.get_input_form_parms("dtfndatatypeinput");
+                        inputs.push(fillnaparms);
+                    } else {
+                        var fillnaparms = window.get_input_form_parms("dtnnfndatatypeinput");
+                        inputs.push(fillnaparms);
+                    }
+                    break;
+            }
+
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "11" + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataCleansing');
+
+            break;
+
+        case 1:
+
+            window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
+            window.scroll_to('DCDataCleansing');
+            break;
+    }
 }
