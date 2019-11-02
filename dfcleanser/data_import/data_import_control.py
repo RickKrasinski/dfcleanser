@@ -14,6 +14,7 @@ this = sys.modules[__name__]
 import dfcleanser.common.cfg as cfg
 import dfcleanser.data_import.data_import_widgets as diw
 import dfcleanser.data_import.data_import_model as dim
+import dfcleanser.common.db_utils as dbu
 
 from dfcleanser.common.table_widgets import drop_owner_tables
 
@@ -22,14 +23,12 @@ from dfcleanser.common.common_utils import (get_function_parms, INT_PARM,
                                             opStatus, RunningClock, get_string_value, display_status,
                                             display_notes, display_generic_grid, get_formatted_time)
 
-from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
+from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict, parse_connector_parms, 
+                                        validate_connection_parms, display_db_connector_inputs)
 
 from IPython.display import clear_output
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
-
-#from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-
 
 import pandas as pd
 import json
@@ -88,7 +87,22 @@ def get_datetimeformats(importparms) :
         
 
 def display_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importparms=None) :
-    diw.display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importparms=None)
+    
+    #$check_list  =   diw.get_dbcondict(DBid,dbconparms,formtype)#validate_connection_parms(dbcondict)
+    #$print("check_list",check_list)
+    
+    #$error_msg   =   check_list[2]
+    
+    #print("error_msg",error_msg)
+    
+    #if(error_msg is None) :
+    opstat  =   diw.display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importparms=None)
+    
+    if( not (opstat.get_status())) :
+        
+        display_import_forms(2,5)
+        print("\n")
+        display_exception(opstat)
 
 
     
@@ -217,20 +231,26 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     """
     
     ptitles     =   []
+    
     for i in range(len(plist)) :
         ptitles.append(plist[i])
+        
     ptitles.append("NUMBER OF ROWS")
     ptitles.append("NUMBER OF COLS")
     
+    df  =   cfg.get_current_chapter_df(cfg.CURRENT_IMPORT_DF)
+    
     pvalues     =   []
+    
     for i in range(len(fparms)) :
         pvalues.append(fparms[i])
-    pvalues.append(str(len(cfg.get_dfc_dataframe())))
-    pvalues.append(str(len(cfg.get_dfc_dataframe().columns)))
+        
+    pvalues.append(str(len(df)))
+    pvalues.append(str(len(df.columns)))
     
     parms_html  =   displayParms(title,ptitles,pvalues,importID,90,20,False,11)
     
-    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",0,False)
+    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",False)
     importnotes     =   ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME)))+ " seconds"]
     notes_html      =   display_notes(importnotes,False)
     drop_data_import_start()
@@ -391,6 +411,20 @@ def import_custom(parms) :
 #--------------------------------------------------------------------------
 """
 
+def get_file_name(filefullname) :
+    
+    filename    =   filefullname[0:]
+    endnewname  =   filename.rfind(".")
+    if(endnewname > -1) :
+        filename    =   filename[0:endnewname]
+        
+    startnewname    =   filename.rfind("/")
+    if(startnewname > -1) :
+        filename    =   filename[startnewname+1:]
+        
+    return(filename)
+
+
 """
 #------------------------------------------------------------------
 #   import csv file into pandas dataframe
@@ -481,14 +515,14 @@ def import_pandas_csv(fparms,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            csv_title   =   "CurrentImportedDataSource"
+            csv_title   =   get_file_name(fparms[1])
             fparms[0]   =   csv_title
         else :
             csv_title   =   fparms[0]
         
         csv_df  =   cfg.dfc_dataframe(csv_title,df,fparms[1])
         cfg.add_dfc_dataframe(csv_df)
-        cfg.set_current_dfc_dataframe_title(csv_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,csv_title)
         
         if(display) :
             #make scriptable
@@ -499,6 +533,7 @@ def import_pandas_csv(fparms,display=True) :
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
+            fparms[0]   =   csv_title
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
     
@@ -591,14 +626,14 @@ def import_pandas_fwf(fparms,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            fwf_title   =   "CurrentImportedDataSource"
+            fwf_title   =   get_file_name(fparms[1])
             fparms[0]   =   fwf_title
         else :
             fwf_title   =   fparms[0]
         
         fwf_df  =   cfg.dfc_dataframe(fwf_title,df,fparms[1])
         cfg.add_dfc_dataframe(fwf_df)
-        cfg.set_current_dfc_dataframe_title(fwf_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,fwf_title)
         
         if(display) :
             #make scriptable
@@ -609,6 +644,7 @@ def import_pandas_fwf(fparms,display=True) :
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
+            fparms[0]   =   fwf_title
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
     
@@ -692,14 +728,14 @@ def import_pandas_excel(fparms,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            excel_title     =   "CurrentImportedDataSource"
+            excel_title     =   get_file_name(fparms[1])
             fparms[0]       =   excel_title
         else :
             excel_title     =   fparms[0]
         
         excel_df  =   cfg.dfc_dataframe(excel_title,df,fparms[1])
         cfg.add_dfc_dataframe(excel_df)
-        cfg.set_current_dfc_dataframe_title(excel_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,excel_title)
         
         if(display) :
             #make scriptable
@@ -710,6 +746,7 @@ def import_pandas_excel(fparms,display=True) :
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
+            fparms[0]   =   excel_title
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
     
@@ -794,14 +831,14 @@ def import_pandas_json(fparms,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            json_title     =   "CurrentImportedDataSource"
+            json_title     =   get_file_name(fparms[1])
             fparms[0]      =   json_title
         else :
             json_title     =   fparms[0]
         
         json_df  =   cfg.dfc_dataframe(json_title,df,fparms[1])
         cfg.add_dfc_dataframe(json_df)
-        cfg.set_current_dfc_dataframe_title(json_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,json_title)
         
         if(display) :
             #make scriptable
@@ -812,6 +849,7 @@ def import_pandas_json(fparms,display=True) :
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
+            fparms[0]   =   json_title
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
     
@@ -895,14 +933,14 @@ def import_pandas_html(fparms,display=True) :
     if(opstat.get_status()) : 
         
         if(len(fparms[0]) == 0) :
-            html_title     =   "CurrentImportedDataSource"
+            html_title     =   get_file_name(fparms[1])
             fparms[0]      =   html_title
         else :
             html_title     =   fparms[0]
         
         html_df  =   cfg.dfc_dataframe(html_title,df,fparms[1])
         cfg.add_dfc_dataframe(html_df)
-        cfg.set_current_dfc_dataframe_title(html_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,html_title)
         
         if(display) :
             #make scriptable
@@ -913,6 +951,7 @@ def import_pandas_html(fparms,display=True) :
             add_to_script(script,opstat)
 
         if(len(fparms) > 0) :
+            fparms[0]   =  html_title 
             cfg.set_config_value(importId + "Parms",fparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
         
@@ -998,14 +1037,14 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
     if(opstat.get_status()) : 
         
         if(len(sqltableparms[0]) == 0) :
-            sql_title           =   "CurrentImportedData"
+            sql_title           =   sqltableparms[1] + "_df"
             sqltableparms[0]    =   sql_title
         else :
             sql_title           =   sqltableparms[0]
         
         sql_df  =   cfg.dfc_dataframe(sql_title,df,sqltableparms[1])
         cfg.add_dfc_dataframe(sql_df)
-        cfg.set_current_dfc_dataframe_title(sql_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,sql_title)
         
         if(display) :
             
@@ -1015,13 +1054,12 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
                            "from dfcleanser.data_import.data_import_control import import_pandas_sqltable",
                            "import_pandas_sqltable(" + json.dumps(sqltableparms) + 
                            "," + json.dumps(dbcondict) + "," + 
-                           str(importid) + ",False)",
-                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
-                           "set_current_dfc_dataframe(df)"],opstat)
+                           str(importid) + ",False)"],opstat)
        
         import_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms) 
         
         if(len(sqltableparms) > 0) :
+            sqltableparms[0]   =   sql_title
             cfg.set_config_value(importid + "Parms",sqltableparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[1])
 
@@ -1104,14 +1142,13 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
     if(opstat.get_status()) : 
         
         if(len(sqlqueryparms[0]) == 0) :
-            sql_title           =   "CurrentImportedData"
-            sqlqueryparms[0]    =   sql_title
+            sql_title           =   "sql_query_df"
         else :
             sql_title           =   sqlqueryparms[0]
         
         sql_df  =   cfg.dfc_dataframe(sql_title,df,sqlqueryparms[1])
         cfg.add_dfc_dataframe(sql_df)
-        cfg.set_current_dfc_dataframe_title(sql_title)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,sql_title)
         
         if(display) :
         
@@ -1120,14 +1157,13 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
             add_to_script(["# Import SQL Query ",
                            "from dfcleanser.data_import.data_import_control import import_pandas_sqlquery",
                            "import_pandas_sqlquery(" + json.dumps(sqlqueryparms) +"," + json.dumps(dbcondict) + 
-                           "," + str(importid) + ",False)",
-                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
-                           "set_current_dfc_dataframe(df)"],opstat)
+                           "," + str(importid) + ",False)"],opstat)
        
         import_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms) 
         
         
         if(len(sqlqueryparms) > 0) :
+            sqlqueryparms[0]    =   sql_title
             cfg.set_config_value(importid + "Parms",sqlqueryparms)
             cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[1])
 
@@ -1165,7 +1201,7 @@ def process_custom_import(fparms,import_id,display=True) :
         
         custom_df  =   cfg.dfc_dataframe(custom_title,df,fparms[1])
         cfg.add_dfc_dataframe(custom_df)
-        cfg.set_current_dfc_dataframe_title(custom_title)
+        cfg.save_config_value(cfg.CURRENT_IMPORT_DF,custom_title)
         
         if(display) :
             #make scriptable
@@ -1210,17 +1246,38 @@ def test_import_sql_db_connector(importtype,driverid,sqlinputparms) :
     opstat  =   opStatus()
     
     try :
-        from dfcleanser.common.db_utils import test_db_connector, SQL_IMPORT, SQL_QUERY, NATIVE, SQLALCHEMY
-        if(importtype == dim.SQLTABLE_IMPORT) :
-            test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),NATIVE,sqlinputparms,SQL_IMPORT)
-            test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),SQLALCHEMY,sqlinputparms,SQL_IMPORT)
+        
+        connectParms  =   {}
+        parmslist = parse_connector_parms(sqlinputparms,cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),connectParms)
+    
+        errormsg = validate_connection_parms(connectParms)
+    
+        if(errormsg is None) :
+        
+            from dfcleanser.common.db_utils import test_db_connector, SQL_IMPORT, SQL_QUERY, NATIVE, SQLALCHEMY
+            if(importtype == dim.SQLTABLE_IMPORT) :
+                test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),NATIVE,sqlinputparms,SQL_IMPORT,opstat)
+                test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),SQLALCHEMY,sqlinputparms,SQL_IMPORT,opstat)
+            else :
+                test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),NATIVE,sqlinputparms,SQL_QUERY,opstat)
+                test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),SQLALCHEMY,sqlinputparms,SQL_QUERY,opstat)
+                    
         else :
-            test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),NATIVE,sqlinputparms,SQL_QUERY)
-            test_db_connector(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),SQLALCHEMY,sqlinputparms,SQL_QUERY)
+            opstat.set_status(False) 
+            opstat.set_errorMsg(errormsg)
+            
             
     except Exception as e: 
         opstat.store_exception("DB Connection failed ",e)
-        display_exception(opstat)        
+        #display_exception(opstat)        
+    
+    #if(importtype == dim.SQLTABLE_IMPORT) :
+    #    display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),parmslist,dbu.SQL_IMPORT) 
+    #else :
+    #    display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),parmslist,dbu.SQL_QUERY) 
+    
+    #if(not (opstat.get_status())) :
+    #    display_exception(opstat)        
 
 
 """
@@ -1232,6 +1289,9 @@ def test_import_sql_db_connector(importtype,driverid,sqlinputparms) :
 def clear_data_import_data() :
     
     drop_owner_tables(cfg.DataImport_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.DataImport_ID,diw.dataimport_inputs)
+    delete_all_inputs(cfg.DataImport_ID)
     clear_data_import_cfg_values()
     
 def clear_data_import_cfg_values() :
