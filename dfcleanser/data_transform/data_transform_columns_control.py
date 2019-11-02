@@ -16,6 +16,8 @@ import json
 import dfcleanser.common.cfg as cfg 
 import dfcleanser.data_transform.data_transform_columns_widgets as dtcw
 import dfcleanser.data_transform.data_transform_model as dtm
+import dfcleanser.data_transform.data_transform_widgets as dtw
+
 
 from dfcleanser.common.common_utils import (displayParms, single_quote, get_parms_for_input,
                                             display_exception, display_status, does_col_contain_nan, 
@@ -72,7 +74,11 @@ def process_column_option(parms) :
     elif(optionid == dtm.REORDER_COLUMNS) :
         process_reorder_columns(parms)
     elif(optionid == dtm.MAP_COLUMN) :
-        process_map_transform(colname,parms)
+        process_map_transform(dtm.MAP_FROM_FILE,colname,parms)
+    elif(optionid == dtm.MAP_COLUMN_VALUES) :
+        process_map_transform(dtm.MAP_FROM_VALUES,colname,parms)
+    elif(optionid == dtm.MAP_COLUMN_FUNCTION) :
+        process_map_transform(dtm.MAP_FROM_FUNCTION,colname,parms)
     elif(optionid == dtm.DUMMIES_COLUMN) :
         process_dummy_transform(colname,parms)
     elif(optionid == dtm.CAT_COLUMN) :
@@ -82,7 +88,7 @@ def process_column_option(parms) :
     elif(optionid == dtm.COPY_COLUMN) :
         process_copy_column(parms)
     elif(optionid == dtm.SORT_COLUMN) :
-        process_sort_by_column(parms)
+        process_sort_by_column(colname,parms)
     elif(optionid == dtm.APPLY_COLUMN) :
         process_apply_fn_to_column(parms)
     elif(optionid == dtm.DATATYPE_COLUMN) :
@@ -104,33 +110,58 @@ def process_rename_column(colname,parms,display=True) :
     * --------------------------------------------------------
     """
     
-    fparms = get_parms_for_input(parms[3],dtcw.rename_column_input_idList)
-    newname = fparms[0]
-    
-    namesdict = {}
-    namesdict.update({colname:newname})
-    
     opstat = opStatus()
     
-    try :
-        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).rename(columns=namesdict))
-        
-    except Exception as e:
-        opstat.store_exception("Rename Column Error",e)
-        display_exception(opstat)
-        
-    if(opstat.get_status()) :
+    fparms = get_parms_for_input(parms[3],dtcw.rename_column_input_idList)
+    
+    newname     =   fparms[0]
+    inplace     =   fparms[1]
+    if(inplace == "True") :
+        inplace     =   True
+    else :
+        inplace     =   False
+    
+    if(not inplace) :    
+        resultdf    =   fparms[2]
+        if(len(resultdf) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No title specified for result df")
+    else :
+        resultdf    =   None
 
-        if(display) :
+    if(opstat.get_status()) :
+        
+        namesdict = {}
+        namesdict.update({colname:newname})
+    
+    
+        df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        try :
+        
+            if(inplace) :
+                df.rename(columns=namesdict,axis=1,inplace=True)
+            else :
+                newdf           =   df.rename(columns=namesdict,axis=1)
+                new_dfcnotes    =   "rename " + colname + " to " + newname
+                new_dfcdf       =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfcdf)
+        
+        except Exception as e:
+            opstat.store_exception("Rename Column " + colname + "Error",e)
+            display_exception(opstat)
+        
+        if(opstat.get_status()) :
+
+            if(display) :
             
-            #make scriptable
-            add_to_script(["# Rename column " + colname + " to " + newname,
-                           "from dfcleanser.data_transform.data_transform_columns_control import process_rename_column",
-                           "process_rename_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+                #make scriptable
+                add_to_script(["# Rename column " + colname + " to " + newname,
+                               "from dfcleanser.data_transform.data_transform_columns_control import process_rename_column",
+                               "process_rename_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
-            clear_output()
-            dtcw.display_base_data_transform_columns_taskbar()
-            display_status("Column " + colname + " renamed to " + newname + " successfully")
+                clear_output()
+                dtcw.display_base_data_transform_columns_taskbar()
+                display_status("Column " + colname + " renamed to " + newname + " successfully")
         
 
 def add_column(dftitle,colname,colList,opstat,display=True) :
@@ -150,8 +181,7 @@ def add_column(dftitle,colname,colList,opstat,display=True) :
     * --------------------------------------------------------
     """
     
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle) 
+    df = cfg.get_dfc_dataframe_df(dftitle) 
     
     if(is_existing_column(df,colname)) :
         opstat.set_status(False)
@@ -161,9 +191,13 @@ def add_column(dftitle,colname,colList,opstat,display=True) :
     try :
         namesdict = {}
         namesdict.update({"newcolname" : colname})
-
-        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).assign(newcolname=colList))
-        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).rename(columns=namesdict))
+        
+        df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        #TODO inplace
+        newdf   =   df.assign(newcolname=colList)
+        newdf.rename(columns=namesdict,axis=1,inplace=True)
+        
+        #TODO assign newdf back to dftitle
         
     except Exception as e:
         opstat.store_exception("Add New Column Error",e)
@@ -185,70 +219,259 @@ def process_add_column(parms,display=True) :
     * --------------------------------------------------------
     """
 
-    optionid        =   parms[0]
+    dtw.display_main_option(None)
+    
+    optionid        =   parms[0][2]
+    #print("process_add_column",parms,optionid)
 
     opstat = opStatus()
-    
-    newcolname  =   parms[1][0]
+   
+    if(display) :
+        clock = RunningClock()
+        clock.start()
         
-    if(len(newcolname) < 1) :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Unable to add new column - no name specified")
-        display_exception(opstat)
-        
-    else :
-        
-        if(display) :
-            clock = RunningClock()
-            clock.start()
-        
-        # get column names from file
-        if(optionid == dtm.PROCESS_FILE_OPTION) :
-
-            filename    =   parms[1][1]
+    # get column names from file
+    if(optionid == dtm.PROCESS_ADD_FROM_FILE_OPTION) :
             
-            if( (len(filename) < 1) ) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("Unable to add column : file name invalid")
+        fparms  =   get_parms_for_input(parms[1],dtcw.add_column_file_input_idList)
+        print(fparms)
+
+        newcolname      =   fparms[0]
+        newcoldatatype  =   fparms[1]
+        filename        =   fparms[2]
+            
+        if( (len(newcolname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add new column - no name specified")
+            display_exception(opstat)
+            
+        elif( (len(filename) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : file name invalid")
+            display_exception(opstat)
+                
+        else :
+            
+            colList = []
+            try :
+                with open(filename, 'r') as col_list_file :
+                    colList = json.load(col_list_file)
+            except Exception as e:
+                opstat.store_exception("Unable to load col list file : " + filename,e)
                 display_exception(opstat)
-                
+
+            if( not (len(colList) == len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))) ) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("Unable to add column : column list values not equal df column length")
+                display_exception(opstat)
+
             else :
-                colList = []
-                try :
-                    with open(filename, 'r') as col_list_file :
-                        colList = json.load(col_list_file)
-                except Exception as e:
-                    opstat.store_exception("Unable to load col list file",e)
-                    display_exception(opstat)
-
-                if( not (len(colList) == len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))) ) :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("Unable to add column : column list values not equal df column length")
-                    display_exception(opstat)
-
-                else :
-                    add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,colList,opstat)
+                add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,colList,opstat)
                 
-                    if(not (opstat.get_status())) :
-                        display_exception(opstat) 
+                if(not (opstat.get_status())) :
+                    display_exception(opstat) 
                         
-        # get column names from code    
-        elif(optionid == dtm.PROCESS_ADD_NEW_CODE_OPTION) :
+    # get column names from code    
+    elif(optionid == dtm.PROCESS_ADD_FROM_CODE_OPTION) :
             
-            code = parms[1][1]
-            code = code.replace('\\n','\n')
+        fparms  =   get_parms_for_input(parms[1],dtcw.add_column_code_gf_input_idList)
+        print(fparms)
+
+        newcolname      =   fparms[0]
+        newcoldatatype  =   fparms[1]
+        modulename      =   fparms[2]
+        functionname    =   fparms[3]
+        code            =   fparms[4]
+        code            =   code.replace('\\n','\n')
+        
+        print("newcolname",newcolname)
+        print("newcoldatatype",newcoldatatype)
+        print("modulename",modulename)
+        print("functionname\n",functionname)
+        print("code\n",code)
+        
+        if( (len(newcolname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add new column - no name specified")
+            display_exception(opstat)
+            
+        elif( (len(modulename) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : module name invalid")
+            display_exception(opstat)
+        
+        elif( (len(functionname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : function name invalid")
+            display_exception(opstat)
+        
+        elif( (len(code) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : code invalid")
+            display_exception(opstat)
+                
+        else :
             
             try :
-                exec(code)
-                #print("NewColumnValues",len(NewColumnValues))
-                add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,NewColumnValues,opstat)
+                
+                if(code.find("set_add_col_list(") < 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("User fn code does not call set_add_col_list")
+                else :
+                    exec(code)
+                    
+                    from dfcleanser.common.common_utils import get_add_col_list
+                    add_column(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),newcolname,get_add_col_list(),opstat)
+                    
                
             except Exception as e:
                 opstat.store_exception("Unable to add new column column list from code error",e)
                 display_exception(opstat)
                 
-        if(display) :
-            clock.stop()    
+    # get column names from dfc function    
+    elif(optionid == dtm.PROCESS_ADD_FROM_DFC_FUNCS) :
+                        
+        fparms  =   get_parms_for_input(parms[1],dtcw.get_current_dfc_funcs_idlist())
+        print(fparms)
+
+        newcolname      =   fparms[0]
+        newcoldatatype  =   fparms[1]
+        dfcfuncname     =   fparms[2]
+        functioncall    =   fparms[3]
+        functiondesc    =   fparms[4]
+            
+        print("newcolname",newcolname)
+        print("newcoldatatype",newcoldatatype)
+        print("dfcfuncname",dfcfuncname)
+        print("functioncall\n",functioncall)
+        print("functiondesc\n",functiondesc)
+            
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule, get_reserved_function_parms, get_reserved_function_parms_datatypes
+        gfmodule    =   reservedfunctionsmodule
+        print("gfmodule",gfmodule)
+            
+        kwargs      =   get_reserved_function_parms(dfcfuncname)
+        kwdtypes    =   get_reserved_function_parms_datatypes(dfcfuncname)
+        print("\nkwargs\n",kwargs)
+        print("\nkwdtypes\n",kwdtypes)
+            
+        kwvals  =   []
+        for i in range(len(kwargs)) :
+            kwvals.append(fparms[i+5])
+                
+        print("kwvals",kwvals)
+
+        code            =   fparms[4]
+        code            =   code.replace('\\n','\n')
+            
+        code = parms[1][1]
+        code = code.replace('\\n','\n')
+        
+        if( (len(newcolname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add new column - no name specified")
+            display_exception(opstat)
+            
+        elif( (len(dfcfuncname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : dfcfunc name invalid")
+            display_exception(opstat)
+            
+        else :
+            
+            for i in range(len(kwvals)) :
+                
+                if(opstat.get_status()) :
+                    if(len(kwvals[i] < 1)) :
+                        
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("Unable to add column : function parm" + str(i) + " is not defined")
+                        display_exception(opstat)
+                        
+                    else :
+                        
+                        if(kwdtypes[i] == int) :
+                        
+                            try :
+                                kwvals[i]    =   int(kwvals[i])
+                            except :
+                                opstat.set_status(False)
+                                opstat.set_errorMsg("Unable to add column : function parm" + str(i) + " is invalid type")
+                                display_exception(opstat)
+
+                        elif(kwdtypes[i] == float) :
+                        
+                            try :
+                                kwvals[i]    =   float(kwvals[i])
+                            except :
+                                opstat.set_status(False)
+                                opstat.set_errorMsg("Unable to add column : function parm" + str(i) + " is invalid type")
+                                display_exception(opstat)
+                        
+        if(opstat.get_status()) :
+            
+            try :
+                
+                
+                
+                
+                
+                print("add column from df func")       
+            except Exception as e:
+                opstat.store_exception("Unable to add new column column list from code error",e)
+                display_exception(opstat)
+               
+    # get column names from dfc function    
+    elif(optionid == dtm.PROCESS_ADD_FROM_DF_OPTION) :
+            
+        fparms  =   get_parms_for_input(parms[1],dtcw.add_column_df_input_idList)
+        print(fparms)
+            
+        outdftitle      =   fparms[0]
+        newcolname      =   fparms[1]
+        newcoldatatype  =   fparms[2]
+        sourcedftitle   =   fparms[3]
+        sourcecolname   =   fparms[4]
+        fillnavalue     =   fparms[5]
+            
+        print("outdftitle",outdftitle)
+        print("newcolname",newcolname)
+        print("newcoldatatype",newcoldatatype)
+        print("sourcedftitle",sourcedftitle)
+        print("sourcecolname",sourcecolname)
+        print("fillnavalue",fillnavalue)
+        
+        if( (len(outdftitle) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add new column - invalid output dataframe")
+            display_exception(opstat)
+        
+        elif( (len(newcolname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add new column - no name specified")
+            display_exception(opstat)
+            
+        elif( (len(sourcedftitle) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : invalid source dataframe")
+            display_exception(opstat)
+
+        elif( (len(sourcecolname) < 1) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Unable to add column : invalid source column name")
+            display_exception(opstat)
+
+        else :
+            
+            try :
+                print("add column from df ")       
+            except Exception as e:
+                opstat.store_exception("Unable to add new column column list from code error",e)
+                display_exception(opstat)
+                
+                
+    if(display) :
+        clock.stop()    
             
     if(opstat.get_status()) :
 
@@ -280,9 +503,9 @@ def save_deleted_column(colname,fname,df) :
     """
     
     opstat = opStatus()
-    
+    df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)  
     try :
-        collist = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].tolist()
+        collist = df[colname].tolist()
         with open(fname, 'w') as col_list_file :
             json.dump(collist,col_list_file)
                     
@@ -308,42 +531,68 @@ def process_drop_column(colname,parms,display=True) :
     """
     
     opstat = opStatus()
+    
     fparms = get_parms_for_input(parms[3],dtcw.drop_column_input_idList)
     
-    if(len(fparms) > 0) :
-        fname = fparms[0]
+    inplace     =   fparms[0]
+    
+    if(inplace == "True") :
+        inplace     =   True
     else :
-        fname = None
+        inplace     =   False
+    
+    if(not inplace) :    
+        resultdf    =   fparms[1]
+        if(len(resultdf) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No title specified for result df")
+    else :
+        resultdf    =   None
         
-    if(not (fname == None))  :
-        
-        opstat = save_deleted_column(colname,fname,cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))
-        
-        if(not opstat.get_status()) :
-            display_exception(opstat)
-            
+    fname   =   fparms[2]
+    
+    if(len(fname) == 0) :
+        fname   =   None
+
     if(opstat.get_status()) :
         
-        try :
-            tdf     =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop([colname],axis=1)
-            cfg.set_current_dfc_dataframe(tdf)
+        df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        
+        if(not (fname is None))  :
+        
+            opstat = save_deleted_column(colname,fname,df)
+        
+            if(not opstat.get_status()) :
+                display_exception(opstat)
             
-        except Exception as e:
-            opstat.store_exception("Drop Columns Error",e)
-            display_exception(opstat)
+        if(opstat.get_status()) :
+        
+            try :
+            
+                if(not(inplace)) :
+                    newdf               =   df.drop([colname],axis=1)
+                    new_dfcnotes        =   "drop " + colname
+                    new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                    cfg.add_dfc_dataframe(new_dfc_dataframe)
+                else :
+                    df.drop([colname],inplace=True,axis=1)
+            
+            except Exception as e:
+                opstat.store_exception("Drop Columns Error",e)
+                display_exception(opstat)
     
-    if(opstat.get_status()) : 
+            if(opstat.get_status()) : 
 
-        if(display) :
+                if(display) :
             
-            #make scriptable
-            add_to_script(["# drop column " + colname,
-                           "from dfcleanser.data_transform.data_transform_columns_control import process_drop_column",
-                           "process_drop_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
+                    #make scriptable
+                    add_to_script(["# drop column " + colname,
+                                   "from dfcleanser.data_transform.data_transform_columns_control import process_drop_column",
+                                   "process_drop_column(" + single_quote(colname) + "," + json.dumps(parms) + ",False)"],opstat)
             
-            clear_output()
-            dtcw.display_base_data_transform_columns_taskbar()
-            display_status("Column " + colname + " dropped Successfully")
+                    clear_output()
+                    dtcw.display_base_data_transform_columns_taskbar()
+                    display_status("Column " + colname + " dropped Successfully")
 
  
 def process_save_column(colname,parms,display=True) :
@@ -369,10 +618,12 @@ def process_save_column(colname,parms,display=True) :
     else :
         fname = None
         
+    df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    
     if(not (fname == None))  :
     
         try :
-            collist = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[colname].tolist()
+            collist = df[colname].tolist()
             with open(fname, 'w') as col_list_file :
                 json.dump(collist,col_list_file)
                     
@@ -413,8 +664,9 @@ def process_reorder_columns(parms,display=True) :
 
     movecol         = fparms[0]
     moveaftercol    = fparms[1]
-
-    df_cols     = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist() 
+    
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    df_cols     =   df.columns.tolist() 
     
     new_cols = []
     
@@ -430,7 +682,7 @@ def process_reorder_columns(parms,display=True) :
             final_cols.append(movecol) 
     
     try :        
-        cfg.set_current_dfc_dataframe(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)[final_cols])       
+        df[final_cols]       
         
     except Exception as e:
         opstat.store_exception("Reorder Columns Error",e)
@@ -466,15 +718,15 @@ def process_copy_column(parms,display=True) :
     """
     
     opstat  =   opStatus()
-    fparms  =   get_parms_for_input(parms[3],dtcw.copy_columns_input_idList)
     
+    fparms  =   get_parms_for_input(parms[3],dtcw.copy_columns_input_idList)
+
     copytocol      = fparms[0]
     copyfromcol    = fparms[1]
 
     try : 
         df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
         df[copytocol] = df[copyfromcol]
-        cfg.set_current_dfc_dataframe(df)       
         
     except Exception as e:
         opstat.store_exception("Reorder Columns Error",e)
@@ -494,7 +746,7 @@ def process_copy_column(parms,display=True) :
             display_status("Column " + copyfromcol + " copied to " + copytocol + " Successfully")
 
 
-def process_sort_by_column(parms,display=True) :
+def process_sort_by_column(colname,parms,display=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : sort by column transform option
@@ -511,35 +763,65 @@ def process_sort_by_column(parms,display=True) :
     opstat  =   opStatus()
 
     fparms      =   get_parms_for_input(parms[3],dtcw.sort_column_input_idList)
-    coltosort   =   fparms[0]
-    sortorder   =   fparms[1]
-    resetrowids =   fparms[2]
-    print(coltosort,sortorder,resetrowids)
-
-    try : 
-        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
-        df.sort_values(coltosort,sortorder)
-        
-        if(resetrowids) :
-            from dfcleanser.data_transform.data_transform_dataframe_control import reset_row_ids_column
-            opstat = reset_row_ids_column()
-        
-    except Exception as e:
-        opstat.store_exception("Sort df By Column Error : "+coltosort,e)
-        display_exception(opstat)
     
-    if(opstat.get_status()) :
+    inplace     =   fparms[0]
+    
+    if(inplace == "True") :
+        inplace     =   True
+    else :
+        inplace     =   False
+    
+    if(not inplace) :    
+        resultdf    =   fparms[1]
+        if(len(resultdf) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("No title specified for result df")
+    else :
+        resultdf    =   None
         
-        if(display) :
+    sortorder   =   fparms[2]
+    if(sortorder == "True") :
+        sortorder   =   True
+    else :
+        sortorder   =   False
+    
+    sortkind    =   fparms[3]
+    naposition  =   fparms[4]
+    resetrowids =   fparms[5]
+
+    if(opstat.get_status()) :
+
+        try : 
+            df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
             
-            #make scriptable
-            add_to_script(["# sort by column ",
+            if(inplace) :
+                df.sort_values(colname,axis=1,ascending=sortorder,inplace=True,kind=sortkind,na_position=naposition)
+            else :
+                newdf               =   df.sort_values(colname,axis=1,ascending=sortorder,inplace=False,kind=sortkind,na_position=naposition)
+                new_dfcnotes        =   "sort by " + colname
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+            if(resetrowids) :
+                from dfcleanser.data_transform.data_transform_dataframe_control import reset_df_index
+                opstat = reset_df_index()
+        
+        except Exception as e:
+            opstat.store_exception("Sort df By Column Error : "+colname,e)
+            display_exception(opstat)
+    
+        if(opstat.get_status()) :
+        
+            if(display) :
+            
+                #make scriptable
+                add_to_script(["# sort by column ",
                            "from dfcleanser.data_transform.data_transform_columns_control import process_sort_by_column",
                            "process_sort_by_column(" + json.dumps(parms) + ",False)"],opstat)
             
-            clear_output()
-            dtcw.display_base_data_transform_columns_taskbar()
-            display_status("Column " + coltosort + " sorted successfully.")
+                clear_output()
+                dtcw.display_base_data_transform_columns_taskbar()
+                display_status("Column " + colname + " sorted successfully.")
     
     cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
 
@@ -559,37 +841,92 @@ def process_apply_fn_to_column(parms,display=True) :
     """
     
     opstat  =   opStatus()
+    apply_id_list   =   dtcw.get_current_apply_fn_idList()
     
-    fparms = get_parms_for_input(parms[3],dtcw.apply_column_gf_input_idList)
+    fparms = get_parms_for_input(parms[3],apply_id_list)
+    print("process_apply_fn_to_column",parms,fparms)
 
-    coltoapply      =   fparms[0]
-    lambdaflag      =   fparms[1]
-    #fnname          =   fparms[2]
+    dftoapply       =   fparms[0]
+    coltoapply      =   fparms[1]
+    fntoapply       =   fparms[2]
     fncode          =   fparms[3]
     
-    try : 
+    print("dftoapply",dftoapply)
+    print("fntoapply",fntoapply)
+    print("fncode",fncode)
     
-        if(lambdaflag == "True") :
-            # strip out any commentary or blank lines in func
-            while(fncode.find("#") > -1) :
-                comment = fncode.find("#")
-                # find the end of the line
-                eol = fncode.find("\n",comment)
-                fncode = fncode[eol+1:]
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_apply_function_parms
+    kwargs  =   get_apply_function_parms(fntoapply)
+    
+    print("kwargs",kwargs)
+    
+    kwargs_vals     =   []
+    for i in range(len(kwargs)) :
+        kwargs_vals.append(fparms[4+i]) 
+        
+    print("kwargs_vals",kwargs_vals) 
+    
+    if(len(dftoapply) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No dataframe to aply fn to defined")
+    elif(cfg.get_dfc_dataframe(dftoapply) is None) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("Dataframe to aply fn to is invalid")
+    elif(len(coltoapply) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("No column to aply fn to defined")
+    else :
+        
+        from dfcleanser.common.common_utils import is_column_in_df
+        if(not (is_column_in_df(cfg.get_dfc_dataframe_df(dftoapply),coltoapply)) ) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Column " + coltoapply + " not found in " + dftoapply)
+        elif(len(fncode) > 0) :
             
-            fncode = fncode.lstrip("\n")
+            for i in range(len(kwargs_vals)) :
+                if(len(kwargs_vals[i]) == 0) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg(kwargs[i] + " fn parm is not defined")
             
-            code    =   "get_dfc_dataframe().loc[:,[" + coltoapply + "]].apply(lambda colval : " + fncode + ", axis = 0)"
+    if(opstat.get_status()) :
+    
+        try : 
+            
+            code    =   ""
+            code    =   (code + "import dfcleanser.common.cfg as cfg\n")
+            fncode  =   fncode.replace("df","cfg.get_dfc_dataframe_df('" + dftoapply +"')")
+            
+            if(len(fntoapply) > 0) :
+                
+                if(fncode.find("np.") > -1) :
+                    code    =   (code + "import numpy as np\n")
+            
+                from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_apply_function_parms_datatypes
+                kwarg_types     =   get_apply_function_parms_datatypes(fntoapply)
+            
+                for i in range(len(kwarg_types)) :
+                    try :
+                        if(kwarg_types[i] == int) :
+                            kwargval    =   int(kwargs_vals[i])
+                        elif(kwarg_types[i] == float) :
+                            kwargval    =   float(kwargs_vals[i])
+                        else :
+                            kwargval    =   str("'"+kwargs_vals[i]+"'")
+                        
+                    except :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg(kwargs[i] + " is invalid data_type")
+                    
+                    fncode  =   fncode.replace(kwargs[i],kwargval)
+                    
+            
+            code    =   (code + fncode) 
+            
             exec(code)
-        else :
-            cfg.set_config_value(cfg.CURRENT_COL_NAME,coltoapply)
-            code = fncode
-            exec(code)
-            cfg.drop_config_value(cfg.CURRENT_COL_NAME)
             
-    except Exception as e:
-        opstat.store_exception("Apply fn to Column Error : " + coltoapply + "\n   " + code,e)
-        display_exception(opstat)
+        except Exception as e:
+            opstat.store_exception("Apply fn to Column Error : " + coltoapply + "\n   " + code,e)
+            #display_exception(opstat)
     
     if(opstat.get_status()) :
         
@@ -603,6 +940,10 @@ def process_apply_fn_to_column(parms,display=True) :
             clear_output()
             dtcw.display_base_data_transform_columns_taskbar()
             display_status("function applied to column " + coltoapply + " successfully.")
+            
+    else :
+        
+        display_exception(opstat)
     
     #et_dc_dataframe()[coltoapply].apply(fncode)
     cfg.drop_config_value(dtcw.apply_column_input_id+"Parms")
@@ -844,8 +1185,7 @@ def process_datatype_column(colname,parms,display=True)  :
         display_exception(opstat)
 
  
-    
-def process_map_transform(colname,parms,display=True) :
+def process_map_transform(mtype,colname,parms,display=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : mapping transform
@@ -872,7 +1212,6 @@ def process_map_transform(colname,parms,display=True) :
     if(len(nanFlag) == 0) :
         nanFlag = "False"
 
-    # TODO check type string must have ' '    
     mapkeys = fparms[2].split(',')
     mapvals = fparms[3].split(',')
     
@@ -954,7 +1293,7 @@ def process_map_transform(colname,parms,display=True) :
         
     if(opstat.get_status()) :
         if(display) :
-            dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
+            dtw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
 
 
 def process_dummy_transform(colname,parms,display=True) :
@@ -1014,13 +1353,8 @@ def process_dummy_transform(colname,parms,display=True) :
     if(opstat.get_status()) :
         if(display) :
             if(not removecol) :
-                dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                dtw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
                                                      colname)
-
-    if(not opstat.get_status()) : 
-        if(display) :
-            if(not removecol) :
-                dtcw.display_transform_cols_option([[colname,26]])
 
 
 def process_cat_transform(colname,parms,display=True) :
@@ -1094,11 +1428,7 @@ def process_cat_transform(colname,parms,display=True) :
     
         displayParms("Column " + colname + " Category Transform Parms",labellist,valuelist,cfg.DataTransform_ID)
         
-        dtcw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
-
-    if(not opstat.get_status()) : 
-        if(display) :
-            dtcw.display_transform_cols_option([[colname,27]])
+        dtw.display_column_transform_status(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)
 
 
 def make_col_categorical(df, columnName, reverse=None)  :   
@@ -1185,7 +1515,7 @@ def make_col_categorical_from_dummies(df, columnName, removeCol)  :
             opstat.store_exception("column drop error : " + columnName,e)
             
     if(opstat.get_status()) :
-        cfg.set_current_dfc_dataframe(df)
+        print("new df")
     
     return(opstat)
 
@@ -1211,6 +1541,7 @@ def make_col_categorical_from_map(df, columnName, cmap, handleNA)  :
     """ 
 
     collist = df[columnName]
+    
     opstat = opStatus()
     
     if( (handleNA == None) or (handleNA == 'ignore') ) : 
@@ -1231,7 +1562,7 @@ def make_col_categorical_from_map(df, columnName, cmap, handleNA)  :
 #--------------------------------------------------------------------------
 """ 
 def clear_dataframe_columns_transform_cfg_values() :
-    
+
     cfg.drop_config_value(dtcw.transform_map_input_id+"Parms")
     cfg.drop_config_value(dtcw.transform_map_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.transform_dummy_input_id+"Parms")
@@ -1247,17 +1578,18 @@ def clear_dataframe_columns_transform_cfg_values() :
     cfg.drop_config_value(dtcw.add_column_code_gf_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.add_column_df_input_id+"Parms")
     cfg.drop_config_value(dtcw.add_column_df_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.add_column_code_dfc_funcs_input_id+"Parms")
+    cfg.drop_config_value(dtcw.add_column_code_dfc_funcs_input_id+"ParmsProtect")
+    
     
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"Parms")
     cfg.drop_config_value(dtcw.reorder_columns_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.sort_column_input_id+"Parms")
     cfg.drop_config_value(dtcw.sort_column_input_id+"ParmsProtect")
-    cfg.drop_config_value(dtcw.apply_column_gf_input_id+"Parms")
-    cfg.drop_config_value(dtcw.apply_column_gf_input_id+"ParmsProtect")
     cfg.drop_config_value(dtcw.apply_column_lambda_input_id+"Parms")
     cfg.drop_config_value(dtcw.apply_column_lambda_input_id+"ParmsProtect")
-    cfg.drop_config_value(dtcw.apply_column_gf_det_input_id+"Parms")
-    cfg.drop_config_value(dtcw.apply_column_gf_det_input_id+"ParmsProtect")
+    cfg.drop_config_value(dtcw.apply_column_lambda_parms_input_id+"Parms")
+    cfg.drop_config_value(dtcw.apply_column_lambda_parms_input_id+"ParmsProtect")
 
     cfg.drop_config_value(dtcw.copy_columns_input_id+"Parms")
     cfg.drop_config_value(dtcw.copy_columns_input_id+"ParmsProtect")

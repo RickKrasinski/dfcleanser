@@ -141,31 +141,112 @@ def add_column_names_row(fname,colslist):
 #    reset the row ids column
 #--------------------------------------------------------------------------
 """
-def reset_row_ids_column(startid):
+def reset_df_index(parms):
     
     opstat = opStatus() 
+    
+    fparms      =   get_parms_for_input(parms,dftw.df_reset_index_transform_input_idList)
 
-    try :
-        cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).index = range(startid,
-                                  len(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).index)+startid)
-    except Exception as e:
-        opstat.store_exception("Unable to reset row ids",e)
+    if(len(fparms[0]) == 0) :
+        colnames = None
+    else :
+        colnames = fparms[0]
+        
+    if(fparms[1] == "True") :
+        drop = True
+    else :
+        drop = False
+            
+    if(fparms[3] == "True") :
+        inplace = True
+    else :
+        inplace = False
+            
+        if(len(fparms[4]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("column names list is empty")
+        else :
+            resultdf    =   fparms[4]
+                
+ 
+    if(opstat.get_status()) :
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+
+        try : 
+            
+            if(inplace) :
+                df.reset_index(colnames,drop=drop,inplace=True)
+            else :
+                newdf               =   df.reset_index(colnames,drop=drop,inplace=False)
+                new_dfcnotes        =   "reset index " + colnames
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+        except Exception as e: 
+            opstat.store_exception("Unable to reset df index : " + colnames,e)
 
     return(opstat)
+    
 
 """
 #--------------------------------------------------------------------------
 #    set a row ids column
 #--------------------------------------------------------------------------
 """
-def set_row_ids_column(colname):
+def set_df_index(parms):
     
     opstat = opStatus()
     
-    try :
-        cfg.cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).set_index(colname, inplace=True)
-    except Exception as e: 
-        opstat.store_exception("Unable to set row ids from : " + colname,e)
+    fparms      =   get_parms_for_input(parms,dftw.df_set_index_transform_input_idList)
+
+    colnames    =   fparms[0]
+    
+    if(len(colnames) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("column names list is empty")
+        
+    else :
+        
+        if(fparms[1] == "True") :
+            drop = True
+        else :
+            drop = False
+            
+        if(fparms[2] == "True") :
+            inplace = True
+        else :
+            inplace = False
+            
+        if(not inplace) :
+            if(len(fparms[3]) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("result df name is empty")
+            else :
+                
+                resultdf    =   fparms[3]
+                
+                if(fparms[4] == "True") :
+                    verify = True
+                else :
+                    verify = False
+ 
+    if(opstat.get_status()) :
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+
+        try : 
+            
+            if(inplace) :
+                df.set_index(colnames,drop=drop,append=False,inplace=True,verify_integirty=verify)
+            else :
+                newdf               =   df.set_index(colnames,drop=drop,append=False,inplace=False,verify_integirty=verify)
+                new_dfcnotes        =   "set index " + colnames
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+        except Exception as e: 
+            opstat.store_exception("Unable to set row ids from : " + colnames,e)
 
     return(opstat)
 
@@ -174,104 +255,237 @@ def set_row_ids_column(colname):
 #    drop the row ids column
 #--------------------------------------------------------------------------
 """
-def drop_row_ids_column():
+def append_to_df_index(parms):
     
     opstat = opStatus()
 
-    try :
-        cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).reset_index(drop=True)
-    except Exception as e: 
-        opstat.store_exception("Unable to drop row ids column",e)
+    fparms      =   get_parms_for_input(parms,dftw.df_append_index_transform_input_idList)
 
-    return(opstat)
-
-"""
-#--------------------------------------------------------------------------
-#    drop duplicate rows
-#--------------------------------------------------------------------------
-"""
-def sort_row_ids_column(parms):
+    colnames    =   fparms[0]
     
-    print("sort_row_ids_column",parms)
-    
-    opstat = opStatus()
-
-    return(opstat)
-
-
-
-"""
-#--------------------------------------------------------------------------
-#    drop duplicate rows
-#--------------------------------------------------------------------------
-"""
-def drop_duplicate_rows(colkeys):
-    
-    opstat = opStatus()
-
-    try :
-        if(len(colkeys) > 0) :
-            cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop_duplicates(colkeys,inplace=True) 
+    if(len(colnames) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("column names list is empty")
+        
+    else :
+        
+        if(fparms[1] == "True") :
+            drop = True
         else :
-            cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).drop_duplicates(inplace=True) 
-    except Exception as e:
-        opstat.store_exception("Unable to drop drop duplicate rows",e)
+            drop = False
+        
+        if(fparms[2] == "True") :
+            inplace = True
+        else :
+            inplace = False
+            
+        if(not inplace) :
+            if(len(fparms[3]) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("result df name is empty")
+            else :
+                
+                resultdf    =   fparms[3]
+                
+    if(opstat.get_status()) :
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+
+        try : 
+            
+            if(inplace) :
+                df.set_index(colnames,drop=drop,append=True,inplace=True)
+            else :
+                newdf               =   df.set_index(colnames,drop=drop,append=True,inplace=False)
+                new_dfcnotes        =   "append to index " + colnames
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+        except Exception as e: 
+            opstat.store_exception("Unable to append to df index : " + colnames,e)
 
     return(opstat)
 
+
+"""
+#--------------------------------------------------------------------------
+#    drop duplicate rows
+#--------------------------------------------------------------------------
+"""
+def sort_df_index(parms):
+    
+    opstat = opStatus()
+    
+    fparms      =   get_parms_for_input(parms,dftw.df_sort_index_transform_input_idList)
+
+    colnames    =   fparms[0]
+    
+    if(len(colnames) == 0) :
+        opstat.set_status(False)
+        opstat.set_errorMsg("column names list is empty")
+        
+    else :
+        
+        if(fparms[1] == "True") :
+            ascending = True
+        else :
+            ascending = False
+        
+        if(fparms[2] == "True") :
+            inplace = True
+        else :
+            inplace = False
+            
+        if(not inplace) :
+            if(len(fparms[3]) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("result df name is empty")
+            else :
+                
+                resultdf    =   fparms[3]
+                kind        =   fparms[4]
+                na_position =   fparms[5]
+                
+    if(opstat.get_status()) :
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+
+        try : 
+            
+            if(inplace) :
+                df.set_index(colnames,level=None,ascending=ascending,inplace=True,kind=kind,na_position=na_position)
+            else :
+                newdf               =   df.set_index(colnames,level=None,ascending=ascending,inplace=False,kind=kind,na_position=na_position)
+                new_dfcnotes        =   "sort index " + colnames
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+        except Exception as e: 
+            opstat.store_exception("Unable to sort df index : " + colnames,e)
+
+    return(opstat)
+
+
+"""
+#--------------------------------------------------------------------------
+#    drop duplicate rows
+#--------------------------------------------------------------------------
+"""
+def drop_duplicate_rows(parms):
+    
+    opstat = opStatus()
+    
+    fparms      =   get_parms_for_input(parms,dftw.df_drop_dups_transform_input_idList)
+
+    colnames    =   fparms[0]
+    
+    if(len(colnames) == 0) :
+        colnames    =   None
+        
+    if(fparms[1] == "drop") :
+        drop = True
+    else :
+        drop = False
+        
+    keep        =   fparms[2]
+    if(keep == "False") :
+        keep    =   False
+        
+    if(fparms[3] == "True") :
+        inplace = True
+    else :
+        inplace = False
+            
+    if(not inplace) :
+        if(len(fparms[3]) == 0) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("result df name is empty")
+        else :
+            resultdf    =   fparms[4]
+            
+    df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+            
+    if(not (colnames is None)) :
+        if(not drop) :
+            fcolnames   =   []  
+            colslist    =   df.columns.tolist()
+            
+            for i in range(len(colslist)) :
+                if(not (colslist[i] in colnames)) :
+                    fcolnames.append(colslist[i]) 
+                    
+            colnames    =   fcolnames
+                
+    if(opstat.get_status()) :
+        
+        try : 
+            
+            if(inplace) :
+                df.drop_duplicates(colnames,keep=keep,inplace=True)
+            else :
+                newdf               =   df.drop_duplicates(colnames,keep=keep,inplace=False)
+                new_dfcnotes        =   "drop duplicates " + colnames
+                new_dfc_dataframe   =   cfg.dfc_dataframe(resultdf,newdf,new_dfcnotes)
+                cfg.add_dfc_dataframe(new_dfc_dataframe)
+        
+        except Exception as e: 
+            opstat.store_exception("Unable to sort df index : " + colnames,e)
+
+    return(opstat)
+ 
 
 """
 #--------------------------------------------------------------------------
 #    process the dataframe transform options
 #--------------------------------------------------------------------------
 """
-def process_df_transform(parms,display=True) :
+def process_df_transform(optionid,parms,display=True) :
     
     opstat  =   opStatus()
     
-    optionid    =   parms[0][0]
     funcid      =   parms[0][1]
     
-    PROCESS_CMD                 =   0
-    GET_DEFAULT_FILE_NAME       =   1
+    #PROCESS_CMD                 =   0
+    #GET_DEFAULT_FILE_NAME       =   1
     
     dftw.display_dataframe_transform_taskbar()
 
-    if(optionid == dtm.SAVE_COLUMN_NAMES_ROW) :
+    if(optionid == dtm.PROCESS_SAVE_COLUMN_NAMES_ROW) :
         
         # remove column names row
-        if(funcid == PROCESS_CMD) :
-            fparms      =   dftw.get_save_colnames_row_input_parms(parms[1])
-            filename    =   fparms[0]
+        #if(funcid == PROCESS_CMD) :
+        fparms      =   get_parms_for_input(parms,dftw.df_save_row_transform_input_idList)
+        filename    =   fparms[0]
             
-            if(len(filename) == 0) :
-                filename = "datasets/" + cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
-                filename = filename.replace(".","_")
-                filename = filename + "_column_names.json"
+        if(len(filename) == 0) :
+            filename = "datasets/" + cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
+            filename = filename.replace(".","_")
+            filename = filename + "_column_names.json"
             
-            opstat  =   save_column_names_row(filename)
+        opstat  =   save_column_names_row(filename)
             
-            if(opstat.get_status()) :
+        if(opstat.get_status()) :
                 
-                if(display) :
+            if(display) :
                     
-                    #make scriptable
-                    add_to_script(["# save column names row",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_control save_column_names_row",
-                                   "save_column_names_row(" + str(filename) + ")"],opstat)
+                #make scriptable
+                add_to_script(["# save column names row",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control save_column_names_row",
+                               "save_column_names_row(" + str(filename) + ")"],opstat)
                 
-                clear_output()
+            clear_output()
 
-                display_main_option([[0,0]])
-                display_status("Column Names Row Saved Successfully to : " + filename)
+            display_main_option([[0,0]])
+            display_status("Column Names Row Saved Successfully to : " + filename)
 
-                clear_dataframe_transform_cfg_values()
+            clear_dataframe_transform_cfg_values()
                 
-            else :
-                clear_output()
-                dftw.display_dataframe_options([[0,1]])
-                display_exception(opstat)
-                
+        else :
+            clear_output()
+            dftw.display_dataframe_options([[0,1]])
+            display_exception(opstat)
+        
+        """        
         # use fefault file name
         elif(funcid == GET_DEFAULT_FILE_NAME) :
              
@@ -289,58 +503,60 @@ def process_df_transform(parms,display=True) :
                 funcid = parms[0][0]
 
             dftw.display_dataframe_options([[dtm.SAVE_COLUMN_NAMES_ROW]])
+        """
             
     # add column names row
-    elif(optionid == dtm.ADD_COLUMN_NAMES_ROW) :
+    elif(optionid == dtm.PROCESS_ADD_COLUMN_NAMES_ROW) :
         
         # add column names row
-        if(funcid == PROCESS_CMD) :
+        #if(funcid == PROCESS_CMD) :
             
-            fparms      =   dftw.get_add_colnames_row_input_parms(parms)
-            filename    =   fparms[0]
-            collist     =   fparms[1]
+        fparms      =   get_parms_for_input(parms,dftw.df_add_row_transform_input_idList)
+        filename    =   fparms[0]
+        collist     =   fparms[1]
             
-            if(len(filename) == 0) :
-                filename = "None"
+        if(len(filename) == 0) :
+            filename = "None"
                 
-            if(len(collist) == 0 ) :
-                collist = "None"
-            else :
-                collist = json.loads(collist)
+        if(len(collist) == 0 ) :
+            collist = "None"
+        else :
+            collist = json.loads(collist)
                 
-            if( (not(filename == "None")) or (not(collist == "None"))) :
+        if( (not(filename == "None")) or (not(collist == "None"))) :
                 
-                opstat = add_column_names_row(filename,collist)
+            opstat = add_column_names_row(filename,collist)
             
-                if(opstat.get_status()) :
+            if(opstat.get_status()) :
                     
-                    if(display) :
+                if(display) :
                         
-                        #make scriptable
-                        add_to_script(["# Add Column Names Row",
-                                       "from dfcleanser.data_transform.data_transform_dataframe_control add_column_names_row",
-                                       "add_column_names_row(" + single_quote(filename) +"," + json.dumps(collist) + ")"],opstat)
+                    #make scriptable
+                    add_to_script(["# Add Column Names Row",
+                                   "from dfcleanser.data_transform.data_transform_dataframe_control add_column_names_row",
+                                   "add_column_names_row(" + single_quote(filename) +"," + json.dumps(collist) + ")"],opstat)
 
-                    clear_output()
-                    display_main_option([[0,0]])
-                    clear_dataframe_transform_cfg_values()
-                    display_status("Column Names Row Added Successfully")
+                clear_output()
+                display_main_option([[0,0]])
+                clear_dataframe_transform_cfg_values()
+                display_status("Column Names Row Added Successfully")
                 
-                else :
-                    
-                    clear_output()
-                    dftw.display_dataframe_options([[1,0]])
-                    display_exception(opstat)
-
             else :
-                
+                    
                 clear_output()
                 dftw.display_dataframe_options([[1,0]])
-                opstat.set_status(False)
-                opstat.set_errormsg("Adding Column Names Row - No file name or column List defined")
                 display_exception(opstat)
+
+        else :
+                
+            clear_output()
+            dftw.display_dataframe_options([[1,0]])
+            opstat.set_status(False)
+            opstat.set_errormsg("Adding Column Names Row - No file name or column List defined")
+            display_exception(opstat)
+            
     
-    elif(optionid == dtm.CHANGE_COLUMN_NAMES) :
+    elif(optionid == dtm.PROCESS_CHANGE_COLUMN_NAMES) :
         
         opstat = change_column_names(parms)
         
@@ -366,164 +582,144 @@ def process_df_transform(parms,display=True) :
                 clear_output()
                 dftw.display_dataframe_options([[4,0]])
                 display_exception(opstat)
-                
-    # reset row ids column
-    elif(optionid == dtm.RESET_ROW_IDS) :
-        
-        # Remove Row Ids Column
-        if(funcid == PROCESS_CMD) :
-            
-            fparms  =   dftw.get_reset_colnames_row_input_parms(parms[1])
-            startid =   fparms[0]
-            
-            if(len(startid) > 0) :
-                startid = int(startid)
-            else :
-                startid = 0
 
-            opstat = reset_row_ids_column(startid)
-            
-            if(opstat.get_status()) :
-                 
-                if(display) :
-                    #make scriptable
-                    add_to_script(["# reset row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_control reset_row_ids_column",
-                                   "reset_row_ids_column(" + str(startid) + ")"],opstat)
-
-                clear_output()
-                display_main_option([[0,0]])
-                clear_dataframe_transform_cfg_values()
-                display_status("Row Index Column Reset Successfully")
-                
-            else :
-                
-                clear_output()
-                dftw.display_dataframe_options([[1,0]])
-                display_exception(opstat)
-            
-    elif(optionid == dtm.SET_NEW_ROW_IDS_COL) :
-        
-        if(funcid == PROCESS_CMD) :
-            
-            fparms  =   dftw.get_set_colnames_row_input_parms(parms[1])
-            colname =   fparms[0]
-            
-            if(len(colname) > 0) :
-                
-                opstat = set_row_ids_column(colname)      
-                
-                if(opstat.get_status()) :
-                    
-                    if(display) :
-                        #make scriptable
-                        add_to_script(["# set row ids column",
-                                       "from dfcleanser.data_transform.data_transform_dataframe_control set_row_ids_column",
-                                       "set_row_ids_column(" + single_quote(colname) + ")"],opstat)
-
-                    clear_output()
-                    display_main_option([[0,0]])
-                    clear_dataframe_transform_cfg_values()
-                    display_status("Row Index Column Set Successfully")
-                
-                else :
-                
-                    clear_output()
-                    dftw.display_dataframe_options([[3,0]]) 
-                    display_exception(opstat)
-                
-            else :
-                
-                clear_output()
-                dftw.display_dataframe_options([[3,0]])
-                opstat.set_status(False)
-                opstat.set_errormsg("No Column Name Defined")
-                display_exception(opstat)
-        
-    elif(optionid == dtm.DROP_ROW_IDS_COL) :
-        
-        # Remove Row Ids Column
-        if(funcid == PROCESS_CMD) :
-            
-            opstat = drop_row_ids_column()
-            
-            if(opstat.get_status()) :
-                 
-                if(display) :
-                    #make scriptable
-                    add_to_script(["# set row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_control drop_row_ids_column",
-                                   "drop_row_ids_column()"],opstat)
-                
-                clear_output()
-                display_main_option([[0,0]])
-                clear_dataframe_transform_cfg_values()
-                
-                display_status("Row Index Column Dropped Successfully")
-                
-            else :
-                
-                clear_output()
-                dftw.display_dataframe_options([[4,0]])
-                display_exception(opstat)
     
-    elif(optionid == dtm.SORT_ROWS) :
+    elif(optionid == dtm.PROCESS_SET_DF_INDEX) :
+        
+        #if(funcid == PROCESS_CMD) :
+            
+        opstat = set_df_index(parms)      
+                
+        if(opstat.get_status()) :
+                    
+            if(display) :
+                #make scriptable
+                add_to_script(["# set df index",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control set_df_index",
+                               "set_df_index(" + json.dumps(parms[1]) + ")"],opstat)
+
+            clear_output()
+            display_main_option([[0,0]])
+            clear_dataframe_transform_cfg_values()
+            display_status("df Index Set Successfully")
+                
+        else :
+                
+            clear_output()
+            dftw.display_dataframe_options([[3,0]]) 
+            display_exception(opstat)
+                
+                
+    elif(optionid == dtm.PROCESS_RESET_DF_INDEX) :
         
         # Remove Row Ids Column
-        if(funcid == PROCESS_CMD) :
+        #if(funcid == PROCESS_CMD) :
             
-            opstat = sort_row_ids_column(parms)
+        opstat = reset_df_index(parms)
             
-            if(opstat.get_status()) :
+        if(opstat.get_status()) :
                  
-                if(display) :
-                    #make scriptable
-                    add_to_script(["# set row ids column",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_control sort_row_ids_column",
-                                   "sort_row_ids_column()"],opstat)
+            if(display) :
+                #make scriptable
+                add_to_script(["# reset df index",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control reset_df_index",
+                               "reset_df_index(" + json.dumps(parms[1]) + ")"],opstat)
+
+            clear_output()
+            display_main_option([[0,0]])
+            clear_dataframe_transform_cfg_values()
+            display_status("df Index Reset Successfully")
                 
-                clear_output()
-                display_main_option([[0,0]])
-                clear_dataframe_transform_cfg_values()
+        else :
                 
-                display_status("Dataframe Sorted Successfully")
+            clear_output()
+            dftw.display_dataframe_options([[1,0]])
+            display_exception(opstat)
+
+            
+    elif(optionid == dtm.PROCESS_APPEND_TO_INDEX) :
+        
+        # Remove Row Ids Column
+        #if(funcid == PROCESS_CMD) :
+            
+        opstat = append_to_df_index(parms)
+            
+        if(opstat.get_status()) :
+                 
+            if(display) :
+                #make scriptable
+                add_to_script(["# append to df index",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control append_to_df_index",
+                               "append_to_df_index(" + json.dumps(parms[1]) + ")"],opstat)
                 
-            else :
+            clear_output()
+            display_main_option([[0,0]])
+            clear_dataframe_transform_cfg_values()
                 
-                clear_output()
-                dftw.display_dataframe_options([[4,0]])
-                display_exception(opstat)
+            display_status("Row Index Column Dropped Successfully")
+                
+        else :
+                
+            clear_output()
+            dftw.display_dataframe_options([[4,0]])
+            display_exception(opstat)
+ 
+    
+    elif(optionid == dtm.PROCESS_SORT_DF_INDEX) :
+        
+        # Remove Row Ids Column
+        #if(funcid == PROCESS_CMD) :
+            
+        opstat = sort_df_index(parms)
+            
+        if(opstat.get_status()) :
+                 
+            if(display) :
+                #make scriptable
+                add_to_script(["# set row ids column",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control sort_df_index",
+                               "sort_df_index(" + json.dumps(parms[1]) + ")"],opstat)
+                
+            clear_output()
+            display_main_option([[0,0]])
+            clear_dataframe_transform_cfg_values()
+                
+            display_status("Dataframe Sorted Successfully")
+                
+        else :
+                
+            clear_output()
+            dftw.display_dataframe_options([[4,0]])
+            display_exception(opstat)
+
             
     # drop duplicate rows
-    elif(optionid == dtm.DROP_DUPLICATE_ROWS) :
+    elif(optionid == dtm.PROCESS_DROP_DUPLICATE_ROWS) :
 
         # drop duplicate rows
-        if(funcid == PROCESS_CMD) :
+        #if(funcid == PROCESS_CMD) :
             
-            fparms  =   dftw.get_drop_duplicate_rows_input_parms(parms[1])
-            collist =   fparms[0]
+        opstat = drop_duplicate_rows(parms)
             
-            opstat = drop_duplicate_rows(collist)
-            
-            if(opstat.get_status()) :
+        if(opstat.get_status()) :
                  
-                if(display) :
-                    #make scriptable
-                    add_to_script(["# drop duplicate rows",
-                                   "from dfcleanser.data_transform.data_transform_dataframe_control drop_duplicate_rows",
-                                   "drop_duplicate_rows("+ json.dumps(collist) + ")"],opstat)
+            if(display) :
+                #make scriptable
+                add_to_script(["# drop duplicate rows",
+                               "from dfcleanser.data_transform.data_transform_dataframe_control drop_duplicate_rows",
+                               "drop_duplicate_rows("+ json.dumps(collist) + ")"],opstat)
 
-                clear_output()
-                display_main_option([[0,0]])
-                clear_dataframe_transform_cfg_values()
+            clear_output()
+            display_main_option([[0,0]])
+            clear_dataframe_transform_cfg_values()
                 
-                display_status("Duplicate Rows Dropped Successfully")
+            display_status("Duplicate Rows Dropped Successfully")
                 
-            else :
+        else :
                 
-                clear_output()
-                dftw.display_dataframe_options([[4,0]])                
-                display_exception(opstat) 
+            clear_output()
+            dftw.display_dataframe_options([[4,0]])                
+            display_exception(opstat) 
     
     # return
     elif(optionid == dtm.DF_TRANSFORM_RETURN) :
@@ -538,11 +734,11 @@ def clear_dataframe_transform_cfg_values() :
     
     cfg.drop_config_value(dftw.df_save_row_transform_input_id+"Parms")
     cfg.drop_config_value(dftw.df_add_row_transform_input_id+"Parms")
-    cfg.drop_config_value(dftw.df_reset_col_transform_input_id+"Parms")
+    cfg.drop_config_value(dftw.df_reset_index_transform_input_id+"Parms")
     cfg.drop_config_value(dftw.df_drop_dups_transform_input_id+"Parms")
     cfg.drop_config_value(dftw.df_change_row_transform_input_id+"Parms")    
-    cfg.drop_config_value(dftw.df_sort_row_ids_transform_input_id+"Parms")
-    cfg.drop_config_value(dftw.df_set_new_col_transform_input_id+"Parms")    
+    cfg.drop_config_value(dftw.df_sort_index_transform_input_id+"Parms")
+    cfg.drop_config_value(dftw.df_set_index_transform_input_id+"Parms")    
     
     
     

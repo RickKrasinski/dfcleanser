@@ -12,6 +12,12 @@ import sys
 this = sys.modules[__name__]
 
 
+"""
+#--------------------------------------------------------------------------
+#    Data Transform Main Taskbar Option IDs
+#--------------------------------------------------------------------------
+"""
+
 MAIN_OPTION                                 =   0
 
 DISPLAY_DATAFRAME_TRANSFORM                 =   1
@@ -21,11 +27,7 @@ DISPLAY_DF_SCHEMA_TRANSFORM                 =   4
 
 DFC_TRANSFORM_RETURN                        =   5
 
-
-
-
-
-TRANSFORM_OPTION                            =   6
+TRANSFORM_COLS_OPTION                       =   6
 
 
 
@@ -41,22 +43,16 @@ PROCESS_DATETIME_OPTION                     =   14
 PROCESS_DATETIME_TIMEDELTA_OPTION           =   15
 PROCESS_DATETIME_MERGESPLIT_OPTION          =   16
 
-PROCESS_DF_SCHEMA_OPTION                    =   17
-
 PROCESS_DATETIME_COMPONNETS_OPTION          =   21
 
-
-CHANGE_NA_OPTION                            =   38
-
-DISPLAY_DROP_NA_OPTION                      =   39
-DISPLAY_FILL_NA_OPTION                      =   40
 DISPLAY_DATATYPE_OPTION                     =   41
 
 PROCESS_DROP_NA_OPTION                      =   42
 PROCESS_FILL_NA_OPTION                      =   43
 PROCESS_DATATYPE_OPTION                     =   44
 
-PROCESS_CHECK_NUMERIC                       =   45
+PROCESS_CHECK_COMPATABILITY                 =   45
+
 
 """
 #--------------------------------------------------------------------------
@@ -74,9 +70,6 @@ DISPLAY_DATETIME_COMPONENTS                 =   6
 SPLIT                                       =   0
 MERGE                                       =   1
 
-DISPLAY_NO_FUNCTIONS                        =   0
-DISPLAY_FUNCTIONS                           =   1
-
 
 """
 #--------------------------------------------------------------------------
@@ -85,16 +78,27 @@ DISPLAY_FUNCTIONS                           =   1
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-SAVE_COLUMN_NAMES_ROW           =   0
-ADD_COLUMN_NAMES_ROW            =   1
-CHANGE_COLUMN_NAMES             =   2
-SET_NEW_ROW_IDS_COL             =   3
-RESET_ROW_IDS                   =   4
-DROP_ROW_IDS_COL                =   5
-SORT_ROWS                       =   6
-DROP_DUPLICATE_ROWS             =   7
-DF_TRANSFORM_RETURN             =   8
-DF_TRANSFORM_HELP               =   9
+DISPLAY_SAVE_COLUMN_NAMES_ROW           =   100
+DISPLAY_ADD_COLUMN_NAMES_ROW            =   101
+DISPLAY_CHANGE_COLUMN_NAMES             =   102
+DISPLAY_SET_DF_INDEX                    =   103
+DISPLAY_RESET_DF_INDEX                  =   104
+DISPLAY_APPEND_TO_INDEX                 =   105
+DISPLAY_SORT_DF_INDEX                   =   106
+DISPLAY_DROP_DUPLICATE_ROWS             =   107
+DF_TRANSFORM_RETURN                     =   108
+DF_TRANSFORM_HELP                       =   109
+
+PROCESS_SAVE_COLUMN_NAMES_ROW           =   110
+PROCESS_ADD_COLUMN_NAMES_ROW            =   111
+PROCESS_CHANGE_COLUMN_NAMES             =   112
+PROCESS_SET_DF_INDEX                    =   113
+PROCESS_RESET_DF_INDEX                  =   114
+PROCESS_APPEND_TO_INDEX                 =   115
+PROCESS_SORT_DF_INDEX                   =   116
+PROCESS_DROP_DUPLICATE_ROWS             =   117
+
+
 
 
 """
@@ -104,24 +108,51 @@ DF_TRANSFORM_HELP               =   9
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-MORE_TASKBAR                    =   0
+MORE_TASKBAR                            =   200
 
-RENAME_COLUMN                   =   1
-ADD_COLUMN                      =   2
-DROP_COLUMN                     =   3
-REORDER_COLUMNS                 =   4
-MAP_COLUMN                      =   5
-DUMMIES_COLUMN                  =   6
-CAT_COLUMN                      =   7
-DATATYPE_COLUMN                 =   8
-CLEAR_COLUMN                    =   9
-HELP_COLUMN                     =   10
-SAVE_COLUMN                     =   11
-COPY_COLUMN                     =   12
-SORT_COLUMN                     =   13
-APPLY_COLUMN                    =   14
-APPLY_COLUMN_GF                 =   15
+DISPLAY_RENAME_COLUMN                   =   201
+DISPLAY_ADD_COLUMN                      =   202
+DISPLAY_DROP_COLUMN                     =   203
+DISPLAY_REORDER_COLUMNS                 =   204
+DISPLAY_MAP_COLUMN                      =   205
+DISPLAY_DUMMIES_COLUMN                  =   206
+DISPLAY_CAT_COLUMN                      =   207
+DISPLAY_DATATYPE_COLUMN                 =   208
+DISPLAY_CLEAR_COLUMN                    =   209
+DISPLAY_HELP_COLUMN                     =   210
+DISPLAY_SAVE_COLUMN                     =   211
+DISPLAY_COPY_COLUMN                     =   212
+DISPLAY_SORT_COLUMN                     =   213
+DISPLAY_APPLY_COLUMN                    =   214
+RETURN_CLEAR_COLUMN                     =   216
+DISPLAY_APPLY_COLUMN_UPDATE             =   217
 
+DISPLAY_DATATYPE_CHANGE_NA              =   220
+DISPLAY_DATATYPE_UNIQUES                =   221
+DISPLAY_CHECK_COMPATABILITY             =   222
+DISPLAY_CHECK_COMPATABILITY_UNIQUES     =   223
+
+
+PROCESS_RENAME_COLUMN                   =   250
+PROCESS_DROP_COLUMN                     =   251
+PROCESS_SAVE_COLUMN                     =   252
+PROCESS_REORDER_COLUMNS                 =   253
+PROCESS_COPY_COLUMN                     =   254
+PROCESS_SORT_COLUMN                     =   255
+PROCESS_APPLY_COLUMN                    =   256
+PROCESS_MAP_COLUMN                      =   257
+PROCESS_MAP_COLUMN_VALUES               =   258
+PROCESS_MAP_COLUMN_FUNCTION             =   259
+PROCESS_DUMMIES_COLUMN                  =   260
+PROCESS_CAT_COLUMN                      =   261
+
+PROCESS_CHANGE_DATATYPE_COLUMNS         =   262
+
+
+MAP_FROM_FILE                           =   0
+MAP_FROM_VALUES                         =   1
+MAP_FROM_FUNCTION                       =   2
+    
 
 """
 #--------------------------------------------------------------------------
@@ -136,21 +167,8 @@ APPLY_COLUMN_GF                 =   15
 #    display transform column display intermediate ids
 #--------------------------------------------------------------------------
 """
-RENAMING                =   1
 ADDING                  =   2
-DROPPING                =   3
-MOVING                  =   4
-MAPPING                 =   5
-DUMMIES                 =   6
-CATEGORIES              =   7
 DATATYPE                =   8
-
-SAVING                  =   11
-COPYING                 =   12
-SORTING                 =   13
-APPLYING                =   14
-APPLYING_SEL_FUN        =   15
-
 
 
 """
@@ -158,59 +176,57 @@ APPLYING_SEL_FUN        =   15
 #    display transform column display details ids
 #--------------------------------------------------------------------------
 """
-RENAMING_DETAILS            =   21
-ADDING_DETAILS              =   22
-DROPPING_DETAILS            =   23
-MOVING_DETAILS              =   24
-MAPPING_DETAILS             =   25
-DUMMIES_DETAILS             =   26
-CATEGORIES_DETAILS          =   27
-DATATYPE_DETAILS            =   28
-SAVING_DETAILS              =   31
-COPYING_DETAILS             =   32
-
-SORTING_DETAILS             =   34
 APPLYING_DETAILS            =   35
-APPLYING_DETAILS_GF         =   36
-APPLYING_DETAILS_GF_DESC    =   37
+APPLYING_DETAILS_PARMS      =   36
 
 
 """
 #--------------------------------------------------------------------------
-#    apply fn to column transform processing ids
-#--------------------------------------------------------------------------
-"""
-APPLY_FN_COLUMN_SAVE    =   6
-APPLY_FN_COLUMN_APPLY   =   7
-APPLY_FN_COLUMN_SHOW    =   8
-APPLY_FN_COLUMN_CLEAR   =   9
-APPLY_FN_COLUMN_RETURN  =   10
-
-
-"""
-#--------------------------------------------------------------------------
-#    add column transform display ids
+#    add column transform option ids
 #--------------------------------------------------------------------------
 """
 DISPLAY_BASE_ADD_OPTION             =   -1
-DISPLAY_ADD_FROM_FILE_OPTION        =   0
-DISPLAY_ADD_FROM_CODE_OPTION        =   1
-DISPLAY_ADD_FROM_DF_OPTION          =   2
+
+DISPLAY_ADD_FROM_FILE_OPTION        =   400
+PROCESS_ADD_FROM_FILE_OPTION        =   401
+
+DISPLAY_ADD_FROM_CODE_OPTION        =   402
+PROCESS_ADD_FROM_CODE_OPTION        =   403
+
+DISPLAY_ADD_FROM_DFC_FUNCS          =   404
+DISPLAY_ADD_FROM_DFC_FUNCS_PARMS    =   405
+PROCESS_ADD_FROM_DFC_FUNCS          =   406
+
+DISPLAY_ADD_FROM_DF_OPTION          =   407
+PROCESS_ADD_FROM_DF_OPTION          =   408
+
+ADD_COLUMN_CLEAR                    =   411        
+ADD_COLUMN_RETURN                   =   412
+
+DISPLAY_NO_FUNCTIONS                =   0
+DISPLAY_FUNCTIONS                   =   1
 
 """
 #--------------------------------------------------------------------------
 #    add column transform processing ids
 #--------------------------------------------------------------------------
 """  
-ADD_COLUMN_CLEAR        =   4        
-ADD_COLUMN_RETURN       =   5
+
  
-PROCESS_FILE_OPTION                 =   13
-PROCESS_MAKE_NEW_CODE_OPTION        =   14
-PROCESS_ADD_NEW_CODE_OPTION         =   15
-PROCESS_SELECT_FUNC_OPTION          =   16
-DISPLAY_GENERIC_FUNCTIONS_OPTION    =   17
-PROCESS_ADD_NEW_FROM_DF_OPTION      =   18
+#PROCESS_FILE_OPTION                 =   13
+#PROCESS_MAKE_NEW_CODE_OPTION        =   14
+#PROCESS_SELECT_FUNC_OPTION          =   16
+#DISPLAY_GENERIC_FUNCTIONS_OPTION    =   17
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#    dataframe schema 
+#--------------------------------------------------------------------------
+"""  
 
 
 """
@@ -228,18 +244,48 @@ NO_NA_OPTION            =   2
 #    check numeric status
 #--------------------------------------------------------------------------
 """  
-UNKNOWN_STATUS      =   0
-INT_STATUS          =   1
-FLOAT_STATUS        =   2
-NOT_INT_STATUS      =   3
-NOT_FLOAT_STATUS    =   4
+UNKNOWN_STATUS          =   0
+INT_STATUS              =   1
+FLOAT_STATUS            =   2
+DATETIME_STATUS         =   3
 
 
-UNKNOWN_TEXT        =   "&nbsp;Unknown"
-INT_TEXT            =   "&nbsp;Can Be Int"
-FLOAT_TEXT          =   "&nbsp;Can Be Float"
-NOT_INT_TEXT        =   "&nbsp;Can Not Be Int"
-NOT_FLOAT_TEXT      =   "&nbsp;Can Not Be Float"
+"""
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+#   check compatability data type values 
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+"""
+VALUES_OK                               =   -1
+VALUE_OUT_OF_RANGE                      =   0
+PRECISION_LOSS                          =   1
+VALUE_NOT_NUMERIC                       =   2
+
+
+MIN_DATETIME_TIMEDELTA_SECONDS          =   -86399999913600.0
+MIN_DATETIME_TIMEDELTA_MILLISECONDS     =   1000 * MIN_DATETIME_TIMEDELTA_SECONDS
+MIN_DATETIME_TIMEDELTA_MICROSECONDS     =   1000 * MIN_DATETIME_TIMEDELTA_MILLISECONDS
+MIN_DATETIME_TIMEDELTA_NANOSECONDS      =   1000 * MIN_DATETIME_TIMEDELTA_MICROSECONDS
+
+MAX_DATETIME_TIMEDELTA_SECONDS          =   86400000000000
+MAX_DATETIME_TIMEDELTA_MILLISECONDS     =   1000 * MAX_DATETIME_TIMEDELTA_SECONDS
+MAX_DATETIME_TIMEDELTA_MICROSECONDS     =   1000 * MAX_DATETIME_TIMEDELTA_MILLISECONDS
+MAX_DATETIME_TIMEDELTA_NANOSECONDS      =   1000 * MAX_DATETIME_TIMEDELTA_MICROSECONDS
+
+MIN_NP_TIMEDELTA_SECONDS                =   -1943161946.9376225
+MIN_NP_TIMEDELTA_MILLISECONDS           =   1000 * MIN_NP_TIMEDELTA_SECONDS
+MIN_NP_TIMEDELTA_MICROSECONDS           =   1000 * MIN_NP_TIMEDELTA_MILLISECONDS
+MIN_NP_TIMEDELTA_NANOSECONDS            =   1000 * MIN_NP_TIMEDELTA_MICROSECONDS
+
+MAX_NP_TIMEDELTA_SECONDS                =   1943161946.9376225
+MAX_NP_TIMEDELTA_MILLISECONDS           =   1000 * MAX_NP_TIMEDELTA_SECONDS
+MAX_NP_TIMEDELTA_MICROSECONDS           =   1000 * MAX_NP_TIMEDELTA_MILLISECONDS
+MAX_NP_TIMEDELTA_NANOSECONDS            =   1000 * MAX_NP_TIMEDELTA_MICROSECONDS
+
+
+
+
 
 
 """
@@ -265,12 +311,32 @@ class chknum_status :
         # minimum init attributes
         self.statusdict     =   status_dict
 
-    def set_col_status(self,colname,status) :
-        self.statusdict.update({colname:status})
+    def set_col_status(self,colname,dtype,status) :
         
-    def get_col_status(self,colname) :
-        return(self.statusdict.get(colname,UNKNOWN_STATUS))
+        statuslist  =  self.statusdict.get(colname,None) 
+        if(statuslist is None) :
+            statuslist  =   [None,None,None]
+            
+        if(dtype == INT_STATUS)         :   statuslist[0]   =   status
+        elif(dtype == FLOAT_STATUS)     :   statuslist[1]   =   status
+        else                            :   statuslist[2]   =   status
         
+        self.statusdict.update({colname:statuslist})
+        
+    def get_col_status(self,colname,dtype) :
+        
+        statuslist  =  self.statusdict.get(colname,None) 
+        
+        if(statuslist is None) :
+            
+            return(None)
+            
+        else :
+            
+            if(dtype == INT_STATUS)         :   return(statuslist[0])
+            elif(dtype == FLOAT_STATUS)     :   return(statuslist[1])
+            else                            :   return(statuslist[2])
+
     def clear_chknum_status(self) :
         self.statusdict     =   {}
 
@@ -286,9 +352,7 @@ checknum_status     =   chknum_status()
 class dfschema_stats :
    
     # full constructor
-    def __init__(self,    
-                 stats_dict    =   {}) :
-        
+    def __init__(self,stats_dict    =   {}) :
         # minimum init attributes
         self.statsdict     =   stats_dict
 

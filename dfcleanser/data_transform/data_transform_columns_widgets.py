@@ -19,9 +19,9 @@ from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, Input
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR)
 
-from dfcleanser.common.common_utils import (get_datatype_id, display_status, opStatus, get_parms_for_input,
+from dfcleanser.common.common_utils import (get_datatype_id, opStatus, get_parms_for_input, display_exception,
                                             is_numeric_col, display_generic_grid, get_select_defaults, 
-                                            get_datatype_str, does_col_contain_nan)
+                                            get_datatype_str, does_col_contain_nan, is_column_in_df)
 
 from dfcleanser.common.display_utils import display_column_names
 
@@ -47,15 +47,15 @@ columns_transform_tb_keyTitleList           =   ["Rename</br> Column",
                                                  "More",
                                                  "Return","Help"]
 
-columns_transform_tb_jsList                 =   ["cols_transform_tb_callback("+str(dtm.RENAME_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.ADD_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DROP_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.REORDER_COLUMNS)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.SAVE_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.COPY_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.SORT_COLUMN)+")",
+columns_transform_tb_jsList                 =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_RENAME_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_ADD_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DROP_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_REORDER_COLUMNS)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_SAVE_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_COPY_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_SORT_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.MORE_TASKBAR)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.CLEAR_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ID) + ")"]
 
 columns_transform_tb_centered               =   True
@@ -72,12 +72,12 @@ columns_transform_tb1_keyTitleList          =   ["Apply</br>fn To</br>Column",
                                                  "Change</br> Column</br>Datatype",
                                                  "Return","Help"]
 
-columns_transform_tb1_jsList                =   ["cols_transform_tb_callback("+str(dtm.APPLY_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.MAP_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DUMMIES_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.CAT_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DATATYPE_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.CLEAR_COLUMN)+")",
+columns_transform_tb1_jsList                =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_APPLY_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_MAP_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DUMMIES_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_CAT_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DATATYPE_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ID) + ")"]
 
 columns_transform_tb1_centered              =   True
@@ -93,11 +93,11 @@ columns_transform_tbA_keyTitleList          =   ["Rename</br> Column",
                                                  "Reorder</br>Columns",
                                                  "Save</br> Column"]
 
-columns_transform_tbA_jsList                =   ["cols_transform_tb_callback("+str(dtm.RENAME_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.ADD_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DROP_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.REORDER_COLUMNS)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.SAVE_COLUMN)+")"]
+columns_transform_tbA_jsList                =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_RENAME_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_ADD_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DROP_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_REORDER_COLUMNS)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_SAVE_COLUMN)+")"]
 
 columns_transform_tbA_centered              =   True
 
@@ -111,11 +111,11 @@ columns_transform_tbB_keyTitleList          =   ["Copy</br>Column",
                                                   "Map</br> Column",
                                                   "Dummies</br>For</br>Column"]
 
-columns_transform_tbB_jsList                =   ["cols_transform_tb_callback("+str(dtm.COPY_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.SORT_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.APPLY_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.MAP_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DUMMIES_COLUMN)+")"]
+columns_transform_tbB_jsList                =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_COPY_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_SORT_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_APPLY_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_MAP_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DUMMIES_COLUMN)+")"]
 
 columns_transform_tbB_centered              =   True
 
@@ -127,65 +127,13 @@ columns_transform_tbC_keyTitleList          =   ["Make</br> Column</br>Categoric
                                                  "Change</br> Column</br>Datatype",
                                                  "Return","Help"]
 
-columns_transform_tbC_jsList                =   ["cols_transform_tb_callback("+str(dtm.CAT_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.DATATYPE_COLUMN)+")",
-                                                 "cols_transform_tb_callback("+str(dtm.CLEAR_COLUMN)+")",
+columns_transform_tbC_jsList                =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_CAT_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DISPLAY_DATATYPE_COLUMN)+")",
+                                                 "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MDC_ID) + ")"]
 
 columns_transform_tbC_centered              =   True
 
-
-
-
-
-"""
-#--------------------------------------------------------------------------
-#   column categorical task bar
-#--------------------------------------------------------------------------
-"""
-cols_cat_transform_tb_doc_title              =   "DataFrame Columns Categorical Options"
-cols_cat_transform_tb_title                  =   "DataFrame Columns Categorical Options"
-cols_cat_transform_tb_id                     =   "colscattransformoptionstb"
-
-cols_cat_transform_tb_keyTitleList           =   ["Apply</br>fn To</br>Column",
-                                                  "Map</br> Column",
-                                                  "Dummies</br>For</br>Column",
-                                                  ]
-
-cols_cat_transform_tb_jsList                 =   ["cols_transform_tb_callback("+str(dtm.APPLY_COLUMN)+")",
-                                                  "cols_transform_tb_callback("+str(dtm.MAP_COLUMN)+")",
-                                                  "cols_transform_tb_callback("+str(dtm.DUMMIES_COLUMN)+")",
-                                                  "cols_transform_tb_callback("+str(dtm.CAT_COLUMN)+")",
-                                                  "cols_transform_tb_callback("+str(dtm.DATATYPE_COLUMN)+")",
-                                                  "cols_transform_tb_callback("+str(dtm.CLEAR_COLUMN)+")",
-                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MDC_ID) + ")"]
-
-"""
-#--------------------------------------------------------------------------
-#    rename column input for single column
-#--------------------------------------------------------------------------
-"""
-rename_column_input_title               =   "Column Naming Parameters"
-rename_column_input_id                  =   "renamecolInput"
-rename_column_input_idList              =   ["newColumnName",
-                                             None,None,None]
-
-rename_column_input_labelList           =   ["new_column_name",
-                                             "Rename</br> Column",
-                                             "Return","Help"]
-
-rename_column_input_typeList            =   ["text",
-                                             "button","button","button"]
-
-rename_column_input_placeholderList     = ["enter the new column name",
-                                           None,None,None]
-
-rename_column_input_jsList              =    [None,
-                                              "data_transform_cols_callback(0,"+str(dtm.RENAME_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.RENAME_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_RENAME_ID) + ")"]
-
-rename_column_input_reqList             =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -207,26 +155,28 @@ add_column_input_title                  =   "Add Column Parameters"
 add_column_input_id                     =   "addcolInput"
 add_column_input_idList                 =   ["addColumnName",
                                              "addColumnDataType",
-                                             None,None,None,None]
+                                             None,None,None,None,None]
 
 add_column_input_labelList              =   ["new_column_name",
                                              "new_column_data_type",
-                                             "Get</br>Column</br>Values</br>From File",
-                                             "Get</br>Column</br>Values From</br>User Code",
-                                             "Get</br>Column</br>Values From</br>df",
+                                             "Get</br>Column</br>Values</br>From</br>File",
+                                             "Get</br>Column</br>Values</br>From</br>dfc</br>Functions",
+                                             "Get</br>Column</br>Values</br>From</br>User</br>Code",
+                                             "Get</br>Column</br>Values</br>From</br>df",
                                              "Return"]
 
-add_column_input_typeList               =   ["text","select","button","button","button","button"]
+add_column_input_typeList               =   ["text","select","button","button","button","button","button"]
 
 add_column_input_placeholderList        =   ["enter the new column name",
                                              "enter the new column data type",
-                                             None,None,None,None]
+                                             None,None,None,None,None]
 
 add_column_input_jsList                 =    [None,None,
-                                              "data_transform_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_FILE_OPTION) + ")",
-                                              "data_transform_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_CODE_OPTION) + ")",
-                                              "data_transform_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_DF_OPTION) + ")",
-                                              "data_transform_add_cols_callback(" + str(ADD_COLUMN_RETURN) + ")"]
+                                              "data_transform_display_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_FILE_OPTION) + ")",
+                                              "data_transform_display_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_DFC_FUNCS) + ")",
+                                              "data_transform_display_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_CODE_OPTION) + ")",
+                                              "data_transform_display_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_DF_OPTION) + ")",
+                                              "data_transform_display_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")"]
 
 add_column_input_reqList                =   [0,1]
 
@@ -245,7 +195,7 @@ add_column_file_input_idList             =   ["addfcolumnname",
 add_column_file_input_labelList          =   ["new_column_name",
                                               "new_column_data_type",
                                               "Column Values File",
-                                              "Add New</br>Column",
+                                              "Add New</br>Column</br>From File",
                                               "Return","Help"]
 
 add_column_file_input_typeList           =   ["text","select","file",
@@ -257,11 +207,97 @@ add_column_file_input_placeholderList    =   ["enter the new column name",
                                               None,None,None]
 
 add_column_file_input_jsList             =    [None,None,None,
-                                               "data_transform_add_cols_callback(" + str(dtm.PROCESS_FILE_OPTION) + ")",
+                                               "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_FILE_OPTION) + ")",
                                                "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
                                                "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_FILE_ID) + ")"]
 
 add_column_file_input_reqList            =   [0,1,2]
+
+
+"""
+#--------------------------------------------------------------------------
+#    add new column - dfc funcs
+#--------------------------------------------------------------------------
+"""
+
+add_column_code_dfc_funcs_input_title           =   "Add Column Parameters"
+add_column_code_dfc_funcs_input_id              =   "addcoldfcfuncInput"
+add_column_code_dfc_funcs_input_idList          =   ["addcolName",
+                                                     "addcoldtype",
+                                                     "addcolfuncs",
+                                                     "addcolcodefcode",
+                                                     "addcoldesc",
+                                                     None,None,None,None]
+
+add_column_code_dfc_funcs_input_labelList       =   ["new_column_name",
+                                                     "new_column_data_type",
+                                                     "generic_function",
+                                                     "function_code",
+                                                     "function_description",
+                                                     "Add New</br>Column</br>From Code",
+                                                     "Clear","Return","Help"]
+
+add_column_code_dfc_funcs_input_typeList        =   ["text","select","select",
+                                                     maketextarea(5),maketextarea(10),
+                                                     "button","button","button","button"]
+
+add_column_code_dfc_funcs_input_placeholderList =   ["enter the new column name",
+                                                     "enter the column data type",
+                                                     "generic function",
+                                                     "function code",
+                                                     "function description",
+                                                     None,None,None,None]
+
+add_column_code_dfc_funcs_input_jsList          =    [None,None,None,None,None,
+                                                      "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_DFC_FUNCS) + ")",
+                                                      "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_CLEAR) + ")",
+                                                      "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
+                                                      "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+
+add_column_code_dfc_funcs_input_reqList         =   [0,1,2]
+
+
+"""
+#--------------------------------------------------------------------------
+#    display add column from dfc funcs objects
+#--------------------------------------------------------------------------
+""" 
+
+add_column_code_dfc_funcs_parms_input_title           =   "Add Column Parameters"
+add_column_code_dfc_funcs_parms_input_id              =   "addcoldfcfuncInput"
+add_column_code_dfc_funcs_parms_input_idList          =   ["addcolName",
+                                                           "addcoldtype",
+                                                           "addcolfuncs",
+                                                           "addcolcodefcode",
+                                                           "addcoldesc"]
+
+add_column_code_dfc_funcs_parms_input_labelList       =   ["new_column_name",
+                                                           "new_column_data_type",
+                                                           "dfc_function",
+                                                           "function_call",
+                                                           "function_description"]
+
+add_column_code_dfc_funcs_parms_input_labelList1      =   ["Add New</br>Column</br>From Code",
+                                                           "Clear","Return","Help"]
+
+add_column_code_dfc_funcs_parms_input_typeList        =   ["text","select","select",
+                                                           maketextarea(5),maketextarea(10)]
+
+add_column_code_dfc_funcs_parms_input_placeholderList =   ["enter the new column name",
+                                                           "enter the column data type",
+                                                           "generic function",
+                                                           "function code",
+                                                           "function description"]
+
+add_column_code_dfc_funcs_parms_input_jsList          =    [None,None,None,None,None]
+
+add_column_code_dfc_funcs_parms_input_jsList1         =    ["data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_DFC_FUNCS) + ")",
+                                                            "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_CLEAR) + ")",
+                                                            "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
+                                                            "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+
+add_column_code_dfc_funcs_parms_input_reqList         =   [0,1,2]
+
 
 """
 #--------------------------------------------------------------------------
@@ -273,43 +309,38 @@ add_column_code_gf_input_title           =   "Add Column Parameters"
 add_column_code_gf_input_id              =   "addcolcodeInput"
 add_column_code_gf_input_idList          =   ["addColumnName",
                                               "addColumndtype",
-                                              "addcolfuncs",
                                               "addcolmodule",
                                               "addcolname",
                                               "addcolcodefcode",
-                                              "addcoldesc",
                                               None,None,None,None]
 
 add_column_code_gf_input_labelList       =   ["new_column_name",
-                                              "column_data_type",
-                                              "generic_function",
+                                              "new_column_data_type",
                                               "function_module",
                                               "function_name",
                                               "function_code",
-                                              "function_description",
                                               "Add New</br>Column</br>From Code",
                                               "Clear","Return","Help"]
 
-add_column_code_gf_input_typeList        =   ["text","select","select","text","text",
-                                              maketextarea(5),maketextarea(10),
+add_column_code_gf_input_typeList        =   ["text","select","text","text",maketextarea(5),
                                               "button","button","button","button"]
 
 add_column_code_gf_input_placeholderList =   ["enter the new column name",
                                               "enter the column data type",
-                                              "generic function",
                                               "function module",
                                               "function name",
                                               "function code",
-                                              "function description",
                                               None,None,None,None]
 
-add_column_code_gf_input_jsList          =    [None,None,None,None,None,None,None,
-                                               "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_NEW_CODE_OPTION) + ")",
+add_column_code_gf_input_jsList          =    [None,None,None,None,None,
+                                               "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_CODE_OPTION) + ")",
                                                "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_CLEAR) + ")",
                                                "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
                                                "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
 
-add_column_code_gf_input_reqList         =   [0,1,3,4,5]
+add_column_code_gf_input_reqList         =   [0,1,2,3,4]
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -319,38 +350,94 @@ add_column_code_gf_input_reqList         =   [0,1,3,4,5]
 
 add_column_df_input_title               =   "Add Column Parameters"
 add_column_df_input_id                  =   "addcoldfInput"
-add_column_df_input_idList              =   ["addcoldfcname",
+add_column_df_input_idList              =   ["addcoloutdftitle",
+                                             "addcoldfcname",
                                              "addcoldfd",
                                              "addcoldftitle",
                                              "addcolddfcname",
+                                             "addcolddfoindex",
+                                             "addcolddfsindex",
                                              "addcolddfbafill",
                                              None,None,None,None]
 
-add_column_df_input_labelList           =   ["new_column_name",
-                                             "column_data_type",
+add_column_df_input_labelList           =   ["output_dataframe_title",
+                                             "new_output_column_name",
+                                             "new_output_column_data_type",
                                              "source_dataframe_title",
                                              "source_dataframe_column_name",
+                                             "output_dataframe_index_column_name",
+                                             "source_dataframe_index_column_name",
                                              "na_fill_value",
                                              "Add New</br>Column</br>From df",
                                              "Clear","Return","Help"]
 
-add_column_df_input_typeList            =   ["text","text","text","text","text",
+add_column_df_input_typeList            =   ["select","text","select","select","select","select","select","text",
                                              "button","button","button","button"]
 
-add_column_df_input_placeholderList     =   ["enter the new column name",
+add_column_df_input_placeholderList     =   ["enter the output dataframe title",
+                                             "enter the new column name",
                                              "enter the column data type",
                                              "enter the source dataframe title",
-                                             "enter the soyrce column name",
-                                             "enter the na fiull value",
+                                             "enter the source column name",
+                                             "enter the output index column name",
+                                             "enter the source index column name",
+                                             "enter the na fill value",
                                              None,None,None,None]
 
-add_column_df_input_jsList              =    [None,None,None,None,None,
-                                              "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_NEW_FROM_DF_OPTION) + ")",
+add_column_df_input_jsList              =    [None,None,None,None,None,None,None,None,
+                                              "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_DF_OPTION) + ")",
                                               "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_CLEAR) + ")",
                                               "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
 
-add_column_df_input_reqList         =   [0,1,2,3]
+add_column_df_input_reqList             =   [0,1,2,3,4]
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    ytransform columns display objects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+"""
+#--------------------------------------------------------------------------
+#    rename column input for single column
+#--------------------------------------------------------------------------
+"""
+rename_column_input_title               =   "Column Naming Parameters"
+rename_column_input_id                  =   "renamecolInput"
+rename_column_input_idList              =   ["renamecolumnname",
+                                             "renameoldColumnName",
+                                             "renamecolInput_inplace",
+                                             "renamecolInput_resultdf",
+                                             None,None,None]
+
+rename_column_input_labelList           =   ["new_column_name",
+                                             "column_to_rename",
+                                             "inplace",
+                                             "result_df_title",
+                                             "Rename</br> Column",
+                                             "Return","Help"]
+
+rename_column_input_typeList            =   ["text","select","select","text",
+                                             "button","button","button"]
+
+rename_column_input_placeholderList     =   ["enter the new column name",
+                                             "column name",
+                                             "rename column inplace",
+                                             "result df title (ignored if inplace = True)",
+                                             None,None,None]
+
+rename_column_input_jsList              =   [None,None,None,None,
+                                             "data_transform_process_cols_callback("+str(dtm.PROCESS_RENAME_COLUMN)+")",
+                                             "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
+                                             "display_help_url('" + dfchelp.RENAME_COL + "')"]
+
+rename_column_input_reqList             =   [0,1,2]
+
+
 
 
 """
@@ -360,31 +447,34 @@ add_column_df_input_reqList         =   [0,1,2,3]
 """
 drop_column_input_title                 =   "Drop Column Parameters"
 drop_column_input_id                    =   "dropcolInput"
-drop_column_input_idList                =   ["dropColumninplace",
-                                             "dropColumndftitle",
+drop_column_input_idList                =   ["dropcolInput_name",
+                                             "dropcolInput_inplace",
+                                             "dropcolInput_resultdf",
                                              "dropColumnFname",
                                              None,None,None]
 
-drop_column_input_labelList             =   ["inplace",
-                                             "dftitle",
+drop_column_input_labelList             =   ["column_to_drop",
+                                             "inplace",
+                                             "result_df_title",
                                              "file_save_name",
                                              "Drop</br> Column",
                                              "Return","Help"]
 
-drop_column_input_typeList              =   ["select","text","file",
+drop_column_input_typeList              =   ["select","select","text","file",
                                              "button","button","button"]
 
-drop_column_input_placeholderList       =   ["drop column inplace",
-                                             "dataframe title - (if inplace True - ignore",
+drop_column_input_placeholderList       =   ["drop column name",
+                                             "drop column inplace",
+                                             "result df title (ignored if inplace = True)",
                                              "enter File name to save dropped column to or browse to file below (default no save)",
                                              None,None,None]
 
-drop_column_input_jsList                =    [None,None,None,
-                                              "data_transform_cols_callback(0,"+str(dtm.DROP_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.DROP_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DROP_ID) + ")"]
+drop_column_input_jsList                =    [None,None,None,None,
+                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_DROP_COLUMN)+")",
+                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
+                                              "display_help_url('" + dfchelp.DROP_COL + "')"]
 
-drop_column_input_reqList               =   [0]
+drop_column_input_reqList               =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -393,25 +483,28 @@ drop_column_input_reqList               =   [0]
 """
 save_column_input_title                 =   "Save Column Parameters"
 save_column_input_id                    =   "savecolInput"
-save_column_input_idList                =   ["saveColumnFname",
+save_column_input_idList                =   ["saveColumnname",
+                                             "saveColumnFname",
                                              None,None,None]
 
-save_column_input_labelList             =   ["file_save_name",
+save_column_input_labelList             =   ["column_to_save",
+                                             "file_save_name",
                                              "Save</br> Column",
                                              "Return","Help"]
 
-save_column_input_typeList              =   ["file",
+save_column_input_typeList              =   ["select","file",
                                              "button","button","button"]
 
-save_column_input_placeholderList       =   ["enter File name to save dropped column to or browse to file below (default no save)",
+save_column_input_placeholderList       =   ["column to save",
+                                             "enter File name to save dropped column to or browse to file below (default no save)",
                                              None,None,None]
 
-save_column_input_jsList                =    [None,
-                                              "data_transform_cols_callback(0,"+str(dtm.SAVE_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.SAVE_COLUMN)+")",
+save_column_input_jsList                =    [None,None,
+                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_SAVE_COLUMN)+")",
+                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_SAVE_ID) + ")"]
 
-save_column_input_reqList               =   [0]
+save_column_input_reqList               =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -429,7 +522,7 @@ reorder_columns_input_labelList          =   ["column_to_move",
                                               "Move</br> Column",
                                               "Return","Help"]
 
-reorder_columns_input_typeList           =   ["text","text",
+reorder_columns_input_typeList           =   ["select","select",
                                               "button","button","button"]
 
 reorder_columns_input_placeholderList    =   ["column to move",
@@ -437,8 +530,8 @@ reorder_columns_input_placeholderList    =   ["column to move",
                                               None,None,None]
 
 reorder_columns_input_jsList             =    [None,None,
-                                               "data_transform_cols_callback(0,"+str(dtm.REORDER_COLUMNS)+")",
-                                               "data_transform_cols_callback(2,"+str(dtm.REORDER_COLUMNS)+")",
+                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_REORDER_COLUMNS)+")",
+                                               "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                                "displayhelp(" + str(dfchelp.TRANSFORM_COLS_REORDER_ID) + ")"]
 
 reorder_columns_input_reqList            =   [0,1]
@@ -459,16 +552,16 @@ copy_columns_input_labelList            =   ["column_to_copy_to",
                                              "Copy</br>Column",
                                              "Return","Help"]
 
-copy_columns_input_typeList             =   ["text","text",
+copy_columns_input_typeList             =   ["select","select",
                                              "button","button","button"]
 
-copy_columns_input_placeholderList      =   ["column to move",
-                                             "column to move after", 
+copy_columns_input_placeholderList      =   ["column to copy",
+                                             "column to copy to", 
                                              None,None,None]
 
 copy_columns_input_jsList               =    [None,None,
-                                              "data_transform_cols_callback(0,"+str(dtm.COPY_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.COPY_COLUMN)+")",
+                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_COPY_COLUMN)+")",
+                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_COPY_ID) + ")"]
 
 copy_columns_input_reqList              =   [0,1]
@@ -480,31 +573,43 @@ copy_columns_input_reqList              =   [0,1]
 """
 sort_column_input_title                 =   "Sort Column Parameters"
 sort_column_input_id                    =   "sortcolInput"
-sort_column_input_idList                =   ["sortColumnname",
+sort_column_input_idList                =   ["sortcolname",
+                                             "sortcolInput_inplace",
+                                             "sortcolInput_resultdf",
                                              "sortOrder",
+                                             "sortkind",
+                                             "sortna",
                                              "resetRowIds",
                                              None,None,None]
 
 sort_column_input_labelList             =   ["column_to_sort_by",
+                                             "inplace",
+                                             "result_df_title",
                                              "ascending_order_flag",
+                                             "kind",
+                                             "na_position",
                                              "reset_row_index_flag",
                                              "Sort By</br>Column",
                                              "Return","Help"]
 
-sort_column_input_typeList              =   ["text","select","select",
+sort_column_input_typeList              =   ["select","select","text","select","select","select","select",
                                              "button","button","button"]
 
-sort_column_input_placeholderList       =   ["column to sort by",
+sort_column_input_placeholderList       =   ["column to sort by)",
+                                             "drop column inplace (default True)",
+                                             "result df title (ignored if inplace = True)",
                                              "ascending sort order (default = False)",
+                                             "sort method (default = quicksort)",
+                                             "na position (default = last)",
                                              "reorder the row id column after the sort (default True)",
                                              None,None,None]
 
-sort_column_input_jsList                =    [None,None,None,
-                                              "data_transform_cols_callback(0,"+str(dtm.SORT_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.SORT_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_SORT_BY_COL_ID) + ")"]
+sort_column_input_jsList                =    [None,None,None,None,None,None,None,
+                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_SORT_COLUMN)+")",
+                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
+                                              "display_help_url('" + dfchelp.SORT_COL + "')"]
 
-sort_column_input_reqList               =   [0,1,2]
+sort_column_input_reqList               =   [0,1,2,3,4]
 
 
 """
@@ -512,42 +617,37 @@ sort_column_input_reqList               =   [0,1,2]
 #    apply lambda fn column
 #--------------------------------------------------------------------------
 """
-apply_column_lambda_input_title              =   "Apply lambda fn To Column Parameters"
+apply_column_lambda_input_title              =   "Apply dfc fn To Column Parameters"
 apply_column_lambda_input_id                 =   "applylcolInput"
 apply_column_lambda_input_idList             =   ["currentdf",
-                                                  "applylColumnname",
-                                                  "fnlambda",
+                                                  "applycolname",
                                                   "fnlfnsel",
                                                   "fntoapply",
-                                                  None,None,None,None,None]
+                                                  None,None,None,None]
 
 apply_column_lambda_input_labelList          =   ["dataframe_to_apply_fn_to",
                                                   "column_to_apply_fn_to",
-                                                  "run_as_lamda",
-                                                  "lambda_fns",
+                                                  "dfc_fns",
                                                   "function_code",
-                                                  "Save</br>As</br>Generic",
                                                   "Apply</br>fn To</br>Column",
                                                   "Clear","Return","Help"]
 
-apply_column_lambda_input_typeList           =   ["text","text","select","select",maketextarea(3),
-                                                  "button","button","button","button","button"]
+apply_column_lambda_input_typeList           =   ["select","select","select",maketextarea(5),
+                                                  "button","button","button","button"]
 
 apply_column_lambda_input_placeholderList    =   ["dataframe to apply fn to",
                                                   "column to apply fn to",
-                                                  "run as lambda",
-                                                  "lambda function",
+                                                  "dfc function",
                                                   "function code",
-                                                  None,None,None,None,None]
+                                                  None,None,None,None]
 
-apply_column_lambda_input_jsList             =    [None,None,None,None,None,
-                                                   "data_transform_apply_fn_callback(0," + str(dtm.APPLY_FN_COLUMN_SAVE) + ")",
-                                                   "data_transform_apply_fn_callback(0," + str(dtm.APPLY_FN_COLUMN_APPLY)+")",
-                                                   "data_transform_apply_fn_callback(0," + str(dtm.APPLY_FN_COLUMN_CLEAR)+")",
-                                                   "data_transform_apply_fn_callback(0," + str(dtm.APPLY_FN_COLUMN_RETURN)+")",
+apply_column_lambda_input_jsList             =    [None,None,None,None,
+                                                   "data_transform_process_cols_callback("+str(dtm.PROCESS_APPLY_COLUMN)+")",
+                                                   "data_transform_process_cols_callback("+str(dtm.DISPLAY_CLEAR_COLUMN)+")",
+                                                   "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                                    "displayhelp(" + str(dfchelp.TRANSFORM_COLS_APPLY_FN_ID) + ")"]
 
-apply_column_lambda_input_reqList            =   [0,1,2]
+apply_column_lambda_input_reqList            =   [0,1,2,3]
 
 
 """
@@ -555,10 +655,11 @@ apply_column_lambda_input_reqList            =   [0,1,2]
 #    apply fn with gf to column
 #--------------------------------------------------------------------------
 """
+"""
 apply_column_gf_input_title              =   "Apply fn To Column Parameters"
 apply_column_gf_input_id                 =   "applycolInput"
 apply_column_gf_input_idList             =   ["currentdf",
-                                              "applyColumnname",
+                                              "applycolname",
                                               "fmodule",
                                               "fnname",
                                               "fnselect",
@@ -596,12 +697,13 @@ apply_column_gf_input_jsList             =    [None,None,None,None,None,None,
                                                "displayhelp(" + str(dfchelp.TRANSFORM_COLS_APPLY_FN_ID) + ")"]
 
 apply_column_gf_input_reqList            =   [0,1,2,3,4]
-
+"""
 
 """
 #--------------------------------------------------------------------------
 #    apply fn with gf to column details
 #--------------------------------------------------------------------------
+"""
 """
 apply_column_gf_det_input_title              =   "Apply fn To Column Parameters"
 apply_column_gf_det_input_id                 =   "applydcolInput"
@@ -646,7 +748,7 @@ apply_column_gf_det_input_jsList             =    [None,None,None,None,None,None
 
 apply_column_gf_det_input_reqList            =   [0,1,2,3,4]
 
-
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -655,29 +757,43 @@ apply_column_gf_det_input_reqList            =   [0,1,2,3,4]
 """
 transform_map_input_title               =   "Column Mapping Parameters"
 transform_map_input_id                  =   "maptransformInput"
-transform_map_input_idList              =   ["mapfilename","handlena","mapkeys","mapvals",
-                                             None,None,None]
+transform_map_input_idList              =   ["mapcolumnname",
+                                             "mapkeys",
+                                             "mapvals",
+                                             "handlena",
+                                             "mapfn",
+                                             "mapfilename",
+                                             None,None,None,None,None]
 
-transform_map_input_labelList           =   ["mapping_values_list_file_name",
+transform_map_input_labelList           =   ["mapping_column_name",
+                                             "mapping_keys",
+                                             "mapping_values",
                                              "handle_nan",
-                                             "mapping_keys","mapping_values",
-                                             "Map Column",
+                                             "mapping_function",
+                                             "mapping_values_list_file_name",
+                                             "Map</br>Column</br>from</br>File",
+                                             "Map</br>Column</br>from</br>Values",
+                                             "Map</br>Column</br>from</br>Function",
                                              "Return","Help"]
 
-transform_map_input_typeList            =   ["file","select",
-                                             maketextarea(5),maketextarea(5),
-                                             "button","button","button"]
+transform_map_input_typeList            =   ["select",maketextarea(5),maketextarea(5),
+                                             "select",maketextarea(5),"file",
+                                             "button","button","button","button","button"]
 
-transform_map_input_placeholderList     = ["enter File name containing mapping or browse to file below",
+transform_map_input_placeholderList     = ["column to map",
+                                           "mapping keys",
+                                           "enter mapping values (comma separated)",
                                            "ignore Nans (default = True)",
-                                           "mapping keys ** see List Utiltity below",
-                                           "enter mapping values {comma separated) ** see List Utiltity below",
-                                           None,None,None]
+                                           "mapping function to generate mapping values ",
+                                           "enter File name containing mapping or browse to file below",
+                                           None,None,None,None,None]
 
-transform_map_input_jsList              =    [None,None,None,None,
-                                              "data_transform_cols_callback(0,"+str(dtm.MAP_COLUMN)+")",
-                                              "data_transform_cols_callback(2,"+str(dtm.MAP_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MAP_ID) + ")"]
+transform_map_input_jsList              = [None,None,None,None,None,None,
+                                           "data_transform_process_cols_callback("+str(dtm.PROCESS_MAP_COLUMN)+")",
+                                           "data_transform_process_cols_callback("+str(dtm.PROCESS_MAP_COLUMN_VALUES)+")",
+                                           "data_transform_process_cols_callback("+str(dtm.PROCESS_MAP_COLUMN_FUNCTION)+")",
+                                           "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
+                                           "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MAP_ID) + ")"]
 
 transform_map_input_reqList             =   [0,1,2,3]
 
@@ -688,24 +804,27 @@ transform_map_input_reqList             =   [0,1,2,3]
 """
 transform_dummy_input_title             =   "Column Dummies Parameters"
 transform_dummy_input_id                =   "dummytransformInput"
-transform_dummy_input_idList            =   ["removecol",
+transform_dummy_input_idList            =   ["dummycol",
+                                             "removecol",
                                              None,None,None]
 
-transform_dummy_input_labelList         =   ["remove_original_column",
+transform_dummy_input_labelList         =   ["column_set_dummies_for",
+                                             "remove_original_column",
                                              "Make </br>Dummies</br> for Column",
                                              "Return","Help"]
 
-transform_dummy_input_typeList          =   ["select","button","button","button"]
+transform_dummy_input_typeList          =   ["select","select","button","button","button"]
 
-transform_dummy_input_placeholderList   =   ["remove original column (default = True)",
+transform_dummy_input_placeholderList   =   ["column to set dummies for",
+                                             "remove original column (default = True)",
                                              None,None,None]
  
-transform_dummy_input_jsList            =   [None,
-                                             "data_transform_cols_callback(0,"+str(dtm.DUMMIES_COLUMN)+")",
-                                             "data_transform_cols_callback(2,"+str(dtm.DUMMIES_COLUMN)+")",
+transform_dummy_input_jsList            =   [None,None,
+                                             "data_transform_process_cols_callback("+str(dtm.PROCESS_DUMMIES_COLUMN)+")",
+                                             "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DUMMY_ID) + ")"]
 
-transform_dummy_input_reqList           =   [0]
+transform_dummy_input_reqList           =   [0,1]
 
 """
 #--------------------------------------------------------------------------
@@ -714,87 +833,166 @@ transform_dummy_input_reqList           =   [0]
 """
 transform_category_input_title          =   "Column Category Parameters"
 transform_category_input_id             =   "categorytransformInput"
-transform_category_input_idList         =   ["ordinalcol","convertcol",
+transform_category_input_idList         =   ["catcolumnname",
+                                             "ordinalcol",
+                                             "convertcol",
                                              None,None,None]
 
-transform_category_input_labelList      =   ["make_column_categorical_flag",
+transform_category_input_labelList      =   ["categorical_column_name",
+                                             "make_column_categorical_flag",
                                              "change_column_datatype_to_category_datatype_flag",
-                                             "Transform</br>Column",
+                                             "Make</br>Column</br>Categorical",
                                              "Return","Help"]
 
-transform_category_input_typeList       =   ["select","select","button","button","button"]
+transform_category_input_typeList       =   ["select","select","select","button","button","button"]
 
-transform_category_input_placeholderList =  ["make column categorical (default = True)",
+transform_category_input_placeholderList =  ["column to make categorical",
+                                             "make column categorical (default = True)",
                                              "convert column to category datatype (default = False)",
                                              None,None,None]
 
-transform_category_input_jsList         =   [None,None,
-                                             "data_transform_cols_callback(0,"+str(dtm.CAT_COLUMN)+")",
-                                             "data_transform_cols_callback(2,"+str(dtm.CAT_COLUMN)+")",
+transform_category_input_jsList         =   [None,None,None,
+                                             "data_transform_process_cols_callback("+str(dtm.PROCESS_CAT_COLUMN)+")",
+                                             "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_CAT_ID) + ")"]
 
-transform_category_input_reqList        =   [0,1]
+transform_category_input_reqList        =   [0,1,2]
+
+
 
 
 """
 #--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   data type components 
-#--------------------------------------------------------------------------
+#   datatype no nons 
 #--------------------------------------------------------------------------
 """
+dt_data_type_input_title                =   "Change Data Type Parameters"
+dt_data_type_input_id                   =   "dtdatatypeinput"
+dt_data_type_input_idList               =   ["dtcolname",
+                                             "dtdatatype",
+                                             None,None,None,None,None]
 
-"""
-#--------------------------------------------------------------------------
-#   data type input (dropna) 
-#--------------------------------------------------------------------------
-"""
-dt_data_type_dn_input_title             =   "Change Data Type Parameters"
-dt_data_type_dn_input_id                =   "dtdndatatypeinput"
-dt_data_type_dn_input_idList            =   ["dtnaoption",
-                                             "dtanyall",
-                                             "dtthreshold",
-                                             "inplace",
-                                             None,None,None]
-
-dt_data_type_dn_input_labelList         =   ["na_option",
-                                             "any_or_all",
-                                             "threshold",
-                                             "inplace",
+dt_data_type_input_labelList            =   ["column_to_change_datatype",
+                                             "datatype",
+                                             "Show</br>Uniques",
+                                             "Check</br>DataType</br>Compat",
                                              "Change</br>DataType",
                                              "Return","Help"]
 
-dt_data_type_dn_input_typeList          =   ["select","select","text","select",
-                                             "button","button","button"]
+dt_data_type_input_typeList             =   ["select","select","button","button","button","button","button"]
 
-dt_data_type_dn_input_placeholderList   =   ["na option",
-                                             "drop any or all",
-                                             "dropna threshold - (default : None)",
-                                             "dropna inplace",
-                                             None,None,None]
+dt_data_type_input_placeholderList      =   ["column name",
+                                             "datatype selected",
+                                             None,None,None,None,None]
 
-dt_data_type_dn_input_jsList            =   [None,None,None,None,
-                                             "process_cols_datatype_transform_callback(" + str(dtm.DROP_NA_OPTION) + ",0,1,'DataTransform')",
-                                             "process_cols_datatype_transform_callback(" + str(dtm.DROP_NA_OPTION) + ",1,1,'DataTransform')",
-                                             "display_help_url(" + str(dfchelp.PANDAS_DROPNA) + ")"]
+dt_data_type_input_jsList               =   [None,None,
+                                             "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",0)",
+                                             "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",1)",
+                                             "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",2)",
+                                             "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",3)",
+                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
 
-dt_data_type_dn_input_reqList           =   [0,1,2]
+dt_data_type_input_reqList              =   [0,1]
 
 
 """
 #--------------------------------------------------------------------------
-#   non data type input (dropna) 
+#   datatype nons with fillna 
 #--------------------------------------------------------------------------
 """
-ndt_data_type_dn_input_title            =   "Change Data Type Parameters"
-ndt_data_type_dn_input_id               =   "dtdndatatypeinput"
+dt_nans_data_type_input_title           =   "Change Data Type Parameters"
+dt_nans_data_type_input_id              =   "dtfndatatypeinput"
+dt_nans_data_type_input_idList          =   ["dtcolname",
+                                             "dtdatatype",
+                                             "dtnaopt",
+                                             "dtfillnavalue",
+                                             "dtfillnamethod",
+                                             "dtfillnalimit",
+                                             None,None,None,None,None]
+
+dt_nans_data_type_input_labelList       =   ["column_to_change_datatype",
+                                             "datatype",
+                                             "na_option",
+                                             "fillna_value",
+                                             "fillna_method",
+                                             "fillna_limit",
+                                             "Show</br>Uniques",
+                                             "Check</br>DataType</br>Compat",
+                                             "Change</br>DataType",
+                                             "Return","Help"]
+
+dt_nans_data_type_input_typeList        =   ["select","select","select","text","select","text","button","button","button","button","button"]
+
+dt_nans_data_type_input_placeholderList =   ["column name",
+                                             "datatype selected",
+                                             "na option",
+                                             "fillna value",
+                                             "fillna method",
+                                             "limit (default = None)",
+                                             None,None,None,None,None]
+
+dt_nans_data_type_input_jsList          =   [None,None,None,None,None,None,
+                                             "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",0)",
+                                             "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",1)",
+                                             "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",2)",
+                                             "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",3)",
+                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+
+dt_nans_data_type_input_reqList         =   [0,1,2,3,4,5]
+
+
+"""
+#--------------------------------------------------------------------------
+#   datatype nons with dropna 
+#--------------------------------------------------------------------------
+"""
+dt_drop_nans_data_type_input_title           =   "Change Data Type Parameters"
+dt_drop_nans_data_type_input_id              =   "dtdndatatypeinput"
+dt_drop_nans_data_type_input_idList          =   ["dtcolname",
+                                                  "dtdatatype",
+                                                  "dtnaopt",
+                                                  "dtanyall",
+                                                  "dtthreshold",
+                                                  None,None,None,None,None]
+
+dt_drop_nans_data_type_input_labelList       =   ["column_to_change_datatype",
+                                                  "datatype",
+                                                  "na_option",
+                                                  "dropna_any_or_all",
+                                                  "dropna_threshold",
+                                                  "Show</br>Uniques",
+                                                  "Check</br>DataType</br>Compat",
+                                                  "Change</br>DataType",
+                                                  "Return","Help"]
+
+dt_drop_nans_data_type_input_typeList        =   ["select","select","select","select","text","button","button","button","button","button"]
+
+dt_drop_nans_data_type_input_placeholderList =   ["column name",
+                                                  "datatype selected",
+                                                  "na option",
+                                                  "drop any or all",
+                                                  "dropna threshold (default : None)",
+                                                  None,None,None,None,None]
+
+dt_drop_nans_data_type_input_jsList          =   [None,None,None,None,None,
+                                                  "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",0)",
+                                                  "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",1)",
+                                                  "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",2)",
+                                                  "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",3)",
+                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+
+dt_drop_nans_data_type_input_reqList         =   [0,1,2,3,4]
+
+
+
+
+"""
 ndt_data_type_dn_input_idList           =   ["dtanyall",
                                              "dtthreshold",
                                              "inplace",
                                              None,None,None]
 
-ndt_data_type_dn_input_labelList        =   ["any_or_all",
-                                             "threshold",
+ndt_data_type_dn_input_labelList        =   [
                                              "inplace",
                                              "Drop</br>Nans",
                                              "Return","Help"]
@@ -810,190 +1008,21 @@ ndt_data_type_dn_input_placeholderList  =   ["drop any or all",
 ndt_data_type_dn_input_jsList           =   [None,None,None,
                                              "process_cols_dropna_fillna_transform_callback(5)",
                                              "process_cols_dropna_fillna_transform_callback(0)",
-                                             "display_help_url(" + str(dfchelp.PANDAS_DROPNA) + ")"]
-
-ndt_data_type_dn_input_reqList          =   [0,1]
-
-
+                                             "display_help_url('" + str(dfchelp.PANDAS_DROPNA) + "')"]
 """
-#--------------------------------------------------------------------------
-#   numeric data type input (fillnana) 
-#--------------------------------------------------------------------------
-"""
-dt_data_type_fn_input_title             =   "Change Data Type Parameters"
-dt_data_type_fn_input_id                =   "dtfndatatypeinput"
-dt_data_type_fn_input_idList            =   ["dtnaoption",
-                                             "dtfillvalue",
-                                             "dtfillmethod",
-                                             "dtfillinplace",
-                                             "dtfilllimit",
-                                             None,None,None]
-
-dt_data_type_fn_input_labelList         =   ["na_option",
-                                             "fillna_value",
-                                             "fillna_method",
-                                             "inplace",
-                                             "limit",
-                                             "Change</br> DataType",
-                                             "Return","Help"]
-
-dt_data_type_fn_input_typeList          =   ["select","text","select","select","text",
-                                             "button","button","button"]
-
-dt_data_type_fn_input_placeholderList   =   ["na option",
-                                             "fillna value",
-                                             "fillna method",
-                                             "inplace flag",
-                                             "limit (default = None)",
-                                             None,None,None]
-
-dt_data_type_fn_input_jsList            =   [None,None,None,None,None,
-                                             "process_cols_datatype_transform_callback(" + str(dtm.FILL_NA_OPTION) + ",0,1,'DataTransform')",
-                                             "process_cols_datatype_transform_callback(" + str(dtm.FILL_NA_OPTION) + ",1,1,'DataTransform')",
-                                             "display_help_url(" + str(dfchelp.PANDAS_FILLNA) + ")"]
-
-dt_data_type_fn_input_reqList           =   [0,1,2]
 
 
-"""
-#--------------------------------------------------------------------------
-#   numeric non data type input (fillnana) 
-#--------------------------------------------------------------------------
-"""
-ndt_data_type_fn_input_title            =   "Change Data Type Parameters"
-ndt_data_type_fn_input_id               =   "dtfndatatypeinput"
-ndt_data_type_fn_input_idList           =   ["dtfillvalue",
-                                             "dtfillmethod",
-                                             "dtfillinplace",
-                                             "dtfilllimit",
-                                             None,None,None]
-
-ndt_data_type_fn_input_labelList        =   ["fillna_value",
-                                             "fillna_method",
-                                             "inplace",
-                                             "limit",
-                                             "Fill</br>Nans",
-                                             "Return","Help"]
-
-ndt_data_type_fn_input_typeList         =   ["text","select","select","text",
-                                             "button","button","button"]
-
-ndt_data_type_fn_input_placeholderList  =   ["fillna value",
-                                             "fillna method",
-                                             "inplace flag",
-                                             "limit (default = None)",
-                                             None,None,None]
-
-ndt_data_type_fn_input_jsList           =   [None,None,None,None,
-                                             "process_cols_dropna_fillna_transform_callback(9)",
-                                             "process_cols_dropna_fillna_transform_callback(0)",
-                                             "display_help_url(" + str(dfchelp.PANDAS_FILLNA) + ")"]
-
-ndt_data_type_fn_input_reqList          =   [0,1]
 
 
-"""
-#--------------------------------------------------------------------------
-#   non numeric data type fill na input 
-#--------------------------------------------------------------------------
-"""
-dt_nn_fn_data_type_input_title           =   "Change Data Type Parameters"
-dt_nn_fn_data_type_input_id              =   "dtdatatypeinput"
-dt_nn_fn_data_type_input_idList          =   ["dtnnnaoption",
-                                              "dtnnfillvalue",
-                                              "dtnnfillinplace",
-                                              "dtnnfilllimit",
-                                              None,None,None]
-
-dt_nn_fn_data_type_input_labelList       =   ["na_option",
-                                              "fillna_value",
-                                              "inplace",
-                                              "limit",
-                                              "Change</br> DataType",
-                                              "Return","Help"]
-
-dt_nn_fn_data_type_input_typeList        =   ["select","text","select","text",
-                                             "button","button","button"]
-
-dt_nn_fn_data_type_input_placeholderList =   ["na option",
-                                              "fillna value",
-                                              "inplace flag",
-                                              "limit (default = None)",
-                                              None,None,None]
-
-dt_nn_fn_data_type_input_jsList          =   [None,None,None,None,
-                                              "process_cols_datatype_transform_callback(" + str(dtm.FILL_NA_OPTION) + ",0,0,'DataTransform')",
-                                              "process_cols_datatype_transform_callback(" + str(dtm.FILL_NA_OPTION) + ",1,0,'DataTransform')",
-                                              "display_help_url(" + str(dfchelp.PANDAS_FILLNA) + ")"]
-
-dt_nn_fn_data_type_input_reqList         =   [0,1]
 
 
-"""
-#--------------------------------------------------------------------------
-#   non numeric non data type fill na input 
-#--------------------------------------------------------------------------
-"""
-ndt_nn_fn_data_type_input_title          =   "Change Data Type Parameters"
-ndt_nn_fn_data_type_input_id             =   "dtdatatypeinput"
-ndt_nn_fn_data_type_input_idList         =   ["dtnnfillvalue",
-                                              "dtnnfillinplace",
-                                              "dtnnfilllimit",
-                                              None,None,None]
-
-ndt_nn_fn_data_type_input_labelList      =   ["fillna_value",
-                                              "inplace",
-                                              "limit",
-                                              "Fill</br>Nans",
-                                              "Return","Help"]
-
-ndt_nn_fn_data_type_input_typeList       =   ["text","select","text",
-                                             "button","button","button"]
-
-ndt_nn_fn_data_type_input_placeholderList =   ["fillna value",
-                                              "inplace flag",
-                                              "limit (default = None)",
-                                              None,None,None]
-
-ndt_nn_fn_data_type_input_jsList         =   [None,None,None,
-                                              "process_cols_dropna_fillna_transform_callback(9)",
-                                              "process_cols_dropna_fillna_transform_callback(0)",
-                                              "display_help_url(" + str(dfchelp.PANDAS_FILLNA) + ")"]
-
-ndt_nn_fn_data_type_input_reqList        =   [0]
-
-
-"""
-#--------------------------------------------------------------------------
-#   non numeric data type fill na input 
-#--------------------------------------------------------------------------
-"""
-dt_data_type_input_title                =   "Change Data Type Parameters"
-dt_data_type_input_id                   =   "dtdatatypeinput"
-dt_data_type_input_idList               =   ["dtdatatype",
-                                             None,None,None]
-
-dt_data_type_input_labelList            =   ["datatype",
-                                             "Change</br> DataType",
-                                             "Return","Help"]
-
-dt_data_type_input_typeList             =   ["select","button","button","button"]
-
-dt_data_type_input_placeholderList      =   ["datatype selected",
-                                             None,None,None]
-
-dt_data_type_input_jsList               =   [None,
-                                             "process_cols_datatype_transform_callback(" + str(dtm.NO_NA_OPTION) + ",0,0,'DataTransform')",
-                                             "process_cols_datatype_transform_callback(" + str(dtm.NO_NA_OPTION) + ",1,0,'DataTransform')",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
-
-dt_data_type_input_reqList              =   [0]
 
 
 """
 #--------------------------------------------------------------------------
 #   change data type input no buttons
 #--------------------------------------------------------------------------
+"""
 """
 dt_data_type_nb_input_title             =   "Change Data Type Parameters"
 dt_data_type_nb_input_id                =   "dtdatatypeinput"
@@ -1008,7 +1037,95 @@ dt_data_type_nb_input_placeholderList   =   ["datatype selected"]
 dt_data_type_nb_input_jsList            =   [None]
 
 dt_data_type_nb_input_reqList           =   [0]
+"""
 
+"""
+#--------------------------------------------------------------------------
+#   check column datatype compatability 
+#--------------------------------------------------------------------------
+"""
+dt_check_data_type_input_title           =   "Check Column Compatability Parameters"
+dt_check_data_type_input_id              =   "checkdtinput"
+dt_check_data_type_input_idList          =   ["checkdtcolname",
+                                              "checkdtdatatypes",
+                                              "checkdtdatatypesok",
+                                              None,None,None,None]
+
+dt_check_data_type_input_labelList       =   ["column_to_check_datatype_compatability",
+                                              "datatypes_to_check_for_compatability",
+                                              "compatable_datatypes",
+                                              "Show</br>Uniques",
+                                              "Check</br>Data Type</br>Compatability",
+                                              "Return","Help"]
+
+dt_check_data_type_input_typeList        =   ["select","selectmultiple",maketextarea(4),"button","button","button","button"]
+
+dt_check_data_type_input_placeholderList =   ["column name",
+                                              "datatype selected",
+                                              "compatable datatypes",
+                                              None,None,None,None]
+
+dt_check_data_type_input_jsList          =   [None,None,None,
+                                              "process_transform_check_compatability(0)",
+                                              "process_transform_check_compatability(1)",
+                                              "process_transform_check_compatability(2)",
+                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+
+dt_check_data_type_input_reqList         =   [0,1]
+
+
+"""
+#--------------------------------------------------------------------------
+#   check column str datatype compatability 
+#--------------------------------------------------------------------------
+"""
+dt_str_check_data_type_input_title           =   "Check Column Compatability Parameters"
+dt_str_check_data_type_input_id              =   "checkstrdtinput"
+dt_str_check_data_type_input_idList          =   ["checkdtcolname",
+                                                  "checkdtdatatypes",
+                                                  "checkdtdatatypesok",
+                                                  "checkdtsmaplesize",
+                                                  None,None,None,None]
+
+dt_str_check_data_type_input_labelList       =   ["column_to_check_datatype_compatability",
+                                                  "datatypes_to_check_for_compatability",
+                                                  "compatable_datatypes",
+                                                  "sample_size_percent",
+                                                  "Show</br>Uniques",
+                                                  "Check</br>Data Type</br>Compatability",
+                                                  "Return","Help"]
+
+dt_str_check_data_type_input_typeList        =   ["select","selectmultiple",maketextarea(4),"text","button","button","button","button"]
+
+dt_str_check_data_type_input_placeholderList =   ["column name",
+                                                  "datatype selected",
+                                                  "compatable datatypes",
+                                                  "column values sample size (default : 5%)",
+                                                  None,None,None,None]
+
+dt_str_check_data_type_input_jsList          =   [None,None,None,None,
+                                                  "process_transform_check_compatability(0)",
+                                                  "process_transform_check_compatability(1)",
+                                                  "process_transform_check_compatability(2)",
+                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+
+dt_str_check_data_type_input_reqList         =   [0,1]
+
+
+
+
+
+
+
+
+
+datatransform_cols_inputs   =   [rename_column_input_id,add_column_input_id,add_column_file_input_id,
+                                 add_column_code_gf_input_id,add_column_df_input_id,drop_column_input_id,
+                                 save_column_input_id,reorder_columns_input_id,copy_columns_input_id,
+                                 sort_column_input_id,apply_column_lambda_input_id,transform_map_input_id,
+                                 transform_dummy_input_id,transform_category_input_id,
+                                 dt_nans_data_type_input_id,dt_drop_nans_data_type_input_id,
+                                 dt_data_type_input_id,dt_check_data_type_input_id,dt_str_check_data_type_input_id]
 
 
 """
@@ -1070,334 +1187,23 @@ def display_more_transform_taskbar() :
                                                True))
     
 
-"""
-#--------------------------------------------------------------------------
-#    display cols table to select column to work on from 
-#--------------------------------------------------------------------------
-"""
-def display_col_transform_columns(refparm,note,status,displaycollist=True,callbacks=True) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display cols table to select column to work on from
-    * 
-    * parms :
-    *   refparm         -   add column parms
-    *   note            -   note to display
-    *   status          -   display status value
-    *   displaycollist  -   display col list flag
-    *   callbacks       -   set callback flag
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
+
+def get_df_colslist() :
     
-    clear_output()
-    
-    if( (refparm == dtm.MAPPING_DETAILS) or 
-        (refparm == dtm.DUMMIES_DETAILS) or 
-        (refparm == dtm.CATEGORIES_DETAILS) ) :
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    colslist    =   df.columns.tolist()
         
-        display_more_transform_taskbar()
-        
+    colname     =   cfg.get_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY)
+    if(colname is None) :
+        colname     =   colslist[0]
     else :
-        display_base_data_transform_columns_taskbar()
-
-    print("\n") 
-    
-    if(len(status)> 0) :
-        display_status(status)
-     
-    if(displaycollist) :
-        col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
-        col_names_table.set_note("<b>*</b> Select a Column for " + note + " by clicking on Column Name above.")
-        col_names_table.set_refParm(str(refparm))
-    
-        if(callbacks) :
-            col_names_html  =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                                     col_names_table,"dtctcol",False)
-        else :
-            col_names_html  =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                                     col_names_table,None,False)
+        if(not (is_column_in_df(df,colname))) :
+            colname     =   colslist[0]
             
-        gridclasses     =   ["dfc-top-"]
-        gridhtmls       =   [col_names_html]
+    return(df,colslist,colname)
+
     
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-transform-col-nammes-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("df-transform-col-nammes-pop-up-wrapper",gridclasses,gridhtmls)
-
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-def display_df_column_custom_input_forms(cmd,colid,colstats_html) :
-    """
-    * -------------------------------------------------------- 
-    * function : display custom grid cols forms
-    * 
-    * parms :
-    *
-    *   cmd     - command type
-    *   colid   - column id
-    *    
-    * returns : operators html
-    * --------------------------------------------------------
-    """
-    
-    if(cmd == dtm.MAPPING_DETAILS) :
-        
-        common_column_heading_html      =   "<div>Map Column '" + str(colid) + "'</div><br>"
-
-        grid_input_form     =   display_mapping_col(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colid) 
-        
-        grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":100, "left-margin":0})
-        grid_input_form.set_gridwidth(480)
-    
-        grid_input_html   =   grid_input_form.get_html()
-    
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
-    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-map-col-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("df-map-col-pop-up-wrapper",gridclasses,gridhtmls)
-        
-        return()
-
-    elif(cmd == dtm.COPYING_DETAILS) :
-
-        common_column_heading_html      =   "<div>Copying Column</div><br>"
-
-        grid_input_form     =   display_copy_column(colid)
-        
-        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":120, "left-margin":40}) 
-        grid_input_form.set_gridwidth(480)
-    
-        grid_input_html   =   grid_input_form.get_html()
-    
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,grid_input_html]
-    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
-        else :
-            print(grid_input_html)
-            display_generic_grid("col-narrow-pop-up-wrapper",gridclasses,gridhtmls)
-            
-        from dfcleanser.common.display_utils import display_pop_up_buffer
-        display_pop_up_buffer()
-        
-        return()
-        
-    elif(cmd == dtm.MOVING_DETAILS) : 
-        
-        common_column_heading_html      =   "<div>Moving Column Parameters</div><br>"
-
-        grid_input_form     =   InputForm(reorder_columns_input_id,
-                                          reorder_columns_input_idList,
-                                          reorder_columns_input_labelList,
-                                          reorder_columns_input_typeList,
-                                          reorder_columns_input_placeholderList,
-                                          reorder_columns_input_jsList,
-                                          reorder_columns_input_reqList,
-                                          True)
-       
-        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":120, "left-margin":40}) 
-        grid_input_form.set_gridwidth(480)
-    
-        grid_input_html   =   grid_input_form.get_html()
-    
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,grid_input_html]
-    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("col-narrow-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("col-narrow-pop-up-wrapper",gridclasses,gridhtmls)
-    
-        from dfcleanser.common.display_utils import display_pop_up_buffer
-        display_pop_up_buffer()
-        
-        return()
-
-
-def display_df_column_input_forms(cmd,colid) :
-    """
-    * -------------------------------------------------------- 
-    * function : display grid cols forms
-    * 
-    * parms :
-    *
-    *   cmd     - command type
-    *   colid   - column id
-    *    
-    * returns : operators html
-    * --------------------------------------------------------
-    """
-
-    if(( (not(cmd == dtm.MOVING_DETAILS)) and (not(cmd == dtm.COPYING_DETAILS)))) :
-        display_base_data_transform_columns_taskbar() 
-        print("\n")
-    
-    if(not(colid is None)) :
-        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
-        colstats_html       =   display_transform_col_data(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                                           colid,False)
-
-    if(cmd == dtm.RENAMING_DETAILS) :
-    
-        common_column_heading_html      =   "<div>Rename Column '" + str(colid) + "'</div>"
-        
-        grid_input_form                 =   InputForm(rename_column_input_id,
-                                                      rename_column_input_idList,
-                                                      rename_column_input_labelList,
-                                                      rename_column_input_typeList,
-                                                      rename_column_input_placeholderList,
-                                                      rename_column_input_jsList,
-                                                      rename_column_input_reqList,
-                                                      True)
-                
-    elif(cmd == dtm.DROPPING_DETAILS) :
-        
-        common_column_heading_html      =   "<div>Drop Column '" + str(colid) + "'</div>"
-
-        grid_input_form     =   InputForm(drop_column_input_id,
-                                          drop_column_input_idList,
-                                          drop_column_input_labelList,
-                                          drop_column_input_typeList,
-                                          drop_column_input_placeholderList,
-                                          drop_column_input_jsList,
-                                          drop_column_input_reqList,
-                                          True)
-        
-        selectDicts     =   []
-        inplacesel      =   {"default" : "False",
-                             "list" : ["True","False"]}
-        selectDicts.append(inplacesel)
-           
-        get_select_defaults(grid_input_form,
-                            drop_column_input_id,
-                            drop_column_input_idList,
-                            drop_column_input_typeList,
-                            selectDicts)
-         
-    elif(cmd == dtm.SAVING_DETAILS) : 
-        
-        common_column_heading_html      =   "<div>Save Column '" + str(colid) + "'</div>"
-
-        grid_input_form     =   InputForm(save_column_input_id,
-                                          save_column_input_idList,
-                                          save_column_input_labelList,
-                                          save_column_input_typeList,
-                                          save_column_input_placeholderList,
-                                          save_column_input_jsList,
-                                          save_column_input_reqList,
-                                          True)
-    
-    elif(cmd == dtm.SORTING_DETAILS) : 
-        
-        cfg.set_config_value(sort_column_input_id+"Parms",[colid,"",""])
-        
-        common_column_heading_html      =   "<div>Sort By Column '" + str(colid) + "'</div>"
-        
-        grid_input_form     =   InputForm(sort_column_input_id,
-                                          sort_column_input_idList,
-                                          sort_column_input_labelList,
-                                          sort_column_input_typeList,
-                                          sort_column_input_placeholderList,
-                                          sort_column_input_jsList,
-                                          sort_column_input_reqList,
-                                          True)   
-
-        selectDicts     =   []
-        sortsel         =   {"default" : "False",
-                             "list" : ["True","False"]}
-        selectDicts.append(sortsel)
-        sortsel         =   {"default" : "True",
-                             "list" : ["True","False"]}
-        selectDicts.append(sortsel)
-           
-        get_select_defaults(grid_input_form,
-                            sort_column_input_id,
-                            sort_column_input_idList,
-                            sort_column_input_typeList,
-                            selectDicts)
-
-
-    elif(cmd == dtm.DUMMIES_DETAILS) :
-        
-        common_column_heading_html      =   "<div>Dummies For Column '" + str(colid) + "'</div>"
-
-        grid_input_form     =   InputForm(transform_dummy_input_id,
-                                          transform_dummy_input_idList,
-                                          transform_dummy_input_labelList,
-                                          transform_dummy_input_typeList,
-                                          transform_dummy_input_placeholderList,
-                                          transform_dummy_input_jsList,
-                                          transform_dummy_input_reqList)
-        
-        selectDicts     =   []
-        dummysel        =   {"default" : "True",
-                             "list" : ["True","False"]}
-        selectDicts.append(dummysel)
-           
-        get_select_defaults(grid_input_form,
-                            transform_dummy_input_id,
-                            transform_dummy_input_idList,
-                            transform_dummy_input_typeList,
-                            selectDicts)
-
-    elif(cmd == dtm.CATEGORIES_DETAILS) :
-        
-        common_column_heading_html      =   "<div>Make Column '" + str(colid) + "' Categorical</div>"
-
-        grid_input_form     =   InputForm(transform_category_input_id,
-                                          transform_category_input_idList,
-                                          transform_category_input_labelList,
-                                          transform_category_input_typeList,
-                                          transform_category_input_placeholderList,
-                                          transform_category_input_jsList,
-                                          transform_category_input_reqList)
-        
-        selectDicts     =   []
-        catsel          =   {"default" : "True",
-                             "list" : ["True","False"]}
-        selectDicts.append(catsel)
-        catsel          =   {"default" : "False",
-                             "list" : ["True","False"]}
-        selectDicts.append(catsel)
-           
-        get_select_defaults(grid_input_form,
-                            transform_category_input_id,
-                            transform_category_input_idList,
-                            transform_category_input_typeList,
-                            selectDicts)
-
-    elif(cmd == dtm.MAPPING_DETAILS):
-        display_df_column_custom_input_forms(cmd,colid,colstats_html)
-        return()
-    
-    elif( (cmd == dtm.COPYING_DETAILS) or 
-          (cmd == dtm.MOVING_DETAILS) ):
-        display_df_column_custom_input_forms(cmd,colid,None)
-        return()
-    
-    """
-    #    display common transform column grid 
-    """
-    grid_input_form.set_gridwidth(480)
-    if(cmd == dtm.DUMMIES_DETAILS) :
-        grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":100, "left-margin":0}) 
-    else :
-        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0}) 
-   
-    grid_input_html   =   grid_input_form.get_html()
-    
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
-    gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+def display_dct_form(gridclasses,gridhtmls) :
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("df-common-col-wrapper",gridclasses,gridhtmls)
@@ -1408,258 +1214,677 @@ def display_df_column_input_forms(cmd,colid) :
     display_pop_up_buffer()
 
 
-"""
-#--------------------------------------------------------------------------
-#    display transform column options 
-#--------------------------------------------------------------------------
-"""
-def display_transform_cols_option(parms) : 
- 
-    
-    colid = "None"
-    if(len(parms[0]) == 1) :
-        funcid     =   parms[0][0]
-    else :
-        colid      =   parms[0][0]
-        funcid     =   int(parms[0][1])
-    
-    print("display_transform_cols_option",parms,funcid)
-    
-    if(colid == "DCCleanser") :
-        colid = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-        
-    cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colid)
-    
-    if(funcid == dtm.MORE_TASKBAR) :
-        clear_output()
-        display_more_transform_taskbar() 
-        
-    elif(funcid == dtm.RENAMING) :
-        display_col_transform_columns(dtm.RENAMING_DETAILS,"renaming","") 
-    
-    elif(funcid == dtm.ADDING) :
-        display_base_data_transform_columns_taskbar()       
-        print("\n")
-
-        cmdparms    =   parms[0]
-        if(len(cmdparms) == 1) :
-            display_add_cols_option(None)
-        else :
-            display_add_cols_option(parms)
-    
-    elif(funcid == dtm.DROPPING) :
-        display_col_transform_columns(dtm.DROPPING_DETAILS,"dropping","")
-    
-    elif(funcid == dtm.MOVING) :
-        display_col_transform_columns(dtm.MOVING_DETAILS,"moving","")
-        display_df_column_input_forms(dtm.MOVING_DETAILS,None)
-    
-    elif(funcid == dtm.MAPPING) :
-        display_col_transform_columns(dtm.MAPPING_DETAILS,"setting mapping","") 
-    
-    elif(funcid == dtm.DUMMIES) :
-        display_col_transform_columns(dtm.DUMMIES_DETAILS,"setting dummies","") 
-    
-    elif(funcid == dtm.CATEGORIES) :
-        display_col_transform_columns(dtm.CATEGORIES_DETAILS,"setting categories","") 
-    
-    elif(funcid == dtm.DATATYPE) :
-        display_col_transform_columns(dtm.DATATYPE_DETAILS,"changing datatype","")
-    
-    elif(funcid == dtm.SAVING) :
-        display_col_transform_columns(dtm.SAVING_DETAILS,"saving","") 
-    
-    elif(funcid == dtm.COPYING) :
-        display_col_transform_columns(dtm.COPYING_DETAILS,"copying","")
-        display_df_column_input_forms(dtm.COPYING_DETAILS,None)#display_copy_column_parms(colid)
-        
-    elif(funcid == dtm.SORTING) : 
-        display_col_transform_columns(dtm.SORTING_DETAILS,"sorting","")
-
-    elif(funcid == dtm.APPLYING) :
-        display_col_transform_columns(dtm.APPLYING_DETAILS,"applying function","")
-    
-        
-    #"""
-    #* -------------------------------------------------------- 
-    #* display dataframe cols transform input forms
-    #* --------------------------------------------------------
-    #"""
-    
-    # display column transform details input
-    elif( (funcid == dtm.RENAMING_DETAILS) or 
-          (funcid == dtm.DROPPING_DETAILS) or 
-          (funcid == dtm.MAPPING_DETAILS) or
-          (funcid == dtm.DUMMIES_DETAILS) or 
-          (funcid == dtm.CATEGORIES_DETAILS) or
-          (funcid == dtm.SAVING_DETAILS) or
-          (funcid == dtm.SORTING_DETAILS) ):
-        
-        display_df_column_input_forms(funcid,colid)
-
-    elif(funcid == dtm.MOVING_DETAILS) :
-        """       
-        if(cfg.get_config_value(cfg.MOVE_COL_ID_KEY) == None) :
-            cfg.set_config_value(cfg.MOVE_COL_ID_KEY,colid)
-            cfg.drop_config_value(cfg.MOVE_AFTER_COL_ID_KEY)
-        else :
-            cfg.set_config_value(cfg.MOVE_AFTER_COL_ID_KEY,colid)
-
-        moveParms = []
-        if(not(cfg.get_config_value(cfg.MOVE_COL_ID_KEY) == None)) : 
-            moveParms.append(cfg.get_config_value(cfg.MOVE_COL_ID_KEY))
-        else :
-            moveParms.append("")
-                    
-        if(not(cfg.get_config_value(cfg.MOVE_AFTER_COL_ID_KEY) == None)) : 
-            moveParms.append(cfg.get_config_value(cfg.MOVE_AFTER_COL_ID_KEY))
-        else :
-            moveParms.append("")
-
-        if( (len(moveParms[0]) > 0) or (len(moveParms[1])) ) :  
-            cfg.set_config_value(reorder_columns_input_id+"Parms",moveParms)
-
-        display_col_transform_columns(dtm.MOVING_DETAILS,"moving "+colid+" after ","")
-
-        display_df_column_input_forms(dtm.MOVING_DETAILS,colid)
-        """
-    
-    elif(funcid == dtm.DATATYPE_DETAILS) :
-        df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
-        display_convert_datatype(df,colid,True,True,cfg.DataTransform_ID)
-    
-    #elif(funcid == dtm.COPYING_DETAILS) :
-    #    display_copy_column_parms(colid)    
-    
-    elif(funcid == dtm.APPLYING_DETAILS) :
-        display_base_data_transform_columns_taskbar()        
-        print("\n")
-        display_apply_fn_inputs(colid)
-    
-    elif(funcid == dtm.APPLYING_DETAILS_GF) :
-        display_base_data_transform_columns_taskbar() 
-        
-        parms = cfg.get_config_value(apply_column_lambda_input_id+"Parms")
-        colid = parms[1]
-        print("\n")
-        display_apply_fn_gf_inputs(colid)
-    
-    elif(funcid == dtm.APPLYING_DETAILS_GF_DESC) :
-        display_base_data_transform_columns_taskbar() 
-        
-        parms = cfg.get_config_value(apply_column_lambda_input_id+"Parms")
-        colid = parms[1]
-        print("\n")
-        display_apply_fn_gf_det_inputs(colid)
-    
-    elif(funcid == dtm.APPLYING_SEL_FUN) :
-        display_apply_fn_sel_inputs(parms)
-
-    else :
-        from dfcleanser.data_transform.data_transform_widgets import display_main_option
-        display_main_option(None)
-        
-
-def display_column_transform_status(df,colname) :
+def display_column_transform_forms(option,parms=None) :
     """
-    * -------------------------------------------------------------------------- 
-    * function : display column transform status
+    * -------------------------------------------------------- 
+    * function : display grid cols forms
     * 
     * parms :
-    *  df          -   data frame
-    *  colname     -   column name
+    *
+    *   option - col transform option
+    *    
+    * returns : display form html
+    * --------------------------------------------------------
+    """
+    
+    if(option == dtm.MORE_TASKBAR) :
+        display_more_transform_taskbar()
+        return()        
+    
+    display_base_data_transform_columns_taskbar()
+    print("\n")
+
+    if(option == dtm.DISPLAY_RENAME_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Rename Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(rename_column_input_id,
+                                                      rename_column_input_idList,
+                                                      rename_column_input_labelList,
+                                                      rename_column_input_typeList,
+                                                      rename_column_input_placeholderList,
+                                                      rename_column_input_jsList,
+                                                      rename_column_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname, "list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+        
+        inplacesel      =   {"default" : "True","list" : ["True","False"]}
+        selectDicts.append(inplacesel)
+           
+        get_select_defaults(grid_input_form,
+                            rename_column_input_id,
+                            rename_column_input_idList,
+                            rename_column_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html   =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0}) 
+        grid_input_form.set_gridwidth(480)
+        grid_input_html =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+    if(option == dtm.DISPLAY_DROP_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Drop Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(rename_column_input_id,
+                                                      rename_column_input_idList,
+                                                      rename_column_input_labelList,
+                                                      rename_column_input_typeList,
+                                                      rename_column_input_placeholderList,
+                                                      rename_column_input_jsList,
+                                                      rename_column_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname, "list" : colslist, "size" : 10, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+        
+        inplacesel      =   {"default" : "True","list" : ["True","False"]}
+        selectDicts.append(inplacesel)
+           
+        get_select_defaults(grid_input_form,
+                            rename_column_input_id,
+                            rename_column_input_idList,
+                            rename_column_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html       =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    elif(option == dtm.DISPLAY_REORDER_COLUMNS) : 
+        
+        common_column_heading_html      =   "<div>Reorder Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+
+        grid_input_form     =   InputForm(reorder_columns_input_id,
+                                          reorder_columns_input_idList,
+                                          reorder_columns_input_labelList,
+                                          reorder_columns_input_typeList,
+                                          reorder_columns_input_placeholderList,
+                                          reorder_columns_input_jsList,
+                                          reorder_columns_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname, "list" : colslist, "size" : 5}
+        selectDicts.append(cnames)
+        selectDicts.append(cnames)
+           
+        get_select_defaults(grid_input_form,
+                            reorder_columns_input_id,
+                            reorder_columns_input_idList,
+                            reorder_columns_input_typeList,
+                            selectDicts)
+
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":120, "left-margin":40})
+        grid_input_form.set_gridwidth(480)
+        grid_input_html   =   grid_input_form.get_html()
+    
+        col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
+        col_names_table.set_note("")
+        col_names_html  =   display_column_names(df,col_names_table,None,False)
+    
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,col_names_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_SAVE_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Save Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(save_column_input_id,
+                                                      save_column_input_idList,
+                                                      save_column_input_labelList,
+                                                      save_column_input_typeList,
+                                                      save_column_input_placeholderList,
+                                                      save_column_input_jsList,
+                                                      save_column_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname, "list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+        
+        get_select_defaults(grid_input_form,
+                            save_column_input_id,
+                            save_column_input_idList,
+                            save_column_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html       =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0}) 
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_COPY_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Copy Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(copy_columns_input_id,
+                                                      copy_columns_input_idList,
+                                                      copy_columns_input_labelList,
+                                                      copy_columns_input_typeList,
+                                                      copy_columns_input_placeholderList,
+                                                      copy_columns_input_jsList,
+                                                      copy_columns_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname,"list" : colslist, "size" : 5}
+        selectDicts.append(cnames)
+        selectDicts.append(cnames)
+        
+        get_select_defaults(grid_input_form,
+                            copy_columns_input_id,
+                            copy_columns_input_idList,
+                            copy_columns_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        blank_html       =   ""
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,blank_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_SORT_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Drop Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(sort_column_input_id,
+                                                      sort_column_input_idList,
+                                                      sort_column_input_labelList,
+                                                      sort_column_input_typeList,
+                                                      sort_column_input_placeholderList,
+                                                      sort_column_input_jsList,
+                                                      sort_column_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname,"list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+
+        inplacesel      =   {"default" : "True", "list" : ["True","False"]}
+        selectDicts.append(inplacesel)
+        
+        ordersel        =   {"default" : "True","list" : ["True","False"]}
+        selectDicts.append(ordersel)
+        
+        kindsel         =   {"default" : "'quicksort'","list" : ["'quicksort'","'mergesort'","'heapsort'"]}
+        selectDicts.append(kindsel)
+        
+        napossel        =   {"default" : "'last'","list" : ["'first'","'last'"]}
+        selectDicts.append(napossel)
+        
+        resetsel        =   {"default" : "False","list" : ["True","False"]}
+        selectDicts.append(resetsel)
+           
+        get_select_defaults(grid_input_form,
+                            sort_column_input_id,
+                            sort_column_input_idList,
+                            sort_column_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html       =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_APPLY_COLUMN) :
+        
+        df,colslist,colname             =   get_df_colslist()
+        display_apply_fn_inputs(colname,None)
+    
+    if(option == dtm.DISPLAY_APPLY_COLUMN_UPDATE) :
+        
+        df,colslist,colname             =   get_df_colslist()
+        display_apply_fn_inputs(colname,parms)
+
+
+    if(option == dtm.DISPLAY_MAP_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Map Column </div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        counts  =   df[colname].value_counts().to_dict()
+        uniques =   list(counts.keys())
+
+        if(is_numeric_col(df,colname)) :
+            uniques.sort()
+
+        keyslist = ""
+            
+        for i in range(len(uniques)) :
+            keyslist = (keyslist + str(uniques[i])) 
+            if(not((i+1) == len(uniques))) :
+                keyslist = (keyslist + str(","))
+        
+        if(len(keyslist) > 300) :
+            parmslist = ["","","mapping keys too large to define by hand","",""]
+            parmsProtect = [False,False,True,True,False]
+        else :
+            parmslist = ["","",keyslist,"",""]
+            parmsProtect = [False,False,True,False,False]
+        
+        cfg.set_config_value(transform_map_input_id+"Parms",parmslist)
+        cfg.set_config_value(transform_map_input_id+"ParmsProtect",parmsProtect)
+
+        grid_input_form     =   InputForm(transform_map_input_id,
+                                          transform_map_input_idList,
+                                          transform_map_input_labelList,
+                                          transform_map_input_typeList,
+                                          transform_map_input_placeholderList,
+                                          transform_map_input_jsList,
+                                          transform_map_input_reqList)
+    
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname,"list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+
+        mapsel     =   {"default" : "True", "list" : ["True","False"]}
+        selectDicts.append(mapsel)
+           
+        get_select_defaults(grid_input_form,
+                            transform_map_input_id,
+                            transform_map_input_idList,
+                            transform_map_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html   =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":90, "width":90, "left-margin":1})
+        grid_input_form.set_gridwidth(480)
+        
+        grid_input_html =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_DUMMIES_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Dummies for Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form                 =   InputForm(transform_dummy_input_id,
+                                                      transform_dummy_input_idList,
+                                                      transform_dummy_input_labelList,
+                                                      transform_dummy_input_typeList,
+                                                      transform_dummy_input_placeholderList,
+                                                      transform_dummy_input_jsList,
+                                                      transform_dummy_input_reqList)
+        
+        selectDicts     =   []
+        
+        cnames          =   {"default" : colname,"list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+        
+        inplacesel      =   {"default" : "True","list" : ["True","False"]}
+        selectDicts.append(inplacesel)
+           
+        get_select_defaults(grid_input_form,
+                            transform_dummy_input_id,
+                            transform_dummy_input_idList,
+                            transform_dummy_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html       =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+
+    if(option == dtm.DISPLAY_CAT_COLUMN) :
+        
+        common_column_heading_html      =   "<div>Categories for Column</div><br>"
+        
+        df,colslist,colname             =   get_df_colslist()
+        
+        grid_input_form     =   InputForm(transform_category_input_id,
+                                          transform_category_input_idList,
+                                          transform_category_input_labelList,
+                                          transform_category_input_typeList,
+                                          transform_category_input_placeholderList,
+                                          transform_category_input_jsList,
+                                          transform_category_input_reqList)
+        
+        selectDicts     =   []
+
+        cnames          =   {"default" : colname,"list" : colslist, "size" : 5, "callback" : "change_col_stats_callback"}
+        selectDicts.append(cnames)
+
+        catsel          =   {"default" : "True","list" : ["True","False"]}
+        selectDicts.append(catsel)
+        
+        catsel          =   {"default" : "False","list" : ["True","False"]}
+        selectDicts.append(catsel)
+           
+        get_select_defaults(grid_input_form,
+                            transform_category_input_id,
+                            transform_category_input_idList,
+                            transform_category_input_typeList,
+                            selectDicts)
+        
+        from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+        colstats_html       =   display_transform_col_data(df,colname,False)
+        
+        grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":100, "left-margin":0}) 
+        grid_input_form.set_gridwidth(480)
+        grid_input_html     =   grid_input_form.get_html()
+
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,colstats_html,grid_input_html]
+    
+        display_dct_form(gridclasses,gridhtmls)
+
+    if(option == dtm.DISPLAY_DATATYPE_COLUMN) :
+        
+        df,colslist,colname             =   get_df_colslist()
+        if(not (parms is None)) :
+            print("dtm.DISPLAY_DATATYPE_COLUMN",parms)
+            colname     =   parms[0]
+        
+        display_convert_datatype(df,colname,False,False,cfg.DataTransform_ID)
+        
+    elif(option == dtm.DISPLAY_DATATYPE_CHANGE_NA) :
+        print("dtm.DISPLAY_DATATYPE_CHANGE_NA",parms)
+        
+        df,colslist,colname             =   get_df_colslist()
+
+        if(parms[1] == "fillna") :
+            display_convert_datatype(df,parms[0],True,False,cfg.DataTransform_ID) 
+        else :
+            display_convert_datatype(df,parms[0],False,True,cfg.DataTransform_ID) 
+        
+    if(option == dtm.DISPLAY_CHECK_COMPATABILITY) :
+        
+        display_check_compatability(parms,False) 
+        
+    if(option == dtm.DISPLAY_CHECK_COMPATABILITY_UNIQUES) :
+        
+        display_check_compatability(None,True)        
+    
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    display apply fn onjects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+""" 
+apply_column_lambda_parms_input_id                 =   "applylfntocolInput"
+
+apply_fn_idList                      =   []
+
+def get_current_apply_fn_idList() :
+    return(apply_fn_idList)
+def set_current_apply_fn_idList(idlist) :
+    global apply_fn_idList
+    apply_fn_idList = idlist
+
+
+def display_apply_fn_inputs(colname,parms=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the apply function to column parms
+    * 
+    * parms :
+    *  colname  -   column name
+    *  genfuncs -   display generic funcs flag
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
-    
-    from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
-    display_transform_col_data(df,colname)
-    
-
-def display_column_uniques(df,colname,display=True) : 
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display col uniques
-    * 
-    * parms :
-    *  df          -   data frame
-    *  colname     -   column name
-    *  display     -   boolean display flag
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
+    if(parms is None) :
+        column_name     =   colname
+    else :
+        column_name     =   parms[0]
+        
+    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
+    col_stats_html  =   display_col_stats(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
+                                          column_name,
+                                          False,
+                                          True)
+        
+    if(parms is None) :
+        
+        ftitle  =   None
  
-    uniques             =   df[colname].unique().tolist()
-    
-    uniquesamplesize    =   24
-    uniquesperrow       =   4
-    
-    if(is_numeric_col(df,colname)) :
-        uniques.sort()
+        applyfn_input_form = InputForm(apply_column_lambda_input_id,
+                                       apply_column_lambda_input_idList,
+                                       apply_column_lambda_input_labelList,
+                                       apply_column_lambda_input_typeList,
+                                       apply_column_lambda_input_placeholderList,
+                                       apply_column_lambda_input_jsList,
+                                       apply_column_lambda_input_reqList)
+        
     else :
-        if(does_col_contain_nan(df,colname)) :
-            import pandas as pd
-            uniques = pd.Series(uniques).fillna("nan").tolist()
-            uniques.sort()
+        
+        ftitle  =   parms[1]
+    
+        dfc_apply_idList, dfc_apply_labelList, dfc_apply_typeList          =   [],[],[]
+        dfc_apply_placeholderList, dfc_apply_jsList, dfc_apply_reqList     =   [],[],[]
+    
+        for i in range(4)           :     
+            dfc_apply_idList.append(apply_column_lambda_input_idList[i])
+            dfc_apply_labelList.append(apply_column_lambda_input_labelList[i])
+            dfc_apply_typeList.append(apply_column_lambda_input_typeList[i])
+            dfc_apply_placeholderList.append(apply_column_lambda_input_placeholderList[i])
+            dfc_apply_jsList.append(apply_column_lambda_input_jsList[i])
+            dfc_apply_reqList.append(apply_column_lambda_input_reqList[i])
+
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_apply_function_parms
+        kwargs  =   get_apply_function_parms(ftitle)
+        
+        if(not(kwargs is None)) :
+            for i in range(len(kwargs)) :
+                dfc_apply_idList.append("applyfnfparm"+str(i))    
+                dfc_apply_labelList.append(kwargs[i])    
+                dfc_apply_typeList.append("text")    
+                dfc_apply_placeholderList.append(kwargs[i])    
+                dfc_apply_jsList.append(None)    
+                dfc_apply_reqList.append(i+4) 
+        
+        for i in range(4) :
+            dfc_apply_idList.append(None)
+            dfc_apply_typeList.append("button")    
+            dfc_apply_placeholderList.append(None)
+        
+        for i in range(4) :
+            dfc_apply_labelList.append(apply_column_lambda_input_labelList[i+4])    
+            dfc_apply_jsList.append(apply_column_lambda_input_jsList[i+4])
+            
+        set_current_apply_fn_idList(dfc_apply_idList)
+
+        applyfn_input_form   = InputForm(apply_column_lambda_parms_input_id,
+                                         dfc_apply_idList,
+                                         dfc_apply_labelList,
+                                         dfc_apply_typeList,
+                                         dfc_apply_placeholderList,
+                                         dfc_apply_jsList,
+                                         dfc_apply_reqList)
+        
+    selectDicts     =   []
+    
+    dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
+    current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+    dataframes          =   {"default":current_df_name,"list":dataframes_loaded, "callback":"change_apply_df_callback"}
+    selectDicts.append(dataframes)
+        
+    current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    colnames        =   current_df.columns.tolist()
+    cnames          =   {"default":colnames[0],"list": colnames, "callback":"change_col_stats_callback"}
+    selectDicts.append(cnames)
+    
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import applyfns
+    
+    fns             =   [""]
+    for i in range(len(applyfns)) :
+        fns.append(applyfns[i])
+        
+    if(parms is None) :
+        lambdas         =   {"default":"","list":fns,"callback":"get_apply_fn"}
+    else :
+        lambdas         =   {"default":ftitle,"list":fns,"callback":"get_apply_fn"}
+        
+    selectDicts.append(lambdas)
+        
+    get_select_defaults(applyfn_input_form,
+                        apply_column_lambda_input_id,
+                        apply_column_lambda_input_idList,
+                        apply_column_lambda_input_typeList,
+                        selectDicts)
+        
+    applyfn_input_form.set_buttonstyle({"font-size":13, "height":75, "width":110, "left-margin":5})
+    applyfn_input_form.set_gridwidth(480)
+    applyfn_input_form.set_shortForm(True)
+    applyfn_input_form.set_fullparms(True)
+    
+    currenttransformdf  =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF) 
+    
+    if(parms is None) :
+        cfg.set_config_value(apply_column_lambda_input_id+"Parms",[currenttransformdf,column_name,"",""])
+    else :
+        
+        if(ftitle.find("lambda") > -1) :
+            fncode  =  "df['" + column_name + "'] = df['" + column_name + "'].apply(" + ftitle + ")" 
         else :
-            uniques.sort()
+            fncode  =   ftitle.replace("(","")
+            fncode  =   fncode.replace(")","")
+            fncode  =  "df['" + column_name + "'] = df['" + column_name + "'].apply(" + ftitle + ", axis=1)"
 
-    uniqueHeader    =   []
-    uniqueWidths    =   []
-    uniqueAligns    =   []
-    
-    if(len(uniques) < uniquesperrow) :
-        uniquesperrow       =   len(uniques)
-        uniquesamplesize    =   len(uniques)
+        apply_parms     =   [currenttransformdf,column_name,ftitle,fncode]
         
-    colwidth    =   100/uniquesperrow
-    
-    for i in range(uniquesperrow) :
-        uniqueHeader.append("Value")
-        uniqueWidths.append(colwidth)
-        uniqueAligns.append("center")
+        if(not(kwargs is None)) :
+            for i in range(len(kwargs)) :
+                apply_parms.append("")
+            
+        cfg.set_config_value(apply_column_lambda_parms_input_id+"Parms",apply_parms)
         
-    uniqueRows      =   []
-    uniqueHrefs     =   []
+    applyfn_input_html = ""
+    applyfn_input_html = applyfn_input_form.get_html()
     
-    uniquerow       =   []
+    applyfn_heading_html      =   "<div>" + apply_column_lambda_input_title + "</div><br>"
+
+    dtype_mismatch  =   False
+
+    if(not(ftitle is None)) :        
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_apply_function_return_datatype
+        fn_dtype    =   get_apply_function_return_datatype(ftitle)
     
-    for i in range(uniquesamplesize) :
-        
-        if(i < len(uniques)) :
-            uniquerow.append(uniques[i])
-
-            if((i+1) % uniquesperrow == 0) :
-                uniqueRows.append(uniquerow)
-                uniqueHrefs.append([None,None,None,None,None,None,None,None,None,None])
-                uniquerow   =   []
-        
-    if(((i+1) % uniquesperrow) != 0) :
-
-        for k in range(uniquesperrow - ((i) % uniquesperrow)) :
-            uniquerow.append("")
-
-        uniqueRows.append(uniquerow) 
+        from dfcleanser.common.common_utils import is_float_col,is_int_col,is_string_col,is_object_col,is_numeric_col
+        if(fn_dtype == "numeric") :
+            if(not(is_numeric_col(current_df,column_name))) :
+                dtype_mismatch  =   True
+        elif(fn_dtype == "float") :
+            if(not(is_float_col(current_df,column_name))) :
+                dtype_mismatch  =   True
+        elif(fn_dtype == "int") :
+            if(not(is_int_col(current_df,column_name))) :
+                dtype_mismatch  =   True
+        else :
+            if( (not(is_string_col(current_df,column_name))) and
+               (not(is_object_col(current_df,column_name))) ): 
+                dtype_mismatch  =   True
     
-    uniques_table = dcTable("Sample Column Values for "+colname,"dtuniquesTable",
-                            cfg.DataTransform_ID,
-                            uniqueHeader,uniqueRows,
-                            uniqueWidths,uniqueAligns)
-    
-    uniques_table.set_tabletype(ROW_MAJOR)
-    uniques_table.set_small(True)
-    uniques_table.set_smallwidth(100)
-    uniques_table.set_rowspertable(6)
-    uniques_table.set_refList(uniqueHrefs)
-
-    if(display) :
-        uniques_table.display_table()
+    if(dtype_mismatch) :
+        help_note           =   "'column_to_apply_fn_to' datatype does not match fn datatype."
+        from dfcleanser.common.common_utils import get_help_note_warning_html
+        applyfn_notes_html   =   get_help_note_warning_html(help_note)
     else :
-        return(uniques_table.get_html())
+        if(parms is None) :
+            help_note           =   "Select a dfc fn to run or enter function code."
+        else :
+            help_note           =   "The 'df' in function_code is filled in with the 'dataframe_to_apply_fn_to' value.</br>To apply the fn hit the 'Apply fn to Column' key."
+            
+        from dfcleanser.common.common_utils import get_help_note_html
+        applyfn_notes_html   =   get_help_note_html(help_note)
+
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-main","dfc-footer"]
+        gridhtmls       =   [applyfn_heading_html,col_stats_html,applyfn_input_html,applyfn_notes_html]
+        
+        display_generic_grid("generic-gf-transform-wrapper",gridclasses,gridhtmls)
+    else :
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-main","dfc-footer"]
+        gridhtmls       =   [applyfn_heading_html,col_stats_html,applyfn_input_html,applyfn_notes_html]
+        
+        display_generic_grid("generic-gf-transform-pop-up-wrapper",gridclasses,gridhtmls)
+
+    from dfcleanser.common.display_utils import display_pop_up_buffer
+    display_pop_up_buffer()
+
 
 
 """
@@ -1669,7 +1894,7 @@ def display_column_uniques(df,colname,display=True) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """    
-def parse_add_cols_option_inputs(parms,opstat=None) :
+def parse_add_cols_option_inputs(option,parms,opstat=None) :
     """
     * -------------------------------------------------------------------------- 
     * function : parse parms for add columns
@@ -1682,27 +1907,20 @@ def parse_add_cols_option_inputs(parms,opstat=None) :
     *  N/A
     * --------------------------------------------------------
     """
-    
-    optionid        =   -1
+
     newcolname      =   ""
     newdatatytpe    =   ""
     fparms          =   []
-    
-    if(len(parms[0]) > 1) :
-        optionid    =   int(parms[0][2])
 
-    if(len(parms)>1) :
+    if(len(parms)>0) :
         
-        if(optionid == dtm.PROCESS_FILE_OPTION) :
-            fparms = get_parms_for_input(parms[1],add_column_file_input_idList)
-        elif(optionid == dtm.PROCESS_ADD_NEW_CODE_OPTION) :
-            fparms = get_parms_for_input(parms[1],add_column_code_gf_input_idList)
-        elif(optionid == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
-            fparms = get_parms_for_input(parms[1],add_column_input_idList)
-        elif(optionid == dtm.DISPLAY_ADD_FROM_CODE_OPTION) :
-            fparms = get_parms_for_input(parms[1],add_column_input_idList)
-        elif(optionid == dtm.DISPLAY_ADD_FROM_DF_OPTION) :
-            fparms = get_parms_for_input(parms[1],add_column_input_idList)
+        if( (option == dtm.DISPLAY_ADD_FROM_FILE_OPTION) or
+            (option == dtm.DISPLAY_ADD_FROM_DFC_FUNCS) or
+            (option == dtm.DISPLAY_ADD_FROM_DFC_FUNCS_PARMS) or
+            (option == dtm.DISPLAY_ADD_FROM_CODE_OPTION) or 
+            (option == dtm.DISPLAY_ADD_FROM_DF_OPTION) ) :
+            
+            fparms = get_parms_for_input(parms[0],add_column_input_idList)
     
         if(len(fparms) > 0) :
             newcolname      =   fparms[0]
@@ -1721,17 +1939,19 @@ def parse_add_cols_option_inputs(parms,opstat=None) :
         # check if new column name already exists
         collist = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist()
         found = False
-        for i in range(len(collist)) :
-            if(collist[i] == newcolname) :
-                found = True
-        
+        if(newcolname in collist) :
+            found = True
         if(not found) :
         
-            if(optionid == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
+            if(option == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
                 cfg.set_config_value(add_column_file_input_id + "Parms",[newcolname,newdatatytpe,""]) 
-            elif(optionid == dtm.DISPLAY_ADD_FROM_CODE_OPTION ) :
-                cfg.set_config_value(add_column_code_gf_input_id + "Parms",[newcolname,newdatatytpe,"",""]) 
-            elif(optionid == dtm.DISPLAY_ADD_FROM_DF_OPTION ) :
+            elif(option == dtm.DISPLAY_ADD_FROM_CODE_OPTION ) :
+                cfg.set_config_value(add_column_code_gf_input_id + "Parms",[newcolname,newdatatytpe,"",""])
+            elif(option == dtm.DISPLAY_ADD_FROM_DFC_FUNCS) :
+                cfg.set_config_value(add_column_code_gf_input_id + "Parms",[newcolname,newdatatytpe,"",""])
+            elif(option == dtm.DISPLAY_ADD_FROM_DFC_FUNCS_PARMS) :
+                cfg.set_config_value(add_column_code_gf_input_id + "Parms",[newcolname,newdatatytpe,"","","","","","",""]) 
+            elif(option == dtm.DISPLAY_ADD_FROM_DF_OPTION ) :
                 cfg.set_config_value(add_column_code_gf_input_id + "Parms",[newcolname,newdatatytpe,"",""]) 
                 
         else :
@@ -1739,15 +1959,30 @@ def parse_add_cols_option_inputs(parms,opstat=None) :
             cfg.drop_config_value(add_column_code_gf_input_id+"Parms")
             
             opstat.set_status(False)
-            opstat.set_errorMsg("   [Column Name Error] : column ",newcolname," already exists")
+            opstat.set_errorMsg("   [Column Name Error] : column " + newcolname + " already exists")
 
-    return([optionid,newcolname,newdatatytpe,fparms])
+    return([newcolname,newdatatytpe,fparms])
 
 
-def display_add_cols_option(parms) :
+"""
+#--------------------------------------------------------------------------
+#    display add column from dfc funcs working idlist
+#--------------------------------------------------------------------------
+""" 
+
+add_column_code_dfc_funcs_idList                      =   []
+
+def get_current_dfc_funcs_idlist() :
+    return(add_column_code_dfc_funcs_idList)
+def set_current_dfc_funcs_idlist(idlist) :
+    global add_column_code_dfc_funcs_idList
+    add_column_code_dfc_funcs_idList = idlist
+
+
+def display_add_cols_df_funcs(parms) :
     """
     * -------------------------------------------------------------------------- 
-    * function : parse parms for add columns
+    * function : display the add cols with parms input
     * 
     * parms :
     *   parms   -   add column parms
@@ -1757,232 +1992,401 @@ def display_add_cols_option(parms) :
     * --------------------------------------------------------
     """
     
-    optionid        =   -1
+    dftitle     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+    df          =   cfg.get_dfc_dataframe_df(dftitle)
+    cols_list   =   df.columns.tolist()
+    dfcolname   =   cols_list[0]
+    
+    #form_parms  =   parms[1]
+    fparms      =   get_parms_for_input(parms[1],add_column_code_dfc_funcs_input_idList)
+    
+    #print("fparms",fparms)
+    
+    if(len(fparms) > 0) :
+        newcolname  =   fparms[0]
+        cdatatype   =   fparms[1]
+        if(len(cdatatype) == 0) :
+            cdatatype   =   "str"
+        ftitle      =   parms[3]
+        
+    else :
+        newcolname  =   "USER VALUE"
+    
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule, get_function_kwvals, get_function_kwargs
+    gfmodule    =   reservedfunctionsmodule
+        
+    kwvals      =   get_function_kwvals(ftitle,dftitle,dfcolname)
+        
+    [kwargs,gfcode]      =   get_function_kwargs(gfmodule,ftitle,kwvals)
+    
+    gfcode      =   gfcode.replace("'",'"')
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_reserved_function_parms_datatypes
+    pdtypes     =   get_reserved_function_parms_datatypes(ftitle)
+    
+    for i in range(len(kwargs)) :
+        pval    =   kwvals.get(kwargs[i])
+        if(pdtypes[i] == str) :
+            if(len(pval) > 0) :
+                gfcode      =   gfcode.replace(pval,"'" + pval + "'")    
+        
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_generic_function_desc
+
+    gfdesc      =   get_generic_function_desc(ftitle)
+    gfdesc      =   gfdesc.replace("'",'"')
+        
+    dfc_add_code_idList, dfc_add_code_labelList, dfc_add_code_typeList          =   [],[],[]
+    dfc_add_code_placeholderList, dfc_add_code_jsList, dfc_add_code_reqList     =   [],[],[]
+    
+    for i in range(len(add_column_code_dfc_funcs_parms_input_idList))           :     dfc_add_code_idList.append(add_column_code_dfc_funcs_parms_input_idList[i])
+    for i in range(len(add_column_code_dfc_funcs_parms_input_labelList))        :     dfc_add_code_labelList.append(add_column_code_dfc_funcs_parms_input_labelList[i])
+    for i in range(len(add_column_code_dfc_funcs_parms_input_typeList))         :     dfc_add_code_typeList.append(add_column_code_dfc_funcs_parms_input_typeList[i])
+    for i in range(len(add_column_code_dfc_funcs_parms_input_placeholderList))  :     dfc_add_code_placeholderList.append(add_column_code_dfc_funcs_parms_input_placeholderList[i])
+    for i in range(len(add_column_code_dfc_funcs_parms_input_jsList))           :     dfc_add_code_jsList.append(add_column_code_dfc_funcs_parms_input_jsList[i])
+    for i in range(len(add_column_code_dfc_funcs_parms_input_reqList))          :     dfc_add_code_reqList.append(add_column_code_dfc_funcs_parms_input_reqList[i])
+
+    kwarg_selects   =   []
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_function_kwval_parms_select
+    for i in range(len(kwargs)) :
+        kwarg_selects.append(get_function_kwval_parms_select(ftitle,kwargs[i]))
+
+    #print("kwarg_selects\n",kwarg_selects)
+
+
+    for i in range(len(kwargs)) :
+        dfc_add_code_idList.append("addcolfparm"+str(i))    
+        dfc_add_code_labelList.append(kwargs[i])
+        
+        if(kwarg_selects[i] is None) :
+            dfc_add_code_typeList.append("text")
+        else :
+            dfc_add_code_typeList.append("select")
+            
+        dfc_add_code_placeholderList.append(kwvals.get(kwargs[i]))    
+        dfc_add_code_jsList.append(None)    
+        dfc_add_code_reqList.append(i+5) 
+        
+    for i in range(4) :
+        dfc_add_code_idList.append(None)
+        dfc_add_code_typeList.append("button")    
+        dfc_add_code_placeholderList.append(None)
+        
+    for i in range(len(add_column_code_dfc_funcs_parms_input_labelList1)) :
+        dfc_add_code_labelList.append(add_column_code_dfc_funcs_parms_input_labelList1[i])    
+            
+    for i in range(len(add_column_code_dfc_funcs_parms_input_jsList1)) :
+        dfc_add_code_jsList.append(add_column_code_dfc_funcs_parms_input_jsList1[i])    
+
+    #print("dfc_add_code_typeList",dfc_add_code_typeList)
+    gt_input_form   = InputForm(add_column_code_dfc_funcs_parms_input_id,
+                                dfc_add_code_idList,
+                                dfc_add_code_labelList,
+                                dfc_add_code_typeList,
+                                dfc_add_code_placeholderList,
+                                dfc_add_code_jsList,
+                                dfc_add_code_reqList)
+
+    selectDicts     =   []
+    
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_function_return_datatype
+    cdatatype       =   get_function_return_datatype(ftitle)
+    
+    
+    
+    dtypes          =   {"default":cdatatype,"list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
+                                                 "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
+                                                 "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
+    selectDicts.append(dtypes)
+
+    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_genfunc_list
+    funcs_list  =   get_genfunc_list()
+        
+    funcs           =   []
+    funcs.append(" ")
+        
+    if(not (funcs_list == None)) :
+        for i in range(len(funcs_list)) :
+            funcs.append(funcs_list[i])
+        
+    funclist    =   {"default":ftitle,"list":funcs,"callback":"get_dfc_func_value"}
+    selectDicts.append(funclist)
+    
+    for i in range(len(kwarg_selects)) :
+        if(not(kwarg_selects[i] is None)) :
+            selectDicts.append(kwarg_selects[i])
+            
+    cfg.drop_config_value(add_column_code_dfc_funcs_parms_input_id+"Parms")
+        
+    get_select_defaults(gt_input_form,
+                        add_column_code_dfc_funcs_parms_input_id,
+                        dfc_add_code_idList,
+                        dfc_add_code_typeList,
+                        selectDicts)
+
+    gt_input_form.set_shortForm(True)
+    gt_input_form.set_gridwidth(480)
+    gt_input_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":0})
+    gt_input_form.set_fullparms(True)
+    
+    inputparms      =   [newcolname,cdatatype,ftitle,gfcode,gfdesc]
+    inputpparms     =   [False,False,False,True,True]
+    
+    for i in range(len(kwargs)) :
+        inputparms.append(kwvals.get(kwargs[i]))
+        inputpparms.append(False)
+        
+    cfg.set_config_value(add_column_code_dfc_funcs_parms_input_id+"Parms",inputparms)
+    cfg.set_config_value(add_column_code_dfc_funcs_parms_input_id+"ParmsProtect",inputpparms)
+    
+    set_current_dfc_funcs_idlist(dfc_add_code_idList)    
+    
+    gt_input_html   =   ""
+    gt_input_html   =   gt_input_form.get_html()
+    
+    gt_heading_html     =   "<div>Add New Column From dfc Functions</div><br>"
+    help_note           =   "After setting and reviewing parms in the above form click on 'Add New Column From Code' to add a new column."
+    from dfcleanser.common.common_utils import get_help_note_html
+    addcol_notes_html   =   get_help_note_html(help_note)
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+    gridhtmls       =   [gt_heading_html,gt_input_html,addcol_notes_html]
+
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("df-add-col-code-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("df-add-col-code-pop-up-wrapper",gridclasses,gridhtmls)
+
+    from dfcleanser.common.display_utils import display_pop_up_buffer
+    display_pop_up_buffer()
+
+
+def display_add_cols_option(option,parms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the add cols input
+    * 
+    * parms :
+    *   parms   -   add column parms
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    display_base_data_transform_columns_taskbar()
+
     newcolname      =   ""
     newdatatype     =   ""
-    nparms          =   []
+    addparms        =   []
     
     opstat  =   opStatus()
     
-    if(parms == None) :
-        optionid        =   dtm.DISPLAY_BASE_ADD_OPTION
+    if(option == dtm.DISPLAY_ADD_COLUMN) :
         newcolname      =   None
         newdatatype     =   None
-        nparms          =   None
+        addparms        =   None
         
     else :
-        parsedParms = parse_add_cols_option_inputs(parms,opstat)
+        parsedParms = parse_add_cols_option_inputs(option,parms,opstat)
+        
+        print("parsedParms",parsedParms)
 
-        optionid        =   parsedParms[0]
-        newcolname      =   parsedParms[1]
-        newdatatype     =   parsedParms[2]
-        nparms          =   parsedParms[3]
+        newcolname      =   parsedParms[0]
+        newdatatype     =   parsedParms[1]
+        addparms        =   parsedParms[2]
+        
+    if(opstat.get_status()) :
 
-    if(optionid == dtm.DISPLAY_BASE_ADD_OPTION) :
+        if(option == dtm.DISPLAY_ADD_COLUMN) :
         
-        cfg.drop_config_value(cfg.ADD_COL_COL_NAME_KEY)
-        cfg.drop_config_value(cfg.ADD_COL_DATATYPE_ID_KEY)
-        cfg.drop_config_value(add_column_input_id + "Parms")
+            cfg.drop_config_value(cfg.ADD_COL_COL_NAME_KEY)
+            cfg.drop_config_value(cfg.ADD_COL_DATATYPE_ID_KEY)
+            cfg.drop_config_value(add_column_input_id + "Parms")
         
-        common_column_heading_html      =   "<div>Add New Column </div><br>"
+            common_column_heading_html      =   "<br><div>Add New Column </div><br>"
             
-        grid_input_form                 =   InputForm(add_column_input_id,
-                                                      add_column_input_idList,
-                                                      add_column_input_labelList,
-                                                      add_column_input_typeList,
-                                                      add_column_input_placeholderList,
-                                                      add_column_input_jsList,
-                                                      add_column_input_reqList,
-                                                      True)
+            grid_input_form                 =   InputForm(add_column_input_id,
+                                                          add_column_input_idList,
+                                                          add_column_input_labelList,
+                                                          add_column_input_typeList,
+                                                          add_column_input_placeholderList,
+                                                          add_column_input_jsList,
+                                                          add_column_input_reqList)
         
-        selectDicts     =   []
+            selectDicts     =   []
             
-        dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
-                                                     "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
-                                                     "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
-        selectDicts.append(dtypes)
+            dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
+                                                         "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
+                                                         "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
+            selectDicts.append(dtypes)
         
-        get_select_defaults(grid_input_form,
-                            add_column_input_id,
-                            add_column_input_idList,
-                            add_column_input_typeList,
-                            selectDicts)
+            get_select_defaults(grid_input_form,
+                                add_column_input_id,
+                                add_column_input_idList,
+                                add_column_input_typeList,
+                                selectDicts)
         
-        grid_input_form.set_buttonstyle({"font-size":12, "height":90, "width":115, "left-margin":2})
-        grid_input_form.set_gridwidth(480)
-        grid_input_form.set_fullparms(True)    
-        grid_input_html   =   grid_input_form.get_html()
-    
+            grid_input_form.set_buttonstyle({"font-size":12, "height":110, "width":90, "left-margin":1})
+            grid_input_form.set_gridwidth(480)
+            grid_input_form.set_fullparms(True) 
 
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,grid_input_html]
-    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
-            
-        from dfcleanser.common.display_utils import display_pop_up_buffer
-        display_pop_up_buffer()
-                 
-    elif(optionid == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
-        
-        cfg.drop_config_value(cfg.ADD_COL_DATATYPE_ID_KEY)
-        
-        common_column_heading_html      =   "<div>Add New Column From File Parameters</div>"
-            
-        grid_input_form                 =   InputForm(add_column_file_input_id,
-                                                      add_column_file_input_idList,
-                                                      add_column_file_input_labelList,
-                                                      add_column_file_input_typeList,
-                                                      add_column_file_input_placeholderList,
-                                                      add_column_file_input_jsList,
-                                                      add_column_file_input_reqList,
-                                                      True)
-        
-        selectDicts     =   []
-            
-        dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
-                                                     "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
-                                                     "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
-        selectDicts.append(dtypes)
-        
-        get_select_defaults(grid_input_form,
-                            add_column_file_input_id,
-                            add_column_file_input_idList,
-                            add_column_file_input_typeList,
-                            selectDicts)
-            
-        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":90, "left-margin":0})
-        grid_input_form.set_gridwidth(280)
-        grid_input_form.set_fullparms(True)
-    
-        grid_input_html   =   grid_input_form.get_html()
+            grid_input_html   =   grid_input_form.get_html()
 
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,grid_input_html]
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+            gridhtmls       =   [common_column_heading_html,grid_input_html]
     
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
-    
-        from dfcleanser.common.display_utils import display_pop_up_buffer
-        display_pop_up_buffer()
-                
-    elif(optionid == dtm.DISPLAY_ADD_FROM_CODE_OPTION) :
-        
-        if(newcolname == None)  : newcolname    =   ""
-        if(newdatatype == None) : newdatatype   =   ""
-
-        #print("DISPLAY_ADD_FROM_CODE_OPTION",newcolname,newdatatype)
-        
-        cfg.set_config_value(add_column_code_gf_input_id+"Parms",[newcolname,newdatatype,"","","","",""])
-        display_add_cols_code(dtm.DISPLAY_FUNCTIONS)
-    
-    elif(optionid == dtm.DISPLAY_ADD_FROM_DF_OPTION) :
-        
-        if(newcolname == None)  : newcolname    =   ""
-        if(newdatatype == None) : newdatatype   =   ""
-
-        cfg.set_config_value(add_column_df_input_id+"Parms",[newcolname,newdatatype,"","",""])
-        
-        common_column_heading_html      =   "<div>Add New Column From df</div><br>"
-            
-        grid_input_form                 =   InputForm(add_column_df_input_id,
-                                                      add_column_df_input_idList,
-                                                      add_column_df_input_labelList,
-                                                      add_column_df_input_typeList,
-                                                      add_column_df_input_placeholderList,
-                                                      add_column_df_input_jsList,
-                                                      add_column_df_input_reqList,
-                                                      True)
-        
-        grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":115, "left-margin":2})
-        grid_input_form.set_gridwidth(480)
-        grid_input_form.set_fullparms(True)
-    
-        grid_input_html   =   grid_input_form.get_html()
-
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [common_column_heading_html,grid_input_html]
-    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
-    
-        from dfcleanser.common.display_utils import display_pop_up_buffer
-        display_pop_up_buffer()
-    
-    elif(optionid == dtm.PROCESS_FILE_OPTION) :
-        from dfcleanser.data_transform.data_transform_columns_control import process_add_column
-        process_add_column([optionid,nparms])
-
-    elif(optionid == dtm.PROCESS_MAKE_NEW_CODE_OPTION) :
-        
-        if(not (cfg.get_config_value(cfg.ADD_COL_CODE_KEY) == None) ) :
-            cfg.set_config_value(add_column_code_gf_input_id+"Parms",[newcolname,cfg.get_config_value(cfg.ADD_COL_CODE_KEY)])
-        
-        display_add_cols_code()
-        
-    elif(optionid == dtm.PROCESS_ADD_NEW_CODE_OPTION) :
-        
-        from dfcleanser.sw_utilities.sw_utility_genfunc_control import process_add_column
-        process_add_column([optionid,nparms])
-        
-    elif(optionid == dtm.PROCESS_SELECT_FUNC_OPTION) :
-        ftitle  =   parms[1]
-        
-        newcolname      =   cfg.get_config_value(cfg.ADD_COL_COL_NAME_KEY)
-        newdatatype     =   cfg.get_config_value(cfg.ADD_COL_DATATYPE_ID_KEY)
-        
-        if(newcolname == None)  : newcolname    =   ""
-        if(newdatatype == None) : newdatatype   =   ""
-        
-        from dfcleanser.sw_utilities.sw_utility_genfunc_control import get_generic_function_desc, get_generic_function
-        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_function_call,is_lambda_function
-        gt_func         =   get_generic_function(ftitle)
-        gt_func_desc    =   get_generic_function_desc(ftitle)
-        
-        if(not (gt_func_desc is None)) :
-            
-            lambda_flag     =   is_lambda_function(ftitle)
-            if(lambda_flag) :   lambda_val      =   "True"
-            else :              lambda_val      =   "False"
-        
-            func_parms_dict     =   {}
-            func_parms_dict.update({"dftitle":cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)})
-            func_parms_dict.update({"newcolname":newcolname})
-            
-            func_call   =   get_function_call(ftitle,func_parms_dict)
-            
-            import dfcleanser.sw_utilities.sw_utility_genfunc_model as gfm
-            if(ftitle in gfm.reservedfunctions) :
-                from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule
-                fparms = [newcolname,
-                          newdatatype,
-                          lambda_val,
-                          reservedfunctionsmodule,
-                          ftitle,
-                          func_call,
-                          gt_func_desc]
-                
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
             else :
-                fparms = [newcolname,
-                          newdatatype,
-                          "",
-                          gt_func.get_func_module(),
-                          gt_func.get_func_title(),
-                          "",
-                          gt_func.get_func_code()]
+                display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
+            
+            from dfcleanser.common.display_utils import display_pop_up_buffer
+            display_pop_up_buffer()
+                 
+        elif(option == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
+        
+            cfg.drop_config_value(cfg.ADD_COL_DATATYPE_ID_KEY)
+        
+            common_column_heading_html      =   "<br><div>Add New Column From File Parameters</div><br>"
+            
+            grid_input_form                 =   InputForm(add_column_file_input_id,
+                                                          add_column_file_input_idList,
+                                                          add_column_file_input_labelList,
+                                                          add_column_file_input_typeList,
+                                                          add_column_file_input_placeholderList,
+                                                          add_column_file_input_jsList,
+                                                          add_column_file_input_reqList)
+        
+            selectDicts     =   []
+            
+            dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
+                                                         "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
+                                                         "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
+            selectDicts.append(dtypes)
+        
+            get_select_defaults(grid_input_form,
+                                add_column_file_input_id,
+                                add_column_file_input_idList,
+                                add_column_file_input_typeList,
+                                selectDicts)
+            
+            grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":120, "left-margin":40})
+            grid_input_form.set_gridwidth(480)
+            grid_input_form.set_fullparms(True)
+            grid_input_form.set_shortForm(True)
+        
+            cfg.set_config_value(add_column_file_input_id+"Parms",[newcolname,newdatatype,""])
+    
+            grid_input_html   =   grid_input_form.get_html()
+
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+            gridhtmls       =   [common_column_heading_html,grid_input_html]
+    
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
+    
+            from dfcleanser.common.display_utils import display_pop_up_buffer
+            display_pop_up_buffer()
+
+
+        elif(option == dtm.DISPLAY_ADD_FROM_DFC_FUNCS) :
+        
+            if(newcolname == None)  : newcolname    =   ""
+            if(newdatatype == None) : newdatatype   =   ""
+
+            print("DISPLAY_ADD_FROM_DFC_FUNCS",newcolname,newdatatype)
+        
+            cfg.set_config_value(add_column_code_dfc_funcs_input_id+"Parms",[newcolname,newdatatype,"","",""])
+            cfg.set_config_value(add_column_code_dfc_funcs_input_id+"ParmsProtect",[False,False,False,True,True])
+
+            display_add_cols_code(dtm.DISPLAY_FUNCTIONS)
                 
-            cfg.set_config_value(add_column_code_gf_input_id+"Parms",fparms)
+        elif(option == dtm.DISPLAY_ADD_FROM_CODE_OPTION) :
+        
+            if(newcolname == None)  : newcolname    =   ""
+            if(newdatatype == None) : newdatatype   =   ""
 
-        display_add_cols_code(dtm.DISPLAY_FUNCTIONS)
+            cfg.set_config_value(add_column_code_gf_input_id+"Parms",[newcolname,newdatatype,"","",""])
+        
+            display_add_cols_code(dtm.DISPLAY_NO_FUNCTIONS)
+    
+        elif(option == dtm.DISPLAY_ADD_FROM_DF_OPTION) :
+        
+            if(newcolname == None)  : newcolname    =   ""
+            if(newdatatype == None) : newdatatype   =   ""
+
+            cfg.set_config_value(add_column_df_input_id+"Parms",["",newcolname,newdatatype,"","","","",""])
+        
+            common_column_heading_html      =   "<div>Add New Column From df</div><br>"
+            
+            grid_input_form                 =   InputForm(add_column_df_input_id,
+                                                          add_column_df_input_idList,
+                                                          add_column_df_input_labelList,
+                                                          add_column_df_input_typeList,
+                                                          add_column_df_input_placeholderList,
+                                                          add_column_df_input_jsList,
+                                                          add_column_df_input_reqList)
+
+            selectDicts     =   []
+        
+            dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
+            current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+        
+            dataframes      =   {"default":current_df_name,"list":dataframes_loaded, "callback":"add_df_col_change_df"}
+            selectDicts.append(dataframes)
+            
+            dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
+                                                         "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
+                                                         "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
+            selectDicts.append(dtypes)
+        
+            dataframes1     =   {"default":current_df_name,"list":dataframes_loaded, "callback":"add_df_col_change_df"}
+            selectDicts.append(dataframes1)
+        
+            current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+            colnames        =   current_df.columns.tolist()
+            cnames          =   {"default":colnames[0],"list": colnames}
+            selectDicts.append(cnames)
+        
+            cnames1         =   {"default":colnames[0],"list": colnames}
+            selectDicts.append(cnames1)
+        
+            cnames2         =   {"default":colnames[0],"list": colnames}
+            selectDicts.append(cnames2)
+        
+            get_select_defaults(grid_input_form,
+                                add_column_df_input_id,
+                                add_column_df_input_idList,
+                                add_column_df_input_typeList,
+                                selectDicts)
+
+            grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":115, "left-margin":2})
+            grid_input_form.set_gridwidth(480)
+            grid_input_form.set_fullparms(True)
+            grid_input_form.set_shortForm(True)
+        
+            grid_input_html   =   grid_input_form.get_html()
+        
+            #print(grid_input_html)
+
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+            gridhtmls       =   [common_column_heading_html,grid_input_html]
+    
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                display_generic_grid("df-add-col-wrapper",gridclasses,gridhtmls)
+            else :
+                display_generic_grid("df-add-col-pop-up-wrapper",gridclasses,gridhtmls)
+    
+            from dfcleanser.common.display_utils import display_pop_up_buffer
+            display_pop_up_buffer()
+    
+            
+    else :
+        display_exception(opstat)
 
 
-def display_add_cols_code(option) :
+def display_add_cols_code(option,colname=None,dtype=None) :
     """
     * -------------------------------------------------------------------------- 
     * function : display add column fom code inputs
@@ -1995,49 +2399,79 @@ def display_add_cols_code(option) :
     * --------------------------------------------------------
     """
     
-    gt_input_form   = InputForm(add_column_code_gf_input_id,
-                                add_column_code_gf_input_idList,
-                                add_column_code_gf_input_labelList,
-                                add_column_code_gf_input_typeList,
-                                add_column_code_gf_input_placeholderList,
-                                add_column_code_gf_input_jsList,
-                                add_column_code_gf_input_reqList)
+    if(dtype is None) :
+        defdtype   =    "str" 
+    else :
+        defdtype    =   dtype
+    
+    if(option==dtm.DISPLAY_FUNCTIONS) :
+        
+        gt_input_form   = InputForm(add_column_code_dfc_funcs_input_id,
+                                    add_column_code_dfc_funcs_input_idList,
+                                    add_column_code_dfc_funcs_input_labelList,
+                                    add_column_code_dfc_funcs_input_typeList,
+                                    add_column_code_dfc_funcs_input_placeholderList,
+                                    add_column_code_dfc_funcs_input_jsList,
+                                    add_column_code_dfc_funcs_input_reqList)
+    
+    else :
+        
+        gt_input_form   = InputForm(add_column_code_gf_input_id,
+                                    add_column_code_gf_input_idList,
+                                    add_column_code_gf_input_labelList,
+                                    add_column_code_gf_input_typeList,
+                                    add_column_code_gf_input_placeholderList,
+                                    add_column_code_gf_input_jsList,
+                                    add_column_code_gf_input_reqList)
 
     selectDicts     =   []
             
-    dtypes          =   {"default":"str","list":["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
-                                                 "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
-                                                 "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
+    dtypes          =   {"default" : defdtype, "list": ["str","numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64","numpy.int8",
+                                                        "numpy.int16","numpy.int32","numpy.int64","numpy.float16","numpy.float32","numpy.float64",
+                                                        "datetime.datetime","datetime.date","datetime.time","datetime.timedelta","object","int","float"]}
     selectDicts.append(dtypes)
-    
-    from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_list
-    funcs_list  =   get_genfunc_list()
+
+    if(option == dtm.DISPLAY_FUNCTIONS) : 
         
-    funcs           =   []
-    funcs.append(" ")
+        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_genfunc_list
+        funcs_list  =   get_genfunc_list()
         
-    if(not (funcs_list == None)) :
-        for i in range(len(funcs_list)) :
-            funcs.append(funcs_list[i])
+        funcs           =   []
+        funcs.append(" ")
         
-    funclist    =   {"default":" ","list":funcs,"callback":"get_selected_value"}
-    selectDicts.append(funclist)
+        if(not (funcs_list == None)) :
+            for i in range(len(funcs_list)) :
+                funcs.append(funcs_list[i])
         
-    get_select_defaults(gt_input_form,
-                        add_column_code_gf_input_id,
-                        add_column_code_gf_input_idList,
-                        add_column_code_gf_input_typeList,
-                        selectDicts)
-    
+        funclist    =   {"default":" ","list":funcs,"callback":"get_dfc_func_value"}
+        selectDicts.append(funclist)
+        
+        get_select_defaults(gt_input_form,
+                            add_column_code_dfc_funcs_input_id,
+                            add_column_code_dfc_funcs_input_idList,
+                            add_column_code_dfc_funcs_input_typeList,
+                            selectDicts)
+        
+    else :
+        
+        get_select_defaults(gt_input_form,
+                            add_column_code_gf_input_id,
+                            add_column_code_gf_input_idList,
+                            add_column_code_gf_input_typeList,
+                            selectDicts)
+        
     gt_input_form.set_shortForm(True)
     gt_input_form.set_gridwidth(480)
-    gt_input_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":0})
+    gt_input_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":25})
     gt_input_form.set_fullparms(True)
     
     gt_input_html   =   ""
     gt_input_html   =   gt_input_form.get_html()
-        
-    gt_heading_html =   "<div>Add New Column From User Code</div><br>"
+    
+    if(option == dtm.DISPLAY_FUNCTIONS) : 
+        gt_heading_html =   "<br><div>Add New Column From dfc Functions</div><br>"
+    else :
+        gt_heading_html =   "<br><div>Add New Column From User Code</div><br>"
 
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [gt_heading_html,gt_input_html]
@@ -2046,17 +2480,6 @@ def display_add_cols_code(option) :
         display_generic_grid("df-add-col-code-wrapper",gridclasses,gridhtmls)
     else :
         display_generic_grid("df-add-col-code-pop-up-wrapper",gridclasses,gridhtmls)
-
-
-    addcol_notes_html        =   "<div style='text-align:center; margin-left:85px; width:340px; border: 1px solid #67a1f3;'>Change all USER VALUE vars in the *function_code box.</div><br>"
-
-    gridclasses     =   ["dfc-top"]
-    gridhtmls       =   [addcol_notes_html]
-    
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("generic-gf-transform-notes-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("generic-gf-transform-notes-pop-up-wrapper",gridclasses,gridhtmls)
 
     from dfcleanser.common.display_utils import display_pop_up_buffer
     display_pop_up_buffer()
@@ -2078,243 +2501,206 @@ def display_add_cols_code(option) :
 #--------------------------------------------------------------------------
 """ 
 
-def get_dt_js_list(jslist,dfc_id) :
+
+
+def display_column_uniques(df,colname,samplesize,uniquesperrow,display=True) : 
     """
     * -------------------------------------------------------------------------- 
-    * function : get the final datacleansing task bar
+    * function : display col uniques
     * 
     * parms :
-    *   jslist      -   javascript list
-    *   dfc_id      -   dfc id
+    *  df          -   data frame
+    *  colname     -   column name
+    *  display     -   boolean display flag
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
-
-    new_js_list     =   []
-    
-    for i in range(len(jslist)) :
-        if(dfc_id == cfg.DataCleansing_ID) :
-            if(not (jslist[i] is None)) :
-                if(jslist[i].find("DataTransform") > -1) :
-                    newjs   =   jslist[i].replace("DataTransform","DataCleansing")
-                else :
-                    newjs   =   jslist[i]
-            else :
-                newjs   =   jslist[i]    
-                
-        elif(dfc_id == cfg.DataTransform_ID) :
-            newjs   =   jslist[i] 
-            
-        new_js_list.append(newjs)
-        
-    return(new_js_list)
-
-
-def get_dropna_display(withdt,dfc_id) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : get the dropna html
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    if(withdt) :
-        
-        grid_input_form     =   InputForm(dt_data_type_dn_input_id,
-                                          dt_data_type_dn_input_idList,
-                                          dt_data_type_dn_input_labelList,
-                                          dt_data_type_dn_input_typeList,
-                                          dt_data_type_dn_input_placeholderList,
-                                          get_dt_js_list(dt_data_type_dn_input_jsList,dfc_id),
-                                          dt_data_type_dn_input_reqList,
-                                          True)
-        
-    else :
-        
-        grid_input_form     =   InputForm(ndt_data_type_dn_input_id,
-                                          ndt_data_type_dn_input_idList,
-                                          ndt_data_type_dn_input_labelList,
-                                          ndt_data_type_dn_input_typeList,
-                                          ndt_data_type_dn_input_placeholderList,
-                                          ndt_data_type_dn_input_jsList,
-                                          ndt_data_type_dn_input_reqList,
-                                          True)
-
-    selectDicts     =   []
-    
-    if(withdt) : 
-        if(dfc_id == cfg.DataTransform_ID) :
-            naoption         =   {"default" : "dropna", "list" : ["dropna","fillna"],"callback":"dtselect_dropna_change"}
-        else :
-            naoption         =   {"default" : "dropna", "list" : ["dropna","fillna"],"callback":"dtcselect_dropna_change"}
-        
-        selectDicts.append(naoption)
-    
-    anyall  =   {"default" : "any", "list" : ["any","all"]}
-    selectDicts.append(anyall)            
-    
-    inplace         =   {"default" : "False", "list" : ["True","False"]}
-    selectDicts.append(inplace)
-
-    if(withdt) :        
  
-        get_select_defaults(grid_input_form,
-                            dt_data_type_dn_input_id,
-                            dt_data_type_dn_input_idList,
-                            dt_data_type_dn_input_typeList,
-                            selectDicts)
+    uniques             =   df[colname].unique().tolist()
     
+    if(is_numeric_col(df,colname)) :
+        uniques.sort()
     else :
+        if(does_col_contain_nan(df,colname)) :
+            import pandas as pd
+            uniques = pd.Series(uniques).fillna("nan").tolist()
+            uniques.sort()
+        else :
+            uniques.sort()
+
+    uniqueHeader    =   []
+    uniqueWidths    =   []
+    uniqueAligns    =   []
+    
+    if(len(uniques) < uniquesperrow) :
+        uniquesperrow       =   len(uniques)
+        samplesize          =   len(uniques)
         
-        get_select_defaults(grid_input_form,
-                            ndt_data_type_dn_input_id,
-                            ndt_data_type_dn_input_idList,
-                            ndt_data_type_dn_input_typeList,
-                            selectDicts)
+    colwidth    =   100/uniquesperrow
     
-    #grid_input_form.set_custombwidth(80)
-    grid_input_form.set_gridwidth(340)
-    grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":80, "left-margin":35})
+    for i in range(uniquesperrow) :
+        uniqueHeader.append("Value")
+        uniqueWidths.append(colwidth)
+        uniqueAligns.append("center")
+        
+    uniqueRows      =   []
+    uniqueHrefs     =   []
     
-    return(grid_input_form.get_html())
+    uniquerow       =   []
     
+    if(samplesize > len(uniques)) :
+        samplesize = len(uniques)
     
-def get_fillna_display(df,colname,withdt,dfc_id) :
+    for i in range(samplesize) :
+        
+        if(i < len(uniques)) :
+            uniquerow.append(uniques[i])
+
+            if((i+1) % uniquesperrow == 0) :
+                uniqueRows.append(uniquerow)
+                uniqueHrefs     =   []
+                for k in range(uniquesperrow) :
+                    uniqueHrefs.append(None)
+                uniquerow   =   []
+    
+    #print("display_column_uniques",i,uniquerow,uniquesperrow,samplesize,len(uniques),samplesize % uniquesperrow)
+    
+    if((samplesize % uniquesperrow) != 0) :
+
+        for k in range(uniquesperrow - (samplesize % uniquesperrow)) :
+            uniquerow.append("")
+
+        uniqueRows.append(uniquerow) 
+        
+        uniqueHrefs     =   []
+        for k in range(uniquesperrow) :
+            uniqueHrefs.append(None)
+            
+    #print("dcTable",uniqueHeader,uniqueRows,uniqueWidths,uniqueAligns,uniqueHrefs)
+    
+    uniques_table = dcTable("Sample Column Values for "+colname,"dtuniquesTable",
+                            cfg.DataTransform_ID,
+                            uniqueHeader,uniqueRows,
+                            uniqueWidths,uniqueAligns)
+    
+    uniques_table.set_tabletype(ROW_MAJOR)
+    uniques_table.set_small(True)
+    uniques_table.set_smallwidth(100)
+    uniques_table.set_rowspertable(6)
+    uniques_table.set_refList(uniqueHrefs)
+
+    if(display) :
+        uniques_table.display_table()
+    else :
+        return(uniques_table.get_html())
+
+
+def get_uniques_display(df,colname) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get the fillna html
+    * function : get the uniques and change datatype
     * 
     * parms :
-    *   df      -   dataframe
-    *   colname -   column name
+    *   colname   -   column name
+    *   noButtons -   input no buttons flag
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
     
-    if(is_numeric_col(df,colname)) :
+    display_base_data_transform_columns_taskbar()
+    
+    print("\n")
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
+         uniques_html    =   display_column_uniques(df,colname,48,6,False)
+    else :
+         uniques_html    =   display_column_uniques(df,colname,24,4,False)
+         
+    if(not (is_numeric_col(df,colname)) ) :
         
-        if(withdt) :
+        import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
 
-            grid_input_form     =   InputForm(dt_data_type_fn_input_id,
-                                              dt_data_type_fn_input_idList,
-                                              dt_data_type_fn_input_labelList,
-                                              dt_data_type_fn_input_typeList,
-                                              dt_data_type_fn_input_placeholderList,
-                                              get_dt_js_list(dt_data_type_fn_input_jsList,dfc_id),
-                                              dt_data_type_fn_input_reqList,
-                                              True)
+        find_values_inputs  =   InputForm(dcw.nn_find_values_input_id,
+                                          dcw.nn_find_values_input_idList,
+                                          dcw.nn_find_values_input_labelList,
+                                          dcw.nn_find_values_input_typeList,
+                                          dcw.nn_find_values_input_placeholderList,
+                                          dcw.nn_find_values_input_jsList,
+                                          dcw.nn_find_values_input_reqList)
             
-        else :
+        find_values_inputs.set_buttonstyle({"font-size":13, "height":50, "width":90, "left-margin":40})
+        find_values_inputs.set_gridwidth(280)
+        find_values_inputs.set_shortForm(True)
+
+        find_values_html    =   find_values_inputs.get_html()
             
-            grid_input_form     =   InputForm(ndt_data_type_fn_input_id,
-                                              ndt_data_type_fn_input_idList,
-                                              ndt_data_type_fn_input_labelList,
-                                              ndt_data_type_fn_input_typeList,
-                                              ndt_data_type_fn_input_placeholderList,
-                                              ndt_data_type_fn_input_jsList,
-                                              ndt_data_type_fn_input_reqList,
-                                              True)
-                
     else :
         
-        if(withdt) :
+        import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
+
+        find_values_inputs  =   InputForm(dcw.find_values_input_id,
+                                          dcw.find_values_input_idList,
+                                          dcw.find_values_input_labelList,
+                                          dcw.find_values_input_typeList,
+                                          dcw.find_values_input_placeholderList,
+                                          dcw.find_values_input_jsList,
+                                          dcw.find_values_input_reqList)
             
-            grid_input_form     =   InputForm(dt_nn_fn_data_type_input_id,
-                                              dt_nn_fn_data_type_input_idList,
-                                              dt_nn_fn_data_type_input_labelList,
-                                              dt_nn_fn_data_type_input_typeList,
-                                              dt_nn_fn_data_type_input_placeholderList,
-                                              get_dt_js_list(dt_nn_fn_data_type_input_jsList,dfc_id),
-                                              dt_nn_fn_data_type_input_reqList,
-                                              True)
-            
-        else :
-            
-            grid_input_form     =   InputForm(ndt_nn_fn_data_type_input_id,
-                                              ndt_nn_fn_data_type_input_idList,
-                                              ndt_nn_fn_data_type_input_labelList,
-                                              ndt_nn_fn_data_type_input_typeList,
-                                              ndt_nn_fn_data_type_input_placeholderList,
-                                              ndt_nn_fn_data_type_input_jsList,
-                                              ndt_nn_fn_data_type_input_reqList,
-                                              True)
+        find_values_inputs.set_buttonstyle({"font-size":13, "height":50, "width":90, "left-margin":40})
+        find_values_inputs.set_gridwidth(280)
+        find_values_inputs.set_shortForm(True)
+
+        find_values_html    =   find_values_inputs.get_html()
+
     
-    selectDicts     =   []
-    
-    if(withdt) : 
-        if(dfc_id == cfg.DataTransform_ID) :
-            naoption         =   {"default" : "fillna", "list" : ["dropna","fillna"],"callback":"dtselect_dropna_change"}
-        else :
-            naoption         =   {"default" : "fillna", "list" : ["dropna","fillna"],"callback":"dtcselect_dropna_change"}
+    uniques_heading_html  =   "<div>Find Uniques</div><br>"
+     
         
-        selectDicts.append(naoption)
-    
-    if(is_numeric_col(df,colname)) :
-        fillnas         =   {"default" : "None - use fillna_value", "list" : ["None - use fillna_value","mean","bfill","ffill"]}
-        selectDicts.append(fillnas)
-    
-    inplace         =   {"default" : "False", "list" : ["True","False"]}
-    selectDicts.append(inplace)
- 
-    #get_select_defaults(grid_input_form,
-    #                    dt_data_type_dn_input_id,
-    #                    dt_data_type_dn_input_idList,
-    #                    dt_data_type_dn_input_typeList,
-    #                    selectDicts)
-    
-    
-    if(is_numeric_col(df,colname)) :
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
+        gridclasses     =   ["dfc-left","dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [uniques_html,uniques_heading_html,find_values_html]
         
-        if(withdt) :
-        
-            get_select_defaults(grid_input_form,
-                                dt_data_type_fn_input_id,
-                                dt_data_type_fn_input_idList,
-                                dt_data_type_fn_input_typeList,
-                                selectDicts)
+        display_generic_grid("col-change-datatype-uniques-wrapper",gridclasses,gridhtmls) 
             
-        else :
-            
-            get_select_defaults(grid_input_form,
-                                ndt_data_type_fn_input_id,
-                                ndt_data_type_fn_input_idList,
-                                ndt_data_type_fn_input_typeList,
-                                selectDicts)
-            
-    
     else :
+        gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [uniques_html,uniques_heading_html,find_values_html]
+        
+        display_generic_grid("col-change-datatype-uniques-pop-up-wrapper",gridclasses,gridhtmls) 
     
-        if(withdt) :
+    print("\n")
+    
+    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
+    col_stats_html  =   display_col_stats(df,colname,False,True)
+
+    nans            =   df[colname].isnull().sum()
+    
+    if(nans > 0) :
+        change_dt_html  =   get_datatype_display(df,colname,True,False,cfg.DataTransform_ID)
+        common_column_heading_html  =   "<div>Data Type Change Parameters</div><br>"
+    else :
+        change_dt_html  =   get_datatype_display(df,colname,False,False,cfg.DataTransform_ID)
+        common_column_heading_html  =   "<br><br><div>Data Type Change Parameters</div><br>"
+     
+        
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
+        gridclasses     =   ["dfc-left","dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [col_stats_html,common_column_heading_html,change_dt_html]
+        
+        display_generic_grid("col-change-datatype-dt-wrapper",gridclasses,gridhtmls) 
             
-            get_select_defaults(grid_input_form,
-                                dt_nn_fn_data_type_input_id,
-                                dt_nn_fn_data_type_input_idList,
-                                dt_nn_fn_data_type_input_typeList,
-                                selectDicts)
-            
-        else :
-            
-            get_select_defaults(grid_input_form,
-                                ndt_nn_fn_data_type_input_id,
-                                ndt_nn_fn_data_type_input_idList,
-                                ndt_nn_fn_data_type_input_typeList,
-                                selectDicts)
+    else :
+        gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
+        gridhtmls       =   [col_stats_html,common_column_heading_html,change_dt_html]
+        
+        display_generic_grid("col-change-datatype-dt-pop-up-wrapper",gridclasses,gridhtmls)
+
     
-    grid_input_form.set_gridwidth(340)
-    grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":80, "left-margin":35})
-    
-    return(grid_input_form.get_html())
-    
-    
-def get_datatype_display(df,colname,noButtons,dfc_id) :
+def get_datatype_display(df,colname,nansflag,nadropflag,dfc_id) :
     """
     * -------------------------------------------------------------------------- 
     * function : get the fillna html
@@ -2328,47 +2714,84 @@ def get_datatype_display(df,colname,noButtons,dfc_id) :
     * --------------------------------------------------------
     """
     
-    if(noButtons) :
-
-        grid_input_form     =   InputForm(dt_data_type_nb_input_id,
-                                          dt_data_type_nb_input_idList,
-                                          dt_data_type_nb_input_labelList,
-                                          dt_data_type_nb_input_typeList,
-                                          dt_data_type_nb_input_placeholderList,
-                                          dt_data_type_nb_input_jsList,
-                                          dt_data_type_nb_input_reqList,
-                                          True)
-                
+    #print("get_datatype_display",len(df),colname,nansflag,dfc_id)
+    
+    if(nansflag) :
+        
+        if(nadropflag) :
+            
+            grid_input_form     =   InputForm(dt_drop_nans_data_type_input_id,
+                                              dt_drop_nans_data_type_input_idList,
+                                              dt_drop_nans_data_type_input_labelList,
+                                              dt_drop_nans_data_type_input_typeList,
+                                              dt_drop_nans_data_type_input_placeholderList,
+                                              dt_drop_nans_data_type_input_jsList,
+                                              dt_drop_nans_data_type_input_reqList)
+            
+        else :
+        
+            grid_input_form     =   InputForm(dt_nans_data_type_input_id,
+                                              dt_nans_data_type_input_idList,
+                                              dt_nans_data_type_input_labelList,
+                                              dt_nans_data_type_input_typeList,
+                                              dt_nans_data_type_input_placeholderList,
+                                              dt_nans_data_type_input_jsList,
+                                              dt_nans_data_type_input_reqList)
+        
     else :
-                
+    
         grid_input_form     =   InputForm(dt_data_type_input_id,
                                           dt_data_type_input_idList,
                                           dt_data_type_input_labelList,
                                           dt_data_type_input_typeList,
                                           dt_data_type_input_placeholderList,
-                                          get_dt_js_list(dt_data_type_input_jsList,dfc_id),
-                                          dt_data_type_input_reqList,
-                                          True)
+                                          dt_data_type_input_jsList,
+                                          dt_data_type_input_reqList)
     
     selectDicts     =   []
+    
+    current_df      =   df#cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    colnames        =   current_df.columns.tolist()
+    cnames          =   {"default":colname,"list": colnames, "callback":"change_dt_col_callback"}
+    selectDicts.append(cnames)
     
     data_type_id    =   get_datatype_id(df[colname].dtype)
     data_type_str   =   get_datatype_str(data_type_id)
     data_type_str   =   data_type_str.lstrip("numpy.")
-    print("get_datatype_display",data_type_id,data_type_str)
+
     from dfcleanser.common.common_utils import get_datatypes_list      
     dtypes          =   {"default":data_type_str,"list":get_datatypes_list(False)}
-    
     selectDicts.append(dtypes)
     
+    if(nansflag) :
+        
+        if(nadropflag) :
+            
+            nanopts     =   {"default":"dropna","list": ["fillna","dropna"], "callback":"change_na_option_callback"}
+            selectDicts.append(nanopts)
+            
+            dropopts     =   {"default":"any","list": ["any","all"]}
+            selectDicts.append(dropopts)
+            
+            get_select_defaults(grid_input_form,
+                                dt_drop_nans_data_type_input_id,
+                                dt_drop_nans_data_type_input_idList,
+                                dt_drop_nans_data_type_input_typeList,
+                                selectDicts)
+            
+        else :
+            
+            nanopts     =   {"default":"fillna","list": ["fillna","dropna"], "callback":"change_na_option_callback"}
+            selectDicts.append(nanopts)
+            
+            methodopts     =   {"default":"None","list": ["None","backfill","bfill","pad","ffill"]}
+            selectDicts.append(methodopts)
     
-    if(noButtons) :    
- 
-        get_select_defaults(grid_input_form,
-                            dt_data_type_nb_input_id,
-                            dt_data_type_nb_input_idList,
-                            dt_data_type_nb_input_typeList,
-                            selectDicts)
+            get_select_defaults(grid_input_form,
+                                dt_nans_data_type_input_id,
+                                dt_nans_data_type_input_idList,
+                                dt_nans_data_type_input_typeList,
+                                selectDicts)
         
     else :
         
@@ -2379,79 +2802,16 @@ def get_datatype_display(df,colname,noButtons,dfc_id) :
                             selectDicts)
         
     #grid_input_form.set_custombwidth(80)
-    grid_input_form.set_gridwidth(340)
-    grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":80, "left-margin":35})
+    grid_input_form.set_gridwidth(480)
+    grid_input_form.set_shortForm(True)
+    grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":90, "left-margin":1})
+    
+    #grid_input_form.dump()
         
     return(grid_input_form.get_html())
 
 
-def display_dropna(df,colname,withdt,dfc_id) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display dropna form
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    uniques_html    =   display_column_uniques(df,colname,False)        
-
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(df,colname,False,False)
-    
-    dropna_html     =   get_dropna_display(withdt)
-    
-    heading_html    =   "<div>Drop na Parameters</div><br>"
-
-    gridclasses     =   ["dfc-top","dfc-middle","dfcleanser-common-grid-header","dfc-bottom"]
-    gridhtmls       =   [uniques_html,col_stats_html,heading_html,dropna_html]
-
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
-        display_generic_grid("col-change-datatype-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("col-change-datatype-pop-up-wrapper",gridclasses,gridhtmls)
-                    
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-def display_fillna(df,colname,withdt,dfc_id) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display dropna form
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    uniques_html    =   display_column_uniques(df,colname,False)        
-
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(df,colname,False,False)
-    
-    fillna_html     =   get_fillna_display(df,colname,withdt)
-    
-    heading_html    =   "<div>Fill na Parameters</div><br>"
-
-    gridclasses     =   ["dfc-top","dfc-middle","dfcleanser-common-grid-header","dfc-bottom"]
-    gridhtmls       =   [uniques_html,col_stats_html,heading_html,fillna_html]
-
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
-        display_generic_grid("col-change-datatype-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("col-change-datatype-pop-up-wrapper",gridclasses,gridhtmls)
-                    
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-def display_convert_datatype(df,colname,dnflag,displayBase,dfc_id) : 
+def display_convert_datatype(df,colname,fillflag,dropflag,dfc_id) : 
     """
     * -------------------------------------------------------------------------- 
     * function : display column change data type
@@ -2463,75 +2823,187 @@ def display_convert_datatype(df,colname,dnflag,displayBase,dfc_id) :
     *  N/A
     * --------------------------------------------------------
     """
-  
-    if(displayBase) :
-        display_base_data_transform_columns_taskbar()
+
+    print("display_convert_datatype",len(df),colname,fillflag,dropflag,dfc_id)
     
     cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colname) 
     
-    uniques_html    =   display_column_uniques(df,colname,False)        
 
     from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(df,colname,False,False)
+    col_stats_html  =   display_col_stats(df,colname,False,True)
     
     nans            =   df[colname].isnull().sum()
         
     if(nans > 0) :
         
-        if(dnflag) :  
+        if(fillflag) :  
+             dt_html     =   get_datatype_display(df,colname,True,False,dfc_id)
             
-            dropna_html     =   get_dropna_display(True,dfc_id)
-        
         else :
             
-            fillna_html     =   get_fillna_display(df,colname,True,dfc_id)
-            
-        dt_html     =   get_datatype_display(df,colname,True,dfc_id)
+            if(dropflag) :  
+                dt_html     =   get_datatype_display(df,colname,True,True,dfc_id)
+                
+            else :
+                dt_html     =   get_datatype_display(df,colname,True,False,dfc_id)
 
     else :
  
-        dt_html     =   get_datatype_display(df,colname,False,dfc_id)
-
+        dt_html     =   get_datatype_display(df,colname,False,False,dfc_id)
+        
     common_column_heading_html      =   "<div>Data Type Change Parameters</div><br>"
      
-    print("\n")
-
     if(nans > 0) :    
 
-        gridclasses     =   ["dfc-top","dfc-middle","dfcleanser-common-grid-header","dfc-bottom","dfc-footer"]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-middle","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,col_stats_html,dt_html]
         
-        if(dnflag) :
-            gridhtmls       =   [uniques_html,col_stats_html,common_column_heading_html,dt_html,dropna_html]
-        else :
-            gridhtmls       =   [uniques_html,col_stats_html,common_column_heading_html,dt_html,fillna_html]
-    
     else :
         
-        gridclasses     =   ["dfc-top","dfc-middle","dfcleanser-common-grid-header","dfc-bottom"]
-        gridhtmls       =   [uniques_html,col_stats_html,common_column_heading_html,dt_html]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-middle","dfc-footer"]
+        gridhtmls       =   [common_column_heading_html,col_stats_html,dt_html]
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
-        
-        if(nans > 0) :  
-            display_generic_grid("col-change-datatype-fn-wrapper",gridclasses,gridhtmls) 
-        else :
-            display_generic_grid("col-change-datatype-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("col-change-datatype-transform-wrapper",gridclasses,gridhtmls) 
             
     else :
-        
-        if(nans > 0) :  
-            display_generic_grid("col-change_datatype-fn-pop-up-wrapper",gridclasses,gridhtmls) 
-        else :
-            display_generic_grid("col-change-datatype-pop-up-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("col-change-datatype-transform-pop-up-wrapper",gridclasses,gridhtmls) 
                     
     from dfcleanser.common.display_utils import display_pop_up_buffer
     display_pop_up_buffer()
-
     
-def display_copy_column(colid) :
+
+def get_compatable_dtypes(df,colname) : 
     """
     * -------------------------------------------------------------------------- 
-    * function : display copy column parms
+    * function : get compatable data types
+    * 
+    * parms :
+    *  df        -   dataframe
+    *  colname   -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    all_dtypes          =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64",
+                             "np.float16","np.float32","np.float32",
+                             "datetime.datetime","datetime.date","datetime.time","datetime.timedelta",
+                             "np.datetime64","np.timedelta","pd.Timestamp",
+                             "int","float","str","onject"]
+    
+    check_dtypes        =   get_check_dtypes(df,colname)
+    
+    compatable_dtypes   =   []
+    
+    for i in range(len(all_dtypes)) :
+        
+        if( not(all_dtypes[i] in check_dtypes)) :
+            compatable_dtypes.append(all_dtypes[i])
+            
+    return(compatable_dtypes)
+
+    
+def get_check_dtypes(df,colname) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display check data type compatability
+    * 
+    * parms :
+    *  df        -   dataframe
+    *  colname   -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    import numpy as np
+    import pandas as pd
+    import datetime
+    
+    col_dtype           =   df[colname].dtype
+    check_dtypes_list   =   []
+    
+    if(col_dtype == np.int8) :
+        check_dtypes_list     =   ["np.uint8"]    
+        
+    elif(col_dtype == np.int16) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.uint16"]    
+        
+    elif(col_dtype == np.int32) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.uint32","np.float16","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.int64) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.int32","np.uint32","np.uint64","np.float16","np.float32","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.uint8) :
+        check_dtypes_list     =   ["np.int8"]    
+        
+    elif(col_dtype == np.uint16) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16"]    
+        
+    elif(col_dtype == np.uint32) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","int","np.float16","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.uint64) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.int64","np.uint32","int","np.int64","np.float16","np.float32","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.float16) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","int","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.float32) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","int","np.float16","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == np.float64) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","int","np.float16","np.float32","datetime.timedelta","np.timedelta"]    
+
+    elif(col_dtype == object) :
+        print("getting object list")
+        check_dtypes_list     =  ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","np.float16","np.float32","np.float64","datetime.datetime","datetime.date","datetime.time","np.datetime64","pd.Timestamp","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == datetime.datetime) :
+        print("getting datetime.datetime")
+        check_dtypes_list     =   ["np.datetime64","pd.timestamp"]    
+        
+    elif(col_dtype == datetime.date) :
+        check_dtypes_list     =   ["datetime.datetime","np.datetime64","pd.timestamp"]    
+        
+    elif(col_dtype == datetime.time) :
+        check_dtypes_list     =   ["datetime.datetime","np.datetime64","pd.timestamp"]    
+        
+    elif(col_dtype == datetime.timedelta) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64"] 
+        
+    elif(col_dtype == np.datetime64) :
+        check_dtypes_list     =   ["datetime.datetime","pd.timestamp"]    
+        
+    elif(col_dtype == np.timedelta) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64"] 
+
+    elif(col_dtype == pd.Timestamp) :
+        check_dtypes_list     =   ["datetime.datetime","np.datetime64"] 
+
+        
+    elif(col_dtype == int) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.uint32","np.float16","datetime.timedelta","np.timedelta"]    
+        
+    elif(col_dtype == float) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","np.float16","datetime.timedelta","np.timedelta"]    
+
+        
+    elif(col_dtype == str) :
+        check_dtypes_list     =   ["np.int8","np.uint8","np.int16","np.uint16","np.int32","np.uint32","np.int64","np.uint64","np.float16","np.float32","np.float64","datetime.datetime","datetime.date","datetime.time","np.datetime64","pd.Timestamp","datetime.timedelta","np.timedelta"]    
+        
+    
+    return(check_dtypes_list)    
+    
+
+def display_check_compatability(parms,uniques=False) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display check data type compatability
     * 
     * parms :
     *  colid      -   column name
@@ -2541,415 +3013,89 @@ def display_copy_column(colid) :
     * --------------------------------------------------------
     """
     
-    if(cfg.get_config_value(cfg.COPY_COL_TO_KEY) == None) :
-        cfg.set_config_value(cfg.COPY_COL_TO_KEY,colid)
-        cfg.drop_config_value(cfg.COPY_COL_FROM_KEY)
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    
+    if(parms is None) :
+        colname     =   cfg.get_config_value(cfg.COMPAT_COL_KEY)
     else :
-        cfg.set_config_value(cfg.COPY_COL_FROM_KEY,colid)
+        colname     =   parms[0]
+        cfg.set_config_value(cfg.COMPAT_COL_KEY,colname)
+        
+    if(uniques) :
+        from dfcleanser.data_cleansing.data_cleansing_widgets import get_unique_col_html
+        opstat  =   opStatus()
+        get_unique_col_html(df,colname,opstat)
+    
+    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
+    col_stats_html  =   display_col_stats(df,colname,False,True)
+    
+    if(is_numeric_col(df,colname)) :
+        
+        grid_input_form     =   InputForm(dt_check_data_type_input_id,
+                                          dt_check_data_type_input_idList,
+                                          dt_check_data_type_input_labelList,
+                                          dt_check_data_type_input_typeList,
+                                          dt_check_data_type_input_placeholderList,
+                                          dt_check_data_type_input_jsList,
+                                          dt_check_data_type_input_reqList)
+        
+    else :
+        
+        grid_input_form     =   InputForm(dt_str_check_data_type_input_id,
+                                          dt_str_check_data_type_input_idList,
+                                          dt_str_check_data_type_input_labelList,
+                                          dt_str_check_data_type_input_typeList,
+                                          dt_str_check_data_type_input_placeholderList,
+                                          dt_str_check_data_type_input_jsList,
+                                          dt_str_check_data_type_input_reqList)
+    
+    selectDicts     =   []
+    
+    colnames        =   df.columns.tolist()
+    cnames          =   {"default":colname,"list": colnames, "callback":"change_col_for_check_callback"}
+    selectDicts.append(cnames)
 
-    copyParms = []
-    if(not(cfg.get_config_value(cfg.COPY_COL_TO_KEY) == None)) : 
-        copyParms.append(cfg.get_config_value(cfg.COPY_COL_TO_KEY))
+    check_dtypes    =   get_check_dtypes(df,colname)     
+    dtypes          =   {"default":check_dtypes[0],"list":check_dtypes, "size":10}
+    selectDicts.append(dtypes)
+    
+    get_select_defaults(grid_input_form,
+                        dt_check_data_type_input_id,
+                        dt_check_data_type_input_idList,
+                        dt_check_data_type_input_typeList,
+                        selectDicts)
+    
+    grid_input_form.set_gridwidth(420)
+    grid_input_form.set_shortForm(True)
+    grid_input_form.set_buttonstyle({"font-size":13, "height":75, "width":100, "left-margin":1})
+
+    compatable_dtypes   =   get_compatable_dtypes(df,colname)
+    compatable_str      =   str(compatable_dtypes)
+    
+    compatable_parms    =   [str(colname),str(check_dtypes[0]),compatable_str]
+    
+    cfg.set_config_value(dt_check_data_type_input_id + "Parms",compatable_parms)
+    cfg.set_config_value(dt_check_data_type_input_id + "ParmsProtect",[False,False,True])
+
+    check_html  =   grid_input_form.get_html()   
+        
+    common_column_heading_html      =   "<div>Check Datatype Compatability Parameters</div><br>"
+     
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+    gridhtmls       =   [common_column_heading_html,col_stats_html,check_html]
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
+        display_generic_grid("check-compatability-wrapper",gridclasses,gridhtmls) 
+            
     else :
-        copyParms.append("")
+        display_generic_grid("check-compatability-pop-up-wrapper",gridclasses,gridhtmls) 
                     
-    if(not(cfg.get_config_value(cfg.COPY_COL_FROM_KEY) == None)) : 
-        copyParms.append(cfg.get_config_value(cfg.COPY_COL_FROM_KEY))
-    else :
-        copyParms.append("")
-
-    if( (len(copyParms[0]) > 0) or (len(copyParms[1])) ) :  
-        cfg.set_config_value(copy_columns_input_id+"Parms",copyParms)
-
-
-    grid_input_form     =   InputForm(copy_columns_input_id,
-                                      copy_columns_input_idList,
-                                      copy_columns_input_labelList,
-                                      copy_columns_input_typeList,
-                                      copy_columns_input_placeholderList,
-                                      copy_columns_input_jsList,
-                                      copy_columns_input_reqList,
-                                      True)
-    
-    return(grid_input_form)
-       
-    #grid_input_form.set_custombwidth(80)
-    #grid_input_form.set_gridwidth(280)
-    
-    #grid_input_html   =   grid_input_form.get_html()
-    
-    #gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-    #gridhtmls       =   [common_column_heading_html,grid_input_html]
-    
-    #if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        #display_generic_grid("col-narrow-wrapper",gridclasses,gridhtmls)
-    #else :
-        #display_generic_grid("col-narrow-pop-up-wrapper",gridclasses,gridhtmls)
-
-    #from dfcleanser.common.display_utils import display_pop_up_buffer
-    #display_pop_up_buffer()
-    
-
-def display_mapping_col(df,colname) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display cols table to map from
-    * 
-    * parms :
-    *  df       -   dataframe
-    *  colname  -   column name
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    cfg.set_config_value(cfg.MAP_TRANSFORM_COL_NAME_KEY,colname)
-    
-    counts  =   df[colname].value_counts().to_dict()
-    uniques =   list(counts.keys())
-
-    if(is_numeric_col(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),colname)) :
-        uniques.sort()
-
-    keyslist = ""
-            
-    for i in range(len(uniques)) :
-        keyslist = (keyslist + str(uniques[i])) 
-        if(not((i+1) == len(uniques))) :
-            keyslist = (keyslist + str(","))
-            
-    parmslist = []
-            
-    parmslist.append("")
-    parmslist.append("")
-    parmslist.append(keyslist)
-    parmslist.append("")
-        
-    parmsProtect = [False,False,True,False]
-        
-    cfg.set_config_value(transform_map_input_id+"Parms",parmslist)
-    cfg.set_config_value(transform_map_input_id+"ParmsProtect",parmsProtect)
-
-    map_form    =   InputForm(transform_map_input_id,
-                              transform_map_input_idList,
-                              transform_map_input_labelList,
-                              transform_map_input_typeList,
-                              transform_map_input_placeholderList,
-                              transform_map_input_jsList,
-                              transform_map_input_reqList)
-    
-    selectDicts     =   []
-    mapsel     =   {"default" : "True",
-                    "list" : ["True","False"]}
-    selectDicts.append(mapsel)
-           
-    get_select_defaults(map_form,
-                        transform_map_input_id,
-                        transform_map_input_idList,
-                        transform_map_input_typeList,
-                        selectDicts)
-
-    return(map_form)
-
-def display_apply_fn_inputs(colname) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the apply function to column parms
-    * 
-    * parms :
-    *  colname  -   column name
-    *  genfuncs -   display generic funcs flag
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                          colname,
-                                          False,
-                                          True)
-        
-    selectDicts     =   []
-    lambdaflag      =   {"default":"True","list":["True","False"],"callback":"get_gf_fn"}
-    selectDicts.append(lambdaflag)
-
-    from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedlambdas
-    lambdas         =   {"default":reservedlambdas[0],"list":reservedlambdas,"callback":"get_lambda_fn"}
-    selectDicts.append(lambdas)
-    
-    applyfn_input_form = InputForm(apply_column_lambda_input_id,
-                                   apply_column_lambda_input_idList,
-                                   apply_column_lambda_input_labelList,
-                                   apply_column_lambda_input_typeList,
-                                   apply_column_lambda_input_placeholderList,
-                                   apply_column_lambda_input_jsList,
-                                   apply_column_lambda_input_reqList)
-        
-    get_select_defaults(applyfn_input_form,
-                        apply_column_lambda_input_id,
-                        apply_column_lambda_input_idList,
-                        apply_column_lambda_input_typeList,
-                        selectDicts)
-        
-    applyfn_input_form.set_buttonstyle({"font-size":13, "height":75, "width":75, "left-margin":0})
-    applyfn_input_form.set_gridwidth(480)
-    applyfn_input_form.set_shortForm(True)
-    applyfn_input_form.set_fullparms(True)
-    
-    currenttransformdf  =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF) 
-    cfg.set_config_value(apply_column_lambda_input_id+"Parms",[currenttransformdf,colname,"","",""])
-        
-    applyfn_input_html = ""
-    applyfn_input_html = applyfn_input_form.get_html()
-        
-    applyfn_heading_html      =   "<div>" + apply_column_lambda_input_title + "</div><br>"
-
-    gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [col_stats_html,applyfn_heading_html,applyfn_input_html]
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("generic-gf-transform-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("generic-gf-transform-pop-up-wrapper",gridclasses,gridhtmls)
-
-    applyfn_notes_html        =   "<div style='text-align:center; margin-left:85px; width:340px; border: 1px solid #67a1f3;'>*dataframe_to_apply_fn_to is substituted for 'df'.<br>*column_to_apply_fn_to is substituted for 'dfcolname'.</div><br>"
-
-    gridclasses     =   ["dfc-top"]
-    gridhtmls       =   [applyfn_notes_html]
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("generic-gf-transform-notes-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("generic-gf-transform-notes-pop-up-wrapper",gridclasses,gridhtmls)
-
     from dfcleanser.common.display_utils import display_pop_up_buffer
     display_pop_up_buffer()
 
 
-       
-def display_apply_fn_gf_inputs(colname,fromSelect=False) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the apply generic function to column parms
-    * 
-    * parms :
-    *  colname  -   column name
-    *  genfuncs -   display generic funcs flag
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                          colname,
-                                          False,
-                                          True)
-        
-    selectDicts     =   []
-        
-    from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_list
-    funcs_list  =   get_genfunc_list()
-        
-    funcs           =   []
-    funcs.append(" ")
-        
-    if(not (funcs_list == None)) :
-        for i in range(len(funcs_list)) :
-            funcs.append(funcs_list[i])
-        
-    funclist    =   {"default":" ","list":funcs, "callback":"get_selected_value"}
-    selectDicts.append(funclist)
-
-    applyfn_input_form = InputForm(apply_column_gf_input_id,
-                                   apply_column_gf_input_idList,
-                                   apply_column_gf_input_labelList,
-                                   apply_column_gf_input_typeList,
-                                   apply_column_gf_input_placeholderList,
-                                   apply_column_gf_input_jsList,
-                                   apply_column_gf_input_reqList)
-        
-    get_select_defaults(applyfn_input_form,
-                        apply_column_gf_input_id,
-                        apply_column_gf_input_idList,
-                        apply_column_gf_input_typeList,
-                        selectDicts)
-        
-    applyfn_input_form.set_buttonstyle({"font-size":13, "height":75, "width":75, "left-margin":0})
-    applyfn_input_form.set_gridwidth(480)
-    applyfn_input_form.set_shortForm(True)
-    applyfn_input_form.set_fullparms(True)
-    
-    if(not (fromSelect)) :
-        currenttransformdf  =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF) 
-        cfg.set_config_value(apply_column_gf_input_id+"Parms",[currenttransformdf,colname,"","","",""])
-        
-    applyfn_input_html = ""
-    applyfn_input_html = applyfn_input_form.get_html()
-        
-    applyfn_heading_html      =   "<div>" + apply_column_gf_input_title + "</div><br>"
-
-    gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [col_stats_html,applyfn_heading_html,applyfn_input_html]
-    
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("generic-gf-transform-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("generic-gf-transform-pop-up-wrapper",gridclasses,gridhtmls)
-
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-def display_apply_fn_gf_det_inputs(colname,fromSelect=False) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the apply generic function to column with desc 
-    * 
-    * parms :
-    *  colname  -   column name
-    *  genfuncs -   display generic funcs flag
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),
-                                          colname,
-                                          False,
-                                          True)
-        
-    selectDicts     =   []
-        
-    from dfcleanser.sw_utilities.sw_utility_genfunc_widgets import get_genfunc_list
-    funcs_list  =   get_genfunc_list()
-        
-    funcs           =   []
-    funcs.append(" ")
-        
-    if(not (funcs_list == None)) :
-        for i in range(len(funcs_list)) :
-            funcs.append(funcs_list[i])
-        
-    funclist    =   {"default":" ","list":funcs, "callback":"get_selected_value"}
-    selectDicts.append(funclist)
-
-    applyfn_input_form = InputForm(apply_column_gf_det_input_id,
-                                   apply_column_gf_det_input_idList,
-                                   apply_column_gf_det_input_labelList,
-                                   apply_column_gf_det_input_typeList,
-                                   apply_column_gf_det_input_placeholderList,
-                                   apply_column_gf_det_input_jsList,
-                                   apply_column_gf_det_input_reqList)
-        
-    get_select_defaults(applyfn_input_form,
-                        apply_column_gf_det_input_id,
-                        apply_column_gf_det_input_idList,
-                        apply_column_gf_det_input_typeList,
-                        selectDicts)
-        
-    applyfn_input_form.set_buttonstyle({"font-size":13, "height":75, "width":75, "left-margin":0})
-    applyfn_input_form.set_gridwidth(480)
-    applyfn_input_form.set_shortForm(True)
-    applyfn_input_form.set_fullparms(True)
-    
-    if(not (fromSelect)) :
-        fparms     =   cfg.get_config_value(apply_column_gf_input_id + "Parms")
-
-        from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_df_function_source
-        code = get_df_function_source(fparms[3],sourceOnly=False)
-        fparms.append(code)
-        cfg.set_config_value(apply_column_gf_det_input_id + "Parms",fparms)
-        
-    applyfn_input_html = ""
-    applyfn_input_html = applyfn_input_form.get_html()
-        
-    applyfn_heading_html      =   "<div>" + apply_column_gf_input_title + "</div><br>"
-
-    gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [col_stats_html,applyfn_heading_html,applyfn_input_html]
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("generic-gf-transform-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("generic-gf-transform-pop-up-wrapper",gridclasses,gridhtmls)
-
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-def display_apply_fn_sel_inputs(parms) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the selected apply function
-    * 
-    * parms :
-    *  parms    -   transform parms
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    print("APPLYING_SEL_FUN",parms)
-    ftitle = parms[1]
-    cparms      =   cfg.get_config_value(apply_column_gf_input_id+"Parms")
-    colname     =   cparms[0]
-        
-    from dfcleanser.sw_utilities.sw_utility_genfunc_control import get_generic_function, get_generic_function_desc
-    from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_function_call,is_lambda_function
-    gt_func         =   get_generic_function(ftitle)
-    gt_func_desc    =   get_generic_function_desc(ftitle)
-        
-    if(not (gt_func == None)) :
-            
-        lambda_flag     =   is_lambda_function(ftitle)
-        if(lambda_flag) :   lambda_val      =   "True"
-        else :              lambda_val      =   "False"
-        
-        func_parms_dict     =   {}
-        func_parms_dict.update({"dftitle":cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)})
-        func_parms_dict.update({"dfcolname":colname})
-        func_parms_dict.update({"newcolname":None})
-            
-        func_call   =   get_function_call(ftitle,func_parms_dict)
-          
-        import dfcleanser.sw_utilities.sw_utility_genfunc_model as gfm
-        if(ftitle in gfm.reservedfunctions) :
-            from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule
-            fparms = [colname,
-                      reservedfunctionsmodule,
-                      ftitle,
-                      lambda_val,
-                      func_call,
-                      gt_func_desc]
-                
-        else :
-            fparms = [colname,
-                      gt_func.get_func_module(),
-                      gt_func.get_func_title(),
-                      "",
-                      "",
-                      gt_func.get_func_code()]
-                
-    cfg.set_config_value(apply_column_gf_input_id+"Parms",fparms)
-
-    display_apply_fn_gf_inputs(colname,True)
-
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
-
-
-
-
-
-
-
-
-
+#
 
 
 

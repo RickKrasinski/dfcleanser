@@ -15,11 +15,11 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_transform.data_transform_model as dtm
 
-from dfcleanser.common.html_widgets import (get_html_spaces, maketextarea, ButtonGroupForm, InputForm) 
+from dfcleanser.common.html_widgets import (get_html_spaces, maketextarea, ButtonGroupForm, InputForm, new_line) 
 
 from dfcleanser.common.table_widgets import dcTable
 
-from dfcleanser.common.common_utils import (get_parms_for_input, get_select_defaults, display_generic_grid)
+from dfcleanser.common.common_utils import (get_select_defaults, display_generic_grid)
 
 from dfcleanser.common.display_utils import display_column_names
 
@@ -40,19 +40,19 @@ dataframe_transform_tb_keyTitleList         =   ["Save </br>Column</br> Names",
                                                  "Change</br>Column </br>Names",
                                                  "Set </br> Index",
                                                  "Reset</br> Index",
-                                                 "Drop</br> Index",
+                                                 "Append</br>Index",
                                                  "Sort </br>Index",
                                                  "Drop</br>Duplicate</br> Rows",
                                                  "Return","Help"]
 
-dataframe_transform_tb_jsList               =   ["df_transform_task_bar_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.ADD_COLUMN_NAMES_ROW)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.CHANGE_COLUMN_NAMES)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.SET_NEW_ROW_IDS_COL)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.RESET_ROW_IDS)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.DROP_ROW_IDS_COL)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.SORT_ROWS)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.DROP_DUPLICATE_ROWS)+")",
+dataframe_transform_tb_jsList               =   ["df_transform_task_bar_callback("+str(dtm.DISPLAY_SAVE_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_ADD_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_CHANGE_COLUMN_NAMES)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_SET_DF_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_RESET_DF_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_APPEND_TO_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_SORT_DF_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_DROP_DUPLICATE_ROWS)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
 
@@ -69,11 +69,11 @@ dataframe_transform_tbA_keyTitleList        =   ["Save </br>Column</br> Names",
                                                  "Set </br>Index",
                                                  "Reset</br>Index"]
 
-dataframe_transform_tbA_jsList              =   ["df_transform_task_bar_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.ADD_COLUMN_NAMES_ROW)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.CHANGE_COLUMN_NAMES)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.SET_NEW_ROW_IDS_COL)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.RESET_ROW_IDS)+")"]
+dataframe_transform_tbA_jsList              =   ["df_transform_task_bar_callback("+str(dtm.DISPLAY_SAVE_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_ADD_COLUMN_NAMES_ROW)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_CHANGE_COLUMN_NAMES)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_SET_DF_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_RESET_DF_INDEX)+")"]
 
 dataframe_transform_tbA_centered            =   True
 
@@ -81,14 +81,14 @@ dataframe_transform_tbB_doc_title           =   "DataFrame Transform Options"
 dataframe_transform_tbB_title               =   "DataFrame Transform Options"
 dataframe_transform_tbB_id                  =   "dftransformoptionstbB"
 
-dataframe_transform_tbB_keyTitleList        =   ["Drop</br>Index",
+dataframe_transform_tbB_keyTitleList        =   ["Append</br>Index",
                                                  "Sort</br>Index",
                                                  "Drop</br>Duplicate</br> Rows",
                                                  "Return","Help"]
 
-dataframe_transform_tbB_jsList              =   ["df_transform_task_bar_callback("+str(dtm.DROP_ROW_IDS_COL)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.SORT_ROWS)+")",
-                                                 "df_transform_task_bar_callback("+str(dtm.DROP_DUPLICATE_ROWS)+")",
+dataframe_transform_tbB_jsList              =   ["df_transform_task_bar_callback("+str(dtm.DISPLAY_APPEND_TO_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_SORT_DF_INDEX)+")",
+                                                 "df_transform_task_bar_callback("+str(dtm.DISPLAY_DROP_DUPLICATE_ROWS)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
 
@@ -101,7 +101,7 @@ dataframe_transform_tbB_centered            =   True
 #--------------------------------------------------------------------------
 """
 df_save_row_transform_input_title           =   "Save Column Names Row"
-df_save_row_transform_input_id              =   "savecidrowtransform"
+df_save_row_transform_input_id              =   "savecolnamestransform"
 df_save_row_transform_input_idList          =   ["filesavename",
                                                  None,None,None]
 
@@ -116,11 +116,12 @@ df_save_row_transform_input_placeholderList     = ["enter File name to save colu
                                                    None,None,None]
 
 df_save_row_transform_input_jsList          =    [None,
-                                                 "df_process_cmd_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+",0)",
-                                                 "df_process_cmd_callback("+str(dtm.SAVE_COLUMN_NAMES_ROW)+",1)",
+                                                 "df_process_cmd_callback("+str(dtm.PROCESS_SAVE_COLUMN_NAMES_ROW) + ")",
+                                                 "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_SAVE_COL_NAME_ID) + ")"]
 
 df_save_row_transform_input_reqList         =   [0]
+
 
 """
 #--------------------------------------------------------------------------
@@ -128,7 +129,7 @@ df_save_row_transform_input_reqList         =   [0]
 #--------------------------------------------------------------------------
 """
 df_add_row_transform_input_title            =   "Add Column Names Row"
-df_add_row_transform_input_id               =   "addcidrowtransform"
+df_add_row_transform_input_id               =   "addcolnamestransform"
 df_add_row_transform_input_idList           =   ["filereadname","dfcolsidlist",
                                                  None,None,None]
 
@@ -145,8 +146,8 @@ df_add_row_transform_input_placeholderList  =   ["enter File name to read or bro
                                                  None,None,None]
 
 df_add_row_transform_input_jsList           =   [None,None,
-                                                 "df_process_cmd_callback("+str(dtm.ADD_COLUMN_NAMES_ROW)+",0)",
-                                                 "df_process_cmd_callback("+str(dtm.ADD_COLUMN_NAMES_ROW)+",1)",
+                                                 "df_process_cmd_callback("+str(dtm.PROCESS_ADD_COLUMN_NAMES_ROW) + ")",
+                                                 "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_SET_COL_NAME_ID) + ")"]
 
 df_add_row_transform_input_reqList          =   [0,1]
@@ -160,7 +161,7 @@ df_add_row_transform_input_reqList          =   [0,1]
 df_change_row_transform_input_helpurl       =   "https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html"
 
 df_change_row_transform_input_title         =   "Add Column Names Row"
-df_change_row_transform_input_id            =   "changecidrowtransform"
+df_change_row_transform_input_id            =   "changecolnamestransform"
 df_change_row_transform_input_idList        =   ["dfcolsidlist",
                                                  None,None,None]
 
@@ -175,50 +176,51 @@ df_change_row_transform_input_placeholderList  =   ["modify the current Column N
                                                     None,None,None]
 
 df_change_row_transform_input_jsList        =   [None,
-                                                 "df_process_cmd_callback("+str(dtm.CHANGE_COLUMN_NAMES)+",0)",
-                                                 "df_process_cmd_callback("+str(dtm.CHANGE_COLUMN_NAMES)+",1)",
+                                                 "df_process_cmd_callback("+str(dtm.PROCESS_CHANGE_COLUMN_NAMES) + ")",
+                                                 "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_DF_CHANGE_COL_NAMES_ID) + ")"]
 
 df_change_row_transform_input_reqList       =   [0]
+
 
 """
 #--------------------------------------------------------------------------
 #    dataframe set row ids col inputs
 #--------------------------------------------------------------------------
 """
-df_set_new_col_transform_input_title          =   "Set New Index Column"
-df_set_new_col_transform_input_id             =   "setnewcoltransform"
-df_set_new_col_transform_input_idList         =   ["setnewcolid",
-                                                   "setnewdrop",
-                                                   "setnewappend",
-                                                   "setnewinplace",
-                                                   "setnewverify",
+df_set_index_transform_input_title            =   "Set New Index Column"
+df_set_index_transform_input_id               =   "setnewindextransform"
+df_set_index_transform_input_idList           =   ["newindex_colid",
+                                                   "setnewindex_drop",
+                                                   "setnewindex_inplace",
+                                                   "setnewindex_resultdf",
+                                                   "setnewindex_verify",
                                                    None,None,None]
 
-df_set_new_col_transform_input_labelList      =   ["column_name(s)",
+df_set_index_transform_input_labelList        =   ["column_name(s)",
                                                    "drop",
-                                                   "append",
                                                    "inplace",
+                                                   "result_df_title",
                                                    "verify_integrity",
                                                    "Set</br>Index",
                                                    "Return","Help"]
 
-df_set_new_col_transform_input_typeList       =   ["text","select","select","select","select",
+df_set_index_transform_input_typeList         =   ["text","select","select","text","select",
                                                    "button","button","button"]
 
-df_set_new_col_transform_input_placeholderList =  ["select column name(s) to use as df index column ",
-                                                   "drop df column ",
-                                                   "append to index",
-                                                   "change inplace",
+df_set_index_transform_input_placeholderList  =  ["list or single of column name(s) to use as df index",
+                                                   "drop df column (default : False)",
+                                                   "set index inplace (default True)",
+                                                   "result df title (ignored if inplace = True)",
                                                    "verify integrity",
                                                    None,None,None]
 
-df_set_new_col_transform_input_jsList         =    [None,None,None,None,None,
-                                                    "df_process_cmd_callback("+str(dtm.SET_NEW_ROW_IDS_COL)+",0)",
-                                                    "df_process_cmd_callback("+str(dtm.SET_NEW_ROW_IDS_COL)+",1)",
+df_set_index_transform_input_jsList           =    [None,None,None,None,None,
+                                                    "df_process_cmd_callback("+str(dtm.PROCESS_SET_DF_INDEX) + ")",
+                                                    "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                     "display_help_url('" + str(dfchelp.SET_INDEX ) + "')"]
 
-df_set_new_col_transform_input_reqList        =   [0]
+df_set_index_transform_input_reqList          =   [0,1,2,3]
 
 
 """
@@ -226,67 +228,69 @@ df_set_new_col_transform_input_reqList        =   [0]
 #    dataframe reset row ids col inputs
 #--------------------------------------------------------------------------
 """
-df_reset_col_transform_input_title          =   "Reset Index Column"
-df_reset_col_transform_input_id             =   "resetridcoltransform"
-df_reset_col_transform_input_idList         =   ["resetlevel",
-                                                 "resetdrop",
-                                                 "resetinplace",
-                                                 "resetcollevel",
-                                                 "resetcolfill",
+df_reset_index_transform_input_title        =   "Reset Index Column"
+df_reset_index_transform_input_id           =   "resetindextransform"
+df_reset_index_transform_input_idList       =   ["resetindex_drop",
+                                                 "resetindex_inplace",
+                                                 "resetindex_resultdf",
                                                  None,None,None]
 
-df_reset_col_transform_input_labelList      =   ["level",
-                                                 "drop",
+df_reset_index_transform_input_labelList    =   ["drop",
                                                  "inplace",
-                                                 "col_level",
-                                                 "col_fill",
+                                                 "result_df_title",
                                                  "Reset</br>Index",
                                                  "Return","Help"]
 
-df_reset_col_transform_input_typeList       =   ["text","select","select","text","text",
+df_reset_index_transform_input_typeList     =   ["select","select","text",
                                                  "button","button","button"]
 
-df_reset_col_transform_input_placeholderList =  ["int, str, tuple, or list, default None) ",
-                                                 "drop from df (default : False)",
-                                                 "reset inplace (default : False)",
-                                                 "which level the labels are inserted into (default : 0)",
-                                                 "determines how the other levels are named",
-                                                 None,None,None]
+df_reset_index_transform_input_placeholderList =  ["drop df column(default : True)",
+                                                   "reset inplace (default : False)",
+                                                   "result df title (ignored if inplace = True)",
+                                                   None,None,None]
 
-df_reset_col_transform_input_jsList         =    [None,None,None,None,None,
-                                                  "df_process_cmd_callback("+str(dtm.RESET_ROW_IDS)+",0)",
-                                                  "df_process_cmd_callback("+str(dtm.RESET_ROW_IDS)+",1)",
+df_reset_index_transform_input_jsList       =    [None,None,None,
+                                                  "df_process_cmd_callback("+str(dtm.PROCESS_RESET_DF_INDEX) + ")",
+                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                   "display_help_url('" + str(dfchelp.RESET_INDEX) + "')"]
 
-df_reset_col_transform_input_reqList        =   [0,1,2]
+df_reset_index_transform_input_reqList      =   [0,1,2]
 
 """
 #--------------------------------------------------------------------------
 #    dataframe drop row ids column inputs
 #--------------------------------------------------------------------------
 """
-df_drop_row_ids_transform_input_title         =   "Drop Row Index Column"
-df_drop_row_ids_transform_input_title         =   "Drop Row Index Column"
-df_drop_row_ids_transform_input_id            =   "dropridcoltransform"
-df_drop_row_ids_transform_input_idList        =   ["dropinplace",
+df_append_index_transform_input_title         =   "Append Index Column"
+df_append_index_transform_input_id            =   "appendindextransform"
+df_append_index_transform_input_idList        =   ["appendindex_colid",
+                                                   "appendindex_drop",
+                                                   "appendindex_inplace",
+                                                   "appendindex_resultdf",
                                                    None,None,None]
 
-df_drop_row_ids_transform_input_labelList     =   ["inplace",
+df_append_index_transform_input_labelList     =   ["colnames",
+                                                   "drop",
+                                                   "inplace",
+                                                   "result_df_title",
                                                    "Drop</br>Index",
                                                    "Return","Help"]
 
-df_drop_row_ids_transform_input_typeList      =   ["select",
+df_append_index_transform_input_typeList      =   ["text","select","select","text",
                                                    "button","button","button"]
 
-df_drop_row_ids_transform_input_placeholderList   =  ["drop inplace (default : False)",
+df_append_index_transform_input_placeholderList   =  ["list or single name of columns to append to index",
+                                                      "drop df column (default : False)",
+                                                      "append inplace (default : True)",
+                                                      "result df title (ignored if inplace = True)",
                                                       None,None,None]
 
-df_drop_row_ids_transform_input_jsList        =    [None,
-                                                    "df_process_cmd_callback("+str(dtm.DROP_ROW_IDS_COL)+",0)",
-                                                    "df_process_cmd_callback("+str(dtm.DROP_ROW_IDS_COL)+",1)",
+df_append_index_transform_input_jsList        =    [None,None,None,None,
+                                                    "df_process_cmd_callback("+str(dtm.PROCESS_APPEND_TO_INDEX) + ")",
+                                                    "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                     "display_help_url('" + str(dfchelp.RESET_INDEX) + "')"]
 
-df_drop_row_ids_transform_input_reqList       =   [0]
+df_append_index_transform_input_reqList       =   [0,1,2,3]
 
 
 """
@@ -296,42 +300,42 @@ df_drop_row_ids_transform_input_reqList       =   [0]
 """
 df_sort_row_ids_help_url                       =   "https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.sort_index.html"
 
-df_sort_row_ids_transform_input_title          =   "Sort Row Index Column"
-df_sort_row_ids_transform_input_id             =   "sortrowidcoltransform"
-df_sort_row_ids_transform_input_idList         =   ["dtsortaxis",
-                                                    "dtsortlevel",
-                                                    "dtsortorder",
-                                                    "dtsortinplace",
-                                                    "dtsortkind",
-                                                    "dtsortnaposition",
+df_sort_index_transform_input_title            =   "Sort Row Index Column"
+df_sort_index_transform_input_id               =   "sortindextransform"
+df_sort_index_transform_input_idList           =   ["sortindex_axis",
+                                                    "sortindex_order",
+                                                    "sortindex_inplace",
+                                                    "sortindex_resultdf",
+                                                    "sortindex_sortkind",
+                                                    "sortindex_naposition",
                                                     None,None,None]
 
-df_sort_row_ids_transform_input_labelList      =   ["axis",
-                                                    "level",
+df_sort_index_transform_input_labelList        =   ["axis",
                                                     "ascending",
                                                     "inplace",
+                                                    "result_df_title",
                                                     "kind",
                                                     "na_position",
                                                     "Sort</br>Index",
                                                     "Return","Help"]
 
-df_sort_row_ids_transform_input_typeList       =   ["text","text","select","select","select","select",
+df_sort_index_transform_input_typeList         =   ["text","select","select","text","select","select",
                                                     "button","button","button"]
 
-df_sort_row_ids_transform_input_placeholderList =  ["index, columns to direct sorting",
-                                                    "int or level name or list of ints or list of level names",
+df_sort_index_transform_input_placeholderList  =   ["index, columns to direct sorting",
                                                     "Order of sort : True - ascending - False - descending (default True )",
-                                                    "sort in place (default - False )",
+                                                    "sort inplace (default : True)",
+                                                    "result df title (ignored if inplace = True)",
                                                     "sort method quicksort, mergesort, heapsort (default - quicksort )",
                                                     "where to put nas - first : last (default - last )",
                                                     None,None,None]
 
-df_sort_row_ids_transform_input_jsList         =    [None,None,None,None,None,None,
-                                                     "df_process_cmd_callback("+str(dtm.SORT_ROWS)+",0)",
-                                                     "df_process_cmd_callback("+str(dtm.SORT_ROWS)+",1)",
+df_sort_index_transform_input_jsList           =    [None,None,None,None,None,None,
+                                                     "df_process_cmd_callback("+str(dtm.PROCESS_SORT_DF_INDEX) +")",
+                                                     "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
                                                      "display_help_url('" + str(dfchelp.SORT_INDEX) + "')"]
 
-df_sort_row_ids_transform_input_reqList        =   [0,1,2,3,4]
+df_sort_index_transform_input_reqList          =   [0,1,2,3,4]
 
 
 """
@@ -340,36 +344,43 @@ df_sort_row_ids_transform_input_reqList        =   [0,1,2,3,4]
 #--------------------------------------------------------------------------
 """
 df_drop_dups_transform_input_title          =   "Drop Duplicate Rows"
-df_drop_dups_transform_input_id             =   "dropdridcoltransform"
-df_drop_dups_transform_input_idList         =   ["dtddrcolumnids",
-                                                 "dtddrincexclude",
-                                                 "dtddrkeep",
-                                                 "dtddrinplace",
+df_drop_dups_transform_input_id             =   "dropduplicatetransform"
+df_drop_dups_transform_input_idList         =   ["dropduplicate_colids",
+                                                 "dropduplicate_cexclude",
+                                                 "dropduplicate_keep",
+                                                 "dropduplicate_inplace",
+                                                 "dropduplicate_resultdf",
                                                  None,None,None]
 
 df_drop_dups_transform_input_labelList      =   ["column_names_list",
-                                                 "include_column_Ids_list",
+                                                 "drop_or_save_columns_in_column_names_list",
                                                  "keep",
-                                                 "inplace_dftitle",
+                                                 "inplace",
+                                                 "result_df_title",
                                                  "Drop Duplicate</br>Rows",
                                                  "Return","Help"]
 
-df_drop_dups_transform_input_typeList       =   [maketextarea(3),"select","select","text",
+df_drop_dups_transform_input_typeList       =   [maketextarea(3),"select","select","select","text",
                                                  "button","button","button"]
 
 df_drop_dups_transform_input_placeholderList =  ["enter list of columns to use as keys to identify dups (default blank -  all cols) ",
-                                                 "include or exclude column_names_list (default True : include ) ",
+                                                 "drop or save column_names_list (default : drop ) ",
                                                  "keep occurence (default : False",
-                                                 "df title to return a copy (default - None : inplace)",
+                                                 "drop dups inplace (default : True)",
+                                                 "result df title (ignored if inplace = True)",
                                                  None,None,None]
 
-df_drop_dups_transform_input_jsList         =    [None,None,None,None,
-                                                  "df_process_cmd_callback("+str(dtm.DROP_DUPLICATE_ROWS)+",0)",
-                                                  "df_process_cmd_callback("+str(dtm.DROP_DUPLICATE_ROWS)+",1)",
+df_drop_dups_transform_input_jsList         =    [None,None,None,None,None,
+                                                  "df_process_cmd_callback("+str(dtm.PROCESS_DROP_DUPLICATE_ROWS) +")",
+                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) +")",
                                                   "display_help_url('" + str(dfchelp.DROP_DUPS) + "')"]
 
-df_drop_dups_transform_input_reqList        =   [0]
+df_drop_dups_transform_input_reqList        =   [0,1,2,3,4]
 
+
+datatransform_df_inputs     =   [df_save_row_transform_input_id,df_add_row_transform_input_id,df_change_row_transform_input_id,
+                                 df_set_index_transform_input_id,df_reset_index_transform_input_id,df_append_index_transform_input_id,
+                                 df_sort_index_transform_input_id,df_drop_dups_transform_input_id]
 
 
 """
@@ -416,30 +427,33 @@ def display_dataframe_transform_main() :
 
     display_dataframe_transform_taskbar()    
 
-    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-    display_inspection_data()
-
 def process_dataframe_transform(parms,display=True) :
     from dfcleanser.data_transform.data_transform_dataframe_control import process_df_transform    
     process_df_transform(parms,display=True)
+
+def get_current_df_index(df) :
     
-def get_save_colnames_row_input_parms(inparms) :
-    return(get_parms_for_input(inparms,df_save_row_transform_input_idList))            
+    #from contextlib import redirect_stdout
+    #import io
+    
+    #f = io.StringIO()
+    #with redirect_stdout(f):
+    #    print(df.index)
+        
+    #indices = f.getvalue()   
+    indices = df.index.name
+    if(indices is None) :
+        indices     =   "No indices defined"
+    
+    indices_html        =   "<br>" + new_line
+    indices_html        =   (indices_html + "<div style='text-align:left; width:480px; font-size:12px; font-weight:bold; font-family:arial;'>Current Indices : </div>")
+    indices_html        =   (indices_html + "<div style='text-align:center; width:480px; border: 1px solid #67a1f3; font-size:11px; font-family:arial;'>" + indices + "</div>")
+    indices_html        =   (indices_html + "<br>" + new_line)
+    
+    return(indices_html)
 
-def get_add_colnames_row_input_parms(inparms) :
-    return(get_parms_for_input(inparms,df_add_row_transform_input_idList))            
-
-def get_reset_colnames_row_input_parms(inparms) :
-    return(get_parms_for_input(inparms,df_reset_col_transform_input_idList))            
-
-def get_set_colnames_row_input_parms(inparms) :
-    return(get_parms_for_input(inparms,df_set_new_col_transform_input_idList))            
-
-def get_drop_duplicate_rows_input_parms(inparms) :
-    return(get_parms_for_input(inparms,df_drop_dups_transform_input_idList))            
-
-
-def display_common_df_options(header_html,grid_input_form) :
+    
+def display_common_df_options(df,header_html,grid_input_form) :
     
     display_dataframe_transform_taskbar()
     
@@ -448,27 +462,32 @@ def display_common_df_options(header_html,grid_input_form) :
     grid_input_form.set_gridwidth(440)
     grid_input_form.set_fullparms(True)  
     
-    grid_input_html   =   grid_input_form.get_html()
+    grid_input_html     =   grid_input_form.get_html()
     
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [header_html,grid_input_html]
+    df_index_html       =   get_current_df_index(df)
+    
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+    gridhtmls       =   [header_html,grid_input_html,df_index_html]
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
     else :
         display_generic_grid("df-common-df-pop-up-wrapper",gridclasses,gridhtmls)
 
+    from dfcleanser.common.display_utils import display_pop_up_buffer
+    display_pop_up_buffer()
+   
    
 """
 #--------------------------------------------------------------------------
 #    display dataframe main taskbar widgets
 #--------------------------------------------------------------------------
 """
-def display_dataframe_options(parms) :
+def display_dataframe_options(funcid) :
 
-    funcid = parms[0][0]
+    #funcid = parms[0][0]
 
-    if(funcid == dtm.SAVE_COLUMN_NAMES_ROW) :
+    if(funcid == dtm.DISPLAY_SAVE_COLUMN_NAMES_ROW) :
         
         display_dataframe_transform_taskbar()
         
@@ -504,7 +523,7 @@ def display_dataframe_options(parms) :
             display_generic_grid("df-save-col-names-pop-up-wrapper",gridclasses,gridhtmls)
 
     # add column names row
-    elif(funcid == dtm.ADD_COLUMN_NAMES_ROW) :
+    elif(funcid == dtm.DISPLAY_ADD_COLUMN_NAMES_ROW) :
         
         common_dataframe_heading_html       =   "<div>Add Column Names </div>"
         
@@ -516,10 +535,11 @@ def display_dataframe_options(parms) :
                                                           df_add_row_transform_input_jsList,
                                                           df_add_row_transform_input_reqList)
         
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        display_common_df_options(df,common_dataframe_heading_html,grid_input_form)            
     
  
-    elif(funcid == dtm.CHANGE_COLUMN_NAMES) :
+    elif(funcid == dtm.DISPLAY_CHANGE_COLUMN_NAMES) :
         
         colslist    =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF).columns.tolist()
         import json
@@ -535,21 +555,22 @@ def display_dataframe_options(parms) :
                                                           df_change_row_transform_input_placeholderList,
                                                           df_change_row_transform_input_jsList,
                                                           df_change_row_transform_input_reqList)
-            
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        display_common_df_options(df,common_dataframe_heading_html,grid_input_form)            
         
 
-    elif(funcid == dtm.RESET_ROW_IDS) :
+    elif(funcid == dtm.DISPLAY_RESET_DF_INDEX) :
         
-        common_dataframe_heading_html       =   "<div>Reset Index Column </div>"
+        common_dataframe_heading_html       =   "<div>Reset dataframe Index</div>"
         
-        grid_input_form                     =   InputForm(df_reset_col_transform_input_id,
-                                                          df_reset_col_transform_input_idList,
-                                                          df_reset_col_transform_input_labelList,
-                                                          df_reset_col_transform_input_typeList,
-                                                          df_reset_col_transform_input_placeholderList,
-                                                          df_reset_col_transform_input_jsList,
-                                                          df_reset_col_transform_input_reqList)
+        grid_input_form                     =   InputForm(df_reset_index_transform_input_id,
+                                                          df_reset_index_transform_input_idList,
+                                                          df_reset_index_transform_input_labelList,
+                                                          df_reset_index_transform_input_typeList,
+                                                          df_reset_index_transform_input_placeholderList,
+                                                          df_reset_index_transform_input_jsList,
+                                                          df_reset_index_transform_input_reqList)
         
         selectDicts     =   []
         dropsel         =   {"default" : "False",
@@ -560,37 +581,34 @@ def display_dataframe_options(parms) :
         selectDicts.append(inplacesel)
            
         get_select_defaults(grid_input_form,
-                            df_reset_col_transform_input_id,
-                            df_reset_col_transform_input_idList,
-                            df_reset_col_transform_input_typeList,
+                            df_reset_index_transform_input_id,
+                            df_reset_index_transform_input_idList,
+                            df_reset_index_transform_input_typeList,
                             selectDicts)
 
-        #grid_input_form.set_fullparms(False)
-            
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        display_common_df_options(df,common_dataframe_heading_html,grid_input_form)            
         
 
-    elif(funcid == dtm.SET_NEW_ROW_IDS_COL) :
+    elif(funcid == dtm.DISPLAY_SET_DF_INDEX) :
         
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
         col_names_table.set_note(get_html_spaces(10)+"<b>*</b> Select a Column to use for Index by clicking on Column Name above.")
         col_names_table.set_refParm(str(30))
             
-        col_names_html  =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dfsnriccol",False)
-
-    #elif(funcid == dtm.SET_NEW_ROW_IDS_COL_SEL) :
-
-        set_index_heading_html       =   "<div>Set Index Column </div><br>"
+        col_names_html          =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"setindexcol",False)
+        df_index_html           =   get_current_df_index(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))
+        set_index_heading_html  =   "<div>Set dataframe Index</div><br>"
         
-        cfg.drop_config_value(df_set_new_col_transform_input_id+"Parms")        
+        cfg.drop_config_value(df_set_index_transform_input_id+"Parms")        
         
-        grid_input_form                     =   InputForm(df_set_new_col_transform_input_id,
-                                                          df_set_new_col_transform_input_idList,
-                                                          df_set_new_col_transform_input_labelList,
-                                                          df_set_new_col_transform_input_typeList,
-                                                          df_set_new_col_transform_input_placeholderList,
-                                                          df_set_new_col_transform_input_jsList,
-                                                          df_set_new_col_transform_input_reqList)
+        grid_input_form                     =   InputForm(df_set_index_transform_input_id,
+                                                          df_set_index_transform_input_idList,
+                                                          df_set_index_transform_input_labelList,
+                                                          df_set_index_transform_input_typeList,
+                                                          df_set_index_transform_input_placeholderList,
+                                                          df_set_index_transform_input_jsList,
+                                                          df_set_index_transform_input_reqList)
         
         selectDicts     =   []
         dropsel         =   {"default" : "True",
@@ -607,66 +625,117 @@ def display_dataframe_options(parms) :
         selectDicts.append(verifysel)
            
         get_select_defaults(grid_input_form,
-                            df_set_new_col_transform_input_id,
-                            df_set_new_col_transform_input_idList,
-                            df_set_new_col_transform_input_typeList,
+                            df_set_index_transform_input_id,
+                            df_set_index_transform_input_idList,
+                            df_set_index_transform_input_typeList,
                             selectDicts)
 
         grid_input_form.set_fullparms(False)
              
         display_dataframe_transform_taskbar()
+        print("\n")
     
         grid_input_form.set_shortForm(True)
         grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
-        grid_input_form.set_gridwidth(440)
-        grid_input_form.set_fullparms(True)  
+        grid_input_form.set_gridwidth(480)
+        grid_input_form.set_fullparms(False)  
     
         grid_input_html   =   grid_input_form.get_html()
     
-        gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [col_names_html,set_index_heading_html,grid_input_html]
-    
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-common-df-cols-wrapper",gridclasses,gridhtmls)
+            
+            colsclasses     =   ["dfc-top"]
+            colshtmls       =   [col_names_html]
+            display_generic_grid("df-column-names-wrapper",colsclasses,colshtmls)
+            
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+            gridhtmls       =   [set_index_heading_html,grid_input_html,df_index_html]
+            display_generic_grid("df-index-common-wrapper",gridclasses,gridhtmls)
+            
         else :
-            display_generic_grid("df-common-df-cols-pop-up-wrapper",gridclasses,gridhtmls)
+            
+            gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+            gridhtmls       =   [col_names_html,set_index_heading_html,grid_input_html,df_index_html]
+            display_generic_grid("df-index-common-pop-up-wrapper",gridclasses,gridhtmls)
+            
+        from dfcleanser.common.display_utils import display_pop_up_buffer
+        display_pop_up_buffer()
 
-    elif(funcid == dtm.DROP_ROW_IDS_COL) :
+    elif(funcid == dtm.DISPLAY_APPEND_TO_INDEX) :
         
-        common_dataframe_heading_html       =   "<div>Drop Index Column </div>"
+        display_dataframe_transform_taskbar()
+        print("\n")
         
-        grid_input_form                     =   InputForm(df_drop_row_ids_transform_input_id,
-                                                          df_drop_row_ids_transform_input_idList,
-                                                          df_drop_row_ids_transform_input_labelList,
-                                                          df_drop_row_ids_transform_input_typeList,
-                                                          df_drop_row_ids_transform_input_placeholderList,
-                                                          df_drop_row_ids_transform_input_jsList,
-                                                          df_drop_row_ids_transform_input_reqList)
+        col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
+        col_names_table.set_note(get_html_spaces(10)+"<b>*</b> Select a Column to use for Index by clicking on Column Name above.")
+        col_names_table.set_refParm(str(30))
+            
+        col_names_html                  =   display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"appendindexcol",False)
+        df_index_html                   =   get_current_df_index(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF))
+        common_dataframe_heading_html   =   "<div>Append to dataframe Index </div>"
+        
+        grid_input_form                     =   InputForm(df_append_index_transform_input_id,
+                                                          df_append_index_transform_input_idList,
+                                                          df_append_index_transform_input_labelList,
+                                                          df_append_index_transform_input_typeList,
+                                                          df_append_index_transform_input_placeholderList,
+                                                          df_append_index_transform_input_jsList,
+                                                          df_append_index_transform_input_reqList)
 
         selectDicts     =   []
+        dropsel         =   {"default" : "False",
+                             "list" : ["True","False"]}
+        selectDicts.append(dropsel)
+
         inplacesel      =   {"default" : "False",
                              "list" : ["True","False"]}
         selectDicts.append(inplacesel)
            
         get_select_defaults(grid_input_form,
-                            df_drop_row_ids_transform_input_id,
-                            df_drop_row_ids_transform_input_idList,
-                            df_drop_row_ids_transform_input_typeList,
+                            df_append_index_transform_input_id,
+                            df_append_index_transform_input_idList,
+                            df_append_index_transform_input_typeList,
                             selectDicts)
+        
+        grid_input_form.set_shortForm(True)
+        grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
+        grid_input_form.set_gridwidth(480)
+        grid_input_form.set_fullparms(False)  
+        
+        grid_input_html   =   grid_input_form.get_html()
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+            colsclasses     =   ["dfc-top"]
+            colshtmls       =   [col_names_html]
+            display_generic_grid("df-column-names-wrapper",colsclasses,colshtmls)
+            
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+            gridhtmls       =   [common_dataframe_heading_html,grid_input_html,df_index_html]
+            display_generic_grid("df-index-common-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            gridclasses     =   ["dfc-top","dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+            gridhtmls       =   [col_names_html,common_dataframe_heading_html,grid_input_html,df_index_html]
+            display_generic_grid("df-index-common-pop-up-wrapper",gridclasses,gridhtmls)
 
-    elif(funcid == dtm.SORT_ROWS) :
+        
+        #df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+            
+        #display_common_df_options(df,common_dataframe_heading_html,grid_input_form)            
+
+    elif(funcid == dtm.DISPLAY_SORT_DF_INDEX) :
         
         common_dataframe_heading_html       =   "<div>Sort Index Column </div>"
         
-        grid_input_form                     =   InputForm(df_sort_row_ids_transform_input_id,
-                                                          df_sort_row_ids_transform_input_idList,
-                                                          df_sort_row_ids_transform_input_labelList,
-                                                          df_sort_row_ids_transform_input_typeList,
-                                                          df_sort_row_ids_transform_input_placeholderList,
-                                                          df_sort_row_ids_transform_input_jsList,
-                                                          df_sort_row_ids_transform_input_reqList)
+        grid_input_form                     =   InputForm(df_sort_index_transform_input_id,
+                                                          df_sort_index_transform_input_idList,
+                                                          df_sort_index_transform_input_labelList,
+                                                          df_sort_index_transform_input_typeList,
+                                                          df_sort_index_transform_input_placeholderList,
+                                                          df_sort_index_transform_input_jsList,
+                                                          df_sort_index_transform_input_reqList)
     
         selectDicts     =   []
         sortsel         =   {"default" : "True", "list" : ["True","False"]}
@@ -679,15 +748,17 @@ def display_dataframe_options(parms) :
         selectDicts.append(sortsel)
           
         get_select_defaults(grid_input_form,
-                            df_sort_row_ids_transform_input_id,
-                            df_sort_row_ids_transform_input_idList,
-                            df_sort_row_ids_transform_input_typeList,
+                            df_sort_index_transform_input_id,
+                            df_sort_index_transform_input_idList,
+                            df_sort_index_transform_input_typeList,
                             selectDicts)
         
-        display_common_df_options(common_dataframe_heading_html,grid_input_form)            
+        df = cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+
+        display_common_df_options(df,common_dataframe_heading_html,grid_input_form)            
         
 
-    elif(funcid == dtm.DROP_DUPLICATE_ROWS) :
+    elif(funcid == dtm.DISPLAY_DROP_DUPLICATE_ROWS) :
         
         common_dataframe_heading_html       =   "<div>Drop Duplicate Rows </div><br>"
         
@@ -704,6 +775,8 @@ def display_dataframe_options(parms) :
         selectDicts.append(dropsel)
         keepsel         =   {"default" : "False", "list" : ["first","last","False"]}
         selectDicts.append(keepsel)
+        inplacesel      =   {"default" : "True", "list" : ["True","False"]}
+        selectDicts.append(inplacesel)
         
         get_select_defaults(grid_input_form,
                             df_drop_dups_transform_input_id,
@@ -720,7 +793,7 @@ def display_dataframe_options(parms) :
             col_names_table.set_note(get_html_spaces(10)+"<b>*</b> To select columns for duplicate key definition click on the column name in the table above.")
         else :
             col_names_table.set_note(get_html_spaces(3)+"<b>*</b> To select columns for duplicate key definition click on the column<br>" + get_html_spaces(6) + " name in the table above.")
-        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dtdcrcol")
+        display_column_names(cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF),col_names_table,"dropduplicatescol")
     
         grid_input_form.set_shortForm(True)
         grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
@@ -736,23 +809,23 @@ def display_dataframe_options(parms) :
             display_generic_grid("df-common-df-wrapper",gridclasses,gridhtmls)
         else :
             display_generic_grid("df-common-df-pop-up-wrapper",gridclasses,gridhtmls)
+        
+        from dfcleanser.common.display_utils import display_pop_up_buffer
+        display_pop_up_buffer()
 
     elif(funcid == dtm.DF_TRANSFORM_RETURN) :
                     
-        from dfcleanser.data_transform.data_transform_widgets import display_main_option,clear_data_transform_cfg_values
+        from dfcleanser.data_transform.data_transform_widgets import display_main_option
+        from dfcleanser.data_transform.data_transform_control import clear_data_transform_cfg_values
         display_main_option([[0,0]])
         clear_data_transform_cfg_values()
 
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
- 
     elif(funcid == dtm.DF_TRANSFORM_HELP) :
         
-        from dfcleanser.data_transform.data_transform_widgets import display_main_option,clear_data_transform_cfg_values
+        from dfcleanser.data_transform.data_transform_widgets import display_main_option
+        from dfcleanser.data_transform.data_transform_control import clear_data_transform_cfg_values
         display_main_option([[0,0]])
         clear_data_transform_cfg_values()
 
-        from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-        display_inspection_data()
 
 
