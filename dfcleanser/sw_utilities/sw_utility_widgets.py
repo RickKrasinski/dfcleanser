@@ -12,6 +12,8 @@ import sys
 this = sys.modules[__name__]
 
 import dfcleanser.sw_utilities.sw_utility_model as swum
+import dfcleanser.sw_utilities.sw_utility_control as swuc
+
 import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_genfunc_functions as swgf
@@ -58,33 +60,35 @@ build_utility_tb_centered         =   True
 """
 build_list_utility_input_title          =   "Build List Utility"
 build_list_utility_input_id             =   "buildlistparms"
-build_list_utility_input_idList         =   ["listname","listitems","startlistfile",
+build_list_utility_input_idList         =   ["listname","newlistname","listitems","startlistfile",
                                              None,None,None,None,None]
 
 build_list_utility_input_labelList      =   ["list_name",
+                                             "new_list_name",
                                              "list_value(s)",
                                              "list_file_to_start_with",
                                              "Delete</br>From</br>Lists",
-                                             "Save</br> To </br>Lists",
+                                             "Add</br>User List</br>To Lists",
                                              "Clear","Return","Help"]
 
-build_list_utility_input_typeList       =   ["text",maketextarea(10),"file",
+build_list_utility_input_typeList       =   ["select","text",maketextarea(10),"file",
                                              "button","button",
                                              "button","button","button"]
 
 build_list_utility_input_placeholderList = ["enter list name in 'Notebook' lists (default None)",
+                                            "enter new list name ",
                                             "enter new list value(s) example (&#39;1&#39;, 2, a, &#39;b&#39;, [3,4] ...)",
                                             "select file to start with (default None)",
                                             None,None,None,None,None]
 
-build_list_utility_input_jsList         =    [None,None,None,
+build_list_utility_input_jsList         =    [None,None,None,None,
                                               "sw_utilities_delete_callback("+str(swum.DELETE_LIST_OPTION)+")",
                                               "sw_utilities_list_add_callback()",
                                               "build_utility_callback("+str(swum.LIST_OPTION)+")",
                                               "build_utility_clear_callback()",
                                               "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_LIST_ID) + ")"]
 
-build_list_utility_input_reqList        =   [0,1]
+build_list_utility_input_reqList        =   [0,1,2]
 
 build_list_utility_input_form           =   [build_list_utility_input_id,
                                              build_list_utility_input_idList,
@@ -103,34 +107,37 @@ build_list_utility_input_form           =   [build_list_utility_input_id,
 build_dict_utility_input_title          =   "Build Dict Utility"
 build_dict_utility_input_id             =   "builddictparms"
 build_dict_utility_input_idList         =   ["dictname",
+                                             "newdictname",
                                              "dictpairs",
                                              "startdictfile",
                                              None,None,None,None,None]
 
 build_dict_utility_input_labelList      =   ["dict_name",
+                                             "new_dict_name",
                                              "dict_values",
                                              "dict_file_to_start_with",
                                              "Delete</br>From</br>Dicts",
-                                             "Save</br> To </br>Dicts",
+                                             "Add</br>User Dict</br>To Dicts",
                                              "Clear","Return","Help"]
 
-build_dict_utility_input_typeList       =   ["text",maketextarea(10),"file",
+build_dict_utility_input_typeList       =   ["select","text",maketextarea(10),"file",
                                              "button","button",
                                              "button","button","button"]
 
 build_dict_utility_input_placeholderList = ["enter dict name in 'Notebook' dicts (default None)",
+                                            "enter new dict name",
                                             "enter new dict pairs(s) (&#39;&#39;{key:value}&#39;&#39;,&#39;&#39;.....{key:value})",
                                             "select file to start with (default None)",
                                             None,None,None,None,None]
 
-build_dict_utility_input_jsList         =    [None,None,None,
+build_dict_utility_input_jsList         =    [None,None,None,None,
                                               "sw_utilities_delete_callback("+str(swum.DELETE_DICT_OPTION)+")",
                                               "sw_utilities_dict_add_callback()",
                                               "build_utility_callback("+str(swum.DICT_OPTION)+")",
                                               "build_utility_clear_callback()",
                                               "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_DICT_ID) + ")"]
 
-build_dict_utility_input_reqList        =   [0,1]
+build_dict_utility_input_reqList        =   [0,1,2]
 
 build_dict_utility_input_form           =   [build_dict_utility_input_id,
                                              build_dict_utility_input_idList,
@@ -188,6 +195,8 @@ gen_function_input_form          =   [gen_function_input_id,
                                       gen_function_input_reqList]  
 
 
+dfswutils_inputs             =   [build_list_utility_input_id,build_dict_utility_input_id,gen_function_input_id]
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -218,9 +227,7 @@ def get_sw_utilities_dict_inputs(parms) :
 #   display the list and dict screens
 #--------------------------------------------------------------------------
 """
-def display_list_dict(id) :
-
-    list_html = get_grid_list_html(id)
+def display_list_dict(id,keyValue=None) :
     
     if(id==swum.DICT_ID) :
         list_dict_form = build_dict_utility_input_form
@@ -235,25 +242,85 @@ def display_list_dict(id) :
                                           list_dict_form[3],
                                           list_dict_form[4],
                                           list_dict_form[5],
-                                          list_dict_form[6],
-                                          shortForm=False) 
-      
+                                          list_dict_form[6]) 
+    
+    selectDicts     =   []  
+    
+    if(id==swum.DICT_ID) :
+        
+        if(keyValue is None) :
+            def_dict    =   swum.ReservedDicts[0]
+        else :
+            def_dict    =   keyValue
+            
+        dictssel    =   {"default":def_dict,"list": swum.ReservedDicts, "callback":"select_dict"}
+        seldict     =   swuc.get_Dict(def_dict)
+        
+        keys = list(seldict.keys())
+        if( (def_dict == "Country_Codes") or (def_dict == "Language_Codes") ):
+            keys.sort()
+
+        sellist    =   swuc.get_pretty_dict(seldict,keys)
+        
+    else :
+        
+        if(keyValue is None) :
+            def_list    =   swum.ReservedLists[0]
+        else :
+            def_list    =   keyValue
+
+        dictssel    =   {"default":def_list,"list": swum.ReservedLists, "callback":"select_list"}
+        sellist     =   str(swuc.get_List(def_list))
+        
+    selectDicts.append(dictssel)
+    
+    from dfcleanser.common.common_utils import get_select_defaults
+        
+    get_select_defaults(list_dict_input_form,
+                        list_dict_form[0],
+                        list_dict_form[1],
+                        list_dict_form[3],
+                        selectDicts)
+        
     list_dict_input_form.set_gridwidth(700)
     list_dict_input_form.set_custombwidth(120)
+    list_dict_input_form.set_fullparms(True)
+    
+    if(id==swum.DICT_ID) :
+        
+        selparms = [def_dict, "", sellist, ""]
+        cfg.set_config_value(build_dict_utility_input_id+"Parms",selparms)
+        
+        help_note           =   "To retrieve a dict in python from dfcleanser.sw_utiliities.sw_utility.control call 'get_Dict(dictname)'.</br>To add a dict in python from dfcleanser.sw_utiliities.sw_utility.control call 'add_Dict(dictname,newdict)'"
+        
+        
+    else :
+    
+        selparms = [def_list, "", sellist, ""]
+        cfg.set_config_value(build_list_utility_input_id+"Parms",selparms)
+        
+        help_note           =   "To retrieve a list in python from dfcleanser.sw_utiliities.sw_utility.control call 'get_List(listname)'.</br>To add a list in python from dfcleanser.sw_utiliities.sw_utility.control call 'add_List(listtname,newlist)'"
+        
+    from dfcleanser.common.common_utils import get_help_note_html
+    listdict_notes_html   =   get_help_note_html(help_note,700,None,None)
+    
     
     list_dictcustom_html = ""
     list_dictcustom_html = list_dict_input_form.get_html()
-        
+    
     if(id==swum.DICT_ID)  :
         list_title_html =   "<div>" + build_dict_utility_input_title + "</div><br></br>"
+        cfg.drop_config_value(build_dict_utility_input_id+"Parms")
+        
     else : 
         list_title_html =   "<div>" + build_list_utility_input_title + "</div><br></br>"
+        cfg.drop_config_value(build_list_utility_input_id+"Parms")
     
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
-    gridhtmls       =   [list_title_html,list_html,list_dictcustom_html]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-bottom","dfc-footer"]
+    gridhtmls       =   [list_title_html,list_dictcustom_html,listdict_notes_html]
     
     print("\n")
-    display_generic_grid("sw-utils-wrapper",gridclasses,gridhtmls)
+    display_generic_grid("sw-utils-listdict-wrapper",gridclasses,gridhtmls)
 
 
 
@@ -595,8 +662,7 @@ def display_generic_functions(forAddColumn=False):
                               gen_function_input_form[3],
                               gen_function_input_form[4],
                               gen_function_input_form[5],
-                              gen_function_input_form[6],
-                              shortForm=False)
+                              gen_function_input_form[6])
     
     gt_input_form.set_gridwidth(700)
     gt_input_form.set_custombwidth(120)

@@ -796,6 +796,12 @@ bulk_baidu_reverse_input_form             =   [bulk_bing_reverse_input_id,
                                                bulk_bing_reverse_input_reqList]  
 
 
+geocoding_bulk_inputs                     =   [google_bulk_geocoder_id,bulk_google_query_input_id,bulk_google_reverse_input_id,
+                                               batch_arcgis_geocoder_id,batch_arcgis_query_id,bing_bulk_geocoder_id,
+                                               bulk_bing_query_input_id,bulk_bing_reverse_input_id,baidu_bulk_geocoder_id,
+                                               bulk_baidu_query_input_id,bulk_baidu_reverse_input_id]
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1204,14 +1210,18 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             geo_parms_html = sugw.get_geocoder_table(True) 
             
         elif(tabletype==sugm.COLNAMES_TABLE) :
+            
+            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            
+            from dfcleanser.common.display_utils import get_df_col_names_table
             if(geocid == sugm.GoogleId) :
-                geo_parms_html = sugw.get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.QUERY))
+                geo_parms_html = get_df_col_names_table(df,"gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.QUERY))
             elif(geocid == sugm.ArcGISId) :  
-                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.ArcGISId) + "," + str(sugm.QUERY))
+                geo_parms_html = get_df_col_names_table(df,"geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.ArcGISId) + "," + str(sugm.QUERY))
             elif(geocid == sugm.BingId) :
-                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.QUERY))
+                geo_parms_html = get_df_col_names_table(df,"geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.QUERY))
             elif(geocid == sugm.BaiduId) :
-                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BaiduId) + "," + str(sugm.QUERY))
+                geo_parms_html = get_df_col_names_table(df,"geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BaiduId) + "," + str(sugm.QUERY))
                 
         elif(tabletype==sugm.LANGUAGE_TABLE) :
             geo_parms_html = get_languages_table("gedflanguagesTable",cfg.SWGeocodeUtility_ID,"gb_select_language")
@@ -1266,10 +1276,14 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             geo_parms_html = get_geocoder_table(True) 
         
         elif(tabletype==sugm.COLNAMES_TABLE) :
+            
+            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            
+            from dfcleanser.common.display_utils import get_df_col_names_table
             if(geocid == sugm.GoogleId) :
-                geo_parms_html = sugw.get_df_col_names_table("gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.REVERSE))
+                geo_parms_html = get_df_col_names_table(df,"gegdfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.GoogleId) + "," + str(sugm.REVERSE))
             elif(geocid == sugm.BingId) :
-                geo_parms_html = sugw.get_df_col_names_table("geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.REVERSE))
+                geo_parms_html = get_df_col_names_table(df,"geadfcolnamesTable",cfg.SWGeocodeUtility_ID,"bg_add_df_column",str(sugm.BingId) + "," + str(sugm.REVERSE))
             
         elif(tabletype==sugm.ADDRESS_COMPONENTS_TABLE) :
             if(geocid == sugm.GoogleId) :
@@ -1308,8 +1322,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
                                    form[3],
                                    form[4],
                                    form[5],
-                                   form[6],
-                                   shortForm=False)
+                                   form[6])
     
     # add select true false lists
     if (geotype == sugm.QUERY) :
@@ -1661,8 +1674,7 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
                                    geocoder_input_form[3],
                                    geocoder_input_form[4],
                                    geocoder_input_form[5],
-                                   geocoder_input_form[6],
-                                   shortForm=False)
+                                   geocoder_input_form[6])
     
     if(geocodeid == sugm.GoogleId) :
         
@@ -1711,7 +1723,7 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
     
-    geocode_heading_html =   "<div>Bulk Geocoder Connector Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
+    geocode_heading_html =   "<br><div>Bulk Geocoder Connector Parms - " + sugm.get_geocoder_title(geocodeid) + "</div><br>"
 
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
@@ -1783,10 +1795,14 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
                     opstat.set_errorMsg("No dataframe lat lng column name(s) defined")
 
         if(opstat.get_status()) :
+            
+            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
                 
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[0] : fparms[0]})
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[1] : fparms[1]})
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[2] : fparms[2]})
+            
+            cfg.set_config_value(cfg.CURRENT_GEOCODE_DF,fparms[0])
                 
             if(len(fparms[3]) > 0) :
                 bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : fparms[3]})
@@ -1811,12 +1827,12 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : fparms[7]})
            
             if(len(fparms[8]) > 0) :
-                if(int(fparms[8]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                if(int(fparms[8]) > len(df)) :
+                    bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : len(df)}) 
                 else :
                     bulk_geocode_kwargs.update({bulk_google_query_input_labelList[8] : fparms[8]})
             else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[7] : len(df)}) 
                     
             if(len(fparms[9]) > 0) :
                 if(int(fparms[9]) > 100) :
@@ -1856,6 +1872,8 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
         
         # validate non required parmsd            
         if(opstat.get_status()) :
+            
+            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
                 
             bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[0] : fparms[0]})
             bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[1] : fparms[1]})
@@ -1876,7 +1894,7 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
             if(len(fparms[7]) > 0) :
                 bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[7] : fparms[7]}) 
             else :
-                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[7] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[7] : len(df)}) 
                 
             if(len(fparms[8]) > 0) :
                 bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[8] : fparms[8]}) 
@@ -1969,7 +1987,8 @@ def validate_arcgis_bulk_parms(geotype,inputs,opstat) :
 
             if(len(fparms[9]) == 0) :
                 df_title    =   fparms[0]
-                df          =   cfg.get_dfc_dataframe(df_title)
+                df          =   cfg.get_dfc_dataframe_df(df_title)
+            
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[9] : str(len(df))})
             else :
                 bulk_geocode_kwargs.update({batch_arcgis_query_labelList[9] : fparms[9]}) 
@@ -2052,12 +2071,13 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
                 bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : "False"})
                 
             if(len(fparms[8]) > 0) :
-                if(int(fparms[8]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                if(int(fparms[8]) > len(df)) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(df)}) 
                 else :
                     bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : fparms[8]})
             else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(df)}) 
                     
             if(len(fparms[9]) > 0) :
                 if(int(fparms[9]) > 100) :
@@ -2099,12 +2119,13 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
                 bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : "False"})
                 
             if(len(fparms[4]) > 0) :
-                if(int(fparms[4]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(cfg.get_dfc_dataframe())}) 
+                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                if(int(fparms[4]) > len(df)) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(df)}) 
                 else :
                     bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : fparms[4]})
             else :
-                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(df)}) 
                     
             if(len(fparms[5]) > 0) :
                 if(int(fparms[5]) > 100) :
@@ -2163,12 +2184,13 @@ def validate_baidu_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[2] : fparms[2]})
             
             if(len(fparms[3]) > 0) :
-                if(int(fparms[3]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(cfg.get_dfc_dataframe())}) 
+                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                if(int(fparms[3]) > len(df)) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(df)}) 
                 else :
                     bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : fparms[8]})
             else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(df)}) 
                     
             if(len(fparms[4]) > 0) :
                 if(int(fparms[4]) > 100) :
@@ -2200,12 +2222,14 @@ def validate_baidu_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[1] : fparms[1]})
 
             if(len(fparms[2]) > 0) :
-                if(int(fparms[4]) > len(cfg.get_dfc_dataframe())) :
-                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(cfg.get_dfc_dataframe())}) 
+                
+                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                if(int(fparms[4]) > len(df)) :
+                    bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(df)}) 
                 else :
                     bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : fparms[2]})
             else :
-                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(cfg.get_dfc_dataframe())}) 
+                bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(df)}) 
                     
             if(len(fparms[3]) > 0) :
                 if(int(fparms[3]) > 100) :

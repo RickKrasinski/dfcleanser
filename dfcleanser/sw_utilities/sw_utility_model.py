@@ -35,8 +35,8 @@ SELECT_FUNCTION             =   17
 DICT_ID         =   0
 LIST_ID         =   1
 
-ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes","ArcGIS_Categories"]
-ReservedLists   =   ["columnNames", "Google_Address_Components", "Google_Location_Types"]
+ReservedDicts   =   ["strftime","Elipsoids","Country_Codes","Language_Codes","ArcGIS_Categories","US_States_and_Territories","Canadian_Provinces_and_Territories"]
+ReservedLists   =   ["Google_Address_Components", "Google_Location_Types"]
 
 
 FOR_ADD_COLUMNS                     =   0

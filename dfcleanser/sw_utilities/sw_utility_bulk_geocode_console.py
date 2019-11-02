@@ -187,6 +187,11 @@ bulk_geocode_export_input_form             =   [bulk_geocode_export_input_id,
                                                 bulk_geocode_export_input_jsList,
                                                 bulk_geocode_export_input_reqList]  
 
+
+geocoding_console_inputs                   =   [bulk_geocode_proc_input_id,bulk_geocode_procr_input_id,bulk_geocode_export_input_id]
+
+
+
 """
 #--------------------------------------------------------------------------
 #   bulk geocoding console html
@@ -943,7 +948,7 @@ def display_geocoder_process_results(optionid,opstat,showFull=False) :
                     geoparms        =   cfg.get_config_value(subgw.bulk_baidu_reverse_input_id+"Parms")
 
             source_df_title     =   geoparms[0]
-            source_df           =   cfg.get_dfc_df(source_df_title).get_df()
+            source_df           =   cfg.get_dfc_dataframe_df(source_df_title)
             
             stats_title                 =   source_df_title + " dataframe"
             stats_colnames              =   ["Total Rows","Total Columns"]
@@ -993,7 +998,7 @@ def display_dataframe(df_title,owner,opstat) :
     * --------------------------------------------------------
     """
 
-    df  =   cfg.get_dfc_dataframe(df_title)
+    df  =   cfg.get_dfc_dataframe_df(df_title)
     
     if(len(df) == 0) :
         display_status("dataframe " + df_title + " has no rows")
@@ -1008,7 +1013,7 @@ def display_dataframe(df_title,owner,opstat) :
             rows_table      =   dcTable(df_title,df_title + "_search_" + str(owner),owner)
         
             from dfcleanser.common.display_utils import display_sample_rows
-            sample_row_html =   display_sample_rows(cfg.get_dfc_dataframe(df_title),rows_table,0,0,opstat,False)
+            sample_row_html =   display_sample_rows(df,rows_table,0,0,opstat,False)
                     
             gridclasses     =   ["dfcleanser-common-grid-header","df-display-wrapper-content"]
             gridhtmls       =   [df_heading_html,sample_row_html]

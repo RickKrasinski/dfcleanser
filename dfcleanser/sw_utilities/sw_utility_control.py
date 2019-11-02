@@ -73,61 +73,15 @@ def process_sw_utilities(optionId,parms=None) :
 
     elif (optionId == swum.SELECT_LIST_OPTION) :
 
-        opstat = opStatus()
-        
-        if(parms == swum.ReservedLists[0]) :
-            if(cfg.is_a_dfc_dataframe_loaded()) :
-                sellist = cfg.get_dfc_dataframe().columns.tolist()
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("No Dataframe loaded")
-                
-        else :
-            sellist     = get_List(parms)
-        
-        if(opstat.get_status()) :
-            if(not (type(sellist) == list)) :
-                listtext    = ''.join(sellist)
-                listtext    = ("&#91;" + listtext + "&#93;")
-            else :
-                listtext    =   str(sellist)
-        
-            listparms = [parms, listtext, ""]
-            cfg.set_config_value(swuw.build_list_utility_input_id+"Parms",listparms)
-        
         swuw.get_sw_utilities_main_taskbar()
-        swuw.display_list_dict(swum.LIST_ID)
-        
-        if(not(opstat.get_status())) :
-            display_status(opstat.get_errorMsg())            
-            
-        cfg.drop_config_value(swuw.build_list_utility_input_id+"Parms")
+        swuw.display_list_dict(swum.LIST_ID,parms[0])
         
         return
 
     elif (optionId == swum.SELECT_DICT_OPTION) :
         
-        seldict     = get_Dict(parms)
-        
-        # pretty print dict
-        keys = list(seldict.keys())
-        if( (parms == "Country_Codes") or (parms == "Language_Codes") ):
-            keys.sort()
-        
-        dicttext = "{" 
-        for i in range(len(keys)) :
-            dicttext = (dicttext + '"' + str(keys[i]) + '" : ' + '"' + str(seldict.get(keys[i])) + '"')   
-            if(i != (len(keys) -1)) :
-                dicttext = (dicttext + "," + new_line)
-            else :
-                dicttext = (dicttext + "}")
-        
-        dictparms =  [parms, dicttext,""]
-        cfg.set_config_value(swuw.build_dict_utility_input_id+"Parms",dictparms)
         swuw.get_sw_utilities_main_taskbar()
-        swuw.display_list_dict(swum.DICT_ID)
-        
-        cfg.drop_config_value(swuw.build_dict_utility_input_id+"Parms")
+        swuw.display_list_dict(swum.DICT_ID,parms[0])
         
         return
         
@@ -335,17 +289,6 @@ def process_generic_function(parms) :
         swuw.display_generic_function_inputs(None)
 
 
-def clear_sw_utility_data() :
-    
-    drop_owner_tables(cfg.SWUtilities_ID)
-    clear_sw_utility_cfg_values()
-    
-def clear_sw_utility_cfg_values() :
-    cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
-    cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)    
-
-    return
-
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -364,7 +307,19 @@ def delete_Dict(dictname) :
     DataframeCleanserDictLog.delete_Item(swum.DICT_ID,dictname) 
 
 def get_Dictlog() :
-    return(DataframeCleanserDictLog.get_log(swum.DICT_ID)) 
+    return(DataframeCleanserDictLog.get_log(swum.DICT_ID))
+    
+def get_pretty_dict(indict,inkeys) :
+    
+    dicttext = "{" 
+    for i in range(len(inkeys)) :
+        dicttext = (dicttext + '"' + str(inkeys[i]) + '" : ' + '"' + str(indict.get(inkeys[i])) + '"')   
+        if(i != (len(inkeys) -1)) :
+            dicttext = (dicttext + "," + new_line)
+        else :
+            dicttext = (dicttext + "}")
+        
+    return(dicttext)
 
 
 def get_List(listname) :
@@ -425,10 +380,6 @@ class DCDictListLog :
                    
                 log_file.close()
                 
-            if(id == swum.LIST_ID) :   
-                if(self.listlog.get("columnNames") == None) :
-                    self.listlog.update({"columnNames":[]})    
-                
         except Exception as e:
             if(id == swum.DICT_ID) :
                 self.dictlog          =   {}
@@ -462,7 +413,7 @@ class DCDictListLog :
             if(self.dictlog == {}) :    self.load_Log_file(id)    
             return(self.dictlog.get(itemname,None))
         else :
-            if(self.listlog == {}) :    self.load_Log_file(id)    
+            if(self.listlog == {}) :    self.load_Log_file(id) 
             return(self.listlog.get(itemname,None))
             
     def add_Item(self,id,name,newitem) :
@@ -499,6 +450,23 @@ DataframeCleanserDictLog    =   DCDictListLog()
 
 
 
+
+def clear_sw_utility_data() :
+    
+    drop_owner_tables(cfg.SWUtilities_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.SWUtilities_ID,swuw.dfswutils_inputs)
+    delete_all_inputs(cfg.SWUtilities_ID)
+    clear_sw_utility_cfg_values()
+    
+def clear_sw_utility_cfg_values() :
+    
+    cfg.drop_config_value(swuw.build_list_utility_input_id+"Parms")
+    cfg.drop_config_value(swuw.build_dict_utility_input_id+"Parms")
+    cfg.drop_config_value(swuw.gen_function_input_id+"Parms")
+    cfg.drop_config_value(cfg.CURRENT_GENERIC_FUNCTION)    
+
+    return
 
 
 

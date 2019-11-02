@@ -21,7 +21,7 @@ from dfcleanser.common.table_widgets import drop_owner_tables
 from dfcleanser.common.html_widgets import new_line
 
 from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, get_parms_for_input,  
-                                            is_numeric_col, is_int_col, single_quote, RunningClock)
+                                            is_numeric_col, is_int_col, RunningClock)
 
    
 """
@@ -33,11 +33,22 @@ from dfcleanser.common.common_utils import (display_exception, display_status, o
 """
 
 def get_subset_df() :
-    return(cfg.get_dfc_dataframe())
+    return(cfg.get_current_chapter_df(cfg.CURRENT_SUBSET_DF))
 
+
+def get_current_subset_df(parms) :
+    
+    fparms          =   get_parms_for_input(parms[0],["dsdfdataframe"])
+    if(len(fparms) > 0) :
+        selected_df     =   fparms[0]
+            
+            
+        if(not (len(selected_df) == 0) ) :
+            cfg.set_config_value(cfg.CURRENT_SUBSET_DF,selected_df)
 
 
 def display_dfsubset_utility(optionId,parms=None) :
+    
 
     if(cfg.is_a_dfc_dataframe_loaded()) :
         
@@ -47,11 +58,18 @@ def display_dfsubset_utility(optionId,parms=None) :
         if(optionId == dfsm.DISPLAY_MAIN) :
             dfsw.get_dfsubset_main_taskbar()
             clear_sw_utility_dfsubsetdata()
+            
+            cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
     
         if(optionId == dfsm.DISPLAY_GET_SUBSET) :
-            parmslist = dfsw.get_dfsubset_input_parms(parms)
-            if(len(parmslist) > 0) :
-                cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
+            if(len(parms) > 0) :
+
+                if(len(parms) == 1) :
+                    get_current_subset_df(parms)
+                else :
+                    parmslist = dfsw.get_dfsubset_input_parms(parms)
+                    cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
+                    
             dfsw.display_df_subset(get_subset_df(),False) 
         
         elif(optionId ==  dfsm.PROCESS_GET_SUBSET) :
@@ -148,10 +166,17 @@ def display_dfsubset_utility(optionId,parms=None) :
             dfsw.display_df_subset(get_subset_df(),True) 
          
     else :
+        
         dfsw.get_dfsubset_main_taskbar()
+        
+        cfg.drop_config_value(cfg.CURRENT_SUBSET_DF)
+        clear_sw_utility_dfsubsetdata()
+        
+        cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
+            
         if(not(optionId == dfsm.DISPLAY_MAIN)) :
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
+            cfg.display_no_dfs(cfg.SWDFSubsetUtility_ID)
+        
         
 
 
@@ -316,7 +341,7 @@ def build_and_validate_search_criteria(colslist,keepflag,filters,inneropers,oute
     
     filtersList     =   []
 
-    df = cfg.get_dfc_dataframe()
+    df = get_subset_df()
     
     try :
         
@@ -481,8 +506,8 @@ def get_truth_table(df_title,criteria,opstat) :
     #     next criteria
     #------------------------------------------------------------------
     """       
-    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe, update_dfc_dataframe" + new_line
-    ccode   =   (ccode + "df = get_dfc_dataframe('" + df_title +"')" + new_line)
+    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe_df" + new_line
+    ccode   =   (ccode + "df = get_dfc_dataframe_df('" + df_title +"')" + new_line)
     ccode   =   (ccode + "from dfcleanser.sw_utilities.sw_utility_dfsubset_control import set_criteria" + new_line)
     ccode   =   (ccode + "new_criteria = " + criteria + new_line)
     ccode   =   (ccode + "set_criteria(new_criteria)" + new_line)
@@ -630,7 +655,7 @@ def get_subset_from_criteria(df_title,filters,filters_flag,newdf_title,csv_file_
     dfssubset_parms     =   get_filters_criteria(filters,opstat)
 
     import pandas as pd
-    df                  =   cfg.get_dfc_dataframe(df_title)
+    df                  =   cfg.get_dfc_dataframe_df(df_title)
 
     truth_table         =   pd.Series()
     truth_table_list    =   []
@@ -744,7 +769,7 @@ def get_df_subset(parms,filtered=False,display=True) :
         if(not filtered) :   
             if(len(subsetparms[2]) == 0) :
                 opstat.set_status(False)
-                opstat.set_errorMsg("columns_names_list is not set")
+                opstat.set_errorMsg("no filters and columns_names_list is not set")
         
         else :
             
@@ -761,18 +786,15 @@ def get_df_subset(parms,filtered=False,display=True) :
 
         try :
             
-            if(not filtered) :
-                subset_query    =   subsetparms[2]
-            
-            else :
+            if(filtered) :
                 subset_query    =   filterparms[2]
                 
-            if(len(subsetparms[1]) > 0) :
-                get_subset_from_criteria(subsetparms[0],subset_query,filtered,subsetparms[1],subsetparms[4],opstat)
-                out_df_title  =   subsetparms[1]
-            else :
-                get_subset_from_criteria(subsetparms[0],subset_query,filtered,None,subsetparms[4],opstat)
-                out_df_title  =   subsetparms[0]
+                if(len(subsetparms[1]) > 0) :
+                    get_subset_from_criteria(subsetparms[0],subset_query,filtered,subsetparms[1],subsetparms[4],opstat)
+                    out_df_title  =   subsetparms[1]
+                else :
+                    get_subset_from_criteria(subsetparms[0],subset_query,filtered,None,subsetparms[4],opstat)
+                    out_df_title  =   subsetparms[0]
             
         except Exception :
             opstat.set_status(False)
@@ -780,6 +802,46 @@ def get_df_subset(parms,filtered=False,display=True) :
 
         if(display) :
             clock.stop()
+            
+            
+    if(opstat.get_status()) :
+        
+        col_names_list  =   subsetparms[2]  
+        keep_flag       =   subsetparms[3]
+        
+        if(len(col_names_list) > 0) :
+            col_names   =   col_names_list.split(",")
+            
+            if(keep_flag == "True") :
+                keep    =   True
+            else :
+                keep    =   False
+                
+            df              =   cfg.get_dfc_dataframe_df(subsetparms[0])
+            all_col_names   =   df.columns.tolist() 
+            
+            if(keep) :
+                drop_columns    =   []
+                for i in range(len(all_col_names)) :
+                    if(not (all_col_names[i] in col_names)) :
+                        
+                        drop_columns.append(all_col_names[i])
+            else :
+                drop_columns    =  col_names 
+                
+            try :
+                
+                if(len(subsetparms[1]) > 0) :
+                    
+                    newdf   =   cfg.get_dfc_dataframe_df(subsetparms[1])
+                    newdf   =   df.drop(drop_columns,axis=1)
+                    cfg.set_dfc_dataframe(subsetparms[1],newdf)
+                else :
+                    df.drop(drop_columns,inplace=True,axis=1)
+                    
+            except Exception :
+                opstat.set_status(False)
+                opstat.set_errorMsg("unable to drop columns")
        
     if(opstat.get_status()) : 
         
@@ -801,7 +863,7 @@ def get_df_subset(parms,filtered=False,display=True) :
             clear_output()
             
             cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
-            dfsw.display_df_subset(cfg.get_dfc_dataframe(),False) 
+            dfsw.display_df_subset(get_subset_df(),False) 
             display_exception(opstat)
 
 
@@ -815,6 +877,9 @@ def get_df_subset(parms,filtered=False,display=True) :
 def clear_sw_utility_dfsubsetdata() :
     
     drop_owner_tables(cfg.SWDFSubsetUtility_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.SWDFSubsetUtility_ID,dfsm.dfsubset_inputs)
+    delete_all_inputs(cfg.SWDFSubsetUtility_ID)
     clear_sw_utility_dfsubset_cfg_values()
 
 

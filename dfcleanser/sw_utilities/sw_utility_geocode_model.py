@@ -13,7 +13,6 @@ import sys
 this = sys.modules[__name__]
 
 from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, ROW_MAJOR)
-from dfcleanser.common.common_utils import (get_dfc_dataframe)
 import dfcleanser.common.cfg as cfg
 
 
@@ -804,7 +803,7 @@ class BulkGeocodeResults:
             cfg.add_dfc_dataframe(dfc_geocode_results_df)
 
         else :
-            self.geocode_results_df  = cfg.get_dfc_dataframe(dftitle)
+            self.geocode_results_df  = cfg.get_dfc_dataframe_df(dftitle)
 
     def add_result(self,rowResults,opstat) :
         
@@ -818,7 +817,7 @@ class BulkGeocodeResults:
             if(len(self.geocode_results_list) >= MAX_RESULTS_CACHED)  :
                 self.flush_results_to_dataframe(opstat)
         
-            cfg.get_dfc_df(GEOCODING_RESULTS_DF_TITLE).set_df(self.geocode_results_df)
+            cfg.set_dfc_dataframe_df(GEOCODING_RESULTS_DF_TITLE,self.geocode_results_df)
             
         except :
             opstat.set_status(False)
@@ -836,7 +835,7 @@ class BulkGeocodeResults:
             resultsAligns.append("left")    
 
         for i in range(MAX_RESULTS_DISPLAYED) :
-            df      =   cfg.get_dfc_dataframe(GEOCODING_ERROR_LOG_DF_TITLE)
+            df      =   cfg.get_dfc_dataframe_df(GEOCODING_ERROR_LOG_DF_TITLE)
             result  =   df.loc[df[self.column_headers_map[0]] == startrowindex+i] 
             result  =   result.tolist()
         
@@ -870,7 +869,7 @@ class BulkGeocodeResults:
                 import pandas as pd
                 self.geocode_results_df = self.geocode_results_df.append(pd.DataFrame(self.geocode_results_list, columns=self.column_headers_list))
             
-                cfg.get_dfc_df(GEOCODING_RESULTS_DF_TITLE).set_df(self.geocode_results_df)
+                cfg.set_dfc_dataframe_df(GEOCODING_RESULTS_DF_TITLE,self.geocode_results_df)
                 self.geocode_results_list   =   []
                 
             except :
@@ -948,7 +947,7 @@ class BulkGeocodeResults:
             self.flush_results_to_dataframe(opstat)
             self.geocode_results_df = self.geocode_results_df.sort_values("source df rowid")
             self.geocode_results_df.index = range(0,len(self.geocode_results_df.index))
-            cfg.get_dfc_df(GEOCODING_RESULTS_DF_TITLE).set_df(self.geocode_results_df)
+            cfg.set_dfc_dataframe_df(GEOCODING_RESULTS_DF_TITLE,self.geocode_results_df)
         except :
             opstat.set_status(False)
             import sys
@@ -1004,7 +1003,7 @@ class BulkGeocodeErrorLog:
         if(len(self.error_log_list) >= MAX_ERRORS_CACHED)  :
             self.flush_errors_to_dataframe(opstat)
         
-        cfg.get_dfc_df(GEOCODING_ERROR_LOG_DF_TITLE).set_df(self.error_log_df)
+        cfg.set_dfc_dataframe_df(GEOCODING_ERROR_LOG_DF_TITLE,self.error_log_df)
 
     def show_errors(self, startrowindex) :
         
@@ -1016,7 +1015,7 @@ class BulkGeocodeErrorLog:
         errorsAligns      =   ["center","left","left"]
 
         for i in range(MAX_ERRORS_DISPLAYED) :
-            df      =   cfg.get_dfc_dataframe(GEOCODING_ERROR_LOG_DF_TITLE)
+            df      =   cfg.get_dfc_dataframe_df(GEOCODING_ERROR_LOG_DF_TITLE)
             cerror  =   df.loc[df[GEOCODING_ERROR_LOG_COLUMN_NAME_LIST[0]] == startrowindex+i] 
             cerror  =   cerror.tolist()
         
@@ -1047,7 +1046,7 @@ class BulkGeocodeErrorLog:
             if(len(self.error_log_list) > 0) :
                 import pandas as pd
                 self.error_log_df = self.error_log_df.append(pd.DataFrame(self.error_log_list, columns=GEOCODING_ERROR_LOG_COLUMN_NAME_LIST))
-                cfg.get_dfc_df(GEOCODING_ERROR_LOG_DF_TITLE).set_df(self.error_log_df)
+                cfg.set_dfc_dataframe_df(GEOCODING_ERROR_LOG_DF_TITLE,self.error_log_df)
                 self.error_log_list   =   []
                 
         except :
@@ -1126,7 +1125,7 @@ class BulkGeocodeErrorLog:
         self.flush_errors_to_dataframe(opstat)
         self.error_log_df = self.error_log_df.sort_values("source df rowid")
         self.error_log_df.index = range(0,len(self.error_log_df.index))
-        cfg.get_dfc_df(GEOCODING_ERROR_LOG_DF_TITLE).set_df(self.error_log_df)
+        cfg.set_dfc_dataframe_df(GEOCODING_ERROR_LOG_DF_TITLE,self.error_log_df)
         
 
 """
@@ -1174,7 +1173,7 @@ def get_address_map(address_cols) :
         address_components[i]   =   address_components[i].lstrip(" ")
         address_components[i]   =   address_components[i].rstrip(" ")
         
-    colnames            =   cfg.get_dfc_dataframe().columns.values.tolist() 
+    colnames    =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF).columns.values.tolist() 
     
     for i in range(len(address_components)) :
 
@@ -1218,7 +1217,7 @@ def get_geocode_address_string(geocid,runparms,address_map,rowIndex) :
     elif(geocid   ==  BingId) :
         df_name     =   runparms.get(bulk_bing_query_input_labelList[0]) 
         
-    df  =   get_dfc_dataframe(df_name)
+    df  =   cfg.get_dfc_dataframe_df(df_name)
     
     for i in range(len(address_map.get_colindices())) :
         
@@ -1259,7 +1258,7 @@ def get_geocode_reverse_lat_lng_string(geocid,runparms,rowIndex) :
             df_name         =   runparms.get(bulk_bing_reverse_input_labelList[0])
             lat_lng_cols    =   runparms.get(bulk_bing_reverse_input_labelList[1])
         
-        df  =   get_dfc_dataframe(df_name)
+        df  =   cfg.get_dfc_dataframe_df(df_name)
 
         lat_lng_cols        =   runparms.get(bulk_google_reverse_input_labelList[1])
         lat_lng_cols        =   lat_lng_cols.replace("[","")

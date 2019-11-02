@@ -21,7 +21,7 @@ from dfcleanser.common.common_utils import opStatus
 * -------------------------------------------------------------
 """
 
-def upperCase_df_column(dftitle, dfcolname, newcolname=None) :
+def upperCase_df_column(dftitle, dfcolname) :
     """
     * ------------------------------------------------------------------------
     * function : convert string column to upper case
@@ -29,42 +29,31 @@ def upperCase_df_column(dftitle, dfcolname, newcolname=None) :
     * parms :
     *  dftitle     - dataframe title
     *  dfcolname   - dataframe column to normalize
-    *  newcolname  - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    upper cased columns list or opstat
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
     
-    opstat  =   opStatus()
-    
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df                  =   cfg.get_dfc_dataframe_df(dftitle)
+    new_col_values      =   []
 
     try :
         
-        if(newcolname is None) :
-            df[dfcolname].apply(lambda x: x.upper(), inplace=True)
-        else :
-            from dfcleanser.common.common_utils import is_column_in_df
-            if(is_column_in_df(df,newcolname)) :
-                df[newcolname] = map(lambda x: x.upper(), df[dfcolname])
-            else :
-                new_col_values  =   map(lambda x: x.upper(), df[dfcolname])
-                from dfcleanser.data_transform.data_transform_columns_control import add_column
-                add_column(dftitle, newcolname, new_col_values, opstat)
+        new_col_values  =   map(lambda x: x.upper(), df[dfcolname])
+        return(new_col_values)
         
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Covert to uppercase Error : " + str(sys.exc_info()[0].__name__))        
+    except Exception as e:
+        opstat.store_exception("'upperCase_df_column' error : " + dftitle + " " + dfcolname,e)
+        return(opstat)
+        
     
-    return(opstat) 
 
-
-def normalize_df_column(dftitle, dfcolname, newcolname=None) :
+def normalize_df_column(dftitle, dfcolname) :
     """
     * ------------------------------------------------------------------------
     * function : normalize a dataframe column
@@ -72,20 +61,17 @@ def normalize_df_column(dftitle, dfcolname, newcolname=None) :
     * parms :
     *  dftitle     - dataframe title
     *  dfcolname   - dataframe column to normalize
-    *  newcolname  - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    normalized column list or opstat
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
     
-    opstat  =   opStatus()
-    
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df                  =   cfg.get_dfc_dataframe_df(dftitle)
 
     from sklearn.preprocessing import MinMaxScaler
 
@@ -93,25 +79,15 @@ def normalize_df_column(dftitle, dfcolname, newcolname=None) :
         
         scaler = MinMaxScaler() 
         scaled_values = scaler.fit_transform(df[dfcolname])
-
-        if(newcolname == None) :
-            df[dfcolname] = scaled_values
-        else :
-            from dfcleanser.common.common_utils import is_column_in_df
-            if(is_column_in_df(df,newcolname)) :
-                df[newcolname] = scaled_values
-            else :
-                from dfcleanser.data_transform.data_transform_columns_control import add_column
-                add_column(dftitle, newcolname, scaled_values, opstat)
+        return(scaled_values)
                 
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Covert to uppercase Error : " + str(sys.exc_info()[0].__name__))        
+    except Exception as e:
+        opstat.store_exception("'normalize_df_column' error : " + dftitle + " " + dfcolname,e)
+        return(opstat)
         
-    return(opstat)
     
 
-def get_trig_values_for_column(dftitle, dfcolname, trigfunc, newcolname=None) :
+def get_trig_values_for_column(dftitle, dfcolname, trigfunc) :
     """
     * ------------------------------------------------------------------------
     * function : get trig column values
@@ -121,69 +97,40 @@ def get_trig_values_for_column(dftitle, dfcolname, trigfunc, newcolname=None) :
     *  dfcolname     - dataframe column to apply trig function to
     *  trigfunc      - trig function to apply 
     *                    ('sin','cos','tan','arcsin','arccos','arctan')
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    col list of trig values or opstat
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
     
-    opstat  =   opStatus()
-    
-    df  =   cfg.get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df  =   cfg.get_dfc_dataframe_df(dftitle)
 
     try :
         
         import numpy as np
         trigcol = np.array()
     
-        if(not (df is None)) :
+        if(trigfunc == 'sin')       :   trigcol = np.sin(df[dfcolname])
+        elif(trigfunc == 'cos')     :   trigcol = np.cos(df[dfcolname])
+        elif(trigfunc == 'tan')     :   trigcol = np.tan(df[dfcolname])
+        elif(trigfunc == 'arcsin')  :   trigcol = np.arcsin(df[dfcolname])
+        elif(trigfunc == 'arccos')  :   trigcol = np.arccos(df[dfcolname])
+        elif(trigfunc == 'arctan')  :   trigcol = np.arctan(df[dfcolname])
+        else                        :   
+            trigcol     =   None
             
-            from dfcleanser.common.common_utils import is_column_in_df
-            if(is_column_in_df(df,dfcolname)) :
-
-                if(trigfunc == 'sin')       :   trigcol = np.sin(df[dfcolname])
-                elif(trigfunc == 'cos')     :   trigcol = np.cos(df[dfcolname])
-                elif(trigfunc == 'tan')     :   trigcol = np.tan(df[dfcolname])
-                elif(trigfunc == 'arcsin')  :   trigcol = np.arcsin(df[dfcolname])
-                elif(trigfunc == 'arccos')  :   trigcol = np.arccos(df[dfcolname])
-                elif(trigfunc == 'arctan')  :   trigcol = np.arctan(df[dfcolname])
-                else                        :   
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("trig Func " + trigfunc + " is not supported")
+        return(trigcol)
                 
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("df column name " + dfcolname + " is not found")
-            
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("dataframe " + dftitle + " is not defined")
-   
-        if(opstat.get_status()) :
-            if(not (newcolname is None)) :
-                df[dfcolname]     =   trigcol
-            else :
-            
-                from dfcleanser.common.common_utils import is_column_in_df
-                if(not (is_column_in_df(df,newcolname))) :
-                
-                    from dfcleanser.data_transform.data_transform_columns_control import add_column
-                    add_column(dftitle, newcolname, trigcol, opstat)
-                
-                else :
-                    df[newcolname]  =   trigcol
+    except Exception as e:
+        opstat.store_exception("'get_trig_values_for_column' error : " + dftitle + " " + dfcolname + " " + trigfunc,e)
+        return(opstat)
         
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Covert to uppercase Error : " + str(sys.exc_info()[0].__name__))        
-        
-    return(opstat)
 
-def convert_df_column_to_degrees_or_radians(dftitle, dfcolname, degrees, newcolname=None) :
+def convert_df_column_to_degrees_or_radians(dftitle, dfcolname, degrees) :
     """
     * ------------------------------------------------------------------------
     * function : convert dataframe column to degrees or radians
@@ -193,20 +140,17 @@ def convert_df_column_to_degrees_or_radians(dftitle, dfcolname, degrees, newcoln
     *  dfcolname     - dataframe column to apply trig function to
     *  degrees       - True  - convert to degrees
     *                  False - conveet to radians
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    converted column or opstat
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
 
-    opstat  =   opStatus()
-    
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df = cfg.get_dfc_dataframe_df(dftitle)
 
     import numpy as np
     colvalues = np.array()
@@ -215,39 +159,93 @@ def convert_df_column_to_degrees_or_radians(dftitle, dfcolname, degrees, newcoln
         
         if(degrees) :
             colvalues   =   np.degrees(df[dfcolname])
-        #df[dfcolname] = np.degrees(df[dfcolname])
         else :
             colvalues   =   np.radians(df[dfcolname])
+            
+        return(colvalues)
     
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Covert to degrees/radians : " + str(sys.exc_info()[0].__name__))        
+    except Exception as e:
+        opstat.store_exception("'convert_df_column_to_degrees_or_radians' error : " + dftitle + " " + dfcolname + " " + str(degrees),e)
+        return(opstat)
         
-    if(opstat.get_status()) :
+
+def random_int_range(dftitle, randomIntLower, randomIntUpper) :
+    """
+    * ------------------------------------------------------------------------
+    * function : generate column of random ints in a range
+    * 
+    * parms :
+    *  dftitle          - dataframe title
+    *  randomIntLower   - random integer lower range value
+    *  randomIntUpper   - random integer upper range value
+    *
+    * returns : 
+    *    column values of random ints or opstat
+    *
+    * Notes : 
+    *    dfcleanser generic function
+    * -------------------------------------------------------------------------
+    """
+
+    opstat              =   opStatus()
+    df = cfg.get_dfc_dataframe_df(dftitle)
+    
+    import numpy as np
+    import random
+    
+    colrandints = np.array()
+    
+    try :
         
-        try :
+        for i in range(len(df)) :
+            colrandints.append(random.randrange(int(randomIntLower),int(randomIntUpper))) 
             
-            if(not (newcolname is None)) :
-                df[dfcolname]  =   colvalues
-            else :
-            
-                from dfcleanser.common.common_utils import is_column_in_df
-                if(not (is_column_in_df(df,newcolname))) :
-                
-                    from dfcleanser.data_transform.data_transform_columns_control import add_column
-                    add_column(dftitle, newcolname, colvalues, opstat)
-                
-                else :
-                    df[newcolname]  =   colvalues
-                    
-        except :
-            opstat.set_status(False)
-            opstat.set_errorMsg("Covert to degrees/radians : " + str(sys.exc_info()[0].__name__))        
-                    
-    return(opstat)
+        return(colrandints)
+        
+    except Exception as e:
+        opstat.store_exception("'random_int_range' error : " + dftitle + " " + str(randomIntLower) + " " + str(randomIntUpper),e)
+        return(opstat)
 
 
-def absolute_df_column(dftitle, dfcolname, newcolname=None) :
+def random_float_range(dftitle, randomFloatLower, randomFloatUpper) :
+    """
+    * ------------------------------------------------------------------------
+    * function : generate column of random floats in a range
+    * 
+    * parms :
+    *  dftitle            - dataframe title
+    *  randomFloatLower   - random integer lower range value
+    *  randomFloatUpper   - random integer upper range value
+    *
+    * returns : 
+    *    cols list of random floats or opstat
+    *
+    * Notes : 
+    *    dfcleanser generic function
+    * -------------------------------------------------------------------------
+    """
+    
+    opstat              =   opStatus()
+    df = cfg.get_dfc_dataframe_df(dftitle)
+    
+    import numpy as np
+    import random
+    
+    colrandfloats  =   np.array()
+    
+    try :
+        
+        for i in range(len(df)) :
+            colrandfloats.append(random.randrange(float(randomFloatLower),float(randomFloatUpper)))  
+        
+        return(colrandfloats)
+        
+    except Exception as e:
+        opstat.store_exception("'random_float_range' error : " + dftitle + " " + str(randomFloatLower) + " " + str(randomFloatUpper),e)
+        return(opstat)
+
+
+def absolute_df_column(dftitle, dfcolname) :
     """
     * ------------------------------------------------------------------------
     * function : convert dataframe column to absolute value
@@ -255,56 +253,32 @@ def absolute_df_column(dftitle, dfcolname, newcolname=None) :
     * parms :
     *  dftitle       - dataframe title
     *  dfcolname     - dataframe column to apply trig function to
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    col list of abs values or opstat
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
 
-    opstat  =   opStatus()
-    
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df = cfg.get_dfc_dataframe_df(dftitle)
 
     import numpy as np
     colabsolutes = np.array()
 
     try :
         
-        from dfcleanser.common.common_utils import is_column_in_df
-        if(is_column_in_df(df,dfcolname)) :
-            colabsolutes   =   np.absolute(df[dfcolname])
+        colabsolutes   =   np.absolute(df[dfcolname])
+        return(colabsolutes)
         
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("col name : " + dfcolname + " not found")        
-            
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Convert to absolutes : " + str(sys.exc_info()[0].__name__))        
-
-    if(opstat.get_status()) :
-        if(newcolname is None) :
-            df[dfcolname] = colabsolutes
-        else :
-            
-            from dfcleanser.common.common_utils import is_column_in_df
-            if(not (is_column_in_df(df,newcolname))) :
-                
-                from dfcleanser.data_transform.data_transform_columns_control import add_column
-                add_column(dftitle, newcolname, colabsolutes, opstat)
-           
-            else :
-                df[newcolname] = colabsolutes        
-                
-    return(opstat)
+    except Exception as e:
+        opstat.store_exception("'absolute_df_column' error : " + dftitle + " " + dfcolname,e)
+        return(opstat)
 
 
-def round_df_column(dftitle, dfcolname, decimals, newcolname=None) :
+def round_df_column(dftitle, dfcolname, decimals) :
     """
     * ------------------------------------------------------------------------
     * function : round float column to decials range
@@ -314,60 +288,36 @@ def round_df_column(dftitle, dfcolname, decimals, newcolname=None) :
     *  dfcolname     - dataframe column to round
     *  decimals      - rounding precision
     *                   0 - round to int
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    roundex col vals list or None
     *
     * Notes : 
     *    dfcleanser generic function
     * -------------------------------------------------------------------------
     """
-
-    opstat  =   opStatus()
     
-    from dfcleanser.common.cfg import get_dfc_dataframe
-    df = get_dfc_dataframe(dftitle)
+    opstat              =   opStatus()
+    df = cfg.get_dfc_dataframe_df(dftitle)
 
     import numpy as np
     dfrounds = np.array()
 
     try :
         
-        from dfcleanser.common.common_utils import is_column_in_df
-        if(is_column_in_df(df,dfcolname)) :
-
-            if(decimals == 0) :
-                dfrounds    =   np.rint(df[dfcolname])
-            else :
-                dfrounds    =   np.round_(df[dfcolname,decimals])
-                
+        if(decimals == 0) :
+            dfrounds    =   np.rint(df[dfcolname])
         else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("col name : " + dfcolname + " not found")        
-                
-    except :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Round Values : " + str(sys.exc_info()[0].__name__))        
-
-    if(opstat.get_status()) :
-        if(newcolname is None) :
-            df[dfcolname] = dfrounds
-        else :
+            dfrounds    =   np.round_(df[dfcolname,decimals])
             
-            from dfcleanser.common.common_utils import is_column_in_df
-            if(not (is_column_in_df(df,newcolname))) :
+        return(dfrounds)
                 
-                from dfcleanser.data_transform.data_transform_columns_control import add_column
-                add_column(dftitle, newcolname, dfrounds, opstat)
-                
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("col name : " + newcolname + " not found")        
+    except Exception as e:
+        opstat.store_exception("'round_df_column' error : " + dftitle + " " + dfcolname + " " + str(decimals),e)
+        return(opstat)
+        
 
-    return(opstat)
-
-def get_dist_from_center_df_column(dftitle,dfcolname,units,newcolname=None) :
+def get_dist_from_center_df_column(dftitle,dfcolname,units) :
     """
     * ------------------------------------------------------------------------
     * function : get the distance from geocode center 
@@ -378,10 +328,9 @@ def get_dist_from_center_df_column(dftitle,dfcolname,units,newcolname=None) :
     *  units         - distance units
     *  decimals      - rounding precision
     *                   0 - round to int
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    col list or None
     *
     * Notes : 
     *    dfcleanser generic function
@@ -390,7 +339,7 @@ def get_dist_from_center_df_column(dftitle,dfcolname,units,newcolname=None) :
 
     print("get_dist_from_center_df_column")
 
-def get_dist_from_point_df_column(dftitle,dfcolname,point,units,newcolname=None) :
+def get_dist_from_point_df_column(dftitle,dfcolname,point,units) :
     """
     * ------------------------------------------------------------------------
     * function : get the distance from geocode center 
@@ -401,10 +350,9 @@ def get_dist_from_point_df_column(dftitle,dfcolname,point,units,newcolname=None)
     *  units         - distance units
     *  decimals      - rounding precision
     *                   0 - round to int
-    *  newcolname    - dataframe column to add - if None modify dfcolname in place
     *
     * returns : 
-    *    opstat object for status
+    *    col list or None
     *
     * Notes : 
     *    dfcleanser generic function
@@ -439,7 +387,7 @@ def get_df_geocode_center(dftitle,dfcolname) :
     
     geocoords   =   []
     
-    df  =   cfg.get_dfc_dataframe(dftitle) 
+    df  =   cfg.get_dfc_dataframe_df(dftitle) 
     
     if(len(dfcolname == 1)) :
         geocoords   =   df[dfcolname[0]].tolist()

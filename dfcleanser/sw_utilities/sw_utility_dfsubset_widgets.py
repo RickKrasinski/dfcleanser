@@ -16,6 +16,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 
 import dfcleanser.sw_utilities.sw_utility_dfsubset_model as swsm
+import dfcleanser.sw_utilities.sw_utility_dfsubset_control as swsc
 
 from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm)
 
@@ -55,7 +56,7 @@ get_subset_input_idList                 =   ["gsindataframe",
                                              "gscolnames",
                                              "gsadddrop",
                                              "subsetfname",
-                                             None,None,None,None,None,None]
+                                             None,None,None,None,None]
 
 get_subset_input_labelList              =   ["input_dataframe",
                                              "output_dataframe",
@@ -64,11 +65,10 @@ get_subset_input_labelList              =   ["input_dataframe",
                                              "csv_file_name",
                                              "Define</br>Filter(s)",
                                              "Get</br>Subset",
-                                             "Display</br>Filter(s)",
                                              "Clear","Return","Help"]
 
-get_subset_input_typeList               =   ["select","text",maketextarea(4),"select","file",
-                                             "button","button","button","button","button","button"]
+get_subset_input_typeList               =   ["select","text","selectmultiple","select","file",
+                                             "button","button","button","button","button"]
 
 get_subset_input_placeholderList        =   ["dataframe to get subset from",
                                              "dataframe name to copy subset to (default - None overwrite input_dataframe)",
@@ -80,7 +80,6 @@ get_subset_input_placeholderList        =   ["dataframe to get subset from",
 get_subset_input_jsList                 =   [None,None,None,None,None,
                                              "get_subset_callback("+str(swsm.DISPLAY_GET_SUBSET_FILTER)+")",
                                              "get_subset_callback("+str(swsm.PROCESS_GET_SUBSET)+")",
-                                             "get_subset_callback("+str(swsm.DISPLAY_FILTERS)+")",
                                              "get_subset_callback("+str(swsm.CLEAR_SUBSET_FORM)+")",
                                              "get_subset_callback("+str(swsm.DISPLAY_MAIN)+")",
                                              "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + ")"]
@@ -105,29 +104,25 @@ get_subset_filter_input_id                =   "dcdfsubsetsearch"
 get_subset_filter_input_idList            =   ["gscolname",
                                                "gsfilterselectstring",
                                                "gsselectstring",
-                                               None,None,None,None,None,None,None]
+                                               None,None,None,None,None]
 
 get_subset_filter_input_labelList         =   ["filter_column_name",
                                                "filter_select_string",
                                                "subset_selection_criteria",
-                                               "Get</br>Column</br>Names",
                                                "Add</br>Filter</br>To Criteria",
-                                               "Display</br>Filters",
                                                "Get</br>Subset",
-                                               "Clear","Return","Help"]
+                                               "Clear</br>Current</br>Filter","Return","Help"]
 
 get_subset_filter_input_typeList          =   ["text",maketextarea(3),maketextarea(6),
-                                               "button","button","button","button","button","button","button"]
+                                               "button","button","button","button","button"]
 
 get_subset_filter_input_placeholderList   =   ["current filter column name - select from Condition Columns table",
                                                "current filter column value(s) - select from Column Values table or enter 'value' ",
                                                "select string : can be editted manually (default - None)",
-                                               None,None,None,None,None,None,None]
+                                               None,None,None,None,None]
 
 get_subset_filter_input_jsList            =   [None,None,None,
-                                               "get_subset_callback("+str(swsm.GET_COLUMN_NAMES)+")",
                                                "get_subset_callback("+str(swsm.ADD_FILTER)+")",
-                                               "get_subset_callback("+str(swsm.DISPLAY_FILTERS)+")",
                                                "get_subset_callback("+str(swsm.PROCESS_GET_SUBSET_FILTERED)+")",
                                                "get_subset_callback("+str(swsm.CLEAR_FILTER_FORM)+")",
                                                "get_subset_callback("+str(swsm.DISPLAY_MAIN)+")",
@@ -190,7 +185,7 @@ get_subset_filters_form                 =   [get_subset_filters_id,
 
 keypad_container = """
     <div style="margin-top:5px; padding-top:5px;">
-    <div class='container dc-table-container' style="margin-left:80px; width:590px; margin-top:5px;">
+    <div class='container dc-table-container' style="margin-left:30px; width:640px; margin-top:5px;">
         <div>
             <table class="table dc-table" id="keypadTable" style="border:3px solid #428bca;">
                 <tbody>
@@ -201,32 +196,35 @@ keypad_container = """
                         <td style=" width:9%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(1)">1</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(2)">2</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(3)">3</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(4)">4</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(5)">5</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(6)">6</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(7)">7</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(8)">8</button>
                         </td>
-                        <td style=" width:9%; width:20px; height:20px;">
+                        <td style=" width:8%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(9)">9</button>
                         </td>
                         <td style=" width:9%; width:20px; height:20px;">
-                            <button type="button" style="font-size:12px; font-weight:bold;" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad('.')">.</button>
+                            <button type="button" style="font-size:12px; font-weight:bold;" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad('.')"><span style='font-size:20px; font-weight:bold;'>.</span></button>
+                        </td>
+                        <td style=" width:9%; width:20px; height:20px;">
+                            <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="keypad(',')"><span style='font-size:20px; font-weight:bold;'>,</span></button>
                         </td>
 
                     </tr>
@@ -238,33 +236,36 @@ keypad_container = """
 """
 
 operator_keypad_container = """
-    <div class='container dc-table-container' style=" margin-left:80px; width:590px; padding-top:5px; font-family:arial; font-size:12px;">
+    <div class='container dc-table-container' style=" margin-left:30px; width:640px; padding-top:5px; font-family:arial; font-size:12px;">
         <div>
             <table class="table dc-table" id="opeatorTable" style="border:3px solid #428bca;">
                 <tbody>
                     <tr class="dc-describe-table-body-row">
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:10%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('==')">==</button>
                         </td>
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:10%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('!=')">!=</button>
                         </td>
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:9%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('<')">&lt;</button>
                         </td>
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:10%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('<=')">&lt;=</button>
                         </td>
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:9%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('>')">></button>
                         </td>
-                        <td style=" width:11%; width:20px; height:20px;">
+                        <td style=" width:10%; width:20px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('>=')">>=</button>
                         </td>
-                        <td style=" width:17%; width:40px; height:20px;">
+                        <td style=" width:13%; width:40px; height:20px;">
+                            <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('.isin()')">isin</button>
+                        </td>
+                        <td style=" width:14%; width:40px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('.isnull()')">isnull</button>
                         </td>
-                        <td style=" width:17%; width:40px; height:20px;">
+                        <td style=" width:15%; width:40px; height:20px;">
                             <button type="button" class="btn btn-outline-primary waves-effect dc-btn-subset" onclick="operpad('.notnull()')">notnull</button>
                         </td>
                     </tr>
@@ -275,7 +276,7 @@ operator_keypad_container = """
 """
 
 logic_keypad_container = """
-    <div class='container dc-table-container' style=" margin-left:80px; width:590px; padding-top:5px;">
+    <div class='container dc-table-container' style=" margin-left:30px; width:640px; padding-top:5px;">
         <div>
             <table class="table dc-table" id="opeatorTable" style="border:3px solid #428bca;">
                 <tbody>
@@ -356,10 +357,10 @@ def display_df_subset_status(out_df,filename,runtime,filtertext=None) :
     statusRows.append(["output dataframe",out_df])
     colorList.append([whitecolor,whitecolor])
     
-    statusRows.append(["Total Rows",len(cfg.get_dfc_dataframe(out_df))])
+    statusRows.append(["Total Rows",len(cfg.get_dfc_dataframe_df(out_df))])
     colorList.append([whitecolor,whitecolor])
     
-    statusRows.append(["Total Columns",len(cfg.get_dfc_dataframe(out_df).columns)])
+    statusRows.append(["Total Columns",len(cfg.get_dfc_dataframe_df(out_df).columns)])
     colorList.append([whitecolor,whitecolor])
     
     statusRows.append(["Total Run Time",runtime])
@@ -424,16 +425,16 @@ def get_col_uniques_table(df,colname) :
     uniques =   [] 
         
     #check if the object is string
-    if (is_str_column(cfg.get_dfc_dataframe(),colname)) :
+    if (is_str_column(swsc.get_subset_df(),colname)) :
         
-        uniques =   cfg.get_dfc_dataframe()[colname].unique().tolist()
+        uniques =   swsc.get_subset_df()[colname].unique().tolist()
         for i in range(len(uniques)) :
             uniques[i]  =   str(uniques[i])
         uniques.sort()
     else :
         
         if(is_numeric_col(df,colname)) :           
-            uniques =   cfg.get_dfc_dataframe()[colname].unique().tolist()
+            uniques =   swsc.get_subset_df()[colname].unique().tolist()
             uniques.sort()
 
     if(len(uniques) > 0) :
@@ -504,70 +505,19 @@ def get_dfsubset_table(df,filters=False,colname=None) :
     * --------------------------------------------------------
     """
  
-    from dfcleanser.sw_utilities.sw_utility_geocode_widgets import get_df_col_names_table
+    from dfcleanser.common.display_utils import get_df_col_names_table
     
     if(colname==None) :
         if(filters) :
             callback = "set_filter_colname"
         else :
-            callback = "set_filter_colname"#"set_ds_colname"
-    
-        # get the drop flag and col name list
-        dfsparms = cfg.get_config_value(get_subset_input_id+"Parms")
+            callback = "set_ds_colname"
         
-        if( (not(dfsparms == None)) and (len(dfsparms) > 0) ):
-            collist = cfg.get_cfg_parm_from_input_list(get_subset_input_id,
-                                                       "column_names_list",
-                                                       get_subset_input_labelList)
-            
-            if(collist == "") :
-                collist =  df.columns.get_values().tolist() 
-            else :    
-                #collist = dfsparms[3]
-                collist = collist.split(",")
-                for i in range(len(collist)) :
-                    collist[i]  =   collist[i].rstrip(" ")    
-            
-            if(len(collist) > 0) :
-                keepcols = True
-                keepflag = cfg.get_cfg_parm_from_input_list(get_subset_input_id,
-                                                           "column_names_list_flag",
-                                                           get_subset_input_labelList)
-                #keepflag = dfsparms[4]
-                if(not (keepflag is None) ) :
-                    if(keepflag == "False") :
-                        keepcols = False
-                
-                if(keepcols) :
-                    colnames = collist
-                else :
-                    colnames = []
-                    allcols = cfg.get_dfc_dataframe().columns.tolist()
-                    for i in range(len(allcols)) :
-                        matched = False
-                        for j in range(len(collist)) : 
-                            if(allcols[i] == allcols[j]) :
-                                matched = True
-                            
-                        if(not (matched)) :
-                            colnames.append(allcols[i])
-                
-                if(len(colnames) > 0) :
-                    col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
-                                                            cfg.SWDFSubsetUtility_ID,callback,None,colnames)    
-                else :
-                    col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
-                                                            cfg.SWDFSubsetUtility_ID,callback)
-            else :
-                col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
-                                                        cfg.SWDFSubsetUtility_ID,callback)
-                
-        else :       
-            col_names_html = get_df_col_names_table("dcsubsetcolnamesTable",
-                                                    cfg.SWDFSubsetUtility_ID,callback)
-             
+        col_names_html = get_df_col_names_table(df,"dcsubsetcolnamesTable",
+                                                cfg.SWDFSubsetUtility_ID,callback)
+
     else :
-        col_names_html  =  get_col_uniques_table(cfg.get_dfc_dataframe(),colname) 
+        col_names_html  =  get_col_uniques_table(df,colname) 
 
     return(col_names_html) 
 
@@ -586,6 +536,8 @@ def display_df_subset(df,filters=False,colname=None) :
     * --------------------------------------------------------
     """
     
+    print("display_df_subset",filters,colname)
+    
     if(not colname==None) :
         cfg.set_config_value(get_subset_filter_input_id+"Parms",[colname,"","","","",""])
 
@@ -603,7 +555,7 @@ def display_df_subset(df,filters=False,colname=None) :
         
         get_filter_subset_input_form.set_shortForm(False)
         get_filter_subset_input_form.set_gridwidth(680)
-        get_filter_subset_input_form.set_custombwidth(85)
+        get_filter_subset_input_form.set_custombwidth(110)
         get_filter_subset_input_form.set_fullparms(True)
         
         get_subset_input_html = get_filter_subset_input_form.get_html() 
@@ -622,8 +574,17 @@ def display_df_subset(df,filters=False,colname=None) :
     
         selectDicts     =   []
         
-        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWDFSubsetUtility_ID)
         selectDicts.append(dataframes)
+        
+        current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_SUBSET_DF)
+        colnames        =   current_df.columns.tolist()
+        cols_name_list  =   ["all"]
+        for i in range(len(colnames)) :
+            cols_name_list.append(colnames[i])
+            
+        cnames          =   {"default":cols_name_list[0],"list": cols_name_list,"size":10}
+        selectDicts.append(cnames)
         
         subssel         =   {"default":"True","list":["True","False"]}
         selectDicts.append(subssel)
@@ -636,7 +597,7 @@ def display_df_subset(df,filters=False,colname=None) :
         
         subset_input_form.set_shortForm(False)
         subset_input_form.set_gridwidth(680)
-        subset_input_form.set_custombwidth(100)
+        subset_input_form.set_custombwidth(110)
         subset_input_form.set_fullparms(True)
         
         get_subset_input_html = subset_input_form.get_html() 
@@ -644,18 +605,29 @@ def display_df_subset(df,filters=False,colname=None) :
         get_subset_heading_html =   "<div>Get Dataframe Subset</div><br></br>"
     
     if(filters) :
-    
-        addfilters_notes_html        =   "<br><div id='addfilternote' style='text-align:center; margin-left:130px; width:480px; border: 1px solid #67a1f3;'>Select a column name for this filter.</div><br>"
         
+        if(cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS) is None) :
+            help_note           =   "Select a column name to use as the value for the filter."
+        else :
+            help_note           =   "If defining another filter select '|' or '&' to join new filter to old filters and then select a column name to use as the value for the filter.</br>If done defining filters hit 'Get Subset' to get the subset."
+        
+        from dfcleanser.common.common_utils import get_help_note_html
+        filter_notes_html   =   get_help_note_html(help_note,None,None,"addfilternote")
+
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","dfc-top","dfc-main","dfc-bottom","dfc-footer"]
-        gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html,keypad_container,operator_keypad_container,logic_keypad_container,addfilters_notes_html]
+        gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html,keypad_container,operator_keypad_container,logic_keypad_container,filter_notes_html]
     
         display_generic_grid("dfsubset-wrapper",gridclasses,gridhtmls)
         
     else :
         
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
-        gridhtmls       =   [get_subset_heading_html,col_names_html,get_subset_input_html]
+        help_note           =   "Select columns to keep or drop with the 'column_names_list." + "<br>" + "Once you select the columns you can get a subset or define filters to get a subset."
+        from dfcleanser.common.common_utils import get_help_note_html
+        subset_notes_html   =   get_help_note_html(help_note,None,None,"addfilternote")
+
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-bottom","dfc-footer"]
+        gridhtmls       =   [get_subset_heading_html,get_subset_input_html,subset_notes_html]
         
         print("\n")
         display_generic_grid("sw-utils-wrapper",gridclasses,gridhtmls)

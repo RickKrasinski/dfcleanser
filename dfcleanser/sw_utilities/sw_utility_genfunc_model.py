@@ -41,14 +41,23 @@ FOR_ADD_COLUMNS                     =   0
 FOR_APPLY_FN                        =   1
 FOR_GEN_FUNC                        =   2
 
-reservedlambdas                     =   ["np.sin(df[dfcolname])","np.cos(df[dfcolname])","np.tan(df[dfcolname])",
-                                         "np.arcsin(df[dfcolname])","np.arccos(df[dfcolname])","np.arctan(df[dfcolname])",
-                                         "lambda x: x.upper()","np.degrees(df[dfcolname])","np.radians(df[dfcolname])",
-                                         "np.absolute(df[dfcolname])","np.round_(df[dfcolname,decimals])"]
+
+applyfns                            =   ["np.sin","np.cos","np.tan","np.arcsin","np.arccos","np.arctan",
+                                         "np.degrees","np.radians",
+                                         "np.absolute","np.square","np.sqrt",
+                                         "np.ceil","np.floor","np.rint",
+                                         "np.reciprocal","np.positive","np.negative",
+                                         "np.capitalize",
+                                         "lambda x: x.upper()","lambda x: x.lower()","lambda x: x.round(ndigits)",
+                                         "lambda x: x.strip(stripchar)","lambda x: x.lstrip(stripchar)","lambda x: x.rstrip(stripchar)",
+                                         "lambda x: x.center(width,fillchar)","lambda x: x.ljust(width,fillchar)",
+                                         "lambda x: x.rjust(width,fillchar)","lambda x: x.replace(old,new)",
+                                         "lambda x: x.slice(start,stop)"]
 
 reservedfunctions                   =   ["upperCase_df_column","normalize_df_column","get_trig_values_for_column",
                                          "convert_df_column_to_degrees_or_radians","absolute_df_column","round_df_column",
-                                         "get_dist_from_center_df_column","get_dist_from_point_df_column"]
+                                         "get_dist_from_center_df_column","get_dist_from_point_df_column","random_int_range",
+                                         "random_float_range"]
 
 reservedfunctionsmodule             =    "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
 
@@ -56,6 +65,13 @@ reservedfunctionsmodule             =    "dfcleanser.sw_utilities.sw_utility_gen
 Red     = "#FAA78F"
 Green   = "#8FFAC0"
 Yellow  = "#F5F7A5"
+
+
+def get_genfunc_list() :
+    
+    gtfuncs = reservedfunctions
+    gtfuncs.sort()
+    return(gtfuncs)
 
 
 """
@@ -66,8 +82,137 @@ Yellow  = "#F5F7A5"
 * -----------------------------------------------------------------------*
 """
 
-def is_lambda_function(ftile) :
-    return(False)
+def get_apply_function_return_datatype(ftitle) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function call for reserved functions
+    * 
+    * parms :
+    *  ftitle      - reserved function title
+    *  fparms_dict - function parms dict
+    *
+    * returns : 
+    *    function call
+    *
+    * -------------------------------------------------------------------------
+    """
+    
+    dtype  =   "str"
+    
+    if(ftitle.find("np.sin") > -1 )                 :   dtype  =   "float"
+    elif(ftitle.find("np.cos") > -1 )               :   dtype  =   "float"
+    elif(ftitle.find("np.tan") > -1 )               :   dtype  =   "float"
+    elif(ftitle.find("np.arcsin") > -1 )            :   dtype  =   "float"
+    elif(ftitle.find("np.arccos") > -1 )            :   dtype  =   "float"
+    elif(ftitle.find("np.arctan") > -1 )            :   dtype  =   "float"
+    elif(ftitle.find("np.degrees") > -1 )           :   dtype  =   "float"
+    elif(ftitle.find("np.radians") > -1 )           :   dtype  =   "float"
+    elif(ftitle.find("np.absolute") > -1 )          :   dtype  =   "numeric"
+    elif(ftitle.find("np.square") > -1 )            :   dtype  =   "numeric"
+    elif(ftitle.find("np.sqrt") > -1 )              :   dtype  =   "numeric"
+    elif(ftitle.find("np.ceil") > -1 )              :   dtype  =   "numeric"
+    elif(ftitle.find("np.floor") > -1 )             :   dtype  =   "numeric"
+    elif(ftitle.find("np.rint") > -1 )              :   dtype  =   "int"
+    elif(ftitle.find("np.reciprocal") > -1 )        :   dtype  =   "float"
+    elif(ftitle.find("np.positive") > -1 )          :   dtype  =   "numeric"
+    elif(ftitle.find("np.negative") > -1 )          :   dtype  =   "numeric"
+    elif(ftitle.find("np.capitalize") > -1 )        :   dtype  =   "str"
+    elif(ftitle.find("x.round") > -1 )              :   dtype  =   "numeric"
+    elif(ftitle.find("x.strip") > -1 )              :   dtype  =   "str"
+    elif(ftitle.find("x.lstrip") > -1 )             :   dtype  =   "str"
+    elif(ftitle.find("x.rstrip") > -1 )             :   dtype  =   "str"
+    elif(ftitle.find("x.center") > -1 )             :   dtype  =   "str"
+    elif(ftitle.find("x.ljust") > -1 )              :   dtype  =   "str"
+    elif(ftitle.find("x.rjust") > -1 )              :   dtype  =   "str"
+    elif(ftitle.find("x.replace") > -1 )            :   dtype  =   "str"
+    elif(ftitle.find("x.slice") > -1 )              :   dtype  =   "str"
+        
+    return(dtype)
+
+
+def get_apply_function_parms_datatypes(ftitle) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function parms datatypes for apply functions
+    * 
+    * parms :
+    *  ftitle     - reserved function title
+    *
+    * returns : 
+    *    opstat function parms
+    *
+    * -------------------------------------------------------------------------
+    """
+    fparms  =   None
+    
+    if(ftitle.find("x.round") > -1 )                            :   fparms  =   [int]
+    elif(ftitle.find("x.strip") > -1 )                          :   fparms  =   [str]
+    elif(ftitle.find("x.lstrip") > -1 )                         :   fparms  =   [str]
+    elif(ftitle.find("x.rstrip") > -1 )                         :   fparms  =   [str]
+    elif(ftitle.find("x.center") > -1 )                         :   fparms  =   [int,str]
+    elif(ftitle.find("x.ljust") > -1 )                          :   fparms  =   [int,str]
+    elif(ftitle.find("x.rjust") > -1 )                          :   fparms  =   [int,str]
+    elif(ftitle.find("x.replace") > -1 )                        :   fparms  =   [str,str]
+    elif(ftitle.find("x.slice") > -1 )                          :   fparms  =   [int,int]
+    
+    return(fparms)
+
+
+def get_apply_function_parms(ftitle) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function parms for apply functions
+    * 
+    * parms :
+    *  ftitle     - reserved function title
+    *
+    * returns : 
+    *    opstat function parms
+    *
+    * -------------------------------------------------------------------------
+    """
+    fparms  =   None
+    
+    if(ftitle.find("x.round") > -1 )                            :   fparms  =   ["ndigits"]
+    elif(ftitle.find("x.strip") > -1 )                          :   fparms  =   ["stripchar"]
+    elif(ftitle.find("x.lstrip") > -1 )                         :   fparms  =   ["stripchar"]
+    elif(ftitle.find("x.rstrip") > -1 )                         :   fparms  =   ["stripchar"]
+    elif(ftitle.find("x.center") > -1 )                         :   fparms  =   ["width","fillchar"]
+    elif(ftitle.find("x.ljust") > -1 )                          :   fparms  =   ["width","fillchar"]
+    elif(ftitle.find("x.rjust") > -1 )                          :   fparms  =   ["width","fillchar"]
+    elif(ftitle.find("x.replace") > -1 )                        :   fparms  =   ["old","new"]
+    elif(ftitle.find("x.slice") > -1 )                          :   fparms  =   ["start","stop"]
+    
+    return(fparms)
+
+
+def get_reserved_function_parms_datatypes(ftitle) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function parms for reserved functions
+    * 
+    * parms :
+    *  ftitle     - reserved function title
+    *
+    * returns : 
+    *    opstat function parms
+    *
+    * -------------------------------------------------------------------------
+    """
+    fparms  =   None
+    
+    if(ftitle == "upperCase_df_column")                         :   fparms  =   [str,str]
+    elif(ftitle == "normalize_df_column")                       :   fparms  =   [str,str]
+    elif(ftitle == "get_trig_values_for_column")                :   fparms  =   [str,str,str]
+    elif(ftitle == "convert_df_column_to_degrees_or_radians")   :   fparms  =   [str,str,float]
+    elif(ftitle == "absolute_df_column")                        :   fparms  =   [str,str]
+    elif(ftitle == "round_df_column")                           :   fparms  =   [str,str,int]
+    elif(ftitle == "get_dist_from_center_df_column")            :   fparms  =   [str,str,int]
+    elif(ftitle == "get_dist_from_point_df_column")             :   fparms  =   [str,str,float,int]
+    elif(ftitle == "random_int_range")                          :   fparms  =   [str,int,int]
+    elif(ftitle == "random_float_range")                        :   fparms  =   [str,float,float]
+    
+    return(fparms)
 
 
 def get_reserved_function_parms(ftitle) :
@@ -85,19 +230,135 @@ def get_reserved_function_parms(ftitle) :
     """
     fparms  =   None
     
-    if(ftitle == "upperCase_df_column")                         :   fparms  =   "dftitle,dfcolname,newcolname"
-    elif(ftitle == "normalize_df_column")                       :   fparms  =   "dftitle,dfcolname,newcolname"
-    elif(ftitle == "get_trig_values_for_column")                :   fparms  =   "dftitle,dfcolname,trigfunc,newcolname"
-    elif(ftitle == "convert_df_column_to_degrees_or_radians")   :   fparms  =   "dftitle,dfcolname,degrees,newcolname"
-    elif(ftitle == "absolute_df_column")                        :   fparms  =   "dftitle,dfcolname,newcolname"
-    elif(ftitle == "round_df_column")                           :   fparms  =   "dftitle,dfcolname,decimals,newcolname"
-    elif(ftitle == "get_dist_from_center_df_column")            :   fparms  =   "dfname,dfcolname,newcolname"
+    if(ftitle == "upperCase_df_column")                         :   fparms  =   "dftitle,dfcolname"
+    elif(ftitle == "normalize_df_column")                       :   fparms  =   "dftitle,dfcolname"
+    elif(ftitle == "get_trig_values_for_column")                :   fparms  =   "dftitle,dfcolname,trigfunc"
+    elif(ftitle == "convert_df_column_to_degrees_or_radians")   :   fparms  =   "dftitle,dfcolname,degrees"
+    elif(ftitle == "absolute_df_column")                        :   fparms  =   "dftitle,dfcolname"
+    elif(ftitle == "round_df_column")                           :   fparms  =   "dftitle,dfcolname,decimals"
+    elif(ftitle == "get_dist_from_center_df_column")            :   fparms  =   "dftitle,dfcolname,units"
+    elif(ftitle == "get_dist_from_point_df_column")             :   fparms  =   "dftitle,dfcolname,point,units"
+    elif(ftitle == "random_int_range")                          :   fparms  =   "dftitle,randomIntLower,randomIntUpper"
+    elif(ftitle == "random_float_range")                        :   fparms  =   "dftitle,randomFloatLower,randomFloatUpper"
     
     if(not(fparms is None)) :
         fparms  =   fparms.split(",")
     
     return(fparms)
 
+
+def get_function_kwvals(ftitle,dftitle,dfcolname) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function call for reserved functions
+    * 
+    * parms :
+    *  ftitle      - reserved function title
+    *  fparms_dict - function parms dict
+    *
+    * returns : 
+    *    function call
+    *
+    * -------------------------------------------------------------------------
+    """
+ 
+    #print("get_function_kwvals",ftitle,dftitle,dfcolname)
+    
+    kwvals  =   None
+    
+    if(ftitle == "upperCase_df_column")                         :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
+    if(ftitle == "normalize_df_column")                         :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
+    if(ftitle == "get_trig_values_for_column")                  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"trigfunc":"sin"}
+    if(ftitle == "convert_df_column_to_degrees_or_radians")     :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"degrees":"True"}
+    if(ftitle == "absolute_df_column")                          :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
+    if(ftitle == "round_df_column")                             :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
+    if(ftitle == "get_dist_from_center_df_column")              :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"units":"USER VALUE"}
+    if(ftitle == "get_dist_from_point_df_column")               :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"point":"USER VALUE","units":"USER VALUE"}
+    if(ftitle == "random_int_range")                            :    kwvals  =   {"dftitle":dftitle,"randomIntLower":"0","randomIntUpper":"0"}
+    if(ftitle == "random_float_range")                          :    kwvals  =   {"dftitle":dftitle,"randomFloatLower":"0.0","randomFloatUpper":"0.0"}
+        
+    return(kwvals)
+
+
+def get_function_return_datatype(ftitle) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function call for reserved functions
+    * 
+    * parms :
+    *  ftitle      - reserved function title
+    *  fparms_dict - function parms dict
+    *
+    * returns : 
+    *    function call
+    *
+    * -------------------------------------------------------------------------
+    """
+    
+    dtype  =   "str"
+    
+    if(ftitle == "upperCase_df_column")                         :    dtype   =  "str"
+    if(ftitle == "normalize_df_column")                         :    dtype   =  "float"
+    if(ftitle == "get_trig_values_for_column")                  :    dtype   =  "float"
+    if(ftitle == "convert_df_column_to_degrees_or_radians")     :    dtype   =  "float"
+    if(ftitle == "absolute_df_column")                          :    dtype   =  "float"
+    if(ftitle == "round_df_column")                             :    dtype   =  "float"
+    if(ftitle == "get_dist_from_center_df_column")              :    dtype   =  "float"
+    if(ftitle == "get_dist_from_point_df_column")               :    dtype   =  "float"
+    if(ftitle == "random_int_range")                            :    dtype   =  "int"
+    if(ftitle == "random_float_range")                          :    dtype   =  "float"
+        
+    return(dtype)
+    
+    
+def get_function_kwval_parms_select(ftitle,parmid) :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the function call for reserved functions
+    * 
+    * parms :
+    *  ftitle      - reserved function title
+    *  fparms_dict - function parms dict
+    *
+    * returns : 
+    *    function call
+    *
+    * -------------------------------------------------------------------------
+    """
+ 
+    #print("get_function_kwvals",ftitle,parmid)
+    
+    select_dict  =   None
+    
+    if(parmid == "dftitle") :
+        dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
+        current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+        select_dict         =   {"default":current_df_name,"list":dataframes_loaded}
+        
+    elif(parmid == "dfcolname") :
+        current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+        df                  =   cfg.get_dfc_dataframe_df(current_df_name)
+        cols_list           =   df.columns.tolist()
+        select_dict         =   {"default":cols_list[0],"list":cols_list}
+        
+    elif(ftitle == "get_trig_values_for_column") :
+        if(parmid == "trigfunc") :        
+            select_dict         =   {"default":'sin',"list":['sin','cos','tan','arcsin','arccos','arctan']}
+
+    elif(ftitle == "convert_df_column_to_degrees_or_radians") :
+        if(parmid == "degrees") :        
+            select_dict         =   {"default":True,"list":[True,False]}
+            
+    elif(ftitle == "get_dist_from_center_df_column") :
+        if(parmid == "units") :        
+            select_dict         =   {"default":True,"list":[True,False]}
+            
+    elif(ftitle == "get_dist_from_point_df_column") :
+        if(parmid == "units") :        
+            select_dict         =   {"default":True,"list":[True,False]}
+    
+    return(select_dict)
+    
 
 def get_function_call(ftitle,fparms_dict) :
     """
@@ -126,16 +387,13 @@ def get_function_call(ftitle,fparms_dict) :
                 func_call       =   (func_call + "'" + fparms_dict.get("dftitle",None) + "'")
             else :
                 func_call       =   (func_call + "****")
+        
         elif(funcparms[i] == "dfcolname") :
             if(not (fparms_dict.get("dfcolname",None) is None)) :
                 func_call       =   (func_call + ",  '" + fparms_dict.get("dfcolname",None) + "'")
             else :
                 func_call       =   (func_call + ",  ****")
-        elif(funcparms[i] == "newcolname") :
-            newcol  =  fparms_dict.get("newcolname",None)
-            if( (not (newcol is None)) and (not (newcol == "None")) ) :
-                func_call       =   (func_call + ",  '" + newcol + "'")
-                        #func_call       =   (func_call + " ,****")
+        
         elif(funcparms[i] == "opstat") :
             func_call       =   (func_call + ",  opstat ")
         else :
@@ -146,35 +404,6 @@ def get_function_call(ftitle,fparms_dict) :
     return(func_call)
 
 
-def get_function_kwvals(ftitle,dftitle,dfcolname,newcolname) :
-    """
-    * ------------------------------------------------------------------------
-    * function : get the function call for reserved functions
-    * 
-    * parms :
-    *  ftitle      - reserved function title
-    *  fparms_dict - function parms dict
-    *
-    * returns : 
-    *    function call
-    *
-    * -------------------------------------------------------------------------
-    """
- 
-    print("get_function_kwvals",ftitle,dftitle,dfcolname,newcolname)
-    
-    kwvals  =   None
-    
-    if(ftitle == reservedfunctions[0])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"newcolname":newcolname}
-    if(ftitle == reservedfunctions[1])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"newcolname":newcolname}
-    if(ftitle == reservedfunctions[2])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"trigfunc":"USER VALUE","newcolname":newcolname}
-    if(ftitle == reservedfunctions[3])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"degrees":"USER VALUE","newcolname":newcolname}
-    if(ftitle == reservedfunctions[4])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"newcolname":newcolname}
-    if(ftitle == reservedfunctions[5])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"newcolname":newcolname}
-    if(ftitle == reservedfunctions[6])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"units":"USER VALUE","newcolname":newcolname}
-    if(ftitle == reservedfunctions[7])  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"point":"USER VALUE","units":"USER VALUE","newcolname":newcolname}
-        
-    return(kwvals)
 
 
 
@@ -267,6 +496,12 @@ def get_df_function_source(ftitle,sourceOnly=True) :
     elif(ftitle == reservedfunctions[7])  :   
         from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_dist_from_point_df_column
         gfcode      =   inspect.getsource(get_dist_from_point_df_column) 
+    elif(ftitle == reservedfunctions[8])  :   
+        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import random_int_range
+        gfcode      =   inspect.getsource(random_int_range) 
+    elif(ftitle == reservedfunctions[9])  :   
+        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import random_float_range
+        gfcode      =   inspect.getsource(random_float_range) 
         
     if(sourceOnly) :
         firstcomment    =   gfcode.find('"""')
@@ -297,6 +532,8 @@ def get_function_kwargs(module,fname,kwvals=None) :
     * -------------------------------------------------------------------------
     """
     
+    #print("get_function_kwargs",module,fname,kwvals)
+    
     help_text   =   get_function_help_doc(module,fname)
     
     if(len(help_text) > 0) :
@@ -314,7 +551,7 @@ def get_function_kwargs(module,fname,kwvals=None) :
             defval      =   kwargs[i].find("=")
             if(defval > -1) :
                 kwargs[i]   =   kwargs[i][:defval] 
-        
+                
         from dfcleanser.common.html_widgets import new_line
         
         kwargs_text     =   "from " + module + " import " + fname + new_line
@@ -342,7 +579,7 @@ def get_function_kwargs(module,fname,kwvals=None) :
                 
         kwargs_text     =   kwargs_text + ") "        
                 
-        return(kwargs_text)
+        return([kwargs,kwargs_text])
         
     else :
         
@@ -408,7 +645,7 @@ def get_generic_function(ftitle) :
 def get_generic_function_desc(ftitle) :
     
     if(ftitle in reservedfunctions) :
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_help_doc
+        #from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_help_doc
         module_name   =   "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
         return(get_function_help_doc(module_name,ftitle))
         
@@ -419,11 +656,13 @@ def delete_generic_function(title) :
     GenericFunctions.delete_function(title)
 
 def get_total_generic_functions() :
+    print("get_total_generic_functions")
     total_funcs     =   len(reservedfunctions)
     total_funcs     =   total_funcs + GenericFunctions.get_total_functions()
     return(total_funcs)
 
 def get_generic_functions_names_list() :
+    print("get_generic_functions_names_list")
     func_list   =   []
     for i in range(len(reservedfunctions)) :
         func_list.append(reservedfunctions[i])
@@ -478,7 +717,7 @@ class genericFunctionsStore :
             except FileNotFoundError :
                 self.genericfunctionDict = {}
             except :
-                print("[error load gen_func file]",str(sys.exc_info()[0]))
+                #print("[error load gen_func file ...]",str(sys.exc_info()[0]))
                 self.genericfunctionDict = {}
     
     def save_generic_functions_file(self) :

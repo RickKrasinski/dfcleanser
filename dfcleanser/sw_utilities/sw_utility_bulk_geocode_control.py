@@ -70,7 +70,6 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
         resume_geocode_runner()
     
     elif(cmd == sugm.BULK_VIEW_ERRORS) :
-        cfg.set_current_dfc_dataframe_title(sugm.GEOCODING_ERROR_LOG_DF_TITLE)
         run_jscript("view_geocode_errors();","view_geocode_errors")
         
     elif(cmd == sugm.BULK_CHECKPT_GEOCODER) :
@@ -1812,7 +1811,7 @@ def process_geocode_final_results(cmd,inparms) :
         
         if(geocid == sugm.GoogleId) :
             gparms      =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
-            source_df   =   cfg.get_dfc_df(gparms[0]).get_df()
+            source_df   =   cfg.get_dfc_dataframe_df(gparms[0])
             
             proc_parms  =   get_parms_for_input(inparms,subgc.bulk_geocode_proc_input_idList)
 
@@ -1846,7 +1845,7 @@ def process_geocode_final_results(cmd,inparms) :
                     results_df.drop(["source df rowid","input value"],axis=1,inplace=True)
                     source_df     =   pd.concat([source_df, results_df], axis=paxis, join=pjoin)
 
-                    cfg.set_current_dfc_dataframe(source_df) 
+                    #TODO check inplace
                     
                 except Exception as e:
                     opstat.store_exception("Unable append geocoding results ",e)
@@ -1864,7 +1863,7 @@ def process_geocode_final_results(cmd,inparms) :
         
         if(geocid == sugm.GoogleId) :
             gparms      =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
-            source_df   =   cfg.get_dfc_df(gparms[0]).get_df()
+            source_df   =   cfg.get_dfc_dataframe_df(gparms[0])
 
             proc_parms  =   get_parms_for_input(inparms,subgw.bulk_google_procr_input_idList)
             
@@ -1876,7 +1875,7 @@ def process_geocode_final_results(cmd,inparms) :
                 results_df.drop(["source df rowid","input value"],axis=1,inplace=True)
                 source_df     =   pd.concat([source_df, results_df], axis=paxis, join=pjoin)
                 
-                cfg.set_current_dfc_dataframe(source_df)
+                #TODO check inplace
                 
             except Exception as e:
                 opstat.store_exception("Unable to append geocoding results ",e)

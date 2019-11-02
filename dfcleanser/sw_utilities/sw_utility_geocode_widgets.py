@@ -19,9 +19,9 @@ import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 
 from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable)
 
-from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid, is_numeric_col, 
+from dfcleanser.common.common_utils import (get_parms_for_input, display_generic_grid, 
                                             display_exception, opStatus, get_select_defaults)
 
 
@@ -1350,6 +1350,17 @@ bulk_tune_utility_input_jsList                  =    [None,None,
 
 bulk_tune_utility_input_reqList                 =   [0,1]
 
+
+geocoding_inputs            =   [arcgis_geocoder_id,google_geocoder_id,bing_geocoder_id,mapquest_geocoder_id,
+                                 nomin_geocoder_id,baidu_geocoder_id,arcgis_query_id,google_query_id,
+                                 bing_query_id,mapquest_query_id,nomin_query_id,baidu_query_id,
+                                 google_reverse_id,arcgis_reverse_id,bing_reverse_id,mapquest_reverse_id,
+                                 nomin_reverse_id,baidu_reverse_id,addr_dist_utility_input_id,
+                                 addr_df_dist_utility_input_id,addr_center_utility_input_id,
+                                 addr_df_center_utility_input_id,bulk_tune_utility_input_id]
+
+
+
  
 """
 #--------------------------------------------------------------------------
@@ -1384,8 +1395,7 @@ def display_calc_distance_input_form() :
                                   addr_dist_utility_input_typeList,
                                   addr_dist_utility_input_placeholderList,
                                   addr_dist_utility_input_jsList,
-                                  addr_dist_utility_input_reqList,
-                                  shortForm=False)       
+                                  addr_dist_utility_input_reqList)       
     
     selectDicts     =   []
             
@@ -1425,8 +1435,7 @@ def display_calc_df_distance_input_form() :
                                   addr_df_dist_utility_input_typeList,
                                   addr_df_dist_utility_input_placeholderList,
                                   addr_df_dist_utility_input_jsList,
-                                  addr_df_dist_utility_input_reqList,
-                                  shortForm=False)       
+                                  addr_df_dist_utility_input_reqList)       
         
     selectDicts     =   []
     
@@ -1469,8 +1478,7 @@ def display_calc_center_input_form() :
                                     addr_center_utility_input_typeList,
                                     addr_center_utility_input_placeholderList,
                                     addr_center_utility_input_jsList,
-                                    addr_center_utility_input_reqList,
-                                    shortForm=False)       
+                                    addr_center_utility_input_reqList)       
     
     center_addr_form.set_gridwidth(720)
     center_addr_form.set_custombwidth(120)
@@ -1496,8 +1504,7 @@ def display_calc_df_center_input_form() :
                                     addr_df_center_utility_input_typeList,
                                     addr_df_center_utility_input_placeholderList,
                                     addr_df_center_utility_input_jsList,
-                                    addr_df_center_utility_input_reqList,
-                                    shortForm=False)       
+                                    addr_df_center_utility_input_reqList)       
     
     selectDicts     =   []
     
@@ -1534,8 +1541,7 @@ def display_bulk_tune_input_form() :
                                     bulk_tune_utility_input_typeList,
                                     bulk_tune_utility_input_placeholderList,
                                     bulk_tune_utility_input_jsList,
-                                    bulk_tune_utility_input_reqList,
-                                    shortForm=False)       
+                                    bulk_tune_utility_input_reqList)       
     
     selectDicts     =   []
     geocoders       =   [] 
@@ -2218,77 +2224,7 @@ def customize_query_kwargs(geocid,geokwargs) :
 """ 
 
 
-def get_df_col_names_table(tableid,owner,callback,callbackParms=None,colsList=None,nonnumericOnly=False) :
-    """
-    * ---------------------------------------------------------
-    * function : get dataframe column names html table
-    * 
-    * parms :
-    *  tableid          - table id
-    *  owner            - table owner
-    *  callback         - callback for column click
-    *  callbackParms    - callback parms for column click
-    *  colsList         - df columns list or None for all cols
-    *  nonnumericOnly   - numeric only cols flag
-    *
-    * returns : 
-    *  cols name html table
-    * --------------------------------------------------------
-    """
 
-    if(not (colsList == None)) :
-        colnames = colsList
-    else :
-        colnames            =   cfg.get_dfc_dataframe().columns.values.tolist() 
-    
-    colnamesHeader      =   [""]
-    colnamesRows        =   []
-    colnamesWidths      =   [100]
-    colnamesAligns      =   ["left"]
-    colnamesHrefs       =   []
-    
-    for i in range(len(colnames)) :
-        
-        if( (nonnumericOnly)  and (colsList == None) ): 
-            if( not (is_numeric_col(cfg.get_dfc_dataframe(),colnames[i])) ) :
-                colnamesrow = [colnames[i]]
-                colnamesRows.append(colnamesrow)
-                colnamesHrefs.append([callback])
-                
-        else : 
-            colnamesrow = [colnames[i]]
-            colnamesRows.append(colnamesrow)
-            colnamesHrefs.append([callback])
-        
-    colnames_table = None
-                
-    colnames_table = dcTable("Column Names",tableid,owner,
-                              colnamesHeader,colnamesRows,
-                              colnamesWidths,colnamesAligns)
-            
-    colnames_table.set_refList(colnamesHrefs)
-    
-    colnames_table.set_small(True)
-    colnames_table.set_smallwidth(98)
-    colnames_table.set_smallmargin(10)
-
-    colnames_table.set_border(True)
-        
-    colnames_table.set_checkLength(True)
-            
-    colnames_table.set_textLength(26)
-    colnames_table.set_html_only(True) 
-    
-    colnames_table.set_tabletype(ROW_MAJOR)
-    colnames_table.set_rowspertable(14)
-    
-    if(not (callbackParms == None)) :
-        colnames_table.set_refParm(str(callbackParms))
-
-    listHtml = get_row_major_table(colnames_table,SCROLL_DOWN,False)
-    #print(listHtml)   
-    return(listHtml)
-    
 
 def display_geocode_inputs(geocid,gtype,showfull=False) :
     """
@@ -2343,8 +2279,7 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                    form[3],
                                    form[4],
                                    form[5],
-                                   form[6],
-                                   shortForm=False)
+                                   form[6])
     
     if(gtype == sugm.QUERY) :
         
@@ -2566,8 +2501,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
                                    geocoder_input_form[3],
                                    geocoder_input_form[4],
                                    geocoder_input_form[5],
-                                   geocoder_input_form[6],
-                                   shortForm=False)
+                                   geocoder_input_form[6])
     
     geocode_input_form.set_gridwidth(720)
     geocode_input_form.set_custombwidth(90)
@@ -2578,7 +2512,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     geocode_input_html = ""
     geocode_input_html = geocode_input_form.get_html() 
         
-    geocode_heading_html =   "<div>Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
+    geocode_heading_html =   "<br><div>Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
  
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
     gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]

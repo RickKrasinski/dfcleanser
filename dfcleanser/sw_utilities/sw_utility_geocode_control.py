@@ -992,6 +992,14 @@ def run_geocoder_reverse(geocid,parms) :
 def clear_sw_utility_geocodedata() :
     
     drop_owner_tables(cfg.SWGeocodeUtility_ID)
+    
+    geocodeInputs   =   subgcs.geocoding_console_inputs
+    geocodeInputs.extend(subgw.geocoding_bulk_inputs)
+    geocodeInputs.extend(sugw.geocoding_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.SWGeocodeUtility_ID,geocodeInputs)
+    delete_all_inputs(cfg.SWGeocodeUtility_ID)
+    
     clear_sw_utility_geocode_cfg_values()
 
 
