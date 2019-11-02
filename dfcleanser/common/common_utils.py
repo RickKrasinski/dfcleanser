@@ -10,7 +10,7 @@ Created on Tue Jun 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.common.cfg import (DataTransform_ID, get_dfc_dataframe)
+from dfcleanser.common.cfg import (DataTransform_ID, get_dfc_dataframe_df)
 
 import dfcleanser.common.table_widgets as tblw         
 new_line =   """
@@ -226,6 +226,7 @@ class RunningClock:
         time.sleep(self.delay)
         self.stoptime = time.time()
         run_javaScript(delete_clock)
+        return(str(get_formatted_time(self.stoptime-self.starttime)) + " seconds")
 
     def get_elapsed_time(self) :
         return(get_formatted_time(self.stoptime - self.starttime))
@@ -242,24 +243,15 @@ import pandas.api.types as pat
 
 def get_column_datatype(df,colname) :
     
-    found = -1
-    
-    df_cols     = df.columns.tolist()
-    df_dtypes   = df.dtypes.tolist()
-
-    for i in range(len(df_cols)) :
-        if(df_cols[i] == colname) :
-            found = i
-
-    if(found > -1) :
-        return(df_dtypes[found])
-    else :
+    try :
+        return(df[colname].dtype)
+    except :
         return(None)
 
 def is_numeric_col(df,colname) :
-    
+
     datatype   =   get_column_datatype(df,colname)
-    
+
     if(not (datatype is None)) :
         return(pat.is_numeric_dtype(datatype)) 
     else :
@@ -341,6 +333,13 @@ def is_timedelta64_col(df,colname,anydatetime64=False) :
     else :
         return(False)
 
+def is_timestamp_col(df,colname) :
+    
+    import pandas as pd
+    if(get_column_datatype(df,colname) == pd.Timestamp) :
+        return(True)
+    else :
+        return(False)
 
 def is_datetime_col(df,colname) :
     
@@ -374,6 +373,13 @@ def is_timedelta_col(df,colname) :
     else :
         return(False)
     
+def is_datetime_type_col(df,colname) :
+    
+    if( (is_datetime_col(df,colname)) or (is_date_col(df,colname)) or
+        (is_time_col(df,colname)) or (is_timedelta_col(df,colname)) ) :
+        return(True)
+    else :
+        return(False)
   
 
 """
@@ -756,37 +762,47 @@ def get_parms_for_input(parms,ids) :
     outparms = []
 
     
-    if( (parms == None) or (ids == None) or 
-        ((len(parms) == 0) or (len(ids) == 0)) ) :
-        return(outparms)
-    
-    #print("get_parms_for_input : parms",len(parms),parms) 
-    #print("get_parms_for_input : ids  ",len(ids),ids) 
+    try :
         
-    if(type(parms) == str) :
-        import json
-        inparms = json.loads(parms)
-    else :
-        inparms = parms
+        if( (parms == None) or (ids == None) or 
+           ((len(parms) == 0) or (len(ids) == 0)) ) :
+            return(outparms)
+    
+        #print("get_parms_for_input : parms",len(parms),parms) 
+        #print("get_parms_for_input : ids  ",len(ids),ids) 
+        
+        if(type(parms) == str) :
+            import json
+            inparms = json.loads(parms)
+        else :
+            inparms = parms
+            
+    except :
+        print("get_parms_for_input invalid input parms")
     
     #print("get_parms_for_input : inparms  ",inparms) 
     
-    if(len(inparms[0]) == 0) :
-        return(outparms)
+    try :
         
-    for i in range(len(ids)) :
-        if(ids[i] != None):
-            found = -1
-            for j in range(len(inparms[0])) :
-                if(inparms[0][j] == ids[i]) :
-                    found = j
-            if(found > -1) :
-                outparms.append(inparms[1][found])
+        if(len(inparms[0]) == 0) :
+            return(outparms)
+        
+        for i in range(len(ids)) :
+            if(ids[i] != None):
+                found = -1
+                for j in range(len(inparms[0])) :
+                    if(inparms[0][j] == ids[i]) :
+                        found = j
+                if(found > -1) :
+                    outparms.append(inparms[1][found])
+                else :
+                    outparms.append("")
             else :
-                outparms.append("")
-        else :
-            if(ids[i] != None) :
-                outparms.append("")    
+                if(ids[i] != None) :
+                    outparms.append("")  
+                    
+    except :
+        print("get_parms_for_input invalid idlist")    
 
     return(outparms)
 
@@ -806,7 +822,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     #--------------------------------------------------------------------------
     """
 
-    #print("\nget_select_defaults",formid,parmids,parmtypes,len(selectDicts))
+    #print("\nget_select_defaults\n",selectDicts)
     
     numselects  =   0
     
@@ -841,7 +857,7 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True,
     maxlvalues      =   0
 
     if( not ( (len(labels)>0) and (len(labels) == len(values)) ) ) :
-        return()
+        return("<p>Invalid Parameter List</p>")
         
     for i in range(len(labels)) :
         if(len(labels[i])>maxllabels) :
@@ -867,6 +883,8 @@ def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True,
     
             else :
                 maxlvalues = len(values[i])
+                
+    #print("displayParms",maxllabels,maxlvalues)
     
     if(display) :      
         print("\n")        
@@ -1019,18 +1037,31 @@ def get_full_parms_html(inputid) :
     from dfcleanser.common.html_widgets import get_Input
     inputlist = get_Input(inputid)
     
+    #print("get_full_parms_html",)
+    
     from dfcleanser.common.html_widgets import InputForm
     input_form   =   InputForm(inputid,inputlist[0],inputlist[1],
                                inputlist[2],inputlist[3],inputlist[4],
-                               inputlist[5],inputlist[6],inputlist[7],
-                               True)
+                               inputlist[5])
+    
+    input_form.set_form_select_dict(inputlist[6])
+    input_form.set_form_custom_dict(inputlist[7])
     
     input_form.set_fullparms(True)
     input_html = input_form.get_html()
     
-    startnewhtml    =   input_html.find(inputid) + len(inputid) + 3
-    endnewhtml      =   input_html.find(inputid+"tb") - len('</div> <div style="margin-top:10px;" id="')
+    #print("input_html",input_html)
+    
+    startnewhtml    =   input_html.find(inputid + "input") + len(inputid + "input") + 3
+    endnewhtml      =   input_html.find(inputid + "tb")
     newhtml         =   input_html[startnewhtml:endnewhtml]
+    endnewhtml      =   newhtml.rfind("<div") -1
+    newhtml         =   newhtml[0:endnewhtml]
+    endnewhtml      =   newhtml.rfind("</div>") -1
+    
+    newhtml         =   newhtml[0:endnewhtml]
+    
+    #print("newhtml",newhtml)
     
     return(newhtml)
     
@@ -1064,12 +1095,15 @@ def get_fullparms(parms) :
         
     else :
         
-        change_input_js = "$('#" + formid + "').html('"
+        change_input_js = "$('#" + formid + "input').html('"
         change_input_js = change_input_js + new_input_html + "');"
         run_jscript(change_input_js,"fail to get full parms for : " + formid)
         
-        change_input_js = "$('#" + formid + "').css('background-color','#F8F5E1')";
+        change_input_js = "$('#" + formid + "').css('background-color','#F8F5E1');";
         run_jscript(change_input_js,"fail to get full parms for : " + formid)
+        
+        #change_input_js = "$('#" + formid + "tb button').button();";
+        #run_jscript(change_input_js,"fail to get full parms for : " + formid)
         
 
 """
@@ -1120,20 +1154,17 @@ def get_scroll_table_html(tableid,direction) :
     * --------------------------------------------------------
     """
     
-    print("get_scroll_table_html",tableid,direction,tblw.get_table_value(tableid).get_tabletype())
+    #print("get_scroll_table_html",tableid,direction,tblw.get_table_value(tableid).get_tabletype())
     
     if(tblw.get_table_value(tableid).get_tabletype() == tblw.ROW_MAJOR) : 
          table_html = tblw.get_row_major_table(tblw.get_table_value(tableid),direction,False)
     
     elif(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) : 
-        print("COLUMN_MAJOR",tblw.get_table_value(tableid),direction)
+        tblw.scroll_col_major_table(tblw.get_table_value(tableid),direction)
         return(None)
     
-    elif(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) : 
-       table_html = tblw.get_mult_table(tblw.get_table_value(tableid),direction,False)
-    
     elif(tblw.get_table_value(tableid).get_tabletype() == tblw.ROW_COL_MAJOR) : 
-        print("ROW_COL_MAJOR",tblw.get_table_value(tableid),direction)
+        #print("ROW_COL_MAJOR",tblw.get_table_value(tableid),direction)
          #table_html = tblw.get_row_major_table(tblw.get_table_value(tableid),direction,False)
         return(None)
         
@@ -1142,21 +1173,11 @@ def get_scroll_table_html(tableid,direction) :
 
     if(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) :
         
-        #print("COLUMN_MAJOR")
+        print("COLUMN_MAJOR")
         tablehtmlloc    = table_html.find("<thead")
         tableendhtmlloc = table_html.find("</tbody>")
         table_html = table_html[tablehtmlloc:tableendhtmlloc+len("</tbody>")]
         
-    elif(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) :
-        
-        thead       = table_html.find("<thead")
-        table_html  = table_html[thead:]
-        #print("MULTIPLE\n",thead,table_html)
-
-        tend        = table_html.find("</table>")
-    
-        table_html = table_html[0:(tend-1)]
-    
     else :
         # check for no header tables
         if(table_html.find("<thead") == -1) :
@@ -1175,6 +1196,25 @@ def get_scroll_table_html(tableid,direction) :
     return(new_table_html)
 
 
+def refresh_scroll_buttons(tableid) :
+    
+    buttons     =   ["downarrow","uparrow","leftarrow","rightarrow"]
+    
+    import datetime 
+    tstamp = datetime.datetime.now().time()
+    
+    for i in range(len(buttons)) :
+        
+        button_id       =   tableid + buttons[i] + "Id"
+        
+        change_html     =   ("'#" + button_id + "').attr('src'," + 
+                             "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) + "'")
+        change_cols_js = ("$(" + change_html + ");")
+
+        run_jscript(change_cols_js,"fail to refresh sroll table : ")
+    
+
+
 def scroll_table(parms) :
     """
     * ---------------------------------------------------------
@@ -1189,10 +1229,10 @@ def scroll_table(parms) :
     * --------------------------------------------------------
     """
     
-    print("scroll_table",parms)
-    
     tableid     =   parms[0]
     direction   =   int(parms[1])
+    
+    #print("scroll_table",tableid,direction)
     
     new_table_html  = get_scroll_table_html(tableid,direction)
     
@@ -1204,9 +1244,6 @@ def scroll_table(parms) :
     if( (new_table_html.find("<thead") == -1) or (tableid == "dfschemaTable") or (tableid == "dfchknumTable") ) :
         change_table_js = change_table_js + "'#" + tableid + "').html('"
         
-    elif(tblw.get_table_value(tableid).get_tabletype() == tblw. MULTIPLE) :
-        change_table_js = change_table_js + "'#" + tableid + "').html('"    
-        
     else :
         change_table_js = change_table_js + "'#" + tableid + "container').html('"
         
@@ -1215,26 +1252,14 @@ def scroll_table(parms) :
     run_jscript(change_table_js,"fail scroll_table parms : "+tableid+" "+str(direction))
  
     refresh_bg_js = "$('#" + tableid + "_thr').css({'background-color':'#6FA6DA'});"
-    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+    run_jscript(refresh_bg_js,"fail scroll_table : "+tableid+" "+str(direction))
     refresh_bg_js = "$('#" + tableid + "_thr').css({'color':'white'});"
-    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+    run_jscript(refresh_bg_js,"fail scroll_table : "+tableid+" "+str(direction))
     refresh_bg_js = "$('#" + tableid + "buttons').css({'margin-right':'1%'});"
-    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+    run_jscript(refresh_bg_js,"fail scroll_table : "+tableid+" "+str(direction))
 
-    buttons     =   ["downarrow","uparrow","leftarrow","rightarrow"]
-    
-    import datetime 
-    tstamp = datetime.datetime.now().time()
-    
-    for i in range(len(buttons)) :
-    
-        button_id       =   tableid + buttons[i]+"img"
-        change_html     =   ("'#" + button_id + "').attr('src'," + 
-                             "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) + "'")
-        change_cols_js = ("$(" + change_html + ");")
+    refresh_scroll_buttons(tableid)
 
-        run_jscript(change_cols_js,"fail to refresh sroll table : ")
-    
          
 def scroll_sample_rows(parms) :
     """
@@ -1253,21 +1278,24 @@ def scroll_sample_rows(parms) :
     tableid     =   parms[0]
     direction   =   int(parms[1])
     
-    print("scroll_sample_rows",tableid,direction)
+    #print("scroll_sample_rows",tableid,direction)
     
     from dfcleanser.common.display_utils import display_more_sample_rows
     df_delim    =   tableid.find("_search_")
     if(df_delim > -1) :
         df_title  =   tableid[:df_delim]
     else :
-        df_title  =   None
+        from dfcleanser.common.cfg import get_config_value,CURRENT_INSPECTION_DF
+        if(tableid == "DIsamplerows") :
+            df_title    =   get_config_value(CURRENT_INSPECTION_DF)
+        else :
+            df_title  =   None
     
-    print("df_title",df_title)
+    #print("df_title",df_title)
     
+    table_html = display_more_sample_rows(get_dfc_dataframe_df(df_title),tableid,direction)
     
-    table_html = display_more_sample_rows(get_dfc_dataframe(df_title),tableid,direction)
-    
-    
+    #print("table_html",table_html)    
     
     thead = table_html.find("<thead>")
     table_html = table_html[thead:]
@@ -1283,12 +1311,14 @@ def scroll_sample_rows(parms) :
     run_jscript(change_table_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
 
     refresh_bg_js = "$('#" + tableid + "_thr').css({'background-color':'#6FA6DA'});"
-    print("refresh_bg_js",refresh_bg_js)
+    #print("refresh_bg_js",refresh_bg_js)
     run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
     
     refresh_bg_js = "$('#" + tableid + "_thr').css({'color':'white'});"
-    print("refresh_bg_js",refresh_bg_js)
+    #print("refresh_bg_js",refresh_bg_js)
     run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
+    
+    return
 
 
 def get_sample_row(parms) :
@@ -1311,7 +1341,7 @@ def get_sample_row(parms) :
     newrowId    =   int(parms[0][1])
         
     from dfcleanser.common.display_utils import display_more_sample_rows
-    new_rows_html = display_more_sample_rows(get_dfc_dataframe(),
+    new_rows_html = display_more_sample_rows(get_dfc_dataframe_df(),
                                              tableId,1,newrowId,opstat)
 
     table_html = patch_html(new_rows_html)
@@ -1348,7 +1378,7 @@ def scroll_single_row(parms) :
     direction   =   int(parms[1])
     
     from dfcleanser.common.display_utils import display_more_single_row
-    table_html = display_more_single_row(get_dfc_dataframe(),tableid,direction)
+    table_html = display_more_single_row(get_dfc_dataframe_df(),tableid,direction)
     
     thead = table_html.find("<tbody>")
     tend  = table_html.find("</tbody>")
@@ -1364,7 +1394,6 @@ def scroll_single_row(parms) :
     run_jscript(change_table_js,"fail scroll_single_row : " + tableid + str(direction))
 
 
- 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1387,6 +1416,7 @@ def get_dfsubset_vals_html(filters,colname) :
 
     from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_subset_input_id, get_subset_input_labelList
     import dfcleanser.common.cfg as cfg
+    
     # get the drop flag and col name list
     dfsparms = cfg.get_config_value(get_subset_input_id+"Parms")
         
@@ -1395,24 +1425,19 @@ def get_dfsubset_vals_html(filters,colname) :
                                                    "input_dataframe",
                                                     get_subset_input_labelList)
         
-    df  =   cfg.get_dfc_dataframe(dftitle)
+    df  =   get_dfc_dataframe_df(dftitle)
 
     from dfcleanser.sw_utilities.sw_utility_dfsubset_widgets import get_dfsubset_table
     cols_html = get_dfsubset_table(df,filters,colname)
 
-    startinner  =   cols_html.find('<div class="input-group">')
-    endinner    =   cols_html.find('<table class="table dc-table"')
+    startinner  =   cols_html.find('">')
+    startinner  =   startinner + len('">') + 1
+    endinner    =   cols_html.rfind("</div>")
+    endinner    =   endinner - 1
 
-    title_html  =   cols_html[startinner:endinner]
-    endinner    =   title_html.rfind("</div>")
-    title_html  =   "\t\t" + title_html[:endinner]
-    
-    
-    startinner  =   cols_html.find('<tbody>')
-    endinner    =   cols_html.find('</tbody>') + len('</tbody>')
     table_html  =   cols_html[startinner:endinner]
     
-    return([title_html,table_html])
+    return(table_html)
 
 
 def get_dfsubset_vals(parms) :
@@ -1434,26 +1459,16 @@ def get_dfsubset_vals(parms) :
     if( (colname == -1) or (len(colname) == 0) ):
         colname = None
 
-    fetched_html    =   get_dfsubset_vals_html(filters,colname) 
-    panel_html      =   fetched_html[0]
-    cols_html       =   fetched_html[1]
+    table_html      =   get_dfsubset_vals_html(filters,colname) 
     
-    panel_html   =   panel_html.replace("&","&amp;")
-    new_panel_html = patch_html(panel_html)
+    table_html      =   table_html.replace("&","&amp;")
+    new_table_html  =   patch_html(table_html)
     
-    change_table_js = "$('#dcsubsetcolnamesTablePanelHeading').html('"
-    change_table_js = change_table_js + new_panel_html + "');"
+    change_table_js = "$('#dcsubsetcolnamesTablecontainer').html('"
+    change_table_js = change_table_js + new_table_html + "');"
             
     run_jscript(change_table_js,"fail to get unique vals for : ")
     
-    cols_html   =   cols_html.replace("&","&amp;")
-    new_cols_html = patch_html(cols_html)
-    
-    change_table_js = "$('#dcsubsetcolnamesTable').html('"
-    change_table_js = change_table_js + new_cols_html + "');"
-            
-    run_jscript(change_table_js,"fail to get unique vals for : ")
-
     buttons     =   ["downarrow","uparrow"]
     
     for i in range(len(buttons)) :
@@ -1520,7 +1535,8 @@ def get_df_browser_search(numeric) :
     new_html    =   get_colsearch_form(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
                                        num_flag).get_html()
     
-    start_html  =   new_html.find("<div class='container dc-container dc-default-input-inner-div'>")
+    start_html  =   new_html.find("<div class='container' style='padding:5px; margin:auto; width:100%;'  id="+'"datainspectcolsearchinput">')
+    
     #end_html    =   new_html.find('<div style="margin-top:10px;"  id="datainspectcolsearchtb">')
     end_html    =   len(new_html) - 6
     
@@ -1528,22 +1544,82 @@ def get_df_browser_search(numeric) :
     
     new_html    =   new_html[start_html:end_html-7]
     new_html    =   new_html.replace("'",'"')
+    new_html    =   new_html.replace('("colsearchnames"',"('colsearchnames'")
     
     final_html  =   patch_html(new_html)
 
-    #print("\n\n\n\nfinal_html\n",final_html)
-    
     change_table_js = "$('#datainspectcolsearch').html('"
     change_table_js = change_table_js + final_html + "');"
             
     run_jscript(change_table_js,"fail to get search df html : ")
 
 
-
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser data transform html methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+def change_col_stats(parms)  :
     
+    selectid    =   parms[0]
+    colid       =   parms[1]
+    
+    print("change_col_stats",parms,selectid,colid)
+    
+    import dfcleanser.common.cfg as cfg
+    
+    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colid)
 
+    from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
+    colstats_html   =   display_transform_col_data(df,colid,False)
+    
+    start_html  =   colstats_html.find('<div class="panel panel-primary"')
+    end_html    =   len(colstats_html) - 14
+    
+    new_html    =   colstats_html[start_html:end_html]
+    final_html  =   patch_html(new_html)
+    
+    change_table_js = "$('#colstatsTablecontainer').html('"
+    change_table_js = change_table_js + final_html + "');"
+            
+    run_jscript(change_table_js,"fail to change col stats html : ")
+    
+    if(selectid == "mapcolumnname") :
+        
+        counts  =   df[colid].value_counts().to_dict()
+        uniques =   list(counts.keys())
 
+        if(is_numeric_col(df,colid)) :
+            uniques.sort()
 
+        keyslist = ""
+            
+        for i in range(len(uniques)) :
+            keyslist = (keyslist + str(uniques[i])) 
+            if(not((i+1) == len(uniques))) :
+                keyslist = (keyslist + str(","))
+        
+        if(len(keyslist) > 300) :
+            keyslist = "mapping keys too large to define by hand"
+            parmsProtect = True
+        else :
+            parmsProtect = False
+            
+        change_map_vals_js = "$('#mapkeys').val('" + keyslist + "');"
+        change_map_vals_prop_js = "$('#mapkeys').prop('disabled', true);"
+            
+        run_jscript(change_map_vals_js,"fail to change map vals html : ")
+        run_jscript(change_map_vals_prop_js,"fail to change map vals html : ")
+        
+        if(parmsProtect) :
+            change_map_protect_js = "$('#mapvals').prop('disabled', true);"
+        else :
+            change_map_protect_js = "$('#mapvals').prop('disabled', false);"
+            
+        run_jscript(change_map_protect_js,"fail to change map vals html : ")
 
 
 def get_column_samples_html(colname) :
@@ -1569,15 +1645,15 @@ def get_column_samples_html(colname) :
     uniques =   [] 
         
     #check if the object is string
-    if (isinstance(get_dfc_dataframe()[colname][0], str)) :
+    if (isinstance(get_dfc_dataframe_df()[colname][0], str)) :
         
-        uniques =   get_dfc_dataframe()[colname].unique().tolist()
+        uniques =   get_dfc_dataframe_df()[colname].unique().tolist()
         for i in range(len(uniques)) :
             uniques[i]  =   str(uniques[i])
         uniques.sort()
     else :
-        if(is_numeric_col(get_dfc_dataframe(),colname)) :           
-            uniques =   get_dfc_dataframe()[colname].unique().tolist()
+        if(is_numeric_col(get_dfc_dataframe_df(),colname)) :           
+            uniques =   get_dfc_dataframe_df()[colname].unique().tolist()
             uniques.sort()
 
     if(len(uniques) > 0) :
@@ -1678,8 +1754,8 @@ def select_df(parms) :
     formid     =   parms[0]
     title      =   parms[1]
     
-    from dfcleanser.common.cfg import get_dfc_dataframe_object
-    dfcdf   =   get_dfc_dataframe_object(title)
+    from dfcleanser.common.cfg import get_dfc_dataframe
+    dfcdf   =   get_dfc_dataframe(title)
     
     newdf       =   dfcdf.get_df()
     numrows     =   len(newdf)
@@ -1700,133 +1776,156 @@ def select_df(parms) :
     run_jscript(change_input_js,"fail to get sample values for : ")
 
 
-
- 
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   dfcleanser common data utility dynamic html methods
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-def get_gen_func_values(parms) :
-
+def open_as_excel(dfid) :
     """
     * ---------------------------------------------------------
-    * function : get generic function values for a form
+    * function : open a df in excel
     * 
     * Parms :
-    *  formid    - form id
-    *  ftitle    - genfunc title
+    *  dfid    - dataframe id
     *
     * returns : 
     *  N/A 
     * --------------------------------------------------------
     """
-
-    formid      =   parms[0]
-    ftitle      =   parms[1]
-    
+        
+    import os
     import dfcleanser.common.cfg as cfg
-    dftitle     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
-    
-    import dfcleanser.common.cfg as cfg
-    
-    if(formid == "addcolfuncs") :
-        
-        from dfcleanser.data_transform.data_transform_columns_widgets import add_column_code_gf_input_id
-        addparms    =   cfg.get_config_value(add_column_code_gf_input_id+"Parms")
-        if(not (addparms is None)) :
-            newcolname  =   "'" + addparms[0] + "'"
-        else :
-            newcolname  =   "USER VALUE"
-        
-        dfcolname   =   "USER VALUE"
-        
-    else :
 
-        from dfcleanser.data_transform.data_transform_columns_widgets import apply_column_gf_input_id
-        addparms    =   cfg.get_config_value(apply_column_gf_input_id+"Parms")
-        if(not (addparms is None)) :
-            dfcolname  =   "'" + addparms[1] + "'"
-        else :
-            dfcolname  =   "USER VALUE"
+    if(dfid == 0) :
+        df          =   cfg.get_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_INSPECTION_DF))
         
-        newcolname   =   "None"
-
-    from dfcleanser.sw_utilities.sw_utility_genfunc_control import get_generic_function, get_generic_function_desc
-    gt_func         =   get_generic_function(ftitle)
-    
-    if(gt_func is None) :
+    dfc_temp_path       =   os.path.join(cfg.get_dfcleanser_location(),"files","temp")
+    dfc_temp_path       =   (dfc_temp_path + "\\exceldfs\\")
         
-        from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule, get_function_kwvals, get_function_kwargs
-        gfmodule    =   reservedfunctionsmodule
-        
-        
-        kwvals      =   get_function_kwvals(ftitle,dftitle,dfcolname,newcolname)
-        gfcode      =   get_function_kwargs(gfmodule,ftitle,kwvals)
-        gfcode      =   gfcode.replace("\n","dfc_new_line")
-        gfcode      =   gfcode.replace("'",'"')
-
-        gfdesc      =   get_generic_function_desc(ftitle)
-        gfdesc      =   gfdesc.replace("\n","dfc_new_line")
-        gfdesc      =   gfdesc.replace("'",'"')
-        
-    else :
-        gfmodule    =   gt_func.get_func_module()
-        gfcode      =   gt_func.get_func_code()
-        gfcode      =   gfcode.replace("\n","dfc_new_line")
-        gfcode      =   gfcode.replace("'",'"')
-
-        gfdesc      =   get_generic_function_desc(ftitle)        
-        gfdesc      =   gfdesc.replace("\n","dfc_new_line")
-        gfdesc      =   gfdesc.replace("'",'"')
-    
-    if(formid == "addcolfuncs") :
-        
-        change_val_js = "$('#addcolmodule').val('"
-        change_val_js = change_val_js + gfmodule + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-
-        change_val_js = "$('#addcolname').val('"
-        change_val_js = change_val_js + ftitle + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-
-        change_val_js = "set_textarea('addcolcodefcode', '"
-        change_val_js = change_val_js + gfcode + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-        
-        change_val_js = "set_textarea('addcoldesc', '"
-        change_val_js = change_val_js + gfdesc + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-
-    elif((formid == "fnselect")  or (formid == "fndselect") ):
-        
-        change_val_js = "$('#fmodule').val('"
-        change_val_js = change_val_js + gfmodule + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-
-        change_val_js = "$('#fnname').val('"
-        change_val_js = change_val_js + ftitle + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-
-        change_val_js = "set_textarea('fntoapply', '"
-        change_val_js = change_val_js + gfcode + "');"
-        run_jscript(change_val_js,"fail to get sample values for : ")
-        
-        if(formid == "fnselect") :
-            fparms  =  cfg.get_config_value(apply_column_gf_input_id+"Parms")
-            cfg.set_config_value(apply_column_gf_input_id+"Parms",[fparms[0],fparms[1],gfmodule,ftitle,ftitle,gfcode])
+    try :
             
-        else :
-            change_val_js = "set_textarea('fndesc', '"
-            change_val_js = change_val_js + gfdesc + "');"
-            run_jscript(change_val_js,"fail to get sample values for : ")
+        tmp_name    =   dfc_temp_path + cfg.get_config_value(cfg.CURRENT_INSPECTION_DF) + "_temp.csv"
+        df.to_csv(tmp_name, index=False)
+        os.startfile(tmp_name)    
+    
+    except :
+            
+        alert_user("Unable to open df in excel")
+
+
+def change_df_select(visible_df_forms) :
+    """
+    * ---------------------------------------------------------
+    * function : change the df list in select forms
+    * 
+    * Parms :
+    *  visible_df_forms - dfs to make visible
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    import dfcleanser.common.cfg as cfg
+    
+    for i in range(len(visible_df_forms)) :
+        cfg.update_chapter_df_select(visible_df_forms[i])
+
+ 
+def get_apply_fn(funcparms) :
+    """
+    * ---------------------------------------------------------
+    * function : change apply fn code box
+    * 
+    * Parms :
+    *  funcparms - column name, function id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    cname   =   funcparms[0]
+    fnid    =   funcparms[1]
+    
+    change_fncode_js  =   "get_apply_fn_parms('" + cname + "','" + fnid + "')"
+    print("change_fncode_js",change_fncode_js)
+
+    run_jscript(change_fncode_js,"fail to set df parms : " + change_fncode_js)
+
+
+
+def get_add_df_col_change_html(dftitle) :
+     
+    from dfcleanser.common.cfg import get_dfc_dataframe_df
+    current_df      =   get_dfc_dataframe_df(dftitle)
+    colnames        =   current_df.columns.tolist()
+
+    selhtml         =   ""
+
+    for i in range(len(colnames)) :
+        selhtml     =   (selhtml + "                    <option style='text-align:left; font-size:11px;'")
+            
+        if(i == 0) :
+            selhtml     =   (selhtml + " selected")
+                
+        selhtml     =   (selhtml + ">" + colnames[i] + "</option>")
+        if(i < len(colnames)) :
+            selhtml     =   (selhtml + new_line)    
         
-            fparms  =  cfg.get_config_value(apply_column_gf_input_id+"Parms")
-            cfg.set_config_value(apply_column_gf_input_id+"Parms",[fparms[0],fparms[1],gfmodule,ftitle,ftitle,gfcode,gfdesc])
+    return(selhtml)
+
+
+def get_add_df_col_change(adddfparms) :
+    """
+    * ---------------------------------------------------------
+    * function : change add col from df df titles
+    * 
+    * Parms :
+    *  adddfparms - column name, function id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    selectid        =   adddfparms[0]
+    dfname          =   adddfparms[1]
+    
+    change_select_html  =   get_add_df_col_change_html(dfname)
+    
+    new_select_html = patch_html(change_select_html)
+    
+    if(selectid == "addcoloutdftitle") :
+    
+        change_select_js = "$('#addcolddfoindex').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+        
+    else :
+        
+        change_select_js = "$('#addcolddfcname').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+        
+        change_select_js = "$('#addcolddfsindex').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+        
+   
 
         
+"""
+#--------------------------------------------------------------------------
+#    display apply fn working idlist
+#--------------------------------------------------------------------------
+""" 
+add_cols_list_holder                 =   []
+
+def get_add_col_list() :
+    return(add_cols_list_holder)
+def set_add_col_list(colslist) :
+    global add_cols_list_holder
+    add_cols_list_holder = colslist
 
 """
 #--------------------------------------------------------------------------
@@ -1881,7 +1980,16 @@ def replace_lt_gt(instr,ltchar="&lt;",gtchar="&gt;") :
     
     return(instr)
 
+
 def replace_comma(instr) :
+    """
+    #------------------------------------------------------------------
+    #   replace comma in string with new line
+    #
+    #   instr    -   input string
+    #
+    #------------------------------------------------------------------
+    """      
     
     foundat = 0
     while(foundat > -1) :
@@ -1891,7 +1999,17 @@ def replace_comma(instr) :
     
     return(instr)
 
+
 def is_existing_column(df,colname) : 
+    """
+    #------------------------------------------------------------------
+    #   check if colname is in df
+    #
+    #   df       -   dataframe
+    #   colname  -   column name
+    #
+    #------------------------------------------------------------------
+    """      
     
     df_cols = df.columns.tolist()
     
@@ -1901,17 +2019,37 @@ def is_existing_column(df,colname) :
 
     return(False)
 
+
 def single_quote(parm) :
+    """
+    #------------------------------------------------------------------
+    #   enclose string in single quotes
+    #
+    #   parm  -   strng to enclose
+    #
+    #------------------------------------------------------------------
+    """      
+
     return("'"+parm+"'")
 
-def any_char_in_cols(df, schar, getvals):
-    
-  schar_in_cols = [[]]
 
-  for k in range(len(df.columns)) :
-      schar_in_cols.append([0,[]])
+def any_char_in_cols(df, schar, getvals):
+    """
+    #------------------------------------------------------------------
+    #   chek if any char in cols
+    #
+    #   opstat   -   status object holding exception
+    #   display  -   display or return html
+    #
+    #------------------------------------------------------------------
+    """      
+    
+    schar_in_cols = [[]]
+
+    for k in range(len(df.columns)) :
+        schar_in_cols.append([0,[]])
       
-      for l in range(len(df)) : 
+        for l in range(len(df)) : 
            
           if(schar in str(df.iloc[l,k])) :
               schar_in_cols[k][0] = schar_in_cols[k][0] + 1
@@ -1919,7 +2057,27 @@ def any_char_in_cols(df, schar, getvals):
               if(getvals) :
                   schar_in_cols[k][1].append(k)
                   
-  return(schar_in_cols) 
+    return(schar_in_cols) 
+
+
+def get_help_note_html(msg,width=None,left=None,msgid=None) :
+    
+    if(msgid is None) :
+        mid = ""
+    else :
+        mid = msgid
+    
+    if(width is None) :
+        notes_html   =   "<br><div id ='" + mid + "' style='text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
+    else :
+        notes_html   =   "<br><div id ='" + mid + "' style='width:" + str(width) + "%; margin-left:" + str(left) + "px; text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
+        
+    return(notes_html)
+
+def get_help_note_warning_html(msg) :
+
+    notes_html   =   "<br><div style='text-align:center;  width:90%; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#ff0000;'>" + msg + "</span></div><br>"
+    return(notes_html)
 
 
 """
@@ -1930,99 +2088,137 @@ def any_char_in_cols(df, schar, getvals):
 #--------------------------------------------------------------------------
 """     
 def display_exception(opstat,display=True) :
-    
-    #print("\n")
-    exception_html = ""
-    exception_html = (exception_html + '<div class="container" style="border: 0px solid #428bca; width:82%; margin-left:20px;">' + new_line)
-    exception_html = (exception_html + '    <div class="row">' + new_line)
-    exception_html = (exception_html + '        <div class="panel panel-primary" style="border: 0px">' + new_line)
-    exception_html = (exception_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
-    exception_html = (exception_html + '                <div class="input-group">' + new_line)
-    exception_html = (exception_html + '                    <p class="dc-table-title" style="margin-bottom:5px;">Error : </p>' + new_line)
-    exception_html = (exception_html + '                </div>' + new_line) 
-    exception_html = (exception_html + '            </div>' + new_line)
-    exception_html = (exception_html + '            <div></br></div>' + new_line)
-    exception_html = (exception_html + '            <div class="exception-status">' + new_line)
-    exception_html = (exception_html + '                <p>' + "&nbsp;" + str(opstat.get_errorMsg()) + '</p>' + new_line)
-    exception_html = (exception_html + '            </div>' + new_line)
+    """
+    #------------------------------------------------------------------
+    #   display a dfc exception
+    #
+    #   opstat   -   status object holding exception
+    #   display  -   display or return html
+    #
+    #------------------------------------------------------------------
+    """      
 
-    if(not (opstat.get_systemRC0()) == None) :
-        exception_html = (exception_html + '            <div class="exception-status-detail" style="height:30px;">' + new_line)
-        exception_html = (exception_html + '                <p>' + "&nbsp;&nbsp;&nbsp;" + str(opstat.get_systemRC0().__name__) + '</p>' + new_line)
-        exception_html = (exception_html + '            </div>' + new_line)
+    if(display) :
+        
+        import dfcleanser.common.cfg as cfg
+        
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            
+            #display_msgs(notes,"Notes :")
+            error_html      =   display_msgs([opstat.get_errorMsg()],"Error :",color=False,margin=5,helpmsg=False,display=False) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [error_html]
     
-    if(not (opstat.get_systemRC1()) == None) :
+            display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            error_html      =   display_msgs([opstat.get_errorMsg()],"Error :",color=False,margin=30,helpmsg=False,display=False) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [error_html]
+    
+            display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+            
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            
+            #display_msgs(notes,"Notes :")
+            error_html      =   get_exception_details(opstat)
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [error_html]
+    
+            display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            error_html      =   get_exception_details(opstat) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [error_html]
+    
+            display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+    
+    else :
+        return(display_msgs([opstat.get_errorMsg(),get_exception_details(opstat)],"Error :",color=False,margin=30,helpmsg=False,display=False))
+
+
+
+def get_exception_details(opstat) :
+    
+    try :
+
+        exception_html = ""
+        exception_html = (exception_html + '<div class="container exception-status">' + new_line)
+        exception_html = (exception_html + '    <div class="row">' + new_line)
+        exception_html = (exception_html + '        <div class="panel panel-primary" style="border: 0px">' + new_line)
+
+        if(not (opstat.get_systemRC0()) == None) :
+            exception_html = (exception_html + '            <div class="exception-status-detail">' + new_line)
+            exception_html = (exception_html + '                <p>' + "&nbsp;&nbsp;&nbsp;" + str(opstat.get_systemRC0().__name__) + '</p>' + new_line)
+            exception_html = (exception_html + '            </div>' + new_line)
+    
+        if(not (opstat.get_systemRC1()) == None) :
         
-        rcstring = str(opstat.get_systemRC1())
-        rcstring = rcstring.replace(";","<br>&nbsp;&nbsp;&nbsp;")
-        exception_html = (exception_html + '            <div class="exception-status-detail" style="height:30px;">' + new_line)
-        exception_html = (exception_html + '                <p>' + "&nbsp;&nbsp;&nbsp;" + rcstring + '</p>' + new_line)
-        exception_html = (exception_html + '            </div>' + new_line)
+            rcstring = str(opstat.get_systemRC1())
+            rcstring = rcstring.replace(";","<br>&nbsp;&nbsp;&nbsp;")
+            exception_html = (exception_html + '            <div class="exception-status-detail">' + new_line)
+            exception_html = (exception_html + '                <p>' + "&nbsp;&nbsp;&nbsp;" + rcstring + '</p>' + new_line)
+            exception_html = (exception_html + '            </div>' + new_line)
         
-    #exception_html = (exception_html + '        <div><br></div>' + new_line) 
+        exception_html = (exception_html + '        </div>' + new_line) 
+        exception_html = (exception_html + '    </div>' + new_line) 
+        exception_html = (exception_html + "</div>")
         
-    exception_html = (exception_html + '        </div>' + new_line) 
-    exception_html = (exception_html + '    </div>' + new_line) 
-    exception_html = (exception_html + "</div>")
+    except :
+        
+        exception_html  =   "  "
+    
+    return(exception_html)
     
     #print(exception_html)
-    from IPython.display import HTML
-    from IPython.display import display
+    #from IPython.display import HTML
+    #from IPython.display import display
     
-    if(display) :
-        display_jupyter_HTML(HTML(exception_html))
-    else :
-        return(exception_html)
+    #if(display) :
+    #    display_jupyter_HTML(HTML(exception_html))
+    #else :
+    #    return(exception_html)
 
-def display_status(msg, skipLines = 0, display=True) :
-    
-    status_html = ""
-    
-    if(skipLines > 0) :
-        for i in range(skipLines) :
-            status_html = (status_html + new_line) 
-    
-    if(display) :        
-        status_html = (status_html + '<div class="container" style="width:80%; margin-left:30px; margin-bottom:5px;">' + new_line)
-    else :
-        status_html = (status_html + '<div class="container" style="width:480px; margin-bottom:5px;">' + new_line)
-        
-    status_html = (status_html + '    <div class="row" style="margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '        <div class="panel panel-primary" style="border:0px; margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px; margin-bottom:0px;">' + new_line)
-    status_html = (status_html + '                <div class="input-group">' + new_line)
-    status_html = (status_html + '                    <p class="dc-table-title">Status : </p>' + new_line)
-    status_html = (status_html + '                </div>' + new_line) 
-    status_html = (status_html + '            </div>' + new_line)
-    status_html = (status_html + "            <div class='note-line'>" + new_line)
-    status_html = (status_html + "                <p></p>" + new_line)
-    status_html = (status_html + "            </div>" + new_line)
-    
-    if(type(msg) == str) :
-    
-        status_html = (status_html + "            <div class='status-line'>" + new_line)
-        status_html = (status_html + "                <p><span class='status-line'>" + str(msg) + "</span></p>" + new_line)
-        status_html = (status_html + "            </div>" + new_line)
-        
-    else :
-        
-        for i in range(len(msg)) :
-            status_html = (status_html + "        <div class='note-line'>" + new_line)
-            status_html = (status_html + "            <p><span class='note-line'>" + msg[i] + "</span></p>" + new_line)
-            status_html = (status_html + "        </div>" + new_line)
 
-    status_html = (status_html + '        </div>' + new_line) 
-    status_html = (status_html + '    </div>' + new_line) 
-    status_html = (status_html + '</div>')
+def display_grid_status(msg) :
+    """
+    #------------------------------------------------------------------
+    #   display status msgs in a grid
+    #
+    #   msg      -   msg
+    #
+    #------------------------------------------------------------------
+    """      
     
-    #print(status_html)
-    if(display) :
-        displayHTML(status_html)
+    status_html     =   display_status(msg,False)    
+    
+    gridclasses     =   ["dfc-footer"]
+    gridhtmls       =   [status_html]
+    
+    import dfcleanser.common.cfg as cfg
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
     else :
-        return(status_html)
+        display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
 
 
 def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
+    """
+    #------------------------------------------------------------------
+    #   display generic list of msgs
+    #
+    #   notes    -   list of msgs
+    #   text     -   heading text
+    #   color    -   display in color
+    #   margin   -   left margin
+    #   helpmsg  -   help msg flag
+    #   display  -   display or return html
+    #
+    #------------------------------------------------------------------
+    """      
     
     notes_html = ""
     if(display) :
@@ -2066,7 +2262,17 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     else :
         return(notes_html)
 
+
 def display_notes(notes,display=True) :
+    """
+    #------------------------------------------------------------------
+    #   display generic list of msgs
+    #
+    #   notes    -   list of msgs
+    #   display  -   display or return html
+    #
+    #------------------------------------------------------------------
+    """      
     
     if(display) :
         
@@ -2091,6 +2297,61 @@ def display_notes(notes,display=True) :
             
     else :
         return(display_msgs(notes,"Notes :",color=False,margin=30,helpmsg=False,display=False))
+
+
+def display_status(msg,display=True) :
+    """
+    #------------------------------------------------------------------
+    #   display generic list of msgs
+    #
+    #   notes    -   list of msgs
+    #   display  -   display or return html
+    #
+    #------------------------------------------------------------------
+    """      
+    
+    if(display) :
+        
+        import dfcleanser.common.cfg as cfg
+        
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            
+            #display_msgs(notes,"Notes :")
+            status_html     =   display_msgs([msg],"Status :",color=False,margin=5,helpmsg=False,display=False) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [status_html]
+    
+            display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
+            
+        else :
+            
+            status_html     =   display_msgs([msg],"Status :",color=False,margin=30,helpmsg=False,display=False) 
+            gridclasses     =   ["dfc-top-"]
+            gridhtmls       =   [status_html]
+    
+            display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+            
+    else :
+        return(display_msgs([msg],"Status :",color=False,margin=30,helpmsg=False,display=False))
+
+
+def print_page_separator(title,divid) :
+    
+    style_name      =   "dfc-divider_" + str(divid)
+    
+    divider_cont    =   ("<div style='margin-left: 0px; width:95%;'>" + new_line) 
+    divider1_html   =   ("        <style>" + new_line + "            hr." + style_name + " { " + new_line + "                overflow: visible; padding: 0; width: 90%; border: none; box-shadow: 0 0 10px 1px #296093; text-align: center;" + new_line + "            } " + new_line)
+    divider2_html   =   ('            hr.' + style_name + ':after { ' + new_line + '                content: "' + title + '"; ')
+    divider3_html   =   (" display: inline-block; position: relative; top: -0.7em; font-size: 24px; font-weight: bold;" + new_line + "                font-family: Arial; color: #236BAF; padding: 0 0.25em; background: white;" + new_line + "            }" + new_line + "        </style>" + new_line) 
+    
+    
+    divider_start_html  =   ("    <hr class='" + style_name + "'>" + new_line + "    <div>" + new_line)
+    divider_end_html    =   ("    </div>" + new_line + "</div>" + new_line + "<br>" + new_line)
+    
+    divider_html     =   (divider_cont + divider_start_html + divider1_html + divider2_html + divider3_html + divider_end_html) 
+    
+    from dfcleanser.common.common_utils import (displayHTML)
+    displayHTML(divider_html)
 
     
 def display_inline_help(helptext,margin=80) :

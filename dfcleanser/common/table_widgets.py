@@ -87,10 +87,11 @@ SCROLL_UP           =   1
 SCROLL_RIGHT        =   2
 SCROLL_LEFT         =   3
 
+SIMPLE              =   -1
+
 ROW_MAJOR           =   0
 COLUMN_MAJOR        =   1
-MULTIPLE            =   2
-ROW_COL_MAJOR       =   3
+ROW_COL_MAJOR       =   2
 
 
 
@@ -175,7 +176,6 @@ class dcTable_cfg :
 dc_table_config    =   dcTable_cfg()
 
 
-
 """
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
@@ -254,8 +254,7 @@ table_more_div_start1 = """ style="padding-right:0px; text-align:right">
 """
 table_more_short_div_start1 = """ style="padding-right:25px; text-align:right;">
 """
-#table_short_more_div_start = """                    <div class="input-group-btn dc-table-title" style="padding-right:0px; padding-left:2%;" >
-#"""
+
 table_short_more_div_start = """                    <div class="input-group-btn" style="padding-right:0px; padding-left:2%;" >
 """
 
@@ -345,7 +344,10 @@ table_body_end = """                </tbody>"""
 
 table_body_row_start = """                    <tr class="dc-describe-table-body-row">
 """
-table_body_row_href_start = """                    <tr class="dc-describe-table-head-row">
+table_body_row_start12 = """                    <tr class="dc-describe-table-body-row12">
+"""
+
+table_body_row_href_start = """                    <tr class="dc-describe-table-body-row ">
 """
 
 table_body_row_end = """
@@ -380,7 +382,7 @@ table_button_end   = """</button>
 """
 
 plain_title_row = """
-        <div>
+        <div style="margin-bottom: -20px;">
             <table class="table dc-table" id="XXXXHeaderTable">
                 <tbody>
                     <tr style="height:XXXXheight; font-family: Arial; font-weight:bold; color:white; background-color:#3281B8;">
@@ -407,11 +409,11 @@ scroll_col_end = """                            </div>
 
 
 scroll_title_row = """
-        <div>
+        <div style="margin-bottom: -20px;">
             <table class="table dc-table" id="XXXXHeaderTable" style="background-color:#3281B8;">
                 <tbody style="background-color:#3281B8;">
                     <tr style="height:XXXXheight; font-family: Arial; font-weight:bold; color:white; background-color:#3281B8;">
-                        <td class="dccolleft" style="font-size:XXXXfont-size;">XXXXTitle</td>
+                        <td class="dccolleft" width="xxxxTitleWidth%" style="font-size:XXXXfont-size;">XXXXTitle</td>
 """
                             
 scroll_title_row_end = """
@@ -422,14 +424,14 @@ scroll_title_row_end = """
 """
 
 
-search_col = """                        <td class="dccolright" width="10%">
+search_col = """                        <td class="dccolright" width="xxxxInputWidth%">
                             <div class="input-group-btn">
                                 <input type="text" class='form-control dc-form-search-more-input' size="14" style=' height:30px;  width:120px; ' id="XXXXsid" placeholder="XXXXtextid" </input>
                             </div>
                         </td>
 
-                        <td class="dccolright" width="15%" >
-                            <div class="input-group-btn" style="text-align:right">
+                        <td class="dccolleft" width="xxxxIconWidth%" >
+                            <div class="input-group-btn" style="text-align:left">
                                 <button class='btn btn-primary' title="Get Row" OnClick="XXXXonclick">
                                     <i class='glyphicon glyphicon-search' id="dcdisrowsearchglyph" style="float:left"></i>
                                 </button>
@@ -444,61 +446,14 @@ search_col = """                        <td class="dccolright" width="10%">
 * -----------------------------------------------------------------------*
 """
 
-
-def get_mult_table(table,direction,displayTable=True) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : A mult_table is a set of tables stacked like sheets with only one
-    *            displayed at a tim
-    * 
-    * parms :
-    *   table           -   dcTable object
-    *   direction       -   direction to scroll in 
-    *   displayTable    -   display the html flag  
-    *
-    * returns : 
-    *  html table
-    * --------------------------------------------------------
-    """
-    
-    if(direction == SCROLL_DOWN):
-        table.set_lasttabledisplayed(table.get_lasttabledisplayed()+1)    
-    elif(direction == SCROLL_UP) :
-        table.set_lasttabledisplayed(table.get_lasttabledisplayed()-1) 
-    elif(direction == SCROLL_RIGHT):
-        table.set_lasttabledisplayed(table.get_lasttabledisplayed()+1)    
-    elif(direction == SCROLL_LEFT) :
-        table.set_lasttabledisplayed(table.get_lasttabledisplayed()-1) 
         
-
-    temp_table = dcTable(table.get_title(),"tempmulttable",
-                         table.get_owner(),
-                         table.get_headerList()[table.get_lasttabledisplayed()],
-                         table.get_rowList()[table.get_lasttabledisplayed()],
-                         table.get_widthList()[table.get_lasttabledisplayed()],
-                         table.get_alignList()[table.get_lasttabledisplayed()])
-    
-    temp_table.set_tableid(table.get_tableid())
-    temp_table.set_tabletype(table.get_tabletype())
-    if( ( not (table.get_refList() == None)) and (len(table.get_refList())>0) ) :
-        temp_table.set_refList(table.get_refList()[table.get_lasttabledisplayed()])
-    temp_table.set_hhrefList(table.get_hhrefList()[table.get_lasttabledisplayed()])
-    temp_table.set_refParm(table.get_refParm())
-    
-    # MULTIPLE specific 
-    temp_table.set_numtables(table.get_numtables())
-    temp_table.set_lasttabledisplayed(table.get_lasttabledisplayed())
-    temp_table.set_rowspertable(table.get_rowspertable())
-    temp_table.set_note(table.get_note())
-    
-    if(not(displayTable)) :
-        table_HTML = temp_table.get_html(False)
-        drop_table_value("tempmulttable")
-        return(table_HTML)
-    else :
-        temp_table.display_table() 
-        drop_table_value("tempmulttable")
-        
+"""
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+*    row major table methods
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+"""
 
 def get_row_major_table(table,direction,displayTable=True) :
     """
@@ -540,24 +495,169 @@ def get_row_major_table(table,direction,displayTable=True) :
         table.display_table() 
         
 
-def update_col_major_table_scroll(table) :
+"""
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+*    column major table methods
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+"""
+
+"""
+* -----------------------------------------------------------------------*
+*    column major refresh styles methods
+* -----------------------------------------------------------------------*
+"""
+def refresh_dfschema_buttons() :
     """
     * -------------------------------------------------------------------------- 
-    * function : update the col major last column displayed value
+    * function : refresh df_schema table css
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
+    from dfcleanser.common.common_utils import run_jscript
+    
+    for j in range(2) :
+        
+        if(j==0)    :   colid    =   "dtcol"
+        else        :   colid    =   "cccol"
+        
+        for i in range(7) :
+    
+            change_table_js = '$("#' + colid + str(i) + '").css("background-color","#67a1f3");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+                    
+            change_table_js = '$("#' + colid + str(i) + '").css("font-size","10px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+                    
+            change_table_js = '$("#' + colid + str(i) + '").css("height","50px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
+            change_table_js = '$("#' + colid + str(i) + '").css("color","white");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
+            change_table_js = '$("#' + colid + str(i) + '").css("width","90px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+            
+            change_table_js = '$("#' + colid + str(i) + '").css("margin-left","15px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
+
+
+"""
+* -----------------------------------------------------------------------*
+*    common column major table methods
+* -----------------------------------------------------------------------*
+"""
+
+def set_col_major_table_scroll(table,direction) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : set the column major scroll values
     * 
     * parms :
     *   table           -   dcTable object
+    *   direction       -   direction left or right
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
+    if( not(direction is None) ) :
+        if(direction == SCROLL_RIGHT) :
+            if((table.get_lastcoldisplayed() + 1) >= table.get_maxcolumns()) :
+                table.set_lastcoldisplayed(0)
+        else :
+            
+            if( (table.get_tableid() == "dcgendfdesc") or (table.get_tableid() == "dcnngendfdesc") ):
+                
+                from dfcleanser.common.common_utils import is_numeric_col
+                
+                start_col   =   0
+                
+                import dfcleanser.common.cfg as cfg
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                df_cols     =   df.columns.tolist()
+                
+                nums_found  =   0
+                
+                for i in range(table.get_lastcoldisplayed(),-1,-1) :
+                    
+                    if(nums_found < (2 * table.get_colsperrow())) :
+                        
+                        col_found   =   False
+                        
+                        if(table.get_tableid() == "dcgendfdesc") :
+                            if(is_numeric_col(df,df_cols[i])) :  
+                                col_found   =   True
+                        else :
+                            if( not(is_numeric_col(df,df_cols[i]))) :  
+                                col_found   =   True
+                        
+                        if(col_found) :
+                            
+                            nums_found  =   nums_found + 1
+                            if(nums_found == (2 * table.get_colsperrow())) :
+                                start_col   =   i
+                                #print("    start_col set ",i,nums_found,start_col)
+                                break;
+                
+            else :
+                start_col   =   table.get_lastcoldisplayed()-(table.get_colsperrow())
+                if(start_col < 0) :
+                    start_col   =   0
+            
+            table.set_lastcoldisplayed(start_col)
+            
+    else :
+        
+        start_col   =   table.get_lastcoldisplayed()-(table.get_colsperrow())
+        
+        if(start_col < 0) :
+            start_col   =   0
+                
+        table.set_lastcoldisplayed(start_col)
+
+
+def update_col_major_html(table,table_html) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : scroll a col majot table
+    * 
+    * parms :
+    *   table           -   dcTable object
+    *   table_html      -   table html
     *
     * returns : 
     *  N?A
     * --------------------------------------------------------
     """
     
-    if((table.get_lastcoldisplayed() + table.get_colsperrow()) >= table.get_maxcolumns()) :
-        table.set_lastcoldisplayed(table.get_maxcolumns()-1)
-    else :
-        table.set_lastcoldisplayed(table.get_lastcoldisplayed() + table.get_colsperrow())
-    
+    start_html      =   table_html.find('<div class="panel panel-primary"  style=border:0px;>')
+    end_html        =   len(table_html) - (len("</div>") + 1)
+    col_major_html  =   table_html[start_html:end_html]
+        
+    from dfcleanser.common.common_utils import patch_html
+    new_table_html = patch_html(col_major_html)
+        
+    change_table_js = "$("
+    change_table_js = change_table_js + "'#" + table.get_tableid() + "container').html('"
+    change_table_js = change_table_js + new_table_html + "');"
+        
+    #print(new_table_html)
+            
+    from dfcleanser.common.common_utils import run_jscript
+    run_jscript(change_table_js,"fail scroll_table : " + table.get_tableid())
+        
+    from dfcleanser.common.common_utils import refresh_scroll_buttons
+    refresh_scroll_buttons(table.get_tableid())  
+
 
 def scroll_col_major_table(table,direction) :
     """
@@ -572,29 +672,41 @@ def scroll_col_major_table(table,direction) :
     *  N?A
     * --------------------------------------------------------
     """
+    #print("scroll_col_major_table",direction,table.get_lastcoldisplayed())
     
-    if( not(direction is None) ) :
-        if(direction == SCROLL_RIGHT) :
-            if((table.get_lastcoldisplayed() + 1) >= table.get_maxcolumns()) :
-                table.set_lastcoldisplayed(-1)
-        else :
-            start_col   =   table.get_lastcoldisplayed()-(2*table.get_colsperrow())
-            if(start_col < 0) :
-                start_col   =   -1
-                
-            table.set_lastcoldisplayed(start_col)
+    set_col_major_table_scroll(table,direction)
+        
+    if(table.get_tableid() == "dfschema") :
+        
+        from dfcleanser.data_transform.data_transform_widgets import update_df_schema_table 
+        df_schema_html  =   update_df_schema_table(table,direction,False)
+        
+        update_col_major_html(table,df_schema_html)
+        
+        refresh_dfschema_buttons()
+
+    elif(table.get_tableid() == "dcgendfdesc") :
+        
+        from dfcleanser.common.display_utils import update_df_describe
+        df_describe_html  =   update_df_describe(table,direction,False)
+        
+        update_col_major_html(table,df_describe_html)
+        
+    elif(table.get_tableid() == "dcnngendfdesc") :
+        
+        from dfcleanser.common.display_utils import update_df_nn_describe
+        df_nn_describe_html  =   update_df_nn_describe(table,direction,False)
+        
+        update_col_major_html(table,df_nn_describe_html)
 
 
-
-
-def get_col_major_table(table,direction,displayTable=True) :
+def get_col_major_table(table,displayTable=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : A col_major_table is a single table that displays a subset of cols at a time
     * 
     * parms :
     *   table           -   dcTable object
-    *   direction       -   direction to scroll in 
     *   displayTable    -   display the html flag  
     *
     * returns : 
@@ -604,37 +716,15 @@ def get_col_major_table(table,direction,displayTable=True) :
 
     if(not(displayTable)) :
         
-        if(direction == SCROLL_LEFT) :
-            numinlasttable = table.get_lastcoldisplayed() % table.get_colsperrow()
-            if(numinlasttable > 0) :
-                colstart = table.get_lastcoldisplayed() - (numinlasttable+table.get_colsperrow())
-            else :
-                colstart = table.get_lastcoldisplayed() - (2*table.get_colsperrow())
-                
-            if(colstart < 0) :
-                colstart = -1
-            
-            table.set_lastcoldisplayed(colstart)
-            
-        else :
-            if( table.get_lastcoldisplayed() == len(table.get_rowList()) ) :
-                table.set_lastcoldisplayed(-1)
-            else :
-                table.set_lastcoldisplayed(table.get_lastcoldisplayed() + table.get_colsperrow()) 
-        
-        from dfcleanser.common.cfg import get_dfc_dataframe 
-        from dfcleanser.data_transform.data_transform_widgets import get_df_schema_table, get_df_chknum_table
-        if(table.get_tableid() == "dfschemaTable") :
-            get_df_schema_table(get_dfc_dataframe(),table,direction)
-        elif(table.get_tableid() == "dfchknumTable") :
-            get_df_chknum_table(get_dfc_dataframe(),table,direction)
-            
         table_HTML = table.get_html(False)
-        
         return(table_HTML)
         
     else :
+        
         table.display_table() 
+
+
+
 
 
 """
@@ -664,13 +754,10 @@ class dcTable :
     *   buttonList          -   list of <tr> buttons
     *   hiddensList         -   list of hidden elements associated with table
     *
-    *   tabletype           -   table type (ROW_MAJOR, COLUMN_MAJOR, MULTIPLE) 
+    *   tabletype           -   table type (ROW_MAJOR, COLUMN_MAJOR) 
     *   colsperrow          -   number of columns per row
     *   rowspertable        -   number of rows per table
-    *   maxtables           -   max tables in MULTIPLE table
     *   lastrowdisplayed    -   last row displayed in ROW_MAJOR table
-    *   numtables           -   number of MULTIPLE tables generated 
-    *   lasttabledisplayed  -   last MULTIPLE table displayed
     *
     *   searchable          -   flag to make table searchable
     *   searchtext          -   text for search box
@@ -741,10 +828,6 @@ class dcTable :
         # attributes for row major table scrolling  
         self.lastrowdisplayed = -1
 
-        # attributes for multiple table type tables    
-        self.numtables            =   0
-        self.lasttabledisplayed   =   -1
-        
         # attributes for col major table scrolling  
         self.lastcoldisplayed  = -1
         self.maxcolumns        = -1
@@ -780,7 +863,7 @@ class dcTable :
         self.table_title_parms      =   None  
         self.table_header_parms     =   None    
         self.table_column_parms     =   None 
-
+        
         # add the table to internal dict for later retrieval    
         if(get_table_value(self.tableid)==None) :
             set_table_value(self.tableid,self)
@@ -841,12 +924,6 @@ class dcTable :
     def set_lastrowdisplayed(self,lastrowdisplayedParm) :
         self.lastrowdisplayed         =   lastrowdisplayedParm
        
-    # attributes for multiple table type tables    
-    def set_numtables(self,numtablesParm) :
-        self.numtables                  =   numtablesParm
-    def set_lasttabledisplayed(self,lasttabledisplayedParm) :
-        self.lasttabledisplayed         =   lasttabledisplayedParm
-    
     # attributes for row major table 
     def set_lastcoldisplayed(self,lastcoldisplayedParm) :
         self.lastcoldisplayed         =   lastcoldisplayedParm
@@ -921,8 +998,6 @@ class dcTable :
     def set_table_column_parms(self,table_column_parms_in) :  
         self.table_column_parms     =   table_column_parms_in
         
-        
-        
     # class getters    
     def get_title(self) :
         return(self.title)
@@ -968,11 +1043,6 @@ class dcTable :
     def get_lastrowdisplayed(self) :
         return(self.lastrowdisplayed)
         
-    def get_numtables(self) :
-        return(self.numtables)
-    def get_lasttabledisplayed(self) :
-        return(self.lasttabledisplayed)
-    
     # attributes for col major table 
     def get_lastcoldisplayed(self) :
         return(self.lastcoldisplayed)
@@ -1034,7 +1104,6 @@ class dcTable :
     def get_table_column_parms(self) :        
         return(self.table_column_parms)
         
-
     def get_table_title_parm(self,title_parm_id) :
         try :
             return(self.get_table_title_parms(self)[title_parm_id])
@@ -1063,7 +1132,7 @@ class dcTable :
             tableHTML = (tableHTML + self.get_search_table_header(fulltable))
         else :
             tableHTML = (tableHTML + self.get_non_search_table_header(self.get_table_scrolls(),fulltable))
-
+            
         fsize   =   self.get_table_column_parm("font")
         if(fsize is None) :
             tableHTML = (tableHTML + table_start)
@@ -1152,7 +1221,7 @@ class dcTable :
         rowcount        =   0
     
         startrowIndex, rowcount = self.get_row_indices()
-    
+        
         for i in range(startrowIndex, (startrowIndex + rowcount)) :
         
             if(self.get_refList() == None) :
@@ -1228,9 +1297,9 @@ class dcTable :
         
         #debug 
         if(not(self.get_title() is None))  :  
-            if( ("#Dataframe Schema" in self.get_title()) or 
+            if( ("#Column Values" in self.get_title()) or 
                (self.get_title() == "#Numeric Column Stats") or 
-               ("#Column Nan Stats" in self.get_title()) ) :  
+               ("#Column Names" in self.get_title()) ) :  
                 self.dump()
                 print(tableHTML)
                 
@@ -1299,8 +1368,8 @@ class dcTable :
             searchParms = self.get_searchParms()
             search_keys =   list(searchParms.keys())
             for i in range(len(search_keys)) :
-                print("  ",search_keys[i],str(searchParms.get(search_keys[i])))    
-            
+                print("  ",search_keys[i],str(searchParms.get(search_keys[i]))) 
+            print("\n")
             
         else :
             print("\n searchable  : ",self.get_searchable())
@@ -1315,10 +1384,6 @@ class dcTable :
             print(" lastcoldisplayed   :     ",self.get_lastcoldisplayed())
             print(" maxcolumns         :     ",self.get_maxcolumns())
             print(" scrollcallback     :     ",self.get_colscrollcallback(),"\n")
-        elif(self.get_tabletype() == MULTIPLE) :
-            print("\nMULTIPLE Parms :")
-            print("\n numtables         : ",self.get_numtables())
-            print(" lasttabledisplayed : ",self.get_lasttabledisplayed(),"\n")
         elif(self.get_tabletype() == ROW_COL_MAJOR) :
             print("\nROW_COL_MAJOR Parms  :")
             print(" rowspertable       :     ",self.get_rowspertable())
@@ -1338,7 +1403,7 @@ class dcTable :
         print(" textlength     : ",self.get_textLength())
 
         if(not(self.get_note() == "")) :
-            print("\nnote           : ",self.get_note())
+            print("\n note           : ",self.get_note())
 
 
 
@@ -1409,7 +1474,7 @@ class dcTable :
             tableHTML = (tableHTML + self.get_hiddens(self.get_tableid(),self.get_hiddensList()))
         
         tableHTML = (tableHTML + self.get_table_container_start())
-
+        
         scrolllist   =   [0,0,0,0]
     
         if(not (self.get_searchParms() == None) ) :
@@ -1470,7 +1535,7 @@ class dcTable :
                     tableHTML = (tableHTML + self.get_table_title_row(True))
                 else :
                     tableHTML = (tableHTML + self.get_table_title_row(False))
-        
+                    
         return(tableHTML)
 
         
@@ -1670,23 +1735,28 @@ class dcTable :
         rowHtml = ""
     
         if(type(rowElement) == str) :
+            
+            if( (rowElement.find("<div") < 0)  and (rowElement.find("<table") < 0) ):
         
-            # check for length of element
-            newrowElement = rowElement.replace("<b>","")
-            newrowElement = newrowElement.replace("</b>","")
-            newrowElement = newrowElement.replace("&nbsp;","")
+                # check for length of element
+                newrowElement = rowElement.replace("<b>","")
+                newrowElement = newrowElement.replace("</b>","")
+                newrowElement = newrowElement.replace("&nbsp;","")
 
-            if(not self.get_checkLength()) :
-                rowHtml = rowElement
-            else :
-                if(len(newrowElement) > self.get_textLength()) :
-                    if(newrowElement.find(",") > -1) :
-                        rowHtml = rowElement 
-                    else :
-                        rowHtml = ('<a href="#" data-toggle="tooltip" data-placement="top" title="' +  
-                                   newrowElement + '">' + self.shorten_element(newrowElement) + '</a>')
-                else :
+                if(not self.get_checkLength()) :
                     rowHtml = rowElement
+                else :
+                    if(len(newrowElement) > self.get_textLength()) :
+                        if(newrowElement.find(",") > -1) :
+                            rowHtml = rowElement 
+                        else :
+                            rowHtml = ('<a href="#" data-toggle="tooltip" data-placement="top" title="' +  
+                                       newrowElement + '">' + self.shorten_element(newrowElement) + '</a>')
+                    else :
+                        rowHtml = rowElement
+            else :
+                rowHtml = rowElement
+                
         else :
             rowHtml = rowElement
 
@@ -1741,9 +1811,9 @@ class dcTable :
                 rowHTML = (rowHTML + "                        <td" + 
                            addattribute("style",addstyleattribute("width", str(self.get_widthList()[i])+"%")))
         
-            if( self.get_alignList()[i] == "left") :  
+            if( self.get_alignList()[i] == "left") : 
                 rowHTML = (rowHTML + addattribute("class","dccolleft dccolwrap"))
-            else :    
+            else :
                 rowHTML = (rowHTML + addattribute("class","dccolwrap"))
 
             if(href == None) :
@@ -1810,10 +1880,7 @@ class dcTable :
         * --------------------------------------------------------
         """
     
-        if( (self.get_tabletype() == MULTIPLE) and (self.get_numtables() > 1) ) :
-            return([0,0,1,1])
-
-        elif(self.get_tabletype() == ROW_MAJOR) :
+        if(self.get_tabletype() == ROW_MAJOR) :
             if(len(self.get_rowList()) > self.get_rowspertable() ) :
                 return([1,1,0,0]) 
             else :
@@ -1843,6 +1910,9 @@ class dcTable :
         table_title     =   self.get_title()
     
         header_html     =   plain_title_row[0:]
+        
+        
+        
     
         header_html     =   header_html.replace("XXXXHeaderTable",table_id+"HeaderTable")
         header_html     =   header_html.replace("XXXXTitle",table_title)
@@ -1861,6 +1931,21 @@ class dcTable :
         return(header_html)
 
 
+    def is_scrolling_required(self,searchParms) :
+        
+        if(not(searchParms is None)) :
+            if( (searchParms.get("SCROLL_UP_callback") == None) and 
+                (searchParms.get("SCROLL_DOWN_callback") == None) and
+                (searchParms.get("SCROLL_RIGHT_callback") == None) and
+                (searchParms.get("SCROLL_LEFT_callback") == None) ) :
+
+                return(False)
+            else :
+                return(True)
+        else :
+            return(False)
+        
+        
     def get_scroll_table_title_row(self,smallflag,scrolllist,addSearch=False) :
         """
         * -------------------------------------------------------------------------- 
@@ -1880,6 +1965,27 @@ class dcTable :
         header_html     =   scroll_title_row[0:]
     
         header_html     =   header_html.replace("XXXXHeaderTable",table_id+"HeaderTable")
+        
+        import dfcleanser.common.cfg as cfg
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            if(addSearch) :
+                titlewidth  =   "20"
+            else :
+                scrollcount     =   0
+                for i in range(len(scrolllist)) :
+                    if(scrolllist[i] == 1) :
+                        scrollcount     =   scrollcount + 1
+                if(scrollcount > 2) :
+                    titlewidth  =   "35"
+                else :
+                    titlewidth  =   "45"
+        else :
+            if(addSearch) :
+                titlewidth  =   "10"
+            else :
+                titlewidth  =   "55"
+            
+        header_html     =   header_html.replace("xxxxTitleWidth", titlewidth)
         header_html     =   header_html.replace("XXXXTitle",table_title)
         header_html     =   header_html.replace("XXXXTableTitle",table_id+"TableTitle")
     
@@ -1904,6 +2010,19 @@ class dcTable :
             
             searchParms     =   self.get_searchParms()
             search_html     =   search_col[0:]
+            
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                inputwidth  =   "15"
+                if(self.is_scrolling_required(searchParms)) :
+                    iconwidth   =   "10"
+                else :
+                    iconwidth   =   "60"
+            else :
+                inputwidth  =   "30"
+                iconwidth   =   "5"
+                
+            search_html     =   search_html.replace("xxxxInputWidth",inputwidth)
+            search_html     =   search_html.replace("xxxxIconWidth",iconwidth)
             
             if(not(searchParms is None)) :
                 
@@ -1960,6 +2079,7 @@ class dcTable :
                         if(addSearch) : callback    =   leftcallback
                         else :          callback    =   "scrollTable('" + table_id + "'," + direction + ")"         
             
+                    arrow_html     =   arrow_html.replace("XXXXimageId",table_id + image + "Id")
                     arrow_html     =   arrow_html.replace("XXXXimage",image)
                     arrow_html     =   arrow_html.replace("XXXXScrollCallback",callback)
                     arrow_html     =   arrow_html.replace("XXXXArrowSize",arrowsize)
@@ -1988,10 +2108,7 @@ class dcTable :
         startrowIndex   =   0
         rowcount        =   0
     
-        if(self.get_tabletype() == MULTIPLE) :
-            rowcount = len(self.get_rowList())
-        
-        elif(self.get_tabletype() == ROW_MAJOR) :
+        if(self.get_tabletype() == ROW_MAJOR) :
         
             if( (len(self.get_rowList()) >= (self.get_lastrowdisplayed() + self.get_rowspertable())) ) :
                 if(self.get_lastrowdisplayed() == -1) :
@@ -2016,7 +2133,7 @@ class dcTable :
     
         elif(self.get_tabletype() == COLUMN_MAJOR) :
             startrowIndex = 0 
-            rowcount = 1
+            rowcount = rowcount = len(self.get_rowList())#1
 
         else :
         

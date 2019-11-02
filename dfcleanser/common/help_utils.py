@@ -171,6 +171,13 @@ DROP_DUPS                           =    "http://pandas.pydata.org/pandas-docs/v
 PANDAS_DROPNA                       =    'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html'
 PANDAS_FILLNA                       =    'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.fillna.html'
 
+RENAME_COL                          =   "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html"
+DROP_COL                            =   "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.drop.html"
+SORT_COL                            =   "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.sort_values.html"
+
+
+
+
 TRANSFORM_MAIN_TASKBAR_ID           =   TRANSFORM_HELP_BASE + 1
 TRANSFORM_DF_ID                     =   TRANSFORM_HELP_BASE + 2
 TRANSFORM_DF_SAVE_COL_NAME_ID           =   TRANSFORM_HELP_BASE + 3

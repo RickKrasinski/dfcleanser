@@ -355,6 +355,9 @@ def get_composite_form_doc(forms) :
     return(composite_form_doc_html)
 
 
+
+
+
 """
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
@@ -431,7 +434,7 @@ def getbuttonsizing(buttonGroup) :
         width       =   math.floor(100 / len(buttonGroup.get_keyList()))
         width_type  =   "%"
     else :
-        if(buttonGroup.get_custombwidth() == 0) :
+        if(buttonGroup.get_custombwidth() is None) :
             width   =   math.floor(buttonGroup.get_gridwidth() / len(buttonGroup.get_keyList()))
             width_type  =   "px"
         else :
@@ -443,7 +446,8 @@ def getbuttonsizing(buttonGroup) :
     if(buttonGroup.get_centered()) :
         if(buttonGroup.get_gridwidth() > 0) :
             
-            gridwithadjust  =   math.floor(buttonGroup.get_gridwidth()*0.02)
+            gridwithadjust  =   math.floor(buttonGroup.get_gridwidth()*0.002) + 14
+            
             import math
             margin  =   math.floor(((buttonGroup.get_gridwidth()-gridwithadjust) - (len(buttonGroup.get_keyList()) * width)) / 2)
             if(margin < 0) :
@@ -610,7 +614,7 @@ class ButtonGroupForm :
         button_group_form_html = (button_group_form_html + button_group_form_div_end)
         button_group_form_html = (button_group_form_html + button_group_form_end)
     
-        if((self.get_formid() == "#coluniquesnormaloptionstb") or (self.get_formid() == "#inspectionoptionstb") ):
+        if((self.get_formid() == "#censusdataload") or (self.get_formid() == "#inspectionoptionstb") ):
             self.dump()
             print(button_group_form_html)
 
@@ -650,16 +654,23 @@ input_group_form_end = ("""
 input_group_grid_form_end     = """
 </div>"""
 
-input_group_form_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; """)
-input_group_form_pop_up_top = ("""<div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; """)
+input_group_form_top = ("""<div class='container' style=' padding:5px; margin:auto; width:100%; """)
+input_group_form_pop_up_top = ("""<div class='container' style=' padding:5px; margin:auto; width:100%; background-color:#F8F5E1; """)
                         
-input_group_short_form_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; """)
-input_group_short_form_pop_up_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:99%; background-color:#F8F5E1; """)
+input_group_short_form_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:100%; """)
+input_group_short_form_pop_up_top = ("""  <div class='container' style=' padding:5px; margin:auto; width:100%; background-color:#F8F5E1; """)
 
 input_group_custom_form_top =   """  <div class="container dc-container" style='width: """ 
 input_group_custom_form_pop_up_top =   """  <div class='container dc-container' """ + addstyleattribute("background-color","#F8F5E1") + """style='width: """ 
  
 input_group_custom_form_top1 =  """ padding:5px; border: 1px solid #428bca;'"""
+
+
+input_group_input_form_top = ("""
+  <div class='container' style='padding:5px; margin:auto; width:100%;' """)
+input_group_input_form_bottom = """
+  </div>"""
+
                         
 input_group_form_bottom = """  </div>"""
 
@@ -707,9 +718,6 @@ input_group_select_middle = """  style="margin-left:1px; font-size: 11px;" class
 input_group_select_end = (tabs(2) + """        </select>""")
 
 
-
-
-
 """
 * -----------------------------------------------------------------------*
 * Common Input Group Form helper functions
@@ -728,7 +736,8 @@ REQUIRED        =   1
 DISPLAYED       =   2
 
 
-def should_display(idList,reqList,i,parmsList) :
+def should_display(idList,reqList,selectDefault,i,parmsList) :
+    
 
     for j in range(len(reqList)) :
         if(reqList[j] == i) :
@@ -737,7 +746,13 @@ def should_display(idList,reqList,i,parmsList) :
     if(not (parmsList is None)) :
         if(i < len(parmsList)) :
             if( not (parmsList[i] == "")) :
-                return(DISPLAYED)
+                if(not(selectDefault is None)) :
+                    if(parmsList[i] == selectDefault) :
+                        return(NOT_DISPLAYED)
+                    else :
+                        return(DISPLAYED)
+                else :
+                    return(DISPLAYED)
             else :
                 return(NOT_DISPLAYED)
     else :
@@ -797,6 +812,14 @@ def display_full_parms(formid,idList,reqList) :
         if(fcount == 0)         : return(True)
     
     return(False)
+    
+    
+shortForm_KEY           =   "shortForm"
+fullparms_KEY           =   "fullparms"
+gridwidth_KEY           =   "gridwidth",
+custombwidth_KEY        =   "custombwidth"
+buttonstyle_KEY         =   "buttonstyle"
+borderwidth_KEY         =   "borderwidth"
 
 """
 * -----------------------------------------------------------------------*
@@ -830,13 +853,7 @@ class InputForm :
                  typeList           =   [],
                  placeholderList    =   [],
                  jsList             =   [],
-                 reqList            =   [],
-                 
-                 shortForm          =   False,
-                 fullparms          =   False,
-                 gridwidth          =   0,
-                 custombwidth       =   0,
-                 buttonstyle        =   None) :
+                 reqList            =   []) :
         
         # instance variables
 
@@ -849,14 +866,7 @@ class InputForm :
         self.jsList             =   jsList
         self.reqList            =   reqList
         
-        # minimum form data attributes
-        self.shortForm          =   shortForm
-        self.fullparms          =   fullparms
-        self.gridwidth          =   gridwidth
-        self.custombwidth       =   custombwidth
-        self.buttonstyle        =   buttonstyle
-        self.borderwidth        =   0
-        
+        self.customDict         =   {}
         self.selectDict         =   {}
 
     def get_formid(self) :
@@ -887,33 +897,42 @@ class InputForm :
         return(self.reqList)
     def set_reqList(self,setParm) :
         self.reqList = setParm
+
+        
     def get_shortForm(self) :
-        return(self.shortForm)
+        return(self.customDict.get(shortForm_KEY,False))
     def set_shortForm(self,setParm) :
-        self.shortForm = setParm
+        self.customDict.update({shortForm_KEY:setParm})
     def get_fullparms(self) :
-        return(self.fullparms)
+        return(self.customDict.get(fullparms_KEY,False))
     def set_fullparms(self,setParm) :
-        self.fullparms = setParm
+        self.customDict.update({fullparms_KEY:setParm})
     def get_gridwidth(self) :
-        return(self.gridwidth)
+        return(self.customDict.get(gridwidth_KEY,None))
     def set_gridwidth(self,setParm) :
-        self.gridwidth = setParm
+        self.customDict.update({gridwidth_KEY:setParm})
     def get_custombwidth(self) :
-        return(self.custombwidth)
+        return(self.customDict.get(custombwidth_KEY,None))
     def set_custombwidth(self,setParm) :
-        self.custombwidth = setParm
+        self.customDict.update({custombwidth_KEY:setParm})
     def get_buttonstyle(self) :
-        return(self.buttonstyle)
+        return(self.customDict.get(buttonstyle_KEY,None))
     def set_buttonstyle(self,setParm) :
-        self.buttonstyle = setParm
+        self.customDict.update({buttonstyle_KEY:setParm})
     def get_borderwidth(self) :
-        return(self.borderwidth)
-    def set_borderwidth(self,width) :
-        self.borderwidth = width
+        return(self.customDict.get(borderwidth_KEY,0))
+    def set_borderwidth(self,setParm) :
+        self.customDict.update({borderwidth_KEY:setParm})
+
+    def get_form_custom_dict(self) :
+        return(self.customDict)
+    def set_form_custom_dict(self,cDict) :
+        self.customDict     =   cDict
+
         
     def get_select_default(self,idkey) :
         seldict     =   self.selectDict.get(idkey,None) 
+        
         if(not (seldict == None)) :
             return(seldict.get("default",None))
         else :
@@ -927,9 +946,18 @@ class InputForm :
             return(seldict.get("default",None))
     
     def get_select_callback(self,idkey) :
+        
         seldict     =   self.selectDict.get(idkey,None) 
         if(not (seldict == None)) :
             return(seldict.get("callback",None))
+        else :
+            return(None)
+    
+    def get_select_size(self,idkey) :
+        
+        seldict     =   self.selectDict.get(idkey,None) 
+        if(not (seldict == None)) :
+            return(seldict.get("size",1))
         else :
             return(None)
             
@@ -944,7 +972,7 @@ class InputForm :
         
         from dfcleanser.common.cfg import get_config_value
         parmslist   =   get_config_value(formid+"Parms")
-    
+        
         if(parmslist is None) :
             seldict.update({"current" : seldict.get("default")})
         else :
@@ -952,7 +980,9 @@ class InputForm :
             found   =   False
             
             for i in range(len(parmidsList)) :
+                
                 if(parmidsList[i] == parmid) :
+                    
                     if(parmslist[i] is None ) :
                         seldict.update({"current" : seldict.get("default")}) 
                     else :
@@ -965,12 +995,18 @@ class InputForm :
                     
         self.selectDict.update({parmid:seldict})
         
+        
+    def get_form_select_dict(self) :
+        return(self.selectDict)
+    def set_form_select_dict(self,sDict) :
+        self.selectDict     =   sDict
+        
     def get_select_html(self,idkey,fparm) :
-
+        
         selhtml     =   ""
         
         options =   self.get_select_list(idkey)
-
+        
         for i in range(len(options)) :
             selhtml     =   (selhtml + tabs(3) + "        <option style='text-align:left; font-size:11px;'")
             
@@ -1010,12 +1046,12 @@ class InputForm :
         # add to fullparms repositiry
         add_Input(self.get_formid(),self.get_idList(),self.get_labelList(),
                   self.get_typeList(),self.get_placeholderList(),
-                  self.get_jsList(),self.get_reqList(),self.get_shortForm(),
-                  self.get_buttonstyle())
+                  self.get_jsList(),self.get_reqList(),self.get_form_select_dict(),
+                  self.get_form_custom_dict())
 
         customWidth = 0
         noKeys      = False
-    
+        
         if(customWidth == 0) :
             if(self.get_shortForm()) :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
@@ -1051,6 +1087,8 @@ class InputForm :
                 input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_custom_form_pop_up_top + str(customWidth) + "%;")
     
         input_group_form_html = (input_group_form_html + addattribute("id",self.get_formid()) +">")
+        
+        input_group_form_html = (input_group_form_html + input_group_input_form_top + addattribute("id",self.get_formid() +"input") + ">")
 
         if(self.get_fullparms()) :
             display_all_flag = True
@@ -1077,18 +1115,21 @@ class InputForm :
         formParmsProtect = None
         if(formParms != None) :
             formParmsProtect = cfg.get_config_value(self.get_formid() + "ParmsProtect")
-    
+
         # for each input in form
         for i in range(len(self.get_idList())) : 
             
             if(self.get_idList()[i] is None)    :   
                 display_flag    =   REQUIRED
             else :
-                display_flag    =   should_display(self.get_idList(),self.get_reqList(),i,formParms)
-            
+                selectDefault   =   None
+                if( (self.get_typeList()[i] == "select") or (self.get_typeList()[i] == "selectmultiple") ) :
+                    selectDefault   =   self.get_select_default(self.get_idList()[i])
+                
+                display_flag    =   should_display(self.get_idList(),self.get_reqList(),selectDefault,i,formParms)
             
             if( (display_all_flag) or (display_flag == REQUIRED) or (display_flag == DISPLAYED)) :
-        
+                
                 if( (self.get_typeList()[i] == "text") or 
                     (self.get_typeList()[i] == "textarea") or 
                     (self.get_typeList()[i] == "file") or 
@@ -1107,6 +1148,8 @@ class InputForm :
                     inputelementId = self.get_idList()[i]
                     input_group_form_html = (input_group_form_html + 
                                              addattribute("for",inputelementId))
+                    input_group_form_html = (input_group_form_html + 
+                                             addattribute("id",inputelementId + "_label"))
                     
                     # add the label for each input line
                     if( not self.get_shortForm()) :
@@ -1256,6 +1299,18 @@ class InputForm :
                                                  "('" + self.get_idList()[i] + "')" + '"')
                     
                     input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i])) 
+                    
+                    # add size attribute
+                    if(not (self.get_select_size(self.get_idList()[i])) == None) :
+                        if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
+                            input_group_form_html = (input_group_form_html + addattribute("multiple","multiple"))
+                            input_group_form_html = (input_group_form_html + addattribute("size",str(self.get_select_size(self.get_idList()[i]))) )
+                        
+                    else :
+                        if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
+                            input_group_form_html = (input_group_form_html + addattribute("size","2"))
+    
+                    
                     input_group_form_html = (input_group_form_html + input_group_select_middle)
                     
                     if(not (formParms is None)) :
@@ -1278,8 +1333,9 @@ class InputForm :
                 
         # end the form
         input_group_form_html = (input_group_form_html + new_line + tabs(1) + "   </div>")
-        #input_group_form_html = (input_group_form_html + new_line + input_group_form_bottom)
-                    
+
+        input_group_form_html = (input_group_form_html + input_group_input_form_bottom)
+        
         # check if need to append buttons at bottom
         if(bcount > 0) :
 
@@ -1295,7 +1351,7 @@ class InputForm :
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
-        if((self.get_formid() == "#importPandasCSV") or (self.get_formid() == "#setnewcoltransform") or (self.get_formid() == "$$addcolcodeInput") ) :   
+        if((self.get_formid() == "#datainspectcolsearch") or (self.get_formid() == "#datainspectcolsearch") or (self.get_formid() == "#dataexportdf") or (self.get_formid() == "#datainspectdf") ) :   
             print(input_group_form_html)
             self.dump()
 
@@ -1321,8 +1377,11 @@ class InputForm :
             ids     =   list(self.selectDict.keys())
             for i in range(len(ids)) :
                 print("\n   Id : ",ids[i],"\n")
-                print("     defaullt : ",self.get_select_default(ids[i]))
+                print("     default  : ",self.get_select_default(ids[i]))
                 print("     list     : ",self.get_select_list(ids[i]))
+
+
+
 
 
 """
@@ -1354,6 +1413,7 @@ checkbox_group_label_start  = new_line + """       <label class='btn btn-primary
 checkbox_group_label_end    = """><span class='badge'>&check;</span></label>"""
 
 checkbox_group_input_start  = """ <input type='checkbox' class='badgebox' """
+checkbox_pop_up_group_input_start  = """ <input type='checkbox' onclick = 'handlecbcheck(this);' class='badgebox' """
 
 
 """
@@ -1453,6 +1513,8 @@ class CheckboxGroupForm :
         
         current_cb  =   0
         
+        #print("self.get_disabledlist()",self.get_disabledlist())
+        
         for j in range(numrows) :
             
             checkbox_group_form_html = (checkbox_group_form_html + checkbox_group_div1_start)    
@@ -1469,8 +1531,13 @@ class CheckboxGroupForm :
                 checkbox_group_form_html = (checkbox_group_form_html + checkbox_group_label_start)
                 checkbox_group_form_html = (checkbox_group_form_html + addattribute("for",self.get_idList()[current_cb]))
                 checkbox_group_form_html = (checkbox_group_form_html + ">" + self.get_labelList()[current_cb] + " ")
+                #checkbox_group_form_html = (checkbox_group_form_html + checkbox_group_label_end)
 
-                checkbox_group_form_html = (checkbox_group_form_html + checkbox_group_input_start)
+                if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                    checkbox_group_form_html = (checkbox_group_form_html + checkbox_group_input_start)
+                else :
+                    checkbox_group_form_html = (checkbox_group_form_html + checkbox_pop_up_group_input_start)
+                    
                 checkbox_group_form_html = (checkbox_group_form_html + addattribute("id",self.get_idList()[current_cb]))
         
                 if(len(self.get_chklist()) > 0) :
@@ -1499,6 +1566,7 @@ class CheckboxGroupForm :
         if((self.get_formid() == "dceulaform") or (self.get_formid() == "dropcolsinput") or (self.get_formid() == "addcolcodeInput") ) :   
             print(checkbox_group_form_html)
         
+        #print(checkbox_group_form_html)
         return(checkbox_group_form_html)
 
 
@@ -1510,6 +1578,9 @@ class CheckboxGroupForm :
         print("jsList          [3] : ",self.get_jsList())
         print("chklist         [4] : ",self.get_chklist())
         print("disabledlist    [5] : ",self.get_disabledlist())
+
+
+
 
 
 
@@ -1695,7 +1766,7 @@ def displayHeading(text,level) :
 #   Dataframe Cleanser Input form repository
 # -------------------------------------------------------------------------
 #   Repository is used to store input form parms to dynamically show minimum
-#   parms or show full parms list
+#   parms or show full parms list and redraw forms on the fly
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -1711,14 +1782,14 @@ def displayHeading(text,level) :
 def get_Input(formid) :
     return(DataframeCleanserInputLog.get_InputForm(formid))
     
-def add_Input(formid,idList,labelList,typeList,placeholderList,jsList,reqList,shortForm=False,custom=None) :
+def add_Input(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict) :
     if(formid != "dceulaform") :
-        DataframeCleanserInputLog.add_InputForm(formid,idList,labelList,typeList,placeholderList,jsList,reqList,shortForm=False,buttonstyle=None)
+        DataframeCleanserInputLog.add_InputForm(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict)
 
 def delete_Input(formid) :
     DataframeCleanserInputLog.delete_InputForm(formid) 
 
-def delete_all(ownerid=None) :
+def delete_all_inputs(ownerid) :
     DataframeCleanserInputLog.delete_all(ownerid) 
 
 def define_inputs(ownerid,formlist) :
@@ -1736,9 +1807,9 @@ class DCInputLog :
         self.ownerDict  =   {}
 
     def get_InputForm(self,formid) :
-        return(self.inputlog.get(formid))
+        return(self.inputlog.get(formid,None))
 
-    def add_InputForm(self,formid,idList,labelList,typeList,placeholderList,jsList,reqList,shortForm=False,buttonstyle=None) :
+    def add_InputForm(self,formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict) :
 
         inputformList = []
         inputformList.append(idList)
@@ -1747,29 +1818,23 @@ class DCInputLog :
         inputformList.append(placeholderList)
         inputformList.append(jsList)
         inputformList.append(reqList)
-        inputformList.append(shortForm)
-        inputformList.append(buttonstyle)
+        inputformList.append(selectDict)
+        inputformList.append(customDict)
         
         self.inputlog.update({formid:inputformList})
         
     def delete_InputForm(self,formid) :
-        
         self.inputlog.pop(formid)
     
     def delete_all(self,ownerid) :
-        
-        if(ownerid == None) :
-            self.inputlog         =   {}
-        else :
-            for i in range(len(self.ownerList)) :
-                ownerlist = list(self.ownerDict.vals())
-                if(ownerlist[i] == ownerid) :
-                    ownerforms = self.ownerDict.get(ownerlist[i])
-                    for j in range(len(ownerforms)) :
-                        self.inputlog.pop(ownerforms[j])    
+        if(not(ownerid is None)) :
+            ownerlist   =   self.ownerDict.get(ownerid,None)
+            if(not(ownerlist is None)) :
+                for i in range(len(ownerlist)) :
+                    if(not(self.get_InputForm(ownerlist[i]))is None) :
+                        self.inputlog.pop(ownerlist[i])    
             
     def define_owner_list(self,ownerid,formlist) :
-        
         self.ownerDict.update({ownerid:formlist})
         
     def get_inputlog_file_name(self) :

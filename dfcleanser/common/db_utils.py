@@ -32,6 +32,8 @@ from dfcleanser.common.html_widgets import displayHeading, InputForm
 from dfcleanser.common.common_utils import (display_status, display_exception, get_parms_for_input, display_generic_grid, RunningClock, opStatus)
 
 from dfcleanser.common.help_utils import IMPORT_CUSTOM_ID
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -120,10 +122,6 @@ mysql_connector_mysql_jsList        =   [None,None,None,None,None,
                                          "pandas_details_clear_callback(5)",
                                          "pandas_details_return_callback(0)",
                                          "display_help_url('"+str(MYSQL_CONNECTOR_URL)+"')"]
-
-
-
-
 
 """
 #--------------------------------------------------------------------------
@@ -681,6 +679,7 @@ def get_db_id_title(dbid) :
     elif(dbid == Oracle)        :   return("Oracle")
     else : return("  ")
 
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -968,7 +967,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid,owner=None) :
                                               db_con_jslist,
                                               mssql_connector_reqList)
             
-        else : #sqlid == SQL_EXPORT
+        else : 
             
             if(dblib == pyodbc_library) :
                 db_con_jslist = mssql_export_connector_jsList
@@ -1114,7 +1113,7 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid,owner=None) :
             for i in range(len(dbconparms)) :
                 if(dbconparms[i] != "") : dbparms[i] = dbconparms[i]
         
-        cfg.set_config_value(cfgname,dbparms,False)
+        cfg.set_config_value(cfgname,dbparms)
     
     dbtitle = ""    
     if( (dbid == None) )            :   dbtitle = ""
@@ -1134,6 +1133,9 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid,owner=None) :
         db_con_input_form.set_custombwidth(67)
 
     db_con_input_html = ""
+    
+    #db_con_input_form.dump()
+    
     db_con_input_html = db_con_input_form.get_html() 
     
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
@@ -1145,8 +1147,6 @@ def display_db_connector_inputs(dbid,dbconparms,sqlid,owner=None) :
         display_generic_grid("sql-connector-pop-up-wrapper",gridclasses,gridhtmls)
    
     from dfcleanser.data_import.data_import_widgets import pandas_import_sqltable_common_id
-    #print("display_db_connector_inputs",cfg.get_config_value(pandas_import_sqltable_common_id+"Parms"))
-    #print("display_db_connector_inputs",cfg.get_config_value("importPandasSQLCommonTableParms"))
     cfg.drop_config_value(pandas_import_sqltable_common_id+"Parms")
 
 def get_stored_con_Parms(dbid) :
@@ -1155,11 +1155,11 @@ def get_stored_con_Parms(dbid) :
     
     import dfcleanser.common.db_utils as dbu
     
-    if(dbid == dbu.MySql)               : conparms = cfg.get_config_value(MYSQL_DBCON_PARMS,cfg.GLOBAL)
-    elif(dbid == dbu.MS_SQL_Server)     : conparms = cfg.get_config_value(MSSQL_DBCON_PARMS,cfg.GLOBAL)
-    elif(dbid == dbu.SQLite)            : conparms = cfg.get_config_value(SQLITE_DBCON_PARMS,cfg.GLOBAL)
-    elif(dbid == dbu.Postgresql)        : conparms = cfg.get_config_value(POSTGRESQL_DBCON_PARMS,cfg.GLOBAL)
-    elif(dbid == dbu.Oracle)            : conparms = cfg.get_config_value(ORACLE_DBCON_PARMS,cfg.GLOBAL)
+    if(dbid == dbu.MySql)               : conparms = cfg.get_config_value(MYSQL_DBCON_PARMS)
+    elif(dbid == dbu.MS_SQL_Server)     : conparms = cfg.get_config_value(MSSQL_DBCON_PARMS)
+    elif(dbid == dbu.SQLite)            : conparms = cfg.get_config_value(SQLITE_DBCON_PARMS)
+    elif(dbid == dbu.Postgresql)        : conparms = cfg.get_config_value(POSTGRESQL_DBCON_PARMS)
+    elif(dbid == dbu.Oracle)            : conparms = cfg.get_config_value(ORACLE_DBCON_PARMS)
     elif(dbid == dbu.Custom)            : conparms = cfg.get_config_value(CUSTOM_DBCON_PARMS)
 
     return(conparms)    
@@ -1243,6 +1243,7 @@ def get_db_connector_list(dbid,dbcondict) :
     
     return(listHtml)
 
+
 """
 #------------------------------------------------------------------
 #   test the db connector
@@ -1252,14 +1253,15 @@ def get_db_connector_list(dbid,dbcondict) :
 #
 #------------------------------------------------------------------
 """    
-def test_db_connector(dbid,driverid,sqlinputparms,sqlid) :
+def test_db_connector(dbid,driverid,sqlinputparms,sqlid,opstat) :
+    
     
     connectParms  =   {}
     parmslist = parse_connector_parms(sqlinputparms,dbid,connectParms)
     
     errormsg = validate_connection_parms(connectParms)
     
-    if(errormsg == None) :
+    if(errormsg is None) :
     
         if(driverid == NATIVE) :
             display_db_connector_inputs(dbid,parmslist,sqlid)
@@ -1271,9 +1273,7 @@ def test_db_connector(dbid,driverid,sqlinputparms,sqlid) :
                 
         clock = RunningClock()
         clock.start()
-        
-        opstat = opStatus()
-
+    
         dbcon = dbConnector()
         dbcon.connect_to_db(driverid,opstat,connectParms)
 
@@ -1289,12 +1289,12 @@ def test_db_connector(dbid,driverid,sqlinputparms,sqlid) :
 
                 dbid = connectParms.get("dbid") 
                 
-                if(dbid   == MySql)             : cfg.set_config_value(MYSQL_DBCON_PARMS,parmslist,cfg.GLOBAL)
-                elif(dbid == MS_SQL_Server)     : cfg.set_config_value(MSSQL_DBCON_PARMS,parmslist,cfg.GLOBAL)
-                elif(dbid == SQLite)            : cfg.set_config_value(SQLITE_DBCON_PARMS,parmslist,cfg.GLOBAL)
-                elif(dbid == Postgresql)        : cfg.set_config_value(POSTGRESQL_DBCON_PARMS,parmslist,cfg.GLOBAL)
-                elif(dbid == Oracle)            : cfg.set_config_value(ORACLE_DBCON_PARMS,parmslist,cfg.GLOBAL)
-                elif(dbid == Custom)            : cfg.set_config_value(CUSTOM_DBCON_PARMS,parmslist,cfg.GLOBAL)
+                if(dbid   == MySql)             : cfg.set_config_value(MYSQL_DBCON_PARMS,parmslist)
+                elif(dbid == MS_SQL_Server)     : cfg.set_config_value(MSSQL_DBCON_PARMS,parmslist)
+                elif(dbid == SQLite)            : cfg.set_config_value(SQLITE_DBCON_PARMS,parmslist)
+                elif(dbid == Postgresql)        : cfg.set_config_value(POSTGRESQL_DBCON_PARMS,parmslist)
+                elif(dbid == Oracle)            : cfg.set_config_value(ORACLE_DBCON_PARMS,parmslist)
+                elif(dbid == Custom)            : cfg.set_config_value(CUSTOM_DBCON_PARMS,parmslist)
             
             else :
                 display_exception(opstat)                
@@ -1305,9 +1305,9 @@ def test_db_connector(dbid,driverid,sqlinputparms,sqlid) :
         
     else :
         
-        display_db_connector_inputs(dbid,parmslist,sqlid)  
-        display_status(errormsg)
-
+        opstat.set_status(False)
+        opstat.set_errorMsg(errormsg)        
+        
 
 """
 #------------------------------------------------------------------
@@ -1331,6 +1331,7 @@ def get_dbid_from_lib(dbcondict) :
     else                                                                    :    dbid = Custom
 
     return(dbid)
+
 
 """
 #------------------------------------------------------------------
@@ -1395,32 +1396,35 @@ def grab_connection_parms(parmsdict) :
             if(not (parmsdict.get("connectstring") == None) )   : dbcondict.update({"connectstring":parmsdict.get("connectstring")})
         
         return(dbcondict)
+
         
 """
 #------------------------------------------------------------------
 #   validate the sql db connector parms
 #
-#    dbid               -   database type identifier 
-#    sqlinputparms      -   connection string 
+#    parmsdict          -   connect parms dict 
 #
 #------------------------------------------------------------------
 """    
 def validate_connection_parms(parmsdict) :
-
+    
     dbid = get_dbid_from_lib(parmsdict)
     
     dbconlabels =   [mysql_connector_labelList,mssql_connector_labelList,sqlite_connector_labelList,
                      Postgresql_connector_labelList,oracle_connector_labelList,custom_connector_labelList]    
     dbconlens   =   [5,5,2,5,4,1] 
     
-    if(dbid == None) :
+    if(dbid is None) :
         return("No db id") 
     else :
 
         for i in range(dbconlens[dbid]) :
             parm = parmsdict.get(dbconlabels[dbid][i])
-            if(parm == None) :
+            if(parm is None) :
                 return("Invalid " + dbconlabels[dbid][i] + " parameter")
+            else :
+                if(len(parm) == 0) :
+                    return("Invalid " + dbconlabels[dbid][i] + " parameter")
     
     return(None)    
 
@@ -1578,6 +1582,7 @@ class dbConnector :
             self.dbconnectParms   =   {}
             
             errormsg = validate_connection_parms(inparms)
+            
             if( errormsg == None) :
                 dbcondict = grab_connection_parms(inparms)
                 self.set_ConnectionParms(dbcondict)

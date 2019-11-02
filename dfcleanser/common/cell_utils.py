@@ -24,20 +24,22 @@ DC_SW_UTILITIES_ID                  =   7
 DC_DATASTRUCT_UTILITY_ID            =   8
 DC_GEOCODE_UTILITY_ID               =   9
 DC_DFSUBSET_UTILITY_ID              =   10
-DC_DATA_SCRIPT_ID                   =   11
-DC_WORKING_ID                       =   12
+DC_CENSUS_UTILITY_ID                =   11
+DC_DATA_SCRIPT_ID                   =   12
+DC_WORKING_ID                       =   13
 
-SYSTEM_TASK_BAR_ID                  =   13
-IMPORT_TASK_BAR_ID                  =   14
-INSPECTION_TASK_BAR_ID              =   15
-CLEANSING_TASK_BAR_ID               =   16
-TRANSFORM_TASK_BAR_ID               =   17
-EXPORT_TASK_BAR_ID                  =   18
-SW_UTILS_DATASTRUCT_TASK_BAR_ID     =   19
-SW_UTILS_GEOCODE_TASK_BAR_ID        =   20
-SW_UTILS_DFSUBSET_TASK_BAR_ID       =   21
-SCRIPT_TASK_BAR_ID                  =   22
-WORKING_CELL_ID                     =   23
+SYSTEM_TASK_BAR_ID                  =   14
+IMPORT_TASK_BAR_ID                  =   15
+INSPECTION_TASK_BAR_ID              =   16
+CLEANSING_TASK_BAR_ID               =   17
+TRANSFORM_TASK_BAR_ID               =   18
+EXPORT_TASK_BAR_ID                  =   19
+SW_UTILS_DATASTRUCT_TASK_BAR_ID     =   20
+SW_UTILS_GEOCODE_TASK_BAR_ID        =   21
+SW_UTILS_DFSUBSET_TASK_BAR_ID       =   22
+SW_UTILS_CENSUS_TASK_BAR_ID         =   23
+SCRIPT_TASK_BAR_ID                  =   24
+WORKING_CELL_ID                     =   25
 
 
 """
@@ -73,11 +75,11 @@ SW_UTILS_DS_TITLE_CELL      =   '<div align="left" id="DCSWDataStructUtility"/><
 SW_UTILS_DB_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_dfsubset_control import display_dfsubset_utility\\ndisplay_dfsubset_utility(0)'
 SW_UTILS_DB_TITLE_CELL      =   '<div align="left" id="DCDFSubsetUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataframeSubset.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Dataframe Subset</h3></div></div>'
 
-SW_UTILS_GF_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_genfunc_control import display_gen_function\\ndisplay_gen_function(0)'
-SW_UTILS_GF_TITLE_CELL      =   '<div align="left" id="DCGenFunctionUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Genfunction.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Generic Functions</h3></div></div>'
-
 SW_UTILS_GC_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_geocode_control import display_geocode_utility\\ndisplay_geocode_utility(0)'
 SW_UTILS_GC_TITLE_CELL      =   '<div align="left" id="DCGeocodeUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/GetLongLat.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Geocoding</h3></div></div>'
+
+SW_UTILS_DM_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_census_control import display_census_utility\\ndisplay_census_utility(0)'
+SW_UTILS_DM_TITLE_CELL      =   '<div align="left" id="DCCensusUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/census.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Census</h3></div></div>'
 
 SYSTEM_CODE_CELL            =   "from dfcleanser.system.system_control import display_system_environment\\ndisplay_system_environment(0)"
 SYSTEM_TITLE_CELL           =   '<div align="left" id="DCSystem"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/systemEnvironment.png" width="80" align="left"/></div><div><image width="10"></div><div><h2>&nbsp;&nbsp;&nbsp;System Environment : </h2><a name="SystemEnvironment"></a></div></div>'
@@ -125,6 +127,9 @@ DC_LIST_UTILITY                 =   "DCListUtility"
 DC_GEOCODE_UTILITY_TITLE        =   "DCGeocodeUtilityTitle"
 DC_GEOCODE_UTILITY              =   "DCGeocodeUtility"
 
+DC_CENSUS_UTILITY_TITLE         =   "DCCensusUtilityTitle"
+DC_CENSUS_UTILITY               =   "DCCensusUtility"
+
 DC_DFSUBSET_UTILITY_TITLE       =   "DCDFSubsetUtilityTitle"
 DC_DFSUBSET_UTILITY             =   "DCDFSubsetUtility"
 
@@ -152,6 +157,7 @@ def get_chapter_code_cell_id(chapter) :
     elif (DC_LIST_UTILITY_TITLE == chapter)             :   return(SW_UTILS_DATASTRUCT_TASK_BAR_ID)
     elif (DC_GEOCODE_UTILITY_TITLE == chapter)          :   return(SW_UTILS_GEOCODE_TASK_BAR_ID)
     elif (DC_DFSUBSET_UTILITY_TITLE == chapter)         :   return(SW_UTILS_DFSUBSET_TASK_BAR_ID)
+    elif (DC_CENSUS_UTILITY_TITLE == chapter)           :   return(SW_UTILS_CENSUS_TASK_BAR_ID)
     elif (DC_DATA_SCRIPTING_TITLE == chapter)           :   return(SCRIPT_TASK_BAR_ID)
     elif (DC_WORKING_TITLE == chapter)                  :   return(WORKING_CELL_ID)
 
@@ -179,6 +185,8 @@ def get_cells_title_index(cellTitle) :
     elif (DC_GEOCODE_UTILITY == cellTitle)                :   return(SW_UTILS_GEOCODE_TASK_BAR_ID)
     elif (DC_DFSUBSET_UTILITY_TITLE == cellTitle)         :   return(DC_DFSUBSET_UTILITY_ID)
     elif (DC_DFSUBSET_UTILITY == cellTitle)               :   return(SW_UTILS_DFSUBSET_TASK_BAR_ID)
+    elif (DC_CENSUS_UTILITY_TITLE == cellTitle)           :   return(DC_CENSUS_UTILITY_ID)
+    elif (DC_CENSUS_UTILITY == cellTitle)                 :   return(SW_UTILS_CENSUS_TASK_BAR_ID)
     elif (DC_DATA_SCRIPTING_TITLE == cellTitle)           :   return(DC_DATA_SCRIPT_ID)
     elif (DC_DATA_SCRIPTING == cellTitle)                 :   return(SCRIPT_TASK_BAR_ID)
     elif (DC_WORKING_TITLE == cellTitle)                  :   return(DC_WORKING_ID)
@@ -219,6 +227,9 @@ def get_dfc_cells_text(cellid) :
 
     elif(cellid == DC_DFSUBSET_UTILITY_ID)              :    return(SW_UTILS_DB_TITLE_CELL)
     elif(cellid == SW_UTILS_DFSUBSET_TASK_BAR_ID)       :    return(SW_UTILS_DB_CODE_CELL)
+    
+    elif(cellid == DC_CENSUS_UTILITY_ID)                :    return(SW_UTILS_DM_TITLE_CELL)
+    elif(cellid == SW_UTILS_CENSUS_TASK_BAR_ID)         :    return(SW_UTILS_DM_CODE_CELL)
     
     elif(cellid == DC_DATA_SCRIPT_ID)                   :    return(SCRIPTING_TITLE_CELL)
     elif(cellid == SCRIPT_TASK_BAR_ID)                  :    return(SCRIPTING_CODE_CELL)
