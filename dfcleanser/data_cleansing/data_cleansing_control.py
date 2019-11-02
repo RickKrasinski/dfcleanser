@@ -18,11 +18,11 @@ import dfcleanser.data_cleansing.data_cleansing_widgets as dcw
 import dfcleanser.data_cleansing.data_cleansing_model as dcm
 
 from dfcleanser.common.common_utils import (RunningClock, display_status, display_exception, is_column_in_df, 
-                                            opStatus, single_quote, is_numeric_col, is_int_col,
+                                            opStatus, single_quote, is_numeric_col, is_int_col, display_grid_status,
                                             display_generic_grid, get_parms_for_input, get_numeric_from_string)
 
-from dfcleanser.common.table_widgets import (dcTable, drop_owner_tables)
-from dfcleanser.common.display_utils import (display_df_describe) 
+from dfcleanser.common.table_widgets import (drop_owner_tables)
+from dfcleanser.common.display_utils import (display_df_describe, display_df_nn_describe) 
 
 from IPython.display import clear_output
 
@@ -65,372 +65,373 @@ def display_data_cleansing(option,parms=None) :
                 if(not (len(selected_df) == 0) ) :
                     cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,selected_df)
 
-    if(cfg.is_a_dfc_dataframe_loaded()) :
         
-        cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
+    cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
-        if(option == dcm.MAIN_OPTION) :
-            clear_data_cleansing_data()
-            dcw.display_data_select_df()
+    if(option == dcm.MAIN_OPTION) :
+        clear_data_cleansing_data()
+        cfg.display_data_select_df(cfg.DataCleansing_ID)
             
-        elif(option == dcm.DFS_CLEANSE_COL) :
-
-            cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF))
-            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
-            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
-
-            cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
-            
-            dcw.display_col_data()
-
-        elif(option == dcm.CHANGE_COLUMN_OPTION) :
-
-            clock = RunningClock()
-            clock.start()
-            
-            opstat = change_unique_col_data(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms)
-            cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
-            
-            clock.stop()
-            
-            if(opstat.get_status()) :
-                display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " values changed successfully")
-            else :
-                display_exception(opstat)                
-            
-            dcw.display_col_data()
-            
-        elif(option == dcm.FIND_COLUMN_OPTION) :
-            cfg.set_config_value(cfg.UNIQUES_RANGE_KEY,parms)
-            dcw.display_col_data()
+    else :
         
-        elif(option == dcm.GENERIC_COL_OPTION) :
+        if(cfg.is_a_dfc_dataframe_loaded()) :
             
-            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
-            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
+            if(option == dcm.DFS_CLEANSE_COL) :
 
-            if(parms != None) :
+                cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF))
+                cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
+
                 cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
             
-            dcw.display_col_data()
-            
-        elif(option == dcm.DISPLAY_COLS_OPTION) :
-            cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
-            cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
-            cfg.drop_config_value(cfg.DATA_TYPES_FLAG_KEY)            
-            
-            cfg.drop_config_value(cfg.CLEANSING_COL_KEY)
-            cfg.drop_config_value(cfg.CLEANSING_ROW_KEY)
+                dcw.display_col_data()
 
-            funcid = int(parms[0])
-            
-            if(funcid == 0) :
-                
-                cols_heading_html  =   "<div>Numeric Columns</div>"
+            elif(option == dcm.CHANGE_COLUMN_OPTION) :
 
                 clock = RunningClock()
                 clock.start()
-
-                try :
-                    
-                    num_col_names_table = dcTable("Numeric Column Names ",
-                                                  "dcgendfdesc",
-                                                  cfg.DataCleansing_ID)
-                    
-                    col_table_html  =   display_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
-                                                            num_col_names_table,None,None,False)
-                    
-                    
-                    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-                    gridhtmls       =   [cols_heading_html,col_table_html]
-    
-                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-                        display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
-                    else :
-                        display_generic_grid("display-df-col-cleanser-pop-up-wrapper",gridclasses,gridhtmls)
-                        
-                except Exception as e: 
-                    opstat = opStatus()
-                    opstat.store_exception("Unable to display numeric column names",e)
-                    display_exception(opstat)
-
+            
+                opstat = change_unique_col_data(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms)
+                cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
+            
                 clock.stop()
+            
+                if(opstat.get_status()) :
+                    display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " values changed successfully")
+                else :
+                    display_exception(opstat)                
+            
+                dcw.display_col_data()
+            
+            elif(option == dcm.FIND_COLUMN_OPTION) :
+                cfg.set_config_value(cfg.UNIQUES_RANGE_KEY,parms)
+                dcw.display_col_data()
+        
+            elif(option == dcm.GENERIC_COL_OPTION) :
                 
-                from dfcleanser.common.display_utils import display_pop_up_buffer
-                display_pop_up_buffer()
+                cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
 
-            elif(funcid == 1) :
-                
-                cfg.drop_config_value(cfg.GRAPHS_FLAG_KEY)
-                
-                cols_heading_html  =   "<div>Non Numeric Columns</div>"
-                
-                clock = RunningClock()
-                clock.start()
+                if(not (parms is None)) :
+                    
+                    if(type(parms) == list) :
+                        from dfcleanser.data_inspection.data_inspection_widgets import data_inspection_df_input_idList
+                        fparms = get_parms_for_input(parms[0],data_inspection_df_input_idList)
+                        cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,fparms[0])
 
-                try :
-                    
-                    nn_col_names_table  = dcTable("Non Numeric Column Names ",
-                                                  "dcnngendfdesc",
-                                                  cfg.DataCleansing_ID)
-                    
-                    nn_cols_html    =   dcw.display_non_numeric_df_describe(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),
-                                                                            nn_col_names_table,None,None,False) 
-                    
-                    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-                    gridhtmls       =   [cols_heading_html,nn_cols_html]
-    
-                    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-                        display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
+                        cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms[1])
                     else :
-                        display_generic_grid("display-df-col-cleanser-pop-up-wrapper",gridclasses,gridhtmls)
-                    
-                except Exception as e:
-                    opstat = opStatus()
-                    opstat.store_exception("Unable to display non numeric column names",e)
-                    display_exception(opstat)
-
-                clock.stop()
-                    
-            elif(funcid == 2) :
-                cfg.set_config_value(cfg.CLEANSING_ROW_KEY,0)
-                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
-    
-            elif(funcid == 3) :
-                return()
-                
-        elif(option == dcm.DISPLAY_ROW_OPTION) :
+                        cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
             
-            rowid = int(parms)
-            cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
-            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
+                dcw.display_col_data()
             
-        elif(option == dcm.DROP_COL_OPTION ) : 
+            elif(option == dcm.DISPLAY_COLS_OPTION) :
+                cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
+                cfg.drop_config_value(cfg.DATA_TYPES_FLAG_KEY)            
             
-            opstat = drop_column(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
-                                 cfg.get_config_value(cfg.CLEANSING_COL_KEY))
-            
-            clear_output()
-            
-            # setup the button bar form
-            dcw.display_data_cleansing_main_taskbar()
-            
-            if(opstat.get_status()) :
-                display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " dropped successfully")
                 cfg.drop_config_value(cfg.CLEANSING_COL_KEY)
-            else :
-                display_exception(opstat)                
-            
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
+                cfg.drop_config_value(cfg.CLEANSING_ROW_KEY)
 
-        elif(option == dcm.DROP_ROWS_OPTION ) : 
+                funcid = int(parms[0])
                 
-            clock = RunningClock()
-            clock.start()
+                fparms  =   get_parms_for_input(parms[1],["dcdfdataframe"])
+                if(len(fparms) > 0) :
+                    cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,fparms[0])    
             
-            drop_value  =   parms[1]
-            
-            if(len(drop_value) > 0) :
-                opstat = drop_value_rows(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
-                                         cfg.get_config_value(cfg.CLEANSING_COL_KEY),
-                                         drop_value)
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("Invalid row value '" +  drop_value + "' entered")
-            
-            clock.stop()
-            
-            if(opstat.get_status()) :
-                display_status("Rows dropped successfully")
-            else :
-                display_exception(opstat)                
-            
-            dcw.display_col_data()
+                if(funcid == 0) :
+                
+                    cols_heading_html  =   "<div>Numeric Columns</div>"
 
-        elif(option == dcm.DISPLAY_OUTLIERS_OPTION ) : 
+                    clock = RunningClock()
+                    clock.start()
+
+                    try :
+                    
+                        col_table_html  =   display_df_describe(False)
+                    
+                        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                        gridhtmls       =   [cols_heading_html,col_table_html]
+    
+                        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                            display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
+                        else :
+                            display_generic_grid("display-df-col-cleanser-pop-up-wrapper",gridclasses,gridhtmls)
+                        
+                    except Exception as e: 
+                        opstat = opStatus()
+                        opstat.store_exception("Unable to display numeric column names",e)
+                        display_exception(opstat)
+
+                    clock.stop()
+                
+                    from dfcleanser.common.display_utils import display_pop_up_buffer
+                    display_pop_up_buffer()
+
+                elif(funcid == 1) :
+                
+                    cols_heading_html  =   "<div>Non Numeric Columns</div>"
+                
+                    clock = RunningClock()
+                    clock.start()
+
+                    try :
+                    
+                        nn_cols_html    =   display_df_nn_describe(False) 
+                    
+                        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+                        gridhtmls       =   [cols_heading_html,nn_cols_html]
+    
+                        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                            display_generic_grid("display-df-col-cleanser-wrapper",gridclasses,gridhtmls)
+                        else :
+                            display_generic_grid("display-df-col-cleanser-pop-up-wrapper",gridclasses,gridhtmls)
+                    
+                    except Exception as e:
+                        opstat = opStatus()
+                        opstat.store_exception("Unable to display non numeric column names",e)
+                        display_exception(opstat)
+
+                    clock.stop()
+                    
+                elif(funcid == 2) :
+                    cfg.set_config_value(cfg.CLEANSING_ROW_KEY,0)
+                    dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
+    
+                elif(funcid == 3) :
+                    return()
+                
+            elif(option == dcm.DISPLAY_ROW_OPTION) :
             
-            cfg.set_config_value(cfg.OUTLIERS_FLAG_KEY, True)
-            dcw.display_col_data()
+                rowid = int(parms)
+                cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
             
-        elif(option ==  dcm.DISPLAY_ROUND_COLUMN_OPTION  ) : 
+            elif(option == dcm.DROP_COL_OPTION ) : 
             
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+                opstat = drop_column(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
+                                     cfg.get_config_value(cfg.CLEANSING_COL_KEY))
             
-            dcw.display_round_option(df,colname)            
+                clear_output()
+            
+                # setup the button bar form
+                dcw.display_data_cleansing_main_taskbar()
+            
+                if(opstat.get_status()) :
+                    display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " dropped successfully")
+                    cfg.drop_config_value(cfg.CLEANSING_COL_KEY)
+                else :
+                    display_exception(opstat)                
+            
+                from dfcleanser.data_inspection.data_inspection_widgets import display_df_size_data
+                display_df_size_data()
+
+            elif(option == dcm.DROP_ROWS_OPTION ) : 
+                
+                clock = RunningClock()
+                clock.start()
+            
+                drop_value  =   parms[0]
+            
+                if(len(drop_value) > 0) :
+                    opstat = drop_value_rows(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
+                                             cfg.get_config_value(cfg.CLEANSING_COL_KEY),
+                                             drop_value)
+                else :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("Invalid row value '" +  drop_value + "' entered")
+            
+                clock.stop()
+            
+                if(opstat.get_status()) :
+                    display_grid_status("Rows dropped successfully")
+                else :
+                    display_exception(opstat)                
+            
+                dcw.display_col_data()
+
+            elif(option ==  dcm.DISPLAY_ROUND_COLUMN_OPTION  ) : 
+            
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+                dcw.display_round_option(df,colname)            
         
-        elif(option ==  dcm.PROCESS_ROUND_COLUMN_OPTION  ) :
+            elif(option ==  dcm.PROCESS_ROUND_COLUMN_OPTION  ) :
             
-            clock = RunningClock()
-            clock.start()
+                clock = RunningClock()
+                clock.start()
             
-            opstat = round_column_data(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
-                                       cfg.get_config_value(cfg.CLEANSING_COL_KEY),
-                                       parms)
+                opstat = round_column_data(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),
+                                           cfg.get_config_value(cfg.CLEANSING_COL_KEY),
+                                           parms)
             
-            clock.stop()
+                clock.stop()
             
-            if(opstat.get_status()) :
-                display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " rounded successfully")
-            else :
-                display_exception(opstat)                
+                if(opstat.get_status()) :
+                    display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " rounded successfully")
+                else :
+                    display_exception(opstat)                
             
-            dcw.display_col_data()
+                dcw.display_col_data()
             
-        elif(option ==  dcm.DISPLAY_COL_CHANGE_OPTION  ) :
+            elif(option ==  dcm.DISPLAY_COL_CHANGE_OPTION  ) :
             
-            dcw.display_col_data()
+                dcw.display_col_data()
             
             
-        elif(option ==  dcm.DISPLAY_REM_WHTSPC_OPTION  ) : 
+            elif(option ==  dcm.DISPLAY_REM_WHTSPC_OPTION  ) : 
 
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-            dcw.display_whitespace_option(df,colname)
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+                dcw.display_whitespace_option(df,colname)
             
-        elif(option ==  dcm.PROCESS_REM_WHTSPC_OPTION  ) :
+            elif(option ==  dcm.PROCESS_REM_WHTSPC_OPTION  ) :
             
-            clock = RunningClock()
-            clock.start()
+                clock = RunningClock()
+                clock.start()
             
-            remove_whitespace(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms,opstat)
+                remove_whitespace(cfg.get_config_value(cfg.CURRENT_CLEANSE_DF),parms,opstat)
             
-            clock.stop()
+                clock.stop()
             
-            if(opstat.get_status()) :
-                display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " whitespace removed successfully")
-            else :
-                display_exception(opstat)                
+                if(opstat.get_status()) :
+                    display_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " whitespace removed successfully")
+                else :
+                    display_exception(opstat)                
             
-            dcw.display_col_data()
+                dcw.display_col_data()
 
-        elif(option ==  dcm.DISPLAY_GRAPHS_OPTION  ) :
+            elif(option ==  dcm.DISPLAY_DETAILS_OPTION  ) :
+                dcw.display_col_data()
+           
+            elif(option ==  dcm.DISPLAY_UNIQUES_OPTION  ) :
+                cfg.set_config_value(cfg.UNIQUES_RANGE_KEY,parms)
+                dcw.display_col_data(True)
             
-            cfg.set_config_value(cfg.GRAPHS_FLAG_KEY,True)
-            dcw.display_col_data()
-            
-        elif(option ==  dcm.DISPLAY_UNIQUES_OPTION  ) :
-            
-            cfg.set_config_value(cfg.UNIQUES_FLAG_KEY, True)
-            dcw.display_col_data()
-            
-        elif(option ==  dcm.DISPLAY_NEW_ROW) :
+            elif(option ==  dcm.DISPLAY_NEW_ROW) :
 
-            rowid = int(parms)
-            cfg.set_config_value(cfg.CLEANSING_ROW_KEY,parms)
-            cfg.set_config_value(cfg.CLEANSING_COL_KEY,0)
-            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
+                colname     =   parms
+                cfg.set_config_value(cfg.CLEANSING_COL_KEY,colname)
+                rowid       =   cfg.get_config_value(cfg.CLEANSING_ROW_KEY)
+            
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+            
+                column_names = list(df.columns.values)
+            
+                found = -1
+                for i in range(len(column_names)) :
+                    if(column_names[i] == colname) :
+                        found = i
+            
+                if(found > -1) :
+                    colid = found
+                    cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
+            
+                chval = df.iloc[rowid,colid]
+            
+            elif(option ==  dcm.UPDATE_ROW_COL) :
+            
+                colname     =   parms
+            
+                rowid       =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF) 
+            
+                column_names = list(df.columns.values)
+            
+                found = -1
+                for i in range(len(column_names)) :
+                    if(column_names[i] == colname) :
+                        found = i
+            
+                if(found > -1) :
+                    colid = found
+                    cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
+            
+                chval = df.iloc[rowid,colid]
 
-        elif(option ==  dcm.UPDATE_ROW_COL) :
-            
-            colname     =   parms
-            
-            rowid       =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
-            
-            column_names = list(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF).columns.values)
-            
-            found = -1
-            for i in range(len(column_names)) :
-                if(column_names[i] == colname) :
-                    found = i
-            
-            if(found > -1) :
-                colid = found
-                cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
-            
-            chval = cfg.get_dfc_dataframe().iloc[rowid,colid]
+                cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[str(chval),""])           
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
 
-            cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[str(chval),""])           
-            dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),rowid,0)
-
-        elif(option ==  dcm.PROCESS_ROW_COL) :
+            elif(option ==  dcm.PROCESS_ROW_COL) :
             
-            func_id     =   parms[0]
-            row_id      =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
+                func_id     =   parms[0]
+                row_id      =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
             
-            cfg.drop_config_value(dcw.change_row_values_input_id + "Parms")           
+                cfg.drop_config_value(dcw.change_row_values_input_id + "Parms")           
             
-            if(func_id == 0) :
+                if(func_id == 0) :
                 
-                fparms      =   dcw.get_change_row_values_inputs(parms)
-                new_value   =   fparms[1]
+                    fparms      =   dcw.get_change_row_values_inputs(parms)
+                    new_value   =   fparms[1]
                 
-                col_id      =   int(cfg.get_config_value(cfg.CLEANSING_COL_KEY))
+                    col_id      =   int(cfg.get_config_value(cfg.CLEANSING_COL_KEY))
                 
-                if(is_numeric_col(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
-                    if(is_int_col(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF), col_id)) :
-                        new_value       =   int(new_value)
-                    else :
-                        new_value       =   float(new_value)
+                    df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
                 
-                if(len(new_value) > 0) :
-                    cfg.get_dfc_dataframe().iloc[row_id,col_id] = new_value
+                    if(is_numeric_col(df,col_id)) :
+                        if(is_int_col(df,col_id)) :
+                            new_value       =   int(new_value)
+                        else :
+                            new_value       =   float(new_value)
+                
+                    if(len(new_value) > 0) :
+                        df.iloc[row_id,col_id] = new_value
 
-                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),row_id,0)
+                    dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),row_id,0)
                 
-            elif(func_id == 1) :
-                drop_row(cfg.CURRENT_CLEANSE_DF,row_id)
-                dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
-        
-        elif(option == dcm.DISPLAY_DROP_NA_OPTION ) :
-            
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-            dcw.display_dropna_option(df,colname)
-            
-        elif(option == dcm.PROCESS_DROP_NA_OPTION ) :
-            
-            print("PROCESS_DROP_NA_OPTION",parms) 
-            
-        elif(option ==  dcm.DISPLAY_FILLNA_OPTION ) :
-            
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-            dcw.display_fillna_option(df,colname)
-            
-        elif(option ==  dcm.PROCESS_FILLNA_OPTION) :
-            
-            print("PROCESS_FILLNA_OPTION",parms)
-            
-        elif(option ==  dcm.DISPLAY_DATA_TYPE_OPTION) :
-            
-            print("dcm.DISPLAY_DATA_TYPE_OPTION",parms) 
-            
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-            
-            from dfcleanser.data_transform.data_transform_columns_widgets import display_convert_datatype
-            display_convert_datatype(df,colname,True,False,cfg.DataCleansing_ID)
+                elif(func_id == 1) :
+                    drop_row(cfg.CURRENT_CLEANSE_DF,row_id)
+                    dcw.display_row_data(cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF),0,0)
 
-        elif(option ==  dcm.PROCESS_DATA_TYPE_OPTION) :
-            print("dcm.PROCESS_DATA_TYPE_OPTION",parms) 
+            # ----------------------------------------------------------- 
+            #  na options
+            # ----------------------------------------------------------- 
+       
+            elif(option == dcm.DISPLAY_DROPNA_OPTION ) :
             
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+                dcw.display_dropna_option(df,colname)
             
-        elif(option ==  dcm.CHANGE_NA_OPTION) :
+            elif(option ==  dcm.DISPLAY_FILLNA_OPTION ) :
             
-            print("dcm.CHANGE_NA_OPTION",parms)             
-            
-            if(parms[0] == 'fillna') :
-                dropflag    =   False
-            else :
-                dropflag    =   True
-                
-            df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-            colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-            
-            from dfcleanser.data_transform.data_transform_columns_widgets import display_convert_datatype
-            display_convert_datatype(df,colname,dropflag,False,cfg.DataCleansing_ID)
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+                dcw.display_fillna_option(df,colname)
 
+
+
+
+            elif(option == dcm.PROCESS_DROP_NA_OPTION ) :
+            
+                print("PROCESS_DROP_NA_OPTION",parms) 
+            
+            
+            elif(option ==  dcm.PROCESS_FILLNA_OPTION) :
+            
+                print("PROCESS_FILLNA_OPTION",parms)
+            
+            elif(option ==  dcm.DISPLAY_DATA_TYPE_OPTION) :
+            
+                print("dcm.DISPLAY_DATA_TYPE_OPTION",parms) 
+            
+                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
+                colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+            
+                from dfcleanser.data_transform.data_transform_columns_widgets import display_convert_datatype
+                display_convert_datatype(df,colname,True,False,cfg.DataCleansing_ID)
+
+            elif(option ==  dcm.PROCESS_DATA_TYPE_OPTION) :
+                print("dcm.PROCESS_DATA_TYPE_OPTION",parms) 
             
 
-    else :
-        cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF)
-        clear_data_cleansing_data()
-        
-        if(not(option == dcm.MAIN_OPTION)) :
-            from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-            display_inspection_data()
+        else :
+            
+            cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF)
+            clear_data_cleansing_data()
+            
+            cfg.display_data_select_df(cfg.DataCleansing_ID)
+            
+            if(not(option == dcm.MAIN_OPTION)) :
+                cfg.display_no_dfs(cfg.DataCleansing_ID)
 
 """
 #--------------------------------------------------------------------------
@@ -458,7 +459,7 @@ def drop_column(dftitle,colname,display=True) :
     droplist    =   []
     droplist.append(colname)
     
-    df  =   cfg.get_dfc_dataframe(dftitle) 
+    df  =   cfg.get_dfc_dataframe_df(dftitle) 
     
     opstat = opStatus()
     
@@ -496,7 +497,7 @@ def drop_value_rows(dftitle,colname,value,display=True) :
 
     opstat      =   opStatus()
     
-    df  =   cfg.get_dfc_dataframe(dftitle)    
+    df  =   cfg.get_dfc_dataframe_df(dftitle)    
     if(value == "nan") :
 
         df.dropna(subset=[colname],inplace=True)
@@ -574,7 +575,7 @@ def drop_row(dftitle,rowid) :
 
     opstat = opStatus()
     
-    df  =   cfg.get_dfc_dataframe(dftitle)    
+    df  =   cfg.get_dfc_dataframe_df(dftitle)    
     try :     
         df.drop(df.index[int(rowid)],inplace=True)
         
@@ -615,7 +616,7 @@ def round_column_data(dftitle,colname,parms) :
     
     opstat = opStatus()
     
-    df  =   cfg.get_dfc_dataframe(dftitle) 
+    df  =   cfg.get_dfc_dataframe_df(dftitle) 
     
     try :     
 
@@ -660,7 +661,7 @@ def fillna_column_data(dftitle,colname,parms) :
 
     opstat = opStatus()
     
-    df  =   cfg.get_dfc_dataframe(dftitle)
+    df  =   cfg.get_dfc_dataframe_df(dftitle)
     
     if(is_column_in_df(df,colname)) :
 
@@ -732,7 +733,7 @@ def remove_whitespace(dftitle,parms,opstat,display=True) :
     
     opstat      =   opStatus()
     
-    df          =   cfg.get_dfc_dataframe(dftitle) 
+    df          =   cfg.get_dfc_dataframe_df(dftitle) 
     
     colname     =   colname = cfg.get_config_value(cfg.CLEANSING_COL_KEY)
     leadflag    =   parms[0] 
@@ -840,7 +841,7 @@ def change_unique_col_data(dftitle,parms) :
 
     opstat = opStatus()
     
-    df  =   cfg.get_dfc_dataframe(dftitle) 
+    df  =   cfg.get_dfc_dataframe_df(dftitle) 
 
     if(type(parms) != str) :
 
@@ -859,8 +860,7 @@ def change_unique_col_data(dftitle,parms) :
                 else :
                     toval       =   changeto
                     
-                df = df.fillna({colname : toval})
-                cfg.set_current_dfc_dataframe(df)
+                df.fillna({colname : toval},axis=1,inplace=True)
                 
             except Exception as e :
                 opstat.store_exception("Unable to change value for " + colname,e) 
@@ -881,7 +881,6 @@ def change_unique_col_data(dftitle,parms) :
 
                 criteria        =   df[colname] == fromval    
                 df[criteria]    =   toval
-                cfg.set_current_dfc_dataframe(df)
                 
             except Exception as e :
                 opstat.store_exception("Unable to change value for " + colname,e)            
@@ -906,6 +905,9 @@ def change_unique_col_data(dftitle,parms) :
 def clear_data_cleansing_data() :
     
     drop_owner_tables(cfg.DataCleansing_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.DataCleansing_ID,dcw.datacleansing_inputs)
+    delete_all_inputs(cfg.DataCleansing_ID)
     clear_data_cleansing_cfg_values()
     
 def clear_data_cleansing_cfg_values(allValues=True) :
@@ -913,9 +915,7 @@ def clear_data_cleansing_cfg_values(allValues=True) :
     cfg.drop_config_value(cfg.CURRENT_CLEANSE_DF) 
     cfg.drop_config_value(cfg.UNIQUES_FLAG_KEY)
     cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
-    cfg.drop_config_value(cfg.OUTLIERS_FLAG_KEY)
     cfg.drop_config_value(cfg.DATA_TYPES_FLAG_KEY)
-    cfg.drop_config_value(cfg.GRAPHS_FLAG_KEY)
     
     if(allValues) :
         cfg.drop_config_value(cfg.CLEANSING_COL_KEY)
