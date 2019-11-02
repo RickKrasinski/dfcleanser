@@ -16,6 +16,7 @@ import json
 
 import dfcleanser.common.cfg as cfg
 import dfcleanser.scripting.data_scripting_widgets as dsw
+import dfcleanser.scripting.data_scripting_model as dsm
 
 from dfcleanser.common.common_utils import (display_status, RunningClock, opStatus, display_exception)
 
@@ -310,9 +311,17 @@ DataframeCleanserScriptLog    =   DCScriptLog()
 def clear_data_scripting_data() :
     
     drop_owner_tables(cfg.DataScripting_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.DataScripting_ID,dsw.datascripting_inputs)
+    delete_all_inputs(cfg.DataScripting_ID)
     clear_data_scripting_cfg_values()
     
 def clear_data_scripting_cfg_values() :
+    
+    cfg.drop_config_value(cfg.SCRIPT_LOG_KEY)
+    cfg.drop_config_value(cfg.BACKUP_SCRIPT_LOG_KEY)
+    cfg.drop_config_value(cfg.SCRIPTING_FLAG_KEY)
+
     return()
 
 

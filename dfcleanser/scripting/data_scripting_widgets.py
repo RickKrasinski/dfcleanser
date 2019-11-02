@@ -105,6 +105,8 @@ dc_add_code_input_jsList       =    [None,
                                      "displayhelp(" + str(SCRIPTING_SHOW_CURRENT_ID) + ")"]
 
 dc_add_code_input_reqList      =   [0]
+
+datascripting_inputs        =   [dc_script_input_id,dc_add_code_input_id]
  
 """
 #--------------------------------------------------------------------------
