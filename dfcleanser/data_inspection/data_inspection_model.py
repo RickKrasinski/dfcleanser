@@ -19,22 +19,27 @@ this = sys.modules[__name__]
 #--------------------------------------------------------------------------
 """
 MAIN_OPTION                 =   0
-REFRESH_OPTION              =   1
-DISPLAY_ROW_OPTION          =   2
-DROP_ROWS_OPTION            =   3
-DROP_COLS_OPTION            =   4
+DISPLAY_DATATYPES_OPTION    =   1
+DISPLAY_NANS_OPTION         =   2
+DISPLAY_ROWS_OPTION         =   3
+DISPLAY_COLS_OPTION         =   4
+DISPLAY_CATEGORIES_OPTION   =   5
+
+DROP_ROW_NANS_OPTION        =   6
+DROP_COL_NANS_OPTION        =   7
+
+DISPLAY_ROW_OPTION          =   8
 
 
-INSPECT_DATATYPES           =   0
-INSPECT_NANS                =   1
-INSPECT_ROWS                =   2
-INSPECT_COLS                =   3
-INSPECT_CATS                =   4
+OPEN_EXCEL_OPTION           =   9
+DISPLAY_FULL_COLUMN_NAMES   =   10
 
-DISPLAY_CHECK_NUMERIC       =   5
-MATCH_VALS_OPTION           =   6
-PROCESS_CHECK_NUMERIC       =   7
+MATCH_VALS_OPTION           =   11
 
+DISPLAY_COL_GRAPHS          =   12
+DISPLAY_COL_OUTLIERS        =   13
+
+CLEANSE_COLUMN              =   14
 
 BY_PERCENT      =   0
 BY_COUNT        =   1

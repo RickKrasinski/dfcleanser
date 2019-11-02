@@ -16,80 +16,16 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_inspection.data_inspection_model as dim
 
-from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, get_parms_for_input, 
-                                            get_col_uniques, display_status, opStatus, 
-                                            display_exception, display_generic_grid,
+from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, 
+                                            get_col_uniques, display_status, display_grid_status, opStatus, 
+                                            display_exception, display_generic_grid, is_numeric_col,
                                             get_select_defaults, displayParms, new_line)
 
-from dfcleanser.common.html_widgets import (InputForm, CheckboxGroupForm, ButtonGroupForm)
+from dfcleanser.common.html_widgets import (InputForm, ButtonGroupForm)
 
-from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table, 
-                                             SCROLL_DOWN, SCROLL_RIGHT, COLUMN_MAJOR, 
-                                             update_col_major_table_scroll, scroll_col_major_table)
+from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table,SCROLL_DOWN)
 
 from dfcleanser.common.display_utils import (display_sample_rows, get_datatype_id)
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#    data inspection cfg variables
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-
-def print_page_separator(title,divid) :
-    
-    style_name      =   "dfc-divider_" + str(divid)
-    
-    divider_cont    =   ("<div style='margin-left: 0px; width:95%;'>" + new_line) 
-    divider1_html   =   ("        <style>" + new_line + "            hr." + style_name + " { " + new_line + "                overflow: visible; padding: 0; width: 90%; border: none; box-shadow: 0 0 10px 1px #296093; text-align: center;" + new_line + "            } " + new_line)
-    divider2_html   =   ('            hr.' + style_name + ':after { ' + new_line + '                content: "' + title + '"; ')
-    divider3_html   =   (" display: inline-block; position: relative; top: -0.7em; font-size: 24px; font-weight: bold;" + new_line + "                font-family: Arial; color: #236BAF; padding: 0 0.25em; background: white;" + new_line + "            }" + new_line + "        </style>" + new_line) 
-    
-    
-    divider_start_html  =   ("    <hr class='" + style_name + "'>" + new_line + "    <div>" + new_line)
-    divider_end_html    =   ("    </div>" + new_line + "</div>" + new_line + "<br>" + new_line)
-    
-    divider_html     =   (divider_cont + divider_start_html + divider1_html + divider2_html + divider3_html + divider_end_html) 
-    
-    from dfcleanser.common.common_utils import (displayHTML)
-    displayHTML(divider_html)
-
-
-def get_cbox_flag(id) :
-    
-    if(id == 0) :
-        if(cfg.get_config_value(cfg.DATA_TYPES_CBOX_0_KEY) == None)  :
-            return(False)
-        else :
-            return(cfg.get_config_value(cfg.DATA_TYPES_CBOX_0_KEY))
-            
-    elif(id == 1) :
-        if(cfg.get_config_value(cfg.NANS_CBOX_1_KEY) == None)  :
-            return(False)
-        else :
-            return(cfg.get_config_value(cfg.NANS_CBOX_1_KEY))
-            
-    elif(id == 2) :
-        if(cfg.get_config_value(cfg.ROWS_CBOX_2_KEY) == None)  :
-            return(False)
-        else :
-            return(cfg.get_config_value(cfg.ROWS_CBOX_2_KEY))
-        
-    elif(id == 3) :
-        if(cfg.get_config_value(cfg.COLS_CBOX_3_KEY) == None)  :
-            return(False)
-        else :
-            return(cfg.get_config_value(cfg.COLS_CBOX_3_KEY))
-
-    elif(id == 4) :
-        if(cfg.get_config_value(cfg.CATS_CBOX_4_KEY) == None)  :
-            return(False)
-        else :
-            return(cfg.get_config_value(cfg.CATS_CBOX_4_KEY))
-
-    else :
-        return(False)
 
 
 """
@@ -102,21 +38,6 @@ def get_cbox_flag(id) :
 
 """
 #--------------------------------------------------------------------------
-#   data inspection checkboxes
-#--------------------------------------------------------------------------
-"""
-main_inspection_checkbox_title      =   "Inspection Options"
-main_inspection_checkbox_id         =   "inspection_cb"
-
-main_inspection_checkbox_idList     =   ["datatypes","rows","columns","nans","categories"]
-main_inspection_checkbox_labelList  =   ["Data Types","NaNs","Rows","Columns","Categories"]
-
-main_inspection_checkbox_jsList     =   [None,None,None,None,None]
-
-main_inspection_checkbox_javascript =   ["js/data_inspection.js"]
-
-"""
-#--------------------------------------------------------------------------
 #    data inspection task bar
 #--------------------------------------------------------------------------
 """
@@ -124,10 +45,14 @@ data_inspection_tb_doc_title       =   "Inspection Options"
 data_inspection_tb_title           =   "Inspection Options"
 data_inspection_tb_id              =   "inspectionoptionstb"
 
-data_inspection_tb_keyTitleList    =   ["Inspect Data","Clear","Reset","Help"]
+data_inspection_tb_keyTitleList    =   ["Data</br>Types","Nans","Rows","Columns","Categories","Clear","Reset","Help"]
 
-data_inspection_tb_jsList          =   ["inspection_task_bar_callback(0)",
-                                        "inspection_task_bar_callback(1)",
+data_inspection_tb_jsList          =   ["inspection_task_bar_callback(" + str(dim.DISPLAY_DATATYPES_OPTION) + ")",
+                                        "inspection_task_bar_callback(" + str(dim.DISPLAY_NANS_OPTION) + ")",
+                                        "inspection_task_bar_callback(" + str(dim.DISPLAY_ROWS_OPTION) + ")",
+                                        "inspection_task_bar_callback(" + str(dim.DISPLAY_COLS_OPTION) + ")",
+                                        "inspection_task_bar_callback(" + str(dim.DISPLAY_CATEGORIES_OPTION) + ")",
+                                        "inspection_task_bar_callback(" + str(dim.MAIN_OPTION) + ")",
                                         "process_pop_up_cmd(6)",
                                         "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
 
@@ -164,6 +89,8 @@ data_inspection_df_input_form             =   [data_inspection_df_input_id,
 data_cleansing_df_input_id                =   "datacleansedf"
 data_transform_df_input_id                =   "datatransformdf"
 data_export_df_input_id                   =   "dataexportdf"
+data_subset_df_input_id                   =   "datasubsetdf"
+
 
 
 """
@@ -173,26 +100,37 @@ data_export_df_input_id                   =   "dataexportdf"
 """
 data_inspection_colsearch_title            =   "Column Values To Search For"
 data_inspection_colsearch_id               =   "datainspectcolsearch"
-data_inspection_colsearch_idList           =   ["colsearchnames",
-                                                "colsearchvalues",
-                                                None,None]
+data_inspection_colsearch_idList           =   ["colsearchoutdf",
+                                                "colsearchnames",
+                                                "colsearchvalues0",
+                                                "colsearchvalues1",
+                                                "colsearchvalues2",
+                                                None,None,None]
 
-data_inspection_colsearch_labelList        =   ["column_names",
+data_inspection_colsearch_labelList        =   ["df_output_title",
+                                                "column_names",
+                                                "column_values",
+                                                "column_values",
                                                 "column_values",
                                                 "Get Rows</br> Matching</br>Numeric</br>colunm_values",
-                                                "Get </br>Non Numeric</br>Colunms"]
+                                                "Get </br>Non Numeric</br>Colunms",
+                                                "Return"]
 
-data_inspection_colsearch_typeList         =   ["selectmultiple","text","button","button","button"]
+data_inspection_colsearch_typeList         =   ["text","selectmultiple","text","text","text","button","button","button"]
 
-data_inspection_colsearch_placeholderList  =   ["columns to search in",
+data_inspection_colsearch_placeholderList  =   ["df title to put search results in",
+                                                "columns to search in",
                                                 "numeric column values list to search for [0, ...] ",
-                                                None,None]
+                                                "numeric column values list to search for [0, ...] ",
+                                                "numeric column values list to search for [0, ...] ",
+                                                None,None,None]
 
-data_inspection_colsearch_jsList           =   [None,None,
+data_inspection_colsearch_jsList           =   [None,None,None,None,None,
                                                 "get_col_rows_callback(0)",
-                                                "get_col_rows_callback(1)"]
+                                                "get_col_rows_callback(1)",
+                                                "inspection_task_bar_callback(1)"]
 
-data_inspection_colsearch_reqList          =   [0,1]
+data_inspection_colsearch_reqList          =   [0,1,2]
 
 data_inspection_colsearch_form             =   [data_inspection_colsearch_id,
                                                data_inspection_colsearch_idList,
@@ -205,37 +143,45 @@ data_inspection_colsearch_form             =   [data_inspection_colsearch_id,
 
 data_inspection_nn_colsearch_title         =   "Column Values To Search For"
 data_inspection_nn_colsearch_id            =   "datainspectcolsearch"
-data_inspection_nn_colsearch_idList        =   ["colsearchnames",
-                                                "colsearchvalues",
-                                                None,None]
+data_inspection_nn_colsearch_idList        =   ["colsearchoutdf",
+                                                "colsearchnames",
+                                                "colsearchvalues0",
+                                                "colsearchvalues1",
+                                                "colsearchvalues2",
+                                                None,None,None]
 
-data_inspection_nn_colsearch_labelList     =   ["column_names",
+data_inspection_nn_colsearch_labelList     =   ["df_output_title",
+                                                "column_names",
+                                                "column_values",
+                                                "column_values",
                                                 "column_values",
                                                 "Get Rows</br> Matching</br>string</br>colunm_values",
-                                                "Get </br>Numeric</br>Colunms"]
+                                                "Get </br>Numeric</br>Colunms",
+                                                "Return"]
 
-data_inspection_nn_colsearch_typeList      =   ["selectmultiple","text","button","button"]
+data_inspection_nn_colsearch_typeList      =   ["text","selectmultiple","text","text","text","button","button","button"]
 
-data_inspection_nn_colsearch_placeholderList=   ["columns to search in",
-                                                "string column values list to search for [' ', ...] ",
-                                                None,None]
+data_inspection_nn_colsearch_placeholderList=   ["df title to put search results in",
+                                                 "columns to search in",
+                                                "string column values list to search for [0, ...] ",
+                                                "string column values list to search for [0, ...] ",
+                                                "string column values list to search for [0, ...] ",
+                                                None,None,None]
 
-data_inspection_nn_colsearch_jsList        =   [None,None,
+data_inspection_nn_colsearch_jsList        =   [None,None,None,None,None,
                                                 "get_col_rows_callback(2)",
-                                                "get_col_rows_callback(3)"]
+                                                "get_col_rows_callback(3)",
+                                                "inspection_task_bar_callback(1)"]
 
-data_inspection_nn_colsearch_reqList       =   [0,1]
+data_inspection_nn_colsearch_reqList       =   [0,1,2]
 
-data_inspection_nn_colsearch_form          =   [data_inspection_colsearch_id,
-                                               data_inspection_colsearch_idList,
-                                               data_inspection_df_input_labelList,
-                                               data_inspection_colsearch_typeList,
-                                               data_inspection_colsearch_placeholderList,
-                                               data_inspection_colsearch_jsList,
-                                               data_inspection_colsearch_reqList]  
-
-
-
+data_inspection_nn_colsearch_form          =   [data_inspection_nn_colsearch_id,
+                                               data_inspection_nn_colsearch_idList,
+                                               data_inspection_nn_colsearch_labelList,
+                                               data_inspection_nn_colsearch_typeList,
+                                               data_inspection_nn_colsearch_placeholderList,
+                                               data_inspection_nn_colsearch_jsList,
+                                               data_inspection_nn_colsearch_reqList]  
 
 """
 #--------------------------------------------------------------------------
@@ -276,7 +222,7 @@ drop_columns_input_placeholderList      =   ["",None,None]
 
 drop_columns_input_jsList               =   [None,
                                             "dc_drop_cols_callback(0)",
-                                            "dc_drop_cols_callback(0)"]
+                                            "dc_drop_cols_callback(1)"]
 
 drop_columns_input_reqList              =   [0]
 
@@ -292,10 +238,109 @@ data_inspection_dfschema_tb_id              =   "inspectiondfschematb"
 
 data_inspection_dfschema_tb_keyTitleList    =   ["Show Dataframe Schema"]
 
-from dfcleanser.data_transform.data_transform_model import DISPLAY_DF_SCHEMA_TRANSFORM
 data_inspection_dfschema_tb_jsList          =   ["transform_task_bar_callback("+str(-1)+")"]
 
 data_inspection_dfschema_tb_centered        =   True
+
+
+"""
+#--------------------------------------------------------------------------
+#    open dataframe in excel
+#--------------------------------------------------------------------------
+"""
+data_inspection_open_excel_tb_doc_title       =   "Inspection open_excel"
+data_inspection_open_excel_tb_title           =   "Inspection open_excel"
+data_inspection_open_excel_tb_id              =   "inspectiondfopen_exceltb"
+
+data_inspection_open_excel_tb_keyTitleList    =   ["Open Dataframe In Excel"]
+
+data_inspection_open_excel_tb_jsList          =   ["inspection_task_bar_callback("+str(dim.OPEN_EXCEL_OPTION)+")"]
+
+data_inspection_open_excel_tb_centered        =   True
+
+
+datainspection_inputs       =   [data_inspection_df_input_id,data_inspection_colsearch_id,
+                                 data_inspection_nn_colsearch_id,drop_rows_input_id,drop_columns_input_id]
+
+"""
+#--------------------------------------------------------------------------
+#    full column names list   
+#--------------------------------------------------------------------------
+"""
+full_col_names_input_title                  =   "Full Names List"
+full_col_names_input_id                     =   "datainspectfull"
+full_col_names_input_idList                 =   ["dffullnames"]
+
+full_col_names_input_labelList              =   ["column_names"]
+
+full_col_names_input_typeList               =   ["select"]
+
+full_col_names_input_placeholderList        =   ["column names"]
+
+full_col_names_input_jsList                 =   [None]
+
+full_col_names_input_reqList                =   []
+
+full_col_names_input_form                   =   [full_col_names_input_id,
+                                                 full_col_names_input_idList,
+                                                 full_col_names_input_labelList,
+                                                 full_col_names_input_typeList,
+                                                 full_col_names_input_placeholderList,
+                                                 full_col_names_input_jsList,
+                                                 full_col_names_input_reqList]  
+
+"""
+#--------------------------------------------------------------------------
+#    inspect numeric column select form   
+#--------------------------------------------------------------------------
+"""
+inspect_col_input_title                =   ""
+inspect_col_input_id                   =   "inspectcolsinput"
+inspect_col_input_idList               =   ["inspectcolname",
+                                            None,None,None,None]
+
+inspect_col_input_labelList            =   ["column_name",
+                                            "Display</br>Graphs",
+                                            "Display</br>Outliers",
+                                            "Cleanse</br>Column",
+                                            "Return"]
+
+inspect_col_input_typeList             =   ["select","button","button","button","button"]
+
+inspect_col_input_placeholderList      =   ["",None,None,None,None]
+
+inspect_col_input_jsList               =   [None,
+                                            "inspection_task_bar_callback(" + str(dim.DISPLAY_COL_GRAPHS) + ")",
+                                            "inspection_task_bar_callback(" + str(dim.DISPLAY_COL_OUTLIERS) + ")",
+                                            "inspection_task_bar_callback(" + str(dim.CLEANSE_COLUMN) + ")",
+                                            "inspection_task_bar_callback(" + str(dim.MAIN_OPTION) + ")"]
+
+inspect_col_input_reqList              =   [0]
+
+
+"""
+#--------------------------------------------------------------------------
+#    inspect non numeric column select form   
+#--------------------------------------------------------------------------
+"""
+inspect_nn_col_input_title                =   ""
+inspect_nn_col_input_id                   =   "inspectcolsinput"
+inspect_nn_col_input_idList               =   ["inspectcolname",
+                                               None,None]
+
+inspect_nn_col_input_labelList            =   ["column_name",
+                                               "Cleanse</br>Column",
+                                               "Return"]
+
+inspect_nn_col_input_typeList             =   ["select","button","button"]
+
+inspect_nn_col_input_placeholderList      =   ["",None,None]
+
+inspect_nn_col_input_jsList               =   [None,
+                                               "inspection_task_bar_callback(" + str(dim.CLEANSE_COLUMN) + ")",
+                                               "inspection_task_bar_callback(" + str(dim.MAIN_OPTION) + ")"]
+
+inspect_nn_col_input_reqList              =   [0]
 
 
 """
@@ -321,8 +366,15 @@ def get_inspection_dfschema_taskbar() :
                            data_inspection_dfschema_tb_jsList,
                            data_inspection_dfschema_tb_centered))
 
+def get_inspection_openexcel_taskbar() :
+    
+    return(ButtonGroupForm(data_inspection_open_excel_tb_id,
+                           data_inspection_open_excel_tb_keyTitleList,
+                           data_inspection_open_excel_tb_jsList,
+                           data_inspection_open_excel_tb_centered))
 
-def display_dfc_inspection_main(current_checkboxes) :
+
+def display_dfc_inspection_main() :
     """
     * -------------------------------------------------------------------------- 
     * function : display the dfc inspection taskbar and select forms
@@ -334,105 +386,10 @@ def display_dfc_inspection_main(current_checkboxes) :
     """
     
     display_inspection_main_taskbar()
-    
-    if(cfg.is_a_dfc_dataframe_loaded() ) :
-    
-        select_df_form              =   get_select_df_form()
-        
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        
-            inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
-    
-            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
-            gridhtmls       =   [select_df_form.get_html(),
-                                 inspection_checkboxForm.get_html()]
-        
-            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
-            
-        else :
-            
-            inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
-    
-            gridclasses     =   ["dfc-header","df-inspection-wrapper-footer"]
-            gridhtmls       =   [select_df_form.get_html(),
-                                 inspection_checkboxForm.get_html()]
-            
-            
-            display_generic_grid("df-inspection-pop-up-wrapper",gridclasses,gridhtmls)
-            
-    else :
-        
-        inspection_checkboxForm     =   get_main_checkbox_form(current_checkboxes)
-        
-        gridclasses     =   ["dfc-footer"]
-        gridhtmls       =   [inspection_checkboxForm.get_html()]
-    
-        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
-        
-        cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
+    cfg.display_data_select_df(cfg.DataInspection_ID)
 
     import matplotlib.pyplot as plt
 
-
-def get_select_df_form(title="Inspect") :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display select dataframe form
-    * 
-    * parms :
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-    
-    if(title == "Cleanse") :
-        labellist   =   ["dataframe_to_cleanse"]
-        formid      =   "datacleansedf"
-
-    elif(title == "Transform") :
-        labellist   =   ["dataframe_to_transform"]
-        formid      =   "datatransformdf"
-
-    elif(title == "Export") :
-        labellist   =   ["dataframe_to_export"]
-        formid      =   "dataexportdf"
-
-    else :
-        labellist   =   data_inspection_df_input_labelList
-        formid      =   data_inspection_df_input_id
-    
-    select_df_form  =   InputForm(formid,
-                                  data_inspection_df_input_idList,
-                                  labellist,
-                                  data_inspection_df_input_typeList,
-                                  data_inspection_df_input_placeholderList,
-                                  data_inspection_df_input_jsList,
-                                  data_inspection_df_input_reqList)
-    
-    df_list     =   cfg.get_dfc_dataframes_select_list()
-
-    if(not (df_list.get("list") == None)) :
-        dataframes      =   df_list
-    else :
-        dataframes      =   {'default': "", 'list': [""]}
-
-    selectDicts     =   []
-    selectDicts.append(dataframes)
-
-    get_select_defaults(select_df_form,
-                        data_inspection_df_input_id,
-                        data_inspection_df_input_idList,
-                        data_inspection_df_input_typeList,
-                        selectDicts)
-    
-    select_df_form.set_shortForm(True)
-    
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        select_df_form.set_gridwidth(780)
-    else :
-        select_df_form.set_gridwidth(480)
-    
-    return(select_df_form)
 
 
 def get_colsearch_form(df,numeric=True) :
@@ -475,10 +432,15 @@ def get_colsearch_form(df,numeric=True) :
                 col_names.append(colnames[i])
         else :
             if( (is_string_col(df,colnames[i])) or (is_object_col(df,colnames[i])) ) :
-                col_names.append(colnames[i])    
+                col_names.append(colnames[i]) 
     
-    if(len(col_names) > 0) :   
-        cnames      =   {'default': col_names[0], 'list': col_names}
+    if(len(col_names) > 0) : 
+        
+        col_names_list  =   ["None"]
+        for i in range(len(col_names)) :
+            col_names_list.append(col_names[i])
+            
+        cnames      =   {'default': col_names_list[0], 'list': col_names_list,"callback":"change_colsearch_cols", "size":10}
     else :
         cnames      =   {'default': "None", 'list': ["None"]}
 
@@ -499,81 +461,11 @@ def get_colsearch_form(df,numeric=True) :
                             selectDicts)
 
     colsearch_form.set_shortForm(True)
-    colsearch_form.set_gridwidth(360)
-    colsearch_form.set_buttonstyle({"font-size":12, "height":90, "width":150, "left-margin":12})
+    colsearch_form.set_gridwidth(480)
+    colsearch_form.set_buttonstyle({"font-size":12, "height":90, "width":120, "left-margin":40})
+    colsearch_form.set_fullparms(True)
     
     return(colsearch_form)
-
-
-def get_inspection_check_form_parms(parms,current_checkboxes) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display inspection checkbox form
-    * 
-    * Parms :
-    *   parms               -   check boxes to set
-    *   current_checkboxes  -   current check boxes set
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-    
-    parms = []
-            
-    parms.append(get_cbox_flag(0))
-    current_checkboxes.append(get_cbox_flag(0))
-    parms.append(get_cbox_flag(1))
-    current_checkboxes.append(get_cbox_flag(1))
-    parms.append(get_cbox_flag(2))
-    current_checkboxes.append(get_cbox_flag(2))
-    parms.append(get_cbox_flag(3))
-    current_checkboxes.append(get_cbox_flag(3))
-    parms.append(get_cbox_flag(4))
-    current_checkboxes.append(get_cbox_flag(4))
-    
-    return()
-
-def get_main_checkbox_form(current_checkboxes) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display inspection checkbox form
-    * 
-    * Parms :
-    *   current_checkboxes  -   current check boxes set
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-
-    inspection_checkboxForm    =  CheckboxGroupForm(main_inspection_checkbox_id,
-                                                    main_inspection_checkbox_idList,
-                                                    main_inspection_checkbox_labelList,
-                                                    main_inspection_checkbox_jsList,
-                                                    current_checkboxes,
-                                                    [0,0,0,0,0])
-    
-    if(not (cfg.get_dfc_mode() == cfg.INLINE_MODE)) :
-        inspection_checkboxForm.set_rows_count([3,2])   
-    
-    return(inspection_checkboxForm)
-
-
-def get_drop_rows_input_parms(parms) :
-    return(get_parms_for_input(parms,drop_rows_input_idList))
-
-def get_drop_cols_input_parms(parms) :
-    return(get_parms_for_input(parms,drop_columns_input_idList))
-
-def get_drop_cbox_flags() :
-
-    parms = []
-    parms.append(get_cbox_flag(0))
-    parms.append(get_cbox_flag(1))
-    parms.append(get_cbox_flag(2))
-    parms.append(get_cbox_flag(3))
-    parms.append(get_cbox_flag(4))
-        
-    return(parms)
 
 
 """            
@@ -581,7 +473,7 @@ def get_drop_cbox_flags() :
 #   display data inspection header
 #------------------------------------------------------------------
 """           
-def display_inspection_data(display=True,forExport=False) :
+def display_df_size_data(display=True,forExport=False) :
     """
     * -------------------------------------------------------------------------- 
     * function : display inspection data form
@@ -597,7 +489,8 @@ def display_inspection_data(display=True,forExport=False) :
     if(cfg.is_a_dfc_dataframe_loaded()) :
         
         labels  =   ["NUMBER OF ROWS","NUMBER OF COLS"]
-        values  =   [str(len(cfg.get_dfc_dataframe())),str(len(cfg.get_dfc_dataframe().columns))]
+        values  =   [str(len(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))),
+                     str(len(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF).columns))]
         
         if(display) :
             displayParms("&nbsp;dataframe Imported",labels,values,"inspectdata",width=None)
@@ -608,7 +501,7 @@ def display_inspection_data(display=True,forExport=False) :
                 return(displayParms("&nbsp;dataframe Imported",labels,values,"inspectdata",100,0,False))
             
     else :
-        display_status("No Dataframe selected for inspection", 1)
+        display_grid_status("No dataframe imported to select", 1)
 
 
 def display_drop_rows() :
@@ -658,6 +551,7 @@ def display_drop_cols() :
     drop_form.set_gridwidth(240)    
     return(drop_form.get_html())
 
+
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -666,8 +560,7 @@ def display_drop_cols() :
 #------------------------------------------------------------------
 """       
 
-
-def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,display=True) : 
+def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,optionid,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : display drop nan cols threshold form
@@ -683,66 +576,115 @@ def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,dis
     * --------------------------------------------------------
     """
 
-    dtypesHeader   =   ["Data Type","Count","Column Names"]
-    dtypesRows     =   []
-    dtypesHrefs    =   []
+    #print("display_df_datatypes\n",dtypes_list,"\n",colnames_count_list,"\n",colnames_dict)
 
-    dtypesWidths   =   [15,10,75]
-    dtypesAligns   =   ["left","center","left"]
+    if(not(optionid == dim.DISPLAY_FULL_COLUMN_NAMES)) :
+        
+        dtypesHeader   =   ["Data Type","Count","Column Names"]
+        dtypesRows     =   []
+        dtypesHrefs    =   []
 
-    dtypesrow      =   []
+        dtypesWidths   =   [15,10,75]
+        dtypesAligns   =   ["left","center","left"]
+
+        dtypesrow      =   []
     
-    table.set_colsperrow(3)
-    table.set_rowspertable(50)
-    table.set_maxtables(1)
+        table.set_colsperrow(3)
+        table.set_rowspertable(50)
+        table.set_maxtables(1)
     
-    for i in range(len(dtypes_list)) :
+        for i in range(len(dtypes_list)) :
         
-        dtypeshref    =   [None,None,None]
+            dtypeshref    =   [None,None,None]
         
-        if(dtypes_list[i] == "str") :
-            hrefdtid = get_datatype_id(str) 
-        else :
-            hrefdtid = get_datatype_id(dtypes_list[i])
+            if(dtypes_list[i] == "str") :
+                hrefdtid = get_datatype_id(str) 
+            else :
+                hrefdtid = get_datatype_id(dtypes_list[i])
             
-        dtypeshref[0] = "display_objects_callback(" + str(hrefdtid) + ")"
-        dtypesHrefs.append(dtypeshref)
+            dtypeshref[0] = "display_objects_callback(" + str(hrefdtid) + ")"
+            dtypesHrefs.append(dtypeshref)
         
-        if(dtypes_list[i] == "datetime64[ns]") :
-            dtypesrow.append("[datetime.datetime]")
-        elif(dtypes_list[i] == "timedelta64[ns]") :
-            dtypesrow.append("[datetime.timedelta]")
-        else :
-            dtypesrow.append("["+str(dtypes_list[i])+"]")
+            if(dtypes_list[i] == "datetime64[ns]") :
+                dtypesrow.append("[datetime.datetime]")
+            elif(dtypes_list[i] == "timedelta64[ns]") :
+                dtypesrow.append("[datetime.timedelta]")
+            else :
+                dtypesrow.append("["+str(dtypes_list[i])+"]")
             
-        dtypesrow.append(colnames_count_list[i])
-        dtypesrow.append(colnames_dict.get(dtypes_list[i])) 
+            dtypesrow.append(colnames_count_list[i])
         
-        dtypesRows.append(dtypesrow)
-        dtypesrow       =   []
+            dtypes_col_names    =  colnames_dict.get(dtypes_list[i]) 
+            if(len(dtypes_col_names) < 40) :
+                dtypesrow.append(colnames_dict.get(dtypes_list[i]))
+            else :
+
+                colnames_str    =   ""
+                for i in range(40) :
+                    colnames_str    =   (colnames_str + dtypes_col_names[i] + ",")
+                colnames_str    =   (colnames_str + "<a onclick='get_columns_name_list()'><span style = 'font-size:14px; font-wight:bold;'> ... More ...<span></a>")
+                dtypesrow.append(colnames_str)
+        
+            dtypesRows.append(dtypesrow)
+            dtypesrow       =   []
     
-    table.set_headerList(dtypesHeader)
-    table.set_rowList(dtypesRows)
-    table.set_widthList(dtypesWidths)
-    table.set_alignList(dtypesAligns)
-    #table.set_refList(dtypesHrefs)
-    table.set_checkLength(True) 
-    table.set_textLength(21) 
+        table.set_headerList(dtypesHeader)
+        table.set_rowList(dtypesRows)
+        table.set_widthList(dtypesWidths)
+        table.set_alignList(dtypesAligns)
+        #table.set_refList(dtypesHrefs)
+        table.set_checkLength(True) 
+        table.set_textLength(21) 
     
-    if(display) :
-        table.display_table()
+        if(display) :
+            table.display_table()
+        else :
+            return(table.get_html())
+            
     else :
-        return(table.get_html())
+        
+        names_html  =   ""
+        
+        for i in range(len(dtypes_list)) :
+            
+            if(dtypes_list[i] == "datetime64[ns]") :
+                title_type  =   ("[datetime.datetime]")
+            elif(dtypes_list[i] == "timedelta64[ns]") :
+                title_type  =   ("[datetime.timedelta]")
+            else :
+                title_type  =   ("["+str(dtypes_list[i])+"]")
+                
+            full_names_list_form  =   InputForm(full_col_names_input_id,
+                                                full_col_names_input_idList,
+                                                [title_type],
+                                                full_col_names_input_typeList,
+                                                full_col_names_input_placeholderList,
+                                                full_col_names_input_jsList,
+                                                full_col_names_input_reqList)
+
+            selectDicts     =   []
+            new_col_names_dict         =   {"default":None,"list":colnames_dict.get(dtypes_list[i]),"size":40}
+            selectDicts.append(new_col_names_dict)  
+            
+            full_names_list_form.set_gridwidth(480)
+        
+        
+            get_select_defaults(full_names_list_form,
+                                full_col_names_input_id,
+                                full_col_names_input_idList,
+                                full_col_names_input_typeList,
+                                selectDicts)
+            
+            #print("get_hml dtypes",full_names_list_form.dump())
+            
+            try :
+                names_html  =   (names_html + full_names_list_form.get_html() + "<br>")
+            except :
+                print("shit")    
+        
+        return(names_html)
 
     
-"""            
-#------------------------------------------------------------------
-#   display null data info for a dataframe
-#
-#   df              -   dataframe
-#
-#------------------------------------------------------------------
-"""
 def display_null_data(df,rownantable,colnantable,rowsize) :
     """
     * -------------------------------------------------------------------------- 
@@ -838,7 +780,6 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
                 
     if(not (opstat.get_status())) :
         display_exception(opstat)
-
             
 
 def display_row_nan_stats(df,display=True) :
@@ -869,6 +810,7 @@ def display_row_nan_stats(df,display=True) :
     if(len(rowswithnulls) == 0) :
         nanstatsRows.append(["No Nans Found",""]) 
     else :
+        nanstatsRows.append(["Total Rows",str(len(df))])
         nanstatsRows.append(["Total Nans Found",str(df.isnull().sum().sum())])
         nanstatsRows.append(["Number of Rows containing Nans",str(rowcounts)])
         nanstatsRows.append(["&nbsp;&nbsp;% of Rows containing Nans",
@@ -1001,6 +943,7 @@ def display_col_nan_stats(df,display=True) :
     if(totnullcols == 0) :
         nanstatsRows.append(["No Nans Found",""]) 
     else :
+        nanstatsRows.append(["Total Columns",str(len(df.columns))])
         nanstatsRows.append(["Total Nans Found",str(df.isnull().sum().sum())])
         nanstatsRows.append(["Number of Cols containing Nans",str(totnullcols)])
         nanstatsRows.append(["&nbsp;&nbsp;% of Cols containing Nans",
@@ -1144,7 +1087,6 @@ def display_row_stats(df,dftitle,display=True) :
     rowstatsAligns    =   ["left","left"]
     
     rowstatsRows.append(["Number of Rows in "+ dftitle,str(len(df))])
-    #rowstatsRows.append(["&nbsp;","&nbsp;"])#"Number of Unique Row ID Values",str(uniqueRowIdsCount)])
     
     row_stats_table = dcTable("Row Stats","rowstatsTable",
                               cfg.DataInspection_ID,
@@ -1153,8 +1095,14 @@ def display_row_stats(df,dftitle,display=True) :
 
     row_stats_table.set_rowspertable(len(rowstatsRows))
     row_stats_table.set_small(True)
-    row_stats_table.set_smallwidth(50)
-    row_stats_table.set_smallmargin(240)
+    
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        row_stats_table.set_smallwidth(50)
+        row_stats_table.set_smallmargin(240)
+    else :
+        row_stats_table.set_smallwidth(98)
+        row_stats_table.set_smallmargin(2)
+        
     row_stats_table.set_table_column_parms({"font":12})
     row_stats_table.set_border(False)
     row_stats_table.set_checkLength(False)
@@ -1284,8 +1232,6 @@ def display_df_categories(df,cattable,catcandidatetable) :
 
     if(len(catcandidates) > 0) :
         
-        #catcandhref         =   ["scatcol",None,None,None,None,None]
-    
         catcandHeader       =   ["Column Name","Column</br>Data Type","Nan</br>Count",
                                  "White</br>Space","Unique</br>Count","Unique Values"]
         catcandRows         =   []
@@ -1341,14 +1287,257 @@ def display_df_categories(df,cattable,catcandidatetable) :
             
             #catcandidatetable.display_table()
         else :
-            display_status("no Candidate Category Columns found",1)
+            display_status("no Candidate Category Columns found")
             
     else :
-        display_status("no Candidate Category Columns found",1)
+        display_status("no Candidate Category Columns found")
         
     return(len(catcols), len(catcandidates))
 
 
-   
+def display_common_graphs(colname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display numeric column data
+    * 
+    * parms :
+    *   colname     -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    clock = RunningClock()
+    clock.start()
+
+    try :
+        
+        try :
+            import os
+            os.remove("hist.png")
+            os.remove("zscore.png")
+        except :
+            df = None   
+        
+        df = cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF)
+        
+        import numpy as np
+        counts      =   df[colname].value_counts().to_dict()
+        dfuniques   =   list(counts.keys())
+        uniques     =   np.asarray(dfuniques)
+        ucounts     =   list(counts.values())
+        ucounts     =   np.asarray(ucounts)
+
+        import matplotlib.pyplot as plt
+        fig     =   plt.figure()
+        plt.style.use('ggplot')
+        plt.hist(uniques,weights=ucounts)
+        plt.title("'" + colname + "'" + " Histogram")
+        fig.savefig("hist.png")
+        plt.close()
+        
+        cmean       =   df[colname].mean() 
+        cstd        =   df[colname].std()
+
+        zscores      =   []
+        for i in range(len(dfuniques)) :
+            zscores.append((dfuniques[i]-cmean)/cstd)
+        
+        # dictionary of lists  
+        zdict = {'ZScore': zscores, 'Frequency': ucounts}  
     
+        import pandas as pd
+        zdf     =   pd.DataFrame(zdict)     
+        ax = zdf.plot(x='ZScore', y='Frequency', kind='kde', figsize=(10, 6))
+        fig1    =   ax.get_figure()
+        arr = ax.get_children()[0]._x
+        plt.xticks(np.linspace(arr[0], arr[-1]), rotation=90)
+        plt.title("'" + colname + "'" + " ZScores")
+        fig1.savefig("zscore.png")
+        plt.close()
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        
+        title_html      =   "<div>Column Graphs</div>"
+        hist_html       =   "<br><br><img src='hist.png' alt='Histogram' height='400' width='400'>"
+        zscore_html     =   "<img src='zscore.png' alt='ZScores' height='480' width='640'>"
+        
+        gridhtmls       =   [title_html,hist_html,zscore_html]
+    
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("display-dfcleansing-graphs-wrapper",gridclasses,gridhtmls)
+        else :
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-top","dfc-footer"]
+            display_generic_grid("display-dfcleansing-graphs-pop-up-wrapper",gridclasses,gridhtmls)
+        
+    except Exception as e: 
+        opstat = opStatus()
+        opstat.store_exception("Unable to plot column",e)
+        display_exception(opstat)
+
+    clock.stop()
+
+   
+def get_simple_col_outliers(df,colname) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get a simplelist of outliers based on stddev from means
+    * 
+    * parms :
+    *   df       -   dataframe
+    *   colname  -   column name
+    *
+    * returns : 
+    *  outliers
+    * --------------------------------------------------------
+    """
+
+    outliers        =   []
+    outlierscount   =   []
+    
+    numstddevs      =   15
+    
+    for i in range(numstddevs) :
+        outliers.append([])
+        outlierscount.append(0)
+    
+    mean    =   df[colname].mean()
+    std     =   df[colname].std()
+    
+    counts  =   df[colname].value_counts().to_dict()
+    uniques =   list(counts.keys())
+    
+    if(is_numeric_col(df,colname)) :
+        uniques.sort()
+
+    for i in range(len(uniques)) :
+        import pandas as pd
+        if( not pd.isnull(uniques[i])) :
+            difference = abs(mean - uniques[i])
+        
+            import math
+            outindex = math.floor(difference / std)
+            outlierscount[outindex] = outlierscount[outindex] + counts.get(uniques[i])
+    
+    return(outlierscount)        
+
+    
+def get_simple_outliers(df,colname,opstat,display=True) :  
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get simple outliers
+    * 
+    * parms :
+    *   df          -   dataframe
+    *   colname    -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    clock = RunningClock()
+    clock.start()
+        
+    totrows     =   len(df)
+    
+    std         =   df[colname].std()
+    mean        =   df[colname].mean()
+    minv        =   df[colname].min()
+    maxv        =   df[colname].max()
+
+    Red     = "#FAA78F"
+    Green   = "#8FFAC0"
+    Yellow  = "#FAFB95"
+
+    try :
+        
+        outliersCount = get_simple_col_outliers(df,colname)
+            
+        outHeader    =   ["Num</br>std devs</br>from Mean","Count","% Total</br>Values","Values Range"]
+        outRows      =   []
+        outWidths    =   [10,10,15,65]
+        outAligns    =   ["center","center","center","left"]
+        colorList    =   []    
+        
+        for i in range(len(outliersCount)) :
+
+            outrow      =   []
+            colorRow    =   []
+            
+            if(outliersCount[i] > 0) :
+                outrow.append(i)
+                outrow.append(str(outliersCount[i]))
+                outrow.append(float("{0:.5f}".format(100 * (outliersCount[i] / totrows))))
+                if(i == 0) :
+                    outrow.append("{0:.2f}".format(mean - ((i+1)*std)) + " - " + "{0:.2f}".format(mean + ((i+1)*std)))
+                    colorRow = [Green,Green,Green,Green]
+
+                else :
+
+                    lowermin = mean - ((i+1)*std)
+                    lowermax = mean - ((i)*std)
+                    if(lowermin < minv) : lowermin = minv
+                    if(lowermax < minv) : lowermax = minv
+                    
+                    uppermin = mean + ((i)*std)
+                    uppermax = mean + ((i+1)*std)
+                    if(uppermin > maxv) : uppermin = maxv
+                    if(uppermax > maxv) : uppermax = maxv
+                    
+                    rangestr    =   ""
+                    rangestr1   =   ""
+                    
+                    if(lowermax > minv) :
+                        rangestr = "{0:.2f}".format(lowermin) + " - " + "{0:.2f}".format(lowermax)
+                    if(uppermin < maxv) :
+                        rangestr1 = rangestr1 + "{0:.2f}".format(uppermin) + " - " + "{0:.2f}".format(uppermax)
+                    
+                    if( (len(rangestr) > 0) and (len(rangestr1) > 0) ) :
+                            rangestr = rangestr + "  and  " + rangestr1
+                    else :
+                        rangestr = rangestr + rangestr1
+                    
+                    outrow.append(rangestr)
+                    if(i > 2) :
+                        colorRow = [Red,Red,Red,Red]
+                    else :
+                        colorRow = [Yellow,Yellow,Yellow,Yellow]
+                    
+                outRows.append(outrow)
+                colorList.append(colorRow)
+          
+
+        outliers_table = dcTable("Simple Outliers","simpleoutliers",cfg.DataCleansing_ID,
+                                 outHeader,outRows,outWidths,outAligns)
+        
+        outliers_table.set_colsperrow(4)
+        outliers_table.set_rowspertable(30)
+        outliers_table.set_maxtables(1)
+        outliers_table.set_checkLength(False)
+        outliers_table.set_color(True)
+        outliers_table.set_colorList(colorList)
+        
+        clock.stop() 
+        
+        if(display) :
+            outliers_table.display_table()
+            return()
+        else :
+            outliers_html   =   outliers_table.get_html()
+            return(outliers_html)
+            
+            
+    except Exception as e: 
+        opstat = opStatus()
+        opstat.store_exception("Unable to get simple outliers",e)
+        display_exception(opstat)
+
+    clock.stop() 
+           
+
+
+
+
+
     
