@@ -19,7 +19,8 @@ from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (get_function_parms, opStatus, RunningClock, display_exception, 
                                             INT_PARM, STRING_PARM, BOOLEAN_PARM, DICT_PARM, 
-                                            displayParms, get_string_value, display_generic_grid)
+                                            displayParms, get_string_value, display_generic_grid, 
+                                            display_status, display_notes, get_formatted_time)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
 
@@ -55,7 +56,7 @@ import time
 """
 def display_export_forms(exportid, detid=0, notes=False) :
     
-    if(exportid == 0) :
+    if(exportid == dem.EXPORT_TB_ONLY) :
         clear_data_export_data()    
 
     dew.display_dc_export_forms(exportid, detid, notes)
@@ -97,6 +98,7 @@ def process_export_form(formid, parms, display=True) :
             clear_output()
             dew.display_export_main_taskbar()
             
+            save_data_export_start()
             clock = RunningClock()
             clock.start()
     
@@ -107,7 +109,7 @@ def process_export_form(formid, parms, display=True) :
                                               dew.pandas_export_csv_labelList)
             
             parmstitle  =   "Pandas CSV Export Parms"
-            parmslist   =   dew.pandas_export_csv_labelList[:5]
+            parmslist   =   dew.pandas_export_csv_labelList[:6]
         
         elif (formid == dem.EXCEL_EXPORT) :
             fparms      =   dew.get_excel_export_inputs(parms)
@@ -116,7 +118,7 @@ def process_export_form(formid, parms, display=True) :
                                                 dew.pandas_export_excel_labelList)
             
             parmstitle  =   "Pandas Excel Export Parms"
-            parmslist   =   dew.pandas_export_excel_labelList[:6]
+            parmslist   =   dew.pandas_export_excel_labelList[:7]
         
         elif (formid == dem.JSON_EXPORT) : 
             fparms      =   dew.get_json_export_inputs(parms)
@@ -125,7 +127,7 @@ def process_export_form(formid, parms, display=True) :
                                                dew.pandas_export_json_labelList)
             
             parmstitle  =   "Pandas JSON Export Parms"
-            parmslist   =   dew.pandas_export_json_labelList[:2]
+            parmslist   =   dew.pandas_export_json_labelList[:6]
         
         elif (formid == dem.HTML_EXPORT) : 
             fparms      =   dew.get_html_export_inputs(parms)
@@ -134,21 +136,21 @@ def process_export_form(formid, parms, display=True) :
                                                dew.pandas_export_html_labelList)
             
             parmstitle  =   "Pandas HTML Export Parms"
-            parmslist   =   dew.pandas_export_html_labelList[:4]
+            parmslist   =   dew.pandas_export_html_labelList[:8]
 
         elif (formid == dem.CUSTOM_EXPORT) : 
             (dispstats, opstat)     =   export_custom(parms)
             
             if(dispstats) :
                 parmstitle  =   "Custom Export Parms"
-                parmslist   =   dew.custom_export_labelList[0]
+                parmslist   =   dew.custom_export_labelList[:4]
            
         if(opstat.get_status()) : 
             if(display) :
                 if (formid == dem.CUSTOM_EXPORT) :
                     if(dispstats) : 
                         ciparms = parms[0].replace("\n","</br>")
-                        display_data_export_parms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID,fparms[1])
+                        display_data_export_parms(parmstitle,parmslist,[ciparms],cfg.DataExport_ID,fparms[1],True)
 
                 else : 
                     display_data_export_parms(parmstitle,parmslist,fparms,cfg.DataExport_ID,fparms[1])
@@ -165,8 +167,14 @@ def process_export_form(formid, parms, display=True) :
         print("Invalid formid "+ str(formid))
         return
 
+def save_data_export_start() :
+    cfg.set_config_value(cfg.CURRENT_EXPORT_START_TIME,time.time())    
+def drop_data_export_start() :
+    cfg.drop_config_value(cfg.CURRENT_EXPORT_START_TIME)    
+def get_data_export_start() :
+    return(cfg.get_config_value(cfg.CURRENT_EXPORT_START_TIME))   
 
-def display_data_export_parms(title,plist,fparms,exportID,fname,dbnote=False) :
+def display_data_export_parms(title,plist,fparms,exportID,fname,custom=False,dbnote=False) :
     """
     * -------------------------------------------------------------------------- 
     * function : display export parms
@@ -183,16 +191,35 @@ def display_data_export_parms(title,plist,fparms,exportID,fname,dbnote=False) :
     * --------------------------------------------------------
     """
     
-    parms_html  =   displayParms(title,plist,fparms,exportID,100,40,False)
-    from dfcleanser.data_inspection.data_inspection_widgets import display_inspection_data
-    stats_html  =   display_inspection_data(False,True)
+    #print("display_data_export_parms",title,plist,fparms)
+    
+    parms_html  =   displayParms(title,plist,fparms,exportID,100,2,False)
 
-    gridclasses     =   ["dfc-left","dfc-right"]
-    gridhtmls       =   [parms_html,stats_html]
+    if(custom) :
+        status_html     =   display_status("Custom export code Exported successfully",False)
+        
+        exportnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-get_data_export_start()))+ " seconds",
+                       "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
+        
+    else :
+        
+        if(dbnote) :
+            status_html     =   display_status(" Dataframe Exported successfully to table " + fname,False)
+        else :    
+            status_html     =   display_status(" Dataframe Exported successfully to File " + fname,False)
+
+        exportnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-get_data_export_start()))+ " seconds"]
+
+    notes_html  =   display_notes(exportnotes,False)
+    
+    #print("parms_html",parms_html)
+    #print("status_html",status_html)
+    #print("notes_html",notes_html)
+
+    gridclasses     =   ["dfc-top","dfc-left","dfc-right"]
+    gridhtmls       =   [parms_html,status_html,notes_html]
     display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls)
     
-    dew.display_data_export_notes(time.time(),fname,dbnote)
-
 
 def export_sql_table(parms,display=True) :
     """
@@ -211,6 +238,7 @@ def export_sql_table(parms,display=True) :
     
     dew.display_export_main_taskbar()
     
+    save_data_export_start()
     clock = RunningClock()
     clock.start()
     
@@ -363,7 +391,7 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
             opstat.set_status(False)
             opstat.set_errorMsg("No dataframe slected")
         else :
-            df = cfg.get_dfc_dataframe(fparms[0])            
+            df = cfg.get_dfc_dataframe_df(fparms[0])            
         
             try :
                 if(len(csvparms) > 0) :
@@ -447,7 +475,7 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
             opstat.set_status(False)
             opstat.set_errorMsg("No dataframe slected")
         else :
-            df = cfg.get_dfc_dataframe(fparms[0])            
+            df = cfg.get_dfc_dataframe_df(fparms[0])            
     
             try :
                 if(len(excelparms) > 0) :
@@ -531,7 +559,7 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
             opstat.set_status(False)
             opstat.set_errorMsg("No dataframe slected")
         else :
-            df = cfg.get_dfc_dataframe(fparms[0])            
+            df = cfg.get_dfc_dataframe_df(fparms[0])            
     
             try :
                 if(len(jsonparms) > 0) :
@@ -615,7 +643,7 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
             opstat.set_status(False)
             opstat.set_errorMsg("No dataframe slected")
         else :
-            df = cfg.get_dfc_dataframe(fparms[0])            
+            df = cfg.get_dfc_dataframe_df(fparms[0])            
     
             try :
                 if(len(htmlparms) > 0) :
@@ -737,7 +765,7 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
                 
                 else :
                 
-                    df = cfg.get_dfc_dataframe(sqltableparms[0])            
+                    df = cfg.get_dfc_dataframe_df(sqltableparms[0])            
             
                     labellist   =   dew.pandas_export_sqltable_labelList
             
@@ -794,9 +822,7 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
             add_to_script(["# Export SQL Table ",
                            "from dfcleanser.data_export.data_export_control export export_pandas_sqltable",
                            "export_pandas_sqltable(" + json.dumps(sqltableparms) + "," + 
-                           json.dumps(dbcondict) + "," + str(exportid) + ",False)",
-                           "from dfcleanser.common.cfg import set_current_dfc_dataframe",
-                           "set_current_dfc_dataframe(df)"],opstat)
+                           json.dumps(dbcondict) + "," + str(exportid) + ",False)"],opstat)
        
         export_notes    =   dbu.get_SQLAlchemy_connector_string(dbconparms)
         
@@ -842,9 +868,14 @@ def export_test_sql_db_connector(driverid,sqlinputparms) :
 def clear_data_export_data() :
     
     drop_owner_tables(cfg.DataExport_ID)
+    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
+    define_inputs(cfg.DataExport_ID,dew.dataexport_inputs)
+    delete_all_inputs(cfg.DataExport_ID)
     clear_data_export_cfg_values()
     
 def clear_data_export_cfg_values() :
+
+    cfg.drop_config_value(cfg.CURRENT_EXPORT_START_TIME)
     
     return(True)
 
