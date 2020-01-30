@@ -21,6 +21,23 @@ from dfcleanser.common.common_utils import opStatus
 * -------------------------------------------------------------
 """
 
+def get_generic_function_code(ftitle) :
+    
+    import inspect
+    
+    if(ftitle == "upperCase_df_column")                         :   return(inspect.getsource(upperCase_df_column))
+    elif(ftitle == "normalize_df_column")                       :   return(inspect.getsource(normalize_df_column))
+    elif(ftitle == "get_trig_values_for_column")                :   return(inspect.getsource(get_trig_values_for_column))
+    elif(ftitle == "convert_df_column_to_degrees_or_radians")   :   return(inspect.getsource(convert_df_column_to_degrees_or_radians))
+    elif(ftitle == "absolute_df_column")                        :   return(inspect.getsource(absolute_df_column))
+    elif(ftitle == "round_df_column")                           :   return(inspect.getsource(round_df_column))
+    elif(ftitle == "get_dist_from_center_df_column")            :   return(inspect.getsource(get_dist_from_center_df_column))
+    elif(ftitle == "get_dist_from_point_df_column")             :   return(inspect.getsource(get_dist_from_point_df_column))
+    elif(ftitle == "random_int_range")                          :   return(inspect.getsource(random_int_range))
+    elif(ftitle == "random_float_range")                        :   return(inspect.getsource(random_float_range))
+    else                                                        :   return("No code found")              
+
+
 def upperCase_df_column(dftitle, dfcolname) :
     """
     * ------------------------------------------------------------------------
@@ -31,7 +48,8 @@ def upperCase_df_column(dftitle, dfcolname) :
     *  dfcolname   - dataframe column to normalize
     *
     * returns : 
-    *    upper cased columns list or opstat
+    *    Successful : upper cased columns list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -63,7 +81,8 @@ def normalize_df_column(dftitle, dfcolname) :
     *  dfcolname   - dataframe column to normalize
     *
     * returns : 
-    *    normalized column list or opstat
+    *    Successful : normalized column list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -71,6 +90,7 @@ def normalize_df_column(dftitle, dfcolname) :
     """
     
     opstat              =   opStatus()
+    
     df                  =   cfg.get_dfc_dataframe_df(dftitle)
 
     from sklearn.preprocessing import MinMaxScaler
@@ -99,7 +119,8 @@ def get_trig_values_for_column(dftitle, dfcolname, trigfunc) :
     *                    ('sin','cos','tan','arcsin','arccos','arctan')
     *
     * returns : 
-    *    col list of trig values or opstat
+    *    Successful : col list of trig values  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -142,7 +163,8 @@ def convert_df_column_to_degrees_or_radians(dftitle, dfcolname, degrees) :
     *                  False - conveet to radians
     *
     * returns : 
-    *    converted column or opstat
+    *    Successful : converted column values list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -180,7 +202,8 @@ def random_int_range(dftitle, randomIntLower, randomIntUpper) :
     *  randomIntUpper   - random integer upper range value
     *
     * returns : 
-    *    column values of random ints or opstat
+    *    Successful : column values list of random ints  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -218,7 +241,8 @@ def random_float_range(dftitle, randomFloatLower, randomFloatUpper) :
     *  randomFloatUpper   - random integer upper range value
     *
     * returns : 
-    *    cols list of random floats or opstat
+    *    Successful : cols list of random floats  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -255,7 +279,8 @@ def absolute_df_column(dftitle, dfcolname) :
     *  dfcolname     - dataframe column to apply trig function to
     *
     * returns : 
-    *    col list of abs values or opstat
+    *    Successful : col list of abs values  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -290,7 +315,8 @@ def round_df_column(dftitle, dfcolname, decimals) :
     *                   0 - round to int
     *
     * returns : 
-    *    roundex col vals list or None
+    *    Successful : roundex col vals list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -326,11 +352,10 @@ def get_dist_from_center_df_column(dftitle,dfcolname,units) :
     *  dftitle       - dataframe title
     *  dfcolname     - dataframe column to round
     *  units         - distance units
-    *  decimals      - rounding precision
-    *                   0 - round to int
     *
     * returns : 
-    *    col list or None
+    *    Successful : distance col vals list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function
@@ -339,10 +364,11 @@ def get_dist_from_center_df_column(dftitle,dfcolname,units) :
 
     print("get_dist_from_center_df_column")
 
+
 def get_dist_from_point_df_column(dftitle,dfcolname,point,units) :
     """
     * ------------------------------------------------------------------------
-    * function : get the distance from geocode center 
+    * function : get the distance from geocode pt 
     * 
     * parms :
     *  dftitle       - dataframe title
@@ -352,7 +378,8 @@ def get_dist_from_point_df_column(dftitle,dfcolname,point,units) :
     *                   0 - round to int
     *
     * returns : 
-    *    col list or None
+    *    Successful : distance col vals list  
+    *    Error : opstat
     *
     * Notes : 
     *    dfcleanser generic function

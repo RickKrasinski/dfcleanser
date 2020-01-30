@@ -192,10 +192,6 @@ bulk_google_query_ltypes_input_jsList     =   [None,None,None,None,None,None,Non
                                                "geocode_return()",
                                                "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
-
-
-
-
 bulk_google_query_input_reqList           =   [0,1,2,3]
 
 bulk_google_query_input_form              =   [bulk_google_query_input_id,
@@ -796,11 +792,10 @@ bulk_baidu_reverse_input_form             =   [bulk_bing_reverse_input_id,
                                                bulk_bing_reverse_input_reqList]  
 
 
-geocoding_bulk_inputs                     =   [google_bulk_geocoder_id,bulk_google_query_input_id,bulk_google_reverse_input_id,
-                                               batch_arcgis_geocoder_id,batch_arcgis_query_id,bing_bulk_geocoder_id,
-                                               bulk_bing_query_input_id,bulk_bing_reverse_input_id,baidu_bulk_geocoder_id,
-                                               bulk_baidu_query_input_id,bulk_baidu_reverse_input_id]
-
+SWUtility_bulk_geocode_inputs             =   [google_bulk_geocoder_id, bulk_google_query_input_id, bulk_google_reverse_input_id,
+                                               batch_arcgis_geocoder_id, batch_arcgis_query_id, bing_bulk_geocoder_id, bulk_bing_query_input_id,
+                                               bulk_bing_reverse_input_id, baidu_bulk_geocoder_id, bulk_baidu_query_input_id, bulk_baidu_reverse_input_id]
+                                 
 
 """
 #--------------------------------------------------------------------------
@@ -837,9 +832,8 @@ def get_languages_table(tableid,owner,callback) :
     languagesHrefs       =   []
 
 
-    from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-    dicts       =   get_Dictlog()
-    langdict    =   dicts.get("Language_Codes",None)
+    from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+    langdict    =   get_Dict("Language_Codes")
     languages   =   list(langdict.keys())
     languages.sort()
     
@@ -898,9 +892,8 @@ def get_regions_table(tableid,owner,callback,countriesFlag=False) :
     regionsHrefs       =   []
 
 
-    from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-    dicts           =   get_Dictlog()
-    regionsdict     =   dicts.get("Country_Codes",None)
+    from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+    regionsdict     =   get_Dict("Country_Codes")
     regions         =   list(regionsdict.keys())
     regions.sort()
     
@@ -964,9 +957,8 @@ def get_categories_table(tableid,owner,callback) :
     categoriesHrefs       =   []
 
 
-    from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-    dicts           =   get_Dictlog()
-    regionsdict     =   dicts.get("Language_Codes",None)
+    from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+    regionsdict     =   get_Dict("Language_Codes")
     categories      =   list(regionsdict.keys())
     categories.sort()
     
@@ -1211,7 +1203,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
         elif(tabletype==sugm.COLNAMES_TABLE) :
             
-            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
             
             from dfcleanser.common.display_utils import get_df_col_names_table
             if(geocid == sugm.GoogleId) :
@@ -1277,7 +1269,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         
         elif(tabletype==sugm.COLNAMES_TABLE) :
             
-            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
             
             from dfcleanser.common.display_utils import get_df_col_names_table
             if(geocid == sugm.GoogleId) :
@@ -1328,7 +1320,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
     if (geotype == sugm.QUERY) :
         
         selectDicts     =   []
-        from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
+        from dfcleanser.sw_utilities.sw_utility_control import get_Dict
         
         geofunc_input_form.set_gridwidth(680)
         
@@ -1345,14 +1337,13 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         
         if(geocid == sugm.GoogleId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
 
             regions             =   {}
             regions.update({"default": "United States"})
 
-            dicts           =   get_Dictlog()
-            regionsdict     =   dicts.get("Country_Codes",None)
+            regionsdict     =   get_Dict("Country_Codes")
             regionslist     =   list(regionsdict.keys())
             regionslist.sort()
             regions.update({"list":regionslist})
@@ -1361,8 +1352,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             languages       =   {}
             languages.update({"default": "English"})
             
-            dicts           =   get_Dictlog()
-            langdict        =   dicts.get("Language_Codes",None)
+            langdict        =   get_Dict("Language_Codes")
             languageslist   =   list(langdict.keys())
             languageslist.sort()
             languages.update({"list":languageslist})
@@ -1380,14 +1370,13 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
         elif(geocid == sugm.ArcGISId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
 
             regions             =   {}
             regions.update({"default": "United States"})
 
-            dicts           =   get_Dictlog()
-            regionsdict     =   dicts.get("Country_Codes",None)
+            regionsdict     =   get_Dict("Country_Codes")
             regionslist     =   list(regionsdict.keys())
             regionslist.sort()
             regions.update({"list":regionslist})
@@ -1395,8 +1384,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
             categories       =   {}
             categories.update({"default": "Address"})
-            dicts           =   get_Dictlog()
-            catdict         =   dicts.get("ArcGIS_Categories",None)
+            catdict         =   get_Dict("ArcGIS_Categories")
             catslist        =   list(catdict.keys())
             catslist.sort()
             categories.update({"list":catslist})
@@ -1410,14 +1398,13 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
 
         elif(geocid == sugm.BingId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
             
             countries       =   {}
             countries.update({"default": "United States"})
             
-            dicts           =   get_Dictlog()
-            countrydict     =   dicts.get("Country_Codes",None)
+            countrydict     =   get_Dict("Country_Codes")
             countrylist     =   list(countrydict.keys())
             countrylist.sort()
             countries.update({"list":countrylist})
@@ -1436,7 +1423,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         
         elif(geocid == sugm.BaiduId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
             
             get_select_defaults(geofunc_input_form,
@@ -1450,7 +1437,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
     else :
         
         selectDicts     =   []
-        from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
+        from dfcleanser.sw_utilities.sw_utility_control import get_Dict
         
         geofunc_input_form.set_gridwidth(680)
         geofunc_input_form.set_custombwidth(120)
@@ -1458,7 +1445,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
         
         if(geocid == sugm.GoogleId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
 
             lengthFlag      =   {"default":"short","list":["short","long"]}
@@ -1467,9 +1454,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             languages       =   {}
             languages.update({"default": "English"})
 
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-            dicts           =   get_Dictlog()
-            langdict        =   dicts.get("Language_Codes",None)
+            langdict        =   get_Dict("Language_Codes")
             languageslist   =   list(langdict.keys())
             languageslist.sort()
             languages.update({"list":languageslist})
@@ -1483,14 +1468,13 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
         elif(geocid == sugm.BingId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
             
             countries       =   {}
             countries.update({"default": "United States"})
             
-            dicts           =   get_Dictlog()
-            countrydict     =   dicts.get("Country_Codes",None)
+            countrydict     =   get_Dict("Country_Codes")
             countrylist     =   list(countrydict.keys())
             countrylist.sort()
             countries.update({"list":countrylist})
@@ -1508,7 +1492,7 @@ def display_bulk_geocode_inputs(geocid,geotype,tabletype=sugm.COLNAMES_TABLE,sho
             
         elif(geocid == sugm.BaiduId) :
             
-            dataframes      =   cfg.get_dfc_dataframes_select_list()
+            dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
             selectDicts.append(dataframes)
             
             get_select_defaults(geofunc_input_form,
@@ -1611,7 +1595,10 @@ def display_bulk_geocoders(geocodeid,showfull=False) :
     *  N?A
     * --------------------------------------------------------
     """
-
+    
+    cfg.display_data_select_df(cfg.SWGeocodeUtility_ID)
+    print("\n")
+    
     listHtml = sugw.get_geocoder_table(True)
     
     if(geocodeid == None) :
@@ -1796,7 +1783,7 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
 
         if(opstat.get_status()) :
             
-            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                 
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[0] : fparms[0]})
             bulk_geocode_kwargs.update({bulk_google_query_input_labelList[1] : fparms[1]})
@@ -1873,7 +1860,7 @@ def validate_google_bulk_parms(geotype,inputs,opstat) :
         # validate non required parmsd            
         if(opstat.get_status()) :
             
-            df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+            df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                 
             bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[0] : fparms[0]})
             bulk_geocode_kwargs.update({bulk_google_reverse_input_labelList[1] : fparms[1]})
@@ -2045,47 +2032,78 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[1] : fparms[1]})
             bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[2] : fparms[2]})
             
+            # full address column name
             if(len(fparms[3]) > 0) :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : fparms[3]})
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : fparms[3]})
             else :
-                bulk_geocode_kwargs.update({bulk_google_query_input_labelList[3] : "None"})
-                
+                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : "None"})
+            
+            # user location    
             if(len(fparms[4]) > 0) :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : fparms[4]})
+                
+                try :
+                    
+                    user_location   =   fparms[4].split(",")
+                    if( (len(user_location) > 1) and (len(user_location) > 4) ) :
+                        for i in range(len(user_location)) :
+                            try :
+                                float(user_location[i])    
+                            except :
+                                opstat.set_status(False)
+                                opstat.set_errorMsg("user_location is not a valid geopy.Point")
+                                break
+                        
+                        if(opstat.get_status()) :
+                            bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : fparms[4]})
+                            
+                    else :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("user_location is not a valid geopy.Point")
+                        
+                except :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("user_location is not a valid geopy.Point")
+                
             else :
                 bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[4] : "None"})
                 
-            if(len(fparms[5]) > 0) :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : fparms[5]})    
-            else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : "en"}) 
+            if(opstat.get_status()) :    
                 
-            if(len(fparms[6]) > 0) :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : fparms[6]}) 
-            else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : "False"})
+                # culture
+                if(len(fparms[5]) > 0) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : fparms[5]})    
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[5] : "en"}) 
+                
+                # neighborhood
+                if(len(fparms[6]) > 0) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : fparms[6]}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[6] : "False"})
             
-            if(len(fparms[7]) > 0) :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : fparms[7]}) 
-            else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : "False"})
+                # country code
+                if(len(fparms[7]) > 0) :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : fparms[7]}) 
+                else :
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[7] : "False"})
                 
-            if(len(fparms[8]) > 0) :
-                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
-                if(int(fparms[8]) > len(df)) :
+                if(len(fparms[8]) > 0) :
+                    df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+                    if(int(fparms[8]) > len(df)) :
+                        bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(df)}) 
+                    else :
+                        bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : fparms[8]})
+                else :
+                    df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                     bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(df)}) 
-                else :
-                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : fparms[8]})
-            else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[8] : len(df)}) 
                     
-            if(len(fparms[9]) > 0) :
-                if(int(fparms[9]) > 100) :
-                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "2"}) 
+                if(len(fparms[9]) > 0) :
+                    if(int(fparms[9]) > 100) :
+                        bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "5"}) 
+                    else :
+                        bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : fparms[9]})
                 else :
-                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : fparms[9]})
-            else :
-                bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "2"}) 
+                    bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[9] : "5"}) 
                     
     else :
                 
@@ -2119,7 +2137,7 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
                 bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[3] : "False"})
                 
             if(len(fparms[4]) > 0) :
-                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                 if(int(fparms[4]) > len(df)) :
                     bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[4] : len(df)}) 
                 else :
@@ -2184,7 +2202,7 @@ def validate_baidu_bulk_parms(geotype,inputs,opstat) :
             bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[2] : fparms[2]})
             
             if(len(fparms[3]) > 0) :
-                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                 if(int(fparms[3]) > len(df)) :
                     bulk_geocode_kwargs.update({bulk_bing_query_input_labelList[3] : len(df)}) 
                 else :
@@ -2223,7 +2241,7 @@ def validate_baidu_bulk_parms(geotype,inputs,opstat) :
 
             if(len(fparms[2]) > 0) :
                 
-                df  =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF)
+                df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
                 if(int(fparms[4]) > len(df)) :
                     bulk_geocode_kwargs.update({bulk_bing_reverse_input_labelList[2] : len(df)}) 
                 else :

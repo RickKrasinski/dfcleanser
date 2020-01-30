@@ -1085,9 +1085,8 @@ def get_google_geocode_results(rowid,address,queryParms,opstat) :
             fparms   =   get_parms_list_from_dict(subgw.bulk_google_query_input_labelList,queryParms) 
 
             regionParm      =   fparms[5]
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-            dicts           =   get_Dictlog()
-            languagedict    =   dicts.get("Language_Codes",None)
+            from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+            languagedict    =   get_Dict("Language_Codes")
             languageParm    =   languagedict.get(fparms[6])
         else :
             regionParm      =   None
@@ -1342,9 +1341,8 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
         if(not (reverseParms == None)) :
             location_typeParm   =   reverseParms.get(subgw.bulk_google_reverse_input_labelList[5],None)
             
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dictlog
-            dicts           =   get_Dictlog()
-            languagedict    =   dicts.get("Language_Codes",None)
+            from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+            languagedict    =   get_Dict("Language_Codes")
             languageParm    =   languagedict.get(reverseParms.get(subgw.bulk_google_reverse_input_labelList[6],None))
             
         else :

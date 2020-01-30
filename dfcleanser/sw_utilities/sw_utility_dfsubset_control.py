@@ -33,7 +33,7 @@ from dfcleanser.common.common_utils import (display_exception, display_status, o
 """
 
 def get_subset_df() :
-    return(cfg.get_current_chapter_df(cfg.CURRENT_SUBSET_DF))
+    return(cfg.get_current_chapter_df(cfg.SWDFSubsetUtility_ID))
 
 
 def get_current_subset_df(parms) :
@@ -54,6 +54,10 @@ def display_dfsubset_utility(optionId,parms=None) :
         
         from IPython.display import clear_output
         clear_output()
+        
+        from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+        if(not (are_owner_inputs_defined(cfg.SWDFSubsetUtility_ID)) ) :
+            define_inputs(cfg.SWDFSubsetUtility_ID,dfsw.SWUtility_subset_inputs)
     
         if(optionId == dfsm.DISPLAY_MAIN) :
             dfsw.get_dfsubset_main_taskbar()
@@ -877,8 +881,7 @@ def get_df_subset(parms,filtered=False,display=True) :
 def clear_sw_utility_dfsubsetdata() :
     
     drop_owner_tables(cfg.SWDFSubsetUtility_ID)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.SWDFSubsetUtility_ID,dfsm.dfsubset_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.SWDFSubsetUtility_ID)
     clear_sw_utility_dfsubset_cfg_values()
 

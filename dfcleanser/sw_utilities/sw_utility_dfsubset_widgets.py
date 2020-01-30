@@ -180,7 +180,9 @@ get_subset_filters_form                 =   [get_subset_filters_id,
                                              get_subset_filters_jsList,
                                              get_subset_filters_reqList]  
 
+import dfcleanser.data_inspection.data_inspection_widgets as diw
 
+SWUtility_subset_inputs                 =   [get_subset_input_id, get_subset_filter_input_id, get_subset_filters_id, diw.data_subset_df_input_id] 
 
 
 keypad_container = """
@@ -577,7 +579,7 @@ def display_df_subset(df,filters=False,colname=None) :
         dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWDFSubsetUtility_ID)
         selectDicts.append(dataframes)
         
-        current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_SUBSET_DF)
+        current_df      =   cfg.get_current_chapter_df(cfg.SWDFSubsetUtility_ID)
         colnames        =   current_df.columns.tolist()
         cols_name_list  =   ["all"]
         for i in range(len(colnames)) :
@@ -713,7 +715,7 @@ def display_filters(df) :
                                    get_subset_filters_form[4],get_subset_filters_form[5],
                                    get_subset_filters_form[6])
     
-    dataframes      =   cfg.get_dfc_dataframes_select_list()
+    dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWDFSubsetUtility_ID)
         
     get_select_defaults(filters_input_form,
                         get_subset_filters_form[0],

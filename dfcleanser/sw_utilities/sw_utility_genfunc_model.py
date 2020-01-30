@@ -68,6 +68,17 @@ Yellow  = "#F5F7A5"
 
 
 def get_genfunc_list() :
+    """
+    * ------------------------------------------------------------------------
+    * function : get the list of dfc reserved functions
+    * 
+    * parms :
+    *
+    * returns : 
+    *    function call
+    *
+    * -------------------------------------------------------------------------
+    """
     
     gtfuncs = reservedfunctions
     gtfuncs.sort()
@@ -77,7 +88,7 @@ def get_genfunc_list() :
 """
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
-* generic functions utilities
+* generic apply to fn functions utilities
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
 """
@@ -186,6 +197,13 @@ def get_apply_function_parms(ftitle) :
     return(fparms)
 
 
+"""
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+* generic add column from reserved functions utilities
+* -----------------------------------------------------------------------*
+* -----------------------------------------------------------------------*
+"""
 def get_reserved_function_parms_datatypes(ftitle) :
     """
     * ------------------------------------------------------------------------
@@ -247,40 +265,7 @@ def get_reserved_function_parms(ftitle) :
     return(fparms)
 
 
-def get_function_kwvals(ftitle,dftitle,dfcolname) :
-    """
-    * ------------------------------------------------------------------------
-    * function : get the function call for reserved functions
-    * 
-    * parms :
-    *  ftitle      - reserved function title
-    *  fparms_dict - function parms dict
-    *
-    * returns : 
-    *    function call
-    *
-    * -------------------------------------------------------------------------
-    """
- 
-    #print("get_function_kwvals",ftitle,dftitle,dfcolname)
-    
-    kwvals  =   None
-    
-    if(ftitle == "upperCase_df_column")                         :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
-    if(ftitle == "normalize_df_column")                         :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
-    if(ftitle == "get_trig_values_for_column")                  :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"trigfunc":"sin"}
-    if(ftitle == "convert_df_column_to_degrees_or_radians")     :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"degrees":"True"}
-    if(ftitle == "absolute_df_column")                          :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
-    if(ftitle == "round_df_column")                             :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname}
-    if(ftitle == "get_dist_from_center_df_column")              :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"units":"USER VALUE"}
-    if(ftitle == "get_dist_from_point_df_column")               :    kwvals  =   {"dftitle":dftitle,"dfcolname":dfcolname,"point":"USER VALUE","units":"USER VALUE"}
-    if(ftitle == "random_int_range")                            :    kwvals  =   {"dftitle":dftitle,"randomIntLower":"0","randomIntUpper":"0"}
-    if(ftitle == "random_float_range")                          :    kwvals  =   {"dftitle":dftitle,"randomFloatLower":"0.0","randomFloatUpper":"0.0"}
-        
-    return(kwvals)
-
-
-def get_function_return_datatype(ftitle) :
+def get_reserved_function_return_datatype(ftitle) :
     """
     * ------------------------------------------------------------------------
     * function : get the function call for reserved functions
@@ -310,101 +295,39 @@ def get_function_return_datatype(ftitle) :
         
     return(dtype)
     
-    
-def get_function_kwval_parms_select(ftitle,parmid) :
+
+DF_COL                  =   0
+DF_COL_NUM              =   1
+DF_COL_NUM_NUM          =   2
+DF_NUM_NUM              =   3
+
+
+def get_reserved_function_form_type(ftitle) :
     """
     * ------------------------------------------------------------------------
-    * function : get the function call for reserved functions
+    * function : get the function form type
     * 
     * parms :
-    *  ftitle      - reserved function title
-    *  fparms_dict - function parms dict
+    *  ftitle     - reserved function title
     *
     * returns : 
-    *    function call
+    *    opstat function parms
     *
     * -------------------------------------------------------------------------
     """
- 
-    #print("get_function_kwvals",ftitle,parmid)
     
-    select_dict  =   None
+    if(ftitle == "upperCase_df_column")                         :   return(DF_COL)
+    elif(ftitle == "normalize_df_column")                       :   return(DF_COL)
+    elif(ftitle == "get_trig_values_for_column")                :   return(DF_COL_NUM)
+    elif(ftitle == "convert_df_column_to_degrees_or_radians")   :   return(DF_COL_NUM)
+    elif(ftitle == "absolute_df_column")                        :   return(DF_COL)
+    elif(ftitle == "round_df_column")                           :   return(DF_COL_NUM)
+    elif(ftitle == "get_dist_from_center_df_column")            :   return(DF_COL_NUM)
+    elif(ftitle == "get_dist_from_point_df_column")             :   return(DF_COL_NUM_NUM)
+    elif(ftitle == "random_int_range")                          :   return(DF_NUM_NUM)
+    elif(ftitle == "random_float_range")                        :   return(DF_NUM_NUM)
     
-    if(parmid == "dftitle") :
-        dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
-        current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
-        select_dict         =   {"default":current_df_name,"list":dataframes_loaded}
-        
-    elif(parmid == "dfcolname") :
-        current_df_name     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
-        df                  =   cfg.get_dfc_dataframe_df(current_df_name)
-        cols_list           =   df.columns.tolist()
-        select_dict         =   {"default":cols_list[0],"list":cols_list}
-        
-    elif(ftitle == "get_trig_values_for_column") :
-        if(parmid == "trigfunc") :        
-            select_dict         =   {"default":'sin',"list":['sin','cos','tan','arcsin','arccos','arctan']}
-
-    elif(ftitle == "convert_df_column_to_degrees_or_radians") :
-        if(parmid == "degrees") :        
-            select_dict         =   {"default":True,"list":[True,False]}
-            
-    elif(ftitle == "get_dist_from_center_df_column") :
-        if(parmid == "units") :        
-            select_dict         =   {"default":True,"list":[True,False]}
-            
-    elif(ftitle == "get_dist_from_point_df_column") :
-        if(parmid == "units") :        
-            select_dict         =   {"default":True,"list":[True,False]}
-    
-    return(select_dict)
-    
-
-def get_function_call(ftitle,fparms_dict) :
-    """
-    * ------------------------------------------------------------------------
-    * function : get the function call for reserved functions
-    * 
-    * parms :
-    *  ftitle      - reserved function title
-    *  fparms_dict - function parms dict
-    *
-    * returns : 
-    *    function call
-    *
-    * -------------------------------------------------------------------------
-    """
- 
-    print("get_function_call",ftitle,fparms_dict)
-    funcparms       =   get_reserved_function_parms(ftitle)
-    
-    func_call       =   (ftitle + "(")
-
-    for i in range(len(funcparms)) :
-            
-        if(funcparms[i] == "dftitle") :
-            if(not (fparms_dict.get("dftitle",None) is None)) :
-                func_call       =   (func_call + "'" + fparms_dict.get("dftitle",None) + "'")
-            else :
-                func_call       =   (func_call + "****")
-        
-        elif(funcparms[i] == "dfcolname") :
-            if(not (fparms_dict.get("dfcolname",None) is None)) :
-                func_call       =   (func_call + ",  '" + fparms_dict.get("dfcolname",None) + "'")
-            else :
-                func_call       =   (func_call + ",  ****")
-        
-        elif(funcparms[i] == "opstat") :
-            func_call       =   (func_call + ",  opstat ")
-        else :
-            func_call       =   (func_call + ",  " + "****") 
-
-        func_call       =   (func_call + ")") 
-        
-    return(func_call)
-
-
-
+    return(None)
 
 
 def get_function_help_doc(module,fname) :
@@ -453,139 +376,6 @@ def get_function_help_doc(module,fname) :
         return("")
 
 
-def get_df_function_source(ftitle,sourceOnly=True) :
-    """
-    * ------------------------------------------------------------------------
-    * function : get the function help doc
-    * 
-    * parms :
-    *  ftitle     - function 
-    *  sourceOnly - source only flag
-    *
-    * returns : 
-    *    function function code
-    *
-    * -------------------------------------------------------------------------
-    """
-
-    import inspect
-    
-    from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctions
-
-    if(ftitle == reservedfunctions[0])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import upperCase_df_column
-        gfcode      =   inspect.getsource(upperCase_df_column)        
-    elif(ftitle == reservedfunctions[1])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import normalize_df_column
-        gfcode      =   inspect.getsource(normalize_df_column) 
-    elif(ftitle == reservedfunctions[2])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_trig_values_for_column
-        gfcode      =   inspect.getsource(get_trig_values_for_column) 
-    elif(ftitle == reservedfunctions[3])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import convert_df_column_to_degrees_or_radians
-        gfcode      =   inspect.getsource(convert_df_column_to_degrees_or_radians) 
-    elif(ftitle == reservedfunctions[4])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import absolute_df_column
-        gfcode      =   inspect.getsource(absolute_df_column) 
-    elif(ftitle == reservedfunctions[5])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import round_df_column
-        gfcode      =   inspect.getsource(round_df_column) 
-    elif(ftitle == reservedfunctions[6])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_dist_from_center_df_column
-        gfcode      =   inspect.getsource(get_dist_from_center_df_column) 
-    elif(ftitle == reservedfunctions[7])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_dist_from_point_df_column
-        gfcode      =   inspect.getsource(get_dist_from_point_df_column) 
-    elif(ftitle == reservedfunctions[8])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import random_int_range
-        gfcode      =   inspect.getsource(random_int_range) 
-    elif(ftitle == reservedfunctions[9])  :   
-        from dfcleanser.sw_utilities.sw_utility_genfunc_functions import random_float_range
-        gfcode      =   inspect.getsource(random_float_range) 
-        
-    if(sourceOnly) :
-        firstcomment    =   gfcode.find('"""')
-        secondcomment   =   gfcode.find('"""',firstcomment + 3)
-        
-        newgfcode       =   gfcode[secondcomment+3:]
-        newgfcode       =   newgfcode.lstrip("\n")
-        newgfcode       =   newgfcode.lstrip("\n")
-
-        return(str(newgfcode))
-        
-    else :
-        return(gfcode)
-        
-
-def get_function_kwargs(module,fname,kwvals=None) :
-    """
-    * ------------------------------------------------------------------------
-    * function : get the function keyord args
-    * 
-    * parms :
-    *  module     - function module
-    *  fname      - function name
-    *
-    * returns : 
-    *    function heyword args
-    *
-    * -------------------------------------------------------------------------
-    """
-    
-    #print("get_function_kwargs",module,fname,kwvals)
-    
-    help_text   =   get_function_help_doc(module,fname)
-    
-    if(len(help_text) > 0) :
-    
-        start_kwargs    =   help_text.find("(")    
-        end_kwargs      =   help_text.find(")")
-        
-        kwargs  =   help_text[start_kwargs+1:end_kwargs]
-        kwargs  =   kwargs.split(",")
-        
-        for i in range(len(kwargs)) :
-            kwargs[i]   =   kwargs[i].lstrip(" ")
-            kwargs[i]   =   kwargs[i].rstrip(" ")
-            
-            defval      =   kwargs[i].find("=")
-            if(defval > -1) :
-                kwargs[i]   =   kwargs[i][:defval] 
-                
-        from dfcleanser.common.html_widgets import new_line
-        
-        kwargs_text     =   "from " + module + " import " + fname + new_line
-        kwargs_text     =   kwargs_text + fname + "("
-        
-        for i in range(len(kwargs)) :
-            
-            if(i == (len(kwargs)-1)) :
-                endchar     =   ""
-            else :
-                endchar     =   ", "
-            
-            if(i>0) :
-                kwargs_text     =   kwargs_text  + kwargs[i] + "="  
-            
-            if(not(kwvals is None)) :
-                
-                kwval   =   kwvals.get(kwargs[i],None)
-                if(kwval is None) :
-                    kwargs_text     =   kwargs_text  + " 'USER VALUE' " + endchar  
-                else :
-                    kwargs_text     =   kwargs_text  + str(kwval) + endchar  
-            else :    
-                kwargs_text     =   kwargs_text  + " 'USER VALUE' " + endchar
-                
-        kwargs_text     =   kwargs_text + ") "        
-                
-        return([kwargs,kwargs_text])
-        
-    else :
-        
-        return(None)
-
-
 """
 * -----------------------------------------------------------------------*
 * -----------------------------------------------------------------------*
@@ -594,91 +384,83 @@ def get_function_kwargs(module,fname,kwvals=None) :
 * -----------------------------------------------------------------------*
 """
 
-GENERIC_FUNCTIONS_FILE_NAME       =   "dfcleanserCommon_gfunclog.json"
+GENERIC_USER_FUNCTIONS_FILE_NAME       =   "dfcleanserCommon_gfunclog.json"
+
+DFC_FUNCTION            =   0
+USER_FUNCTION           =   1
+
 
 """
 * -----------------------------------------------------------------------*
-* generic function class
-* -----------------------------------------------------------------------*
-"""
-class genericFunction :
-
-    def __init__(self,fmodparm="",ftitleparm="",fcodeparm="") :
-        
-        self.fmodule     =   fmodparm
-        self.ftitle      =   ftitleparm
-        self.fcode       =   fcodeparm
-
-    def get_func_module(self) :
-        return(self.fmodule)
-    def get_func_title(self) :
-        return(self.ftitle)
-    def get_func_code(self) :
-        return(self.fcode)
-        
-    def set_func_module(self,module) :
-        self.fmodule    =   module
-    def set_func_title(self,title) :
-        self.ftitle     =   title
-    def set_func_code(self,code) :
-        self.fcode      =   code
-
-    def get_serial_func(self) :
-        return([self.get_func_module(),
-                self.get_func_title(),
-                self.get_func_code(),
-                self.get_func_kwargs()])
-
-"""
-* -----------------------------------------------------------------------*
-* helper functions
+* Generic Functions helper functions
 * -----------------------------------------------------------------------*
 """
 
-def add_generic_function(genfunc) :
-    GenericFunctions.add_function(genfunc)
-
-def get_generic_function(ftitle) :
-    if(not (ftitle in reservedfunctions)) :
-        return(GenericFunctions.get_function(ftitle))
-    
+"""
+* -----------------------------------------------------------------------*
+* dfc defined functions
+* -----------------------------------------------------------------------*
+"""
 def get_generic_function_desc(ftitle) :
     
     if(ftitle in reservedfunctions) :
-        #from dfcleanser.sw_utilities.sw_utility_genfunc_functions import get_function_help_doc
         module_name   =   "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
         return(get_function_help_doc(module_name,ftitle))
-        
     else :
-        return(ftitle)
-
-def delete_generic_function(title) :
-    GenericFunctions.delete_function(title)
+        return(None)
 
 def get_total_generic_functions() :
-    print("get_total_generic_functions")
-    total_funcs     =   len(reservedfunctions)
-    total_funcs     =   total_funcs + GenericFunctions.get_total_functions()
-    return(total_funcs)
+    return(len(reservedfunctions))
 
 def get_generic_functions_names_list() :
-    print("get_generic_functions_names_list")
     func_list   =   []
     for i in range(len(reservedfunctions)) :
         func_list.append(reservedfunctions[i])
-        
-    user_funcs  =   GenericFunctions.get_function_list()
-    for i in range(len(user_funcs)) :
-        func_list.append(user_funcs[i])
     
-    return(func_list)
+    return(func_list.sort())
+
+
+"""
+* -----------------------------------------------------------------------*
+* User defined functions
+* -----------------------------------------------------------------------*
+"""
+
+def add_generic_user_function(ftitle,fmodule,fcode) :
+    GenericUserFunctions.add_function(ftitle,fmodule,fcode)
+
+def get_generic_user_function(ftitle) :
+    if(not (ftitle in reservedfunctions)) :
+        return(GenericUserFunctions.get_function(ftitle))
+    
+def get_generic_user_function_desc(ftitle) :
+    
+    if(ftitle in reservedfunctions) :
+        module_name   =   "dfcleanser.sw_utilities.sw_utility_genfunc_functions"
+        return(get_function_help_doc(module_name,ftitle))
+    else :
+        return(None)
+
+def delete_generic_user_function(ftitle) :
+    GenericUserFunctions.delete_function(ftitle)
+
+def get_total_generic_user_functions() :
+    return(GenericUserFunctions.get_total_functions())
+
+def get_generic_user_functions_names_list() :
+
+    user_funcs  =   GenericUserFunctions.get_function_list()
+    user_funcs.sort()
+    return(user_funcs)
+    
+    
 
 """
 * -----------------------------------------------------------------------*
 * generic transforms storage class
 * -----------------------------------------------------------------------*
 """
-class genericFunctionsStore :
+class genericUserFunctionsStore :
 
     def __init__(self) :
 
@@ -687,8 +469,9 @@ class genericFunctionsStore :
         self.load_generic_functions_file()
     
     def get_functions_file_name(self) :
+        
         import os
-        return(os.path.join(cfg.get_common_files_path(),GENERIC_FUNCTIONS_FILE_NAME))
+        return(os.path.join(cfg.get_common_files_path(),GENERIC_USER_FUNCTIONS_FILE_NAME))
     
     def load_generic_functions_file(self) :
         
@@ -696,28 +479,15 @@ class genericFunctionsStore :
         if(not (fname == None)) :
         
             try :
-                serial_gen_func_dict    =   {}
-                
                 with open(fname, 'r') as gen_func_file :
-                    serial_gen_func_dict = json.load(gen_func_file)
+                    self.genericfunctionDict = json.load(gen_func_file)#serial_gen_func_dict = json.load(gen_func_file)
                     gen_func_file.close()
                
-                if(len(serial_gen_func_dict) > 0) :
-                    gf_keys         =   list(serial_gen_func_dict)
-                    
-                    for i in range(len(gf_keys)) :
-                        gen_func_list   =   serial_gen_func_dict.get(gf_keys[i])
-                        new_gf          =   genericFunction(gen_func_list[0],
-                                                            gen_func_list[1],
-                                                            gen_func_list[2],
-                                                            gen_func_list[3])
-                    
-                    self.genericfunctionDict.update({gf_keys[i] : new_gf}) 
-                    
             except FileNotFoundError :
+                print("[file not found error load gen_func file ...]",str(sys.exc_info()[0]))
                 self.genericfunctionDict = {}
             except :
-                #print("[error load gen_func file ...]",str(sys.exc_info()[0]))
+                print("[error load gen_func file ...]",str(sys.exc_info()[0]))
                 self.genericfunctionDict = {}
     
     def save_generic_functions_file(self) :
@@ -725,34 +495,24 @@ class genericFunctionsStore :
         fname   =    self.get_functions_file_name() 
         if(not (fname == None)) :
             
-            gf_keys         =   list(self.genericfunctionDict.keys())
-
-            serial_gen_func_dict   =   {}
-            
-            if(len(gf_keys) > 0) :
-                for i in range(len(gf_keys)) : 
-                    serial_func     =   self.genericfunctionDict.get(gf_keys[i]).get_serial_func()
-                    serial_gen_func_dict.update({gf_keys[i] : serial_func})
+            if(len(self.genericfunctionDict) > 0) :
     
-                if(len(gf_keys) > 0) :
-                    try :
+                try :
             
-                        with open(fname, 'w') as gen_func_file :
-                            json.dump(serial_gen_func_dict,gen_func_file)
-                            gen_func_file.close()
+                    with open(fname, 'w') as gen_func_file :
+                        json.dump(self.genericfunctionDict,gen_func_file)
+                        gen_func_file.close()
                 
-                    except :
-                        print("[save_generic_functions_file error] : " + str(sys.exc_info()[0]))
+                except :
+                    print("[save_generic_functions_file error] : " + str(sys.exc_info()[0]))
                         
             else :
                     
                 import os 
                 os.remove(self.get_functions_file_name())
             
-    def add_function(self,function) :
-        
-        title   =   function.get_func_title()
-        self.genericfunctionDict.update({title:function})
+    def add_function(self,ftitle,fmodule,fcode) :
+        self.genericfunctionDict.update({ftitle:[fmodule,fcode]})
         self.save_generic_functions_file()
             
     def get_total_functions(self) :
@@ -764,19 +524,26 @@ class genericFunctionsStore :
         return(list(self.genericfunctionDict.keys()))
         
     def delete_function(self,title) :
-        print("delete_function",title,len(self.genericfunctionDict))
         try :
             del self.genericfunctionDict[title]
         except :
-            print("key not found"
-                  )
-        print("delete_function",title,len(self.genericfunctionDict))
+            print("key not found")
+            
         self.save_generic_functions_file()
+        
+    def get_function_code(self,title) :
+        
+        funccomps   =   self.genericfunctionDict.get(title,None)
+        if(not (funccomps is None)) :
+            return(funccomps[1])
+        else  :
+            return(None)
+        
         
     def get_function(self,functionTitle) :
         if(self.genericfunctionDict == {}) :
-            self.load_generic_functions_file()    
-        
+            self.load_generic_functions_file() 
+            
         return(self.genericfunctionDict.get(functionTitle,None))
 
 """
@@ -784,6 +551,6 @@ class genericFunctionsStore :
 #                   static gewneric function store
 # -----------------------------------------------------------------
 """        
-GenericFunctions   =   genericFunctionsStore()
+GenericUserFunctions   =   genericUserFunctionsStore()
     
  

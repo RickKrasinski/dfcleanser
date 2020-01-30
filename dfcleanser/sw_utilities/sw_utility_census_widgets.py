@@ -575,6 +575,9 @@ get_states_census_cols_input_form               =   [get_states_census_cols_inpu
                                                      get_states_census_cols_input_jsList,
                                                      get_states_census_cols_input_reqList]  
 
+SWUtility_census_inputs                         =   [get_census_cols_input_id, get_city_census_cols_input_id, get_county_census_cols_input_id, get_states_census_cols_input_id]
+
+
 
 """
 #--------------------------------------------------------------------------

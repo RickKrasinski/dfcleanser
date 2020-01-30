@@ -117,11 +117,30 @@ def display_geocode_utility(optionId,parms=None) :
     if(not cfg.check_if_dc_init()) :
         sugw.display_geocode_main_taskbar()        
         clear_sw_utility_geocodedata()
+    else :
+        
+        from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+        if(not (are_owner_inputs_defined(cfg.SWGeocodeUtility_ID)) ) :
+            
+            swu_geoocode_inputs     =   []
+            
+            for i in range(len(subgw.SWUtility_bulk_geocode_inputs)) :
+                swu_geoocode_inputs.append(subgw.SWUtility_bulk_geocode_inputs[i])    
+                
+            for i in range(len(subgcs.SWUtility_bulk_geocode_console_inputs)) :
+                swu_geoocode_inputs.append(subgcs.SWUtility_bulk_geocode_console_inputs[i])    
+                
+            for i in range(len(sugw.SWUtility_geocode_inputs)) :
+                swu_geoocode_inputs.append(sugw.SWUtility_geocode_inputs[i])    
+                
+            define_inputs(cfg.SWGeocodeUtility_ID,swu_geoocode_inputs)
 
     if(optionId == sugm.DISPLAY_MAIN_GEOCODING) :
         sugw.display_geocode_main_taskbar()        
         clear_sw_utility_geocodedata()
-    
+        
+        
+    # geoocode utils display
     if(optionId == sugm.DISPLAY_GEOUTILS) :
         sugw.display_geocode_utils_taskbar()        
     
@@ -133,12 +152,6 @@ def display_geocode_utility(optionId,parms=None) :
         clear_output()        
         sugw.display_calc_df_distance_input_form()
     
-    elif(optionId ==  sugm.PROCESS_DISTANCE) :
-        sugw.display_geocode_main_taskbar() 
-
-    elif(optionId ==  sugm.PROCESS_DF_DISTANCE) :
-        sugw.display_geocode_main_taskbar() 
-        
     elif(optionId ==  sugm.DISPLAY_CENTER) :
         clear_output() 
         sugw.display_calc_center_input_form()
@@ -146,12 +159,38 @@ def display_geocode_utility(optionId,parms=None) :
     elif(optionId ==  sugm.DISPLAY_DF_CENTER) :
         clear_output()        
         sugw.display_calc_df_center_input_form()
+    
+    elif(optionId ==  sugm.DISPLAY_DIST_CENTER) :
+        clear_output()        
+        sugw.display_calc_df_center_dist_input_form()
+
+
+    # geoocode utils process
+    elif(optionId ==  sugm.PROCESS_DISTANCE) :
+        sugw.display_geocode_main_taskbar() 
+        print("\n")
+        process_distance(parms)
+
+    elif(optionId ==  sugm.PROCESS_DF_DISTANCE) :
+        sugw.display_geocode_main_taskbar() 
+        print("\n")
+        process_df_distance(parms)
         
     elif(optionId ==  sugm.PROCESS_CENTER) :
         sugw.display_geocode_main_taskbar() 
+        print("\n")
+        process_center(parms)    
 
     elif(optionId ==  sugm.PROCESS_DF_CENTER) :
         sugw.display_geocode_main_taskbar() 
+        print("\n")
+        process_df_center(parms)    
+    
+    elif(optionId ==  sugm.PROCESS_DIST_CENTER) :
+        sugw.display_geocode_main_taskbar() 
+        print("\n")
+        process_df_center_dist(parms)    
+        
     
     elif(optionId ==  sugm.DISPLAY_TUNING) :
         clear_output() 
@@ -857,7 +896,6 @@ def get_bulk_query_parms(geocid,parms) :
     return(fparms)
 
 
-
 def run_geocoder_reverse(geocid,parms) :
     """
     * ---------------------------------------------------------
@@ -982,6 +1020,382 @@ def run_geocoder_reverse(geocid,parms) :
             display_exception(opstat)
 
 
+def calculate_geocode_distances(from_locs_list,to_locs_list,distance_units,algorithm,elipsoid,opstat) :
+    
+    from geopy import distance
+    distances       =   []
+        
+    try :
+            
+        for i in range(len(from_locs_list)) :
+
+            if(algorithm == "geodisic")  :
+            
+                if(distance_units == "km") :
+                    distance    =   distance.geodesic(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).km
+                else :
+                    distance    =   distance.geodesic(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).miles
+            
+            elif(algorithm == "vincenty") :
+                
+                if(distance_units == "km") :
+                    distance    =   distance.vincenty(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).km
+                else :
+                    distance    =   distance.vincenty(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).miles
+            
+            else :
+            
+                if(distance_units == "km") :
+                    distance    =   distance.great_circle(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).km
+                else :
+                    distance    =   distance.great_circle(from_locs_list[i],to_locs_list[i], elipsoid=elipsoid).miles
+                    
+            distances.append(distance)
+                    
+    except Exception as e:
+        opstat.set_status(False)
+        opstat.store_exception("Error calculating distances",e)
+
+    return(distances)
+    
+    
+
+def process_distance(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : calculate the dist betweern coords 
+    * 
+    * parms :
+    *  parms  - input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    opstat  =   opStatus()
+    
+    fparms  =   get_parms_for_input(parms,sugw.addr_dist_utility_input_idList)
+
+    print("process_distance",fparms)
+    
+    from_loc    =   fparms[0]  
+    
+    if(len(from_loc) > 0) :
+        
+        try :
+        
+            from_loc    =   from_loc.lstrip("[")
+            from_loc    =   from_loc.rstrip("]")
+    
+            from_locs_list  =   []
+    
+            if(from_loc.find("[") > -1) :
+        
+                froms   =   from_loc.split("[")
+        
+                for i in range(len(froms)) :
+                    new_from_str    =   froms[i].replace("]","")
+                    new_from        =   new_from_str.split(",")
+                    from_locs_list.append(new_from)
+            
+            else :
+                new_from    =   from_loc.split(",")            
+                from_locs_list.append(new_from)
+                
+        except : 
+            opstat.set_status(False)
+            opstat.set_errorMsg("from_locations is invalid " + str(fparms[0]))
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errorMsg("from_locations are not defined ")
+        
+    if(opstat.get_status()) :
+        
+        to_loc    =   fparms[1]  
+    
+        if(len(to_loc) > 0) :
+        
+            try :
+        
+                to_loc    =   to_loc.lstrip("[")
+                to_loc    =   to_loc.rstrip("]")
+    
+                to_locs_list  =   []
+    
+                if(to_loc.find("[") > -1) :
+        
+                    tos   =   to_loc.split("[")
+        
+                    for i in range(len(tos)) :
+                        new_to_str    =   tos[i].replace("]","")
+                        new_to        =   new_to_str.split(",")
+                        to_locs_list.append(new_to)
+            
+                else :
+                    new_to    =   to_loc.split(",")            
+                    to_locs_list.append(new_to)
+                
+            except : 
+                opstat.set_status(False)
+                opstat.set_errorMsg("to_locations is invalid " + str(fparms[1]))
+            
+        else :
+            opstat.set_status(False)
+            opstat.set_errorMsg("to_locations are not defined ")
+            
+    if(opstat.get_status()) :
+        
+        distance_units  =   fparms[2]
+        algorithm       =   fparms[3]
+        elipsoid        =   fparms[4]
+
+        distances       =   calculate_geocode_distances(from_locs_list,to_locs_list,distance_units,algorithm,elipsoid,opstat)
+        
+    if(opstat.get_status()) :
+
+        print("\n")
+        
+        display_status("distances calculated successfully")
+                
+        notes = []
+        
+        for i in range(len(distances)) :
+            notes.append(str(from_locs_list[i]) + " " + str(to_locs_list[i]) + str(distances[i]) + "<br>")
+                
+        display_notes(notes)
+        
+    else :
+        display_exception(opstat)            
+
+
+def process_df_distance(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : calculate the dist betweern coords in a column
+    * 
+    * parms :
+    *  parms  - input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    print("process_df_distance",parms)
+    opstat  =   opStatus()
+    
+    fparms  =   get_parms_for_input(parms,sugw.addr_df_dist_utility_input_idList)
+
+    print("process_df_distance",fparms)
+    
+    dftitle     =   fparms[0]
+    df          =   cfg.get_dataframe(dftitle)
+    
+    from_col    =   fparms[1]  
+    
+    if(len(from_col) > 0) :
+        
+        try :
+        
+    
+            from_cols_list  =   []
+    
+            if(from_col.find("[") > -1) :
+                from_col    =   from_col.lstrip("[")
+                from_col    =   from_col.rstrip("]")
+        
+                from_cols   =   from_col.split(",")
+                from_cols_list.append(from_cols[0])
+                from_cols_list.append(from_cols[1])            
+            else :
+                from_cols_list.append(fparms[1])
+                
+            from dfcleanser.common.common_utils import is_column_in_df
+            for i in range(len(from_cols_list))  :
+                
+                if(not (is_column_in_df(df,from_cols_list[i]))) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("from_columns column name is invalid " + str(from_cols_list[i]))
+                    break
+                
+        except : 
+            opstat.set_status(False)
+            opstat.set_errorMsg("from_columns is invalid " + str(fparms[1]))
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errorMsg("from_columns are not defined ")
+    
+    to_col    =   fparms[2]  
+    
+    if(len(to_col) > 0) :
+        
+        try :
+    
+            to_cols_list  =   []
+    
+            if(to_col.find("[") > -1) :
+                to_col    =   to_col.lstrip("[")
+                to_col    =   to_col.rstrip("]")
+        
+                to_cols   =   to_col.split(",")
+                to_cols_list.append(to_cols[0])
+                to_cols_list.append(to_cols[1])
+            
+            else :
+                to_cols_list.append(fparms[2])
+                
+            from dfcleanser.common.common_utils import is_column_in_df
+            for i in range(len(to_cols_list))  :
+                
+                if(not (is_column_in_df(df,to_cols_list[i]))) :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("to_columns column name is invalid " + str(to_cols_list[i]))
+                    break
+                
+        except : 
+            opstat.set_status(False)
+            opstat.set_errorMsg("to_columns is invalid " + str(fparms[2]))
+            
+    else :
+        opstat.set_status(False)
+        opstat.set_errorMsg("to_columns are not defined ")
+    
+    if(opstat.get_status()) :
+        
+        distance_col_name   =   fparms[3] 
+        
+        from dfcleanser.common.common_utils import is_column_in_df
+        if(not (is_column_in_df(df,distance_col_name))) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("to_columns column name is invalid " + str(fparms[3]))
+            
+        else :
+            
+            from_coords_list    =   []
+            
+            if(len(from_cols_list) > 1) :
+                
+                from_lat_list   =   df[from_cols_list[0]].tolist()
+                from_lng_list   =   df[from_cols_list[1]].tolist()
+                
+                if(len(from_lat_list) == len(from_lng_list)) :
+                    for i in range(len(from_lat_list)):
+                        from_coords_list.append((from_lat_list[i],from_lng_list[i]))    
+                        
+                else :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("from_columns column lat and long columns do not match ")
+                    
+            else :
+                
+                from_coords_list    =   df[from_cols_list[0]].tolist()    
+            
+            to_coords_list    =   []
+                
+            if(len(to_cols_list) > 1) :
+            
+                to_lat_list   =   df[to_cols_list[0]].tolist()
+                to_lng_list   =   df[to_cols_list[1]].tolist()
+                
+                if(len(to_lat_list) == len(to_lng_list)) :
+                    for i in range(len(to_lat_list)):
+                        to_coords_list.append((to_lat_list[i],to_lng_list[i]))    
+                        
+                else :
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("to_columns column lat and long columns do not match ")
+                    
+            else :
+                
+                to_coords_list    =   df[to_cols_list[0]].tolist()    
+            
+        
+    if(opstat.get_status()) :
+        
+        distance_units  =   fparms[4]
+        algorithm       =   fparms[5]
+        elipsoid        =   fparms[6]
+
+        distances       =   calculate_geocode_distances(from_coords_list,to_coords_list,distance_units,algorithm,elipsoid,opstat)
+        
+        from dfcleanser.data_transform.data_transform_columns_control import add_column_to_df
+        add_column_to_df(df,distance_col_name,distances,opstat,False) 
+        
+    if(opstat.get_status()) :
+
+        print("\n")
+        
+        display_status("distances calculated successfully")
+                
+        notes = []
+        notes.append("New Column Name : " + str(distance_col_name) + " written to df")
+        display_notes(notes)
+        
+    else :
+        display_exception(opstat)        
+    
+    
+    
+    
+
+
+def process_center(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : calculate the center point of a list 
+    * 
+    * parms :
+    *  parms  - input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    print("process_center",parms)
+    
+    
+def process_df_center(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : calculate the center point of a column of coords 
+    * 
+    * parms :
+    *  parms  - input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    print("process_df_center",parms)
+      
+    
+def process_df_center_dist(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : calculate the distance from center point of a column of coords 
+    * 
+    * parms :
+    *  parms  - input parms
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    print("process_df_center_dist",parms)
+      
+
+
+
+
+
+
+
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -993,11 +1407,7 @@ def clear_sw_utility_geocodedata() :
     
     drop_owner_tables(cfg.SWGeocodeUtility_ID)
     
-    geocodeInputs   =   subgcs.geocoding_console_inputs
-    geocodeInputs.extend(subgw.geocoding_bulk_inputs)
-    geocodeInputs.extend(sugw.geocoding_inputs)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.SWGeocodeUtility_ID,geocodeInputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.SWGeocodeUtility_ID)
     
     clear_sw_utility_geocode_cfg_values()

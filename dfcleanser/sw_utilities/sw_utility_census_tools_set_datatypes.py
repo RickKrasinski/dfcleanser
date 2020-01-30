@@ -612,15 +612,14 @@ def print_datasets_stats(all_census_data_dirs,i,dfc_census_path,merged_df,colnam
     print(all_census_data_dirs[i]," : data")
     with open(dfc_census_path+"\\"+ all_census_data_dirs[i]+'colnames.txt', 'w') as outfile:
         json.dump(colnames, outfile)
-                
+    
+    from dfcleanser.common.common_utils import  get_dtype_str_for_datatype 
+          
     dftypes      =   merged_df.dtypes.tolist() 
     dftypes_str  =   []
             
-    from dfcleanser.common.common_utils import get_datatype_id,get_datatype_str
-            
     for p in range(len(dftypes)) :
-        dtid    =   get_datatype_id(dftypes[p])
-        dtstr   =   get_datatype_str(dtid)
+        dtstr   =   get_dtype_str_for_datatype(dftypes[p])
         dftypes_str.append(dtstr)
                 
     with open(dfc_census_path+"\\"+ all_census_data_dirs[i]+'dtypes.txt', 'w') as outfile:

@@ -20,7 +20,8 @@ import dfcleanser.sw_utilities.sw_utility_census_widgets as swcw
 from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, get_parms_for_input,  
-                                            is_numeric_col, is_int_col, single_quote, RunningClock)
+                                            is_numeric_col, is_int_col, single_quote, RunningClock,
+                                            get_dtype_str_for_datatype)
 
    
 """
@@ -902,11 +903,9 @@ def calc_city_stats() :
             dftypes_str  =   []
             
             print("get dtypes",i)
-            from dfcleanser.common.common_utils import get_datatype_id,get_datatype_str
-            
+
             for p in range(len(dftypes)) :
-                dtid    =   get_datatype_id(dftypes[p])
-                dtstr   =   get_datatype_str(dtid)
+                dtstr   =   get_dtype_str_for_datatype(dftypes[p])
                 dftypes_str.append(dtstr)
                 
             with open(dfc_census_stats_path+"\\"+ fnames[i] +'_cities_dtypes.txt', 'w') as outfile:
@@ -954,11 +953,9 @@ def calc_county_stats() :
         dftypes_str  =   []
             
         print("get dtypes",i)
-        from dfcleanser.common.common_utils import get_datatype_id,get_datatype_str
             
         for p in range(len(dftypes)) :
-            dtid    =   get_datatype_id(dftypes[p])
-            dtstr   =   get_datatype_str(dtid)
+            dtstr   =   get_dtype_str_for_datatype(dftypes[p])
             dftypes_str.append(dtstr)
                 
         with open(dfc_census_stats_path+"\\"+ fnames[i] +'_counties_dtypes.txt', 'w') as outfile:
@@ -1000,11 +997,9 @@ def calc_state_stats() :
         dftypes_str  =   []
             
         print("get dtypes",i)
-        from dfcleanser.common.common_utils import get_datatype_id,get_datatype_str
             
         for p in range(len(dftypes)) :
-            dtid    =   get_datatype_id(dftypes[p])
-            dtstr   =   get_datatype_str(dtid)
+            dtstr   =   get_dtype_str_for_datatype(dftypes[p])
             dftypes_str.append(dtstr)
                 
         with open(dfc_census_stats_path+"\\"+ fnames[i] +'_states_dtypes.txt', 'w') as outfile:
@@ -1310,64 +1305,6 @@ def build_summary_datasets() :
     return()
     
     
-    """
-    state_counties        =   get_state_counties(state_county_cities_df)
-    
-    for i in range(len(swcm.census_data_dirs)) :
-        
-        print("summing counties for ",swcm.census_data_dirs[i])
-        
-        if(i==8) :
-            cities_df       =   pd.read_csv(dfc_census_path + "final\\cities\\" + swcm.census_data_dirs[i] + "_cities_A.csv")
-            cities_2_df     =   pd.read_csv(dfc_census_path + "final\\cities\\" + swcm.census_data_dirs[i] + "_cities_B.csv")
-            cities_df       =   cities_df.append(cities_2_df,ignore_index=True)
-            
-        else :
-    
-            cities_df       =   pd.read_csv(dfc_census_path + "final\\cities\\" + swcm.census_data_dirs[i] + "_cities.csv")
-            
-        
-        build_county_summary_dataset(cities_df,state_county_cities_df,state_counties,dfc_census_path + swcm.census_data_dirs[i] + "_counties.csv") 
-    """
-
-    """
-    states        =   get_states(state_county_cities_df)
-    
-    for i in range(len(swcm.census_data_dirs)) :
-        
-        counties_df       =   pd.read_csv(dfc_census_path + "final\\counties\\" + swcm.census_data_dirs[i] + "_counties.csv")
-        build_state_summary_dataset(counties_df,states,dfc_census_path + swcm.census_data_dirs[i] + "_states.csv") 
-    """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 def process_census_load(parms) :
     """
     * -------------------------------------------------------------------------- 
@@ -1403,31 +1340,6 @@ def process_census_load(parms) :
     
         build_zip_code_mappings()
     
-    
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
-    #return()
-    
-    #clock = RunningClock()
-    #clock.start()
-
-    #build_zipcode_summary_tables([swcm.DEMOGRAPHICS,swcm.ECONOMICS,swcm.HOUSING,swcm.SOCIAL],
-    #                             cfg.get_dfc_dataframe_df("zipcode_mapings"))
-
-
-    #dtime   =   clock.stop()
-    #print("Total Roll Up Time : ",dtime)
-
-    #return()
     
     pct_df     =   pandas.read_csv(dfc_census_path+swcm.DEMOGRAPHICS_PERCENT_FILE)
     new_dfcnotes    =   "demo pct"

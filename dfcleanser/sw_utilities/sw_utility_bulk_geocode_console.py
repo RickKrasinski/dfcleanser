@@ -188,9 +188,7 @@ bulk_geocode_export_input_form             =   [bulk_geocode_export_input_id,
                                                 bulk_geocode_export_input_reqList]  
 
 
-geocoding_console_inputs                   =   [bulk_geocode_proc_input_id,bulk_geocode_procr_input_id,bulk_geocode_export_input_id]
-
-
+SWUtility_bulk_geocode_console_inputs      =   [bulk_geocode_proc_input_id,bulk_geocode_procr_input_id,bulk_geocode_export_input_id]
 
 """
 #--------------------------------------------------------------------------
@@ -526,7 +524,7 @@ def get_bulk_parms_table_html(geocid,geotype,runParms) :
     * --------------------------------------------------------
     """
 
-    #print("get_bulk_parms_table_html",runParms)
+    print("get_bulk_parms_table_html",geocid,geotype,"\n",runParms)
 
     parmsHeader      =   [""]
     parmsRows        =   []
@@ -539,7 +537,7 @@ def get_bulk_parms_table_html(geocid,geotype,runParms) :
         
         parmsrow = [parmskeys[i] + "&nbsp;:"]
         parmsRows.append(parmsrow)
-        parmsrow = ["&nbsp;&nbsp;&nbsp;"+ runParms.get(parmskeys[i])]
+        parmsrow = ["&nbsp;&nbsp;&nbsp;" + str(runParms.get(parmskeys[i]))]
         parmsRows.append(parmsrow)
         
     parms_table = None
@@ -627,6 +625,7 @@ def display_geocoder_console(geocid,geotype,runParms,opstat,cmd=sugm.STOP) :
 
         progressBars    =   [bar0]
         console_html    =   get_bulk_geocode_console_html(progressBars,state)
+        
     
     elif(geocid == sugm.BingId) :
         
@@ -637,6 +636,8 @@ def display_geocoder_console(geocid,geotype,runParms,opstat,cmd=sugm.STOP) :
 
         progressBars    =   [bar0]
         console_html    =   get_bulk_geocode_console_html(progressBars,state)
+        
+    print(console_html)
     
     gridclasses     =   ["dfcleanser-common-grid-header-large","dfc-left","dfc-right"]
     gridhtmls       =   [geocoding_heading_html,parms_html,

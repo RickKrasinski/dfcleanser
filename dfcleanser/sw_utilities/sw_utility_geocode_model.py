@@ -30,11 +30,11 @@ GoogleId                    =   7
 OpenMapQuestId              =   9
 NominatimId                 =   11
 
-supported_Geocoders         =   [ArcGISId,BaiduId,BingId,GoogleId,OpenMapQuestId,NominatimId]
-supported_Reverses          =   [ArcGISId,BaiduId,BingId,GoogleId,NominatimId]
+supported_Geocoders         =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,NominatimId]
+supported_Reverses          =   [ArcGISId,BingId,GoogleId,OpenMapQuestId,NominatimId]
 
-supported_Bulk_Geocoders    =   [ArcGISId,BaiduId,BingId,GoogleId]
-supported_Bulk_Reverses     =   [BaiduId,BingId,GoogleId]
+supported_Bulk_Geocoders    =   [ArcGISId,BingId,GoogleId]
+supported_Bulk_Reverses     =   [BingId,GoogleId]
 
 
 """
@@ -121,6 +121,9 @@ PROCESS_DF_CENTER               =   48
 
 DISPLAY_TUNING                  =   49
 PROCESS_TUNING                  =   50
+
+DISPLAY_DIST_CENTER             =   52
+PROCESS_DIST_CENTER             =   53
 
 
 """
@@ -1173,7 +1176,7 @@ def get_address_map(address_cols) :
         address_components[i]   =   address_components[i].lstrip(" ")
         address_components[i]   =   address_components[i].rstrip(" ")
         
-    colnames    =   cfg.get_current_chapter_df(cfg.CURRENT_GEOCODE_DF).columns.values.tolist() 
+    colnames    =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID).columns.values.tolist() 
     
     for i in range(len(address_components)) :
 

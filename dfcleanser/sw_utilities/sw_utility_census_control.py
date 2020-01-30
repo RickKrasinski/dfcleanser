@@ -53,6 +53,12 @@ def display_census_utility(optionId,parms=None) :
     from IPython.display import clear_output
     clear_output()
     
+    
+    from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+    if(not (are_owner_inputs_defined(cfg.SWCensusUtility_ID)) ) :
+        define_inputs(cfg.SWCensusUtility_ID,swcw.SWUtility_census_inputs)
+
+    
     if(optionId == swcm.DISPLAY_MAIN) :
         swcw.get_census_main_taskbar()
         clear_sw_utility_census_data()
@@ -965,6 +971,8 @@ def clear_sw_utility_census_data() :
     
     drop_owner_tables(cfg.SWCensusUtility_ID)
     clear_sw_utility_census_cfg_values()
+    from dfcleanser.common.html_widgets import delete_all_inputs
+    delete_all_inputs(cfg.SWCensusUtility_ID)
 
 
 def clear_sw_utility_census_cfg_values() :
@@ -980,10 +988,6 @@ def clear_sw_utility_census_cfg_values() :
     cfg.drop_config_value(cfg.CENSUS_ADD_DATASETS_LIST)
     cfg.drop_config_value(cfg.CENSUS_DROP_DATASETS_LIST)
 
-    cfg.drop_config_value(swcw.get_census_cols_input_id+"Parms") 
-    cfg.drop_config_value(swcw.get_city_census_cols_input_id+"Parms")   
-    cfg.drop_config_value(swcw.get_county_census_cols_input_id+"Parms")  
-    cfg.drop_config_value(swcw.get_states_census_cols_input_id+"Parms")  
 
     return()
 
