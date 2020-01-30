@@ -54,6 +54,9 @@ function pandas_details_import_callback(id) {
      * Parameters:
      *  id - import type
      */
+
+    window.dfc_log("pandas_details_import_callback : " + id.toString());
+
     var formid = "";
     switch (id) {
         case 0:
@@ -75,10 +78,11 @@ function pandas_details_import_callback(id) {
 
     // get the input values
     var importVals = get_input_form_parms(formid);
-    console.log("pandas_details_import_callback");
     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", id + ", " + importVals));
-    if (get_dfc_mode() == 0)
+
+    if (get_dfc_mode() == 1)
         reset_dependents([false, true, true, true, true, true]);
+
     window.scroll_to('DCDataImport');
 }
 
@@ -114,6 +118,9 @@ function pandas_sql_import_callback(itype, dbid) {
      *  itype - import type
      *  dbid  - database id
      */
+
+    window.dfc_log("pandas_sql_import_callback : " + itype.toString() + " : " + dbid.toString());
+
     var formid = "";
     switch (dbid) {
         case 0:
@@ -177,6 +184,9 @@ function pandas_details_test_con_callback(sqlid, dbid, driverid) {
      *  dbid     - database id
      *  driverid - database driver id
      */
+
+    window.dfc_log("pandas_details_test_con_callback : " + sqlid.toString() + " : " + dbid.toString() + driverid.toString());
+
     var sqlinputparms = null;
     var sqlform = 0
 
@@ -212,31 +222,60 @@ function pandas_details_test_con_callback(sqlid, dbid, driverid) {
     }
 }
 
-function pandas_details_get_columns_callback() {
+function pandas_details_get_index_columns_callback(sqltype) {
     /**
      * get db columns callback.
      */
+
+    window.dfc_log("pandas_details_get_index_columns_callback : " + sqltype);
+
     var sqlinputparms = [];
-    sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
+
+    if (sqltype == "table")
+        sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
+    else
+        sqlinputparms = window.get_input_form_parms("importPandasSQLQuery");
+
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_index_columns", sqlinputparms));
+
+    window.scroll_to('DCDataImport');
+}
+
+function pandas_details_get_columns_callback(sqltype) {
+    /**
+     * get db columns callback.
+     */
+
+    window.dfc_log("pandas_details_get_columns_callback : " + sqltype);
+
+    var sqlinputparms = [];
+
+    if (sqltype == "table")
+        sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
+    else
+        sqlinputparms = window.get_input_form_parms("importPandasSQLQuery");
+
     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_columns", sqlinputparms));
+
+    window.scroll_to('DCDataImport');
 }
 
 function pandas_details_get_strftime_callback(sqltype) {
     /**
      * get format time list callback.
      */
+
+    window.dfc_log("pandas_details_get_strftime_callback : " + sqltype);
+
     var sqlinputparms = [];
 
-    if (sqltype == 0)
+    if (sqltype == "table")
         sqlinputparms = window.get_input_form_parms("importPandasSQLCommonTable");
     else
         sqlinputparms = window.get_input_form_parms("importPandasSQLQuery");
 
-    var inputs = new Array();
-    inputs.push(sqltype);
-    inputs.push(sqlinputparms);
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_datetimeformats", sqlinputparms));
 
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "get_datetimeformats", sqltype + ", " + sqlinputparms));
 
     window.scroll_to('DCDataImport');
 
@@ -249,8 +288,11 @@ function select_db(dblibid) {
      * Parameters:
      *  dblibid - database library is
      */
-    console.log("select_db", dblibid);
-    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_sql_details_form", "5," + JSON.stringify(dblibid)));
+
+    if (window.debug_detail_flag)
+        console.log("select_db", dblibid);
+
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_sql_details_form", JSON.stringify(dblibid)));
     window.scroll_to('DCDataImport');
 }
 
@@ -287,7 +329,29 @@ function select_column(columnname) {
      *  columnname - column name
      */
 
+    window.dfc_log("select_column : " + columnname);
+
     var column = $("#sqltablecommoncolumns");
+    if (column.val() == "") {
+        column.val("[" + columnname + "]");
+    } else {
+        var slen = column.val().length;
+        var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
+        column.val(newstring);
+    }
+}
+
+function select_index_column(columnname) {
+    /**
+     * select column callback.
+     *
+     * Parameters:
+     *  columnname - column name
+     */
+
+    window.dfc_log("select_index_column : " + columnname);
+
+    var column = $("#sqltableindexcol");
     if (column.val() == "") {
         column.val("[" + columnname + "]");
     } else {
@@ -299,45 +363,74 @@ function select_column(columnname) {
 
 function select_date_column(columnname) {
 
-    var selected_format = $('#sqltablecommonparsedateformats option:selected').val();
+    window.dfc_log("select_date_column : " + columnname);
 
-    if (selected_format == "None") {
-        var column = $("#sqltablecommonparsedates");
-        if (column.val() == "") {
-            column.val("[" + columnname + "]");
-        } else {
-            var slen = column.val().length;
-            var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
-            column.val(newstring);
-        }
-    } else {
-        var column = $("#sqltablecommonparsedates");
-        if (column.val() == "") {
-            column.val("{" + columnname + ":" + selected_format + "}");
-        } else {
-            var slen = column.val().length;
-            var newstring = column.val().substr(0, slen - 1) + ", " + columnname + ":" + selected_format + "}";
-            column.val(newstring);
-        }
-    }
-
-}
-
-function select_dtformat(columnname) {
-    console.log("select_dtformat", columnname);
-
-    var column = $("#sqltablecommonparsedates");
-    if (column == null)
-        column = $("#sqlquerycommonparsedates");
-
+    var column = $("#sqltableparsedates");
     if (column.val() == "") {
-        console.log("empty")
         column.val("[" + columnname + "]");
     } else {
         var slen = column.val().length;
         var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
         column.val(newstring);
     }
+
+
+    var selected_format = $("#sqltablecommondateformats :selected").text();
+    console.log("selected_format", selected_format);
+
+    var formats = $("#sqltablecommonparsedateformats");
+    if (formats.val() == "") {
+        formats.val("[" + selected_format + "]");
+    } else {
+        var slen = formats.val().length;
+        var newstring = formats.val().substr(0, slen - 1) + ", " + selected_format + "]";
+        formats.val(newstring);
+    }
+
+
+
+
+    //if (selected_format != "No Format") {
+    //    var parse_dates = $("#sqltableparsedates").val();
+    //    console.log("parse_dates", parse_dates);
+    //    if ((parse_dates == "") || (parse_dates == null)) {
+    //        $("#sqltableparsedates").val("[" + columnname + "]");
+    //    } else {
+    //        var slen = parse_dates.length;
+    //        var newstring = parse_dates.substr(0, slen - 1) + ", " + columnname + "]";
+    //        $("#sqltableparsedates").val(newstring);
+    //    }
+    //} else {
+    //    var parse_dates = $("#sqltableparsedates").val();
+    //    console.log("parse_dates1", parse_dates);
+    //    if ((parse_dates == "") || (parse_dates == null)) {
+    //        $("#sqltableparsedates").val("{" + columnname + ":" + selected_format + "}");
+    //    } else {
+    //        var slen = parse_dates.length;
+    //        var newstring = parse_dates.substr(0, slen - 1) + ", " + columnname + ":" + selected_format + "}";
+    //        $("#sqltableparsedates").val(newstring);
+    //    }
+    //}
+
+}
+
+function select_dtformat(dtformat) {
+
+    window.dfc_log("select_dtformat : " + dtformat);
+
+    //var formats = $("#sqltableparsedates");
+    //formats.val("");
+
+    ///if (column == null)
+    //    column = $("#sqlquerycommonparsedates");
+
+    //if (column.val() == "") {
+    //    column.val("[" + columnname + "]");
+    //} else {
+    //    var slen = column.val().length;
+    //    var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
+    //    column.val(newstring);
+    //}
 
 }
 

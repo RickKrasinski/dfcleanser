@@ -20,10 +20,53 @@ function build_utility_callback(id) {
      *  id - function id - list or dict
      */
 
-    window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
-    window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", id));
+    switch (id) {
+
+        case 1:
+        case 2:
+        case 11:
+        case 12:
+        case 15:
+
+            window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
+            window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", id));
+            break;
+
+        case 3: // add list
+        case 4: // delete list
+        case 7: // clear list
+        case 13: // update list
+
+            var fparms = get_input_form_parms("maintlistparms");
+            window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
+            window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", (id + ", " + fparms)));
+            break;
+
+        case 5: // add dict
+        case 6: // delete dict
+        case 8: // clear dict
+        case 16: // update dict
+
+            var fparms = get_input_form_parms("maintdictparms");
+            window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
+            window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", (id + ", " + fparms)));
+            break;
+    }
     window.scroll_to('DCListUtility');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function build_utility_clear_callback() {
     /**
@@ -145,6 +188,10 @@ function process_geoutils_callback(fid) {
         case 50:
             inputId = "bulktune";
             break;
+        case 52:
+            inputId = "addrdfcenterdist";
+            break;
+
     }
 
     if (inputId != "") {
@@ -1637,4 +1684,59 @@ function get_census_cols(dtid) {
 
     window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("8, " + JSON.stringify(fparms))));
 
+}
+
+function change_get_center_pt_col(selectid) {
+    /**
+     * change get center pt source
+     *
+     * Parameters:
+     *  selectid   - select form id
+     * 
+     */
+
+    var colname = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_get_center_pt_col", selectid, colname);
+
+    var collist = $("#collist").val();
+
+    if (collist.length == 0) {
+        $("#collist").val(colname);
+    } else {
+        if (collist.indexOf("[") > -1) {
+            $("#collist").val(colname);
+        } else {
+            collist = "[" + $("#collist").val() + ", " + colname + "]";
+            $("#collist").val(collist);
+        }
+    }
+}
+
+function change_get_center_pt(selectid) {
+    /**
+     * change get center pt source
+     *
+     * Parameters:
+     *  selectid   - select form id
+     * 
+     */
+
+    var center_pt_source = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_get_center_pt", selectid, center_pt_source);
+
+    if (center_pt_source == "True") {
+        $("#addrcol").prop("disabled", false);
+        $("#collist").prop("disabled", false);
+        $("#centerpt").prop("disabled", true);
+
+    } else {
+        $("#addrcol").prop("disabled", true);
+        $("#collist").prop("disabled", true);
+        $("#centerpt").prop("disabled", false);
+        $("#centerpt").prop("readonly", false);
+    }
 }

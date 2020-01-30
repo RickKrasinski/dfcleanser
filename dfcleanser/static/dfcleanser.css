@@ -636,7 +636,19 @@ div.exception-status-detail {
 
 .dfc-notes-wrapper {
     display: grid;
-    grid-template-columns: 880px;
+    grid-template-columns: 720px;
+    grid-template-areas: 'top';
+    grid-gap: 0px;
+    background-color: #fff;
+    padding: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfc-notes-short-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
     grid-template-areas: 'top';
     grid-gap: 0px;
     background-color: #fff;
@@ -817,6 +829,30 @@ th.a:link {
     background-color: #F8F5E1;
 }
 
+.dfc-short-note-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'main';
+    grid-gap: 0px;
+    background-color: #fff;
+    padding: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfc-large-note-wrapper {
+    display: grid;
+    grid-template-columns: 720px;
+    grid-template-areas: 'main';
+    grid-gap: 0px;
+    background-color: #fff;
+    padding: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 
 /* 
 ----------------------------------------------------                 
@@ -897,53 +933,14 @@ th.a:link {
 -------------- dfcleanser Files Grid --------------                 
 */
 
-.dfcleanser-files-wrapper {
-    margin-left: 0px;
-    display: grid;
-    grid-gap: 0px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "footer";
-    background-color: #fff;
-    color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.dfcleanser-files-pop-up-wrapper {
-    margin-left: 0px;
-    display: grid;
-    grid-gap: 0px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "footer";
-    background-color: #F8F5E1;
-    color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
 .dfcleanser-chapters-wrapper {
     margin-left: 60px;
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 880px;
-    grid-template-areas: "header" "footer";
+    grid-template-areas: "header" "main";
     background-color: #fff;
     color: #444;
-}
-
-.dfcleanser-chapters-pop-up-wrapper {
-    margin-left: px;
-    display: grid;
-    grid-gap: px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "footer";
-    background-color: #F8F5E1;
-    color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
 }
 
 .dfcleanser-system-tb-pop-up-wrapper {
@@ -976,32 +973,6 @@ th.a:link {
 /* 
 -------------- dfcleanser dfmgr Grid --------------                 
 */
-
-.dfcleanser-dfmgr-wrapper {
-    margin-left: 0px;
-    display: grid;
-    grid-gap: 0px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "top";
-    background-color: #fff;
-    color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.dfcleanser-dfmgr-pop-up-wrapper {
-    margin-left: 0px;
-    display: grid;
-    grid-gap: 0px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "top";
-    background-color: #F8F5E1;
-    color: #444;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
 
 .dfcleanser-main-pop-up-title-wrapper {
     margin-left: 0px;
@@ -1070,8 +1041,9 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.data-import-stats-pop-up-wrapper {
-    display: grid;
+
+/*.data-import-stats-pop-up-wrapper {
+//    display: grid;
     grid-template-columns: 480px;
     grid-template-areas: 'top' 'left' 'right';
     grid-gap: 5px;
@@ -1081,6 +1053,7 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 .data-import-sql-table-wrapper {
     display: grid;
@@ -1108,7 +1081,7 @@ th.a:link {
 
 .data-import-wrapper {
     display: grid;
-    grid-template-columns: 640px;
+    grid-template-columns: 480px;
     grid-template-areas: 'header' 'footer';
     grid-gap: 0px;
     background-color: #fff;
@@ -1119,6 +1092,8 @@ th.a:link {
     overflow-y: hidden;
 }
 
+
+/*
 .data-import-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
@@ -1131,6 +1106,7 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 
 /* 
@@ -1240,7 +1216,7 @@ th.a:link {
     grid-template-columns: 720px;
     grid-template-areas: 'main';
     grid-gap: 2px;
-    background-color: #fff;
+    background-color: #ffff;
     padding: 1px;
     margin-left: 0px;
     justify-content: center;
@@ -1266,34 +1242,6 @@ th.a:link {
 --------- Data Inspection Data Type Grid ---------                 
 */
 
-.df-inspection-data-type-wrapper {
-    display: grid;
-    overflow-x: hidden !important;
-    grid-template-columns: 480px;
-    grid-template-areas: 'top' 'footer';
-    grid-gap: 0px;
-    background-color: #fff;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-inspection-data-type-pop-up-wrapper {
-    display: grid;
-    overflow-x: hidden !important;
-    grid-template-columns: 480px;
-    grid-template-areas: 'top' 'footer';
-    grid-gap: 0px;
-    background-color: #F8F5E1;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
 
 /* 
 ----------- Data Inspection Nan Grid -----------                 
@@ -1301,7 +1249,7 @@ th.a:link {
 
 .df-inspection-nan-wrapper {
     display: grid;
-    grid-template-columns: 485px;
+    grid-template-columns: 480px;
     grid-template-areas: 'header' 'top' 'main' 'footer';
     grid-gap: 1px;
     background-color: #fff;
@@ -1312,9 +1260,11 @@ th.a:link {
     overflow-y: hidden;
 }
 
+
+/*
 .df-inspection-nan-col-wrapper {
     display: grid;
-    grid-template-columns: 485px;
+    grid-template-columns: 480px;
     grid-template-areas: 'header' 'top' 'main' 'footer';
     grid-gap: 1px;
     background-color: #fff;
@@ -1337,6 +1287,7 @@ th.a:link {
     overflow-x: hiddenp !important;
     overflow-y: hidden;
 }
+*/
 
 
 /* 
@@ -1376,23 +1327,10 @@ th.a:link {
 
 .df-inspection-category-data-wrapper {
     display: grid;
-    grid-template-columns: 984px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-columns: 980px;
+    grid-template-areas: 'header' 'main';
     grid-gap: 10px;
     background-color: #fff;
-    padding: 1px;
-    margin-left: 5px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-inspection-category-data-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
-    background-color: #F8F5E1;
     padding: 1px;
     margin-left: 5px;
     justify-content: center;
@@ -1407,6 +1345,8 @@ th.a:link {
 ----------------------------------------------------                 
 */
 
+
+/*
 .display-dfcleansing-console-wrapper {
     display: grid;
     grid-template-columns: 480px;
@@ -1432,6 +1372,7 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 .display-df-unique-columns-base-wrapper {
     display: grid;
@@ -1524,6 +1465,8 @@ th.a:link {
     overflow-y: hidden;
 }
 
+
+/*
 .display-df-whitespace-wrapper {
     display: grid;
     grid-template-columns: 180px 300px;
@@ -1549,6 +1492,7 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 .display-df-cleanser-unique-columns-wrapper {
     display: grid;
@@ -1563,10 +1507,36 @@ th.a:link {
     overflow-y: hidden;
 }
 
+.display-df-cleanser-unique-columns-no-find-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'left';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 .display-df-cleanser-unique-columns-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
     grid-template-areas: 'top' 'main' 'footer';
+    grid-gap: 2px;
+    background-color: #F8F5E1;
+    padding: 2px;
+    margin-left: 2px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.display-df-cleanser-unique-columns-no-find-pop-up-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top';
     grid-gap: 2px;
     background-color: #F8F5E1;
     padding: 2px;
@@ -1631,22 +1601,9 @@ th.a:link {
 .display-df-col-cleanser-wrapper {
     display: grid;
     grid-template-columns: 920px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-areas: 'header' 'main';
     grid-gap: 10px;
     background-color: #fff;
-    padding: 10px;
-    margin-left: 5px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.display-df-col-cleanser-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
-    background-color: #F8F5E1;
     padding: 10px;
     margin-left: 5px;
     justify-content: center;
@@ -1713,10 +1670,25 @@ th.a:link {
     overflow-y: hidden;
 }
 
+.display-df-apply-fn-wrapper {
+    display: grid;
+    grid-template-columns: 480px;
+    grid-template-areas: 'top' 'header' 'bottom' 'footer';
+    grid-gap: 10px;
+    background-color: #fff;
+    padding: 10px;
+    margin-left: 5px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/*
 .df-index-common-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'top' 'header' 'main' 'footer';
+    grid-template-areas: 'header' 'main' 'footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;
@@ -1725,12 +1697,15 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 
 /* 
 -------------- Generic Transform Grid --------------                 
 */
 
+
+/*
 .generic-transform-wrapper {
     margin-left: 10px;
     display: grid;
@@ -1759,7 +1734,10 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
+
+/*
 .generic-gf-transform-wrapper {
     display: grid;
     grid-gap: 10px;
@@ -1787,7 +1765,10 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
+
+/*
 .generic-gf-transform-notes-wrapper {
     display: grid;
     grid-gap: 1px;
@@ -1815,6 +1796,7 @@ th.a:link {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 .col-stats-wrapper {
     margin-left: 200px;
@@ -1829,26 +1811,6 @@ th.a:link {
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
-}
-
-.col-narrow-wrapper {
-    margin-left: 280px;
-    display: grid;
-    grid-gap: 2px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "footer";
-    background-color: #fff;
-    color: #444;
-}
-
-.col-narrow-pop-up-wrapper {
-    margin-left: 0px;
-    display: grid;
-    grid-gap: 2px;
-    grid-template-columns: 480px;
-    grid-template-areas: "header" "footer";
-    background-color: #F8F5E1;
-    color: #444;
 }
 
 .col-change-datatype-wrapper {
@@ -1868,8 +1830,8 @@ th.a:link {
     margin-left: 0px;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: 400px;
-    grid-template-areas: "middle" "header" "footer";
+    grid-template-columns: 320px 480px;
+    grid-template-areas: "left header" "left footer";
     background-color: #fff;
     color: #444;
     justify-content: center;
@@ -1895,7 +1857,7 @@ th.a:link {
     display: grid;
     grid-gap: 10px;
     grid-template-columns: 480px;
-    grid-template-areas: "header" "middle" "footer";
+    grid-template-areas: "main" "header" "footer";
     background-color: #fff;
     color: #444;
     justify-content: center;
@@ -1903,18 +1865,21 @@ th.a:link {
     overflow-y: hidden;
 }
 
+
+/*
 .col-change-datatype-transform-pop-up-wrapper {
     margin-left: 0px;
     display: grid;
     grid-gap: 10px;
     grid-template-columns: 480px;
-    grid-template-areas: "header" "middle" "footer";
+    grid-template-areas: "main" "header" "footer";
     background-color: #F8F5E1;
     color: #444;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
 }
+*/
 
 .col-change-datatype-uniques-wrapper {
     margin-left: 0px;
@@ -1935,6 +1900,32 @@ th.a:link {
     grid-gap: 10px;
     grid-template-columns: 480px;
     grid-template-areas: "top" "header" "footer";
+    background-color: #F8F5E1;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-cat-uniques-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 560px;
+    grid-template-areas: "main";
+    background-color: #fff;
+    color: #444;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.col-cat-uniques-pop-up-wrapper {
+    margin-left: 0px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main";
     background-color: #F8F5E1;
     color: #444;
     justify-content: center;
@@ -2065,7 +2056,7 @@ th.a:link {
     margin-left: 5px;
     display: grid;
     grid-gap: 0px;
-    grid-template-columns: 485px;
+    grid-template-columns: 480px;
     grid-template-areas: "top";
     background-color: #F8F5E1;
     color: #444;
@@ -2086,7 +2077,40 @@ th.a:link {
 ------------- datetime Format Grid ----------------                 
 */
 
-.dtformat-wrapper {
+.dfc-common-480px-single-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main";
+    background-color: #fff;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/*
+.dfc-common-480px-single-pop-up-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main";
+    background-color: #F8F5E1;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+*/
+
+.dfc-common-480px-2-vert-wrapper {
     display: grid;
     grid-gap: 2px;
     grid-template-columns: 480px;
@@ -2102,14 +2126,98 @@ th.a:link {
 }
 
 
+/*
+.dfc-common-480px-2-vert-pop-up-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "main";
+    background-color: #F8F5E1;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+*/
+
+.dfc-common-480px-3-vert-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "main" "bottom";
+    background-color: #fff;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/*
+.dfc-common-480px-3-vert-pop-up-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "header" "main" "bottom";
+    background-color: #F8F5E1;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+*/
+
+.dfc-transform-480px-3-vert-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main" "header" "bottom";
+    background-color: #fff;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+
+/*
+.dfc-transform-480px-3-vert-pop-up-wrapper {
+    display: grid;
+    grid-gap: 2px;
+    grid-template-columns: 480px;
+    grid-template-areas: "main" "header" "bottom";
+    background-color: #F8F5E1;
+    overflow-y: hidden;
+    color: #444;
+    padding: 2px;
+    margin-left: 1px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+*/
+
+
 /* 
 --------------- Dataframe Drop Columns Grids --------------                 
 */
 
-.df-common-col-wrapper {
+.df-reorder-colnames-wrapper {
     display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'top' 'footer';
+    grid-template-columns: 720px;
+    grid-template-areas: 'main';
     grid-gap: 10px;
     background-color: #fff;
     padding: 10px;
@@ -2119,40 +2227,14 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.df-common-col-pop-up-wrapper {
+.df-reorder-colnames-pop-up-wrapper {
     display: grid;
     grid-template-columns: 480px;
-    grid-template-areas: 'header' 'top' 'footer';
-    grid-gap: 0px;
-    background-color: #F8F5E1;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-map-col-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'top' 'footer';
-    grid-gap: 0px;
-    background-color: #fff;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-map-col-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'top' 'footer';
-    grid-gap: 0px;
+    grid-template-areas: 'main';
+    grid-gap: 10px;
     background-color: #F8F5E1;
     padding: 10px;
-    margin-left: 0px;
+    margin-left: 5px;
     justify-content: center;
     overflow-x: hidden;
     overflow-y: hidden;
@@ -2189,10 +2271,10 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.df-add-col-wrapper {
+.df-add-col-from-df-wrapper {
     display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-columns: 360px 360px;
+    grid-template-areas: 'header header' 'left right' 'footer footer';
     grid-gap: 0px;
     background-color: #fff;
     padding: 0px;
@@ -2202,101 +2284,10 @@ th.a:link {
     overflow-y: hidden;
 }
 
-.df-add-col-pop-up-wrapper {
+.df-add-col-from-df-pop-up-wrapper {
     display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 0px;
-    background-color: #F8F5E1;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-add-col-parms-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'top' 'footer';
-    grid-gap: 10px;
-    background-color: #fff;
-    padding: 10px;
-    margin-left: 5px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-add-col-code-nf-wrapper {
-    display: grid;
-    grid-template-columns: 680px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
-    background-color: #fff;
-    padding: 10px;
-    margin-left: 5px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-add-col-code-nf-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 0px;
-    background-color: #F8F5E1;
-    padding: 10px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-add-col-code-wrapper {
-    display: grid;
-    grid-template-columns: 540px;
-    grid-template-areas: 'header' 'main' 'footer';
-    grid-gap: 0px;
-    background-color: #fff;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-add-col-code-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'main' 'footer';
-    grid-gap: 0px;
-    background-color: #F8F5E1;
-    padding: 0px;
-    margin-left: 0px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-save-col-names-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
-    grid-gap: 10px;
-    background-color: #fff;
-    padding: 10px;
-    margin-left: 5px;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.df-save-col-names-pop-up-wrapper {
-    display: grid;
-    grid-template-columns: 480px;
-    grid-template-areas: 'header' 'footer';
+    grid-template-columns: 240px 240px;
+    grid-template-areas: 'header header' 'left right' 'footer footer';
     grid-gap: 0px;
     background-color: #F8F5E1;
     padding: 0px;

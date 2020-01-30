@@ -20,6 +20,8 @@ function scripting_tb_callback(fid) {
         case 0:
         case 1:
         case 2:
+        case 9:
+        case 10:
             window.run_code_in_cell(window.SCRIPT_TASK_BAR_ID, window.getJSPCode(window.SCRIPT_LIB, "display_data_scripting", "0" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataScripting');
             break;

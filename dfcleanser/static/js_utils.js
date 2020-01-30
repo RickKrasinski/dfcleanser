@@ -10,6 +10,25 @@
  window.debug_flag = true;
  window.debug_detail_flag = false;
 
+
+ window.BASIC_DEBUG = 0
+ window.DETAIL_DEBUG = 1
+
+ window.log_prefix = '[' + "dfcleanser" + ']';
+
+
+ window.dfc_log = function(message, type = BASIC_DEBUG) {
+
+     if (type == BASIC_DEBUG) {
+         if (window.debug_flag)
+             console.log(log_prefix + "\n    " + message);
+     } else {
+         if (window.debug_detail_flag)
+             console.log(log_prefix + "\n    " + message);
+     }
+ };
+
+
  window.NEW_LINE = "\n";
 
  //
@@ -80,7 +99,6 @@
  window.empty_cell_id = null;
 
 
- window.log_prefix = '[' + "dfcleanser" + ']';
 
 
  var dfc_cell_ids = ["PandasdfcleanserTitle", "DCSystemTitle", "DCDataImportTitle", "DCDataInspectionTitle", "DCDataCleansingTitle",
@@ -90,9 +108,43 @@
      "DCGeocodeUtility", "DCDFSubsetUtility", "DCCensusUtility", "DCDataScripting", "DCWorking", "dfcPopUpCell"
  ];
 
+ var dfc_loaded_flagged = false;
+
  window.WORKING_CODE_CELL = '# working cell- please do not remove';
  window.WORKING_TITLE_CELL = '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>';
  window.WORKING_BLANK_LINE = '<br></br>';
+
+ //
+ // ---------------------------------------------------
+ // ---------------------------------------------------
+ //               cell control functions 
+ // ---------------------------------------------------
+ // ---------------------------------------------------
+ //
+
+ /*
+  *
+  *  get dfc cell pointed to by dfc id 
+  * 
+  *  @function get_dfc_cellid_for_cell_id 
+  * 
+  *     @param : cellId - cell id to select
+  * 
+  */
+
+ window.reset_chapter = function(cellid) {
+
+     console.log("reset_chapter", cellid);
+     switch (cellid) {
+
+         case 0:
+             window.clear_cell_output(window.SYSTEM_TASK_BAR_ID);
+             window.run_code_in_cell(window.SYSTEM_TASK_BAR_ID, window.getJSPCode(window.SYSTEM_LIB, "display_system_environment", 0));
+             window.scroll_to('DCSystem');
+
+     }
+     return (dfc_cell_ids[cellid]);
+ };
 
 
  //
@@ -109,7 +161,7 @@
   * 
   *  @function get_dfc_cellid_for_cell_id 
   * 
-  *    @param : cellId - cell id to select
+  *     @param : cellId - cell id to select
   * 
   */
 
@@ -232,6 +284,7 @@
 
      if (window.debug_detail_flag)
          console.log("select_before_cell", id);
+
      var cell_to_select = window.get_cell_for_before_id(id);
      select_current_cell(cell_to_select);
  };
@@ -417,6 +470,7 @@
      IPython.notebook.insert_cell_below('code');
      var cell = IPython.notebook.select_next().get_selected_cell();
      window.run_code(cell, code);
+
      if (window.debug_detail_flag) {
          console.log(log_prefix + "\n" + "     insert_cell_and_run_code_in_output_cell", id, outputid, code);
      }
@@ -488,7 +542,7 @@
   */
  window.reset_dependents = function(deplist) {
 
-     if (window.debug_detail_flag)
+     if (window.debug_flag)
          console.log(log_prefix + "\n" + "     reset_dependents");
 
      if (get_dfc_mode() == 1)
@@ -516,8 +570,8 @@
       *      System Environment function id
       */
 
-     if (window.debug_detail_flag)
-         console.log(log_prefix + "\n" + "     process_pop_up_cmd", chid);
+     //if (window.debug_detail_flag)
+     console.log(log_prefix + "\n" + "     process_pop_up_cmd", chid);
 
      var code = null;
 
@@ -683,7 +737,8 @@
 
  window.complete_unload_dfcleanser = function() {
 
-     console.log("complete_unload_dfcleanser");
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     complete_unload_dfcleanser");
 
      var max_trys = 5;
      var ctry = 0;
@@ -930,6 +985,7 @@
   * 
   */
  window.delete_dfcleanser_cells = function() {
+
      if (window.debug_detail_flag)
          console.log(log_prefix + "\n" + "     delete_dfcleanser_cells");
 
@@ -968,7 +1024,8 @@
  //
 
  window.handlecbcheck = function(cb) {
-     console.log("handlecbcheck", cb);
+     if (windows.debug_flag)
+         console.log("handlecbcheck", cb);
  };
 
 
@@ -1230,9 +1287,11 @@
      var input = document.getElementById(inputid);
      var file = document.getElementById(fileid);
 
-     console.log("onChangefileselect", input, file);
+     if (window.debug_detail_flag)
+         console.log("onChangefileselect", input, file);
 
-     input.value = file.value.replace("C:\\fakepath\\", "datasets/");
+     if (inputid == "addcolumnfilename") input.value = file.value.replace("C:\\fakepath\\", "");
+     else input.value = file.value.replace("C:\\fakepath\\", "datasets/");
  };
 
  //
@@ -1283,6 +1342,8 @@
  // 
  window.getdfcChaptersLoaded = function() {
 
+     console.log("getdfcChaptersLoaded");
+
      var cells = IPython.notebook.get_cells();
      var cell = window.empty_cell_id;
      var cellsloaded = [];
@@ -1330,6 +1391,7 @@
  //
 
  window.scrollSampleRow = function(tableid, direction) {
+
      var inputs = new Array();
      inputs.push(String(tableid));
      inputs.push(String(direction));
@@ -1337,6 +1399,7 @@
  };
 
  window.scrollSingleRow = function(tableid, direction) {
+
      var inputs = new Array();
      inputs.push(String(tableid));
      inputs.push(String(direction));
@@ -1345,7 +1408,9 @@
 
  window.scrollTable = function(tableid, direction) {
 
-     console.log("scrollTable", tableid, direction);
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     " + "scrollTable", tableid, direction);
+
      var inputs = new Array();
 
      if (tableid == "dfschemaTable") {
@@ -1357,6 +1422,7 @@
      inputs.push(String(tableid));
      inputs.push(String(direction));
      window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "scroll_table", JSON.stringify(inputs)));
+
  };
 
  //
@@ -1422,3 +1488,14 @@
  window.log_jupyter_msg = function(message) {
      console.log(log_prefix + "\n" + "     " + message);
  };
+
+ $(document).ready(function() {
+
+     if (!dfc_loaded_flagged) {
+         window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "dfc_document_loaded", 0));
+         console.log("document ready");
+     }
+     $("div").click(function() {
+         //window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "dfc_document_loaded", 0));
+     });
+ });

@@ -14,7 +14,8 @@ function inspection_task_bar_callback(fid) {
      *  fid - function id
      */
 
-    console.log("inspection_task_bar_callback", fid);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "inspection_task_bar_callback", fid);
 
     var inputs = new Array();
 
@@ -68,7 +69,8 @@ function get_columns_name_list() {
 
 function change_inspect_cols_col(id) {
 
-    console.log("change_inspect_cols_col", id);
+    if (window.debug_detail_flag)
+        console.log("change_inspect_cols_col", id);
 
     var inputs = new Array();
     var inputParms = window.get_input_form_parms("datainspectdf");
@@ -135,18 +137,6 @@ function ncol(colid) {
     window.scroll_to('DCDataCleansing');
 }
 
-function scol(colid) {
-    /**
-     * Data Inspection display single column.
-     *
-     * Parameters:
-     *  colid - column id
-     */
-
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(colid)));
-    window.scroll_to('DCDataCleansing');
-}
-
 function scatcol(colid) {
     /**
      * Data Inspection display cat columns.
@@ -155,10 +145,14 @@ function scatcol(colid) {
      *  colid - column id
      */
 
-    var fparms = [colid, 27];
-    var inputs = new Array();
-    inputs.push(fparms);
-    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "11" + "," + JSON.stringify(inputs)));
+    var ids = new Array("catcolumnname", "catcolumnnameordered", "catcolumncompleteuniques");
+    ids = ids.toString();
+    var vals = new Array(colid, "False", "True");
+
+    var parms = "[[" + '"catcolumnname",' + '"catcolumnnameordered",' + '"catcolumncompleteuniques"],';
+    parms = parms + '["' + colid + '",' + '"False",' + '"True"]]';
+
+    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "265" + "," + parms));
     window.scroll_to('DCDataTransform');
 }
 
@@ -230,8 +224,6 @@ function change_colsearch_cols(selectid) {
 function getSelectValues(selectid) {
     var results = new Array();
 
-    //console.log("getSelectValues", selectid);
-
     $('#' + selectid + ' option:selected').each(function() {
         results.push($(this).val());
     });
@@ -274,7 +266,7 @@ function dc_drop_cols_callback(valtype) {
     window.scroll_to('DCDataInspection');
 }
 
-window.change_dataframes_to_select = function() {
+function change_dataframes_to_select() {
     /**
      * Update datframe select input forms.
      *
@@ -283,21 +275,29 @@ window.change_dataframes_to_select = function() {
      *  selected    - option selected
      */
 
-    console.log("change_dataframes_to_select");
-    var df_forms = ["#dfmgrform", "#datainspectdf", "#datacleansedf", "#datatransformdf", "#dataexportdf", "#datasubsetdf"]
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "change_dataframes_to_select");
+
+    var df_forms = ["dfmgrtitle", "didfdataframe", "dcdfdataframe", "dtdfdataframe", "dedfdataframe", "dsdfdataframe"]
     var displayed_forms = new Array();
 
-    for (i = 0; i < df_forms.length; i++) {
+    var inspectdfs = window.get_input_form_parms("datainspectdfinput");
+    var cleansingdfs = window.get_input_form_parms("datacleansedfinput");
+    var transformdfs = window.get_input_form_parms("datatransformdfinput");
+    var exportdfs = window.get_input_form_parms("dataexportdfinput");
+    var geocodedfs = window.get_input_form_parms("datageocodedfinput");
+    var subsetdfs = window.get_input_form_parms("datasubsetdfinput");
 
-        if ($(df_forms[i]).length > 0) {
-            displayed_forms.push(df_forms[i].slice(1));
-        }
-    }
-    console.log("change_dataframes_to_select", displayed_forms);
+    if (inspectdfs.length > 0) displayed_forms.push("didfdataframe");
+    if (cleansingdfs.length > 0) displayed_forms.push("dcdfdataframe");
+    if (transformdfs.length > 0) displayed_forms.push("dtdfdataframe");
+    if (exportdfs.length > 0) displayed_forms.push("dedfdataframe");
+    if (geocodedfs.length > 0) displayed_forms.push("dgdfdataframe");
+    if (subsetdfs.length > 0) displayed_forms.push("dsdfdataframe");
 
     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_df_select", JSON.stringify(displayed_forms)));
 
-};
+}
 
 
 function get_col_rows_callback(option) {
@@ -309,7 +309,8 @@ function get_col_rows_callback(option) {
      *   
      * */
 
-    //console.log("get_col_rows_callback", option);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "get_col_rows_callback", option);
 
     switch (option) {
         case 0:
@@ -326,5 +327,4 @@ function get_col_rows_callback(option) {
             window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_df_browser_search", JSON.stringify(option)));
             break;
     }
-    //window.scroll_to('DCDataInspection');
 }

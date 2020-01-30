@@ -6,12 +6,44 @@
 //
 // 
 
+function get_dfs() {
+
+    var inputParms1 = window.get_input_form_parms("datainspectdfinput");
+    var inputs1 = new Array();
+    inputs1.push(inputParms1);
+    console.log("get_dfs", inputs1, inputParms1, inputParms1.length);
+
+    var inputParms = window.get_input_form_parms("datacleansedfinput");
+    var inputs = new Array();
+    inputs.push(inputParms);
+    console.log("get_dfs", inputs, inputParms, inputParms.length);
+
+    var selected_value = $("#dcdfdataframe :selected").text();
+    console.log("dfcleanser select ", selected_value);
+
+    var selected_value = $("didfdataframe :selected").text();
+    console.log("dfinspection select ", selected_value);
+
+
+}
+
 function cleansing_tb_callback(fid) {
     /**
-     * save notebook callback.
+     * data cleansing main taskbar callback.
+     *
+     * Parameters:
+     *  fid - function id
      */
     var inputs = new Array();
     inputs.push(String(fid));
+
+    get_dfs();
+
+    var inputParms1 = window.get_input_form_parms("datainspectdf");
+    var inputs1 = new Array();
+    inputs1.push(inputParms1);
+    console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
+
 
     switch (fid) {
         case 0:
@@ -19,7 +51,14 @@ function cleansing_tb_callback(fid) {
         case 2:
             var inputParms = window.get_input_form_parms("datacleansedf");
             inputs.push(inputParms);
-            console.log("cleansing_tb_callback", inputs);
+            console.log("cleansing_tb_callback", inputs, inputParms, inputParms.length);
+
+            var inputParms1 = window.get_input_form_parms("datainspectdf");
+            var inputs1 = new Array();
+            inputs1.push(inputParms1);
+            console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
+
+
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "2" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataCleansing');
             break;
@@ -54,111 +93,134 @@ function chgval(val) {
     }
 }
 
-function change_uvals_callback() {
+function chgcat(val) {
     /**
-     * data cleansing change value callback.
+     * data cleansing change category dhtml.
+     *
+     * Parameters:
+     *  val - value to change to/from
      */
 
-    var labels = get_input_form_labels("dcchangevalsinput");
-    labels = JSON.parse(labels)
+    var currentID = document.getElementById('changecatval');
 
-    if ((labels[0].indexOf("* New_Value") < 0) &&
-        (labels[1].indexOf("* New_Value") < 0)) {
-
-        var currentVal = $('#changecval');
-        var newVal = $('#changenval');
-
-        var $label = $("label[for='" + currentVal.attr('id') + "']")
-        $label.text("* Current_Value");
-        var $label = $("label[for='" + newVal.attr('id') + "']")
-        $label.text("* New_Value");
-
+    if (currentID != null) {
+        $('#changecatval').val(val);
     } else {
+        var currentID = document.getElementById('addcatname');
 
-        var colname = $("#ucolscolumnname");
-        var currentVal = document.getElementById('changecval');
-        var newVal = document.getElementById('changenval');
+        if (currentID != null) {
+            $('#addcatname').val("");
+        } else {
 
-        var cval = "";
-        var nval = "";
-        var cname = "";
+            var currentID = document.getElementById('removecatname');
 
-        if (currentVal.value.length > 0) { cval = currentVal.value; }
-        if (newVal.value.length > 0) { nval = newVal.value; }
+            if (currentID != null) {
+                var currentVal = currentID.value;
 
-        if (window.has_Attribute(colname, "value")) {
-            if (colname.attr('value').length > 0) {
-                cname = colname.attr('value');
+                if (currentVal == "[]") $('#removecatname').val("[" + val + "]");
+                else {
+                    currentVal = currentVal.replace("]", "," + val + "]")
+                    $('#removecatname').val(currentVal);
+                }
+            } else {
+                var currentID = document.getElementById('remwhtspccatname');
+
+                if (currentID != null) {
+                    var currentVal = currentID.value;
+
+                    if (currentVal == "[]") $('#remwhtspccatname').val("[" + val + "]");
+                    else {
+                        currentVal = currentVal.replace("]", "," + val + "]")
+                        $('#remwhtspccatname').val(currentVal);
+                    }
+                } else {
+                    var currentID = document.getElementById('reorderorderlist');
+
+                    if (currentID != null) {
+                        var currentVal = currentID.value;
+                        if (currentVal == "[]")
+                            $('#reorderorderlist').val("[" + val + "]");
+                        else {
+                            currentVal = currentVal.replace("]", "," + val + "]")
+                            $('#reorderorderlist').val(currentVal);
+                        }
+                    }
+                }
             }
         }
-
-        var inputs = new Array();
-        inputs.push(String(cname));
-        inputs.push(String(cval));
-        inputs.push(String(nval));
-
-        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "1" + "," + JSON.stringify(inputs)));
-        window.scroll_to('DCDataCleansing');
     }
 }
+
+function process_category_column(colid) {
+    /**
+     * process category column cleanse.
+     *
+     * Parameters:
+     *  colid - column id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "process_category_column", colid);
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "12" + "," + "'" + colid + "'"));
+    window.scroll_to('DCDataCleansing');
+
+}
+
+
+
+
+
+function change_uvals_callback(optionid) {
+    /**
+     * change unique vals callback.
+     *
+     * Parameters:
+     *  optionid - option id
+     */
+
+    var inputs = new Array();
+
+    if (optionid == 0)
+        var fparms = get_input_form_parms("dcchangevalsinput");
+    else
+        var fparms = get_input_form_parms("dcnnchangevalsinput");
+
+    inputs.push(fparms);
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "1" + "," + inputs));
+    window.scroll_to('DCDataCleansing');
+}
+
 
 function find_nn_uvals_callback() {
     /**
      * data cleansing find non numeric values callback.
      */
 
-    var labels = get_input_form_labels("dcchangevalsinput");
-    labels = JSON.parse(labels)
+    var inputs = new Array();
 
-    console.log("find_nn_uvals_callback", labels);
+    var fparms = get_input_form_parms("dcnnfindvalsinput");
+
+    inputs.push(fparms);
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "29" + "," + inputs));
+    window.scroll_to('DCDataCleansing');
+
 }
 
 function find_uvals_callback() {
     /**
-     * data cleansing find values callback.
+     * data cleansing find numeric values callback.
      */
 
-    var labels = get_input_form_labels("dcchangevalsinput");
-    labels = JSON.parse(labels)
-
-    console.log("find_uvals_callback", labels);
-
-    var forNumericColumn = true;
     var inputs = new Array();
 
-    if (labels[0].indexOf("* min_value") < 0)
-        forNumericColumn = false;
+    var fparms = get_input_form_parms("dcfindvalsinput");
 
-    if (forNumericColumn) {
-        var minVal = $("#findmin"); //document.getElementById('findmin');
-        var maxVal = $("#findmax"); //document.getElementById('findmax');
+    inputs.push(fparms);
 
-        if (minVal.val() == null)
-            minvalue = "";
-        else
-            minvalue = String(minVal.val());
-
-        if (maxVal.val() == null)
-            maxvalue = "";
-        else
-            maxvalue = String(maxVal.val());
-
-
-        console.log("minVal minVal", minvalue, maxvalue);
-        inputs.push(minvalue);
-        inputs.push(maxvalue);
-    } else {
-        var strVal = $("#findcval"); //document.getElementById('findcval');
-
-        if (strVal.val() == null)
-            strvalue = "";
-        else
-            strvalue = String(strVal.val());
-
-        inputs.push(strvalue);
-    }
-
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "29" + "," + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "29" + "," + inputs));
     window.scroll_to('DCDataCleansing');
 }
 
@@ -203,38 +265,18 @@ function cleansesrowtbInputIdcallback() {
     window.scroll_to('DCDataCleansing');
 }
 
-function cleansing_task_bar_process_row_callback(option) {
+function process_cols_callback(fid) {
     /**
-     * process data cleansing row taskbar.
+     * process column cleansing callback.
      *
      * Parameters:
-     *   option - cleanse option
+     *  fid - function id
      */
-    var inputs = new Array();
-    inputs.push(String(option));
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "12" + ", " + JSON.stringify(inputs)));
 
-    if (option == 1) {
-        window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
-        window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "0"));
-        window.scroll_to('DCDataInspection');
-    } else {
-        if (option == 2) {
-            window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
-            window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "0" + ", " + "[[2]]"));
-            window.scroll_to('DCDataTransform');
-        } else {
-            window.scroll_to('DCDataCleansing');
-        }
-    }
-}
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "process_cols_callback", fid);
 
-
-function process_cols_callback(fid) {
-
-    //var element = document.getElementById("ucolscolumnname");
-
-    console.log("process_cols_callback", fid);
+    var reset_inspection = true;
 
     switch (fid) {
 
@@ -242,6 +284,7 @@ function process_cols_callback(fid) {
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "6"));
             window.reset_dependents([true, true, false, true, true, false]);
             window.scroll_to('DCDataCleansing');
+            reset_inspection = false;
             break;
 
         case 7:
@@ -253,36 +296,97 @@ function process_cols_callback(fid) {
             inputs.push(String(cval));
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "7" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataCleansing');
+            reset_inspection = false;
             break;
 
         case 13:
         case 15:
         case 16:
+        case 35:
+        case 36:
+        case 37:
+        case 38:
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
+            window.scroll_to('DCDataCleansing');
+            reset_inspection = false;
+            break;
+
+        case 40:
+            var fparms = window.get_input_form_parms("dccatchangevalsinput");
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
+            window.scroll_to('DCDataCleansing');
+            break;
+
+            //case 41:
+            //    var fparms = window.get_input_form_parms("addcatinput");
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
+            //    window.scroll_to('DCDataCleansing');
+            //    break;
+
+            //case 42:
+            //    var fparms = window.get_input_form_parms("removecatinput");
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
+            //    window.scroll_to('DCDataCleansing');
+            //    break;
+
+        case 43:
+        case 46:
+        case 47:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
             window.scroll_to('DCDataCleansing');
             break;
 
-            //case 26:
-            //    window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "1" + "," + JSON.stringify(element.value)));
-            //    window.scroll_to('DCDataTransform');
+            //case 44:
+            //    var fparms = window.get_input_form_parms("removewscatinput");
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
+            //    window.scroll_to('DCDataCleansing');
+            //    break;
+
+            //case 45:
+            //    var fparms = window.get_input_form_parms("reordercatinputt");
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
+            //    window.scroll_to('DCDataCleansing');
+            //    break;
+
+            //case 46:
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
+            //    window.scroll_to('DCDataCleansing');
+            //    break;
+
+            //case 47:
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "47"));
+            //    window.scroll_to('DCDataCleansing');
             //    break;
     }
+
+    if (reset_inspection) window.reset_dependents([false, true, false, false, false, false]);
 }
 
 function process_cols_na_callback(fid) {
+    /**
+     * process column nan callback.
+     *
+     * Parameters:
+     *  fid - function id
+     */
 
-    console.log("process_cols_na_callback", fid);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "process_cols_na_callback", fid);
 
     switch (fid) {
 
-        case 4:
+        case 5:
         case 8:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
             window.scroll_to('DCDataCleansing');
             break;
         case 41:
+
             window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", fid));
             window.scroll_to('DCDataTransform');
+
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
+
             break;
     }
 }
@@ -291,14 +395,12 @@ function round_col_vals_callback() {
     /**
      * process rounding column.
      */
-    var colname = document.getElementById("ucolscolumnname");
-    var accuracy = document.getElementById("columnround");
+
     var inputs = new Array();
+    var fparms = get_input_form_parms("columnroundinput");
+    inputs.push(fparms);
 
-    if (colname.value.length > 0) { inputs.push(String(colname.value)); }
-    if (accuracy.value.length > 0) { inputs.push(String(accuracy.value)); }
-
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "14" + "," + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "14" + "," + inputs));
     window.scroll_to('DCDataCleansing');
 }
 
@@ -307,37 +409,18 @@ function whitespace_vals_callback() {
      * process rounding column.
      */
 
-    console.log("whitespace_vals_callback");
-
-    var flag = $('#leadtrailflag').val();
-
     var inputs = new Array();
-    inputs.push(flag);
+    var fparms = get_input_form_parms("remwhitetransformInput");
+    inputs.push(fparms);
 
-    console.log("whitespace_vals_callback", inputs);
-
-    var cbs = new Array();
-
-    if ($('#HTabcbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-    if ($('#LfeedcbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-    if ($('#FfeedcbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-    if ($('#CReturncbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-    if ($('#BspacecbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-    if ($('#VTabcbId').is(":checked")) cbs.push("true");
-    else cbs.push("false");
-
-    inputs.push(cbs);
-
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "17" + "," + JSON.stringify(inputs)));
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "17" + "," + inputs));
     window.scroll_to('DCDataCleansing');
 }
 
 function fillna_col_vals_callback() {
+    /**
+     * process fillna column.
+     */
 
     var colname = document.getElementById("ucolscolumnname");
     var inputs = new Array();
@@ -350,6 +433,48 @@ function fillna_col_vals_callback() {
     window.scroll_to('DCDataCleansing');
 
 }
+
+function process_cat_function_callback(fid) {
+    /**
+     * process category function.
+     *
+     * Parameters:
+     *  fid - function id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "process_cols_na_callback", fid);
+
+    switch (fid) {
+
+        case 41:
+            var parms = window.get_input_form_parms("addcatinput");
+            break;
+        case 42:
+            var parms = window.get_input_form_parms("removecatinput");
+            break;
+            //case 43:
+            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "43"));
+            //    window.scroll_to('DCDataCleansing');
+            //    window.reset_dependents([false, true, false, false, false, false]);
+            //   return;
+            //break;
+        case 44:
+            var parms = window.get_input_form_parms("removewscatinput");
+            break;
+        case 45:
+            var parms = window.get_input_form_parms("reordercatinput");
+            break;
+
+    }
+
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + parms));
+    window.scroll_to('DCDataCleansing');
+    window.reset_dependents([false, true, false, false, false, false]);
+
+}
+
+
 
 //function nncol(col) {
 /**
@@ -380,9 +505,6 @@ function getSingleRow() {
     /**
      * get a single row to display - called from button key.
      *
-     * Parameters:
-     *  tableid - table identifier
-     *  rowid - row id
      */
     var element = document.getElementById("DCsinglerowInputId");
     window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "3" + "," + JSON.stringify(element.value)));
@@ -486,4 +608,53 @@ function process_cleanse_datatype_callback(naoption, fid, numflag, dfcid) {
             window.scroll_to('DCDataCleansing');
             break;
     }
+}
+
+function nn_check_compatability(fid, colname) {
+    /**
+     * Check column for alpha or numeric.
+     *
+     * Parameters:
+     *  fid       - function id
+     *  colname   - column name
+     */
+
+    console.log("nn_check_compatability", fid, colname);
+
+    var inputs = new Array();
+    inputs.push(colname);
+
+    window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+
+    if (fid == 0)
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "30" + "," + JSON.stringify(inputs)));
+    else
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "32" + "," + JSON.stringify(inputs)));
+
+    window.scroll_to('DCDataCleansing');
+
+
+}
+
+function process_nn_check_compatability(fid) {
+    /**
+     * Check column for alpha or numeric.
+     *
+     * Parameters:
+     *  fid       - function id
+     *  colname   - column name
+     */
+
+    console.log("nn_check_compatability", fid);
+
+    window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+
+    if (fid == 0)
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "31"));
+    else
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "33"));
+
+    window.scroll_to('DCDataCleansing');
+
+
 }
