@@ -28,6 +28,13 @@ PROCESS_CUSTOM_IMPORT   =   8
 CLEAR_CUSTOM_IMPORT     =   9
 RETURN_CUSTOM_IMPORT    =   10
 
+DISPLAY_COLUMN_NAMES        =   15
+DISPLAY_DATETIME_FORMATS    =   16
+DISPLAY_INDEX_NAMES         =   17
+
+
+
+
 """
 #--------------------------------------------------------------------------
 #   import option ids
@@ -47,10 +54,10 @@ DBLIBS              =   0
 TABLE_NAMES         =   1
 COLUMN_NAMES        =   2
 DATETIME_FORMATS    =   3
+INDEX_NAMES         =   4
 
 SQL_CUSTOM      =   0
 SQL_COMMON      =   1
-
 
 
 

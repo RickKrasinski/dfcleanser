@@ -24,7 +24,7 @@ from dfcleanser.common.common_utils import (get_function_parms, INT_PARM,
                                             display_notes, display_generic_grid, get_formatted_time)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict, parse_connector_parms, 
-                                        validate_connection_parms, display_db_connector_inputs)
+                                        validate_connection_parms)
 
 from IPython.display import clear_output
 
@@ -49,19 +49,35 @@ import time
 """
 def display_import_forms(importid, detid=0, notes=False) :
     
+    from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+    if(not (are_owner_inputs_defined(cfg.DataImport_ID)) ) :
+        define_inputs(cfg.DataImport_ID,diw.dataimport_inputs)
+
+    
     if(importid == 0) :
         clear_data_import_data()    
+    
+        if(not (cfg.is_a_dfc_dataframe_loaded()) ) :
+            cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
+            cfg.drop_config_value(cfg.CURRENT_IMPORT_DF)
     
     from dfcleanser.data_import.data_import_widgets import display_dc_import_forms
     display_dc_import_forms(importid, detid, notes)
     
-    if(importid == 0) :
-        clear_data_import_data()    
-   
 
-def display_sql_details_form(sqlimportid,dblibid) :
+def display_sql_details_form(dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
-    display_dc_sql_connector_forms(sqlimportid,dblibid)
+    display_dc_sql_connector_forms(dblibid)
+
+def get_index_columns(importparms) :
+
+    from dfcleanser.common.db_utils import get_db_connector_idList
+    dbid        =   cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
+    cplist      =   get_db_connector_idList(dbid)
+    cparms      =   get_stored_con_Parms(dbid)
+    conparms    =   [cplist,cparms]
+    
+    diw.display_dc_pandas_import_sql_inputs(cfg.get_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY),dim.INDEX_NAMES,dbid,conparms,importparms)
 
 def get_columns(importparms) :
 
@@ -71,31 +87,21 @@ def get_columns(importparms) :
     cparms      =   get_stored_con_Parms(dbid)
     conparms    =   [cplist,cparms]
     
-    diw.display_dc_pandas_import_sql_inputs(dim.SQLTABLE_IMPORT,dim.COLUMN_NAMES,dbid,conparms,importparms)
+    diw.display_dc_pandas_import_sql_inputs(cfg.get_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY),dim.COLUMN_NAMES,dbid,conparms,importparms)
 
 def get_datetimeformats(importparms) :
     
-    sqltype     =   importparms[0]
-    formparms   =   importparms[1]
+    from dfcleanser.common.db_utils import get_db_connector_idList
+    dbid        =   cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
+    cplist      =   get_db_connector_idList(dbid)
+    cparms      =   get_stored_con_Parms(dbid)
+    conparms    =   [cplist,cparms]
     
-    if(sqltype == 0) :
-        cfg.set_config_value(diw.pandas_import_sqltable_common_id+"Parms",importparms)
-        diw.display_dc_pandas_import_sql_inputs(dim.SQLTABLE_IMPORT,dim.DATETIME_FORMATS,None,None,formparms)
-    else :
-        cfg.set_config_value(diw.pandas_import_sqlquery_id+"Parms",importparms)
-        diw.display_dc_pandas_import_sql_inputs(dim.SQLQUERY_IMPORT,dim.DATETIME_FORMATS,None,None,formparms)
-        
+    diw.display_dc_pandas_import_sql_inputs(cfg.get_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY),dim.DATETIME_FORMATS,dbid,conparms,importparms)
+    
 
 def display_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importparms=None) :
     
-    #$check_list  =   diw.get_dbcondict(DBid,dbconparms,formtype)#validate_connection_parms(dbcondict)
-    #$print("check_list",check_list)
-    
-    #$error_msg   =   check_list[2]
-    
-    #print("error_msg",error_msg)
-    
-    #if(error_msg is None) :
     opstat  =   diw.display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importparms=None)
     
     if( not (opstat.get_status())) :
@@ -103,7 +109,6 @@ def display_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,importp
         display_import_forms(2,5)
         print("\n")
         display_exception(opstat)
-
 
     
 """
@@ -125,86 +130,97 @@ def process_import_form(formid, parms, display=True) :
     * --------------------------------------------------------
     """
     
-    if( (formid == dim.CSV_IMPORT)  or (formid == dim.EXCEL_IMPORT) or 
-        (formid == dim.JSON_IMPORT) or (formid == dim.HTML_IMPORT) or 
-        (formid == dim.FWF_IMPORT)  or (formid == dim.CUSTOM_IMPORT) )  :
-        
-        #s       =   time.time()
-        opstat  =   opStatus()
+    clock   =   None
     
-        if(display) :
-            clear_output()
-            diw.display_import_main_taskbar()
-            clock = RunningClock()
-            clock.start()
-
-        if (formid == dim.CSV_IMPORT) :
-            fparms      =   diw.get_csv_import_inputs(parms)
-            opstat      =   import_pandas_csv(fparms)
-            
-            parmstitle  =   "Pandas CSV Import Parms"
-            parmslist   =   diw.pandas_import_csv_labelList[:6]
+    try :
         
-        if (formid == dim.FWF_IMPORT) :
-            fparms      =   diw.get_fwf_import_inputs(parms)
-            opstat      =   import_pandas_fwf(fparms)
-            
-            parmstitle  =   "Pandas FWF Import Parms"
-            parmslist   =   diw.pandas_import_fwf_labelList[:7]
+        if( (formid == dim.CSV_IMPORT)  or (formid == dim.EXCEL_IMPORT) or 
+            (formid == dim.JSON_IMPORT) or (formid == dim.HTML_IMPORT) or 
+            (formid == dim.FWF_IMPORT)  or (formid == dim.CUSTOM_IMPORT) )  :
         
-        elif (formid == dim.EXCEL_IMPORT) :
-            fparms      =   diw.get_excel_import_inputs(parms)
-            opstat      =   import_pandas_excel(fparms)
-            
-            parmstitle  =   "Pandas Excel Import Parms"
-            parmslist   =   diw.pandas_import_excel_labelList[:7]
-        
-        elif (formid == dim.JSON_IMPORT) : 
-            fparms      =   diw.get_json_import_inputs(parms)
-            opstat      =   import_pandas_json(fparms)
-            
-            parmstitle  =   "Pandas JSON Import Parms"
-            parmslist   =   diw.pandas_import_json_labelList[:8]
-        
-        elif (formid == dim.HTML_IMPORT) : 
-            fparms      =   diw.get_html_import_inputs(parms)
-            opstat      =   import_pandas_html(fparms)
-            
-            parmstitle  =   "Pandas HTML Import Parms"
-            parmslist   =   diw.pandas_import_html_labelList[:8]
-
-        elif (formid == dim.CUSTOM_IMPORT) : 
-            (dispstats, opstat)     =   import_custom(parms)
-            
-            if(dispstats) :
-                parmstitle  =   "Custom Import Parms"
-                parmslist   =   diw.custom_import_labelList[:2]
-
-        if(opstat.get_status()) : 
+            opstat  =   opStatus()
+    
             if(display) :
-                if (formid == dim.CUSTOM_IMPORT) :
-                    if(dispstats) : 
-                        ciparms = parms[0].replace("\n","</br>")
-                        display_data_import_parms(parmstitle,parmslist,[ciparms],cfg.DataImport_ID,parms[0])
+                clear_output()
+                diw.display_import_main_taskbar()
+                clock = RunningClock()
+                clock.start()
 
-                else :
-                    display_data_import_parms(parmstitle,parmslist,fparms,cfg.DataImport_ID,fparms[1])
+            if (formid == dim.CSV_IMPORT) :
+                fparms      =   diw.get_csv_import_inputs(parms)
+                opstat      =   import_pandas_csv(fparms)
+            
+                parmstitle  =   "Pandas CSV Import Parms"
+                parmslist   =   diw.pandas_import_csv_labelList[:6]
+        
+            elif (formid == dim.FWF_IMPORT) :
+                fparms      =   diw.get_fwf_import_inputs(parms)
+                opstat      =   import_pandas_fwf(fparms)
+            
+                parmstitle  =   "Pandas FWF Import Parms"
+                parmslist   =   diw.pandas_import_fwf_labelList[:7]
+        
+            elif (formid == dim.EXCEL_IMPORT) :
+                fparms      =   diw.get_excel_import_inputs(parms)
+                opstat      =   import_pandas_excel(fparms)
+            
+                parmstitle  =   "Pandas Excel Import Parms"
+                parmslist   =   diw.pandas_import_excel_labelList[:7]
+        
+            elif (formid == dim.JSON_IMPORT) : 
+                fparms      =   diw.get_json_import_inputs(parms)
+                opstat      =   import_pandas_json(fparms)
+            
+                parmstitle  =   "Pandas JSON Import Parms"
+                parmslist   =   diw.pandas_import_json_labelList[:8]
+        
+            elif (formid == dim.HTML_IMPORT) : 
+                fparms      =   diw.get_html_import_inputs(parms)
+                opstat      =   import_pandas_html(fparms)
+            
+                parmstitle  =   "Pandas HTML Import Parms"
+                parmslist   =   diw.pandas_import_html_labelList[:8]
+
+            elif (formid == dim.CUSTOM_IMPORT) : 
+                (dispstats, opstat)     =   import_custom(parms)
+            
+                if(dispstats) :
+                    parmstitle  =   "Custom Import Parms"
+                    parmslist   =   diw.custom_import_labelList[:2]
+
+            if(opstat.get_status()) : 
+                if(display) :
+                    if (formid == dim.CUSTOM_IMPORT) :
+                        if(dispstats) : 
+                            ciparms = parms[0].replace("\n","</br>")
+                            display_data_import_parms(parmstitle,parmslist,[ciparms],cfg.DataImport_ID,parms[0])
+
+                    else :
+                        display_data_import_parms(parmstitle,parmslist,fparms,cfg.DataImport_ID,fparms[1])
                     
-        else :
-            display_exception(opstat)
+            else :
+                display_exception(opstat)
 
-        if(display) :
+            if(display) :
+                clock.stop()
+        
+        elif (formid == dim.SQLTABLE_IMPORT) : 
+            import_sql_table(parms)
+        
+        elif (formid == dim.SQLQUERY_IMPORT) :
+            import_sql_query(parms)
+        
+        else :
+            print("Invalid import type "+ str(formid))
+            return
+    
+    except Exception as e:
+        if(not (clock is None)) :
             clock.stop()
-        
-    elif (formid == dim.SQLTABLE_IMPORT) : 
-        import_sql_table(parms)
-        
-    elif (formid == dim.SQLQUERY_IMPORT) :
-        import_sql_query(parms)
-        
-    else :
-        print("Invalid formid "+ str(formid))
-        return
+
+        opstat.store_exception("Error importing df\n ",e)
+        display_exception(opstat)
+
 
 def save_data_import_start() :
     cfg.set_config_value(cfg.CURRENT_IMPORT_START_TIME,time.time())    
@@ -238,7 +254,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     ptitles.append("NUMBER OF ROWS")
     ptitles.append("NUMBER OF COLS")
     
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_IMPORT_DF)
+    df  =   cfg.get_current_chapter_df(cfg.DataImport_ID)
     
     pvalues     =   []
     
@@ -250,7 +266,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     
     parms_html  =   displayParms(title,ptitles,pvalues,importID,90,20,False,11)
     
-    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",False)
+    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",False,False)
     importnotes     =   ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME)))+ " seconds"]
     notes_html      =   display_notes(importnotes,False)
     drop_data_import_start()
@@ -261,10 +277,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls)
     else :
-        display_generic_grid("data-import-stats-pop-up-wrapper",gridclasses,gridhtmls)
-        
-
-    #diw.display_data_import_notes(time.time(),fname)
+        display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls,True)
     
 
 def import_sql_table(parms,display=True) :
@@ -520,8 +533,8 @@ def import_pandas_csv(fparms,display=True) :
         else :
             csv_title   =   fparms[0]
         
-        csv_df  =   cfg.dfc_dataframe(csv_title,df,fparms[1])
-        cfg.add_dfc_dataframe(csv_df)
+        csv_dfc_df  =   cfg.dfc_dataframe(csv_title,df)
+        cfg.add_dfc_dataframe(csv_dfc_df)
         cfg.set_config_value(cfg.CURRENT_IMPORT_DF,csv_title)
         
         if(display) :
@@ -1083,7 +1096,6 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
     
     opstat = opStatus()
     
-    import dfcleanser.common.db_utils as dbu
     dbcon = dbu.dbConnector()
     
     from dfcleanser.common.db_utils import grab_connection_parms
@@ -1248,7 +1260,7 @@ def test_import_sql_db_connector(importtype,driverid,sqlinputparms) :
     try :
         
         connectParms  =   {}
-        parmslist = parse_connector_parms(sqlinputparms,cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),connectParms)
+        parse_connector_parms(sqlinputparms,cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),connectParms)
     
         errormsg = validate_connection_parms(connectParms)
     
@@ -1269,15 +1281,6 @@ def test_import_sql_db_connector(importtype,driverid,sqlinputparms) :
             
     except Exception as e: 
         opstat.store_exception("DB Connection failed ",e)
-        #display_exception(opstat)        
-    
-    #if(importtype == dim.SQLTABLE_IMPORT) :
-    #    display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),parmslist,dbu.SQL_IMPORT) 
-    #else :
-    #    display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),parmslist,dbu.SQL_QUERY) 
-    
-    #if(not (opstat.get_status())) :
-    #    display_exception(opstat)        
 
 
 """
@@ -1289,14 +1292,13 @@ def test_import_sql_db_connector(importtype,driverid,sqlinputparms) :
 def clear_data_import_data() :
     
     drop_owner_tables(cfg.DataImport_ID)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.DataImport_ID,diw.dataimport_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.DataImport_ID)
     clear_data_import_cfg_values()
     
 def clear_data_import_cfg_values() :
     
-    cfg.drop_config_value(cfg.CURRENT_DB_ID_KEY)
+    #cfg.drop_config_value(cfg.CURRENT_DB_ID_KEY)
     cfg.drop_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY)
     cfg.drop_config_value(cfg.CURRENT_IMPORT_START_TIME)    
 

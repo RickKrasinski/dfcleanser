@@ -18,10 +18,10 @@ import dfcleanser.data_import.data_import_model as dim
 
 from dfcleanser.common.html_widgets import (maketextarea, opStatus, ButtonGroupForm, InputForm)
 
-from dfcleanser.common.table_widgets import (dcTable, get_row_major_table, SCROLL_DOWN, SIMPLE, ROW_MAJOR)
+from dfcleanser.common.table_widgets import (dcTable, SIMPLE)
 
 
-from dfcleanser.common.common_utils import (display_exception, display_status, 
+from dfcleanser.common.common_utils import (display_status, 
                                             display_notes, display_inline_help, get_formatted_time,
                                             get_parms_for_input, RunningClock,
                                             get_select_defaults, display_generic_grid) 
@@ -76,8 +76,8 @@ pandas_import_task_bar_doc_title     =  "Pandas Dataframe Import Options"
 pandas_import_task_bar_title         =  "Pandas Dataframe Import Options"
 pandas_import_task_bar_id            =  "pandasimportdataframe"
 
-pandas_import_task_bar_keyTitleList  =   ["CSV","Fixed Width </br>File",
-                                          "Excel File","JSON","HTML","SQL Table",
+pandas_import_task_bar_keyTitleList  =   ["CSV File","Fixed Width </br>File",
+                                          "Excel File","JSON File","HTML File","SQL Table",
                                           "SQL Query","Return"]
 
 pandas_import_task_bar_jsList        =   ["pandas_import_tb_select_callback("+str(dim.CSV_IMPORT)+")",
@@ -127,7 +127,7 @@ pandas_import_task_barB_centered     =   True
 #   pandas import csv form parms
 #--------------------------------------------------------------------------
 """
-pandas_import_csv_title         =   "Pandas CSV Import Parameters"
+pandas_import_csv_title         =   "Pandas CSV Import"
 pandas_import_csv_id            =   "importPandasCSV"
 pandas_import_csv_idList        =   ["csvdftitle",
                                      "csvFileName",
@@ -172,7 +172,7 @@ pandas_import_csv_reqList       =   [0,1]
 #--------------------------------------------------------------------------
 """
 
-pandas_import_fwf_title         =   "Pandas Fixed Width File Import Parameters"
+pandas_import_fwf_title         =   "Pandas Fixed Width File Import"
 pandas_import_fwf_id            =   "importPandasFWF"
 pandas_import_fwf_idList        =   ["fwfdftitle",
                                      "fwfFileName",
@@ -221,7 +221,7 @@ pandas_import_fwf_reqList       =   [0,1]
 #   pandas import excel input form components
 #--------------------------------------------------------------------------
 """
-pandas_import_excel_title       =   "Pandas Excel Import Parameters"
+pandas_import_excel_title       =   "Pandas Excel Import"
 pandas_import_excel_id          =   "importPandasExcel"
 
 pandas_import_excel_idList      =   ["exceldftitle",
@@ -269,7 +269,7 @@ pandas_import_excel_reqList     =   [0,1]
 #   pandas import json input form components
 #--------------------------------------------------------------------------
 """
-pandas_import_json_title        =   "Pandas JSON Import Parameters"
+pandas_import_json_title        =   "Pandas JSON Import"
 pandas_import_json_id           =   "importPandasJSON"
 
 pandas_import_json_idList       =   ["jsondftitle",
@@ -313,7 +313,7 @@ pandas_import_json_reqList      =   [0,1]
 #   pandas import html input form components
 #--------------------------------------------------------------------------
 """
-pandas_import_html_title        =   "Pandas HTML Import Parameters"
+pandas_import_html_title        =   "Pandas HTML Import"
 pandas_import_html_id           =   "importPandasHTML"
 
 pandas_import_html_idList       =   ["htmldftitle",
@@ -366,7 +366,7 @@ pandas_import_html_reqList      =   [0,1]
 #   pandas import sqltable common mysql-mssqlserver-postgresql parms
 #--------------------------------------------------------------------------
 """
-pandas_import_sqltable_common_title        =   "Pandas SQL Table Import Parameters"
+pandas_import_sqltable_common_title        =   "Pandas SQL Table Import"
 pandas_import_sqltable_common_id           =   "importPandasSQLCommonTable"
 
 pandas_import_sqltable_common_idList       =    ["sqldftitle",
@@ -374,44 +374,49 @@ pandas_import_sqltable_common_idList       =    ["sqldftitle",
                                                  "sqltablecommonschema",
                                                  "sqltableindexcol",
                                                  "sqltablecoercefloat",
-                                                 "sqltablechunksize",
-                                                 "sqltablecommoncolumns",
+                                                 "sqltableparsedates",
                                                  "sqltablecommonparsedateformats",
-                                                 "sqltablecommonparsedates",
-                                                 None,None,None,None,None]
+                                                 "sqltablecommondateformats",
+                                                 "sqltablecommoncolumns",
+                                                 "sqltablechunksize",
+                                                 None,None,None,None,None,None]
 
 pandas_import_sqltable_common_labelList    =   ["dataframe_title",
                                                 "table_name",
                                                 "schema",
                                                 "index_col",
                                                 "coerce_float",
+                                                "parse_dates",
+                                                "parse_dates_formats",
+                                                "dates_format",
+                                                "columns",
                                                 "chunksize",
-                                                "table_columns_to_import",
-                                                "table_columns_parse_date_format",
-                                                "table_columns_to_parse_as_dates",
                                                 "Import</br>Table",
-                                                "Get</br>Columns",
-                                                "Get</br>Date</br>Columns",
+                                                "Get</br>'index_col'</br>Columns",
+                                                "Get</br>'columns'</br>Columns",
+                                                "Get</br>'parse_date'</br>Columns",
                                                 "Return","Help"]
 
-pandas_import_sqltable_common_typeList     =   ["text","select","text",maketextarea(2),"select","text","text","select",maketextarea(4),
-                                                "button","button","button","button","button"]
+pandas_import_sqltable_common_typeList     =   ["text","select","text",maketextarea(2),"select",maketextarea(4),maketextarea(4),"select",maketextarea(4),"text",
+                                                "button","button","button","button","button","button"]
 
 pandas_import_sqltable_common_placeholderList = ["dataframe title (default default 'filename'_df)",
                                                  "enter the table name",
                                                  "enter the database schema  (default None)",
                                                  "enter col indices or select from columns list (default None)",
                                                  "convert values of non-string, non-numeric objects (default True)",
-                                                 "enter chunk size in num rows (default None)",
-                                                 "enter list or click column name (blank : all columns)",
+                                                 "parse dates columns list (default None)",
+                                                 "parse dates format list (default None",
                                                  "parse and date format (default None)",
-                                                 "parse and convert date columns (default None)",
-                                                 None,None,None,None,None]
+                                                 "enter column to list or click column name (blank : all columns)",
+                                                 "enter chunk size in num rows (default None)",
+                                                 None,None,None,None,None,None]
 
-pandas_import_sqltable_common_jsList       =   [None,None,None,None,None,None,None,None,None,
+pandas_import_sqltable_common_jsList       =   [None,None,None,None,None,None,None,None,None,None,
                                                 "pandas_import_sql_callback(0)",
-                                                "pandas_details_get_columns_callback()",
-                                                "pandas_details_get_strftime_callback(0)",
+                                                "pandas_details_get_index_columns_callback('table')",
+                                                "pandas_details_get_columns_callback('table')",
+                                                "pandas_details_get_strftime_callback('table')",
                                                 "pandas_details_clear_callback("+str(dim.SQLTABLE_IMPORT)+")",
                                                 "display_help_url('"+str(dfchelp.SQLTABLE_IMPORT_URL)+"')"]
 
@@ -423,7 +428,7 @@ pandas_import_sqltable_common_reqList      =   [0,1]
 #   pandas import sqltable common mysql-mssqlserver-postgresql parms
 #--------------------------------------------------------------------------
 """
-pandas_import_sqltable_custom_title        =   "Pandas SQL Table Import Parameters"
+pandas_import_sqltable_custom_title        =   "Pandas SQL Table Import"
 pandas_import_sqltable_custom_id           =   "importPandasSQLCustomTable"
 
 pandas_import_sqltable_custom_idList       =    ["sqltablecustomdftitle",
@@ -463,7 +468,7 @@ pandas_import_sqltable_custom_placeholderList = ["dataframe title (default 'file
 
 pandas_import_sqltable_custom_jsList       =   [None,None,None,None,None,None,None,None,
                                                 "pandas_import_sql_callback(5)",
-                                                "pandas_details_get_strftime_callback(0)",
+                                                "pandas_details_get_strftime_callback()",
                                                 "pandas_details_clear_callback("+str(dim.SQLTABLE_IMPORT)+")",
                                                 "display_help_url('"+str(dfchelp.SQLTABLE_IMPORT_URL)+"')"]
 
@@ -474,46 +479,43 @@ pandas_import_sqltable_custom_reqList      =   [0,1]
 #   pandas import sqlquery input form components
 #--------------------------------------------------------------------------
 """
-pandas_import_sqlquery_title        =   "Pandas SQL Query Import Parameters"
+pandas_import_sqlquery_title        =   "Pandas SQL Query Import"
 pandas_import_sqlquery_id           =   "importPandasSQLQuery"
 
 pandas_import_sqlquery_idList       =   ["sqlquerydftitle",
                                          "sqlquerysql",
                                          "sqlqueryindices",
                                          "sqlquerycoerce",
-                                         "sqlquerychunksize",
                                          "sqlquerysqlparms",
-                                         "sqlquerycommonparsedateformats",
                                          "sqlqueryparsedates",
+                                         "sqlquerychunksize",
                                          None,None,None,None]
 
 pandas_import_sqlquery_labelList    =   ["dataframe_title",
                                          "sql",
                                          "index_col",
                                          "coerce_float",
-                                         "chunksize",
                                          "params",
-                                         "table_columns_parse_date_format",
-                                         "table_columns_to_parse_as_dates",
+                                         "parse_dates",
+                                         "chunksize",
                                          "Run</br>SQL Query",
                                          "Clear","Return","Help"]
 
 pandas_import_sqlquery_typeList     =   ["text",maketextarea(10),maketextarea(2),
-                                         "select",maketextarea(3),
-                                         maketextarea(3),"select","text",
-                                         "button","button","button","button","button"]
+                                         "select",maketextarea(5),
+                                         maketextarea(2),"text",
+                                         "button","button","button","button"]
 
 pandas_import_sqlquery_placeholderList = ["dataframe title (default 'filename'_df)",
                                           "enter the sql query",
                                           "enter col indices or as List value, value ... (default None)",
                                           "convert values of non-string, non-numeric objects (default True)", 
-                                          "number of rows (default None)",
                                           "enter sql parameters (default None)",
-                                          "parse and date format (default None)",
-                                          "list or dict of columns to parse (default None)",
+                                          "parse dates columns (default None)",
+                                          "number of rows (default None)",
                                           None,None,None,None]
 
-pandas_import_sqlquery_jsList       =   [None,None,None,None,None,None,None,None,
+pandas_import_sqlquery_jsList       =   [None,None,None,None,None,None,None,
                                          "pandas_import_sql_callback(1)",
                                          "pandas_details_clear_callback("+str(dim.SQLQUERY_IMPORT)+")",
                                          "pandas_details_return_callback(0)",
@@ -556,9 +558,10 @@ custom_import_jsList            =   [None,None,None,
 
 custom_import_reqList           =   [0,1]
 
-dataimport_inputs           =   [pandas_import_csv_id,pandas_import_fwf_id,pandas_import_excel_id,
-                                 pandas_import_json_id,pandas_import_html_id,pandas_import_sqltable_common_id,
-                                 pandas_import_sqltable_custom_id,pandas_import_sqlquery_id,custom_import_id]
+
+dataimport_inputs        =   [pandas_import_csv_id, pandas_import_fwf_id, pandas_import_excel_id,
+                              pandas_import_json_id, pandas_import_html_id, pandas_import_sqltable_common_id,
+                              pandas_import_sqltable_custom_id, pandas_import_sqlquery_id, custom_import_id]
 
 """
 #--------------------------------------------------------------------------
@@ -693,7 +696,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         display_import_main_taskbar()        
         if(cfg.is_a_dfc_dataframe_loaded()) :
             if(not(cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) is None)) :
-                display_notes([cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) + " imported as dataframe source"])
+                display_notes([cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) + " imported as dfcleanser df"])
         else :
             cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
             
@@ -712,6 +715,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 import dfcleanser.common.db_utils as dbutils
                 
                 dbid = cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
+                
                 cfg.set_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY,detid)
                 
                 if(dbid == None)                        :   
@@ -759,15 +763,11 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 display_import_main_taskbar()
                 
                 pandas_input_form  =   get_pandas_import_input_form(detid)
+                pandas_input_form.set_gridwidth(480)
+                pandas_input_form.set_buttonstyle({"font-size":13, "height":50, "width":105, "left-margin":12})
 
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     pandas_input_form.set_shortForm(True)
-                    pandas_input_form.set_gridwidth(640)
-                    pandas_input_form.set_custombwidth(110)
-                else :
-                    pandas_input_form.set_gridwidth(480)
-                    pandas_input_form.set_custombwidth(100)
-                    
     
                 pandas_input_html = ""
                 pandas_input_html = pandas_input_form.get_html() 
@@ -781,7 +781,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
                 else :
-                    display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+                    display_generic_grid("data-import-wrapper",gridclasses,gridhtmls,True)
                
         else :
  
@@ -824,14 +824,12 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                             custom_import_idList,
                             custom_import_typeList,
                             selectDicts)
+                
+        pandas_input_form.set_gridwidth(480)
+        pandas_input_form.set_buttonstyle({"font-size":13, "height":50, "width":105, "left-margin":12})
 
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             pandas_input_form.set_shortForm(True)
-            pandas_input_form.set_gridwidth(640)
-            pandas_input_form.set_custombwidth(110)
-        else :
-            pandas_input_form.set_gridwidth(480)
-            pandas_input_form.set_custombwidth(100)
 
         pandas_input_form.set_fullparms(True)
         
@@ -855,11 +853,11 @@ def display_dc_import_forms(id, detid=0, notes=False) :
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
         else :
-            display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+            display_generic_grid("data-import-wrapper",gridclasses,gridhtmls,True)
             
 
 
-def display_dc_sql_connector_forms(sqlimportid,dblibid) :
+def display_dc_sql_connector_forms(dblibid) :
     """
     * -------------------------------------------------------------------------- 
     * function : get sql connector form
@@ -871,6 +869,8 @@ def display_dc_sql_connector_forms(sqlimportid,dblibid) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    print("display_dc_sql_connector_forms",dblibid)
     
     import dfcleanser.common.db_utils as dbutils
     
@@ -885,6 +885,7 @@ def display_dc_sql_connector_forms(sqlimportid,dblibid) :
         cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.SQLite)
     elif(dblibid == dbutils.psycopg2_library) :
         cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.Postgresql)
+        print("CURRENT_DB_ID_KEY",cfg.get_config_value(cfg.CURRENT_DB_ID_KEY))
     elif(dblibid == dbutils.cx_oracle_library) :
         cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.Oracle)
     elif(dblibid == "custom") :
@@ -936,12 +937,16 @@ def display_dc_sql_connector_forms(sqlimportid,dblibid) :
                 
     elif(dbid == dbutils.Custom) :
         inparms = cfg.get_config_value(dbutils.CUSTOM_DBCON_PARMS)
+    
+    sqlimportid     =   cfg.get_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY) 
+    if(sqlimportid is None) :
+        sqlimportid =  dim.SQLTABLE_IMPORT  
         
     from dfcleanser.common.db_utils import display_db_connector_inputs, SQL_IMPORT, SQL_QUERY, SQL_EXPORT
     if(sqlimportid == dim.SQLTABLE_IMPORT) :
         display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_IMPORT)
         
-    elif(sqlimportid == dim.SQLTABLE_IMPORT) :
+    elif(sqlimportid == dim.SQLQUERY_IMPORT) :
         display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_QUERY)
         
     else :
@@ -960,6 +965,8 @@ def get_pandas_import_input_form(impid) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    #print("get_pandas_import_input_form",impid)
 
     if(impid < dim.SQLTABLE_IMPORT) :
         
@@ -1008,8 +1015,8 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_html_placeholderList,
                                           pandas_import_html_jsList,
                                           pandas_import_html_reqList)
-        
-        return(import_form)
+            
+            import_form.dump()
         
     else :
 
@@ -1024,7 +1031,7 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_sqlquery_reqList)
             
             
-            return(import_form)
+    return(import_form)
 
 
 def get_pandas_import_input_title(id,dbid=None) :
@@ -1102,19 +1109,10 @@ def display_sql_table_custom_forms(sqlimportid) :
                                           pandas_import_sqltable_custom_jsList,
                                           pandas_import_sqltable_custom_reqList)
    
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            
-            custom_import_form.set_shortForm(True)
-            custom_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":8})
-            custom_import_form.set_gridwidth(640)
-            custom_import_form.set_fullparms(True)
-        
-        else :
-            
-            custom_import_form.set_shortForm(True)
-            custom_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":8})
-            custom_import_form.set_gridwidth(480)
-            custom_import_form.set_fullparms(True)
+        custom_import_form.set_shortForm(True)
+        custom_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":8})
+        custom_import_form.set_gridwidth(480)
+        custom_import_form.set_fullparms(True)
     
         custom_import_form_html     =   custom_import_form.get_html()
         custom_import_title_html    =   "<div>Custom SQL Table Import</div><br>"
@@ -1125,7 +1123,7 @@ def display_sql_table_custom_forms(sqlimportid) :
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
         else :
-            display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+            display_generic_grid("data-import-wrapper",gridclasses,gridhtmls,True)
 
         
         
@@ -1188,6 +1186,7 @@ def get_rows_html(rowslist,formtype,forExport=False) :
         for i in range(len(rowslist)) :
             tableslistrow = [rowslist[i]]
             tableslistRows.append(tableslistrow)
+            
             if(formtype == dim.TABLE_NAMES) :
                 if(not(forExport)) :
                     tableslistHrefs.append(["select_table"])
@@ -1200,7 +1199,18 @@ def get_rows_html(rowslist,formtype,forExport=False) :
                 else :
                     tableslistHrefs.append(["select_export_column"])
                     
-                table_names_table = dcTable("Columns","columnnamesTable",
+                table_names_table = dcTable("columns","columnnamesTable",
+                                            cfg.DataImport_ID,
+                                            tableslistHeader,tableslistRows,
+                                            tableslistWidths,tableslistAligns)
+            
+            elif(formtype == dim.INDEX_NAMES) :
+                if(not(forExport)) :
+                    tableslistHrefs.append(["select_index_column"])
+                else :
+                    tableslistHrefs.append(["select_export_index_column"])
+                    
+                table_names_table = dcTable("index_col Columns","columnindexnamesTable",
                                             cfg.DataImport_ID,
                                             tableslistHeader,tableslistRows,
                                             tableslistWidths,tableslistAligns)
@@ -1211,7 +1221,7 @@ def get_rows_html(rowslist,formtype,forExport=False) :
                 else :
                     tableslistHrefs.append(["select_export_date_column"])
             
-                table_names_table = dcTable("date Columns","datetimeformatsTable",
+                table_names_table = dcTable("parse_dates Columns","datetimeformatsTable",
                                             cfg.DataImport_ID,
                                             tableslistHeader,tableslistRows,
                                             tableslistWidths,tableslistAligns)
@@ -1258,10 +1268,14 @@ def get_rows_html(rowslist,formtype,forExport=False) :
         table_names_table.set_html_only(True) 
     
         table_names_table.set_tabletype(SIMPLE)#ROW_MAJOR)
-        #table_names_table.set_rowspertable(14)
+        table_names_table.set_rowspertable(14)
+        from dfcleanser.common.table_widgets import ROW_MAJOR
+        table_names_table.set_tabletype(ROW_MAJOR)
         #table_names_table.set_lastrowdisplayed(-1)
-
+        #table_names_table.dump()
         listHtml = table_names_table.get_html()#get_row_major_table(table_names_table,SCROLL_DOWN,False)
+        
+        #print(listHtml)
         
         return(listHtml)
         
@@ -1300,6 +1314,7 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
     * --------------------------------------------------------
     """
 
+    print("display_dc_pandas_import_sql_inputs",importtype,formtype,DBid,"\n dbconparms : ",dbconparms,"\n inputparms : ",importparms)
     opstat      =   opStatus()
     
     listHtml    =   ""
@@ -1335,7 +1350,9 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
             if(importparms != None) :
                 inparms = get_parms_for_input(importparms,pandas_import_sqltable_common_idList)
                 cfg.set_config_value(pandas_import_sqltable_common_id+"Parms",inparms)
-        
+            
+            print("inparms",inparms)
+            
             # if the list is table names or column names
             if(formtype == dim.COLUMN_NAMES) :
         
@@ -1355,9 +1372,27 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
             
                 listHtml = get_rows_html(columnslist,formtype)
             
+            elif(formtype == dim.INDEX_NAMES) :
+            
+                if(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY) == None) :        
+                    columnslist = get_column_names(0,inparms[1],opstat)
+                else :
+                    columnslist = get_column_names(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms[1],opstat) 
+            
+                listHtml = get_rows_html(columnslist,formtype)
+            
+            
             # build the db connector parms list             
             else :
                 listHtml = get_db_connector_list(dbid,dbcondict)
+        
+        elif(importtype == dim.SQLQUERY_IMPORT) :
+        
+            if(importparms != None) :
+                inparms = get_parms_for_input(importparms,pandas_import_sqlquery_idList)
+                cfg.set_config_value(pandas_import_sqlquery_id+"Parms",inparms)
+                
+            listHtml = get_db_connector_list(dbid,dbcondict)
             
         else : 
         
@@ -1394,7 +1429,8 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
                 selectDicts.append(flags)
             
                 datetimeformats     =   get_datetime_formats()
-                formats  =   {"default":str(datetimeformats[1]),"list":datetimeformats,"callback":"select_dtformat"}
+
+                formats  =   {"default":str(datetimeformats[0]),"list":datetimeformats,"callback":"select_dtformat"}
                 selectDicts.append(formats)
             
                 get_select_defaults(pandas_import_sqltable_form,
@@ -1415,13 +1451,15 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                 pandas_import_sqltable_form.set_shortForm(False)
                 pandas_import_sqltable_form.set_gridwidth(680)
-                pandas_import_sqltable_form.set_custombwidth(125)
+                pandas_import_sqltable_form.set_custombwidth(110)
             else :
                 pandas_import_sqltable_form.set_shortForm(True)
                 pandas_import_sqltable_form.set_gridwidth(360)
-                pandas_import_sqltable_form.set_custombwidth(70)
+                pandas_import_sqltable_form.set_custombwidth(60)
             
             pandas_import_sqltable_form.set_fullparms(True)
+            
+            #pandas_import_sqltable_form.dump()
         
             import_sql_input_html = ""
             import_sql_input_html = pandas_import_sqltable_form.get_html()
@@ -1445,7 +1483,7 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
             selectDicts.append(flags)
             
             datetimeformats     =   get_datetime_formats()
-            formats  =   {"default":str(datetimeformats[1]),"list":datetimeformats,"callback":"select_dtformat"}
+            formats  =   {"default":str(datetimeformats[0]),"list":datetimeformats,"callback":"select_dtformat"}
             selectDicts.append(formats)
         
             get_select_defaults(import_sql_input_form,
@@ -1457,7 +1495,12 @@ def display_dc_pandas_import_sql_inputs(importtype,formtype,DBid,dbconparms,impo
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                 import_sql_input_form.set_shortForm(False)
                 import_sql_input_form.set_gridwidth(680)
-                import_sql_input_form.set_custombwidth(125)
+
+                if(importtype == dim.SQLTABLE_IMPORT) :
+                    import_sql_input_form.set_custombwidth(125)
+                else :
+                    import_sql_input_form.set_custombwidth(110)
+                    
             else :
                 import_sql_input_form.set_shortForm(True)
                 import_sql_input_form.set_gridwidth(360)
@@ -1603,7 +1646,7 @@ def get_table_names(dbid,opstat) :
     from dfcleanser.common.db_utils import get_dbcondict
     dbconDict  =   get_dbcondict(dbid,None)
     
-    print("dbconDict",dbconDict)
+    #print("dbconDict",dbconDict)
     
     clock = RunningClock()
     clock.start()
@@ -1615,7 +1658,7 @@ def get_table_names(dbid,opstat) :
 
     dbcon.connect_to_db(NATIVE,opstat,dbconDict)
     
-    if( (opstat.get_status()) and (len(dbconDict.get("database"))>0) ) :
+    if( (opstat.get_status()) and (1)) :#len(dbconDict.get("database"))>0) ) :
         
         dbid = dbcon.get_ConnectionParms().get("dbid")
 
@@ -1698,6 +1741,8 @@ def get_column_names(dbid,tablename,opstat) :
     * --------------------------------------------------------
     """
     
+    #print("get_column_names",dbid,tablename)
+    
     import dfcleanser.common.db_utils as dbutils
     
     dbconDict  =   {}
@@ -1776,7 +1821,7 @@ def get_column_names(dbid,tablename,opstat) :
 """
 def get_datetime_formats() :
 
-    formatsList = ["None"]
+    formatsList = ["No Format"]
     
     from dfcleanser.sw_utilities.sw_utility_control import get_Dict
     formats = get_Dict("strftime")
