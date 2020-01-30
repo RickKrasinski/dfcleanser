@@ -12,7 +12,15 @@ this = sys.modules[__name__]
 
 from dfcleanser.common.cfg import (DataTransform_ID, get_dfc_dataframe_df)
 
-import dfcleanser.common.table_widgets as tblw         
+import dfcleanser.common.table_widgets as tblw 
+
+import pandas as pd
+import pandas.api.types as pat 
+import datetime
+import numpy as np
+
+
+       
 new_line =   """
 """
 
@@ -24,6 +32,7 @@ MINUTES         =   3
 SECONDS         =   4
 MICROSECONDS    =   5
 TIMEDELTA       =   6
+
 
 def get_units_id(unit) :
 
@@ -42,6 +51,8 @@ yellowcolor     =   "#FAF6BE"
 redcolor        =   "#F1C4B7"
 greencolor      =   "#ADECC4"
     
+
+DUMP_HTML       =   True
 
 """
 #--------------------------------------------------------------------------
@@ -182,6 +193,7 @@ class RunningClock:
 
     @staticmethod
     def spinning_clock():
+        
         while 1: 
             #for cursor in '|/-\\': yield cursor
             clockfaces =    ["https://rickkrasinski.github.io/dfcleanser/graphics/hour1.png",
@@ -239,7 +251,7 @@ class RunningClock:
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-import pandas.api.types as pat
+
 
 def get_column_datatype(df,colname) :
     
@@ -250,137 +262,294 @@ def get_column_datatype(df,colname) :
 
 def is_numeric_col(df,colname) :
 
-    datatype   =   get_column_datatype(df,colname)
-
-    if(not (datatype is None)) :
-        return(pat.is_numeric_dtype(datatype)) 
-    else :
+    try :
+        return(pat.is_numeric_dtype(get_column_datatype(df,colname))) 
+    except :
         return(False)
 
 def is_int_col(df,colname) :
 
-    datatype   =   get_column_datatype(df,colname)
-
-    if(not (datatype is None)) :
-        return(pat.is_integer_dtype(datatype)) 
-    else :
+    try :
+        return(pat.is_integer_dtype(get_column_datatype(df,colname))) 
+    except :
         return(False)
 
 def is_float_col(df,colname) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_float_dtype(datatype)) 
-    else :
+    try :
+        return(pat.is_float_dtype(get_column_datatype(df,colname))) 
+    except :
         return(False)
 
 def is_string_col(df,colname) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_string_dtype(datatype))
-    else :
+    try :
+        return(pat.is_string_dtype(get_column_datatype(df,colname)))
+    except :
         return(False)
 
 def is_object_col(df,colname) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_object_dtype(datatype))
-    else :
+    try :
+        return(pat.is_object_dtype(get_column_datatype(df,colname)))
+    except :
         return(False)
 
 def is_bool_col(df,colname) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_bool_dtype(datatype))
-    else :
+    try :
+        return(pat.is_bool_dtype(get_column_datatype(df,colname)))
+    except :
         return(False)
 
 def is_categorical_col(df,colname) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_categorical_dtype(datatype))
-    else :
+    try :
+        return(pat.is_categorical_dtype(get_column_datatype(df,colname)))
+    except :
         return(False)
 
 def is_datetime64_col(df,colname,anydatetime64=False) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        
+    try :
         if(anydatetime64) :
-            return(pat.is_datetime64_any_dtype(datatype)) 
+            return(pat.is_datetime64_any_dtype(get_column_datatype(df,colname))) 
         else :
-            return(pat.is_datetime64_dtype(datatype))
-    else :
+            return(pat.is_datetime64_dtype(get_column_datatype(df,colname)))
+    except :
         return(False)
 
 def is_timedelta64_col(df,colname,anydatetime64=False) :
     
-    datatype   =   get_column_datatype(df,colname)
-    
-    if(not (datatype is None)) :
-        return(pat.is_timedelta64_dtype(datatype)) 
-    else :
+    try :
+        return(pat.is_timedelta64_dtype(get_column_datatype(df,colname))) 
+    except :
         return(False)
 
+
+
 def is_timestamp_col(df,colname) :
-    
-    import pandas as pd
-    if(get_column_datatype(df,colname) == pd.Timestamp) :
-        return(True)
-    else :
+    try : 
+        if(df[colname].dtype == pd.Timestamp) :
+            return(True)
+        else :
+            return(False)
+    except :
         return(False)
 
 def is_datetime_col(df,colname) :
-    
-    import datetime
-    if(get_column_datatype(df,colname) == datetime.datetime) :
-        return(True)
-    else :
+    try :
+        if(isinstance(df[colname][0],datetime.datetime)) :
+            return(True)
+        else :
+            return(False)
+    except :
         return(False)
 
 def is_date_col(df,colname) :
-    
-    import datetime
-    if(get_column_datatype(df,colname) == datetime.date) :
-        return(True)
-    else :
+    try : 
+        if(isinstance(df[colname][0],datetime.date)) :
+            return(True)
+        else :
+            return(False)
+    except :
         return(False)
 
 def is_time_col(df,colname) :
-    
-    import datetime
-    if(get_column_datatype(df,colname) == datetime.time) :
-        return(True)
-    else :
+    try :  
+        if(isinstance(df[colname][0],datetime.time)) :
+            return(True)
+        else :
+            return(False)
+    except :
         return(False)
     
 def is_timedelta_col(df,colname) :
+    try :  
+        if(isinstance(df[colname][0],datetime.timedelta)) :
+            return(True)
+        else :
+            return(False)
+    except :
+        return(False)
+
+def is_Timestamp_col(df,colname) :
+    try :   
+        if(isinstance(df[colname][0],pd.Timestamp)) :
+            return(True)
+        else :
+            return(False)
+    except :
+        return(False)
     
-    import datetime
-    if(get_column_datatype(df,colname) == datetime.timedelta) :
-        return(True)
-    else :
+def is_Timedelta_col(df,colname) :
+    try :
+        if(isinstance(df[colname][0],pd.Timedelta)) :
+            return(True)
+        else :
+            return(False)
+    except :
         return(False)
     
 def is_datetime_type_col(df,colname) :
     
     if( (is_datetime_col(df,colname)) or (is_date_col(df,colname)) or
-        (is_time_col(df,colname)) or (is_timedelta_col(df,colname)) ) :
+        (is_time_col(df,colname)) or (is_timedelta_col(df,colname)) or 
+        (is_datetime64_col(df,colname)) or (is_timedelta64_col(df,colname)) or 
+        (is_Timestamp_col(df,colname)) or (is_Timedelta_col(df,colname))) :
         return(True)
     else :
         return(False)
   
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser datatype mapping from datatypes to display strings
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+""" 
+def get_converted_value(dtype_str,value,opstat) :
+    
+    cvalue  =   None
+    
+    try :
+    
+        if( (dtype_str == "uint8")  or (dtype_str == "numpy.uint8") )                       :   cvalue  =   np.uint8(value)
+        elif( (dtype_str == "uint16") or (dtype_str == "numpy.uint16") )                    :   cvalue  =   np.uint16(value)
+        elif( (dtype_str == "uint32") or (dtype_str == "numpy.uint32") )                    :   cvalue  =   np.uint32(value)
+        elif( (dtype_str == "uint164") or (dtype_str == "numpy.uint64") )                   :   cvalue  =   np.uint64(value)
+        elif( (dtype_str == "int8") or (dtype_str == "numpy.int8") )                        :   cvalue  =   np.int8(value)
+        elif( (dtype_str == "int16") or (dtype_str == "numpy.int16") )                      :   cvalue  =   np.int16(value)
+        elif( (dtype_str == "int32") or (dtype_str == "numpy.int32") )                      :   cvalue  =   np.int32(value)
+        elif( (dtype_str == "int64") or (dtype_str == "numpy.int64") )                      :   cvalue  =   np.int64(value)
+        elif( (dtype_str == "float16") or (dtype_str == "numpy.float16") )                  :   cvalue  =   np.float16(value)
+        elif( (dtype_str == "float32") or (dtype_str == "numpy.float32") )                  :   cvalue  =   np.float32(value)
+        elif( (dtype_str == "float64") or (dtype_str == "numpy.float64") )                  :   cvalue  =   np.float64(value)
+        elif(dtype_str == "datetime.datetime")                                              :   cvalue  =   datetime.datetime(value)
+        elif(dtype_str == "datetime.date")                                                  :   cvalue  =   datetime.date(value)
+        elif(dtype_str == "datetime.time")                                                  :   cvalue  =   datetime.time(value)
+        elif(dtype_str == "datetime.timedelta")                                             :   cvalue  =   datetime.timedelta(value)
+        elif(dtype_str == "int")                                                            :   cvalue  =   int(value)
+        elif(dtype_str == "float")                                                          :   cvalue  =   float(value)
+        elif(dtype_str == "str")                                                            :   cvalue  =   str(value)
+        elif(dtype_str == "object")                                                         :   cvalue  =   object(value)
+        elif( (dtype_str == "category") or (dtype_str == "pandas.category") )               :   cvalue  =   pd.Categorical(value)
+        elif( (dtype_str == "datetime64") or (dtype_str == "numpy.datetime64") )            :   cvalue  =   np.datetime64(value)
+        elif( (dtype_str == "timedelta64") or (dtype_str == "numpy.timedelta64") )          :   cvalue  =   np.timedelta64(value)
+        elif( (dtype_str == "Timestamp") or (dtype_str == "pandas.Timestamp") )             :   cvalue  =   pd.Timestamp(value)
+        elif( (dtype_str == "Timedelta") or (dtype_str == "pandas.Timedelta") )             :   cvalue  =   pd.Timedelta(value)
+        
+    except Exception as e:
+        opstat.store_exception("Unable to convert value to " + dtype_str,e)
+    
+    return(cvalue)
+    
+        
+def get_dtype_str_for_datatype(coldtype,fullname=True) :
+
+    if(coldtype == np.uint8)    :   
+        if(fullname)    :   return("uint8")  
+        else            :   return("numpy.uint8")
+    elif(coldtype == np.uint16)                   :   
+        if(fullname)    :   return("uint16")
+        else            :   return("numpy.uint16")
+    elif(coldtype == np.uint32)                   :   
+        if(fullname)    :   return("numpy.uint32")
+        else            :   return("uint32")
+    elif(coldtype == np.uint64)                   :   
+        if(fullname)    :   return("numpy.uint64")
+        else            :   return("uint64")
+    elif(coldtype == np.int8)                   :   
+        if(fullname)    :   return("numpy.int8")
+        else            :   return("int8")
+    elif(coldtype == np.int16)                   :   
+        if(fullname)    :   return("numpy.int16")
+        else            :   return("int16")
+    elif(coldtype == np.int32)                   :   
+        if(fullname)    :   return("numpy.int32")
+        else            :   return("int32")
+    elif(coldtype == np.int64)                   :   
+        if(fullname)    :   return("numpy.int64")
+        else            :   return("int64")
+    elif(coldtype == np.float16)                   :   
+        if(fullname)    :   return("numpy.float16")
+        else            :   return("float16")
+    elif(coldtype == np.float32)                   :   
+        if(fullname)    :   return("numpy.float32")
+        else            :   return("float32")
+    elif(coldtype == np.float64)                   :   
+        if(fullname)    :   return("numpy.float64")
+        else            :   return("float64")
+    
+    elif(coldtype == int)                         :   return("int")
+    elif(coldtype == float)                       :   return("float")
+    elif(coldtype == str)                         :   return("str")
+    elif(coldtype == object)                      :   return("object")
+    
+    elif(coldtype == pd.Categorical)       :   
+        if(fullname)    :   return("pandas.Categorical")
+        else            :   return("Categorical")
+    elif(coldtype == np.datetime64)               :   
+        if(fullname)    :   return("numpy.datetime64")
+        else            :   return("datetime64")
+    elif(coldtype == np.timedelta64)               :   
+        if(fullname)    :   return("numpy.timedelta64")
+        else            :   return("timedelta64")
+    elif(coldtype == pd.Timestamp)                 :   
+        if(fullname)    :   return("pandas.Timestamp")
+        else            :   return("Timestamp")
+    elif(coldtype == pd.Timedelta)                 :   
+        if(fullname)    :   return("pandas.Timedelta")
+        else            :   return("Timedelta")
+        
+    elif(coldtype == datetime.datetime)           :   
+        if(fullname)    :   return("datetime.datetime")
+        else            :   return("datetime")
+    elif(coldtype == datetime.date)               :   
+        if(fullname)    :   return("datetime.date")
+        else            :   return("date")
+    elif(coldtype == datetime.time)               :   
+        if(fullname)    :   return("datetime.time")
+        else            :   return("time")
+    elif(coldtype == datetime.timedelta)          :   
+        if(fullname)    :   return("datetime.timedelta")
+        else            :   return("timedelta")
+    
+    return(None)
+
+
+def get_datatype_from_dtype_str(dtype_str) :
+    
+    
+    if( (dtype_str == "uint8")  or (dtype_str == "numpy.uint8") )                       :   return(np.uint8)
+    elif( (dtype_str == "uint16") or (dtype_str == "numpy.uint16") )                    :   return(np.uint16)
+    elif( (dtype_str == "uint32") or (dtype_str == "numpy.uint32") )                    :   return(np.uint32)
+    elif( (dtype_str == "uint164") or (dtype_str == "numpy.uint64") )                   :   return(np.uint64)
+    elif( (dtype_str == "int8") or (dtype_str == "numpy.int8") )                        :   return(np.int8)
+    elif( (dtype_str == "int16") or (dtype_str == "numpy.int16") )                      :   return(np.int16)
+    elif( (dtype_str == "int32") or (dtype_str == "numpy.int32") )                      :   return(np.int32)
+    elif( (dtype_str == "int64") or (dtype_str == "numpy.int64") )                      :   return(np.int64)
+    elif( (dtype_str == "float16") or (dtype_str == "numpy.float16") )                  :   return(np.float16)
+    elif( (dtype_str == "float32") or (dtype_str == "numpy.float32") )                  :   return(np.float32)
+    elif( (dtype_str == "float64") or (dtype_str == "numpy.float64") )                  :   return(np.float64)
+    elif( (dtype_str == "datetime") or (dtype_str == "datetime.datetime") )             :   return(datetime.datetime)
+    elif( (dtype_str == "date") or (dtype_str == "datetime.date") )                     :   return(datetime.date)
+    elif( (dtype_str == "time") or (dtype_str == "datetime.time") )                     :   return(datetime.time)
+    elif( (dtype_str == "timedelta") or (dtype_str == "datetime.timedelta") )           :   return(datetime.timedelta)
+    elif(dtype_str == "int")                                                            :   return(int)
+    elif(dtype_str == "float")                                                          :   return(float)
+    elif(dtype_str == "str")                                                            :   return(str)
+    elif(dtype_str == "object")                                                         :   return(object)
+    elif( (dtype_str == "Categorical") or (dtype_str == "pandas.Categorical") )         :   return(pd.Categorical)
+    elif( (dtype_str == "datetime64") or (dtype_str == "numpy.datetime64") )            :   return(np.datetime64)
+    elif( (dtype_str == "timedelta64") or (dtype_str == "numpy.timedelta64") )          :   return(np.timedelta64)
+    elif( (dtype_str == "Timestamp") or (dtype_str == "pandas.Timestamp") )             :   return(pd.Timestamp)
+    elif( (dtype_str == "Timedelta") or (dtype_str == "pandas.Timedelta") )             :   return(pd.Timedelta)
+
+    return(None)
+    
+
 
 """
 #--------------------------------------------------------------------------
@@ -391,9 +560,8 @@ def is_datetime_type_col(df,colname) :
 """ 
 def get_datatype(dtypeid) :
     
-    import numpy
-    import datetime
     import pandas
+    import numpy
     
     typeparm = None
     
@@ -422,32 +590,21 @@ def get_datatype(dtypeid) :
     
     return(typeparm)
     
-
-def is_numeric_datatype_id(dtypeId) :
+def is_datetime_datatype(datatype) :
     
-    if((dtypeId == 0) or (dtypeId == 1) or (dtypeId == 2) or (dtypeId == 3) or 
-       (dtypeId == 4) or (dtypeId == 5) or (dtypeId == 6) or (dtypeId == 7) or 
-       (dtypeId == 8) or (dtypeId == 9) or (dtypeId == 10) or (dtypeId == 17) or 
-       (dtypeId == 18))  : 
+    if( (datatype == 'datetime64[ns]') or
+        (datatype == '<M8[ns]') or
+        (datatype == '>M8[ns]') ) :
         return(True)
     else :
-        return(False)        
+        return(False)
 
-def is_integer_datatype_id(dtypeId) :
+def is_timedelta_datatype(datatype) :
     
-    if((dtypeId == 0) or (dtypeId == 1) or (dtypeId == 2) or (dtypeId == 3) or 
-       (dtypeId == 4) or (dtypeId == 5) or (dtypeId == 6) or (dtypeId == 7) or 
-       (dtypeId == 17) )  : 
+    if( datatype == 'timedelta64[ns]') :
         return(True)
     else :
-        return(False)        
-
-def is_datetime_datatype_id(dtypeId) :
-    
-    if((dtypeId == 11) or (dtypeId == 12) or (dtypeId == 13) or (dtypeId == 14) )  : 
-        return(True)
-    else :
-        return(False)        
+        return(False)
 
 def get_datatype_id(dt) :
     
@@ -482,79 +639,33 @@ def get_datatype_id(dt) :
 
     return(-1)
 
-def get_datatype_str(dt_id) :
-
-    if(dt_id == 0)      : return("numpy.uint8")
-    elif(dt_id == 1)    : return("numpy.uint16")
-    elif(dt_id == 2)    : return("numpy.uint32")
-    elif(dt_id == 3)    : return("numpy.uint64")
-    elif(dt_id == 4)    : return("numpy.int8")
-    elif(dt_id == 5)    : return("numpy.int16")
-    elif(dt_id == 6)    : return("numpy.int32")
-    elif(dt_id == 7)    : return("numpy.int64")
-    elif(dt_id == 8)    : return("numpy.float16")
-    elif(dt_id == 9)    : return("numpy.float32")
-    elif(dt_id == 10)   : return("numpy.float64")
-    elif(dt_id == 11)   : return("datetime.datetime")
-    elif(dt_id == 12)   : return("datetime.date")
-    elif(dt_id == 13)   : return("datetime.time")
-    elif(dt_id == 14)   : return("datetime.timedelta")
-    elif(dt_id == 15)   : return("str")
-    elif(dt_id == 16)   : return("object")
-    elif(dt_id == 17)   : return("int")
-    elif(dt_id == 18)   : return("float")
-    elif(dt_id == 19)   : return("category")
-    elif(dt_id == 20)   : return("numpy.datetime64")
-    elif(dt_id == 21)   : return("numpy.timedelta64")
-    
-    return("unknown")
-
-
-def get_datatype_id_from_str(dt_str) :
-
-    if(dt_str == "numpy.uint8")             :   return(0)
-    elif(dt_str == "numpy.uint16")          :   return(1)
-    elif(dt_str == "numpy.uint32")          :   return(2)
-    elif(dt_str == "numpy.uint64")          :   return(3)
-    elif(dt_str == "numpy.int8")            :   return(4)
-    elif(dt_str == "numpy.int16")           :   return(5)
-    elif(dt_str == "numpy.int32")           :   return(6)
-    elif(dt_str == "numpy.int64")           :   return(7)
-    elif(dt_str == "numpy.float16")         :   return(8)
-    elif(dt_str == "numpy.float32")         :   return(9)
-    elif(dt_str == "numpy.float64")         :   return(10)
-    elif(dt_str == "datetime.datetime")     :   return(11)
-    elif(dt_str == "datetime.date")         :   return(12)
-    elif(dt_str == "datetime.time")         :   return(13)
-    elif(dt_str == "datetime.timedelta")    :   return(14)
-    elif(dt_str == "str")                   :   return(15)
-    elif(dt_str == "object")                :   return(16)
-    elif(dt_str == "int")                   :   return(17)
-    elif(dt_str == "float")                 :   return(18)
-    elif(dt_str == "category")              :   return(19)
-    elif(dt_str == "numpy.datetime64")      :   return(20)
-    elif(dt_str == "numpy.timedelta64")     :   return(21)
-
-    return(None)
-
 
 def get_datatypes_list(full=True) :
+    """
+    #--------------------------------------------------------------------------
+    #   get a list of supported datatypes
+    #
+    #       full   - full name flag 
+    #
+    #   return :
+    #       list of datatypes
+    #
+    #--------------------------------------------------------------------------
+    """
     
     if(full) :
         
         dtlist  =   ["numpy.uint8","numpy.uint16","numpy.uint32","numpy.uint64",
                      "numpy.int8","numpy.int16","numpy.int32","numpy.int64",
-                     "numpy.float16","numpy.float32","numpy.float64","datetime.datetime",
-                     "datetime.date","datetime.time","datetime.timedelta","str",
-                     "object","int","float","category","numpy.datetime64","numpy.timedelta64"]
+                     "numpy.float16","numpy.float32","numpy.float64","str",
+                     "object","int","float","pandas.Categorical"]
         
     else :
         
         dtlist  =   ["uint8","uint16","uint32","uint64",
                      "int8","int16","int32","int64",
-                     "float16","float32","float64","datetime.datetime",
-                     "datetime.date","datetime.time","datetime.timedelta","str",
-                     "object","int","float","category","datetime64","timedelta64"]
+                     "float16","float32","float64","str",
+                     "object","int","float","Categorical"]
         
     
     return(dtlist)
@@ -566,21 +677,6 @@ def get_datatypes_list(full=True) :
 #--------------------------------------------------------------------------
 """
 
-def is_datetime_datatype(datatype) :
-    
-    if( (datatype == 'datetime64[ns]') or
-        (datatype == '<M8[ns]') or
-        (datatype == '>M8[ns]') ) :
-        return(True)
-    else :
-        return(False)
-
-def is_timedelta_datatype(datatype) :
-    
-    if( datatype == 'timedelta64[ns]') :
-        return(True)
-    else :
-        return(False)
 
 def is_simple_type(value) :
     if type(value) in (int, float, bool, str) :
@@ -760,7 +856,9 @@ def get_parms_for_input(parms,ids) :
     #--------------------------------------------------------------------------
     """
     outparms = []
-
+    
+    #print("\nget_parms_for_input",type(parms),parms)
+    #print("\nget_parms_for_input",type(ids),ids)
     
     try :
         
@@ -768,8 +866,8 @@ def get_parms_for_input(parms,ids) :
            ((len(parms) == 0) or (len(ids) == 0)) ) :
             return(outparms)
     
-        #print("get_parms_for_input : parms",len(parms),parms) 
-        #print("get_parms_for_input : ids  ",len(ids),ids) 
+        #print("\nget_parms_for_input : parms",len(parms),type(parms),parms) 
+        #print("\nget_parms_for_input : ids  ",len(ids),ids) 
         
         if(type(parms) == str) :
             import json
@@ -780,7 +878,7 @@ def get_parms_for_input(parms,ids) :
     except :
         print("get_parms_for_input invalid input parms")
     
-    #print("get_parms_for_input : inparms  ",inparms) 
+    #print("\n\nget_parms_for_input : inparms  ",inparms) 
     
     try :
         
@@ -788,7 +886,7 @@ def get_parms_for_input(parms,ids) :
             return(outparms)
         
         for i in range(len(ids)) :
-            if(ids[i] != None):
+            if(not (ids[i] is None)) :
                 found = -1
                 for j in range(len(inparms[0])) :
                     if(inparms[0][j] == ids[i]) :
@@ -822,13 +920,12 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     #--------------------------------------------------------------------------
     """
 
-    #print("\nget_select_defaults\n",selectDicts)
-    
     numselects  =   0
     
     for i in range(len(parmids)) :
         
         if( (parmtypes[i] == "select") or (parmtypes[i] == "selectmultiple") ):
+            
             form.add_select_dict(formid,
                                  parmids,
                                  parmids[i],
@@ -961,6 +1058,7 @@ INT_PARM                =   1
 FLOAT_PARM              =   2
 BOOLEAN_PARM            =   3
 DICT_PARM               =   4
+
 
 def get_function_parms(pkeys,pvals,ptypes) :
     """
@@ -1173,7 +1271,7 @@ def get_scroll_table_html(tableid,direction) :
 
     if(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) :
         
-        print("COLUMN_MAJOR")
+        #print("COLUMN_MAJOR")
         tablehtmlloc    = table_html.find("<thead")
         tableendhtmlloc = table_html.find("</tbody>")
         table_html = table_html[tablehtmlloc:tableendhtmlloc+len("</tbody>")]
@@ -1341,6 +1439,8 @@ def get_sample_row(parms) :
     newrowId    =   int(parms[0][1])
         
     from dfcleanser.common.display_utils import display_more_sample_rows
+    
+    #TODO fic blank df
     new_rows_html = display_more_sample_rows(get_dfc_dataframe_df(),
                                              tableId,1,newrowId,opstat)
 
@@ -1377,6 +1477,7 @@ def scroll_single_row(parms) :
     tableid     =   parms[0]
     direction   =   int(parms[1])
     
+    #TODO fix blank dfc
     from dfcleanser.common.display_utils import display_more_single_row
     table_html = display_more_single_row(get_dfc_dataframe_df(),tableid,direction)
     
@@ -1473,7 +1574,6 @@ def get_dfsubset_vals(parms) :
     
     for i in range(len(buttons)) :
     
-        import datetime 
         tstamp = datetime.datetime.now().time()
 
         change_cols_js = ("$('#" + buttons[i]+"Id" + "').attr('src'," +
@@ -1532,7 +1632,7 @@ def get_df_browser_search(numeric) :
     
     import dfcleanser.common.cfg as cfg
     from dfcleanser.data_inspection.data_inspection_widgets import get_colsearch_form
-    new_html    =   get_colsearch_form(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+    new_html    =   get_colsearch_form(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                        num_flag).get_html()
     
     start_html  =   new_html.find("<div class='container' style='padding:5px; margin:auto; width:100%;'  id="+'"datainspectcolsearchinput">')
@@ -1566,11 +1666,9 @@ def change_col_stats(parms)  :
     selectid    =   parms[0]
     colid       =   parms[1]
     
-    print("change_col_stats",parms,selectid,colid)
-    
     import dfcleanser.common.cfg as cfg
     
-    df          =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    df          =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
     cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colid)
 
     from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
@@ -1602,7 +1700,7 @@ def change_col_stats(parms)  :
             if(not((i+1) == len(uniques))) :
                 keyslist = (keyslist + str(","))
         
-        if(len(keyslist) > 300) :
+        if(len(uniques) > 300) :
             keyslist = "mapping keys too large to define by hand"
             parmsProtect = True
         else :
@@ -1620,6 +1718,7 @@ def change_col_stats(parms)  :
             change_map_protect_js = "$('#mapvals').prop('disabled', false);"
             
         run_jscript(change_map_protect_js,"fail to change map vals html : ")
+        
 
 
 def get_column_samples_html(colname) :
@@ -1643,7 +1742,8 @@ def get_column_samples_html(colname) :
     columnsamplesHrefs       =   []
     
     uniques =   [] 
-        
+     
+    #TODO blank df
     #check if the object is string
     if (isinstance(get_dfc_dataframe_df()[colname][0], str)) :
         
@@ -1793,7 +1893,7 @@ def open_as_excel(dfid) :
     import dfcleanser.common.cfg as cfg
 
     if(dfid == 0) :
-        df          =   cfg.get_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_INSPECTION_DF))
+        df          =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
         
     dfc_temp_path       =   os.path.join(cfg.get_dfcleanser_location(),"files","temp")
     dfc_temp_path       =   (dfc_temp_path + "\\exceldfs\\")
@@ -1821,6 +1921,8 @@ def change_df_select(visible_df_forms) :
     *  N/A 
     * --------------------------------------------------------
     """
+
+    print("change_df_select",visible_df_forms) 
     
     import dfcleanser.common.cfg as cfg
     
@@ -1852,8 +1954,19 @@ def get_apply_fn(funcparms) :
 
 
 def get_add_df_col_change_html(dftitle) :
+    """
+    * ---------------------------------------------------------
+    * function : get colnmes list for a df
+    * 
+    * Parms :
+    *  dftitle - dfc df title
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
      
-    from dfcleanser.common.cfg import get_dfc_dataframe_df
+    #from dfcleanser.common.cfg import get_dfc_dataframe_df
     current_df      =   get_dfc_dataframe_df(dftitle)
     colnames        =   current_df.columns.tolist()
 
@@ -1912,7 +2025,140 @@ def get_add_df_col_change(adddfparms) :
         run_jscript(change_select_js,"fail to get sample values for : ")
         
    
+def add_col_from_df_change_df(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the col name list fro add col from df
+    * 
+    * Parms :
+    *  parms - selectid, ftitle
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    selectid    =   parms[0]
+    ftitle      =   parms[1]
+    
+    print("add_col_from_df_change_df",parms,selectid,ftitle)
+    
+    change_select_html  =   get_add_df_col_change_html(ftitle)
+    
+    new_select_html = patch_html(change_select_html)
+    
+    if(selectid == "addcolsourcedftitle") :
+    
+        change_select_js = "$('#addcolsourcecolname').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+        
+        change_select_js = "$('#addcolsourceindex').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+    
+    elif(selectid == "addcoloutputdftitle") :
+    
+        change_select_js = "$('#addcoloutputindex').html('"
+        change_select_js = change_select_js + new_select_html + "');"
+            
+        run_jscript(change_select_js,"fail to get sample values for : ")
+        
+    else :
+        
+        return()
+    
+    reset_source_index_list_js  =   "$('#addcoldfsourceindexlist').val('[]');"
+    run_jscript(reset_source_index_list_js,"fail to change col stats html : ")
 
+    reset_output_index_list_js  =   "$('#addcoldfoutputindexlist').val('[]');"
+    run_jscript(reset_output_index_list_js,"fail to change col stats html : ")
+
+
+def clear_add_col_df(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : clear the add col from df inputs
+    * 
+    * Parms :
+    *  parms - optionid
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    optionid    =   parms[0]
+    
+    import dfcleanser.common.cfg as cfg
+    
+    dftitle     =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+    
+    import dfcleanser.data_transform.data_transform_model as dtm
+    if(optionid == dtm.CLEAR_SOURCE_PARMS) :
+        
+        add_col_from_df_change_df(["addcolsourcedftitle",dftitle])
+        
+    else :
+        
+        add_col_from_df_change_df(["addcoloutputdftitle",dftitle])
+
+
+def change_add_col_df_source_col(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the datatype for new col in ass cold from df
+    * 
+    * Parms :
+    *  parms - optionid
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    selectid    =   parms[0]
+    ftitle      =   parms[1]
+    colname     =   parms[2]
+    
+    current_df  =   get_dfc_dataframe_df(ftitle)
+    
+    source_col_dtype    =   current_df[colname].dtype
+    
+    print("source_col_dtype",source_col_dtype)
+    
+    dtype_str           =   get_dtype_str_for_datatype(source_col_dtype)
+    print("dtype_str",dtype_str,type(dtype_str))
+    
+    reset_source_index_list_js  =   "$('#addcoloutputdftype').val('" + dtype_str + "');"
+    run_jscript(reset_source_index_list_js,"fail to change col stats html : ")
+
+
+def dfc_document_loaded(idtag) :
+    
+    from dfcleanser.system.system_model import set_document_loaded
+    set_document_loaded()
+    print("dfc_document_loaded")
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   end dfcleanser system dynamic html methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser display methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
         
 """
 #--------------------------------------------------------------------------
@@ -1960,9 +2206,6 @@ def display_script_exception(e) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """      
-def get_datatype_title(dt_id) :
-    return("&#60;" + get_datatype_str(dt_id) + "&#62;")
-
 
 def replace_lt_gt(instr,ltchar="&lt;",gtchar="&gt;") :
     
@@ -2071,7 +2314,10 @@ def get_help_note_html(msg,width=None,left=None,msgid=None) :
         notes_html   =   "<br><div id ='" + mid + "' style='text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
     else :
         notes_html   =   "<br><div id ='" + mid + "' style='width:" + str(width) + "%; margin-left:" + str(left) + "px; text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
-        
+    
+    if(DUMP_HTML)  :
+        print(notes_html)
+    
     return(notes_html)
 
 def get_help_note_warning_html(msg) :
@@ -2118,23 +2364,25 @@ def display_exception(opstat,display=True) :
             gridhtmls       =   [error_html]
     
             display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+        
+        if(not (opstat.get_exception() is None) ) :
+
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            
-            #display_msgs(notes,"Notes :")
-            error_html      =   get_exception_details(opstat)
-            gridclasses     =   ["dfc-top-"]
-            gridhtmls       =   [error_html]
+                #display_msgs(notes,"Notes :")
+                error_html      =   get_exception_details(opstat)
+                gridclasses     =   ["dfc-top-"]
+                gridhtmls       =   [error_html]
     
-            display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
             
-        else :
+            else :
             
-            error_html      =   get_exception_details(opstat) 
-            gridclasses     =   ["dfc-top-"]
-            gridhtmls       =   [error_html]
+                error_html      =   get_exception_details(opstat) 
+                gridclasses     =   ["dfc-top-"]
+                gridhtmls       =   [error_html]
     
-            display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
     
     else :
         return(display_msgs([opstat.get_errorMsg(),get_exception_details(opstat)],"Error :",color=False,margin=30,helpmsg=False,display=False))
@@ -2142,6 +2390,14 @@ def display_exception(opstat,display=True) :
 
 
 def get_exception_details(opstat) :
+    """
+    #------------------------------------------------------------------
+    #   get exception details
+    #
+    #   opstat   -   status object holding exception
+    #
+    #------------------------------------------------------------------
+    """      
     
     try :
 
@@ -2173,14 +2429,6 @@ def get_exception_details(opstat) :
     
     return(exception_html)
     
-    #print(exception_html)
-    #from IPython.display import HTML
-    #from IPython.display import display
-    
-    #if(display) :
-    #    display_jupyter_HTML(HTML(exception_html))
-    #else :
-    #    return(exception_html)
 
 
 def display_grid_status(msg) :
@@ -2193,7 +2441,7 @@ def display_grid_status(msg) :
     #------------------------------------------------------------------
     """      
     
-    status_html     =   display_status(msg,False)    
+    status_html     =   display_status(msg,False,False)    
     
     gridclasses     =   ["dfc-footer"]
     gridhtmls       =   [status_html]
@@ -2203,7 +2451,7 @@ def display_grid_status(msg) :
         display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
     else :
         display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
-
+        
 
 def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     """
@@ -2256,7 +2504,10 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
     notes_html = (notes_html + '    </div>' + new_line) 
     notes_html = (notes_html + "</div>")
     
-    #print(notes_html)
+    from dfcleanser.common.common_utils import DUMP_HTML
+    if(DUMP_HTML) :
+        print(notes_html)
+            
     if(display) :
         displayHTML(notes_html)
     else :
@@ -2299,7 +2550,33 @@ def display_notes(notes,display=True) :
         return(display_msgs(notes,"Notes :",color=False,margin=30,helpmsg=False,display=False))
 
 
-def display_status(msg,display=True) :
+def display_status_note(msg,full=True) :
+    
+    notes_html   =   "<br><div style='text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
+
+    if(DUMP_HTML) :
+        print(notes_html)
+        
+    gridclasses     =   ["dfc-top-"]
+    gridhtmls       =   [notes_html]
+    
+    import dfcleanser.common.cfg as cfg
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+
+        if( not (full)) :
+            display_generic_grid("dfc-notes-short-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("dfc-notes-wrapper",gridclasses,gridhtmls)
+            
+    else :
+            
+        gridclasses     =   ["dfc-top-"]
+        gridhtmls       =   [notes_html]
+    
+        display_generic_grid("dfc-notes-pop-up-wrapper",gridclasses,gridhtmls)
+
+
+def display_status(msg,short=False,display=True) :
     """
     #------------------------------------------------------------------
     #   display generic list of msgs
@@ -2309,15 +2586,19 @@ def display_status(msg,display=True) :
     #
     #------------------------------------------------------------------
     """      
-    
+
     if(display) :
         
         import dfcleanser.common.cfg as cfg
         
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        if( (cfg.get_dfc_mode() == cfg.INLINE_MODE) and (not(short)) ):
             
             #display_msgs(notes,"Notes :")
             status_html     =   display_msgs([msg],"Status :",color=False,margin=5,helpmsg=False,display=False) 
+            
+            if(DUMP_HTML) :
+                print(status_html)
+                
             gridclasses     =   ["dfc-top-"]
             gridhtmls       =   [status_html]
     
@@ -2432,10 +2713,40 @@ class opStatus :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
+common_wrappers     =   ["data-import-stats-wrapper","data-import-wrapper","df-inspection-nan-wrapper",
+                         "df-index-common-wrapper","col-change-datatype-transform-wrapper",
+                         "dfc-common-480px-single-wrapper","dfc-common-480px-2-vert-wrapper",
+                         "dfc-common-480px-3-vert-wrapper","dfc-transform-480px-3-vert-wrapper",
+                         "display-df-apply-fn-wrapper"]
+
+"""
+<div class='dfcleanser-common-grid-header'>
+
+  <div style="margin-top:10px;"  id="systemoptions">
+    <div class="container dc-container dc-default-input-button-container btn-grp-center">
+      <div class="btn-group btn-center"   style=" width: 100%; ">
+        <button type="button" class="btn btn-primary" style = ' margin-left: 2%;  height: 50px;  width: 12%; ' onclick="process_system_tb_callback(1)">Utilities</br>Manager</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(3)">dataframe</br>Manager</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(4)">System</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(6)">About</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(12)">EULA</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(0)">Clear</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_pop_up_cmd(6)">Reset</button>
+        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="displayhelp(101)">Help</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+"""
+
+
 wrapper_start   = """<div class='"""
 wrapper_start1  = """'>
 """
-
+wrapper_start1_pop_up  = """' style='background-color: #F8F5E1;'>
+"""
 wrapper_end     = """</div>"""
 
 
@@ -2446,11 +2757,18 @@ GRID_RIGHT      =   3
 GRID_FOOTER     =   4
 
 
-def display_generic_grid(gridname,gridclasses,gridhtmls) :
+def display_generic_grid(gridname,gridclasses,gridhtmls,pop_up=False) :
     
     gridHTML = ""
     from dfcleanser.common.html_widgets import new_line
-    gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1 + new_line)
+    
+    if(pop_up) :
+        if(gridname in common_wrappers) :
+            gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1_pop_up + new_line)
+        else :
+            gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1 + new_line)
+    else :
+        gridHTML = (gridHTML + wrapper_start + gridname + wrapper_start1 + new_line)
     
     for i in range(len(gridclasses)) :
         
@@ -2462,10 +2780,9 @@ def display_generic_grid(gridname,gridclasses,gridhtmls) :
 
     if(gridname == "#dfsubset-wrapper") :
         print(gridHTML)
-    #print(gridHTML)
+
     displayHTML(gridHTML)
-
-
+    
 
 """            
 #------------------------------------------------------------------
@@ -2534,54 +2851,9 @@ def get_col_num_uniques(df, columnName)  :
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 """    
-
-def convert_nafill_value(nafillValue,dtype,opstat):
-    """
-    #------------------------------------------------------------------
-    #   convert a nafill value to a speicific data type
-    #
-    #   nafillvalue     -   fill value to be used for nas found
-    #
-    #   dtype           -   datatype to convert value to
-    #
-    #   opstat          -   status parm
-    #
-    #------------------------------------------------------------------
-    """      
-    import numpy as np
-    import datetime
-    import pandas
-
-    cnafillValue    = None
-
-    try :
-        
-       if(dtype == 0)       : cnafillValue = np.uint8(nafillValue)
-       elif(dtype == 1)     : cnafillValue = np.uint16(nafillValue)        
-       elif(dtype == 2)     : cnafillValue = np.uint32(nafillValue)        
-       elif(dtype == 3)     : cnafillValue = np.uint64(nafillValue)        
-       elif(dtype == 4)     : cnafillValue = np.int8(nafillValue)        
-       elif(dtype == 5)     : cnafillValue = np.int16(nafillValue)        
-       elif(dtype == 6)     : cnafillValue = np.int32(nafillValue)        
-       elif(dtype == 7)     : cnafillValue = np.int64(nafillValue)        
-       elif(dtype == 8)     : cnafillValue = np.float16(nafillValue) 
-       elif(dtype == 9)     : cnafillValue = np.float32(nafillValue)        
-       elif(dtype == 10)    : cnafillValue = np.float64(nafillValue)
-       elif(dtype == 11)    : return(isinstance(nafillValue,datetime.date))
-       elif(dtype == 12)    : return(isinstance(nafillValue,datetime.timedelta))
-       elif(dtype == 13)    : return(isinstance(nafillValue,str)) 
-       elif(dtype == 14)    : return(isinstance(nafillValue,object)) 
-       elif(dtype == 15)    : return(isinstance(nafillValue,pandas.core.dtypes.dtypes.CategoricalDtype))
-
-    except Exception as e:
-        opstat.set_status(False)
-        opstat.store_exception("fillna value is invalid for datatype",e)
-    
-    return(cnafillValue)
-
   
            
-def convert_df_cols(df,colnames,convdatatype,nafillValue=None) :
+def convert_df_cols_datatype(df,colnames,convdatatype,nafillValue=None) :
     """
     #------------------------------------------------------------------
     #   convert a list of dataframe columns to a speicific data type
@@ -2608,13 +2880,12 @@ def convert_df_cols(df,colnames,convdatatype,nafillValue=None) :
         if(nafillValue != None) : 
             
             if(nafillValue == 'mean') : 
-                cnafillValue = convert_nafill_value(df[colnames[x]].mean(),convdatatype,opstat)
+                cnafillValue = get_converted_value(df[colnames[x]].mean(),convdatatype,opstat)
             else :
-                cnafillValue = convert_nafill_value(nafillValue,convdatatype,opstat)
+                cnafillValue = get_converted_value(nafillValue,convdatatype,opstat)
 
             if(opstat.get_status()) :
                 try :
-                    #print("convert_df_cols",cnafillValue,type(cnafillValue))
                     df[colnames[x]] = df[colnames[x]].fillna(cnafillValue)
                     
                     df[colnames[x]] = df[colnames[x]].astype(get_datatype(convdatatype))

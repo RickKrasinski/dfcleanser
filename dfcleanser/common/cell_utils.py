@@ -70,7 +70,7 @@ SCRIPTING_TITLE_CELL        =   '<div align="left" id="DCDataScripting"/><div><i
 SW_UTILS_SECTION_TITLE_CELL =   '<div align="left" id="SWUtilities"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/SWUtilities.png" width="80" align="left" style="border: 0px ; margin-right: 6px ; margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Software Utilities</h2></div></div>'
 
 SW_UTILS_DS_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_control import process_sw_utilities\\nprocess_sw_utilities(0)'
-SW_UTILS_DS_TITLE_CELL      =   '<div align="left" id="DCSWDataStructUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ListBuild.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Common Data Structures Utility</h3></div></div>'
+SW_UTILS_DS_TITLE_CELL      =   '<div align="left" id="DCListUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/ListBuild.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Common Data Structures Utility</h3></div></div>'
 
 SW_UTILS_DB_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_dfsubset_control import display_dfsubset_utility\\ndisplay_dfsubset_utility(0)'
 SW_UTILS_DB_TITLE_CELL      =   '<div align="left" id="DCDFSubsetUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataframeSubset.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Dataframe Subset</h3></div></div>'
@@ -79,7 +79,7 @@ SW_UTILS_GC_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_geocode
 SW_UTILS_GC_TITLE_CELL      =   '<div align="left" id="DCGeocodeUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/GetLongLat.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Geocoding</h3></div></div>'
 
 SW_UTILS_DM_CODE_CELL       =   'from dfcleanser.sw_utilities.sw_utility_census_control import display_census_utility\\ndisplay_census_utility(0)'
-SW_UTILS_DM_TITLE_CELL      =   '<div align="left" id="DCCensusUtility"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/census.png" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Census</h3></div></div>'
+SW_UTILS_DM_TITLE_CELL      =   '<div align="left" id="DCCensusUtility"/><div><a onclick="reset_chapter(0)"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/census.png" width="80" align="left"/></a></div><div><image width="10"></div><div><image width="10"><h3>&nbsp;&nbsp;&nbsp;Census</h3></div></div>'
 
 SYSTEM_CODE_CELL            =   "from dfcleanser.system.system_control import display_system_environment\\ndisplay_system_environment(0)"
 SYSTEM_TITLE_CELL           =   '<div align="left" id="DCSystem"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/systemEnvironment.png" width="80" align="left"/></div><div><image width="10"></div><div><h2>&nbsp;&nbsp;&nbsp;System Environment : </h2><a name="SystemEnvironment"></a></div></div>'
@@ -88,7 +88,7 @@ TRANSFORM_CODE_CELL         =   'from dfcleanser.data_transform.data_transform_c
 TRANSFORM_TITLE_CELL        =   '<div align="left" id="DCDataTransform"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/dataTransform.jpg" width="80" align="left" style="border: 0px ; margin-right: 6px ; margin-left: 0px"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Data Transform</h2><a name="DataTransform"></a></div></div>'
 
 WORKING_CODE_CELL           =   '# working cell- please do not remove'
-WORKING_TITLE_CELL          =   '<div align="left" id="Restricted"/><div><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>'
+WORKING_TITLE_CELL          =   '<div align="left" id="Restricted"/><div><a href="#" onclick="reset_chapter(0); return false"><img src="https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg" width="80" align="left"/></a></div><div><image width="10"></div><div><image width="10"><h2>&nbsp;&nbsp;&nbsp;Restricted</h2></div></div>'
 
 
 """

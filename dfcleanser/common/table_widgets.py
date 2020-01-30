@@ -87,6 +87,8 @@ SCROLL_UP           =   1
 SCROLL_RIGHT        =   2
 SCROLL_LEFT         =   3
 
+SCROLL_NONE         =   -1
+
 SIMPLE              =   -1
 
 ROW_MAJOR           =   0
@@ -548,6 +550,49 @@ def refresh_dfschema_buttons() :
             run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
 
 
+def refresh_chknum_buttons() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : refresh df_schema table css
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
+    from dfcleanser.common.common_utils import run_jscript
+    
+    for j in range(2) :
+        
+        if(j==0)    :   colid    =   "cancol"
+        else        :   colid    =   "cncol"
+        
+        for i in range(7) :
+    
+            change_table_js = '$("#' + colid + str(i) + '").css("background-color","#67a1f3");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+                    
+            change_table_js = '$("#' + colid + str(i) + '").css("font-size","10px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+                    
+            change_table_js = '$("#' + colid + str(i) + '").css("height","50px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
+            change_table_js = '$("#' + colid + str(i) + '").css("color","white");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
+            change_table_js = '$("#' + colid + str(i) + '").css("width","90px");'
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+            
+            if(j == 0) :
+                change_table_js = '$("#' + colid + str(i) + '").css("margin-left","15px");'
+            else :
+                change_table_js = '$("#' + colid + str(i) + '").css("margin-left","11px");'
+                
+            run_jscript(change_table_js,"fail scroll_table parms : "+ '#dfschemacontainer')
+
 
 """
 * -----------------------------------------------------------------------*
@@ -578,26 +623,30 @@ def set_col_major_table_scroll(table,direction) :
             if( (table.get_tableid() == "dcgendfdesc") or (table.get_tableid() == "dcnngendfdesc") ):
                 
                 from dfcleanser.common.common_utils import is_numeric_col
+                import dfcleanser.common.cfg as cfg
                 
                 start_col   =   0
-                
-                import dfcleanser.common.cfg as cfg
-                df          =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-                df_cols     =   df.columns.tolist()
-                
                 nums_found  =   0
                 
+                df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+                df_cols     =   df.columns.tolist()
+
+                print("set_col_major_table_scroll ",table.get_lastcoldisplayed())
+                
                 for i in range(table.get_lastcoldisplayed(),-1,-1) :
+                    
+                    print("set_col_major_table_scroll : ",i,nums_found)
+                    
                     
                     if(nums_found < (2 * table.get_colsperrow())) :
                         
                         col_found   =   False
                         
                         if(table.get_tableid() == "dcgendfdesc") :
-                            if(is_numeric_col(df,df_cols[i])) :  
+                            if(is_numeric_col(df,df_cols[i-1])) :  
                                 col_found   =   True
                         else :
-                            if( not(is_numeric_col(df,df_cols[i]))) :  
+                            if( not(is_numeric_col(df,df_cols[i-1]))) :  
                                 col_found   =   True
                         
                         if(col_found) :
@@ -698,6 +747,8 @@ def scroll_col_major_table(table,direction) :
         df_nn_describe_html  =   update_df_nn_describe(table,direction,False)
         
         update_col_major_html(table,df_nn_describe_html)
+        
+        refresh_chknum_buttons()
 
 
 def get_col_major_table(table,displayTable=True) :
@@ -1302,7 +1353,16 @@ class dcTable :
                ("#Column Names" in self.get_title()) ) :  
                 self.dump()
                 print(tableHTML)
-                
+        
+        from dfcleanser.common.common_utils import DUMP_HTML
+        if(DUMP_HTML) :
+            if(not(self.get_tableid() == "dfschema")) :
+                print(tableHTML)
+            else :
+                Html_file= open("dfschema_file","w")
+                Html_file.write(tableHTML)
+                Html_file.close()
+            
         return(tableHTML)
 
     def display_table(self) :

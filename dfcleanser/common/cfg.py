@@ -139,7 +139,6 @@ DBUtils_ID              =   "DBUtils"
 DumpUtils_ID            =   "DumpUtils"
 Help_ID                 =   "Help"
 GenFunction_ID          =   "GenFunction"
-SWDFCensusUtility_ID    =   "SWDFCensusUtility"
 
 
 """
@@ -178,7 +177,7 @@ data_subset_df_input_id                   =   "datasubsetdf"
 
 
 
-def update_chapter_df_select(chapterform) :
+def update_chapter_df_select(chapterselect) :
     """
     * ---------------------------------------------------------
     * function : change the df list in select forms
@@ -191,54 +190,61 @@ def update_chapter_df_select(chapterform) :
     * --------------------------------------------------------
     """
     
-    df_forms    =   ["dfmgrform","datainspectdf","datacleansedf","datatransformdf","dataexportdf","datasubsetdf"]
-    df_selects  =   ["dftitle","didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dsdfdataframe"]
+    print("update_chapter_df_select",chapterselect)
     
+    if(chapterselect == "didfdataframe") :
+        select_df_form  =   get_select_df_form(DataInspection_ID) 
+        cfg_key         =   CURRENT_INSPECTION_DF
+    elif(chapterselect == "dcdfdataframe") :
+        select_df_form  =   get_select_df_form(DataCleansing_ID) 
+        cfg_key         =   CURRENT_CLEANSE_DF
+    elif(chapterselect == "dtdfdataframe") :
+        select_df_form  =   get_select_df_form(DataTransform_ID) 
+        cfg_key         =   CURRENT_TRANSFORM_DF
+    elif(chapterselect == "dedfdataframe") :
+        select_df_form  =   get_select_df_form(DataExport_ID) 
+        cfg_key         =   CURRENT_EXPORT_DF
+    elif(chapterselect == "dgdfdataframe") :
+        select_df_form  =   get_select_df_form(SWGeocodeUtility_ID) 
+        cfg_key         =   CURRENT_GEOCODE_DF
+    elif(chapterselect == "dsdfdataframe") :
+        select_df_form  =   get_select_df_form(SWDFSubsetUtility_ID) 
+        cfg_key         =   CURRENT_SUBSET_DF
+    else :
+        return()
     
-    for j in range(len(df_forms)) :
-        if(chapterform == df_forms[j]) :
-            df_index    =   j
-        
-    from dfcleanser.common.html_widgets import get_Input
-    select_df_form      =   get_Input(df_forms[df_index])
-        
-    select_dicts        =   select_df_form[6]
-    select_dfs_dict     =   select_dicts.get(df_selects[df_index])
-    selected_df         =   select_dfs_dict.get("default")
-        
-    # get list to update chapter selects
-    dftitles    =   get_dfc_dataframes_titles_list()
-    dftitles.sort()
-        
-    if(selected_df == "") :
-        selected_df = dftitles[0]
-
-    new_df_dict         =   {"default":selected_df,"list":dftitles}
-    select_dicts.update({df_selects[df_index]:new_df_dict})
-    select_df_form[6]   =   select_dicts
-        
-    from dfcleanser.common.html_widgets import InputForm
-    temp_form  =   InputForm(df_forms[df_index],
-                             select_df_form[0],
-                             select_df_form[1],
-                             select_df_form[2],
-                             select_df_form[3],
-                             select_df_form[4],
-                             select_df_form[5])
-        
-    temp_form.set_form_select_dict(select_dicts)
+    if(is_a_dfc_dataframe_loaded()) :
+        df_titles       =   get_dfc_dataframes_titles_list()
+        selected_df     =   df_titles[0]
+    
+        if(get_config_value(cfg_key) is None)     :   
+            set_config_value(cfg_key,selected_df)
+        else :
+            selected_df    =   get_config_value(cfg_key)
+    
+    else :
+        selected_df     =   ""
+        drop_config_value(cfg_key)            
     
     from dfcleanser.common.common_utils import patch_html, run_jscript
         
-    new_df_html         =   temp_form.get_select_html(df_selects[df_index],selected_df)
+    new_df_html         =   select_df_form.get_html()
     new_df_html         =   patch_html(new_df_html)
 
     change_select_js = "$("
-    change_select_js = change_select_js + "'#" + df_selects[df_index] + "').html('"
+    change_select_js = change_select_js + "'#" + chapterselect + "').html('"
     change_select_js = change_select_js + new_df_html + "');"
-    
     run_jscript(change_select_js,"fail update select : ")
+    
+    set_select_js = "$("
+    set_select_js = set_select_js + "'#" + chapterselect + " :selected').text('" + selected_df + "');"
+    run_jscript(set_select_js,"fail update select : ")
 
+    
+    set_select_js = "$("
+    set_select_js = set_select_js + "'#" + chapterselect + "').trigger('change');"
+    run_jscript(set_select_js,"fail update select : ")
+    
 
 def get_select_df_form(chapterid) :
     """
@@ -251,7 +257,7 @@ def get_select_df_form(chapterid) :
     * returns : form
     * --------------------------------------------------------
     """
-    
+
     if(chapterid == DataCleansing_ID) :
         idlist      =   ["dcdfdataframe"]
         labellist   =   ["dataframe_to_cleanse"]
@@ -266,6 +272,11 @@ def get_select_df_form(chapterid) :
         idlist      =   ["dedfdataframe"]
         labellist   =   ["dataframe_to_export"]
         formid      =   "dataexportdf"
+    
+    elif(chapterid == SWGeocodeUtility_ID) :
+        idlist      =   ["dgdfdataframe"]
+        labellist   =   ["dataframe_to_geocode"]
+        formid      =   "datageocodedf"
     
     elif(chapterid == SWDFSubsetUtility_ID) :
         idlist      =   ["dsdfdataframe"]
@@ -309,7 +320,7 @@ def get_select_df_form(chapterid) :
         select_df_form.set_gridwidth(780)
     else :
         select_df_form.set_gridwidth(480)
-    
+        
     return(select_df_form)
 
 
@@ -326,15 +337,20 @@ def display_data_select_df(chapterid) :
     """
     
     select_df_form              =   get_select_df_form(chapterid)
+    select_df_form_html         =   select_df_form.get_html()
+    
+    #print(select_df_form_html)
     
     gridclasses     =   ["dfc-footer"]
-    gridhtmls       =   [select_df_form.get_html()]
+    gridhtmls       =   [select_df_form_html]
     
     from dfcleanser.common.common_utils import display_generic_grid   
     if(get_dfc_mode() == INLINE_MODE) :
         display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
     else :
         display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
+        
+    
 
 
 def display_no_dfs(chapterid) :
@@ -354,9 +370,28 @@ def display_no_dfs(chapterid) :
     elif(chapterid == DataExport_ID) :          msg    =   "No dataframe imported to select for data export"
     elif(chapterid == DataTransform_ID) :       msg    =   "No dataframe imported to select for data transform"
     elif(chapterid == SWDFSubsetUtility_ID) :   msg    =   "No dataframe imported to select for subsets"
+    elif(chapterid == DataImport_ID)        :   msg    =   "No dataframe imported to select for data import"
+    elif(chapterid == SWGeocodeUtility_ID)  :   msg    =   "No dataframe imported to select for geocoding"
     
     from dfcleanser.common.common_utils import display_grid_status
     display_grid_status(msg)
+    
+
+def delete_df(df) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : delete df and memory
+    * 
+    * parms :
+    *  df    -   df to delete
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    del df
+    import gc
+    gc.collect()
 
 
 """
@@ -392,7 +427,20 @@ def is_a_dfc_dataframe_loaded() :
 #--------------------------------------------------------------------------
 #   dfcleanser dataframe attributes
 #--------------------------------------------------------------------------
-"""   
+"""  
+def get_dataframe(title) :
+    """
+    * ---------------------------------------------------------------------
+    * function : get a datframe object
+    *
+    * Parms : 
+    *  title    :   dfc dataframe title
+    * --------------------------------------------------------------------
+    """
+    return(dfc_dfs.get_dataframe(title))
+    
+    
+ 
 def get_dfc_dataframe(title) :
     """
     * ---------------------------------------------------------------------
@@ -489,6 +537,10 @@ def drop_dfc_dataframe(title) :
     * --------------------------------------------------------------------
     """
     dfc_dfs.drop_dataframe(title)
+    
+    change_select_js = "change_dataframes_to_select();"
+    run_javascript(change_select_js,"fail update select : ")
+
 
 def add_dfc_dataframe(dfcdf,update=True) :
     """
@@ -508,9 +560,7 @@ def add_dfc_dataframe(dfcdf,update=True) :
     
     if(update) :
         change_select_js = "change_dataframes_to_select();"
-    
-        from dfcleanser.common.common_utils import run_jscript
-        run_jscript(change_select_js,"fail update select : ")
+        run_javascript(change_select_js,"fail update select : ")
 
 
 def get_dfc_dataframes_titles_list() :
@@ -543,6 +593,8 @@ def get_dfc_dataframes_select_list(chapterid) :
     elif(chapterid == DataCleansing_ID)     :   default_df  =   get_config_value(CURRENT_CLEANSE_DF)
     elif(chapterid == DataTransform_ID)     :   default_df  =   get_config_value(CURRENT_TRANSFORM_DF)
     elif(chapterid == DataExport_ID)        :   default_df  =   get_config_value(CURRENT_EXPORT_DF)
+    elif(chapterid == DataImport_ID)        :   default_df  =   get_config_value(CURRENT_IMPORT_DF)
+    elif(chapterid == SWGeocodeUtility_ID)  :   default_df  =   get_config_value(CURRENT_GEOCODE_DF)
     elif(chapterid == SWDFSubsetUtility_ID) :   default_df  =   get_config_value(CURRENT_SUBSET_DF)
     else                                    :   default_df  =   None
    
@@ -556,7 +608,6 @@ def get_dfc_dataframes_select_list(chapterid) :
         return(df_select)
     else :
         return(None)
-
 
 
 """
@@ -739,6 +790,7 @@ dfc_dfs     =   dfc_dataframes()
 #   dfc dataframe Chapters current dataframe config value
 #--------------------------------------------------------------------------
 """
+
 CURRENT_INSPECTION_DF                   =   "currentinspectiondf"
 CURRENT_CLEANSE_DF                      =   "currentcleansedf"
 CURRENT_TRANSFORM_DF                    =   "currenttransformdf"
@@ -746,19 +798,30 @@ CURRENT_EXPORT_DF                       =   "currentexportdf"
 CURRENT_IMPORT_DF                       =   "currentimportdf"
 CURRENT_GEOCODE_DF                      =   "currentgeocodedf"
 CURRENT_SUBSET_DF                       =   "currentsubsetdf"
+CURRENT_CENSUS_DF                       =   "currentcensusdf"
 
 
-def get_current_chapter_df(chapterdfId) :
-
+def get_current_chapter_df(chapterId) :
+    
     if(is_a_dfc_dataframe_loaded()) : 
         
-        saved_df    =   get_config_value(chapterdfId)
+        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
+        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
+        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
+        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
+        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
+        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
+        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
+        else                                        :   dftitle     =   None
         
-        if(saved_df is None) :
-            drop_config_value(saved_df)
+        if(dftitle is None) :
             return(None)
         else :
-            df  =   get_dfc_dataframe_df(saved_df)
+        
+            saved_df    =   get_config_value(dftitle)
+            df          =   get_dfc_dataframe_df(saved_df)
+            
             if(df is None) :
                 drop_config_value(saved_df)
                 return(None)
@@ -767,6 +830,37 @@ def get_current_chapter_df(chapterdfId) :
     
     else :
         return(None)
+
+def set_current_chapter_df(chapterId,df,opstat) :
+    
+    if(is_a_dfc_dataframe_loaded()) : 
+        
+        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
+        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
+        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
+        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
+        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
+        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
+        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
+        else                                        :   dftitle     =   None
+        
+        saved_df    =   get_config_value(dftitle)
+        
+        if(dftitle is None) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("invalid chapter id")
+        
+        else :
+            
+            if(df is None) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("invalid df")
+            
+            else :
+                saved_df    =   get_config_value(dftitle)
+                set_dfc_dataframe_df(saved_df,df)
+            
 
 def get_cfg_parm_from_input_list(formid,label,labellist) :
     """
@@ -825,6 +919,7 @@ DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
 
 CLEANSING_COL_KEY                       =   "datacleansingcolumn"
 CLEANSING_ROW_KEY                       =   "datacleansingrow"
+CHKNUM_COL_KEY                          =   "ChknumColumn"
 
 """
 #--------------------------------------------------------------------------
@@ -921,13 +1016,14 @@ def get_current_col_name() :
 #   global keys that should be stored at the dfcleanser level
 #--------------------------------------------------------------------------
 """
-GlobalKeys     =   [EULA_FLAG_KEY,"geocoder","GoogleV3_querykwargs",
+GlobalKeys     =   ["EULARead","geocoder","GoogleV3_querykwargs",
                     "arcgisgeocoderParms","binggeocoderParms","mapquestgeocoderParms",
                     "nomingeocoderParms","googlegeocoderParms","baidu_geocoderParms",
                     "googlebulkgeocoderParms","arcgisbatchgeocoderParms",
                     "bingbulkgeocoderParms","baidubulkgeocoderParms",
                     "PostgresqldbconnectorParms","MySQLdbconnectorParms","SQLitedbconnectorParms",
-                    "OracledbconnectorParms","MSSQLServerdbconnectorParms","customdbconnectorParms"]
+                    "OracledbconnectorParms","MSSQLServerdbconnectorParms","customdbconnectorParms",
+                    "currentDBID","currentDBLIBID"]
 
 def is_global_parm(key) :
     if(key in GlobalKeys) :
@@ -949,8 +1045,10 @@ def is_global_parm(key) :
 #--------------------------------------------------------------------------
 def get_config_value(key) :
     return(DataframeCleanserCfgData.get_config_value(key))
+
 def set_config_value(key, value) :
     DataframeCleanserCfgData.set_config_value(key,value)
+    
 def drop_config_value(key) :
     DataframeCleanserCfgData.drop_config_value(key)
 
@@ -1264,6 +1362,8 @@ def get_chapters_loaded_cbs() :
     
 
 def set_chapters_loaded(cellsList) :
+    
+    print("set_chapters_loaded",cellsList)
     
     set_config_value(DFC_CHAPTERS_LOADED_KEY, cellsList)
     

@@ -617,7 +617,11 @@ class ButtonGroupForm :
         if((self.get_formid() == "#censusdataload") or (self.get_formid() == "#inspectionoptionstb") ):
             self.dump()
             print(button_group_form_html)
-
+        
+        from dfcleanser.common.common_utils import DUMP_HTML
+        if(DUMP_HTML) :
+            print(button_group_form_html)
+            
         return(button_group_form_html)
 
 
@@ -677,8 +681,8 @@ input_group_form_bottom = """  </div>"""
 input_group_div_top = "    <div class='container dc-container dc-default-input-inner-div'>"# dc-container dc-default-input-inner-div'>"# style=' margin-bottom:10px; overflow-y:hidden;'>"
 
 
-input_group_form_div_start = (new_line + tabs(2) + "  <div class='form-group-sm'>")
-input_group_form_div_textarea_start = (new_line + tabs(2) + """<div class="form-group-sm" style="height:120px" >""")
+input_group_form_div_start = (new_line + tabs(2) + "  <div>")
+input_group_form_div_textarea_start = (new_line + tabs(2) + """<div style="height:120px" >""")
 
 input_group_form_div_end = (new_line + tabs(2) + """  </div>""")
 
@@ -713,7 +717,7 @@ input_group_fullparms_end = """)">Show All Parameters</button>
 
 input_group_select_start = (new_line + tabs(2) + """        <select """)
 input_group_select_multiple_start = (new_line + tabs(2) + """        <select multiple """)
-input_group_select_middle = """  style="margin-left:1px; font-size: 11px;" class="form-control"> 
+input_group_select_middle = """  style="margin-left:1px; font-size: 12px;" class="form-control"> 
 """
 input_group_select_end = (tabs(2) + """        </select>""")
 
@@ -868,6 +872,7 @@ class InputForm :
         
         self.customDict         =   {}
         self.selectDict         =   {}
+        self.fontsizeDict       =   {}
 
     def get_formid(self) :
         return(self.formid)
@@ -897,6 +902,10 @@ class InputForm :
         return(self.reqList)
     def set_reqList(self,setParm) :
         self.reqList = setParm
+    def get_custom_font_size(self,inputid) :
+        return(self.fontsizeDict.get(inputid,None))
+    def set_custom_font_size(self,inputid,fontsize) :
+        self.fontsizeDict.update({inputid:fontsize})
 
         
     def get_shortForm(self) :
@@ -981,14 +990,21 @@ class InputForm :
             
             for i in range(len(parmidsList)) :
                 
-                if(parmidsList[i] == parmid) :
+                try :
+                
+                    if(parmidsList[i] == parmid) :
                     
-                    if(parmslist[i] is None ) :
-                        seldict.update({"current" : seldict.get("default")}) 
-                    else :
-                        seldict.update({"current" : parmslist[i]})
-                    found   =   True
-                    break;
+                        if(parmslist[i] is None ) :
+                            seldict.update({"current" : seldict.get("default")}) 
+                        else :
+                            seldict.update({"current" : parmslist[i]})
+                            
+                        found   =   True
+                        break;
+                        
+                except :
+                    
+                    print("add_select_dict",i,parmidsList)
             
             if(not found) :
                 seldict.update({"current" : seldict.get("default")})    
@@ -1008,7 +1024,7 @@ class InputForm :
         options =   self.get_select_list(idkey)
         
         for i in range(len(options)) :
-            selhtml     =   (selhtml + tabs(3) + "        <option style='text-align:left; font-size:11px;'")
+            selhtml     =   (selhtml + tabs(3) + "        <option style='text-align:left; font-size:12px;'")
             
             if(fparm is None) :
                 if(options[i] == self.get_select_current(idkey)) :
@@ -1190,7 +1206,11 @@ class InputForm :
                             input_group_form_html = (input_group_form_html + addattribute("type",self.get_typeList()[i])) 
                    
                         input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
-                        input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 11px;"))
+                        
+                        if(self.get_custom_font_size(self.get_idList()[i]) is None)  :
+                            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 12px;"))
+                        else :
+                            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: " + str(self.get_custom_font_size(self.get_idList()[i])) + "px;"))
                 
                     input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i]))#"input" + formid + idList[i]))
                     input_group_form_html = (input_group_form_html + addattribute("placeholder",self.get_placeholderList()[i]))
@@ -1221,7 +1241,10 @@ class InputForm :
                                 input_group_form_html = (input_group_form_html + addattribute("value",iparm))
                             else :
                                 if(formParmsProtect[i] == True) :
-                                    input_group_form_html = (input_group_form_html + addattribute("value",iparm) + " readonly")
+                                    if( (self.get_typeList()[i] == "select") or (self.get_typeList()[i] == "selectmultiple") ) :
+                                         input_group_form_html = (input_group_form_html + addattribute("value",iparm) + " readonly")
+                                    else:
+                                         input_group_form_html = (input_group_form_html + addattribute("value",iparm) + " readonly")
                                 else : 
                                     input_group_form_html = (input_group_form_html + addattribute("value",iparm))
                             
@@ -1291,6 +1314,10 @@ class InputForm :
                         input_group_form_html = (input_group_form_html + input_group_select_start)
                     else :
                         input_group_form_html = (input_group_form_html + input_group_select_multiple_start)
+                    
+                    if(not(formParmsProtect is None)) :    
+                        if(formParmsProtect[i] == True) :
+                            input_group_form_html = (input_group_form_html + " disabled ")    
 
                     # add onchange event handler
                     if(not (self.get_select_callback(self.get_idList()[i])) == None) :
@@ -1301,14 +1328,16 @@ class InputForm :
                     input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i])) 
                     
                     # add size attribute
-                    if(not (self.get_select_size(self.get_idList()[i])) == None) :
-                        if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
-                            input_group_form_html = (input_group_form_html + addattribute("multiple","multiple"))
-                            input_group_form_html = (input_group_form_html + addattribute("size",str(self.get_select_size(self.get_idList()[i]))) )
+                    select_size     =   self.get_select_size(self.get_idList()[i])
+                    
+                    if(not (select_size == None) ) :
+                        if(not (select_size == 1)) :
+                            #input_group_form_html = (input_group_form_html + addattribute("multiple","multiple"))
+                            input_group_form_html = (input_group_form_html + addattribute("size",str(select_size)))#str(self.get_select_size(self.get_idList()[i]))) )
                         
-                    else :
-                        if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
-                            input_group_form_html = (input_group_form_html + addattribute("size","2"))
+                    #else :
+                    #    if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
+                    #        input_group_form_html = (input_group_form_html + addattribute("size","2"))
     
                     
                     input_group_form_html = (input_group_form_html + input_group_select_middle)
@@ -1351,9 +1380,11 @@ class InputForm :
         
         input_group_form_html = (input_group_form_html + input_group_form_end)
 
-        if((self.get_formid() == "#datainspectcolsearch") or (self.get_formid() == "#datainspectcolsearch") or (self.get_formid() == "#dataexportdf") or (self.get_formid() == "#datainspectdf") ) :   
-            print(input_group_form_html)
-            self.dump()
+        from dfcleanser.common.common_utils import DUMP_HTML
+        if(DUMP_HTML) :
+            if( (not ( self.get_formid() == "googlebulkquery")) and 
+                (not ( self.get_formid() == "bingbulkquery")) ):
+                print(input_group_form_html)
 
         return(input_group_form_html)
 
@@ -1373,12 +1404,14 @@ class InputForm :
         print("buttonstyle     [11]: ",self.get_buttonstyle())
         
         if(len(self.selectDict) > 0) :
-            print("select lists    [12]: ",len(self.selectDict))
+            print("\nselect lists    [12]: ",len(self.selectDict))
             ids     =   list(self.selectDict.keys())
             for i in range(len(ids)) :
                 print("\n   Id : ",ids[i],"\n")
                 print("     default  : ",self.get_select_default(ids[i]))
                 print("     list     : ",self.get_select_list(ids[i]))
+                print("     callback : ",self.get_select_callback(ids[i]))
+                print("     size     : ",self.get_select_size(ids[i]))
 
 
 
@@ -1566,7 +1599,10 @@ class CheckboxGroupForm :
         if((self.get_formid() == "dceulaform") or (self.get_formid() == "dropcolsinput") or (self.get_formid() == "addcolcodeInput") ) :   
             print(checkbox_group_form_html)
         
-        #print(checkbox_group_form_html)
+        from dfcleanser.common.common_utils import DUMP_HTML
+        if(DUMP_HTML) :
+            print(checkbox_group_form_html)
+
         return(checkbox_group_form_html)
 
 
@@ -1732,6 +1768,10 @@ class RadioGroupForm :
 
         if(self.get_radioid == "dtconvertdatatype") :   
             print(radioHTML)
+        
+        from dfcleanser.common.common_utils import DUMP_HTML
+        if(DUMP_HTML) :
+            print(radioHTML)
 
         return(radioHTML)
 
@@ -1774,7 +1814,7 @@ def displayHeading(text,level) :
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   Dataframe Cleanser Input form repository static helper functions
+#   Dataframe Cleanser Input form repository for full parm candidates
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -1795,6 +1835,12 @@ def delete_all_inputs(ownerid) :
 def define_inputs(ownerid,formlist) :
     DataframeCleanserInputLog.define_owner_list(ownerid,formlist) 
 
+def are_owner_inputs_defined(ownerid) :
+    ownerlist   =   DataframeCleanserInputLog.get_owner_list(ownerid) 
+    if(ownerlist is None) :
+        return(False)
+    else :
+        return(True)
 
 
 class DCInputLog :
@@ -1836,6 +1882,9 @@ class DCInputLog :
             
     def define_owner_list(self,ownerid,formlist) :
         self.ownerDict.update({ownerid:formlist})
+    
+    def get_owner_list(self,ownerid) :
+        return(self.ownerDict.get(ownerid))
         
     def get_inputlog_file_name(self) :
         nbname  =   cfg.get_notebook_name()

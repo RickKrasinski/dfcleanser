@@ -14,11 +14,11 @@ this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
 
-from dfcleanser.common.table_widgets import (SCROLL_DOWN, ROW_MAJOR,  dcTable, SCROLL_RIGHT, get_col_major_table,
+from dfcleanser.common.table_widgets import (SCROLL_DOWN, ROW_MAJOR,  dcTable, SCROLL_RIGHT, SCROLL_NONE, get_col_major_table,
                                              get_table_value, get_row_major_table, COLUMN_MAJOR) 
 
 from dfcleanser.common.common_utils import  (is_int_col, is_numeric_col, get_col_uniques,
-                                             opStatus, display_generic_grid)
+                                             opStatus, display_generic_grid, is_categorical_col)
 
 
 """            
@@ -31,21 +31,54 @@ from dfcleanser.common.common_utils import  (is_int_col, is_numeric_col, get_col
 #------------------------------------------------------------------
 """
 
-"""            
-#------------------------------------------------------------------
-#   display col uniques  
-#
-#       df          -   data frame
-#       colname     -   column name
-#
-#------------------------------------------------------------------
-""" 
-def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,display=True) : 
+def display_df_unique_column(df,table,colname,sethrefs=False,display=True) : 
+    """            
+    #------------------------------------------------------------------
+    #   display col uniques and count 
+    #
+    #       df          -   data frame
+    #       table       -   dc table
+    #       colname     -   column name
+    #       sethrefs    -   set hrefs flag
+    #       display     -   display or html flag
+    #
+    #------------------------------------------------------------------
+    """ 
     
-    if(incounts == None) :
-        counts          =   df[colname].value_counts().to_dict()
+    import pandas as pd
+    import numpy as np
+    
+    if(not(is_categorical_col(df,colname))) :
+    
+        counts      =   df[colname].value_counts().to_dict()
+        uniques     =   list(counts.keys())
+        uniques.sort()
+        
     else :
-        counts = incounts
+        
+        CI          =   pd.CategoricalIndex(df[colname])
+        codes       =   CI.codes
+        uniques     =   CI.categories.tolist()
+        
+        cunique, ccounts = np.unique(codes, return_counts=True)
+        cunique     =   cunique.tolist()
+        ccounts     =   ccounts.tolist()
+        counts      =   {}
+        
+        for i in range(len(cunique)) :
+            if(not (cunique[i] == -1)) :
+                counts.update({cunique[i]:ccounts[i]})
+                
+        cuniques    =   list(counts.keys())
+        cuniques.sort()
+        
+        for i in range(len(cuniques)) :
+            counts.update({uniques[cuniques[i]]:counts.get(cuniques[i])})
+            counts.pop(cuniques[i],None)
+            
+        cfg.drop_config_value(cfg.UNIQUES_RANGE_KEY)
+    
+    totnans     =  df[colname].isnull().sum()
     
     minvalue        =   None
     maxvalue        =   None
@@ -56,82 +89,104 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
         findparms = cfg.get_config_value(cfg.UNIQUES_RANGE_KEY)
         
         if(is_numeric_col(df,colname) ) :
+            
             if(is_int_col(df,colname) ) :
-                minvalue = int(findparms[0])
-                maxvalue = int(findparms[1])
-            else :    
-                minvalue = float(findparms[0])
-                maxvalue = float(findparms[1])
+                
+                if(len(findparms[0]) < 1) :
+                    minvalue    =   int(min(uniques))
+                else :
+                    minvalue = int(findparms[0])
+                    
+                if(len(findparms[1]) < 1) :
+                    minvalue    =   int(max(uniques))
+                else :
+                    maxvalue    =   int(findparms[1])
+            
+            else :
+                
+                if(len(findparms[0]) < 1) :
+                    minvalue    =   float(min(uniques))
+                else :
+                    minvalue    =   float(findparms[0])
+                
+                if(len(findparms[1]) < 1) :
+                    minvalue    =   float(max(uniques))
+                else :
+                    maxvalue    =   float(findparms[1])
+                    
         else :
+            
             contains_value  =   findparms[0]
-    
-    totnans =  df[colname].isnull().sum()
-    all_uniques = list(counts.keys())
 
-    uniques     =   []
+    final_uniques     =   []
     
     if(is_numeric_col(df,colname)) :
         if((minvalue is None) and (maxvalue is None)) :
-            uniques     =   all_uniques
-            uniques.sort()
+            final_uniques     =   uniques
         else :
-            for i in range(len(all_uniques)) :
+            for i in range(len(uniques)) :
                 if(not (minvalue is None)) :
                     if(not (maxvalue is None)) :
-                        if( (all_uniques[i] >= minvalue) and (all_uniques[i] <= maxvalue) ) :
-                            uniques.append(all_uniques[i])
+                        if( (uniques[i] >= minvalue) and (uniques[i] <= maxvalue) ) :
+                            final_uniques.append(uniques[i])
                     else :
-                        if( (all_uniques[i] >= minvalue) ) :
-                            uniques.append(all_uniques[i])
+                        if( (uniques[i] >= minvalue) ) :
+                            final_uniques.append(uniques[i])
                 else :
-                    if( (all_uniques[i] <= maxvalue) ) :
-                        uniques.append(all_uniques[i])
+                    if( (uniques[i] <= maxvalue) ) :
+                        final_uniques.append(uniques[i])
                         
-            uniques.sort()
-                    
     else :
+        
+        if(not(is_categorical_col(df,colname))) :
 
-        if((contains_value is None)) :
-            uniques     =   all_uniques
-            uniques.sort()
+            if((contains_value is None)) :
+                final_uniques     =   uniques
+            else :
+                for i in range(len(uniques)) :
+                    if(uniques[i].find(contains_value) > -1) :
+                        final_uniques.append(uniques[i]) 
+                        
         else :
-            for i in range(len(all_uniques)) :
-                if(all_uniques[i].find(contains_value) > -1) :
-                    uniques.append(all_uniques[i])    
+            
+            final_uniques     =   uniques    
 
-    if(totnans > 0) :
+    if( (totnans > 0) and (not(is_categorical_col(df,colname))) ) :
         counts.update({"nan":totnans}) 
         
-    if(0):#cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        table.set_colsperrow(3)
+    table.set_colsperrow(3)
     
-        uniqueHeader    =   ["Value","Count","Value","Count","Value","Count",
-                             "Value","Count","Value","Count"]
-        uniqueRows      =   []
-        uniqueWidths    =   [14,6,14,6,14,6,14,6,14,6]
-        uniqueAligns    =   ["center","center","center","center","center",
-                             "center","center","center","center","center"]
-        
-    else :
-        table.set_colsperrow(3)
-        
+    if(not(is_categorical_col(df,colname))) :
         uniqueHeader    =   ["Value","Count","Value","Count","Value","Count"]
-        uniqueRows      =   []
-        uniqueWidths    =   [22,12,23,12,23,12]
-        uniqueAligns    =   ["center","center","center","center","center","center"]
+    else :
+        uniqueHeader    =   ["Category","Count","Category","Count","Category","Count"]
         
+    uniqueRows      =   []
+    uniqueWidths    =   [22,12,23,12,23,12]
+    uniqueAligns    =   ["center","center","center","center","center","center"]
         
     if(table.get_rowspertable() == 0) :
         table.set_rowspertable(8)
     table.set_maxtables(1)
-
     
     if(sethrefs) :
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None,
-                                 "chgval",None,"chgval",None]
+        
+        if(not(is_categorical_col(df,colname))) :
+            
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None,
+                                     "chgval",None,"chgval",None]
+            else :
+                uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None]
+                
         else :
-            uniquehrefs     =   ["chgval",None,"chgval",None,"chgval",None]
+            
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                uniquehrefs     =   ["chgcat",None,"chgcat",None,"chgcat",None,
+                                     "chgcat",None,"chgcat",None]
+            else :
+                uniquehrefs     =   ["chgcat",None,"chgcat",None,"chgcat",None]
+                
     else :
         uniquehrefs     =   None
     
@@ -141,7 +196,7 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
     j = 0
     k = 0
 
-    totaluniques = len(uniques)
+    totaluniques = len(final_uniques)
     
     if(totaluniques > 100) :
         if(cfg.get_config_value(cfg.UNIQUES_RANGE_KEY) == None) :
@@ -151,7 +206,7 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
             else :
                 totaluniques = 60
             
-    if(totnans > 0) :
+    if( (totnans > 0) and (not(is_categorical_col(df,colname))) ) :
         uniquerow.append("nan")
         uniquerow.append(str(totnans))
         j = 1
@@ -160,8 +215,8 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
     
     for i in range(totaluniques) :
 
-        uniquerow.append(str(uniques[i]))
-        uniquerow.append(str(counts.get(uniques[i])))
+        uniquerow.append(str(final_uniques[i]))
+        uniquerow.append(str(counts.get(final_uniques[i])))
         j = j + 1
 
             
@@ -199,10 +254,17 @@ def display_df_unique_column(df,table,colname,sethrefs=False,incounts=None,displ
 
     table.set_hiddensList(hiddens)
     if(sethrefs) :
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand. To select range of values enter min and max and click 'Find Values'")
+        
+        if(not(is_categorical_col(df,colname))) :
+            
+            if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                table.set_note("<b>*</b> To select 'Current' or 'New' values click on value above or enter by hand. To select range of values enter min and max and click 'Find Values'")
+            else :
+                table.set_note("<b>*</b> To select 'Current' or 'New' values click on value above or enter by hand.<br>&nbsp;&nbsp; To select range of values enter min and max and click 'Find Values'")
+                
         else :
-            table.set_note("<b>*</b> To change 'Current' or 'New' values click on value above or enter by hand.<br>&nbsp;&nbsp; To select range of values enter min and max and click 'Find Values'")
+            
+            table.set_note("<b>*</b> To select a category click on the category above or enter by hand.")            
     
     table_html  =   table.get_html(False)
     
@@ -229,17 +291,17 @@ def unique_list(inlist):
 
 
 
-"""            
-#------------------------------------------------------------------
-#   get the base sizing info of a dataframe
-#
-#   df              -   dataframe
-#
-#   return : basic sizing info
-#
-#------------------------------------------------------------------
-"""
 def display_df_sizing_info(df) : 
+    """            
+    #------------------------------------------------------------------
+    #   get the base sizing info of a dataframe
+    #
+    #   df              -   dataframe
+    #
+    #   return : basic sizing info
+    #
+    #------------------------------------------------------------------
+    """
 
     #print("display_df_sizing_info")
     print("        [NUMBER OF ROWS] :",len(df))
@@ -248,8 +310,18 @@ def display_df_sizing_info(df) :
 
 
 
-def get_num_stats(df,df_cols,i,num_stats) :
-
+#def get_num_stats(df,df_cols,i,num_stats) :
+    """            
+    #------------------------------------------------------------------
+    #   get numeric column stats
+    #
+    #   df   -   dfc table for display
+    #   direction           -   scroll direction
+    #   display             -   display flag
+    #
+    #------------------------------------------------------------------
+    """
+    """
     try :
         num_stats.append(df[df_cols[i]].count())
         num_stats.append(float("{0:.2f}".format(df[df_cols[i]].mean())))
@@ -268,7 +340,8 @@ def get_num_stats(df,df_cols,i,num_stats) :
     except : 
         num_stats = [0, 0, 0, 0, 0]
 
-
+    """
+    
 """            
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -289,12 +362,11 @@ def update_df_describe(df_describe_table,direction=SCROLL_RIGHT,display=True) :
     #------------------------------------------------------------------
     """
     
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-
+    df  =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+    
     from dfcleanser.common.table_widgets import set_col_major_table_scroll
     set_col_major_table_scroll(df_describe_table,direction)
     
-    # build the table lists from the column stats
     dfHeader        =   ["    "]
     dfWidths        =   [7]
     dfAligns        =   ["center"]
@@ -311,25 +383,40 @@ def update_df_describe(df_describe_table,direction=SCROLL_RIGHT,display=True) :
        
     dfRowsList      =   []
     
-    df_cols     =   df.columns.tolist()
+    df_cols         =   df.columns.tolist()
     
     start_col       =   df_describe_table.get_lastcoldisplayed()
-    if( not (start_col == 0)) :
-        start_col       =   start_col + 1
-        
-    current_col     =   df_describe_table.get_lastcoldisplayed()
-
-    #for i in range(df_describe_table.get_colsperrow()) :
     
-    i               =   0
+    if( not (start_col == 0)) :
+        start_col   =   start_col + 1
+
     num_displayed   =   0
+    
+    cols_to_display =   []
+    
+    current_col     =   start_col
         
     while (num_displayed < df_describe_table.get_colsperrow()) :
         
-        current_col     =   start_col + i
-        #print("update_df_schema_table current_col",current_col)
+        if(current_col < len(df_cols)) :
+            
+            if(is_numeric_col(df,df_cols[current_col])) :
+                cols_to_display.append(current_col)
+                num_displayed   =   num_displayed + 1
+                
+            current_col     =   current_col + 1
+            
+        else :
+            
+            if(len(cols_to_display) == 0) :
+                current_col     =   0
+            else :
+                cols_to_display.append(-1)
+                num_displayed   =   num_displayed + 1
+            
+    for i in range(len(cols_to_display)) :
         
-        if(current_col > len(df_cols)) :
+        if(cols_to_display[i] == -1) :
             
             dfHeader.append(" ")
             
@@ -342,52 +429,42 @@ def update_df_describe(df_describe_table,direction=SCROLL_RIGHT,display=True) :
             skewrow.append(" ")
             kurtrow.append(" ")
             
-            i               =   i + 1
-            num_displayed   =   num_displayed + 1
-            
-            
         else :
-            i               =   i + 1
             
-            if(is_numeric_col(df,df_cols[current_col])) :
+            dfHeader.append(df_cols[cols_to_display[i]])
+        
+            numuniquesrow.append(df[df_cols[cols_to_display[i]]].nunique())
+            numnansrow.append(df[df_cols[cols_to_display[i]]].isnull().sum())
+        
+            try :
+                meanrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].mean())))
+                stdrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].std())))
+                
+                if(is_int_col(df,df_cols[cols_to_display[i]])) :
+                    minrow.append(df[df_cols[cols_to_display[i]]].min())
+                    maxrow.append(df[df_cols[cols_to_display[i]]].max())
+                else :    
+                    minrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].min())))
+                    maxrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].max())))
+                
+                skewrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].skew())))
+                kurtrow.append(float("{0:.2f}".format(df[df_cols[cols_to_display[i]]].kurtosis())))
             
-                dfHeader.append(df_cols[current_col])
-        
-                numuniquesrow.append(df[df_cols[current_col]].nunique())
-                numnansrow.append(df[df_cols[current_col]].isnull().sum())
-        
-                try :
-                    meanrow.append(float("{0:.2f}".format(df[df_cols[current_col]].mean())))
-                    stdrow.append(float("{0:.2f}".format(df[df_cols[current_col]].std())))
-                
-                    if(is_int_col(df,df_cols[current_col])) :
-                        minrow.append(df[df_cols[current_col]].min())
-                        maxrow.append(df[df_cols[current_col]].max())
-                    else :    
-                        minrow.append(float("{0:.2f}".format(df[df_cols[current_col]].min())))
-                        maxrow.append(float("{0:.2f}".format(df[df_cols[current_col]].max())))
-                
-                    skewrow.append(float("{0:.2f}".format(df[df_cols[current_col]].skew())))
-                    kurtrow.append(float("{0:.2f}".format(df[df_cols[current_col]].kurtosis())))
-                
-                except : 
+            except : 
                     
-                    numuniquesrow.append(" ")
-                    numnansrow.append(" ")
-                    meanrow.append(" ")
-                    stdrow.append(" ")
-                    minrow.append(" ")
-                    maxrow.append(" ")
-                    skewrow.append(" ")
-                    kurtrow.append(" ")
-                    
-                num_displayed   =   num_displayed + 1
-                    
-                   
+                numuniquesrow.append(" ")
+                numnansrow.append(" ")
+                meanrow.append(" ")
+                stdrow.append(" ")
+                minrow.append(" ")
+                maxrow.append(" ")
+                skewrow.append(" ")
+                kurtrow.append(" ")
+            
         dfWidths.append(13)
         dfAligns.append("center")
         dfchrefs.append("ncol")
-
+        
     dfRowsList.append(numuniquesrow)
     dfRowsList.append(numnansrow)
     dfRowsList.append(meanrow)
@@ -407,24 +484,16 @@ def update_df_describe(df_describe_table,direction=SCROLL_RIGHT,display=True) :
     
     df_describe_table.set_tabletype(COLUMN_MAJOR)
     
-    #print("current_col",current_col)
-    
     df_describe_table.set_lastcoldisplayed(current_col)
-    #print("lastcoldisplayed",df_describe_table.get_lastcoldisplayed())
     df_describe_table.set_maxcolumns(len(df_cols))
     
     df_describe_table.set_note("* To cleanse any column click on the column name in the table above")
 
     if(display) :
-        
-        df_describe_html   =   get_col_major_table(df_describe_table,False)
-        #print(df_schema_html)
         get_col_major_table(df_describe_table,True)
     
     else :
-        
-        df_describe_html   =   get_col_major_table(df_describe_table,False)
-        return(df_describe_html)
+        return(get_col_major_table(df_describe_table,False))
 
         
 def display_df_describe(display=True) : 
@@ -463,6 +532,23 @@ def display_df_describe(display=True) :
 #------------------------------------------------------------------
 """
 
+nn_alpha_numeric_button  =   """
+                            <div>
+                                        <button type='button' class='btn btn-grp dc-schema-button' style='margin-left:15px;' id="canXXXXbutton" onClick="nn_check_compatability(0,'XXXXcolname')">Check</br>Alpha</br>Numeric</button>
+                            </div>
+"""
+
+nn_numeric_button       =   """
+                            <table>
+                                <tr>
+                                    <td align='center' style='width:100%'>
+                                        <button type='button' class='btn btn-grp dc-schema-button' style='margin-left:11px;' id="cnXXXXbutton" onClick="nn_check_compatability(1,'XXXXcolname')">Check</br>Numeric</button>
+                                    </td>
+                                </tr>
+                            </table>
+"""
+
+
 def update_df_nn_describe(nn_df_describe_table,direction=SCROLL_RIGHT,display=True) : 
     """            
     #------------------------------------------------------------------
@@ -475,10 +561,11 @@ def update_df_nn_describe(nn_df_describe_table,direction=SCROLL_RIGHT,display=Tr
     #------------------------------------------------------------------
     """
     
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_CLEANSE_DF)
-
-    from dfcleanser.common.table_widgets import set_col_major_table_scroll
-    set_col_major_table_scroll(nn_df_describe_table,direction)
+    df  =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+    
+    if(not (direction==SCROLL_NONE)) :
+        from dfcleanser.common.table_widgets import set_col_major_table_scroll
+        set_col_major_table_scroll(nn_df_describe_table,direction)
     
     # build the table lists from the column stats
     dfHeader        =   ["    "]
@@ -486,10 +573,10 @@ def update_df_nn_describe(nn_df_describe_table,direction=SCROLL_RIGHT,display=Tr
     dfAligns        =   ["center"]
     dfchrefs        =   [None] 
     
-    numuniquesrow   =   ["<b>uniques</b>"]
-    numnansrow      =   ["<b>nans</b>"]
-    maxlrow         =   ["<b>max len</b>"]
-    alpharow        =   ["<b>alphanum</b>"]
+    numuniquesrow   =   ["<b>uniques Count</b>"]
+    numnansrow      =   ["<b>nans Count</b>"]
+    alphanumrow     =   ["<b>Alpha Numeric</b>"]
+    numrow          =   ["<b>Numeric</b>"]
        
     dfRowsList      =   []
     
@@ -499,76 +586,102 @@ def update_df_nn_describe(nn_df_describe_table,direction=SCROLL_RIGHT,display=Tr
     if( not (start_col == 0)) :
         start_col       =   start_col + 1
         
-    current_col     =   nn_df_describe_table.get_lastcoldisplayed()
-
-    #for i in range(df_describe_table.get_colsperrow()) :
-    
-    i               =   0
     num_displayed   =   0
+    
+    cols_to_display     =   []
+    
+    current_col         =   start_col
         
     while (num_displayed < nn_df_describe_table.get_colsperrow()) :
         
-        current_col     =   start_col + i
-        #print("update_df_schema_table current_col",current_col)
+        if(current_col < len(df_cols)) :
+            
+            if(not (is_numeric_col(df,df_cols[current_col]))) :
+                cols_to_display.append(current_col)
+                num_displayed   =   num_displayed + 1
+                
+            current_col     =   current_col + 1
+            
+        else :
+            
+            if(len(cols_to_display) == 0) :
+                current_col     =   0
+            else :
+                cols_to_display.append(-1)
+                num_displayed   =   num_displayed + 1
+            
+    for i in range(len(cols_to_display)) :
         
-        if(current_col > len(df_cols)) :
+        if(cols_to_display[i] == -1) :
             
             dfHeader.append(" ")
             
             numuniquesrow.append(" ")
             numnansrow.append(" ")
-            maxlrow.append(" ")
-            alpharow.append(" ")
-            
-            i               =   i + 1
-            num_displayed   =   num_displayed + 1
-            
+            alphanumrow.append(" ")
+            numrow.append(" ")
             
         else :
-            i               =   i + 1
             
-            if( not(is_numeric_col(df,df_cols[current_col])) ) :
-            
-                dfHeader.append(df_cols[current_col])
+            dfHeader.append(df_cols[cols_to_display[i]])
         
-                numuniquesrow.append(df[df_cols[current_col]].nunique())
-                numnansrow.append(df[df_cols[current_col]].isnull().sum())
-        
-                try :
-                    
-                    maxlength   =   0 
-                    alphanum    =   False 
-                    uniques     =   get_col_uniques(df,df_cols[i])
+            numuniquesrow.append(df[df_cols[cols_to_display[i]]].nunique())
+            numnansrow.append(df[df_cols[cols_to_display[i]]].isnull().sum())
 
-                    for j in range(len(uniques)) :
-                        if(len(str(uniques[j])) > maxlength) :
-                            maxlength =  len(str(uniques[j])) 
-                        if(str(uniques[j]).isalnum()) :
-                            alphanum = True
-                        else :
-                            alphanum = False
-                            
-                    maxlrow.append(maxlength)
-                    alpharow.append(alphanum)
+
+            from dfcleanser.common.common_utils import is_string_col, is_object_col, is_categorical_col
+            if( ( (is_string_col(df,df_cols[cols_to_display[i]])) or 
+                  (is_object_col(df,df_cols[cols_to_display[i]])) ) and
+                ( (not (is_categorical_col(df,df_cols[cols_to_display[i]]))) ) ) :
+                    
+                from dfcleanser.data_cleansing.data_cleansing_model import ALPHANUMERIC, NUMERIC, get_compatability_status
                 
-                except : 
+                cstatus     =   get_compatability_status(ALPHANUMERIC,cols_to_display[i])
                     
-                    numuniquesrow.append(" ")
-                    numnansrow.append(" ")
-                    maxlrow.append(" ")
-                    alpharow.append(" ")
+                if(cstatus is None) :
+                        
+                    alphanumbutton_html =   nn_alpha_numeric_button
+                    alphanumbutton_html =   alphanumbutton_html.replace("XXXXbutton","col" + str(i))
+                    alphanumbutton_html =   alphanumbutton_html.replace("XXXXcolname",df_cols[cols_to_display[i]])
+                    alphanumrow.append(alphanumbutton_html)
+                        
+                else :
+                        
+                    if(cstatus) :
+                        alphanumrow.append("True")
+                    else :
+                        alphanumrow.append("False")
+                            
+                cstatus     =   get_compatability_status(NUMERIC,cols_to_display[i])
                     
-                num_displayed   =   num_displayed + 1
+                if(cstatus is None) :
                     
-                   
+                    numbutton_html      =   nn_numeric_button
+                    numbutton_html      =   numbutton_html.replace("XXXXbutton","col" + str(i))
+                    numbutton_html      =   numbutton_html.replace("XXXXcolname",df_cols[cols_to_display[i]])
+                    numrow.append(numbutton_html)
+                        
+                else :
+                        
+                    if(cstatus) :
+                        numrow.append("True")
+                    else :
+                        numrow.append("False")
+                
+            else : 
+                    
+                alphanumrow.append(" ")
+                numrow.append(" ")
+
+            
         dfWidths.append(13)
         dfAligns.append("center")
         dfchrefs.append("ncol")
-
+        
     dfRowsList.append(numuniquesrow)
     dfRowsList.append(numnansrow)
-    dfRowsList.append(maxlrow)
-    dfRowsList.append(alpharow)
+    dfRowsList.append(alphanumrow)
+    dfRowsList.append(numrow)
     
     nn_df_describe_table.set_title("Non Numeric Column Stats")    
     
@@ -589,18 +702,13 @@ def update_df_nn_describe(nn_df_describe_table,direction=SCROLL_RIGHT,display=Tr
     nn_df_describe_table.set_note("* To cleanse any non numeric column click on the column name in the table above")
 
     if(display) :
-        
-        nn_df_describe_html   =   get_col_major_table(nn_df_describe_table,False)
-        #print(df_schema_html)
         get_col_major_table(nn_df_describe_table,True)
     
     else :
-        
-        nn_df_describe_html   =   get_col_major_table(nn_df_describe_table,False)
-        return(nn_df_describe_html)
+        return(get_col_major_table(nn_df_describe_table,False))
 
  
-def display_df_nn_describe(display=True) : 
+def display_df_nn_describe(display=True,no_scroll=False) : 
     """            
     #------------------------------------------------------------------
     #   display non numeric df column data
@@ -610,9 +718,15 @@ def display_df_nn_describe(display=True) :
     #------------------------------------------------------------------
     """
     
-    df_nn_describe_table = dcTable("Non Numeric Column Names ",
-                                   "dcnngendfdesc",
-                                   cfg.DataCleansing_ID)
+    if(no_scroll) :
+        df_nn_describe_table = get_table_value("dcnngendfdesc")        
+    else :
+    
+        df_nn_describe_table = dcTable("Non Numeric Column Names ",
+                                       "dcnngendfdesc",
+                                       cfg.DataCleansing_ID)
+        
+        df_nn_describe_table.set_lastcoldisplayed(0)
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         df_nn_describe_table.set_colsperrow(7)
@@ -620,29 +734,13 @@ def display_df_nn_describe(display=True) :
         df_nn_describe_table.set_colsperrow(4)
         
     df_nn_describe_table.set_rowspertable(4)
-    df_nn_describe_table.set_lastcoldisplayed(0)
+    
     
     if(display) :
         update_df_nn_describe(df_nn_describe_table,SCROLL_RIGHT,True)
     else :
         df_nn_describe_html   =   update_df_nn_describe(df_nn_describe_table,SCROLL_RIGHT,False)
         return(df_nn_describe_html)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def get_stat_rows(formId,counts,means,stds,mins,maxs,skews,kurtosis) :#,checkboxes) :    
@@ -779,7 +877,7 @@ def display_column_names(df,table,callback,display=True) :
     colsHrefs     =   []
     
     for i in range(len(colsHeader)) :
-        if(not (callback == None)) :
+        if(not (callback is None)) :
             colsHrefs.append(callback) 
         
     colsrow       =   []
@@ -806,9 +904,16 @@ def display_column_names(df,table,callback,display=True) :
     table.set_alignList(colsAligns)
     if(len(colsHrefs) > 0) :
         table.set_refList(colsHrefs)
+        
     if(table.get_note() == "") :
-        table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above.")
-    
+        if(callback == "select_reorder_cols") :
+            table.set_note("<b>*</b> To set the column_to_move or column_to_move_after click on the column name in the table above.")
+        else :    
+            table.set_note("<b>*</b> To get detailed info on any column click on the column name in the table above.")
+    else :
+        if(table.get_note() == "None") :    
+            table.set_note("")
+            
     table.set_small(True)
     
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
