@@ -20,8 +20,8 @@ from dfcleanser.common.html_widgets import (maketextarea, ButtonGroupForm,
 
 from dfcleanser.common.table_widgets import (dcTable, SIMPLE)
 
-from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML, opStatus, 
-                                            display_exception, display_generic_grid, get_select_defaults)
+from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML,  
+                                            display_generic_grid, get_select_defaults)
 
 
 """
@@ -39,7 +39,7 @@ from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_u
 """
 dfmgr_input_title                 =   "Dataframes Manager"
 dfmgr_input_id                    =   "dfmgrform"
-dfmgr_input_idList                =   ["dftitle",
+dfmgr_input_idList                =   ["dfmgrtitle",
                                        "dfnumrows",
                                        "dfnumcols",
                                        "dfnotes",
@@ -157,16 +157,14 @@ system_environment_doc_title            =   "System Options"
 system_environment_doc_id               =   "systemoptions"
 system_environment_title                =   None
 
-system_environment_keyTitleList         =   ["Select</br>Utilities",
+system_environment_keyTitleList         =   ["Utilities</br>Manager",
                                              "dataframe</br>Manager",
-                                             "dfcleanser</br>Files",
                                              "System",
                                              "About",
                                              "EULA","Clear","Reset","Help"]
 
 system_environment_jsList               =   ["process_system_tb_callback("+str(sysm.DISPLAY_CHAPTERS)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_DATAFRAMES)+")",
-                                             "process_system_tb_callback("+str(sysm.DISPLAY_DFC_FILES)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_SYSTEM)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_ABOUT)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_EULA)+")",
@@ -182,12 +180,10 @@ system_environmentA_title               =   None
 
 system_environmentA_keyTitleList        =   ["Select</br>Utilities",
                                              "dataframe</br>Manager",
-                                             "dfcleanser</br>Files",
                                              "System"]
 
 system_environmentA_jsList              =   ["process_system_tb_callback("+str(sysm.DISPLAY_CHAPTERS)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_DATAFRAMES)+")",
-                                             "process_system_tb_callback("+str(sysm.DISPLAY_DFC_FILES)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_SYSTEM)+")"]
 
 system_environmentA_centered            =   True
@@ -247,42 +243,7 @@ system_chapters_tb_jsList              =   ["process_system_tb_callback("+str(sy
 
 system_chapters_tb_centered            =   True
 
-"""
-#--------------------------------------------------------------------------
-#    notebook save inputs
-#--------------------------------------------------------------------------
-"""
-dfc_files_input_title               =   "dfcleanser files Parameters"
-dfc_files_input_id                  =   "dfcfiles"
-dfc_files_input_idList              =   ["nbname","newnbname",
-                                         None,None,None,None,None]
-
-dfc_files_input_labelList           =   ["notebook_name",
-                                         "new_notebook_name",
-                                         "Copy</br>Notebook</br>dfcleanser</br>files",
-                                         "Rename</br>Notebook</br>dfcleanser</br>files",
-                                         "Delete</br>Notebook</br>dfcleanser</br>files",
-                                         "Return","Help"]
-
-dfc_files_input_typeList            =   ["select","text",
-                                         "button","button","button","button","button"]
-
-dfc_files_input_placeholderList     =   ["notebook name","new notebook name",
-                                         None,None,None,None,None]
-
-dfc_files_input_jsList              =    [None,None,
-                                          "process_notebook_files_callback(0)",
-                                          "process_notebook_files_callback(1)",
-                                          "process_notebook_files_callback(2)",
-                                          "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
-                                          "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_COPY_ID) + ")"]
-
-dfc_files_input_reqList             =   [0,1]
-
-
-system_inputs               =   [dfmgr_input_id,dfmgr_add_input_id,readme_input_id,
-                                 system_environment_doc_id,dfc_files_input_id]
-
+system_inputs                           =   [dfmgr_input_id,dfmgr_add_input_id,readme_input_id]
 
 """
 #--------------------------------------------------------------------------
@@ -343,24 +304,19 @@ def display_add_df_input() :
     
     dfmgr_heading_html       =   "<div>Add df to dfc dataframe Manager</div>"
         
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-top"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
     gridhtmls       =   [dfmgr_heading_html,dfmgr_input_html]
     
     print("\n")
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("dfcleanser-dfmgr-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
     else :
-        display_generic_grid("dfcleanser-dfmgr-pop-up-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
     from dfcleanser.common.display_utils import display_pop_up_buffer            
     display_pop_up_buffer()    
     
     
-def get_dcf_files_parms(parms) :
-    from dfcleanser.common.common_utils import get_parms_for_input
-    return(get_parms_for_input(parms,dfc_files_input_idList))
-
-
 def get_current_checkboxes(cbtype) :
     """
     * -------------------------------------------------------------------------- 
@@ -410,13 +366,13 @@ def display_system_chapters_taskbar() :
     dfc_utils_modules_heading_html       =   "<div>dfcleanser Utilities</div><br>"
     dfc_utils_modules_checkbox_html      =   dfc_utils_modules_checkbox.get_html()
         
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
     gridhtmls       =   [dfc_utils_modules_heading_html,dfc_utils_modules_checkbox_html]
 
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("dfcleanser-chapters-wrapper",gridclasses,gridhtmls)
     else :
-        display_generic_grid("dfcleanser-chapters-pop-up-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
     dfc_script_modules_tb           =   ButtonGroupForm(system_chapters_tb_doc_id,
                                                         system_chapters_tb_keyTitleList,
@@ -424,6 +380,7 @@ def display_system_chapters_taskbar() :
                                                         system_chapters_tb_centered)
     
     dfc_script_modules_tb.set_gridwidth(480)
+    dfc_script_modules_tb.set_custombwidth(240)
     
     dfc_script_modules_tb_html      =   dfc_script_modules_tb.get_html()
 
@@ -435,18 +392,8 @@ def display_system_chapters_taskbar() :
     print("\n")
 
 
-def display_df_dataframes(title) :  
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display dataframe manager form
-    * 
-    * parms :
-    *  N/A
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
- 
+def get_df_list_html(title) :
+
     fparms  =   []
 
     if(title is None) :
@@ -479,7 +426,6 @@ def display_df_dataframes(title) :
     cfg.set_config_value(dfmgr_input_id+"Parms",fparms)
     cfg.set_config_value(dfmgr_input_id+"ParmsProtect",parmsProtect)
             
-    from dfcleanser.common.html_widgets import InputForm
     dfmanager_input_form = InputForm(dfmgr_input_id,
                                      dfmgr_input_idList,
                                      dfmgr_input_labelList,
@@ -511,25 +457,16 @@ def display_df_dataframes(title) :
         
     dfmgr_input_html = dfmanager_input_form.get_html()
     
-    dfmgr_heading_html       =   "<div>Current dfCleanser dataframes </div>"
-        
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-top"]
-    gridhtmls       =   [dfmgr_heading_html,dfmgr_input_html]
-    
-    print("\n")
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("dfcleanser-dfmgr-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("dfcleanser-dfmgr-pop-up-wrapper",gridclasses,gridhtmls)
-
-    from dfcleanser.common.display_utils import display_pop_up_buffer            
-    display_pop_up_buffer()    
+    return(dfmgr_input_html)
 
 
-def display_dfc_files_form() :
+
+
+
+def display_df_dataframes(title) :  
     """
     * -------------------------------------------------------------------------- 
-    * function : display dfcleanser files form
+    * function : display dataframe manager form
     * 
     * parms :
     *  N/A
@@ -537,75 +474,22 @@ def display_dfc_files_form() :
     * returns : N/A
     * --------------------------------------------------------
     """
-    
-    opstat  =   opStatus()
+ 
+    dfmgr_input_html    =  get_df_list_html(title)
+    dfmgr_heading_html  =   "<div>Current dfCleanser dataframes </div>"
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+    gridhtmls       =   [dfmgr_heading_html,dfmgr_input_html]
 
-    import os
+    print("\n")
     
-    from dfcleanser.common.common_utils import get_common_dfcleanser_loc
-    dfc_path        =   get_common_dfcleanser_loc()
-    dfc_nbs_path    =   os.path.join(dfc_path, 'files', 'notebooks')
-    os.chdir(dfc_nbs_path)
-    
-    dfc_nb_files    =   os.listdir(dfc_nbs_path)
-    dfc_nbs         =   []
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
-    for i in range(len(dfc_nb_files)) :
-        if(os.path.isfile(dfc_nb_files[i]))  :
-            found =  dfc_nb_files[i].find("_config.json") 
-            if(found > -1) :
-                dfc_nbs.append(dfc_nb_files[i][:found])
-    
-    # build the input form
-    dfc_files_input_form =  InputForm(dfc_files_input_id,
-                                      dfc_files_input_idList,
-                                      dfc_files_input_labelList,
-                                      dfc_files_input_typeList,
-                                      dfc_files_input_placeholderList,
-                                      dfc_files_input_jsList,
-                                      dfc_files_input_reqList)
-    
-    nbname = cfg.get_current_notebook_name()
-    cfg.set_config_value(dfc_files_input_id + "Parms",[nbname,""])
-    
-    selectDicts =   []
-    nbs     =   {"default":str(nbname),"list":dfc_nbs}
-    selectDicts.append(nbs)
-        
-    get_select_defaults(dfc_files_input_form,
-                        dfc_files_input_id,
-                        dfc_files_input_idList,
-                        dfc_files_input_typeList,
-                        selectDicts)
-        
-    dfc_files_input_form.set_shortForm(True)
-    dfc_files_input_form.set_gridwidth(480)
-    dfc_files_input_form.set_fullparms(True)
-    dfc_files_input_form.set_custombwidth(86)
-    
-    try :    
-    
-        dfc_files_input_html = ""
-        
-        #print("dfc_files_input_html\n",dfc_files_input_html)
-        
-        dfc_files_heading_html  =   "<div>Notebook : '" + str(nbname) + "' Files  </div><br>"
-        dfc_files_input_html    =   dfc_files_input_form.get_html()
-        
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-        gridhtmls       =   [dfc_files_heading_html,dfc_files_input_html]
-    
-        print("\n")
-        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("dfcleanser-files-wrapper",gridclasses,gridhtmls)
-        else :
-            display_generic_grid("dfcleanser-files-pop-up-wrapper",gridclasses,gridhtmls)
-        
-    except Exception as e:
-        opstat.store_exception("Unable to display dfc files form ",e)
-    
-    if( not (opstat.get_status())) :
-        display_exception(opstat)
+    from dfcleanser.common.display_utils import display_pop_up_buffer            
+    display_pop_up_buffer()    
 
 
 def display_EULA():

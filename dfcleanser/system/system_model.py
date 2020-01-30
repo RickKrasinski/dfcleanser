@@ -28,8 +28,6 @@ DISPLAY_DFC_FILES           =   5
 DISPLAY_ABOUT               =   6
 DISPLAY_ADD_DATAFRAME       =   7
 
-PROCESS_DFC_FILES           =   10
-
 DISPLAY_EULA                =   12
 PROCESS_EULA                =   13
 
@@ -59,4 +57,37 @@ RENAME_DATAFRAME            =   3
 ADD_DATAFRAME               =   4
 RETURN_DATAFRAME            =   5
 
+
+"""
+* ----------------------------------------------------
+# dfcleanser system and document loaded
+* ----------------------------------------------------
+""" 
+
+INLINE_MODE     =   0
+POP_UP_MODE     =   1
+     
+def set_document_loaded() :
+    dfc_document_loaded_status.set_document_loaded()
+
+def is_document_loaded() :   
+    return(dfc_document_loaded_status.is_document_loaded())
+
+class dfc_document_status :
+    
+    # instance variables
+    document_loaded             =   False
+    
+    # full constructor
+    def __init__(self) :
+        self.document_loaded    =   False
+        
+    def set_document_loaded(self) :
+        self.document_loaded  =   True
+
+    def is_document_loaded(self) :
+        return(self.document_loaded)
+   
+
+dfc_document_loaded_status     =   dfc_document_status()    
 

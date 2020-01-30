@@ -238,6 +238,7 @@ def load_dfcleanser_cells() :
         add_dfc_cell(cells.MARKDOWN,cells.DC_SYSTEM_TITLE)
         add_dfc_cell(cells.CODE,cells.DC_SYSTEM)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+        #print("DC_SYSTEM")
 
         # insert import cells
         if(corecbs[0]) :
@@ -423,6 +424,8 @@ def reload_dfcleanser(chaptersToLoad) :
     *  N?A
     * --------------------------------------------------------
     """
+    
+    print("reload_dfcleanser",chaptersToLoad)
     
     dfc_loaded = cfg.get_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
     

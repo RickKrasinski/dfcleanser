@@ -11,18 +11,13 @@ Created on Tue Jun 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-import os
-
 import dfcleanser.common.cfg as cfg
 import dfcleanser.system.system_widgets as sysw
 import dfcleanser.system.system_model as sysm
 
 from dfcleanser.common.table_widgets import drop_owner_tables
 
-from dfcleanser.common.common_utils import (display_status, run_jscript, opStatus,
-                                            does_dir_exist, does_file_exist, read_json_file,
-                                            remove_files_from_dir, delete_a_file, write_json_file,
-                                            display_exception)
+from dfcleanser.common.common_utils import (display_status, run_jscript, opStatus)
 
 def isEULA_read() :
     
@@ -34,8 +29,11 @@ def isEULA_read() :
 def display_main_tb() :
 
     sysw.display_system_main_taskbar()
-
-    cfg.get_loaded_cells()
+    
+    print("sysm.is_document_loaded()",sysm.is_document_loaded())
+    
+    if(sysm.is_document_loaded()) :
+        cfg.get_loaded_cells()
         
 def load_dfcleanser_from_toolbar(parms) :
     """
@@ -94,6 +92,8 @@ def display_system_environment(funcId,parms=None) :
     *  N/A
     * --------------------------------------------------------
     """
+    
+    
 
     if(not (cfg.check_if_dc_init()) ) :
         sysw.display_system_main_taskbar()
@@ -101,6 +101,10 @@ def display_system_environment(funcId,parms=None) :
         return
         
     else :
+        
+        from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+        if(not (are_owner_inputs_defined(cfg.System_ID)) ) :
+            define_inputs(cfg.System_ID,sysw.system_inputs)
         
         if(funcId == sysm.DISPLAY_MAIN) :
             display_main_tb()
@@ -234,12 +238,6 @@ def display_system_environment(funcId,parms=None) :
             sysw.display_system_main_taskbar()
             sysw.display_dfc_files_form()
 
-        elif(funcId == sysm.PROCESS_DFC_FILES) :
-            fid = int(parms[0])
-            fparms = sysw.get_dcf_files_parms(parms[1])
-            sysw.display_system_main_taskbar()
-            process_dfc_files(fid,fparms)
-        
         elif(funcId == sysm.DISPLAY_EULA) :
             display_main_tb() 
             sysw.display_EULA()
@@ -328,266 +326,7 @@ def clear_data() :
 
 
 
-""" 
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-#   process dfc files functions
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-"""
- 
 
-
-def verify_file_parms(parms,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : verify the file operations parms
-    * 
-    * parms :
-    *   parms   - operation parms
-    *   opstat  - operation status 
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    if(len(parms[0]) == 0) :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Notebook Name is invalid")
-    else :
-        if(len(parms[1]) == 0) :
-            opstat.set_status(False)
-            opstat.set_errorMsg("New Notebook Name is invalid")
-
-
-def copy_dfc_files(parms,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : copy dfc files and _files dir
-    * 
-    * parms :
-    *   parms   - operation parms
-    *   opstat  - operation status 
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    cfg_data        =   {}  
-    script_data     =   {}
-    
-    nbname      =   parms[0]
-    newnbname   =   parms[1]
-    
-    verify_file_parms(parms,opstat)
-     
-    if(opstat.get_status()) :
-        
-        dfc_files_path = os.path.join(cfg.get_notebook_path(),nbname+"_files")
-
-        # check if dcf javascript exists 
-        if(does_dir_exist(dfc_files_path)) :
-            
-            config_file_path = os.path.join(dfc_files_path,nbname + "_config.json")
-            if(does_file_exist(config_file_path)) :
-                cfg_data = read_json_file(config_file_path,opstat)
-                
-                if(opstat.get_status()) :
-                    scipt_file_path = os.path.join(dfc_files_path,nbname + "_scriptlog.json")    
-                    if(does_file_exist(scipt_file_path)) :
-                        script_data = read_json_file(scipt_file_path,opstat)
-                        
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("No dfc cfg file for "+nbname)
-        
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("No dfc files directory for "+nbname)
-
-    # we have good cfg and script files
-    if(opstat.get_status()) :
-
-        os.chdir(cfg.get_notebook_path())
-        new_files_path = os.path.join(cfg.get_notebook_path(),newnbname+"_files")
-
-        if(does_dir_exist(new_files_path)) :
-                        
-            # remove old files in the dfc_js dir
-            remove_files_from_dir(new_files_path,opstat)
-                        
-        else : 
-        
-            if(does_file_exist(new_files_path)) :
-                delete_a_file(new_files_path,opstat)
-                        
-            # make a _files dir
-            try :
-                os.makedirs(new_files_path)
-                os.chdir(new_files_path)
-            except Exception as e:
-                opstat.store_exception("[error creating directory][" + new_files_path +"]",e)
-
-    # if we have good cfg and script files abd new directory
-    if(opstat.get_status()) :
-
-        #update cfg with new notebook name 
-        from dfcleanser.common.cfg import NOTEBOOK_TITLE
-        cfg_data.update({NOTEBOOK_TITLE:newnbname})
-
-        # write out dicts to files
-        new_config_file_path = os.path.join(cfg.get_notebook_path(),newnbname + "_files",newnbname + "_config.json")
-        write_json_file(new_config_file_path,cfg_data,opstat)
-        
-        if(opstat.get_status()) :
-            script_file_path = os.path.join(cfg.get_notebook_path(),newnbname + "_files",newnbname + "_scriptlog.json")
-            write_json_file(script_file_path,script_data,opstat)
-
-
-def rename_dfc_files(parms,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : rename dfc files and _files dir
-    * 
-    * parms :
-    *   parms   - operation parms
-    *   opstat  - operation status 
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    cfg_data            =   {}
-    config_file_path    =   ""
-    script_file_path    =   ""
-    
-    nbname      =   parms[0]
-    newnbname   =   parms[1]
-    
-    verify_file_parms(parms,opstat)
-    
-    # check if files exist
-    if(opstat.get_status()) :
-        
-        dfc_files_path = os.path.join(cfg.get_notebook_path(),nbname+"_files")
-
-        # check if notebook _files exists 
-        if(does_dir_exist(dfc_files_path)) : 
-            
-            config_file_path = os.path.join(dfc_files_path,nbname + "_config.json")
-            if(does_file_exist(config_file_path)) : 
-                cfg_data = read_json_file(config_file_path,opstat)
-            
-            if(opstat.get_status()) :
-                script_file_path = os.path.join(dfc_files_path,nbname + "_scriptlog.json")
-                if(not (does_file_exist(script_file_path)) ) :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("[no _scriptlog.json file for ][" + nbname +"]")    
-                
-        else :
-            opstat.set_status(False)
-            opstat.opstat.set_errorMsg("[no _files dir for ][" + dfc_files_path +"]")    
-        
-    if(opstat.get_status()) :
-        
-        #update cfg with new notebook name 
-        cfg_data.update({cfg.NOTEBOOK_TITLE:newnbname})
-        
-        #new_config_file_path = os.path.join(dfc_files_path,newnbname + "_config.json")
-        os.chdir(dfc_files_path)
-        os.rename(nbname + "_config.json",newnbname + "_config.json")  
-        
-        #new_script_file_path = os.path.join(dfc_files_path,newnbname + "_scriptlog.json")
-        os.rename(nbname + "_scriptlog.json",newnbname + "_scriptlog.json")  
-        os.chdir(cfg.get_notebook_path())
-        #new_dfc_files_path = os.path.join(get_notebook_path(),newnbname +"_files")
-        os.rename(nbname +"_files",newnbname +"_files")  
-        
-
-def delete_dfc_files(parms,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : delete dfc files and _files dir
-    * 
-    * parms :
-    *   parms   - operation parms
-    *   opstat  - operation status 
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    nbname      =   parms[0]
-    
-    if(len(nbname) == 0) :
-        opstat.set_status(False)
-        opstat.set_errorMsg("Notebook Name is invalid")
-    
-    # check if files exist
-    if(opstat.get_status()) :
-        
-        dfc_files_path = os.path.join(cfg.get_notebook_path(),nbname+"_files")
-
-        # check if notebook _files exists 
-        if(does_dir_exist(dfc_files_path)) : 
-            remove_files_from_dir(dfc_files_path,opstat)
-            
-            if(opstat.get_status()) :
-                os.chdir(cfg.get_notebook_path())
-                os.rmdir(dfc_files_path)
-
-        else :
-            opstat.set_status(False)
-            opstat.opstat.set_errorMsg("[no _files dir for ][" + dfc_files_path +"]")    
-        
-
-def process_dfc_files(funcid,parms) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : process dfc files functions
-    * 
-    * parms :
-    *   funcid  - function id
-    *   parms   - operation parms
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    opstat          =   opStatus()
-
-    print("\n")
-    
-    if(funcid == sysm.COPY_FILES) :
-               
-        copy_dfc_files(parms,opstat) 
-        if(opstat.get_status()) :
-            display_status(parms[0] + " Dir and Cfg and Script files copied to " + cfg.get_notebook_path() + "\\" + parms[1] + "_files")            
-        else :
-            display_exception(opstat)
-        
-    elif(funcid == sysm.RENAME_FILES) :
-    
-        rename_dfc_files(parms,opstat) 
-        if(opstat.get_status()) :
-            display_status(parms[0] + " Dir and Cfg and Script files renamed to " + cfg.get_notebook_path() + "\\" + parms[1])            
-        else :
-            display_exception(opstat)
-        
-    elif(funcid == sysm.DELETE_FILES) :
-
-        delete_dfc_files(parms,opstat) 
-        if(opstat.get_status()) :
-            display_status(parms[0] + " Dir and Cfg and Script files deleted for " + cfg.get_notebook_path() + "\\" + parms[0])            
-        else :
-            display_exception(opstat)
-        
- 
     
 """ 
 #------------------------------------------------------------------
@@ -599,16 +338,12 @@ def process_dfc_files(funcid,parms) :
 def clear_system_data() :
     
     drop_owner_tables(cfg.System_ID)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.System_ID,sysw.system_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.System_ID)
     clear_system_cfg_values()
     
 def clear_system_cfg_values() :
     
-    cfg.drop_config_value(sysw.dfc_files_input_id+"Parms")
-    cfg.drop_config_value(sysw.dfc_files_input_id+"ParmsProtect")
-
     cfg.drop_config_value(sysw.dfmgr_input_id+"Parms")
     cfg.drop_config_value(sysw.dfmgr_input_id+"ParmsProtect") 
 
