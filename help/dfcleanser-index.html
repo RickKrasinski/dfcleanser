@@ -9,8 +9,8 @@
 
     <!--<title>pandas.to_datetime — pandas 0.25.3 documentation</title>-->
     <title>Pandas Dataframe Cleanser</title>
-    <link rel="stylesheet" href="./dfcleanser-index_files/nature.css" type="text/css">
-    <link rel="stylesheet" href="./dfcleanser-index_files/pygments.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/nature.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/pygments.css" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/dfc_styles.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -27,207 +27,851 @@
                 <div class="sphinxsidebar">
                     <h3>Table Of Contents</h3>
                     <ul class="current">
-                        <li class="toctree-l1"><a class="reference internal" href="./dfcleanser-index.html">Dataframe Cleanser Intro</a></li>
-                        <li class="toctree-l1"><a class="reference internal" href="./dfcleanser-install.html">Installation</a></li>
-                        <li class="toctree-l1"><a class="reference internal" href="./dfcleanser-getting-started.html">Getting started</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html">Dataframe Cleanser Intro</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_install">Installation</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_get_started">Getting started</a></li>
                         <li class="toctree-l1 current">User Guide</li>
                         <ul class="current">
-                            <li class="toctree-l2"><a class="reference internal" href="./dfcleanser-system-environment.html">System Environment</a>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html">System Environment</a>
                                 <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-system-environment.html#dfc_Utilities_manager">Utilities Manager</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-system-environment.html#dfc_dataframe_manager">dataframe Manager</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-system-environment.html#dfc_system_system">System</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-system-environment.html#dfc_system_about">About</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-system-environment.html#dfc_system_eula">EULA</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_Utilities_manager">Utilities Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_dataframe_manager">dataframe Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_system">System</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_about">About</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_eula">EULA</a></li>
                                 </ul>
                             </li>
-                            <li class="toctree-l2 current"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html">Data Import</a>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html">Data Import</a>
                                 <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Pandas dataframe</a>
-                                        <ul class="current">
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">CSV</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Fixed Width File</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Excel File</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-dealing-with-datetimelike">JSON</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-dealing-with-intervals">HTML</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-evaluation">SQL Table</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#hashing">SQL Query</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Custom</a></li>
-                                </ul>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/series.html">Data Inspection</a>
-                                <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Data Types</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Nans</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Rows</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-dealing-with-datetimelike">Columns</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-dealing-with-intervals">Categories</a></li>
-                                </ul>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/frame.html">Data Cleansing</a>
-                                <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Cleanse Numeric Column</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Cleanse Non Numeric Columns</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Cleanse Row</a></li>
-                                </ul>
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/arrays.html">Data Transform</a>
-                                <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">dataframe Transform</a>
-                                        <ul class="current">
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Column Names Row</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Simple dataframe Indices</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Sort df by Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Drop Duplicate Rows</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">columns Transform</a>
-                                        <ul class="current">
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Rename Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Add Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Drop Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Reorder Columns</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Save Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Copy Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Apply fn To Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Map Columns</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Dummies For Column</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Make Column Categorical</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Change Column Datatype</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">datetime Transform</a>
-                                        <ul class="current">
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Convert Column to datetime</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Convert Column to timedelta</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Calculate timedelta Cloumn</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Split Column to date, time Columns</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Merge Column from date, time Columns</a></li>
-                                            <li class="toctree-l4"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Get datetime Components Column</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">dataframe Schema</a></li>
-                                </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_fwf">Fixed Width File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
 
-                            </li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/panel.html">Data Export</a></li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/indexing.html">Software Utilities</a>
-                                <ul class="current">
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#data-manipulations">Common Data Structures</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Geocoding</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Dataframe Subset</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-missing-data">Census</a></li>
-                                    <li class="toctree-l3"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/general_functions.html#top-level-conversions">Scripting</a></li>
-
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_table">SQL Table</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_query">SQL Query</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_custom_import">Custom</a></li>
                                 </ul>
-
                             </li>
-                            <li class="toctree-l2"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/offset_frequency.html">Restricted</a></li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html">Data Inspection</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_datatypes">Data Types</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans">Nans</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows">Rows</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Categories</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html">Data Cleansing</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_numeric">Cleanse Numeric Column</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_non_numeric">Cleanse Non Numeric Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row">Cleanse Row</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html">Data Transform</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dataframe_transform">dataframe Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row">Column Names Row</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_index">Single Level dataframe Indices</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_sort">Sort df by Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_drop_duplicates">Drop Duplicate Rows</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform">columns Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename">Rename Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add">Add Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop">Drop Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder">Reorder Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save">Save Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy">Copy Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn">Apply fn To Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_map">Map Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_dummies">Dummies For Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_categorical">Make Column Categorical</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_change_datatype">Change Column Datatype</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime">datetime Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert">Convert Column to datetime</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Convert Column to timedelta</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Calculate timedelta Cloumn</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Split Column to date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Merge Column from date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_components">Get datetime Components Column</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html">Data Export</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_table">SQL Table</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html">Software Utilities</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures">Common Data Structures</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists">Lists</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts">Dicts</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs">Functions</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding">Geocoding</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_select_geocoder">Geocoder Service</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive">Interactive Geoocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive_reverse">Reverse Geocoding</a></li>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk">Bulk Geocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_geocoding_geocoding">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_geocoding_reverse">Reverse Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console">Console</a></li>
+                                            <ul class="current">
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_states">States</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_progress_bars">Progress</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_checkpoint">Checkpointing</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_errors">Errors</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_limits">Limits</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results">Results</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_pricing">Pricing</a></li>
+                                            </ul>
+                                        </ul>
+                                        <li class="toctree-l4">
+                                            <a class="reference internal" href=https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities ">Geocode Utilities</a></li>
+                                        <ul class="current ">
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_interactive_distance ">Geocode Distance</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_interactive_center ">Center Point</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_distance_from_center ">Distance From Center Point</a></li>
+                                        </ul>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset ">Dataframe Subset</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define ">Get Dataframe Subset</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters ">Define Subset Filter</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_census ">Census</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting ">Scripting</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_restrict ">Restricted</a></li>
                         </ul>
                         </li>
-                        <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/development/index.html">Development</a></li>
-                        <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/whatsnew/index.html">Release Notes</a></li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/development/index.html ">Development</a></li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/whatsnew/index.html ">Release Notes</a></li>
                     </ul>
                 </div>
+                <div class="documentwrapper ">
+                    <div class="bodywrapper ">
+                        <div class="body ">
 
-                <div class="documentwrapper">
-                    <div class="bodywrapper">
-                        <div class="body">
-
-                            <div class="section" id="pandas_dfc">
+                            <div class="section " id="pandas_dfc ">
                                 <h1>Pandas Dataframe Cleanser</h1>
-                                <dl class="function">
-                                    <dt id="pandas_dfc"></dt>
+                                <dl class="function ">
+                                    <dt id="pandas_dfc "></dt>
                                     <dd>
-                                        <p>Pandas Dataframe Cleanser is a Jupyter Notebook extension that provides basic functionality for monitoring and maintaining dataframes.</p>
-
-                                        <p>The Pandas Dataframe Cleanser extension consist of a set of chapters (code cells) that provide basic functionality.</p>
-
-                                        <p>The Pandas Dataframe Cleanser chapters consist of the following:</p>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Pandas Dataframe Cleanser is a Jupyter Notebook extension that provides basic functionality for monitoring and maintaining dataframes.</p>
+                                            <p>The Pandas Dataframe Cleanser extension consist of a set of chapters (code cells) that provide basic functionality.</p>
+                                            <p>The Pandas Dataframe Cleanser chapters consist of the following:</p>
+                                        </div>
                                         <h2>Pandas Dataframe Cleanser Chapters</h2>
-                                        <ul class="current">
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/whatsnew/v0.25.2.html">System Environment</a></li>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html ">System Environment</a></li>
                                             <dd>
-                                                <p>System Environment is defined to review and set system configuration values.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>System Environment is defined to review and set system configuration values.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/install.html">Data Import</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html ">Data Import</a></li>
                                             <dd>
-                                                <p>Data Import is defined to allow import of external data into a dataframe.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Data Import is defined to allow import of external data into a dataframe.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/index.html">Data Inspection</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html ">Data Inspection</a></li>
                                             <dd>
-                                                <p>Data Inspection is defined to allow inspection of characteristics of a dataframe.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Data Inspection is defined to allow inspection of characteristics of a dataframe.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/index.html">Data Cleansing</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html ">Data Cleansing</a></li>
                                             <dd>
-                                                <p>Data Cleansing is defined to allow modification of the data contents of a dataframe.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Data Cleansing is defined to allow modification of the data contents of a dataframe.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/install.html">Data Transform</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html ">Data Transform</a></li>
                                             <dd>
-                                                <p>Data Transform is defined to allow modification of the format of a dataframe.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Data Transform is defined to allow modification of the format of a dataframe.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/index.html">Data Export</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html ">Data Export</a></li>
                                             <dd>
-                                                <p>Data Export is defined to allow the export of a dataframe to an external destination.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Data Export is defined to allow the export of a dataframe to an external destination.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/index.html">SW Utilities</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html ">SW Utilities</a></li>
                                             <dd>
-                                                <p>Software Utilities consists of a set sub chapters that provide additional dataframe centric functionality.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Software Utilities consists of a set sub chapters that provide additional dataframe centric functionality.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/reference/index.html">Restricted</a></li>
-                                            <div class="last deprecated">
-                                                <dd>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html ">Restricted</a></li>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
                                                     <p>The Restricted Chapter is a code cell used by the dataframe cleanser to perform operations and should never be modified by the user.</p>
-                                                </dd>
-                                            </div>
+                                                </div>
+                                            </dd>
                                         </ul>
                                     </dd>
                                     <br>
                                     <dd>
                                         <h2>Pandas Dataframe Cleanser Modes</h2>
-                                        <p>The Pandas Dataframe Cleanser can be run in the following modes:</p>
-                                        <ul class="current">
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/whatsnew/v0.25.2.html">Full Screen</a></li>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>The Pandas Dataframe Cleanser can be run in the following modes:</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://pandas.pydata.org/pandas-docs/stable/whatsnew/v0.25.2.html ">Inline</a></li>
                                             <dd>
-                                                <p>Run as Jupyter Code Cells within the current notebook.</p>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Run as Jupyter Code Cells within the current notebook.</p>
+                                                </div>
                                             </dd>
-                                            <li class="toctree-l1"><a class="reference internal" href="https://pandas.pydata.org/pandas-docs/stable/install.html">Pop Up</a></li>
+                                            <li class="toctree-l1 "><a class="reference internal " href="https://pandas.pydata.org/pandas-docs/stable/install.html ">Pop Up</a></li>
                                             <dd>
-                                                <p>Run as a pop up window indepenendent of the current notebook layout.</p>
+                                                <div class="DCChaptersHelpText "> 
+                                                    <p>Run as a pop up window indepenendent of the current notebook layout.</p>
+                                                </div>
                                             </dd>
                                         </ul>
                                     </dd>
                                 </dl>
                             </div>
-                        </div>
-                    </div>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
-                    <p><br></p>
+
+                            <div class="section " id="pandas_dfc_install ">
+                                <h1>Pandas Dataframe Cleanser Install</h1>
+                                <br>
+                                <dl class="function ">
+                                    <dt id="pandas_dfc_i "></dt>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Pandas Dataframe Cleanser is a Jupyter Notebook extension that is installed via the standard Jupyter Notebook extension installation process.</p>
+                                            <p>Jupyter Notebook Extension Installation consists of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">Install the dfcleanser python package</li>
+                                            <li class="toctree-l1 ">Install the dfcleanser notebook extension</li>
+                                            <li class="toctree-l1 ">Enable the dfcleanser notebook extension</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">    
+                                            <p>dfcleanser Notebook Extension Installation can be installed from the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">PIP</li>
+                                            <li class="toctree-l1 ">Conda</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>dfcleanser PIP Notebook Extension Installation consist of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">pip install -e dfcleanser_nbextension</li>
+                                            <li class="toctree-l1 ">jupyter dfcleanser install --user</li>
+                                            <li class="toctree-l1 ">jupyter nbextension enable dfcleanser</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>dfcleanser Conda Notebook Extension Installation consist of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">conda install -c conda-forge dfcleanser_nbextension</li>
+                                            <li class="toctree-l1 ">jupyter dfcleanser install --user</li>
+                                            <li class="toctree-l1 ">jupyter nbextension enable dfcleanser</li>
+                                        </ul>
+                                    </dd>
+                                </dl>
+
+                                <h1>Pandas Dataframe Cleanser UnInstall</h1>
+                                <dl class="function ">
+                                    <dt id="pandas_dfc_uninstall "></dt>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Pandas Dataframe Cleanser is a Jupyter Notebook extension that is uninstalled via the standard Jupyter Notebook extension uninstallation process.</p>
+                                            <p>Jupyter Notebook Extension UnInstallation consists of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">Disable the dfcleanser notebook extension</li>
+                                            <li class="toctree-l1 ">UnInstall the dfcleanser notebook extension</li>
+                                            <li class="toctree-l1 ">UnInstall the dfcleanser python package</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>dfcleanser Notebook Extension UnInstallation can be installed from the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">PIP</li>
+                                            <li class="toctree-l1 ">Conda</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>dfcleanser PIP Notebook Extension Installation consist of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">jupyter nbextension disable dfcleanser</li>
+                                            <li class="toctree-l1 ">jupyter dfcleanser uninstall --user</li>
+                                            <li class="toctree-l1 ">pip uninstall -e dfcleanser_nbextension</li>
+                                        </ul>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>dfcleanser Conda Notebook Extension Installation consist of the following:.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">jupyter nbextension disable dfcleanser</li>
+                                            <li class="toctree-l1 ">jupyter dfcleanser uninstall --user</li>
+                                            <li class="toctree-l1 ">conda uninstall -c conda-forge dfcleanser_nbextension</li>
+                                        </ul>
+                                    </dd>
+                                </dl>
+                            </div>
+
+                            <div class="section " id="pandas_dfc_get_started ">
+                                <h1>Pandas Dataframe Cleanser Getting Started</h1>
+                                <br>
+                                <dl class="function ">
+                                    <dt id="pandas_dfc_start "></dt>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Once you have successfully installed the dfcleanser extension the dfc button should appear in the Notebook banner.</p>
+                                        </div>
+                                        <div>
+                                            <img src="./images/dfc-banner-image.png ">
+                                        </div>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Once you verify dfcleanser is installed click on the dfc button and answer the mode questions.</p>
+                                        </div>
+                                        <br>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-inline-mode.png ">
+                                        </div>
+                                        <h2>Pandas Dataframe Cleanser Inline Mode</h2>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>If you select 'OK' for inline mode the initial Pandas Dataframe Cleanser chapters are inserted into the current notebook as code cells.</p>
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <img src="./images/dfc-initial.png ">
+                                        </div>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>The Pandas Dataframe Cleanser chapters are inserted immediately below the code cell the cursor is in when the button is clicked.</p>
+                                            <p>Every dfc Chapter taskbar in inline mode has the following command buttons.</p>
+                                        </div>
+                                        <ul class="current ">
+                                            <li class="toctree-l1 ">Clear - will reset the current chapter to its initial state.</li>
+                                            <li class="toctree-l1 ">Reset - will reset all chapters to their initial state.</li>
+                                            <li class="toctree-l1 ">Help - will open the current chapter help page.</li>
+                                        </ul>
+                                        <h2>Pandas Dataframe Cleanser Pop Up Mode</h2>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>When you click on 'Cancel' to install in inline mode the popup mode install prompt is displayed.</p>
+                                        </div>
+                                        <br>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-popup-mode.png ">
+                                        </div>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Once you select install popup mode the popup window is displayed in the upper right hand of the notebook window.</p>
+                                        </div>
+                                        <br>
+                                        <div style="text-align:center ">
+                                            <img src="./images/dfc-popup-initial.png ">
+                                        </div>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Clicking on the Chapter icons opens the corrrsponding chapter in the pop up window.</p>
+                                        </div>
+                                        <br>
+                                        <div style="text-align:center ">
+                                            <img src="./images/dfc-popup-import.png ">
+                                        </div>
+                                        <br>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>The pop up window has the following command icons at the bottom of the window from left to right.</p>
+                                        </div>
+                                        <br>
+                                             <dd>
+                                                <table style="text-align:left; margin-left:25px; ">
+                                                    <tr>
+                                                        <td><img src="./images/dfc-pop-up-reset.png "></td>
+                                                        <td>
+                                                            <p style="margin-left:15px; " >Reset will reset the pop up window to its initial state.</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <table style="text-align:left; margin-left:25px; ">
+                                                    <tr>
+                                                        <td><img src="./images/dfc-pop-up-generic.png "></td>
+                                                        <td>
+                                                            <p style="margin-left:15px; ">Generic Code Cell will provide the user with a generic code cell.</p>
+                                                        </td>
+                                                    </tr>
+                                                </table style="text-align:left; margin-left:25px; ">
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <table style="text-align:left; margin-left:25px; ">
+                                                    <tr>
+                                                        <td><img src="./images/dfc-pop-up-clear.png "></td>
+                                                        <td>
+                                                            <p style="margin-left:15px; ">Clear will reset the current chapter to its default state.</p>
+                                                        </td>
+                                                    </tr>
+                                                </table style="text-align:left; margin-left:25px; ">
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <table style="text-align:left; margin-left:20px; ">
+                                                    <tr>
+                                                        <td><img src="./images/dfc-pop-up-minimize.png "></td>
+                                                        <td>
+                                                            <p style="margin-left:15px; ">Minimize will hide the dfc pop up window.</p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>When the pop up window is minimized you can reactivate it by clicking on the dfc button.</p>
+                                                </div>
+                                            </dd>
+                                            </dd>
+
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser Reset</h2>
+                                            <dl class="function ">
+                                                <br>
+                                                <dt id="pandas_dfc_reset "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>When the Pandas Dataframe Cleanser is visible in inline mode you can reset all dfc chapters by clicking on the dfc button again and asking for a reset.</p>
+                                                    </div>
+                                                </dd>
+                                                <br>
+                                                <dd>
+                                                    <div style="text-align:center; ">
+                                                        <img src="./images/dfc-reset.png ">
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser Remove</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_remove "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>When the Pandas Dataframe Cleanser is visible in inline mode or pop-up mode you can remove dfc chapters by clicking on the dfc button again. In inline mode you will be prompted to reset or remove.
+                                                            In pop-up mode the pop-up window is removed immediately.</p>
+                                                        <p>Removing Pandas Dataframe Cleanser chapters does not disable dfcleanser and you can reload the chapters via clicking on the dfc button.</p>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser dataframes Manager</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_df_manager "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser(dfc) maintain a set of dfc dataframe objects that are visible to any function in dfc.</p>
+                                                        <p>A dfc dataframe object is created that consists of a dataframe title, a pandas dataframe object and descriptive notes.</p>
+                                                        <p>Every Chapter has a dropdown selector to define the current default dataframe for that chapter. The default can be overridden in certain functions otherwise the chapter selected dataframe is used.</p>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <dd>
+                                                <div style='margin-left:auto; margin-right:auto; width:480px;'>
+                                                    <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="datainspectdf ">
+                                                        <div class='' style='padding:5px; margin:auto; width:100%;' id="datainspectdfinput ">
+                                                            <div class='dc-container dc-default-input-inner-div'>
+                                                                <div>
+                                                                    <label for="didfdataframe " style='text-align:left; font-size: 10px;'>* dataframe_to_inspect</label>
+                                                                    <select id="didfdataframe " style="margin-left:1px; font-size: 10px; " class="form-control "> 
+                                                      <option style='text-align:left; font-size:10px;' selected></option>
+                                                  </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Until a dataframe is added to the dfc Manager no dfc chapters will open and operate correctly and the message below is displayed.</p>
+                                                </div>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div class="container " style="width:480px; border:1px; ">
+                                                    <div class="row ">
+                                                        <div class="panel panel-primary " style="border:0px; ">
+                                                            <div class="panel-heading dc-table-panel-heading " style="height:30px; ">
+                                                                <div class="input-group ">
+                                                                    <p class="dc-table-title " style="margin-bottom:5px; font-size:12px; padding-bottom:5px; ">Status :</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class='note-line'>
+                                                                <p><span class='note-line'></span></p>
+                                                            </div>
+                                                            <div class='note-line'>
+                                                                <p><span class='note-line' style="font-size:11px; ">No dataframe imported to select for data inspection</span></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Dataframes can be added to dfc via the following:</p>
+                                                </div>
+                                            </dd>
+                                            <dd>
+                                                <ul class="current ">
+                                                    <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html ">Importing dataframe via Data Import</a></li>
+                                                    <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_dataframe_manager ">Add dataframe via dfc manager</a></li>
+                                                    <li class="toctree-l4 ">Add dataframe via python
+                                                        <br>
+                                                        <br>
+                                                        <div class="DCChaptersHelpText " style=" margin-left:10px; width:300px; border:1px; background-color:#ffffcc ">
+                                                            <p>from dfcleanser.commom.cfg import dfc_dataframe<br/> newdfcdf = dfc_dataframe('df_title',df,'dfnotes')</p>
+                                                            <p>from dfcleanser.commom.cfg import add_dataframe<br/> add_dataframe(newdfcdf)</p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>Once a dataframe is imported into dfc then it becomes available in the selector and can be used in the chapters.</p>
+                                                </div>
+                                            </dd>
+                                            <dd>
+                                                <div style='margin-left:auto; margin-right:auto; width:480px;'>
+                                                    <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="datainspectdf ">
+                                                        <div class='' style='padding:5px; margin:auto; width:100%;' id="datainspectdfinput ">
+                                                            <div class='dc-container dc-default-input-inner-div'>
+                                                                <div>
+                                                                    <label for="didfdataframe " style='text-align:left; font-size: 10px;'>* dataframe_to_inspect</label>
+                                                                    <select id="didfdataframe " style="margin-left:1px; font-size: 10px; " class="form-control "> 
+                                                      <option style='text-align:left; font-size:10px;' selected>Chicago_Gun_Crimes</option>
+                                                      <option style='text-align:left; font-size:10px;'>LA_Gun_Crimes</option>
+                                                  </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+                                            <h2>Pandas Dataframe Cleanser 'inplace' Only</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_inplace "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser functions make <b>all</b> function calls to change the dataframe <b>inplace</b>.</p>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+
+                                            <h2>Pandas Dataframe Cleanser Software Utilities Inline Only</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_utils_restrict "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser Software Utilities can only be run in the inline mode.</p>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser Restricted Chapter</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_restrict "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser Restricted Chapter is always loaded in either mode and present when dfc is present.</p>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser File Browser</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_restrict "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser uses the file browser input in multiple forms to allow the user to select files.</p>
+                                                    </div>
+                                                </dd>
+                                                <dd>
+                                                    <div style='margin-left:auto; margin-right:auto; width:640px;'>
+                                                        <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="importPandasCSV ">
+                                                            <div class='' style='padding:5px; margin:auto; width:100%;' id="importPandasCSVinput ">
+                                                                <div class="panel-heading dc-table-panel-heading ">
+                                                                    <button class="btn-group dc-show-full " id="importPandasCSVfullparms " OnClick="getfullparms( 'importPandasCSV') ">Show All Parameters</button>
+                                                                </div>
+
+                                                                <div class='dc-default-input-inner-div'>
+                                                                    <div>
+                                                                        <label for="csvdftitle " id="csvdftitle_label " style="text-align:left; font-size: 11px; ">* dataframe_title</label>
+                                                                        <input type="text " class="form-control " style="text-align:left; font-size: 11px; " id="csvdftitle " placeholder="dataframe title (default 'filename'_df) " value="LA_Gun_Crimesdata "></input>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label for="csvFileName " id="csvFileName_label " style="text-align:left; font-size: 11px; ">* filepath_or_buffer</label>
+                                                                        <input type="text " class="form-control " style="font-size: 11px; " id="csvFileName " placeholder="enter CSV File name or browse to file below " value="datasets/LA_Gun_Crimes_with_data "></input>
+                                                                        <input type="file " id="filecsvFileName " onchange="javascript:onChangefileselect( 'csvFileName', 'filecsvFileName') " class="btn btn-primary " style=" width: 100%; font-size: 11px;
+                                                color: #cfdbee; "></input>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div style="margin-top:10px; " id="importPandasCSVtb ">
+                                                                <div class="dc-default-input-button-container btn-grp-center ">
+                                                                    <div class="btn-group btn-center " style=" width: 640px; ">
+                                                                        <button type="button " class="btn btn-primary " style=' font-size:11px; margin-left: 92px;  height: 50px;  width: 110px; '>Import</br>CSV File</button>
+                                                                        <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Clear</button>
+                                                                        <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Return</button>
+                                                                        <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Help</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>Due to the restrictions limiting access to local resources the base file path for all file selects is the path of the current Jupyter Notebook.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <br>
+                                                    <dd>
+                                                        <table>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width=2%></td>
+                                                                    <td width=70%>
+                                                                        <div class='dc-form-div' id="parmsTableform " style="text-align: left; ">
+                                                                            <div class=" " id="parmsTablecontainer " style="width:99%; margin-left:0px; ">
+                                                                                <div class="panel panel-primary " style="border:0px; ">
+                                                                                    <div style="margin-bottom: -20px; ">
+                                                                                        <table class="table dc-table " id="parmsTableHeaderTable ">
+                                                                                            <tbody>
+                                                                                                <tr style="height:25px; font-family: Arial; font-weight:bold; color:white; background-color:#3281B8; ">
+                                                                                                    <td class="dccolleft " style="text-align: left; font-size:12px; ">Setup Notes</td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+
+                                                                                    <div>
+                                                                                        <table class="table dc-table11 " id="parmsTable ">
+                                                                                            <tbody>
+                                                                                                <tr class="dc-describe-table-body-row ">
+                                                                                                    <td style=" width:1%; " class="dccolwrap "> </td>
+                                                                                                    <td style=" text-align: left; font-size:11px; width:30%; " class="dccolleft dccolwrap ">Notebook Name</td>
+                                                                                                    <td style=" width:3%; " class="dccolwrap "><b>:</b></td>
+                                                                                                    <td style=" font-size:11px; width:66%; text-align: left; " class="dccolleft dccolwrap ">PandasDataframeCleanser</td>
+                                                                                                </tr>
+                                                                                                <tr class="dc-describe-table-body-row ">
+                                                                                                    <td style=" width:1%; " class="dccolwrap "> </td>
+                                                                                                    <td style=" text-align: left; font-size:11px; width:30%; " class="dccolleft dccolwrap ">Notebook Path</td>
+                                                                                                    <td style=" width:3%; " class="dccolwrap "><b>:</b></td>
+                                                                                                    <td style=" font-size:11px; text-align: left; width:66%; " class="dccolleft dccolwrap ">c:\Tech\Projects\Jupyter\samples\Notebooks\RickProjects\DataframeCleanser</td>
+                                                                                                </tr>
+                                                                                                <tr class="dc-describe-table-body-row ">
+                                                                                                    <td style=" width:1%; " class="dccolwrap "> </td>
+                                                                                                    <td style=" text-align: left; font-size:11px; width:30%; " class="dccolleft dccolwrap ">dfcleanser path</td>
+                                                                                                    <td style=" width:3%; " class="dccolwrap "><b>:</b></td>
+                                                                                                    <td style=" font-size:11px; width:66%; text-align: left; " class="dccolleft dccolwrap ">C:\Users\Rick\Anaconda3\lib\site-packages\dfcleanser\</td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </dd>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The current Notebook Path can be viewed from the System Environment Syatem tab.</p>
+                                                            <p>To select a path separate from the Notebook path enter it manually.</p>
+                                                        </div>
+                                                    </dd>
+                                                </dd>
+                                            </dl>
+                                            <h2>Pandas Dataframe Cleanser Configuration Files</h2>
+                                            <br>
+                                            <dl class="function ">
+                                                <dt id="pandas_dfc_restrict "></dt>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The Pandas Dataframe Cleanser uses multiple json configuration files while running. The files are defined can be broken into Notebook files and dfc files.</p>
+                                                    </div>
+                                                </dd>
+                                                <h3>Notebook Files</h3>
+                                                <br>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>Notebook files are unique per notebook that dfc is loaded and run in.&nbsp;The Notebook files path is 'NotebookPath'\'NotebookName'_files.</p>
+                                                    </div>
+                                                    <br>
+                                                    <ul>
+                                                        <li class="toctree-l2 ">Notebook Files</li>
+                                                        <br>
+                                                        <ul>
+                                                            <li class="toctree-l3 ">'NotebookName'_config.json</li>
+                                                            <li class="toctree-l3 ">'NotebookName'_scriptlog.json</li>
+                                                        </ul>
+                                                    </ul>
+                                                    <h4>_config.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The config.json files are used to record the running environment and input form parms.&nbsp;Input forms parms are stroed and recalled each time the form is displayed.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <dd>
+                                                        <div style='margin-left:auto; margin-right:auto; width:640px;'>
+                                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="importPandasCSV ">
+                                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="importPandasCSVinput ">
+                                                                    <div class="panel-heading dc-table-panel-heading ">
+                                                                        <button class="btn-group dc-show-full " id="importPandasCSVfullparms " OnClick="getfullparms( 'importPandasCSV') ">Show All Parameters</button>
+                                                                    </div>
+                                                                    <div class='dc-default-input-inner-div'>
+                                                                        <div>
+                                                                            <label for="csvdftitle " id="csvdftitle_label " style="text-align:left; font-size: 11px; ">* dataframe_title</label>
+                                                                            <input type="text " class="form-control " style="text-align:left; font-size: 11px; " id="csvdftitle " placeholder="dataframe title (default 'filename'_df) " value="LA_Gun_Crimesdata "></input>
+                                                                        </div>
+                                                                        <div>
+                                                                            <label for="csvFileName " id="csvFileName_label " style="text-align:left; font-size: 11px; ">* filepath_or_buffer</label>
+                                                                            <input type="text " class="form-control " style="font-size: 11px; " id="csvFileName " placeholder="enter CSV File name or browse to file below " value="datasets/LA_Gun_Crimes_with_data "></input>
+                                                                            <input type="file " id="filecsvFileName " onchange="javascript:onChangefileselect( 'csvFileName', 'filecsvFileName') " class="btn btn-primary " style=" width: 100%; font-size:
+                                                11px; color: #cfdbee; "></input>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div style="margin-top:10px; " id="importPandasCSVtb ">
+                                                                    <div class="dc-default-input-button-container btn-grp-center ">
+                                                                        <div class="btn-group btn-center " style=" width: 640px; ">
+                                                                            <button type="button " class="btn btn-primary " style=' font-size:11px; margin-left: 92px;  height: 50px;  width: 110px; '>Import</br>CSV File</button>
+                                                                            <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Clear</button>
+                                                                            <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Return</button>
+                                                                            <button type="button " class="btn btn-primary " style=' font-size:11px; height: 50px;  width: 110px; '>Help</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    <h4>_scriptlog.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The scriptlog.json files is used to store the notebook command script.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <h3>Pandas Dataframe Cleanser Files</h3>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>Pandas Dataframe Cleanser files are across dfc and used by all notebooks that dfc is loaded and run in.&nbsp;The Notebook files path &nbsp;&nbsp;&nbsp;&nbsp;is 'dfcleanserPath'\files.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <br>
+                                                    <ul>
+                                                        <li class="toctree-l2 ">Pandas Dataframe Cleanser Files</li>
+                                                        <br>
+                                                        <ul class="current ">
+                                                            <li class="toctree-l3 ">dfcleanserCommon_config.json</li>
+                                                            <li class="toctree-l3 ">dfcleanserCommon_dictlog.json</li>
+                                                            <li class="toctree-l3 ">dfcleanserCommon_gfunclog.json</li>
+                                                            <li class="toctree-l3 ">dfcleanserCommon_listlog.json</li>
+                                                        </ul>
+                                                    </ul>
+                                                    <h4>dfcleanserCommon_config.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The file is used to record the running environment for all notebooks. This includes database and geocoder parms.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <h4>dfcleanserCommon_dictlog.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The file is used to store common dicts for all notebooks. This includes zip code, state, county .. dicts.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <h4>dfcleanserCommon_gfunclog.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The file is used to store common user defined generic functions.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <h4>dfcleanserCommon_listlog.json</h4>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The file is used to store common lists for all notebooks.</p>
+                                                        </div>
+                                                    </dd>
+                                            </dl>
                 </div>
             </div>
         </div>
+    </div>
+    </div>
+    </div>
     </div>
 
 
