@@ -100,7 +100,7 @@ pandas_export_task_bar_pu_centered      =   True
 #   pandas export csv form parms
 #--------------------------------------------------------------------------
 """
-pandas_export_csv_title         =   "Pandas CSV Export Parameters"
+pandas_export_csv_title         =   "Pandas CSV Export"
 pandas_export_csv_id            =   "exportPandasCSV"
 pandas_export_csv_idList        =   ["ecsvdataframe",
                                      "ecsvpath",
@@ -111,7 +111,7 @@ pandas_export_csv_idList        =   ["ecsvdataframe",
                                      None,None,None,None]
 
 pandas_export_csv_labelList     =   ["dataframe_to_export",
-                                     "path_or_buf",
+                                     "filepath_or_buffer",
                                      "na_rep",
                                      "header",
                                      "index",
@@ -144,7 +144,7 @@ pandas_export_csv_reqList       =   [0,1]
 #--------------------------------------------------------------------------
 """
 
-pandas_export_excel_title       =   "Pandas Excel Export Parameters"
+pandas_export_excel_title       =   "Pandas Excel Export"
 pandas_export_excel_id          =   "exportPandasExcel"
 
 pandas_export_excel_idList      =   ["exceldataframe",
@@ -193,7 +193,7 @@ pandas_export_excel_reqList     =   [0,1]
 #--------------------------------------------------------------------------
 """
 
-pandas_export_json_title        =   "Pandas JSON Export Parameters"
+pandas_export_json_title        =   "Pandas JSON Export"
 pandas_export_json_id           =   "exportPandasJSON"
 
 pandas_export_json_idList       =   ["jsondataframe",
@@ -235,7 +235,7 @@ pandas_export_json_reqList      =   [0,1]
 #--------------------------------------------------------------------------
 """
 
-pandas_export_html_title        =   "Pandas HTML Export Parameters"
+pandas_export_html_title        =   "Pandas HTML Export"
 pandas_export_html_id           =   "exportPandasHTML"
 
 pandas_export_html_idList       =   ["exhtmldataframe",
@@ -284,7 +284,7 @@ pandas_export_html_reqList      =   [0,1]
 #--------------------------------------------------------------------------
 """
 
-pandas_export_sqltable_title        =   "Pandas SQL Table Export Parameters"
+pandas_export_sqltable_title        =   "Pandas SQL Table Export"
 pandas_export_sqltable_id           =   "exportPandasSQLTable"
 
 pandas_export_sqltable_idList       =    ["exportsqldataframe",
@@ -295,7 +295,7 @@ pandas_export_sqltable_idList       =    ["exportsqldataframe",
                                           "exportsqltableindexlabel",
                                           "exportsqltablechunksize",
                                           "exportsqltabledtype",
-                                          "exportsqltableaddlParms",
+                                          "exportsqltablemethod",
                                           None,None,None,None,None]
 
 pandas_export_sqltable_labelList    =   ["dataframe_to_export",
@@ -306,13 +306,13 @@ pandas_export_sqltable_labelList    =   ["dataframe_to_export",
                                          "index_label",
                                          "chunksize",
                                          "dtype",
-                                         "Additional Parm(s)",
+                                         "method",
                                          "Export</br>Table",
                                          "Get</br>Columns",
                                          "Clear","Return","Help"]
 
 pandas_export_sqltable_typeList     =   ["select","text","text","select",
-                                         "select","text","text","text",maketextarea(4),
+                                         "select","text","text","text",maketextarea(3),
                                          "button","button","button","button","button"]
 
 pandas_export_sqltable_placeholderList = ["select dataframe to export",
@@ -323,7 +323,7 @@ pandas_export_sqltable_placeholderList = ["select dataframe to export",
                                           "column label for index column(s) (default None)",
                                           "number of rows (default None)",
                                           "dict of column name to SQL type, (default None)",
-                                          "enter additional parms { Key :  Value} ... (default None)",
+                                          "sql method (default None)",
                                           None,None,None,None,None]
 
 pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None,None,
@@ -377,7 +377,12 @@ custom_export_reqList           =   [0,1,2]
 dataexport_inputs           =   [pandas_export_csv_id,pandas_export_excel_id,pandas_export_json_id,
                                  pandas_export_html_id,pandas_export_sqltable_id,custom_export_id]
 
+import dfcleanser.data_inspection.data_inspection_widgets as diw
 
+
+dataexport_inputs           =   [pandas_export_csv_id, pandas_export_excel_id, pandas_export_json_id,
+                                 pandas_export_html_id, pandas_export_sqltable_id, custom_export_id,
+                                 diw.data_export_df_input_id]
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -535,7 +540,7 @@ def get_pandas_export_input_form(exid) :
                                 pandas_export_csv_jsList,
                                 pandas_export_csv_reqList)
         
-        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
         selectDicts.append(dataframes)
 
         boolFlag        =   {"default":"True","list":["True","False"]}
@@ -557,7 +562,7 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_excel_jsList,
                                  pandas_export_excel_reqList)
         
-        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
         selectDicts.append(dataframes)
 
         boolFlag        =   {"default":"True","list":["True","False"]}
@@ -579,7 +584,7 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_json_jsList,
                                  pandas_export_json_reqList)
          
-         dataframes      =   cfg.get_dfc_dataframes_select_list()
+         dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
          selectDicts.append(dataframes)
         
          get_select_defaults(export_form,
@@ -597,7 +602,7 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_html_jsList,
                                  pandas_export_html_reqList)    
         
-        dataframes      =   cfg.get_dfc_dataframes_select_list()
+        dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
         selectDicts.append(dataframes)
 
         boolFlag        =   {"default":"True","list":["True","False"]}
@@ -619,7 +624,7 @@ def get_pandas_export_input_form(exid) :
                                  pandas_export_sqltable_jsList,
                                  pandas_export_sqltable_reqList)
          
-         dataframes      =   cfg.get_dfc_dataframes_select_list()
+         dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
          selectDicts.append(dataframes)
          
          ifexists        =   {"default":"fail","list":["fail","replace","append"]}
@@ -692,7 +697,7 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
     """
     
     clear_output()
-
+    
     # add the main import task bar
     if (exid == dem.EXPORT_TB_ONLY) :
 
@@ -709,7 +714,7 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
             
                 # add the pandas export details form 
                 if (exid == dem.EXPORT_PANDAS_TB_PLUS_DETAILS) :
-                
+
                     if(detid==dem.SQLTABLE_EXPORT):
                     
                         import dfcleanser.common.db_utils as dbutils
@@ -750,7 +755,7 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
                         dbutils.display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),conparms,dbutils.SQL_EXPORT) 
                 
                     else :
-                    
+
                         display_export_main_taskbar()
                 
                         pandas_export_form     =   get_pandas_export_input_form(detid)
@@ -776,8 +781,13 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
                             display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
                         else :
                             display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls)
+                            
+                else :
+                    display_pandas_export_taskbar()                    
 
-            elif(exid == dem.EXPORT_PANDAS_TB_ONLY) : 
+            elif(exid == dem.EXPORT_CUSTOM_ONLY) : 
+                
+                print("dem.EXPORT_PANDAS_TB_ONLY")
             
                 # add the custom import form 
                 exportCustomDetailsForm     =   InputForm(custom_export_id,
@@ -803,7 +813,7 @@ def display_dc_export_forms(exid, detid=0, notes=False) :
         
                 selectDicts     =   []
             
-                df_list     =   cfg.get_dfc_dataframes_select_list()
+                df_list     =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
                 selectDicts.append(df_list)
             
                 flags  =   {"default":"False","list":["True","False"]}
@@ -933,14 +943,9 @@ def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
                                           pandas_export_sqltable_reqList)
         
         selectDicts     =   []
-        df_list         =   cfg.get_dfc_dataframes_select_list()
+        df_list         =   cfg.get_dfc_dataframes_select_list(cfg.DataExport_ID)
         selectDicts.append(df_list)
         
-        #dbid        =   cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
-        #from dfcleanser.data_import.data_import_widgets import get_table_names
-        #tableslist  =   get_table_names(dbid,opstat)
-        #tables  =   {"default":str(tableslist[0]),"list":tableslist}
-        #selectDicts.append(tables)
         exists  =   {"default":"fail","list":["fail","replace","append"]}
         selectDicts.append(exists)
         index  =   {"default":"True","list":["True","False"]}
@@ -960,18 +965,13 @@ def display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
         export_sql_input_html = ""
         export_sql_input_html = export_sql_input_form.get_html()
         
-        export_sql_heading_html     =   "<div>" + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</div>"
+        export_sql_heading_html     =   "<div>" + get_pandas_export_input_title(dem.SQLTABLE_EXPORT,dbid) + "</div><br>"
 
         if( not (exportparms == None) ) :
             cfg.set_config_value(pandas_export_sqltable_id+"Parms",fparms)
     
-        gridclasses     =   ["geocode-final-header",
-                             "dfc-left",
-                             "dfc-right"]
-    
-        gridhtmls       =   [export_sql_heading_html,
-                             listHtml,
-                             export_sql_input_html]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        gridhtmls       =   [export_sql_heading_html,listHtml,export_sql_input_html]
     
         display_generic_grid("data-import-sql-table-wrapper",gridclasses,gridhtmls)
 

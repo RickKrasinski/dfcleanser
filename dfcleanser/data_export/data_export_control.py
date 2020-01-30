@@ -64,7 +64,7 @@ def display_export_forms(exportid, detid=0, notes=False) :
 def display_export_sql_details_form(cmd,dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
     from dfcleanser.common.db_utils import SQL_EXPORT
-    display_dc_sql_connector_forms(SQL_EXPORT,dblibid)
+    display_dc_sql_connector_forms(dblibid)
 
 def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
     dew.display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms)
@@ -83,6 +83,10 @@ def process_export_form(formid, parms, display=True) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+    if(not (are_owner_inputs_defined(cfg.DataExport_ID)) ) :
+        define_inputs(cfg.DataExport_ID,dew.dataexport_inputs)
 
     if( not (cfg.is_a_dfc_dataframe_loaded()) ) :
         print("No Dataframe Currently Loadad")
@@ -190,13 +194,12 @@ def display_data_export_parms(title,plist,fparms,exportID,fname,custom=False,dbn
     * returns : N/A
     * --------------------------------------------------------
     """
-    
     #print("display_data_export_parms",title,plist,fparms)
     
     parms_html  =   displayParms(title,plist,fparms,exportID,100,2,False)
-
+    
     if(custom) :
-        status_html     =   display_status("Custom export code Exported successfully",False)
+        status_html     =   display_status("Custom export code Exported successfully",False,False)
         
         exportnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-get_data_export_start()))+ " seconds",
                        "( check if df exists via dfcleanser.common.cfg.is_a_dfc_dataframe_loaded() )"]
@@ -204,18 +207,14 @@ def display_data_export_parms(title,plist,fparms,exportID,fname,custom=False,dbn
     else :
         
         if(dbnote) :
-            status_html     =   display_status(" Dataframe Exported successfully to table " + fname,False)
+            status_html     =   display_status(" Dataframe Exported successfully to table " + fname,False,False)
         else :    
-            status_html     =   display_status(" Dataframe Exported successfully to File " + fname,False)
+            status_html     =   display_status(" Dataframe Exported successfully to File " + fname,False,False)
 
         exportnotes = ["[Total Export Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-get_data_export_start()))+ " seconds"]
 
     notes_html  =   display_notes(exportnotes,False)
     
-    #print("parms_html",parms_html)
-    #print("status_html",status_html)
-    #print("notes_html",notes_html)
-
     gridclasses     =   ["dfc-top","dfc-left","dfc-right"]
     gridhtmls       =   [parms_html,status_html,notes_html]
     display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls)
@@ -868,8 +867,7 @@ def export_test_sql_db_connector(driverid,sqlinputparms) :
 def clear_data_export_data() :
     
     drop_owner_tables(cfg.DataExport_ID)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.DataExport_ID,dew.dataexport_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.DataExport_ID)
     clear_data_export_cfg_values()
     
