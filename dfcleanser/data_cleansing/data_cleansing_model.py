@@ -44,8 +44,7 @@ CHANGE_COLUMN_OPTION        =   1
 DISPLAY_COLS_OPTION         =   2
 DISPLAY_ROW_OPTION          =   3
 
-DISPLAY_DROPNA_OPTION       =   4
-PROCESS_DROP_NA_OPTION      =   5
+PROCESS_DROPNA_ROWS_OPTION  =   5
 
 DROP_COL_OPTION             =   6
 DROP_ROWS_OPTION            =   7
@@ -56,7 +55,7 @@ PROCESS_FILLNA_OPTION       =   9
 DISPLAY_DATA_TYPE_OPTION    =   10
 PROCESS_DATA_TYPE_OPTION    =   11
 
-GENERIC_COL_OPTION          =   12
+GENERIC_COLUMN_OPTION       =   12
 
 DISPLAY_ROUND_COLUMN_OPTION =   13
 PROCESS_ROUND_COLUMN_OPTION =   14
@@ -79,6 +78,33 @@ DATATYPE_OPTION             =   27
 
 DISPLAY_UNIQUES_OPTION      =   29
 
+DISPLAY_ALPHANUMERIC_CHECK  =   30
+PROCESS_ALPHANUMERIC_CHECK  =   31
+
+DISPLAY_NUMERIC_CHECK       =   32
+PROCESS_NUMERIC_CHECK       =   33
+
+DISPLAY_ADD_CATEGORY                =   35
+DISPLAY_REMOVE_CATEGORY             =   36
+DISPLAY_REMOVE_CATEGORY_WHITESPACE  =   37
+DISPLAY_REORDER_CATEGORY            =   38
+
+
+
+
+PROCESS_RENAME_CATEGORY             =   40
+PROCESS_ADD_CATEGORY                =   41
+PROCESS_REMOVE_CATEGORY             =   42
+PROCESS_REMOVE_UNUSED_CATEGORY      =   43
+PROCESS_REMOVE_CATEGORY_WHITESPACE  =   44
+PROCESS_REORDER_CATEGORY            =   45
+PROCESS_TOGGLE_CATEGORY_ORDER       =   46
+
+CLEANSE_CURRENT_CATEGORY_COLUMN     =   47
+
+
+
+
 whitespace_chars            =   ["\\t","\\n","\\f","\\r","\\b","\\v"]
 whitespace_chars_text       =   ["&nbsp;Horizontal Tab","&nbsp;Linefeed","&nbsp;Formfeed","&nbsp;Cariage Return","&nbsp;Backspace","&nbsp;Vertical Tab"]
 whitespace_chars_ids        =   ["HTab","Lfeed","Ffeed","CReturn","Bspace","VTab"]
@@ -89,6 +115,55 @@ NO_NA_OPTION                =   2
 
 
 
+"""
+* ----------------------------------------------------
+# data cleansing check compatability 
+* ----------------------------------------------------
+""" 
+
+ALPHANUMERIC    =   0
+NUMERIC         =   1
+     
+def set_compatability_status(ctype,colname,status) :
+    check_compatability_dict.set_status(ctype,colname,status)
+
+def get_compatability_status(ctype,colname) :   
+    return(check_compatability_dict.get_status(ctype,colname))
+
+def clear_compatability_status() :   
+    check_compatability_dict.clear_store()
+
+class check_compatability_store :
+    
+    # instance variables
+    alphanumeric_dict   =   {}
+    numeric_dict        =   {}
+    
+    # full constructor
+    def __init__(self) :
+        self.alphanumeric_dict  =   {}
+        self.numeric_dict       =   {}
+        
+    def set_status(self,ctype,colname,status) :
+        
+        if(ctype == ALPHANUMERIC) :
+            self.alphanumeric_dict.update({colname:status}) 
+        else :
+            self.numeric_dict.update({colname:status}) 
+
+    def get_status(self,ctype,colname) :
+        
+        if(ctype == ALPHANUMERIC) :
+            self.alphanumeric_dict.get(colname,None) 
+        else :
+            self.numeric_dict.get(colname,None) 
+            
+    def clear_store(self) :
+        self.alphanumeric_dict  =   {}
+        self.numeric_dict       =   {}
+   
+
+check_compatability_dict     =   check_compatability_store()  
 
 
 
