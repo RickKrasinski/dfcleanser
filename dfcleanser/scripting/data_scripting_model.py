@@ -30,3 +30,6 @@ HELP_SCRIPT             =   6
 ADD_CODE_SCRIPT         =   7
 ADD_CODE_RETURN_SCRIPT  =   8
 
+TURN_ON_SCRIPTING       =   9
+TURN_OFF_SCRIPTING      =   10
+

@@ -33,12 +33,16 @@ dc_script_tb_doc_title                 =   "Scripting Options"
 dc_script_tb_title                     =   "Scripting Options"
 dc_script_tb_id                        =   "scriptingoptionstb"
 
-dc_script_tb_keyTitleList              =   ["Show</br>Current Script",
+dc_script_tb_keyTitleList              =   ["Turn On</br>Scripting",
+                                            "Turn Off</br>Scripting",
+                                            "Show</br>Current Script",
                                             "Add to</br>Current Script",
                                             "Delete</br>Current Script",
                                             "Clear","Reset","Help"]
 
-dc_script_tb_jsList                    =   ["scripting_tb_callback(" + str(dsm.SHOW_CURRENT_SCRIPT) + ")",
+dc_script_tb_jsList                    =   ["scripting_tb_callback(" + str(dsm.TURN_ON_SCRIPTING) + ")",
+                                            "scripting_tb_callback(" + str(dsm.TURN_OFF_SCRIPTING) + ")",
+                                            "scripting_tb_callback(" + str(dsm.SHOW_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.ADD_TO_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.DELETE_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.RETURN_CURRENT_SCRIPT) + ")",
@@ -201,10 +205,22 @@ def display_dc_data_scripting(optionId,parms=None) :
 
         funcid = int(parms[0])
         
-        if(funcid == dsm.SHOW_CURRENT_SCRIPT) :
+        if(funcid == dsm.TURN_ON_SCRIPTING) :
+            from dfcleanser.scripting.data_scripting_control import set_scripting_status
+            set_scripting_status(True)
+            from dfcleanser.common.common_utils import display_status_note
+            display_status_note("Scripting is turned on")  
+            
+        elif(funcid == dsm.TURN_OFF_SCRIPTING) :
+            from dfcleanser.scripting.data_scripting_control import set_scripting_status
+            set_scripting_status(False)
+            from dfcleanser.common.common_utils import display_status_note
+            display_status_note("Scripting is turned off")  
+        
+        elif(funcid == dsm.SHOW_CURRENT_SCRIPT) :
             display_scripting_forms()
         
-        if(funcid == dsm.ADD_TO_CURRENT_SCRIPT) :
+        elif(funcid == dsm.ADD_TO_CURRENT_SCRIPT) :
             script_form  =   InputForm(dc_add_code_input_id,
                                        dc_add_code_input_idList,
                                        dc_add_code_input_labelList,
@@ -227,7 +243,7 @@ def display_dc_data_scripting(optionId,parms=None) :
             from dfcleanser.common.common_utils import display_generic_grid
             display_generic_grid("data-scripting-wrapper",gridclasses,gridhtmls)
 
-        if(funcid == dsm.ADD_CODE_SCRIPT) :
+        elif(funcid == dsm.ADD_CODE_SCRIPT) :
             from dfcleanser.scripting.data_scripting_control import add_code_to_script
             add_code_to_script(parms)
             display_status("Code added to Current Script succesfully ")

@@ -27,7 +27,9 @@ from dfcleanser.common.table_widgets import drop_owner_tables
 
 
 def display_data_scripting(optionId,parms=None) :
+    
     dsw.display_dc_data_scripting(optionId,parms)
+ 
     
 def get_scriptlog_list() :
 
@@ -48,6 +50,7 @@ def get_scriptlog_list() :
             
     else :
         return("")
+
 
 def run_scriptlog(parms,opstat) :
     
@@ -130,10 +133,8 @@ def set_script_logging(state=False) :
     else :       DataframeCleanserScriptLog.exit_scripting_mode()        
 
 def isScripting() :
+    return(DataframeCleanserScriptLog.is_scripting_on)
     
-    if(cfg.get_config_value(cfg.SCRIPTING_FLAG_KEY) == None)    :  return(False)
-    else                                                        :  return(True)
-
 def add_to_script(code,opstat) :
     
     newcode = ""
@@ -197,12 +198,17 @@ def display_script_exception(e) :
 
     return()
     
+def set_scripting_status(status) :
+    DataframeCleanserScriptLog.set_Scripting_status(status)    
+    
 """
 #--------------------------------------------------------------------------
 #   script log class
 #--------------------------------------------------------------------------
 """
 class DCScriptLog :
+    
+    
 
     # full constructor
     def __init__(self) :
@@ -210,10 +216,24 @@ class DCScriptLog :
         # instance variables
         self.scriptlog          =   {}
         self.load_ScriptLog_file()
+        self.scripting_status   =   False
+        
+    def set_Scripting_status(self,status) :
+        
+        if(status) :
+            self.scripting_status   =   True
+        else :
+            self.scripting_status   =   False
 
     def get_ScriptLog_file_name(self) :
+        
+        import os        
+        path_name   =   os.path.join(cfg.get_notebook_path(),cfg.get_notebookName() + "_files")
+        path_name   =   os.path.join(path_name,cfg.get_notebookName() + "_scriptlog.json")
+        
+        #print("get_ScriptLog_file_name",path_name)
         if(len(cfg.get_notebookName()) > 0)  :
-            return(cfg.get_notebook_files_path() + cfg.get_notebookName() + "_scriptlog.json")
+            return(path_name)
         else :
             return(None)
 
@@ -248,6 +268,10 @@ class DCScriptLog :
                 scriptlog_file.close()
 
     def get_ScriptLog(self) :
+        
+        #print("get_ScriptLog_file_name",cfg.get_notebook_path() + cfg.get_notebookName() + "_scriptlog.json")
+
+        
         if(len(self.scriptlog) == 0) :
             self.load_ScriptLog_file()    
         return(self.scriptlog.get(cfg.SCRIPT_LOG_KEY,None))
@@ -288,10 +312,19 @@ class DCScriptLog :
             print("[error drop backup script file]",self.scriptlog,str(sys.exc_info()[0]))
         
     def enter_scripting_mode(self) :
-        cfg.set_config_value(cfg.SCRIPTING_FLAG_KEY,True)
+        #cfg.set_config_value(cfg.SCRIPTING_FLAG_KEY,True)
+        self.scripting_status = True  
         
     def exit_scripting_mode(self) :
-        cfg.drop_config_value(cfg.SCRIPTING_FLAG_KEY)
+        #cfg.drop_config_value(cfg.SCRIPTING_FLAG_KEY)
+        self.scripting_status = False
+        
+    def is_scripting_on(self) :
+        return(self.scripting_status)
+        #if( (cfg.get(config_value(cfg.SCRIPTING_FLAG_KEY,None))) is None) :
+        #@    return(False)
+        #else :
+        #    return(True)
 
 """
 * ----------------------------------------------------
