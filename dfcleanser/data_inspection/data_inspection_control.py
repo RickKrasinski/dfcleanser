@@ -35,6 +35,8 @@ from dfcleanser.common.html_widgets import (InputForm)
 
 
 def display_data_inspection(option, parms=None) :
+    
+    
     """
     * -------------------------------------------------------------------------- 
     * function : main data inspection processing
@@ -50,19 +52,20 @@ def display_data_inspection(option, parms=None) :
     
     from IPython.display import clear_output
     clear_output()
-    
-    no_df_selected  =   False
-    
+
     opstat  =   opStatus()  
     
-    diw.display_dfc_inspection_main()
-      
-    # display the default insoection data
+    from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
+    if(not (are_owner_inputs_defined(cfg.DataInspection_ID)) ) :
+        define_inputs(cfg.DataInspection_ID,diw.datainspection_inputs)
+
     if(option == dim.MAIN_OPTION) :
+        diw.display_dfc_inspection_main()
         clear_data_inspection_data()
+    else :
+        diw.display_inspection_main_taskbar()
     
-    if( (cfg.is_a_dfc_dataframe_loaded()) and
-       (not (no_df_selected)) ) :
+    if(cfg.is_a_dfc_dataframe_loaded()) :
         
         if((option == dim.DISPLAY_DATATYPES_OPTION) or
            (option == dim.DISPLAY_NANS_OPTION) or
@@ -71,11 +74,13 @@ def display_data_inspection(option, parms=None) :
            (option == dim.DISPLAY_CATEGORIES_OPTION)) :
             
             fparms = get_parms_for_input(parms[0],diw.data_inspection_df_input_idList)
-            cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,fparms[0])
+
+            if(len(fparms) > 0) :
+                cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,fparms[0])
         
         if( (option == dim.DISPLAY_DATATYPES_OPTION) or 
             (option == dim.DISPLAY_FULL_COLUMN_NAMES) ):
-            df_data_info = dim.get_df_datatypes_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
+            df_data_info = dim.get_df_datatypes_data(cfg.get_current_chapter_df(cfg.DataInspection_ID))
             display_inspect_datatypes(option,df_data_info)
         
         elif(option == dim.DISPLAY_NANS_OPTION) :
@@ -127,7 +132,7 @@ def display_data_inspection(option, parms=None) :
             if (option == dim.DROP_ROW_NANS_OPTION) :
             
                 if(opstat.get_status()) :
-                    dropstats   =   drop_nan_rows(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),threshold,thresholdType,opstat)
+                    dropstats   =   drop_nan_rows(cfg.get_current_chapter_df(cfg.DataInspection_ID),threshold,thresholdType,opstat)
             
                 if(not(opstat.get_status())) :
                     display_exception(opstat) 
@@ -140,7 +145,7 @@ def display_data_inspection(option, parms=None) :
             else :
                         
                 if(opstat.get_status()) :
-                    numcolsdropped  =   drop_nan_cols(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),threshold,thresholdType,opstat) 
+                    numcolsdropped  =   drop_nan_cols(cfg.get_current_chapter_df(cfg.DataInspection_ID),threshold,thresholdType,opstat) 
             
                 if(not(opstat.get_status())) :
                     display_exception(opstat)   
@@ -165,13 +170,11 @@ def display_data_inspection(option, parms=None) :
             display_inspect_outliers(parms[0])
             
     else :
+            
+        cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
         
         if(not (option == dim.MAIN_OPTION)) :
             cfg.display_no_dfs(cfg.DataInspection_ID)
-        
-        
-    #if(not(opstat.get_status())) :
-    #    display_exception(opstat)
         
     from dfcleanser.common.display_utils import  display_pop_up_buffer   
     display_pop_up_buffer()
@@ -214,18 +217,14 @@ def display_inspect_datatypes(option,df_data_info) :
                         
         data_types_html         =   diw.display_df_datatypes(data_types_table,df_data_info[0],df_data_info[1],df_data_info[2],option,False) 
                     
-        data_types_schema_tb    =   diw.get_inspection_dfschema_taskbar()
-        data_types_schema_tb.set_gridwidth(240)
-        data_types_schema_tb.set_customstyle({"font-size":13, "height":40, "width":240, "left-margin":10})
-        data_types_schema_html  =   data_types_schema_tb.get_html()
 
-        gridclasses     =   ["dfc-top","dfc-footer"]
-        gridhtmls       =   [data_types_html,data_types_schema_html]
+        gridclasses     =   ["dfc-main"]
+        gridhtmls       =   [data_types_html]
                     
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-            display_generic_grid("df-inspection-data-type-wrapper",gridclasses,gridhtmls)
+            display_generic_grid("df-inspection-wrapper",gridclasses,gridhtmls)
         else :
-            display_generic_grid("df-inspection-data-type-pop-up-wrapper",gridclasses,gridhtmls)
+            display_generic_grid("df-inspection-pop-up-wrapper",gridclasses,gridhtmls)
 
         print("\n")
         
@@ -239,8 +238,10 @@ def display_inspect_datatypes(option,df_data_info) :
         for i in range(len(df_data_info[0])) :
             ttype = str(df_data_info[0][i]) 
             ttype = ttype.replace("datetime.","")
-            ttype = ttype.replace("datetime64[ns]","datetime")
-            ttype = ttype.replace("timedelta64[ns]","timedelta")
+            #ttype = ttype.replace("datetime64[ns]","datetime")
+            #ttype = ttype.replace("timedelta64[ns]","timedelta")
+            print(ttype)
+            
             objects.append(ttype)    
             
         y_pos = np.arange(len(objects))
@@ -276,8 +277,7 @@ def display_inspect_nans() :
     
     nans_rows_table = dcTable("Rows with most NaNs","nansrowTable",cfg.DataInspection_ID)
     nans_cols_table = dcTable("Columns with most NaNs","nansTable",cfg.DataInspection_ID)
-    diw.display_null_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
-                          nans_rows_table,nans_cols_table,120)
+    diw.display_null_data(cfg.get_current_chapter_df(cfg.DataInspection_ID),nans_rows_table,nans_cols_table,120)
     
 
 def display_inspect_rows(rowid=0) :
@@ -299,7 +299,7 @@ def display_inspect_rows(rowid=0) :
 
     try :                
                 
-        row_stats_html      =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+        row_stats_html      =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                                       cfg.get_config_value(cfg.CURRENT_INSPECTION_DF),
                                                       False)
                     
@@ -310,9 +310,9 @@ def display_inspect_rows(rowid=0) :
         rows_openexcel_html =   (rows_openexcel_html + "<br>")
                     
         rows_table          =   dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
-        sample_row_html     =   diw.display_df_row_data(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+        sample_row_html     =   diw.display_df_row_data(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                                         rows_table,rowid,0,opstat,False)
-        searchcols_form     =   diw.get_colsearch_form(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))
+        searchcols_form     =   diw.get_colsearch_form(cfg.get_current_chapter_df(cfg.DataInspection_ID))
         searchcols_form.set_fullparms(True)
                     
         cfg.set_config_value(diw.data_inspection_colsearch_id+"Parms",["temp_search_df","","","",""])
@@ -361,7 +361,7 @@ def display_inspect_cols(parms) :
 
     try : 
         
-        df          =   cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF)
+        df          =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
         colnames    =   df.columns.tolist()
         
         if(not (parms is None)) :
@@ -467,7 +467,7 @@ def display_inspect_categories() :
                                     "catcandcolsTable",
                                     cfg.DataInspection_ID)
                 
-        numcats, numcands = diw.display_df_categories(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+        numcats, numcands = diw.display_df_categories(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                                       cattable,catcandidatetable)
                     
     except Exception as e:
@@ -511,7 +511,7 @@ def display_inspect_outliers(colname) :
     
     display_inspect_cols(colname)
     
-    outliers_html   =   diw.get_simple_outliers(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF),
+    outliers_html   =   diw.get_simple_outliers(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                                 colname,opstat,display=False) 
 
     gridclasses     =   ["dfc-main"]
@@ -547,7 +547,7 @@ def check_values_datatypes(cols_lists,vals_lists,opstat) :
     * --------------------------------------------------------
     """
     
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF)  
+    df  =   cfg.get_current_chapter_df(cfg.DataInspection_ID)  
 
     print("\n\ncheck_values_datatypes\n",cols_lists,"\n",vals_lists)      
 
@@ -599,7 +599,7 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
     #return
 
     from dfcleanser.common.common_utils import is_int_col
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF) 
+    df  =   cfg.get_current_chapter_df(cfg.DataInspection_ID) 
 
     print("find_matching_rows df",str(len(df)))       
     # get the subset df
@@ -994,25 +994,16 @@ def drop_nan_cols(df,threshold,ttype,opstat,display=True) :
 def clear_data_inspection_data() :
     
     drop_owner_tables(cfg.DataInspection_ID)
-    from dfcleanser.common.html_widgets import delete_all_inputs, define_inputs
-    define_inputs(cfg.DataInspection_ID,diw.datainspection_inputs)
+    from dfcleanser.common.html_widgets import delete_all_inputs
     delete_all_inputs(cfg.DataInspection_ID)
     clear_data_inspection_cfg_values()
     
     
 def clear_data_inspection_cfg_values() :
     
-    cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
-    cfg.drop_config_value(diw.data_inspection_colsearch_id+"Parms")
-    cfg.drop_config_value(diw.data_inspection_colsearch_id+"ParmsProtect")
-    cfg.drop_config_value(diw.data_inspection_nn_colsearch_id+"Parms")
-    cfg.drop_config_value(diw.data_inspection_nn_colsearch_id+"ParmsProtect")
-    cfg.drop_config_value(diw.drop_rows_input_id+"Parms")
-    cfg.drop_config_value(diw.drop_rows_input_id+"ParmsProtect")
-    cfg.drop_config_value(diw.drop_columns_input_id+"Parms")
-    cfg.drop_config_value(diw.drop_columns_input_id+"ParmsProtect")
-    cfg.drop_config_value(diw.full_col_names_input_id+"Parms")
-    cfg.drop_config_value(diw.full_col_names_input_id+"ParmsProtect")
+    return
+    
+    #cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
     
 
 

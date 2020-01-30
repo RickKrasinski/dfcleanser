@@ -11,6 +11,7 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ BY_PERCENT      =   0
 BY_COUNT        =   1
 
 
+
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -76,8 +78,24 @@ def get_df_datatypes_data(df) :
     
     col_stats   =   col_dts()
     
+    import datetime
+    
     for i in range(len(df_dtypes)) :
-        col_stats.add_column(df_dtypes[i],df_cols[i])
+        
+        if(df_dtypes[i] == "object") :
+            
+            if(isinstance(df[df_cols[i]][0],datetime.date)):
+                col_stats.add_dtype_column("object[datetime.date]",df_cols[i])
+            elif(isinstance(df[df_cols[i]][0],datetime.time)): 
+                col_stats.add_dtype_column("object[datetime.time]",df_cols[i])
+            elif(isinstance(df[df_cols[i]][0],str)):
+                col_stats.add_dtype_column("object[str]",df_cols[i])
+    
+            else :
+                col_stats.add_dtype_column(df_dtypes[i],df_cols[i])
+                
+        else :         
+            col_stats.add_dtype_column(df_dtypes[i],df_cols[i])
     
     dtypes_list          =  col_stats.get_dtype_list() 
     
@@ -132,19 +150,24 @@ class col_dts :
         # minimum init attributes
         self.statusdict     =   {}
         
-    def add_column(self,dtype,colname) :
+    def add_dtype_column(self,dtype,colname) :
         
         dtype_stats     =   self.statusdict.get(dtype)
+        
         if(dtype_stats is None) :
+            
             dt_stats    =   col_dt_stats(dtype)
             dt_stats.add_colname(colname)
             self.statusdict.update({dtype:dt_stats})
+        
         else :
+            
             dtype_stats.add_to_count()
             dtype_stats.add_colname(colname)
             self.statusdict.update({dtype:dtype_stats})
 
     def get_dtype_count(self,dt) :
+        
         dtype_stats     =   self.statusdict.get(dt) 
         if(dtype_stats is None) :
             return(0)
@@ -152,6 +175,7 @@ class col_dts :
             return(dtype_stats.get_count())
             
     def get_dtype_col_list(self,dt) :
+        
         dtype_stats     =   self.statusdict.get(dt) 
         if(dtype_stats is None) :
             return(None)

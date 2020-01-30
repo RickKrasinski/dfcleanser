@@ -16,16 +16,16 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_inspection.data_inspection_model as dim
 
-from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, 
+from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, get_datatype_id,
                                             get_col_uniques, display_status, display_grid_status, opStatus, 
                                             display_exception, display_generic_grid, is_numeric_col,
-                                            get_select_defaults, displayParms, new_line)
+                                            get_select_defaults, displayParms, is_categorical_col)
 
 from dfcleanser.common.html_widgets import (InputForm, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table,SCROLL_DOWN)
 
-from dfcleanser.common.display_utils import (display_sample_rows, get_datatype_id)
+from dfcleanser.common.display_utils import (display_sample_rows)
 
 
 """
@@ -229,22 +229,6 @@ drop_columns_input_reqList              =   [0]
 
 """
 #--------------------------------------------------------------------------
-#    get dataframe schema
-#--------------------------------------------------------------------------
-"""
-data_inspection_dfschema_tb_doc_title       =   "Inspection dfSchema"
-data_inspection_dfschema_tb_title           =   "Inspection dfSchema"
-data_inspection_dfschema_tb_id              =   "inspectiondfschematb"
-
-data_inspection_dfschema_tb_keyTitleList    =   ["Show Dataframe Schema"]
-
-data_inspection_dfschema_tb_jsList          =   ["transform_task_bar_callback("+str(-1)+")"]
-
-data_inspection_dfschema_tb_centered        =   True
-
-
-"""
-#--------------------------------------------------------------------------
 #    open dataframe in excel
 #--------------------------------------------------------------------------
 """
@@ -279,7 +263,7 @@ full_col_names_input_placeholderList        =   ["column names"]
 
 full_col_names_input_jsList                 =   [None]
 
-full_col_names_input_reqList                =   []
+full_col_names_input_reqList                =   [0]
 
 full_col_names_input_form                   =   [full_col_names_input_id,
                                                  full_col_names_input_idList,
@@ -343,6 +327,10 @@ inspect_nn_col_input_jsList               =   [None,
 inspect_nn_col_input_reqList              =   [0]
 
 
+datainspection_inputs       =   [data_inspection_df_input_id, data_inspection_colsearch_id, data_inspection_nn_colsearch_id,
+                                 drop_rows_input_id, full_col_names_input_id, inspect_col_input_id, inspect_nn_col_input_id]
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -358,13 +346,6 @@ def display_inspection_main_taskbar() :
                                                data_inspection_tb_jsList,
                                                data_inspection_tb_centered))
 
-
-def get_inspection_dfschema_taskbar() :
-    
-    return(ButtonGroupForm(data_inspection_dfschema_tb_id,
-                           data_inspection_dfschema_tb_keyTitleList,
-                           data_inspection_dfschema_tb_jsList,
-                           data_inspection_dfschema_tb_centered))
 
 def get_inspection_openexcel_taskbar() :
     
@@ -489,8 +470,8 @@ def display_df_size_data(display=True,forExport=False) :
     if(cfg.is_a_dfc_dataframe_loaded()) :
         
         labels  =   ["NUMBER OF ROWS","NUMBER OF COLS"]
-        values  =   [str(len(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF))),
-                     str(len(cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF).columns))]
+        values  =   [str(len(cfg.get_current_chapter_df(cfg.DataInspection_ID))),
+                     str(len(cfg.get_current_chapter_df(cfg.DataInspection_ID).columns))]
         
         if(display) :
             displayParms("&nbsp;dataframe Imported",labels,values,"inspectdata",width=None)
@@ -584,7 +565,7 @@ def display_df_datatypes(table,dtypes_list,colnames_count_list,colnames_dict,opt
         dtypesRows     =   []
         dtypesHrefs    =   []
 
-        dtypesWidths   =   [15,10,75]
+        dtypesWidths   =   [25,10,65]
         dtypesAligns   =   ["left","center","left"]
 
         dtypesrow      =   []
@@ -730,7 +711,7 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
             display_row_nan_stats(df)
         else : 
         
-            row_nans_header_html    =   "<div>Row Nans</div>"
+            row_nans_header_html    =   "<div>Row Nans</div><br>"
             rowswithnulls, rowcounts, row_nan_stats_html = display_row_nan_stats(df,False)
             row_nans_html           =   display_df_row_nans(df,rownantable,rowswithnulls,rowcounts,50,False)
             drop_row_nans_html      =   display_drop_rows()
@@ -748,11 +729,11 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
                 display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
             else :
-                display_generic_grid("df-inspection-nan-pop-up-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls,True)
                 
             print("\n")
 
-            col_nans_header_html    =   "<div>Column Nans</div>"
+            col_nans_header_html    =   "<div>Column Nans</div><br>"
             col_nan_stats_html      =   display_col_nan_stats(df,False)
             col_nans_html           =   display_df_col_nans(df,colnantable,False)
             drop_col_nans_html      =   display_drop_cols()
@@ -768,9 +749,9 @@ def display_null_data(df,rownantable,colnantable,rowsize) :
                                  drop_col_nans_html]
             
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
-                display_generic_grid("df-inspection-nan-col-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls)
             else :
-                display_generic_grid("df-inspection-nan-pop-up-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("df-inspection-nan-wrapper",gridclasses,gridhtmls,True)
             
 
     except Exception as e:
@@ -1126,6 +1107,8 @@ def display_df_categories(df,cattable,catcandidatetable) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    import pandas as pd
 
     df_cols     = df.columns.tolist()
     datatypesList, datatypesCountList, datatypesColsList = dim.get_df_datatypes_data(df)
@@ -1141,7 +1124,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
             (int((uniquesCountList[i]/len(df)*100)) < 20) ) :
             uniquesVals = get_col_uniques(df,df_cols[i])
             
-            if(not (df[df_cols[i]].dtype.name == "category")) :
+            if(not (is_categorical_col(df,df_cols[i])) ) :
                 uniquesValsList.append(uniquesVals.tolist())
             else :
                 uniquesValsList.append(uniquesVals)
@@ -1154,7 +1137,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
     catcandidatesuniques    =   []
                 
     for i in range(len(uniquesValsList)) :
-        if(df[df_cols[i]].dtype.name == "category") :
+        if(is_categorical_col(df,df_cols[i])) :
             catcols.append(df_cols[i])
             catcolsuniques.append(uniquesValsList[i])
         else :
@@ -1185,7 +1168,7 @@ def display_df_categories(df,cattable,catcandidatetable) :
     
     if(len(catcols) > 0) :
 
-        categoryHeader      =   ["Column Name","Uniques Count","Unique Values"]
+        categoryHeader      =   ["Column Name","Ordered","Categories"]
         categoryRows        =   []
         categoryHrefs       =   []
 
@@ -1194,17 +1177,19 @@ def display_df_categories(df,cattable,catcandidatetable) :
 
         categoryrow         =   []
 
-        cattable.set_colsperrow(3)
+        cattable.set_colsperrow(4)
         cattable.set_rowspertable(50)
         cattable.set_maxtables(1)
 
         for i in range(len(catcols)) :
 
-            categoryHrefs.append([None,None,None])
+            categoryHrefs.append(["process_category_column",None,None])
+            
+            CI  =   pd.CategoricalIndex(df[catcols[i]])
             
             categoryrow.append(catcols[i])
-            categoryrow.append(len(catcolsuniques[i]))
-            categoryrow.append(catcolsuniques[i])
+            categoryrow.append(str(CI.ordered))
+            categoryrow.append(str(CI.categories.tolist()))
         
             categoryRows.append(categoryrow)
             categoryrow       =   []
@@ -1216,20 +1201,16 @@ def display_df_categories(df,cattable,catcandidatetable) :
         cattable.set_refList(categoryHrefs)
         cattable.set_note("<b>*</b> To select a column click on the column name.")
 
-        cattable.display_table()
+        #cattable.display_table()
         
         print("\n")
 
-        gridclasses     =   ["dfcleanser-common-grid-header",
-                             "df-inspection-category-data-wrapper-footer"]
-                
-        gridhtmls       =   ["<p>Categorical Columns</p>",
-                             cattable.get_html()]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+        gridhtmls       =   ["<div>Categorical Columns</div>",cattable.get_html()]
                     
         display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
 
-
-
+    # category candidate table
     if(len(catcandidates) > 0) :
         
         catcandHeader       =   ["Column Name","Column</br>Data Type","Nan</br>Count",
@@ -1255,10 +1236,10 @@ def display_df_categories(df,cattable,catcandidatetable) :
             if( (nans[i] == 0) and (not whitespace[i]) ) :
                 catcandHrefs.append(["scatcol",None,None,None,None,None])
             else :
-                catcandHrefs.append(["scol",None,None,None,None,None])
+                catcandHrefs.append(["scatcol",None,None,None,None,None])
             
             catcandrow.append(catcandidates[i])
-            catcandrow.append(df[catcandidates[i]].dtype)#]get_datatype_str(get_datatype_id(catcandidatesuniques[i][0])))
+            catcandrow.append(df[catcandidates[i]].dtype)
             catcandrow.append(str(nans[i]))
             catcandrow.append(str(whitespace[i]))
             catcandrow.append(len(catcandidatesuniques[i]))
@@ -1277,13 +1258,13 @@ def display_df_categories(df,cattable,catcandidatetable) :
         
         if(len(catcandRows) > 0) :
             
-            gridclasses     =   ["dfcleanser-common-grid-header","df-inspection-category-data-wrapper-footer"]
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
             gridhtmls       =   ["<div>Categorical Candidate Columns</div>",catcandidatetable.get_html()]
              
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                 display_generic_grid("df-inspection-category-data-wrapper",gridclasses,gridhtmls)
             else :
-                display_generic_grid("df-inspection-category-data-pop-up-wrapper",gridclasses,gridhtmls)
+                display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
             
             #catcandidatetable.display_table()
         else :
@@ -1319,7 +1300,7 @@ def display_common_graphs(colname) :
         except :
             df = None   
         
-        df = cfg.get_current_chapter_df(cfg.CURRENT_INSPECTION_DF)
+        df = cfg.get_current_chapter_df(cfg.DataInspection_ID)
         
         import numpy as np
         counts      =   df[colname].value_counts().to_dict()
