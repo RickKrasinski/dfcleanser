@@ -17,11 +17,10 @@ import dfcleanser.data_transform.data_transform_model as dtm
 
 from dfcleanser.common.html_widgets import (ButtonGroupForm, InputForm) 
 
-from dfcleanser.common.table_widgets import (dcTable, SCROLL_RIGHT, COLUMN_MAJOR,get_col_major_table)
+from dfcleanser.common.table_widgets import (dcTable)
 
-from dfcleanser.common.common_utils import (get_datatype_str, display_generic_grid, RunningClock,
-                                            is_datetime_col, is_date_col, is_time_col, is_int_col,
-                                            get_datatype_id, is_numeric_col, whitecolor, get_select_defaults)
+from dfcleanser.common.common_utils import (get_dtype_str_for_datatype, display_generic_grid, display_status_note,
+                                            is_numeric_col, whitecolor, get_select_defaults, get_parms_for_input)
 
 #from dfcleanser.common.display_utils import get_df_col_names_table
 
@@ -50,16 +49,14 @@ data_transform_tb_doc_title                 =   "Transform Options"
 data_transform_tb_title                     =   "Transform Options"
 data_transform_tb_id                        =   "transformoptionstb"
 
-data_transform_tb_keyTitleList              =   ["DataFrame</br> Transform",
-                                                 "Columns</br> Transform",
-                                                 "Datetime</br>Transform",
-                                                 "Dateframe</br>Schema",
+data_transform_tb_keyTitleList              =   ["dataframe</br>Transform",
+                                                 "columns</br>Transform",
+                                                 "datetime</br>Transform",
                                                  "Clear","Reset","Help"]
 
 data_transform_tb_jsList                    =   ["transform_task_bar_callback("+str(dtm.DISPLAY_DATAFRAME_TRANSFORM)+")",
                                                  "transform_task_bar_callback("+str(dtm.DISPLAY_COLUMNS_TRANSFORM)+")",
                                                  "transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_TRANSFORM)+")",
-                                                 "transform_task_bar_callback("+str(dtm.DISPLAY_DF_SCHEMA_TRANSFORM)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "process_pop_up_cmd(6)",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
@@ -76,9 +73,9 @@ data_transform_tbA_doc_title                =   "Transform Options"
 data_transform_tbA_title                    =   "Transform Options"
 data_transform_tbA_id                       =   "transformoptionstbA"
 
-data_transform_tbA_keyTitleList             =   ["DataFrame</br> Transform",
-                                                 "Columns</br> Transform",
-                                                 "Datetime</br>Transform"]
+data_transform_tbA_keyTitleList             =   ["dataframe</br>Transform",
+                                                 "Columns</br>Transform",
+                                                 "datetime</br>Transform"]
 
 data_transform_tbA_jsList                   =   ["transform_task_bar_callback("+str(dtm.DISPLAY_DATAFRAME_TRANSFORM)+")",
                                                  "transform_task_bar_callback("+str(dtm.DISPLAY_COLUMNS_TRANSFORM)+")",
@@ -90,11 +87,9 @@ data_transform_tbB_doc_title                =   "Transform Options"
 data_transform_tbB_title                    =   "Transform Options"
 data_transform_tbB_id                       =   "transformoptionstbB"
 
-data_transform_tbB_keyTitleList             =   ["Dateframe</br>Schema",
-                                                 "Clear","Reset","Help"]
+data_transform_tbB_keyTitleList             =   ["Clear","Reset","Help"]
 
-data_transform_tbB_jsList                   =   ["transform_task_bar_callback("+str(dtm.DISPLAY_DF_SCHEMA_TRANSFORM)+")",
-                                                 "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
+data_transform_tbB_jsList                   =   ["transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "process_pop_up_cmd(6)",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
@@ -110,18 +105,20 @@ datetime_transform_tb_doc_title             =   "datetime Transform Options"
 datetime_transform_tb_title                 =   "datetime Transform Options"
 datetime_transform_tb_id                    =   "datetimetransformoptionstb"
 
-datetime_transform_tb_keyTitleList          =   ["Convert</br> Column</br>Datatype",
-                                                 "Calculate</br> timedelta</br>Column",
-                                                 "Split Column </br>to date,time</br> Columns",
-                                                 "Merge Column </br>from date,time</br> Columns",
-                                                 "Datetime</br>Components",
+datetime_transform_tb_keyTitleList          =   ["Convert</br>Column</br>to</br>datetime",
+                                                 "Convert</br>Column</br>to</br>timedelta",
+                                                 "Calculate</br>timedelta</br>Column",
+                                                 "Split</br>Column</br>to</br>date,time</br>Columns",
+                                                 "Merge</br>Column</br>from</br>date,time</br>Columns",
+                                                 "Get</br>datetime</br>Components</br>Column",
                                                  "Return","Help"]
 
-datetime_transform_tb_jsList                =   ["dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_DATATYPE)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_TIMEDELTA)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_SPLIT)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_MERGE)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_COMPONENTS)+")",
+datetime_transform_tb_jsList                =   ["dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_TIMEDELTA_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_TIMEDELTA_CALCULATE_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_SPLIT_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_COMPONNETS_OPTION)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
@@ -130,30 +127,28 @@ datetimeA_transform_tb_doc_title            =   "datetime Transform Options"
 datetimeA_transform_tb_title                =   "datetime Transform Options"
 datetimeA_transform_tb_id                   =   "datetimeAtransformoptionstb"
 
-datetimeA_transform_tb_keyTitleList         =   ["Convert</br> Column</br>Datatype",
-                                                 "Calculate</br> timedelta</br>Column",
-                                                 "Split Column </br>to date,time</br> Columns",
-                                                 "Merge Column </br>from date,time</br> Columns"]
+datetimeA_transform_tb_keyTitleList         =   ["Convert</br>Column</br>to</br>datetime",
+                                                 "Convert</br>Column</br>to</br>timedelta",
+                                                 "Calculate</br>timedelta</br>Column",
+                                                 "Split</br>Column</br>to</br>date,time</br>Columns"]
 
-datetimeA_transform_tb_jsList               =   ["dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_DATATYPE)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_TIMEDELTA)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_SPLIT)+")",
-                                                 "dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_MERGE)+")"]
+datetimeA_transform_tb_jsList               =   ["dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_TIMEDELTA_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_TIMEDELTA_CALCULATE_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_SPLIT_OPTION)+")"]
 
 datetimeB_transform_tb_doc_title            =   "datetime Transform Options"
 datetimeB_transform_tb_title                =   "datetime Transform Options"
 datetimeB_transform_tb_id                   =   "datetimeBtransformoptionstb"
 
-datetimeB_transform_tb_keyTitleList         =   ["Datetime</br>Components",
+datetimeB_transform_tb_keyTitleList         =   ["Merge</br>Column</br>from</br>date,time</br>Columns",
+                                                 "Get</br>datetime</br>Components</br>Column",
                                                  "Return","Help"]
 
-datetimeB_transform_tb_jsList               =   ["dt_datetime_transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_COMPONENTS)+")",
+datetimeB_transform_tb_jsList               =   ["dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION)+")",
+                                                 "dt_datetime_transform_task_bar_callback("+ str(dtm.DISPLAY_DATETIME_COMPONNETS_OPTION)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
-
-
-
-
 
 
 """
@@ -161,134 +156,170 @@ datetimeB_transform_tb_jsList               =   ["dt_datetime_transform_task_bar
 #   datetime format input 
 #--------------------------------------------------------------------------
 """
-datetime_format_input_title             =   "Datetime Format Parameters"
+datetime_format_input_title             =   "Datetime Format"
 datetime_format_input_id                =   "datetimeformatinput"
 datetime_format_input_idList            =   ["dtcolname",
-                                             "dtdatatype",
-                                             "dtnanfillvalue",
+                                             "dtnanthreshold",
+                                             "dterrors",
                                              "dtformatstring",
                                              None,None,None,None]
 
-datetime_format_input_labelList         =   ["column_name",
-                                             "datetime_datatype",
-                                             "nan_fill_value",
+datetime_format_input_labelList         =   ["column_name_to_convert",
+                                             "NaT_threshold",
+                                             "errors",
                                              "format_string",
                                              "Change</br>Data</br>Type",
                                              "Get</br>formats",
                                              "Return","Help"]
 
-datetime_format_input_typeList          =   ["select","select","text","text","button","button","button","button"]
+datetime_format_input_typeList          =   ["select","text","select","text","button","button","button","button"]
 
 datetime_format_input_placeholderList   =   ["column name",
-                                             "datetime datatype",
-                                             "nan fill value (default = None - NaT)",
+                                             "percent of NaTs to cancel convert : default (do not check)",
+                                             "parse error handling (default = NaT)",
                                              "format string to use (default = infer)",
                                              None,None,None,None]
 
 datetime_format_input_jsList            =   [None,None,None,None,
-                                             "process_datetime_format_transform_callback(0)",
-                                             "process_datetime_format_transform_callback(1)",
-                                             "process_datetime_format_transform_callback(3)",
+                                             "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_OPTION) + ")",
+                                             "process_datetime_format_transform_callback(" + str(dtm.DISPLAY_DATETIME_FORMAT_OPTION) + ")",
+                                             "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
 datetime_format_input_reqList           =   [0,1,2]
 
 
-datetime_format_ftypes_input_typeList   =   ["select","select","text","select","button","button","button","button"]
+datetime_format_ftypes_input_typeList   =   ["select","select","text","select","text","button","button","button","button"]
+
 
 """
-datetime_format_ftypes_input_labelList  =   ["column_name",
-                                             "datetime_datatype",
-                                             "nan_fill_value",
-                                             "format_string",
+#--------------------------------------------------------------------------
+#   datetime format input 
+#--------------------------------------------------------------------------
+"""
+timedelta_format_input_title            =   "timedelta Format"
+timedelta_format_input_id               =   "timedeltaformatinput"
+timedelta_format_input_idList           =   ["tdcolname",
+                                             "dtnanthreshold",
+                                             "tdunits",
+                                             "tderrors",
+                                             None,None,None]
+
+timedelta_format_input_labelList        =   ["column_name_to_convert",
+                                             "NaT_threshold",
+                                             "units",
+                                             "errors",
                                              "Change</br>Data</br>Type",
-                                             "Get</br>Cols",
                                              "Return","Help"]
 
-datetime_format_ftypes_input_jsList     =   [None,None,None,None,
-                                             "process_datetime_format_transform_callback(0)",
-                                             "process_datetime_format_transform_callback(4)",
-                                             "process_datetime_format_transform_callback(3)",
+timedelta_format_input_typeList         =   ["select","text","select","select","button","button","button"]
+
+timedelta_format_input_placeholderList  =   ["column name",
+                                             "percent of NaTs to cancel convert : default (do not check)",
+                                             "units of time (default = infer)",
+                                             "parse error handling (default = NaT)",
+                                             None,None,None]
+
+timedelta_format_input_jsList           =   [None,None,None,None,
+                                             "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_TIMEDELTA_OPTION) + ")",
+                                             "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
-"""
+
+timedelta_format_input_reqList          =   [0,1,2,3]
+
+
+timedelta_units         =   ["Y","M","W","D","hours","minutes","seconds","milliseconds","microseconds","nanoseconds"]
+
+
+error_handlers          =   ["raise","coerce","ignore"]
+error_handlers_text     =   ["raise exception and terminate","coerce and set result to NaT","ignore and set result to input"]
+
+
 """
 #--------------------------------------------------------------------------
 #   datetime timedelta input 
 #--------------------------------------------------------------------------
 """
-datetime_tdelta_input_title             =   "Datetime timedelta Parameters"
+datetime_tdelta_input_title             =   "Datetime timedelta"
 datetime_tdelta_input_id                =   "datetimetdeltainput"
 datetime_tdelta_input_idList            =   ["dttdcolname",
                                              "dttdcolname1",
                                              "dttdrescolname",
+                                             "dttdelta",
                                              "dttdunits",
                                              None,None,None,None]
 
 datetime_tdelta_input_labelList         =   ["datetime_column_name_1",
                                              "datetime_column_name_2",
-                                             "timedelta_column_name",
+                                             "new_timedelta_column_name",
+                                             "new_timedelta_column_name_data_type",
                                              "time_units",
-                                             "Calculate</br> timedelta",
+                                             "Calculate</br>timedelta",
                                              "Clear",
                                              "Return","Help"]
 
-datetime_tdelta_input_typeList          =   ["select","select","text","select",
+datetime_tdelta_input_typeList          =   ["select","select","text","select","select",
                                              "button","button","button","button"]
 
 datetime_tdelta_input_placeholderList   =   ["first column name",
                                              "second column name",
-                                             "time delta column name",
+                                             "result time delta column name",
+                                             "result time delta column name data type",
                                              "time delta units",
                                               None,None,None,None]
 
-datetime_tdelta_input_jsList            =   [None,None,None,None,
-                                             "process_datetime_tdelta_callback(0)",
-                                             "process_datetime_tdelta_callback(1)",
-                                             "process_datetime_tdelta_callback(2)",
+datetime_tdelta_input_jsList            =   [None,None,None,None,None,
+                                             "process_datetime_tdelta_callback(" + str(dtm.PROCESS_TIMEDELTA_CALCULATE_OPTION) + ")",
+                                             "process_datetime_tdelta_callback(" + str(dtm.DISPLAY_TIMEDELTA_CALCULATE_OPTION) + ")",
+                                             "process_datetime_tdelta_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
-datetime_tdelta_input_reqList           =   [0,1,2,3]
+datetime_tdelta_input_reqList           =   [0,1,2,3,4]
+
 
 """
 #--------------------------------------------------------------------------
 #   datetime merge input 
 #--------------------------------------------------------------------------
 """
-datetime_merge_input_title              =   "Datetime Merge Parameters"
+datetime_merge_input_title              =   "Datetime Merge"
 datetime_merge_input_id                 =   "datetimetmergeinput"
 datetime_merge_input_idList             =   ["dtmdatecolname",
                                              "dtmtimecolname",
                                              "dtmdatetimecolname",
+                                             "dtmdatatype",
                                              None,None,None,None]
 
-datetime_merge_input_labelList          =   ["date_column_name",
-                                             "time_column_name",
-                                             "datetime_column_name",
+datetime_merge_input_labelList          =   ["datetime.date_column_name",
+                                             "datetime.time_column_name",
+                                             "new_datetime_column_name",
+                                             "new_datetime_column_data_type",
                                              "Merge</br>Columns",
                                              "Clear",
                                              "Return","Help"]
 
-datetime_merge_input_typeList           =   ["select","select","text","button","button","button","button"]
+datetime_merge_input_typeList           =   ["select","select","text","select","button","button","button","button"]
 
-datetime_merge_input_placeholderList    =   ["date column name",
-                                             "time column name",
-                                             "new merged column name",
+datetime_merge_input_placeholderList    =   ["datetime.date column name",
+                                             "datetime.time column name",
+                                             "new datetime merged column name",
+                                             "new datetime merged column data type",
                                               None,None,None,None]
 
-datetime_merge_input_jsList             =   [None,None,None,
-                                             "process_datetime_merge_split_callback(0,"+str(dtm.MERGE)+")",
-                                             "process_datetime_merge_split_callback(1,"+str(dtm.MERGE)+")",
-                                             "process_datetime_merge_split_callback(2,"+str(dtm.MERGE)+")",
+datetime_merge_input_jsList             =   [None,None,None,None,
+                                             "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_MERGE_OPTION) + ")",
+                                             "process_datetime_merge_split_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION) + ")",
+                                             "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
-datetime_merge_input_reqList            =   [0,1,2]
+datetime_merge_input_reqList            =   [0,1,2,3]
 
 """
 #--------------------------------------------------------------------------
 #   datetime split input 
 #--------------------------------------------------------------------------
 """
-datetime_split_input_title              =   "Datetime Split Parameters"
+datetime_split_input_title              =   "Datetime Split"
 datetime_split_input_id                 =   "datetimetsplitinput"
 datetime_split_input_idList             =   ["dtsdatetimecolname",
                                              "dtsdatecolname",
@@ -296,8 +327,8 @@ datetime_split_input_idList             =   ["dtsdatetimecolname",
                                              None,None,None,None]
 
 datetime_split_input_labelList          =   ["datetime_column_name",
-                                             "date_column_name",
-                                             "time_column_name",
+                                             "new_datetime.date_column_name",
+                                             "new_datetime.time_column_name",
                                              "Split</br>Column",
                                              "Clear",
                                              "Return","Help"]
@@ -310,9 +341,9 @@ datetime_split_input_placeholderList    =   ["datetime column name",
                                               None,None,None,None]
 
 datetime_split_input_jsList             =   [None,None,None,
-                                             "process_datetime_merge_split_callback(0,"+str(dtm.SPLIT)+")",
-                                             "process_datetime_merge_split_callback(1,"+str(dtm.SPLIT)+")",
-                                             "process_datetime_merge_split_callback(2,"+str(dtm.SPLIT)+")",
+                                             "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_SPLIT_OPTION) + ")",
+                                             "process_datetime_merge_split_callback(" + str(dtm.DISPLAY_DATETIME_SPLIT_OPTION) + ")",
+                                             "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
 datetime_split_input_reqList            =   [0,1,2]
@@ -323,60 +354,38 @@ datetime_split_input_reqList            =   [0,1,2]
 #   datetime components input 
 #--------------------------------------------------------------------------
 """
-datetime_comp_input_title               =   "Datetime Split Parameters"
+datetime_comp_input_title               =   "Datetime Split"
 datetime_comp_input_id                  =   "datetimecompinput"
 datetime_comp_input_idList              =   ["dtcdatetimecolname",
-                                             "dtccomptype",
                                              "dtcresultcolname",
+                                             "dtccomptype",
                                              None,None,None]
 
 datetime_comp_input_labelList           =   ["datetime_column_name",
+                                             "new_datetime_component_column_name",
                                              "datetime_component",
-                                             "result_column_name",
                                              "Get</br>Component",
                                              "Return","Help"]
 
-datetime_comp_input_typeList            =   ["select","select","text","button","button","button"]
+datetime_comp_input_typeList            =   ["select","text","select","button","button","button"]
 
 datetime_comp_input_placeholderList     =   ["datetime column name",
-                                             "date column name",
                                              "result column name",
+                                             "result component",
                                               None,None,None]
 
 datetime_comp_input_jsList              =   [None,None,None,
-                                             "process_datetime_components_callback(0)",
-                                             "process_datetime_components_callback(1)",
+                                             "process_datetime_components_callback(" + str(dtm.PROCESS_DATETIME_COMPONNETS_OPTION) + ")",
+                                             "process_datetime_components_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
                                              "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
 
 datetime_comp_input_reqList             =   [0,1,2]
 
+import dfcleanser.data_inspection.data_inspection_widgets as diw 
 
-"""
-#--------------------------------------------------------------------------
-#   datatime radio 
-#--------------------------------------------------------------------------
-"""
-datetime_radio_id                       =   "datetimeselect"
-datetime_radio_idList                   =   ["datetimercid","datercid","timercid","deltarcid",]
-
-datetime_radio_labelList                =   ["datetime.datetime","&nbsp;&nbsp;datetime.date&nbsp;&nbsp;",
-                                             "&nbsp;&nbsp;datetime.time&nbsp;&nbsp;",
-                                             "&nbsp;&nbsp;datetime.timedelta&nbsp;&nbsp;"]
-
-
-datetime_radio_form                     =   [datetime_radio_id,
-                                             datetime_radio_idList,
-                                             datetime_radio_labelList]
-
-datetime_radio_jslist                   =   ["select_datetime_dt(0)",
-                                             "select_datetime_dt(1)",
-                                             "select_datetime_dt(2)",
-                                             "select_datetime_dt(3)"]
-
-
-datatransform_inputs        =   [datetime_format_input_id,datetime_tdelta_input_id,datetime_merge_input_id,
-                                 datetime_split_input_id,datetime_comp_input_id]
-
+datatransform_inputs                    =   [datetime_format_input_id, timedelta_format_input_id, datetime_tdelta_input_id,
+                                             datetime_merge_input_id, datetime_split_input_id, datetime_comp_input_id,
+                                             diw.data_transform_df_input_id]
 
 """
 #--------------------------------------------------------------------------
@@ -466,12 +475,12 @@ def display_datetime_column_taskbar() :
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#    datetime components
+#    datetime convert methods
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
-def display_datetime_convert(parms=None) :
+def display_datetime_convert(option,parms=None) :
     """
     * ---------------------------------------------------------
     * function : display date time convert input screen
@@ -484,69 +493,71 @@ def display_datetime_convert(parms=None) :
     * --------------------------------------------------------
     """
 
-    dtid        =   ""
     colname     =   ""
-    nanvalue    =   ""
     
-    if(parms == None) :
+    df          =   cfg.get_current_chapter_df(cfg.DataTransform_ID) 
+    
+    if( not(option == dtm.DISPLAY_DATETIME_FORMAT_OPTION) ) :
+            
         cfg.drop_config_value(datetime_format_input_id+"Parms")
         
-    else :
-        
-        if(len(parms) == 1) :
+        dt_datetime_custom_form = InputForm(datetime_format_input_id,
+                                            datetime_format_input_idList,
+                                            datetime_format_input_labelList,
+                                            datetime_format_input_typeList,
+                                            datetime_format_input_placeholderList,
+                                            datetime_format_input_jsList,
+                                            datetime_format_input_reqList)
             
-            if(parms[0] == 0) :
-                dtid    =   11
-            elif(parms[0] == 1) :
-                dtid    =   12
-            elif(parms[0] == 2) :
-                dtid    =   13
-                
-            cfg.drop_config_value(datetime_format_input_id+"Parms")
-        
-            dt_datetime_custom_form = InputForm(datetime_format_input_id,
-                                                datetime_format_input_idList,
-                                                datetime_format_input_labelList,
-                                                datetime_format_input_typeList,
-                                                datetime_format_input_placeholderList,
-                                                datetime_format_input_jsList,
-                                                datetime_format_input_reqList)
-            
-            strftimelist    =   None
+        strftimelist    =   None
     
-        else :
-        
-            dtid        =   11
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dict
-            strftimedict = get_Dict("strftime")
+    else :
             
-            strftimekeys    =   list(strftimedict.keys())
-            strftimelist    =   []
-            for i in range(len(strftimekeys)) :
-                strftimelist.append(strftimekeys[i] + " : " + strftimedict.get(strftimekeys[i]))    
+        fparms  =   get_parms_for_input(parms,datetime_format_input_idList)
+        print("display_datetime_convert : fparms ",fparms)
             
-            dt_datetime_custom_form = InputForm(datetime_format_input_id,
-                                                datetime_format_input_idList,
-                                                datetime_format_input_labelList,
-                                                datetime_format_ftypes_input_typeList,
-                                                datetime_format_input_placeholderList,
-                                                datetime_format_input_jsList,
-                                                datetime_format_input_reqList)
-        
-    parmsList = [colname,get_datatype_str(dtid),str(nanvalue),""]
-    cfg.set_config_value(datetime_format_input_id+"Parms",parmsList)
+        colname     =   fparms[0]
+        natthresh   =   fparms[1]
+        errors      =   fparms[2]
+        formatstr   =   fparms[3]
 
+        cfg.set_config_value(datetime_format_input_id+"Parms",[colname,natthresh,errors,formatstr])
+        
+        from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+        strftimedict = get_Dict("strftime")
+            
+        strftimekeys    =   list(strftimedict.keys())
+        strftimelist    =   []
+        for i in range(len(strftimekeys)) :
+            strftimelist.append(strftimekeys[i] + " : " + strftimedict.get(strftimekeys[i]))    
+            
+        dt_datetime_custom_form = InputForm(datetime_format_input_id,
+                                            datetime_format_input_idList,
+                                            datetime_format_input_labelList,
+                                            datetime_format_ftypes_input_typeList,
+                                            datetime_format_input_placeholderList,
+                                            datetime_format_input_jsList,
+                                            datetime_format_input_reqList)
     
     selectDicts     =   [] 
     
-    current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
     colnames        =   current_df.columns.tolist()
-    cnames          =   {"default":colnames[0],"list": colnames}
-    selectDicts.append(cnames)
+    
+    cnames          =   []
+    
+    for i in range(len(colnames)) :
+        if(not (is_numeric_col(df,colnames[i])) ) :
+            cnames.append(colnames[i])
+    
+    if(len(colname) == 0) :
+        colname     =   cnames[0]
         
-    dtsel           =   {"default":"datetime.datetime","list":["datetime.datetime","datetime.date","datetime.time",
-                                                               "datetime.timedelta","numpy.datetime64","numpy.timedelta64"]}
-    selectDicts.append(dtsel)
+    cnames          =   {"default":colname,"list": cnames}#, "callback":"change_convert_dtype_callback"}
+    selectDicts.append(cnames)
+    
+    errorssel         =   {"default":error_handlers_text[1],"list":error_handlers_text}
+    selectDicts.append(errorssel)
     
     if(not(strftimelist is None)) :
         strftimesel     =   {"default":strftimelist[0],"list": strftimelist}
@@ -567,21 +578,120 @@ def display_datetime_convert(parms=None) :
                             selectDicts)
     
     dt_datetime_custom_form.set_shortForm(True)
-    dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":22})
+    dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":28})
     dt_datetime_custom_form.set_gridwidth(480)
     dt_datetime_custom_form.set_fullparms(True)  
     
     dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-    dt_datetime_title_html  =   "<br><div>Datetime Convert Parms</div><br>"
+    dt_datetime_title_html  =   "<br><div>Convert Column to Datetime</div><br>"
         
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
     gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
+
+    print("\n")
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+        
+
+
+def display_timedelta_convert(parms=None) :
+    """
+    * ---------------------------------------------------------
+    * function : display timedelta convert input screen
+    * 
+    * parms :
+    *  parms          - datatype parms
+    *
+    * returns : 
+    *  N?A
+    * --------------------------------------------------------
+    """
+
+    print("display_timedelta_convert",parms)
     
-    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
+    if(not(parms is None)) :
+    
+        fparms  =   get_parms_for_input(parms,datetime_format_input_idList)
+        print("display_timedelta_convert : fparms ",fparms)
+            
+        colname     =   fparms[0]
+        nanthresh   =   fparms[1]
+        units       =   fparms[2]
+        errors      =   fparms[3]
+    
+        
+        cfg.set_config_value(timedelta_format_input_id+"Parms",[colname,nanthresh,units,errors])
+        
+    else :
+        
+        colname     =   ""
+        nanthresh   =   ""
+        units       =   "seconds"
+
+        cfg.drop_config_value(timedelta_format_input_id+"Parms")
+        
+    
+    df          =   cfg.get_current_chapter_df(cfg.DataTransform_ID) 
+    
+    dt_timedelta_custom_form = InputForm(timedelta_format_input_id,
+                                         timedelta_format_input_idList,
+                                         timedelta_format_input_labelList,
+                                         timedelta_format_input_typeList,
+                                         timedelta_format_input_placeholderList,
+                                         timedelta_format_input_jsList,
+                                         timedelta_format_input_reqList)
+            
+    selectDicts     =   [] 
+    
+    current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    colnames        =   current_df.columns.tolist()
+    cnames          =   []
+    
+    for i in range(len(colnames)) :
+        if(is_numeric_col(df,colnames[i])) :
+            cnames.append(colnames[i])
+    
+    if(len(colname) == 0) :
+        colname     =   cnames[0]
+        
+    cnamessel       =   {"default":colname,"list": cnames}#, "callback":"change_convert_dtype_callback"}
+    selectDicts.append(cnamessel)
+        
+    unitsel           =   {"default":units,"list":timedelta_units}
+    selectDicts.append(unitsel)
+    
+    errorssel         =   {"default":error_handlers_text[1],"list":error_handlers_text}
+    selectDicts.append(errorssel)
+    
+    get_select_defaults(dt_timedelta_custom_form,
+                        timedelta_format_input_id,
+                        timedelta_format_input_idList,
+                        timedelta_format_input_typeList,
+                        selectDicts)
+    
+    dt_timedelta_custom_form.set_shortForm(True)
+    dt_timedelta_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":90})
+    dt_timedelta_custom_form.set_gridwidth(480)
+    dt_timedelta_custom_form.set_fullparms(True)  
+    
+    dt_timedelta_custom_form_html = dt_timedelta_custom_form.get_html()
+
+    dt_timedelta_title_html  =   "<br><div>Convert Column to Timedelta</div><br>"
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+    gridhtmls       =   [dt_timedelta_title_html,dt_timedelta_custom_form_html]
+
+    print("\n")
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
 
-def display_datetime_timedelta(parms)  :
+def display_datetime_timedelta(parms=None)  :
     """
     * ---------------------------------------------------------
     * function : display date time timedelta input screen
@@ -603,34 +713,66 @@ def display_datetime_timedelta(parms)  :
                                         datetime_tdelta_input_reqList)
     selectDicts     =   [] 
     
-    current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+    current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
     colnames        =   current_df.columns.tolist()
-    cnames          =   {"default":colnames[0],"list": colnames}
-    selectDicts.append(cnames)
-    selectDicts.append(cnames)
-        
-    dtsel           =   {"default":"Seconds","list":["Years","Days","Hours","Minutes","Seconds","MicroSeconds","datetime.timedelta"]}
-    selectDicts.append(dtsel)
     
+    datetimecols    =   []
+             
+    from dfcleanser.common.common_utils import is_datetime_type_col
+       
+    for i in range(len(colnames)) :
+            
+        if(is_datetime_type_col(current_df,colnames[i])) :   
+            datetimecols.append(colnames[i])
+    
+        if(len(datetimecols) > 0) :
+            datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
+        else :
+            datetimenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
+    
+    selectDicts.append(datetimenames)
+    selectDicts.append(datetimenames)
+    
+    tdeltasel         =   {"default":"timedelta","list":["timedelta","float64"], "callback":"change_convert_dtype_callback"}
+    selectDicts.append(tdeltasel)
+        
+    dtsel           =   {"default":"Seconds","list":["Days","Hours","Minutes","Seconds","MilliSeconds","MicroSeconds"], "callback":"change_convert_units_callback"}
+    selectDicts.append(dtsel)
+   
     get_select_defaults(dt_datetime_custom_form,
                         datetime_tdelta_input_id,
                         datetime_tdelta_input_idList,
                         datetime_tdelta_input_typeList,
                         selectDicts)
-
-    dt_datetime_custom_form.set_shortForm(True)
-    dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":22})
-    dt_datetime_custom_form.set_gridwidth(480)
-    dt_datetime_custom_form.set_fullparms(True)  
     
-    dt_datetime_custom_html = dt_datetime_custom_form.get_html()
-    
-    dt_datetime_title_html  =   "<div>Calculate Datetime.timedelta</div><br>"
+    if(len(datetimecols) > 0) :    
+        cfg.set_config_value(datetime_tdelta_input_id+"Parms",[datetimecols[0],datetimecols[0],"timedelta_column_timedelta","timedelta","Seconds"])
         
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
-    gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
-    print("\n")
-    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
+        cfg.set_config_value(datetime_tdelta_input_id+"ParmsProtect",[False,False,False,False,True])
+
+        dt_datetime_custom_form.set_shortForm(True)
+        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":25})
+        dt_datetime_custom_form.set_gridwidth(480)
+        dt_datetime_custom_form.set_fullparms(True)  
+    
+        dt_datetime_custom_html = dt_datetime_custom_form.get_html()
+    
+        dt_datetime_title_html  =   "<div>Calculate timedelta</div><br>"
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+        gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
+    
+        print("\n")
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+
+    else :
+        #display_datetime_column_taskbar()
+        print("\n")
+
+        display_status_note("No datetime columns found in dataframe")
 
 
 def display_datetime_split_merge(parms,action) :
@@ -658,10 +800,23 @@ def display_datetime_split_merge(parms,action) :
         
         selectDicts     =   [] 
     
-        current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
         colnames        =   current_df.columns.tolist()
-        cnames          =   {"default":colnames[0],"list": colnames}
-        selectDicts.append(cnames)
+        
+        from dfcleanser.common.common_utils import is_datetime_type_col
+       
+        datetimecols    =   []
+        for i in range(len(colnames)) :
+            
+            if(is_datetime_type_col(current_df,colnames[i])):   
+                datetimecols.append(colnames[i])
+            
+        if(len(datetimecols) > 0) :
+            datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
+        else :
+            datetimenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
+        
+        selectDicts.append(datetimenames)
         
         get_select_defaults(dt_datetime_custom_form,
                             datetime_split_input_id,
@@ -670,13 +825,13 @@ def display_datetime_split_merge(parms,action) :
                             selectDicts)
         
         dt_datetime_custom_form.set_shortForm(True)
-        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":20})
+        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":25})
         dt_datetime_custom_form.set_gridwidth(480)
         dt_datetime_custom_form.set_fullparms(True)  
         
         dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-        dt_datetime_title_html  =   "<div>Split Datetime Column Parameters</div><br>"
+        dt_datetime_title_html  =   "<div>Split Datetime Column</div><br>"
         
     else :
         
@@ -690,11 +845,34 @@ def display_datetime_split_merge(parms,action) :
         
         selectDicts     =   [] 
     
-        current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
+        current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
         colnames        =   current_df.columns.tolist()
-        cnames          =   {"default":colnames[0],"list": colnames}
-        selectDicts.append(cnames)
-        selectDicts.append(cnames)
+        
+        datecols        =   []
+        timecols        =   []
+             
+        from dfcleanser.common.common_utils import is_date_col, is_time_col
+       
+        for i in range(len(colnames)) :
+            
+            if(is_date_col(current_df,colnames[i])) :   datecols.append(colnames[i])
+            if(is_time_col(current_df,colnames[i])) :   timecols.append(colnames[i])
+            
+        if(len(datecols) > 0) :
+            datenames          =   {"default":datecols[0],"list": datecols}
+        else :
+            datenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
+                
+        if(len(timecols) > 0) :
+            timenames          =   {"default":timecols[0],"list": timecols}
+        else :
+            timenames          =   {"default":"No datetime.time Columns to Select","list": ["No datetime.time Columns to Select"]}
+                
+        selectDicts.append(datenames)
+        selectDicts.append(timenames)
+        
+        ctypes          =   {"default":"datetime.datetime","list": ["datetime.datetime","np.datetime64","pd.Timestamp"]}
+        selectDicts.append(ctypes)
         
         get_select_defaults(dt_datetime_custom_form,
                             datetime_merge_input_id,
@@ -703,7 +881,7 @@ def display_datetime_split_merge(parms,action) :
                             selectDicts)
         
         dt_datetime_custom_form.set_shortForm(True)
-        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":22})
+        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":30})
         dt_datetime_custom_form.set_gridwidth(480)
         dt_datetime_custom_form.set_fullparms(True)  
         
@@ -715,10 +893,18 @@ def display_datetime_split_merge(parms,action) :
     gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
     
     print("\n")
-    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
 
-def display_datetime_components(parms) :
+
+dtcomps           =   ["year","quarter","month","week","week of year","day","day of year","day of week","time","hour","minute","second","microsecond","nanosecond"]
+tdcomps           =   ["days","seconds","microseconds","nanoseconds"]
+   
+
+def display_datetime_components(parms,tddtype=False) :
     """
     * ---------------------------------------------------------
     * function : display date time split or merge input screen
@@ -741,18 +927,56 @@ def display_datetime_components(parms) :
     
     selectDicts     =   [] 
     
-    current_df      =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
-    colnames        =   current_df.columns.tolist()
-    cnames          =   {"default":colnames[0],"list": colnames}
-    selectDicts.append(cnames)
+    df              =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    colnames        =   df.columns.tolist()
+    
+    dt_colnames     =   []
+    
+    
+    for i in range(len(colnames)) :
         
-    comps           =   {"default":"Day of Week","list":["numpy.datetime64","year","quarter","month","week","week of year","day","day of year","day of week","hour","minute","second"]}
+        if(not tddtype) :
+        
+            from dfcleanser.common.common_utils import is_datetime_type_col
+            if(is_datetime_type_col(df,colnames[i])) :            
+                dt_colnames.append(colnames[i])
+                
+        else :
+            
+            from dfcleanser.common.common_utils import is_datetime_type_col, is_numeric_col
+            if( (is_datetime_type_col(df,colnames[i])) or (is_numeric_col(colnames[i])) ) :            
+                dt_colnames.append(colnames[i])
+            
+    if(len(dt_colnames) > 0)   :
+        cnames          =   {"default": dt_colnames[0],"list": dt_colnames, "callback":"change_component_callback"}
+    else :
+        cnames          =   {"default": "No datetime columns found","list": ["No datetime columns found"]}
+    selectDicts.append(cnames)
+    
+    if(not tddtype) :    
+        comps           =   {"default":dtcomps[0],"list":dtcomps, "callback":"change_component_callback"}
+    else :
+        comps           =   {"default":tdcomps[0],"list":tdcomps, "callback":"change_component_callback"}
     selectDicts.append(comps)
+    
     get_select_defaults(dt_datetime_comps_form,
                         datetime_comp_input_id,
                         datetime_comp_input_idList,
                         datetime_comp_input_typeList,
                         selectDicts)
+    
+    if(not tddtype) :
+        if(len(dt_colnames) > 0) :
+            cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + dtcomps[0],dtcomps[0]])
+        else :
+            cfg.set_config_value(datetime_comp_input_id+"Parms",["","",dtcomps[0]])
+    else :
+        if(len(dt_colnames) > 0) :
+            cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + tdcomps[0],tdcomps[0]])
+        else :
+            cfg.set_config_value(datetime_comp_input_id+"Parms",["","",tdcomps[0]])
+        
+        
     
     dt_datetime_comps_form.set_shortForm(True)
     dt_datetime_comps_form.set_buttonstyle({"font-size":12, "height":50, "width":140, "left-margin":15})
@@ -761,13 +985,16 @@ def display_datetime_components(parms) :
         
     dt_datetime_comps_html = dt_datetime_comps_form.get_html()
         
-    dt_datetime_title_html  =   "<div>Get Datetime Component</div><br>"
+    dt_datetime_title_html  =   "<div>Get Datetime Component Column</div><br>"
         
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
     gridhtmls       =   [dt_datetime_title_html,dt_datetime_comps_html]
     
     print("\n")
-    display_generic_grid("dtformat-wrapper",gridclasses,gridhtmls)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
        
 """
@@ -820,11 +1047,6 @@ def display_main_option(parms,clear=False) :
             elif(funcid == dtm.DISPLAY_DATETIME_TRANSFORM) :
                 display_datetime_column_taskbar() 
             
-            elif(funcid == dtm.DISPLAY_DF_SCHEMA_TRANSFORM) :
-                display_main_taskbar()
-                print("\n")
-                display_df_schema_table() 
-                
             elif(funcid == dtm.DFC_TRANSFORM_RETURN) :
                 display_main_taskbar()
                 
@@ -875,15 +1097,8 @@ def display_transform_col_data(df,colname,display=True) :
     if(found != -1) :
         ftype = df_dtypes[found]
     
-    if(is_datetime_col(df,colname)) :
-        typestr = get_datatype_str(11)
-    elif(is_date_col(df,colname)) :
-        typestr = get_datatype_str(12)
-    elif(is_time_col(df,colname)) :
-        typestr = get_datatype_str(13)
-    else :
-        typestr = get_datatype_str(get_datatype_id(ftype))
-        
+    typestr = get_dtype_str_for_datatype(ftype)
+
     statsRows.append(["Column Data Type",typestr])
     colorList.append([whitecolor,whitecolor])
     
@@ -925,251 +1140,7 @@ def display_transform_col_data(df,colname,display=True) :
         return(stats_table.get_html())
 
 
-"""
-* ----------------------------------------------------------------
-* ----------------------------------------------------------------
-*             dataframe schema objects
-* ----------------------------------------------------------------
-* ----------------------------------------------------------------
-"""
-
-schema_data_type_button    =   """
-                            <div>
-                                        <button type='button' class='btn btn-grp dc-schema-button' style='margin-left:15px;' id="dtXXXXbutton" onClick="dfsch_changedt('XXXXcolname')">Change</br>Datatype</button>
-                            </div>
-"""
-
-schema_compat_button    =   """
-                            <table>
-                                <tr>
-                                    <td align='center' style='width:100%'>
-                                        <button type='button' class='btn btn-grp dc-schema-button' style='margin-left:15px;' id="ccXXXXbutton" onClick="dfsch_chkcompat('XXXXcolname')">Check</br>Compatability</button>
-                                    </td>
-                                </tr>
-                            </table>
-"""
-
-
-def update_df_schema_table(schema_table,direction=SCROLL_RIGHT,display=True) : 
-    """            
-    #------------------------------------------------------------------
-    #   update df schema data
-    #
-    #   df              -   dataframe
-    #   schema_table    -   schema table
-    #   display         -   display flag
-    #
-    #------------------------------------------------------------------
-    """
-
-    #print("update_df_schema_table",schema_table.get_lastcoldisplayed(),schema_table.get_colsperrow(),direction)
-
-    df  =   cfg.get_current_chapter_df(cfg.CURRENT_TRANSFORM_DF)
-    
-    from dfcleanser.common.table_widgets import set_col_major_table_scroll
-    set_col_major_table_scroll(schema_table,direction)
-    
-    # build the table lists from the column stats
-    dfHeader        =   ["    "]
-    dfWidths        =   [7]
-    dfAligns        =   ["center"]
-    
-    datatyperow     =   ["<b>datatype</b>"]
-    numuniquesrow   =   ["<b>num uniques</b>"]
-    numnansrow      =   ["<b>num nans</b>"]
-    meanrow         =   ["<b>mean</b>"]
-    stdrow          =   ["<b>std dev</b>"]
-    minrow          =   ["<b>min</b>"]
-    maxrow          =   ["<b>max</b>"]
-    skewrow         =   ["<b>skew</b>"]
-    kurtrow         =   ["<b>kurtosis</b>"]
-       
-    dtbuttonrow     =   [" "]
-    dtcompatbuttonrow = [" "]
-    
-    dfRowsList      =   []
-    
-    df_cols     =   df.columns.tolist()
-    df_dtypes   =   df.dtypes.tolist()
-    
-    start_col       =   schema_table.get_lastcoldisplayed()
-    if( not (start_col == 0)) :
-        start_col       =   start_col + 1
-        
-    current_col     =   schema_table.get_lastcoldisplayed()
-    
-    #print("update_df_schema_table start_col" ,start_col)
-    
-    for i in range(schema_table.get_colsperrow()) :
-        
-        current_col     =   start_col + i
-        #print("update_df_schema_table current_col",current_col)
-        
-        if(current_col > len(df_cols)) :
-            
-            dfHeader.append(" ")
-            
-            datatyperow.append(" ")
-            numuniquesrow.append(" ")
-            numnansrow.append(" ")
-            meanrow.append(" ")
-            stdrow.append(" ")
-            minrow.append(" ")
-            maxrow.append(" ")
-            skewrow.append(" ")
-            kurtrow.append(" ")
-            dtbuttonrow.append(" ")
-            dtcompatbuttonrow.append(" ")
-            
-        else :
-
-            dfHeader.append(df_cols[current_col])
-        
-            datatyperow.append(str(df_dtypes[current_col]))      
-        
-            numuniquesrow.append(df[df_cols[current_col]].nunique())
-            numnansrow.append(df[df_cols[current_col]].isnull().sum())
-        
-            if(is_numeric_col(df,df_cols[current_col])) :
-            
-                try :
-                    meanrow.append(float("{0:.2f}".format(df[df_cols[current_col]].mean())))
-                    stdrow.append(float("{0:.2f}".format(df[df_cols[current_col]].std())))
-                
-                    if(is_int_col(df,df_cols[current_col])) :
-                        minrow.append(df[df_cols[current_col]].min())
-                        maxrow.append(df[df_cols[current_col]].max())
-                    else :    
-                        minrow.append(float("{0:.2f}".format(df[df_cols[current_col]].min())))
-                        maxrow.append(float("{0:.2f}".format(df[df_cols[current_col]].max())))
-                
-                    skewrow.append(float("{0:.2f}".format(df[df_cols[current_col]].skew())))
-                    kurtrow.append(float("{0:.2f}".format(df[df_cols[current_col]].kurtosis())))
-                
-                except : 
-                    
-                    datatyperow.append(" ")
-                    numuniquesrow.append(" ")
-                    numnansrow.append(" ")
-                    meanrow.append(" ")
-                    stdrow.append(" ")
-                    minrow.append(" ")
-                    maxrow.append(" ")
-                    skewrow.append(" ")
-                    kurtrow.append(" ")
-                    dtbuttonrow.append(" ")
-                    dtcompatbuttonrow.append(" ")
-                    
-            else :
-                
-                meanrow.append(" ")
-                stdrow.append(" ")
-                minrow.append(" ")
-                maxrow.append(" ")
-                skewrow.append(" ")
-                kurtrow.append(" ")
-
-                
-            dtbutton_html     =   schema_data_type_button
-            dtbutton_html     =   dtbutton_html.replace("XXXXbutton","col" + str(i))#df_cols[current_col])
-            dtbutton_html     =   dtbutton_html.replace("XXXXcolname",df_cols[current_col])
-            dtbuttonrow.append(dtbutton_html)
-                    
-            ccbutton_html     =   schema_compat_button
-            ccbutton_html     =   ccbutton_html.replace("XXXXbutton","col" + str(i))
-            ccbutton_html     =   ccbutton_html.replace("XXXXcolname",df_cols[current_col])
-            dtcompatbuttonrow.append(ccbutton_html)
-                   
-        dfWidths.append(13)
-        dfAligns.append("center")
-        
-    dfRowsList.append(datatyperow)
-    dfRowsList.append(numuniquesrow)
-    dfRowsList.append(numnansrow)
-    dfRowsList.append(meanrow)
-    dfRowsList.append(stdrow)
-    dfRowsList.append(minrow)
-    dfRowsList.append(maxrow)
-    dfRowsList.append(skewrow)
-    dfRowsList.append(kurtrow)
-    dfRowsList.append(dtbuttonrow)
-    dfRowsList.append(dtcompatbuttonrow)
-    
-    schema_table.set_title("df Schema Table")    
-    
-    schema_table.set_headerList(dfHeader)
-    schema_table.set_widthList(dfWidths)
-    schema_table.set_alignList(dfAligns)
-    schema_table.set_rowList(dfRowsList)
-    
-    schema_table.set_tabletype(COLUMN_MAJOR)
-    schema_table.set_lastcoldisplayed(current_col)
-    schema_table.set_maxcolumns(len(df_cols))
-    
-    #print("lastcoldisplayed",schema_table.get_lastcoldisplayed(),current_col)
-    
-    if(display) :
-        
-        df_schema_html   =   get_col_major_table(schema_table,False)
-        #print(df_schema_html)
-        get_col_major_table(schema_table,True)
-    
-    else :
-        
-        df_schema_html   =   get_col_major_table(schema_table,False)
-        return(df_schema_html)
-
-
-def display_df_schema_table(display=True) : 
-    """            
-    #------------------------------------------------------------------
-    #   display df schema data
-    #
-    #   df          -   dataframe
-    #   display     -   display flag
-    #
-    #------------------------------------------------------------------
-    """
- 
-    df_schema_table = dcTable("dataframe schema ",
-                              "dfschema",
-                              cfg.DataTransform_ID)
-    
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        df_schema_table.set_colsperrow(7)
-    else :
-        df_schema_table.set_colsperrow(4)
-        
-    df_schema_table.set_rowspertable(11)
-    df_schema_table.set_lastcoldisplayed(0)
-    
-    if(display) :
-        update_df_schema_table(df_schema_table,SCROLL_RIGHT,True)
-    else :
-        df_schema_html   =   update_df_schema_table(df_schema_table,SCROLL_RIGHT,False)
-        
-        return(df_schema_html)
-
-
-def display_column_transform_status(df,colname) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display column transform status
-    * 
-    * parms :
-    *  df          -   data frame
-    *  colname     -   column name
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
-    display_transform_col_data(df,colname)
-
-
-    
+   
 
 
     
