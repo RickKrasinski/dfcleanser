@@ -202,7 +202,7 @@
                                             <p>Sw Utilities is defined to provide a set of stand alone utilities for dataframe processing.</p>
                                         </div>
                                     </dd>
-                                    <h2 id="dfc_swutilities_data_structures ">Common Data Structures</h2>
+                                    <h2 id='dfc_swutilities_data_structures'>Common Data Structures</h2>
                                     <br>
                                     <dd>
                                         <div class="DCChaptersHelpText ">
@@ -340,7 +340,7 @@
                                             </tbody>
                                         </table>
                                     </dd>
-                                    <h4 id='dfc_swutilities_data_structures_lists_dfc'>User Lists</h4>
+                                    <h4 id='dfc_swutilities_data_structures_lists_user'>User Lists</h4>
                                     <br>
                                     <dd>
                                         <div class="DCChaptersHelpText ">
@@ -412,7 +412,7 @@
                                             <p>from dfcleanser.sw_utilities.sw_utility_control import get_Dict<br>get_Dict(dictname,creator=DFC_CREATED)</p>
                                         </div>
                                     </dd>
-                                    <h4 id="dfc_swutilities_data_structures_dicts_dfc ">dfc Dicts</h4>
+                                    <h4 id='dfc_swutilities_data_structures_dicts_dfc'>dfc Dicts</h4>
                                     <br>
                                     <dd>
                                         <div class="DCChaptersHelpText ">
@@ -598,6 +598,12 @@ except Exception as e:
                                         </div>
                                     </dd>
                                     <h2 id='dfc_swutilities_geocoding'>Geocoding</h2>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Geocoding is the process of converting addresses into geographic coordinates (latitude and longitude). Reverse geocoding is the process of converting geographic coordinates into an address</p>
+                                        </div>
+                                    </dd>
                                     <br>
                                     <div class="DCChaptersHelpText ">
                                         <p>The Geocoding Utility provides the following functionality.</p>
@@ -1696,7 +1702,7 @@ except Exception as e:
                                             <p>Fill in the connecion parms and test the conncetion before continuing.</p>
                                         </div>
                                     </dd>
-                                    <h4 id="dfc_swutilities_geocoding_bulk_geocoding_geocoding ">Bulk Geocoding</h4>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_geocoding_geocoding'>Bulk Geocoding</h4>
                                     <br>
                                     <dd>
                                         <div style='font-size:14px; font-weight:bold; text-align:center;'>
@@ -2579,7 +2585,7 @@ except Exception as e:
                                             </tbody>
                                         </table>
                                     </dd>
-                                    <h5 id="dfc_swutilities_geocoding_bulk_console_states">Bulk Geocoding Console States</h5>
+                                    <h5 id='dfc_swutilities_geocoding_bulk_console_states'>Bulk Geocoding Console States</h5>
                                     <br>
                                     <dd>
                                         <ul class="current">
@@ -2764,7 +2770,7 @@ except Exception as e:
                                     <br>
                                     <h5 id='dfc_swutilities_geocoding_bulk_console_limits'>Run Limits</h5>
                                     <br>
-                                    <h5 id='dfc_swutilities_geocoding_bulk_console_limits'>Results Processing</h5>
+                                    <h5 id='dfc_swutilities_geocoding_bulk_console_results'>Results Processing</h5>
                                     <br>
                                     <h5 id='dfc_swutilities_geocoding_bulk_console_pricing'>Bulk Geocoding Pricing</h5>
                                     <br>
@@ -3762,10 +3768,13 @@ except Exception as e:
                                             </tbody>
                                         </table>
                                     </dd>
-                                    <h2 id="dfc_swutilities_subset">Dataframe Subset</h2>
+                                    <h2 id='dfc_swutilities_subset'>Dataframe Subset</h2>
                                     <br>
                                     <dd>
-                                        <p>The Subset utility allows you to easily generate subsets of pandas dataframes.</p>
+                                        <div class="DCChaptersHelpText">
+                                            <p>The Subset utility allows you to easily generate subsets of pandas dataframes.</p>
+                                            <p>A Subset is a collection of rows in a dataframe selected via <a href="https://www.dunderdata.com/blog/selecting-subsets-of-data-in-pandas-part-2" target="_blank">booean indexing</a>.</p>
+                                        </div>
                                     </dd>
                                     <br>
                                     <dd>
@@ -4273,6 +4282,7 @@ except Exception as e:
                                             </tr>
                                         </table>
                                     </dd>
+                                    <br>
                                     <dd>
                                         <table class="field-list " frame="void " rules="none ">
                                             <colgroup>
@@ -5301,24 +5311,353 @@ except Exception as e:
                                     <dd>
                                         <div class="DCChaptersHelpText">
                                             <p>The Census utility allows you to retrieve census data and insert it into a pandas dataframe.</p>
+                                            <p>The census data included with this utility is derived from the <a href="https://www.census.gov/programs-surveys/acs/news/data-releases/2017.html" target="_blank">US Census Bureau 2017 Data Release.</a></p>
                                         </div>
                                     </dd>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>The Census data is broken into the following sections for ease of use and can be downloaded and used independently of each section.</a>
+                                            </p>
+                                            <p>To review detailed census info for each section click on the section titles below:</p>
+                                        </div>
+                                    </dd>
+                                    <dd>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 "><a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-economic.html" target="_blank">Economic</a></li>
+                                            <li class="toctree-l3 ">Education</li>
+                                            <li class="toctree-l3 ">Employment</li>
+                                            <li class="toctree-l3 ">Health Insurance</li>
+                                            <li class="toctree-l3 ">Housing</li>
+                                            <li class="toctree-l3 ">Immigration</li>
+                                            <li class="toctree-l3 ">Internet</li>
+                                            <li class="toctree-l3 ">Population</li>
+                                            <li class="toctree-l3 ">Social</li>
+                                            <li class="toctree-l3 ">Transportation</li>
+                                        </ul>
+                                    </dd>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Data for each section can be retrieved by the following:</p>
+                                        </div>
+                                    </dd>
+                                    <dd>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">City</li>
+                                            <li class="toctree-l3 ">County</li>
+                                            <li class="toctree-l3 ">State</li>
+                                            <li class="toctree-l3 ">Zip Code</li>
+                                        </ul>
+                                    </dd>
+                                    <br>
                                     <br>
                                     <h2 id='dfc_swutilities_scripting'>Scripting</h2>
                                     <br>
                                     <dd>
-                                        <p>The Scripting utility allows you to log dfc actions and rerun them as a script.</p>
+                                        <div class="DCChaptersHelpText">
+                                            <p>The Scripting utility allows you to log dfc actions and review and or rerun them as a script.</p>
+                                            <p>Only actions that impact a dataframe are logged in the script file.</p>
+                                        </div>
                                     </dd>
                                     <br>
+                                    <dd>
+                                        <div style="margin-top:10px;" id="scriptingoptionstb">
+                                            <div class="dc-container dc-default-input-button-container btn-grp-center">
+                                                <div class="btn-group btn-center" style=" width: 100%; ">
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; margin-left: 2%;  height: 60px;  width: 14%; '>Turn On</br>Scripting</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Turn Off</br>Scripting</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Show</br>Current Script</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Delete</br>Current Script</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Clear</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Reset</button>
+                                                    <button type="button" class="btn btn-primary" style=' font-size:11px; height: 60px;  width: 14%; '>Help</button>
+                                                </div>
+                                            </div>
+                                    </dd>
+                                    <br>
+                                    <h3 id='dfc_swutilities_scripting_on'>Turn On Scripting</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Turning on scripting starts the logging of all commands.</p>
+                                        </div>
+                                    </dd>
+                                    <h3 id='dfc_swutilities_scripting_off'>Turn Off Scripting</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Turning off scripting stops the logging of all commands.</p>
+                                        </div>
+                                    </dd>
+                                    <h3 id='dfc_swutilities_scripting_show'>Show Current Script</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Displays the contents of the current script log.</p>
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <dd>
+                                        <div class="" style="width:60%; margin-left:150px; border:1px;">
+                                            <div class="row">
+                                                <div class="panel panel-primary" style="border:0px;  ">
+                                                    <div class="panel-heading dc-table-panel-heading" style="height:40px;">
+                                                        <div class="input-group">
+                                                            <p class="dc-table-title" style="margin-bottom:5px; font-size:12px; padding-bottom:5px;">Notes :</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class='note-line' style="font-size:11px;">
+                                                        <p><span class='note-line'></span></p>
+                                                    </div>
+                                                    <div class='note-line' style="font-size:11px;">
+                                                        <p><span class='note-line'>You can manually edit the script log as desired</span></p>
+                                                    </div>
+                                                    <div class='note-line' style="font-size:11px;">
+                                                        <p><span class='note-line'>The step numbers are commentary only and order is relative only.</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <dd>
+                                        <div style='margin-left:auto; margin-right:auto; width:620px;'>
+                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="dcscripting">
+                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="dcscriptinginput">
+                                                    <div class='dc-container dc-default-input-inner-div'>
+                                                        <div>
+                                                            <label for="dscode" id="dscode_label" style="text-align:left; font-size: 10px;">* current_script </label>
+                                                            <textarea rows="20" class="form-control" style="text-align:left; font-size: 10px;" id="dscode" placeholder="current script python code">
+# step 1
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 2
+# Make categories for Victim Sex
+from dfcleanser.data_transform.data_transform_columns_control import process_cat_transform
+process_cat_transform([["catcolumnname", "catcolumnnameordered", "catcolumncompleteuniques"], ["Victim Sex", "True", "True"]],False)
+                                          
+# step 3
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 4
+# change column names
+from dfcleanser.data_transform.data_transform_dataframe_control change_column_names
+drop_column_names(False)
+                                          
+# step 5
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number", "True", "False"],False)
+                                          
+# step 6
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 7
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number", "True", "False"],False)
+                                          
+# step 8
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 9
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 10
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number", "True", "False"],False)
+                                          
+# step 11
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 12
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 13
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number", "True", "False"],False)
+                                          
+# step 14
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 15
+# append to df index
+from dfcleanser.data_transform.data_transform_dataframe_control append_to_df_index
+append_to_df_index(["Date Reported", "False", "False"],False)
+                                          
+# step 16
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 17
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number,Date Reported", "True", "False"],False)
+                                          
+# step 18
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 19
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number,Date Reported", "True", "False"],False)
+                                          
+# step 20
+# Import CSV File 
+from dfcleanser.data_import.data_import_control import import_pandas_csv
+import_pandas_csv(["LA_Gun_Crimes_cleansed", "datasets/LA_Gun_Crimes_cleansed.csv", "", "", "", ""],False)
+                                          
+# step 21
+# set df index
+from dfcleanser.data_transform.data_transform_dataframe_control set_df_index
+set_df_index(["DR Number,Date Reported", "True", "False"],False)
+                                          
+# step 22
+# set row ids column
+from dfcleanser.data_transform.data_transform_dataframe_control sort_df_index
+sort_df_index(["True", "quicksort", "last"],False)
+                                          
+# step 23
+# Make categories for Victim Sex
+from dfcleanser.data_transform.data_transform_columns_control import process_cat_transform
+process_cat_transform([["catcolumnname", "catcolumnnameordered", "catcolumncompleteuniques"], ["Victim Sex", "False", "True"]],False)</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top:10px;" id="dcscriptingtb">
+                                                    <div class="dc-container dc-default-input-button-container btn-grp-center">
+                                                        <div class="btn-group btn-center" style=" width: 880px; ">
+                                                            <button type="button" class="btn btn-primary" style=' font-size: 11px;  margin-left: 30px;  height: 75px;  width: 110px; '>Run</br>Current</br> Script</button>
+                                                            <button type="button" class="btn btn-primary" style=' font-size: 11px;  height: 75px;  width: 110px; '>Load</br>Backup</br> Script</button>
+                                                            <button type="button" class="btn btn-primary" style=' font-size: 11px;  height: 75px;  width: 110px; '>Backup</br>Current </br>Script</button>
+                                                            <button type="button" class="btn btn-primary" style=' font-size: 11px;  height: 75px;  width: 110px; '>Return</button>
+                                                            <button type="button" class="btn btn-primary" style=' font-size: 11px;  height: 75px;  width: 110px; '>Help</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <dd>
+                                        <table class="field-list " frame="void " rules="none ">
+                                            <colgroup>
+                                                <col class="field-name ">
+                                                <col class="field-body " style="background-color:#ffffff; ">
+                                            </colgroup>
+                                            <tbody valign="top ">
+                                                <tr class="field ">
+                                                    <th class="field-name ">Parameters:</th>
+                                                    <td class="field-body " style="background-color:#ffffff; ">
+                                                        <br>
+                                                        <dl class="input_body ">
+                                                            <dt><strong>*current_script</strong> </dt>
+                                                            <dd>
+                                                                <div class="results_text ">
+                                                                    <p>The current script in the loag that can be edited.</p>
+                                                                </div>
+                                                            </dd>
+                                                        </dl>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </dd>
+                                    <br>
+                                    <dd>
+                                        <table class="field-list " frame="void " rules="none ">
+                                            <colgroup>
+                                                <col class="field-name ">
+                                                <col class="field-body " style="background-color:#ffffff; ">
+                                            </colgroup>
+                                            <tbody valign="top ">
+                                                <tr class="field ">
+                                                    <th class="field-name results_title ">Commands:&nbsp;</th>
+                                                    <td class="field-body " style='background-color:#ffffff;'>
+                                                        <br>
+                                                        <dl class="input_body ">
+                                                            <dt><strong>Run Current Script</strong> </dt>
+                                                            <dd>
+                                                                <div class="results_text ">
+                                                                    <p>Run the current script as displayed or changed.</p>
+                                                                </div>
+                                                            </dd>
+                                                        </dl>
+                                                        <dl class="input_body ">
+                                                            <dt><strong>Load Backup Script</strong> </dt>
+                                                            <dd>
+                                                                <div class="results_text ">
+                                                                    <p>Load the backup script as the current script.</p>
+                                                                </div>
+                                                            </dd>
+                                                        </dl>
+                                                        <dl class="input_body ">
+                                                            <dt><strong>Backup Current Script</strong> </dt>
+                                                            <dd>
+                                                                <div class="results_text ">
+                                                                    <p>Backup the current script.</p>
+                                                                </div>
+                                                            </dd>
+                                                        </dl>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </dd>
+                                    <h4 id='dfc_swutilities_scripting_run'>Run Current Script</h4>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Run the contents of the current script log.</p>
+                                        </div>
+                                    </dd>
+                                    <h4 id='dfc_swutilities_scripting_load_backup'>Load Backup Script</h4>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Load Backup script as the current script log.</p>
+                                        </div>
+                                    </dd>
+                                    <h4 id='dfc_swutilities_scripting_backup'>Backup Current Script</h4>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Backup the contents of the current script log.</p>
+                                        </div>
+                                    </dd>
 
-
-
-
-
-
-
-
+                                    <h3 id='dfc_swutilities_scripting_delete'>Delete Current Script</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Delete the current script log.</p>
+                                        </div>
+                                    </dd>
+                                    <br>
                                 </dl>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -5326,9 +5665,6 @@ except Exception as e:
             </div>
         </div>
     </div>
-    </div>
-
-
 </body>
 
 </html>
