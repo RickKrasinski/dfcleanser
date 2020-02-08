@@ -1,0 +1,1224 @@
+"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0042)file:///C:/Downloads/dfcleanser_index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <title>dfCleanser Census Utility - Housing Data Fields</title>
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/nature.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/pygments.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/dfc_styles.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/help.js"></script>
+</head>
+
+<body>
+    <div id="MathJax_Message" style="display: none;"></div>
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="document">
+                <div class="sphinxsidebar">
+                    <h3>Table Of Contents</h3>
+                    <ul class="current">
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html">Dataframe Cleanser Intro</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-install.html">Installation</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-getting-started.html">Getting started</a></li>
+                        <li class="toctree-l1 current">User Guide</li>
+                        <ul class="current">
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html">System Environment</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_Utilities_manager">Utilities Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_dataframe_manager">dataframe Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_system">System</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_about">About</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_eula">EULA</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html">Data Import</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_fwf">Fixed Width File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_table">SQL Table</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_query">SQL Query</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html">Data Inspection</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_datatypes">Data Types</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans">Nans</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows">Rows</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Categories</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html">Data Cleansing</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_numeric">Cleanse Numeric Column</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_non_numeric">Cleanse Non Numeric Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row">Cleanse Row</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html">Data Transform</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dataframe_transform">dataframe Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row">Column Names Row</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_index">Single Level dataframe Indices</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_sort">Sort df by Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_drop_duplicates">Drop Duplicate Rows</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform">columns Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename">Rename Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add">Add Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop">Drop Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder">Reorder Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save">Save Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy">Copy Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn">Apply fn To Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_map">Map Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_dummies">Dummies For Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_categorical">Make Column Categorical</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_change_datatype">Change Column Datatype</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime">datetime Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert">Convert Column to datetime</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Convert Column to timedelta</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Calculate timedelta Cloumn</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Split Column to date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Merge Column from date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_components">Get datetime Components Column</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html">Data Export</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_table">SQL Table</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html">Software Utilities</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures">Common Data Structures</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists">Lists</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts">Dicts</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs">Functions</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html">Geocoding</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_select_geocoder">Geocoder Service</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive">Interactive Geoocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive_reverse">Reverse Geocoding</a></li>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk">Bulk Geocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_geocoding_geocoding">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_geocoding_reverse">Reverse Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console">Console</a></li>
+                                            <ul class="current">
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_states">States</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_progress_bars">Progress</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_checkpoint">Checkpointing</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_errors">Errors</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_limits">Limits</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_results">Results</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_pricing">Pricing</a></li>
+                                            </ul>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities">Geocode Utilities</a></li>
+                                        <ul class="current ">
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_interactive_distance ">Geocode Distance</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_interactive_center ">Center Point</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_distance_from_center ">Distance From Center Point</a></li>
+                                        </ul>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset ">Dataframe Subset</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define">Get Dataframe Subset</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters ">Define Subset Filter</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html">Census</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_build">Build Census Data</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_configure">Configure Census Data</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_load_df">Load Census Data to df(s)</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_load_db">Load Census Data to db(s)</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_get_df_cols">Get Censu Columns for df</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting ">Scripting</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html ">Restricted</a></li>
+                        </ul>
+                        </li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/development/index.html ">Development</a></li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/whatsnew/index.html ">Release Notes</a></li>
+                    </ul>
+                </div>
+                <div class="documentwrapper">
+                    <div class="bodywrapper ">
+                        <div class="body ">
+                            <div class="section">
+                                <h1>dfCleanser Census Housing Data Fields</h1>
+                                <br>
+                                <dd>
+                                    <div class="DCChaptersHelpText ">
+                                        <p>The dfCleanser Census Housing data can be sub divided into the following : </p>
+                                    </div>
+                                </dd>
+                                <ul class="current ">
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_race'>Housing By Race</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_age'>Housing By Age</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_education'>Housing By Education</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_duration'>Housing By Duration</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_income'>Housing By Income</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_monthly_cost'>Housing By Monthly Cost</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_percent_of_income'>Housing By Percent Of Income</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_persons'>Housing By Persons</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_persons_per_room'>Housing By Persons Per Room</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_family_type'>Housing By Family Type</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_with_children'>Housing With Children</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_units_in_structure'>Housing Units In Structure</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_units_year_built'>Housing Units Year Built</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_rooms'>Housing By Rooms</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_bedrooms'>Housing By Bedrooms</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_ammenities'>Housing Ammenities</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_vehicle_count'>Housing By Vehicle Count</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_telephone'>Housing By Telephone</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#housing_by_heating_type'>Housing By Heating Type</a></li>
+                                </ul>
+                                <dl class="function"> <dt id='dfcleanser_census_housing'></dt>
+                                    <dd>
+                                        <h2 id='housing_by_race'>Housing By Race</h2>
+                                        <br>
+                                        <ul class="current">
+                                            <li class="toctree-l3 ">housing_units_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_white_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_white_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_white_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_white_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_white_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_white_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_black_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_black_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_black_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_black_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_black_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_black_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_native_american_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_native_american_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_native_american_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_native_american_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_native_american_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_native_american_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_asian_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_asian_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_asian_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_asian_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_asian_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_asian_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hawaiin_and_pacific_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hawaiin_and_pacific_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hawaiin_and_pacific_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hawaiin_and_pacific_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hawaiin_and_pacific_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hawaiin_and_pacific_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_other_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_other_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_other_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_other_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_other_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_other_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_mixed_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_mixed_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_mixed_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_mixed_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_mixed_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_mixed_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hispanic_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hispanic_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hispanic_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hispanic_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_hispanic_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_hispanic_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_white_alone_not_hispanic_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_white_alone_not_hispanic_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_white_alone_not_hispanic_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_white_alone_not_hispanic_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_white_alone_not_hispanic_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_white_alone_not_hispanic_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_age'>Housing By Age</h2>
+                                        <br>
+                                        <ul class="current">
+                                            <li class="toctree-l3 ">housing_units_householder_age_under_35_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_under_35_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_under_35_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_under_35_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_under_35_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_under_35_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_35_to_44_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_35_to_44_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_35_to_44_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_35_to_44_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_35_to_44_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_35_to_44_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_45_to_54_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_45_to_54_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_45_to_54_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_45_to_54_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_45_to_54_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_45_to_54_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_55_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_55_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_55_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_55_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_55_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_55_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_65_to_74_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_65_to_74_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_65_to_74_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_65_to_74_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_65_to_74_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_65_to_74_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_75_to_84_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_75_to_84_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_75_to_84_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_75_to_84_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_75_to_84_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_75_to_84_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_85_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_85_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_85_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_85_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_householder_age_85_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_age_85_and_over_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_education'>Housing By Education</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3">housing_units_householder_education_less_than_high_school_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_less_than_high_school_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_less_than_high_school_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_less_than_high_school_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_less_than_high_school_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_less_than_high_school_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_high_school_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_high_school_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_high_school_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_high_school_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_high_school_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_high_school_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_some_college+or_associate_degree_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_some_college+or_associate_degree_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_some_college+or_associate_degree_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_some_college+or_associate_degree_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_some_college+or_associate_degree_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_some_college+or_associate_degree_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_bachelor_degree_or_higher_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_bachelor_degree_or_higher_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_bachelor_degree_or_higher_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_education_bachelor_degree_or_higher_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_education_bachelor_degree_or_higher_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_education_bachelor_degree_or_higher_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_duration'>Housing By Duration</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2015_or_later_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2015_or_later_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2015_or_later_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2015_or_later_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2015_or_later_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2015_or_later_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2010_to_2014_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2010_to_2014_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2010_to_2014_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2010_to_2014_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2010_to_2014_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2010_to_2014_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2000_to_2009_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2000_to_2009_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2000_to_2009_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2000_to_2009_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_2000_to_2009_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_2000_to_2009_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1990_to_1999_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1990_to_1999_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1990_to_1999_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1990_to_1999_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1990_to_1999_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1990_to_1999_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1980_to_1989_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1980_to_1989_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1980_to_1989_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1980_to_1989_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1980_to_1989_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1980_to_1989_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1979_or_earlier_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1979_or_earlier_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1979_or_earlier_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_householder_moved_in_1979_or_earlier_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1979_or_earlier_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_householder_moved_in_1979_or_earlier_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_income'>Housing By Income</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_income_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_less_than_5000_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_less_than_5000_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_less_than_5000_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_less_than_5000_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_less_than_5000_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_less_than_5000_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_5000_to_9999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_5000_to_9999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_5000_to_9999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_5000_to_9999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_5000_to_9999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_5000_to_9999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_10000_to_14999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_10000_to_14999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_10000_to_14999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_10000_to_14999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_10000_to_14999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_10000_to_14999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_15000_to_19999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_15000_to_19999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_15000_to_19999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_15000_to_19999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_15000_to_19999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_15000_to_19999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_20000_to_24999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_20000_to_24999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_20000_to_24999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_20000_to_24999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_20000_to_24999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_20000_to_24999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_25000_to_34999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_25000_to_34999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_25000_to_34999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_25000_to_34999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_25000_to_34999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_25000_to_34999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_35000_to_49999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_35000_to_49999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_35000_to_49999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_35000_to_49999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_35000_to_49999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_35000_to_49999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_50000_to_74999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_50000_to_74999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_50000_to_74999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_50000_to_74999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_50000_to_74999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_50000_to_74999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_75000_to_99999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_75000_to_99999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_75000_to_99999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_75000_to_99999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_75000_to_99999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_75000_to_99999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_100000_to_149999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_100000_to_149999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_100000_to_149999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_100000_to_149999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_100000_to_149999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_100000_to_149999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_150000_or_more_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_150000_or_more_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_150000_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_150000_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_150000_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_income_150000_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_income_occupied_median</li>
+                                            <li class="toctree-l3">housing_units_income_owner_occupied_median</li>
+                                            <li class="toctree-l3">housing_units_income_renter_occupied_median</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_monthly_cost'>Housing By Monthly Cost</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_less_than_300_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_less_than_300_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_less_than_300_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_less_than_300_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_less_than_300_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_less_than_300_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_300_to_499_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_300_to_499_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_300_to_499_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_300_to_499_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_300_to_499_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_300_to_499_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_500_to_799_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_500_to_799_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_500_to_799_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_500_to_799_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_500_to_799_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_500_to_799_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_800_to_999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_800_to_999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_800_to_999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_800_to_999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_800_to_999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_800_to_999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1000_to_1499_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1000_to_1499_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1000_to_1499_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1000_to_1499_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1000_to_1499_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1000_to_1499_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1500_to_1999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1500_to_1999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1500_to_1999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1500_to_1999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_1500_to_1999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_1500_to_1999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2000_to_2499_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2000_to_2499_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2000_to_2499_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2000_to_2499_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2000_to_2499_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2000_to_2499_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2500_to_2999_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2500_to_2999_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2500_to_2999_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2500_to_2999_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_2500_to_2999_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_2500_to_2999_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_3000_or_more_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_3000_or_more_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_3000_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_3000_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_3000_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_3000_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_no_cash_rent_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_no_cash_rent_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_no_cash_rent_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_no_cash_rent_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_monthly_cost_occupied_median</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_owner_occupied_median</li>
+                                            <li class="toctree-l3">housing_units_monthly_cost_renter_occupied_median</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_percent_of_income'>Housing By Percent Of Income</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_less_than_20_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_20_to_29_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_less_than_20000_30_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_less_than_20_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_20_to_29_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_25000_to_34999_30_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_less_than_20_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_20_to_29_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_35000_to_49999_30_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_less_than_20_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_20_to_29_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_50000_to_74999_30_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_less_than_20_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_20_to_29_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_75000_or_more_30_or_more_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_zero_or_less_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_zero_or_less_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_zero_or_less_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_zero_or_less_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_zero_or_less_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_zero_or_less_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_no_cash_rent_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_cost_as_pct_of_income_no_cash_rent_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_no_cash_rent_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_cost_as_pct_of_income_no_cash_rent_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_persons'>Housing By Persons</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_with_1_person_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_person_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_person_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_person_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_person_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_person_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_2_person_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_2_person_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_2_person_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_2_person_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_2_person_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_2_person_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_person_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_person_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_person_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_person_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_person_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_person_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_or_more_person_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_or_more_person_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_or_more_person_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_or_more_person_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_3_or_more_person_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_3_or_more_person_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_persons_per_room'>Housing By Persons Per Room</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_with_1_or_less_per_room_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_or_less_per_room_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_or_less_per_room_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_or_less_per_room_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_or_less_per_room_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_or_less_per_room_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_to_1.5_per_room_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_to_1.5_per_room_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_to_1.5_per_room_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_to_1.5_per_room_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1_to_1.5_per_room_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1_to_1.5_per_room_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1.5_or_more_per_room_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1.5_or_more_per_room_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1.5_or_more_per_room_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1.5_or_more_per_room_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_1.5_or_more_per_room_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_1.5_or_more_per_room_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_by_family_type'>Housing By Family Type</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_with_family_households_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_family_households_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_family_households_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_family_households_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_family_households_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_family_households_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_15_to_34_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_15_to_34_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_15_to_34_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_15_to_34_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_15_to_34_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_15_to_34_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_35_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_35_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_35_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_35_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_35_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_35_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_55_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_55_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_55_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_55_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_married_family_household_55_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_married_family_household_55_and_over_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_other_family_household_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_other_family_household_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_other_family_household_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_other_family_household_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_other_family_household_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_other_family_household_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_15_to_34_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_15_to_34_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_15_to_34_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_15_to_34_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_15_to_34_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_15_to_34_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_35_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_35_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_35_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_35_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_35_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_35_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_55_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_55_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_55_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_55_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_male_no_wife_family_household_55_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_male_no_wife_family_household_55_and_over_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_15_to_34_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_15_to_34_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_15_to_34_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_15_to_34_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_15_to_34_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_15_to_34_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_35_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_35_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_35_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_35_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_35_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_35_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_55_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_55_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_55_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_55_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_female_no_husband_family_household_55_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_female_no_husband_family_household_55_and_over_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_households_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_households_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_households_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_households_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_households_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_households_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_15_to_34_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_15_to_34_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_15_to_34_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_15_to_34_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_15_to_34_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_15_to_34_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_35_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_35_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_35_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_35_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_35_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_35_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_55_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_55_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_55_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_55_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_living_alone_households_55_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_living_alone_households_55_and_over_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_15_to_34_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_15_to_34_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_15_to_34_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_15_to_34_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_15_to_34_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_15_to_34_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_35_to_64_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_35_to_64_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_35_to_64_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_35_to_64_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_35_to_64_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_35_to_64_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_55_and_over_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_55_and_over_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_55_and_over_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_55_and_over_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_non_family_not_living_alone_households_55_and_over_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_non_family_not_living_alone_households_55_and_over_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_related_children_under_18_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_related_children_under_18_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_related_children_under_18_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_related_children_under_18_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_related_children_under_18_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_related_children_under_18_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_with_children'>Housing With Children</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_18_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_18_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_18_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_18_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_18_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_18_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_6_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_6_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_6_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_6_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_under_6_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_under_6_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_6_to_17_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_6_to_17_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_6_to_17_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_6_to_17_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_own_children_6_to_17_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_own_children_6_to_17_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_children_under_18_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_children_under_18_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_children_under_18_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_children_under_18_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_children_under_18_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_children_under_18_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_not_own_children_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_not_own_children_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_not_own_children_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_not_own_children_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_not_own_children_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_not_own_children_renter_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_no_related_children_under_18_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_no_related_children_under_18_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_no_related_children_under_18_owner_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_no_related_children_under_18_owner_occupied_percent</li>
+                                            <li class="toctree-l3 ">housing_units_with_no_related_children_under_18_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_with_no_related_children_under_18_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='housing_units_in_structure'>Housing Units In Structure</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">housing_units_in_structure_total</li>
+                                            <li class="toctree-l3">housing_units_in_structure_1_detached_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_1_detached_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_1_detached_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_1_detached_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_1_detached_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_1_detached_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_2_apartments_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_2_apartments_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_2_apartments_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_2_apartments_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_2_apartments_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_2_apartments_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_3_or_4_apartments_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_3_or_4_apartments_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_3_or_4_apartments_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_3_or_4_apartments_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_3_or_4_apartments_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_3_or_4_apartments_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_5_to_9_apartments_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_5_to_9_apartments_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_5_to_9_apartments_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_5_to_9_apartments_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_5_to_9_apartments_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_5_to_9_apartments_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_10_or_more_apartments_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_10_or_more_apartments_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_10_or_more_apartments_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_10_or_more_apartments_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_10_or_more_apartments_renter_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_10_or_more_apartments_renter_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_mobile_home_or_other_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_mobile_home_or_other_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_mobile_home_or_other_owner_occupied_total</li>
+                                            <li class="toctree-l3 ">housing_units_in_structure_mobile_home_or_other_owner_occupied_percent</li>
+                                            <li class="toctree-l3">housing_units_in_structure_mobile_home_or_other_renter_occupied_total</li>
+                                            <li class="toctree-l3">housing_units_in_structure_mobile_home_or_other_renter_occupied_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <dd>
+                                            <h2 id='housing_units_year_built'>Housing Units Year Built</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_year_built_2014_or_later_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2014_or_later_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2014_or_later_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2014_or_later_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2014_or_later_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2014_or_later_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2010_2013_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2010_2013_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2010_2013_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2010_2013_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2010_2013_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2010_2013_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2000_to_2009_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2000_to_2009_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2000_to_2009_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2000_to_2009_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_2000_to_2009_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_2000_to_2009_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1980_to_1999_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1980_to_1999_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1980_to_1999_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1980_to_1999_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1980_to_1999_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1980_to_1999_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1960_tp_1979_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1960_tp_1979_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1960_tp_1979_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1960_tp_1979_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1960_tp_1979_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1960_tp_1979_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1940_to_1959_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1940_to_1959_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1940_to_1959_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1940_to_1959_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1940_to_1959_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1940_to_1959_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1939_or_earlier_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1939_or_earlier_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1939_or_earlier_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1939_or_earlier_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_year_built_1939_or_earlier_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_year_built_1939_or_earlier_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_by_rooms'>Housing By Rooms</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_1_room_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_room_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_1_room_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_room_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_1_room_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_room_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_rooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_rooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_rooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_rooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_rooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_rooms_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_5_rooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_5_rooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_5_rooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_5_rooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_5_rooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_5_rooms_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_6_or_7_rooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_6_or_7_rooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_6_or_7_rooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_6_or_7_rooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_6_or_7_rooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_6_or_7_rooms_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_8_or_more_rooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_8_or_more_rooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_8_or_more_rooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_8_or_more_rooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_8_or_more_rooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_8_or_more_rooms_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_by_bedrooms'>Housing By Bedrooms</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_no_bedroom_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_no_bedroom_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_no_bedroom_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_no_bedroom_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_no_bedroom_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_no_bedroom_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_1_bedroom_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_bedroom_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_1_bedroom_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_bedroom_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_1_bedroom_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_1_bedroom_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_bedrooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_bedrooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_bedrooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_bedrooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_2_or_3_bedrooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_2_or_3_bedrooms_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_more_bedrooms_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_more_bedrooms_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_more_bedrooms_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_more_bedrooms_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_4_or_more_bedrooms_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_4_or_more_bedrooms_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_ammenities'>Housing Ammenities</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_with_complete_plumbing_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_complete_plumbing_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_complete_plumbing_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_complete_plumbing_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_complete_plumbing_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_complete_plumbing_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_with_complete_kitchen_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_with_complete_kitchen_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_with_complete_kitchen_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_with_complete_kitchen_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_with_complete_kitchen_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_with_complete_kitchen_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_by_vehicle_count'>Housing By Vehicle Count</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_vehicles_none_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_none_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_none_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_none_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_none_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_none_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_1_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_1_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_1_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_1_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_1_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_1_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_2_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_2_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_2_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_2_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_2_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_2_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_3_or_more_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_3_or_more_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_3_or_more_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_3_or_more_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_vehicles_3_or_more_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_vehicles_3_or_more_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_by_telephone'>Housing By Telephone</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_with_telephone_service_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_telephone_service_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_telephone_service_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_telephone_service_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_with_telephone_service_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_with_telephone_service_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='housing_by_heating_type'>Housing By Heating Type</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">housing_units_heating_utility_gas_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_utility_gas_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_utility_gas_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_utility_gas_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_utility_gas_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_utility_gas_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_bottled_tank_or_lp_gas_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_bottled_tank_or_lp_gas_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_bottled_tank_or_lp_gas_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_bottled_tank_or_lp_gas_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_bottled_tank_or_lp_gas_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_bottled_tank_or_lp_gas_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_electricity_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_electricity_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_electricity_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_electricity_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_electricity_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_electricity_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_fuel_oil_kerosene_etc_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_fuel_oil_kerosene_etc_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_fuel_oil_kerosene_etc_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_fuel_oil_kerosene_etc_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_fuel_oil_kerosene_etc_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_fuel_oil_kerosene_etc_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_coal_or_coke_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_coal_or_coke_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_coal_or_coke_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_coal_or_coke_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_coal_or_coke_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_coal_or_coke_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_other_fuels_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_other_fuels_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_other_fuels_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_other_fuels_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_other_fuels_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_other_fuels_renter_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_no_fuel_used_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_no_fuel_used_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_no_fuel_used_owner_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_no_fuel_used_owner_occupied_percent</li>
+                                                <li class="toctree-l3 ">housing_units_heating_no_fuel_used_renter_occupied_total</li>
+                                                <li class="toctree-l3">housing_units_heating_no_fuel_used_renter_occupied_percent</li>
+                                            </ul>
+                                        </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>"

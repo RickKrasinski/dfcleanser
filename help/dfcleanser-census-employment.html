@@ -1,0 +1,984 @@
+"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0042)file:///C:/Downloads/dfcleanser_index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <title>dfCleanser Census Utility - Employment Data Fields</title>
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/nature.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/pygments.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/dfc_styles.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/help.js"></script>
+</head>
+
+<body>
+    <div id="MathJax_Message" style="display: none;"></div>
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="document">
+                <div class="sphinxsidebar">
+                    <h3>Table Of Contents</h3>
+                    <ul class="current">
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html">Dataframe Cleanser Intro</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-install.html">Installation</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-getting-started.html">Getting started</a></li>
+                        <li class="toctree-l1 current">User Guide</li>
+                        <ul class="current">
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html">System Environment</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_Utilities_manager">Utilities Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_dataframe_manager">dataframe Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_system">System</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_about">About</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_eula">EULA</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html">Data Import</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_fwf">Fixed Width File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_table">SQL Table</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_query">SQL Query</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html">Data Inspection</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_datatypes">Data Types</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans">Nans</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows">Rows</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Categories</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html">Data Cleansing</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_numeric">Cleanse Numeric Column</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_non_numeric">Cleanse Non Numeric Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row">Cleanse Row</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html">Data Transform</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dataframe_transform">dataframe Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row">Column Names Row</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_index">Single Level dataframe Indices</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_sort">Sort df by Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_drop_duplicates">Drop Duplicate Rows</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform">columns Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename">Rename Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add">Add Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop">Drop Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder">Reorder Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save">Save Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy">Copy Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn">Apply fn To Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_map">Map Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_dummies">Dummies For Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_categorical">Make Column Categorical</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_change_datatype">Change Column Datatype</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime">datetime Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert">Convert Column to datetime</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Convert Column to timedelta</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Calculate timedelta Cloumn</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Split Column to date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Merge Column from date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_components">Get datetime Components Column</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html">Data Export</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_table">SQL Table</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html">Software Utilities</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures">Common Data Structures</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists">Lists</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts">Dicts</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs">Functions</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html">Geocoding</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_select_geocoder">Geocoder Service</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive">Interactive Geoocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_interactive_reverse">Reverse Geocoding</a></li>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk">Bulk Geocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_geocoding_geocoding">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_geocoding_reverse">Reverse Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console">Console</a></li>
+                                            <ul class="current">
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_states">States</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_progress_bars">Progress</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_checkpoint">Checkpointing</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_errors">Errors</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_limits">Limits</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_results">Results</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_bulk_console_pricing">Pricing</a></li>
+                                            </ul>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities">Geocode Utilities</a></li>
+                                        <ul class="current ">
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_interactive_distance ">Geocode Distance</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_interactive_center ">Center Point</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html#dfc_swutilities_geocoding_utilities_distance_from_center ">Distance From Center Point</a></li>
+                                        </ul>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset ">Dataframe Subset</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define">Get Dataframe Subset</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters ">Define Subset Filter</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html">Census</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_build">Build Census Data</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_configure">Configure Census Data</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_load_df">Load Census Data to df(s)</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_load_db">Load Census Data to db(s)</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_get_df_cols">Get Censu Columns for df</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting ">Scripting</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html ">Restricted</a></li>
+                        </ul>
+                        </li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/development/index.html ">Development</a></li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/whatsnew/index.html ">Release Notes</a></li>
+                    </ul>
+                </div>
+                <div class="documentwrapper">
+                    <div class="bodywrapper ">
+                        <div class="body ">
+                            <div class="section">
+                                <h1>dfCleanser Census Dataset Employment Fields</h1>
+                                <br>
+                                <dd>
+                                    <div class="DCChaptersHelpText ">
+                                        <p>The dfCleanser Census Employment data can be sub divided into the following : </p>
+                                    </div>
+                                </dd>
+                                <ul class="current ">
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_age'>Employment By Age</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_race'>Employment By Race</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_families_with_children'>Employment By Families With Children</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_poverty_level'>Employment By Poverty Level</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_disability'>Employment By Disability</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_education'>Employment By Education</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_family_type'>Employment By Family Type</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_workers'>Employment By Workers</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_work_type'>Employment By Work Type</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_weeks_worked'>Employment Weeks Worked</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_hours_worked'>Employment Hours Worked</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_workers_age_median'>Employment Workers Age Median</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_full_time_by_sex'>Employment Full Time By Sex</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href='#employment_by_business_type'>Employment By Business Type</a></li>
+                                </ul>
+                                <dl class="function"> <dt id='dfcleanser_census_employment'></dt>
+                                    <dd>
+                                        <h2 id="employment_by_age">Employment By Age</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_16_years_and_over_total</li>
+                                            <li class="toctree-l3">population_employment_16_years_and_over_percent</li>
+                                            <li class="toctree-l3 ">population_employment_16_years_and_over_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_16_years_and_over_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_16_to_19_total</li>
+                                            <li class="toctree-l3">population_employment_16_to_19_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_16_to_19_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_16_to_19_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_24_total</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_24_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_24_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_24_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_25_to_29_total</li>
+                                            <li class="toctree-l3">population_employment_25_to_29_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_25_to_29_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_25_to_29_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_30_to_34_total</li>
+                                            <li class="toctree-l3">population_employment_30_to_34_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_30_to_34_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_30_to_34_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_35_to_44_total</li>
+                                            <li class="toctree-l3">population_employment_35_to_44_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_35_to_44_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_35_to_44_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_45_to_54_total</li>
+                                            <li class="toctree-l3">population_employment_45_to_54_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_45_to_54_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_45_to_54_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_55_to_59_total</li>
+                                            <li class="toctree-l3">population_employment_55_to_59_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_55_to_59_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_55_to_59_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_60_to_64_total</li>
+                                            <li class="toctree-l3">population_employment_60_to_64_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_60_to_64_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_60_to_64_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_65_to_74_total</li>
+                                            <li class="toctree-l3">population_employment_65_to_74_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_65_to_74_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_65_to_74_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_75_and_over_total</li>
+                                            <li class="toctree-l3">population_employment_75_and_over_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_75_and_over_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_75_and_over_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id="employment_by_race">Employment By Race</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_white_total</li>
+                                            <li class="toctree-l3">population_employment_white_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_white_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_white_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_black_total</li>
+                                            <li class="toctree-l3">population_employment_black_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_black_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_black_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_native_american_total</li>
+                                            <li class="toctree-l3">population_employment_native_american_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_native_american_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_native_american_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_asian_total</li>
+                                            <li class="toctree-l3">population_employment_asian_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_asian_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_asian_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_hawaiian_pacific_total</li>
+                                            <li class="toctree-l3">population_employment_hawaiian_pacific_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_hawaiian_pacific_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_hawaiian_pacific_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_other_total</li>
+                                            <li class="toctree-l3">population_employment_other_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_other_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_other_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_mixed_total</li>
+                                            <li class="toctree-l3">population_employment_mixed_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_mixed_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_mixed_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_hispanic_total</li>
+                                            <li class="toctree-l3">population_employment_hispanic_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_hispanic_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_hispanic_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_white_alone_not_hispanic_total</li>
+                                            <li class="toctree-l3">population_employment_white_alone_not_hispanic_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_white_alone_not_hispanic_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_white_alone_not_hispanic_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id="employment_by_families_with_children">Employment By Families With Children</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_20_to_64_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_male_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_male_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_male_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_male_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_under_18_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_under_18_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_under_18_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_under_18_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_under_6_only_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_under_6_only_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_under_6_only_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_under_6_only_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_6_to_17_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_6_to_17_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_6_to_17_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_6_to_17_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_6_to_17_only_total</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_6_to_17_only_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_20_to_64_female_own_children_6_to_17_only_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_20_to_64_female_own_children_6_to_17_only_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id="employment_by_poverty_level">Employment By Poverty Level</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_below_poverty_level_total</li>
+                                            <li class="toctree-l3">population_employment_below_poverty_level_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_below_poverty_level_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_below_poverty_level_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_at_or_above_poverty_level_total</li>
+                                            <li class="toctree-l3">population_employment_at_or_above_poverty_level_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_at_or_above_poverty_level_employed_percent</li>
+                                            <li class="toctree-l3">population_employment_at_or_above_poverty_level_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id="employment_by_disability">Employment By Disability</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_with_any_disability_total</li>
+                                            <li class="toctree-l3 ">population_employment_with_any_disability_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_with_any_disability_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_with_any_disability_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_by_education'>Employment By Education</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_total</li>
+                                            <li class="toctree-l3 ">population_employment_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_less_than_high_school_total</li>
+                                            <li class="toctree-l3 ">population_employment_less_than_high_school_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_less_than_high_school_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_less_than_high_school_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_high_school_total</li>
+                                            <li class="toctree-l3 ">population_employment_high_school_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_high_school_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_high_school_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_some_college_or_associate_total</li>
+                                            <li class="toctree-l3 ">population_employment_some_college_or_associate_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_some_college_or_associate_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_some_college_or_associate_unemployed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_bachelor_or_higher_total</li>
+                                            <li class="toctree-l3 ">population_employment_bachelor_or_higher_labor_force_participation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_bachelor_or_higher_employed_percent</li>
+                                            <li class="toctree-l3 ">population_employment_bachelor_or_higher_unemployed_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_by_family_type'>Employment By Family Type</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">families_total</li>
+                                            <li class="toctree-l3 ">families_with_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_both_husband_and_wife_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_both_husband_and_wife_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_both_husband_and_wife_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_both_husband_and_wife_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_husband_in_labor_force_wife_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_husband_in_labor_force_wife_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_husband_in_labor_force_wife_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_husband_in_labor_force_wife_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_wife_in_labor_force_husband_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_wife_in_labor_force_husband_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_wife_in_labor_force_husband_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_wife_in_labor_force_husband_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_both_husband_and_wife_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_both_husband_and_wife_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_both_husband_and_wife_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_own_children_under_18_both_husband_and_wife_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_other_total</li>
+                                            <li class="toctree-l3 ">families_other_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_in_labor_force_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_in_labor_force_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_not_in_labor_force_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_female_no_husband_not_in_labor_force_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_in_labor_force_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_in_labor_force_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_not_in_labor_force_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_not_in_labor_force_percent</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_not_in_labor_force_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_other_male_no_wife_not_in_labor_force_own_children_under_18_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_by_workers'>Employment By Workers</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">families_workers_total</li>
+                                            <li class="toctree-l3 ">families_workers_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_workers_no_workers_total</li>
+                                            <li class="toctree-l3 ">families_workers_no_workers_percent</li>
+                                            <li class="toctree-l3 ">families_workers_no_workers_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_workers_no_workers_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_workers_1_worker_total</li>
+                                            <li class="toctree-l3 ">families_workers_1_worker_percent</li>
+                                            <li class="toctree-l3 ">families_workers_1_worker_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_workers_1_worker_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_workers_2_or_more_workers_total</li>
+                                            <li class="toctree-l3 ">families_workers_2_or_more_workers_percent</li>
+                                            <li class="toctree-l3 ">families_workers_2_or_more_workers_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_workers_2_or_more_workers_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_worked_full_time_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_worked_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_worked_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_worked_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_spouse_worked_full_time_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_spouse_worked_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_spouse_worked_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_spouse_worked_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_married_couple_householder_spouse_worked_less_than_full_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_spouse_worked_less_than_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_spouse_worked_less_than_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_spouse_worked_less_than_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_less_than_full_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_less_than_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_less_than_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_less_than_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_part_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_part_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_part_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_part_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_full_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_part_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_part_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_part_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_part_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_did_not_work_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_worked_spouse_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_did_not_work_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_full_time_spouse_did_not_work_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_spouse_did_not_work_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_spouse_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">families_householder_worked_spouse_did_not_work_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_worked_spouse_did_not_work_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_full_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_full_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_full_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_full_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_part_time_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_part_time_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_part_time_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work__spouse_part_time_own_children_under_18_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_did_not_work_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_did_not_work_own_children_under_18_total</li>
+                                            <li class="toctree-l3 ">families_householder_did_not_work_spouse_did_not_work_own_children_under_18_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_by_work_type'>Employment By Work Type</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_full_time_16_and_over_total</li>
+                                            <li class="toctree-l3 ">population_employment_male_full_time_16_and_over_total</li>
+                                            <li class="toctree-l3 ">population_employment_male_full_time_16_and_over_percent</li>
+                                            <li class="toctree-l3 ">population_employment_female_full_time_16_and_over_total</li>
+                                            <li class="toctree-l3 ">population_employment_female_full_time_16_and_over_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_management_business_science_and_arts_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_business_science_and_arts_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_business_science_and_arts_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_business_science_and_arts_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_business_science_and_arts_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_management_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_business_financial_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_business_financial_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_management_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_management_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_management_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_business_financial_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_business_financial_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_business_financial_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_computer_engineering_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_computer_engineering_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_computer_engineering_science_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_computer_engineering_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_computer_engineering_science_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_computer_mathematical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_computer_mathematical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_computer_mathematical_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_computer_mathematical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_computer_mathematical_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_architecture_engineering_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_architecture_engineering_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_architecture_engineering_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_architecture_engineering_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_architecture_engineering_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_life_physical_social_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_life_physical_social_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_life_physical_social_science_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_life_physical_social_science_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_life_physical_social_science_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_education_legal_community_service_arts_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_education_legal_community_service_arts_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_education_legal_community_service_arts_media_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_education_legal_community_service_arts_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_education_legal_community_service_arts_media_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_community_social_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_community_social_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_community_social_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_community_social_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_community_social_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_legal_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_legal_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_legal_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_legal_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_legal_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_education_training_library_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_education_training_library_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_education_training_library_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_education_training_library_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_education_training_library_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_arts_design_entertainment_sports_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_arts_design_entertainment_sports_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_arts_design_entertainment_sports_media_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_arts_design_entertainment_sports_media_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_arts_design_entertainment_sports_media_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_healthcare_practitioner_technical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_healthcare_practitioner_technical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_healthcare_practitioner_technical_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_healthcare_practitioner_technical_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_healthcare_practitioner_technical_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_health_diagnostics_treating_practitioners_other_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_health_diagnostics_treating_practitioners_other_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_health_diagnostics_treating_practitioners_other_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_health_diagnostics_treating_practitioners_other_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_health_diagnostics_treating_practitioners_other_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_health_technologists_technician_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_health_technologists_technician_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_health_technologists_technician_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_health_technologists_technician_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_health_technologists_technician_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_service_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_service_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_service_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_service_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_service_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_healthcare_support_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_healthcare_support_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_healthcare_support_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_healthcare_support_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_healthcare_support_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_protective_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_protective_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_protective_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_protective_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_protective_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_firefighters_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_firefighters_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_firefighters_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_firefighters_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_firefighters_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_law_enforcement_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_law_enforcement_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_law_enforcement_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_law_enforcement_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_law_enforcement_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_food_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_food_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_food_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_food_services_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_food_services_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_building_and_grounds_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_building_and_grounds_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_building_and_grounds_maintenance_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_building_and_grounds_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_building_and_grounds_maintenance_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_personal_care_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_personal_care_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_personal_care_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_personal_care_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_personal_care_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_sales_and_office_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_sales_and_office_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_sales_and_office_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_sales_and_office_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_sales_and_office_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_sales_related_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_sales_related_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_sales_related_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_sales_related_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_sales_related_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_office_administrative_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_office_administrative_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_office_administrative_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_office_administrative_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_office_administrative_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_natural_resources_construction_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_natural_resources_construction_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_natural_resources_construction_maintenance_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_natural_resources_construction_maintenance_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_natural_resources_construction_maintenance_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_farming_fishing_forestry_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_farming_fishing_forestry_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_farming_fishing_forestry_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_farming_fishing_forestry_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_farming_fishing_forestry_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_construction_extraction_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_construction_extraction_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_construction_extraction_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_construction_extraction_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_construction_extraction_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_installation_maintenance_repair_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_installation_maintenance_repair_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_installation_maintenance_repair_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_installation_maintenance_repair_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_installation_maintenance_repair_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_production_transportation_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_production_transportation_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_production_transportation_material_moving_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_production_transportation_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_production_transportation_material_moving_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_production_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_production_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_production_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_production_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_production_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_transportation_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_transportation_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_transportation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_transportation_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_transportation_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_male_material_moving_percent</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_material_moving_total</li>
+                                            <li class="toctree-l3 ">population_employment_full_time_female_material_moving_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_weeks_worked'>Employment Weeks Worked</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_16_to_64_total</li>
+                                            <li class="toctree-l3 ">population_employment_16_to_64_percent</li>
+                                            <li class="toctree-l3 ">population_employment_male_16_to_64_total</li>
+                                            <li class="toctree-l3 ">population_employment_male_16_to_64_percent</li>
+                                            <li class="toctree-l3 ">population_employment_female_16_to_64_total</li>
+                                            <li class="toctree-l3 ">population_employment_female_16_to_64_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_male_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_weeks_worked_female_did_not_work_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <h2 id='employment_hours_worked'>Employment Hours Worked</h2>
+                                        <br>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_35_or_more_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_35_or_more_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_35_or_more_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_15_to_34_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_15_to_34_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_15_to_34_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_50_to_52_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_50_to_52_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_48_to_49_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_48_to_49_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_40_to_47_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_40_to_47_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_27_to_39_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_27_to_39_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_14_to_26_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_14_to_26_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_1_to_14_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_1_to_14_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_1_to_13_weeks_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_1_to_14_hours_per_week_1_to_13_weeks_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_male_did_not_work_percent</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_did_not_work_total</li>
+                                            <li class="toctree-l3 ">population_employment_usual_hours_female_did_not_work_percent</li>
+                                        </ul>
+                                    </dd>
+                                    <dd>
+                                        <dd>
+                                            <h2 id='employment_workers_age_median'>Employment Workers Age Median</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">population_employment_workers_age_mean</li>
+                                                <li class="toctree-l3 ">population_employment_workers_age_male_mean</li>
+                                                <li class="toctree-l3 ">population_employment_workers_age_female_mean</li>
+                                                <li class="toctree-l3 ">population_employment_workers_age_median</li>
+                                                <li class="toctree-l3 ">population_employment_workers_age_male_median</li>
+                                                <li class="toctree-l3 ">population_employment_workers_age_female_median</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='employment_full_time_by_sex'>Employment Full Time By Sex</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">population_full_time_total</li>
+                                                <li class="toctree-l3 ">population_full_time_percent</li>
+                                                <li class="toctree-l3 ">population_full_time_male_total</li>
+                                                <li class="toctree-l3 ">population_full_time_male_percent</li>
+                                                <li class="toctree-l3 ">population_full_time_female_total</li>
+                                                <li class="toctree-l3 ">population_full_time_female_percent</li>
+                                            </ul>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='employment_by_business_type'>Employment By Business Type</h2>
+                                            <br>
+                                            <ul class="current ">
+                                                <li class="toctree-l3 ">population_employed_total</li>
+                                                <li class="toctree-l3 ">population_employed_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_workers_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_workers_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_workers_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_workers_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_workers_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_company_worker_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_company_worker_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_company_worker_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_company_worker_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_for_profit_company_worker_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_for_profit_incorporated_worker_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_for_profit_incorporated_worker_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_for_profit_incorporated_worker_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_for_profit_incorporated_worker_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_for_profit_incorporated_worker_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_not_for_profit_workers_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_not_for_profit_workers_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_not_for_profit_workers_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_private_not_for_profit_workers_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_private_not_for_profit_workers_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_local_government_workers_total</li>
+                                                <li class="toctree-l3 ">population_employed_local_government_workers_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_local_government_workers_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_local_government_workers_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_local_government_workers_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_state_government_workers_total</li>
+                                                <li class="toctree-l3 ">population_employed_state_government_workers_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_state_government_workers_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_state_government_workers_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_state_government_workers_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_federal_government_workers_total</li>
+                                                <li class="toctree-l3 ">population_employed_federal_government_workers_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_federal_government_workers_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_federal_government_workers_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_federal_government_workers_female_percent</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_not_incorporated_or_unpaid_worker_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_not_incorporated_or_unpaid_worker_male_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_not_incorporated_or_unpaid_worker_male_percent</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_not_incorporated_or_unpaid_worker_female_total</li>
+                                                <li class="toctree-l3 ">population_employed_self_employed_not_incorporated_or_unpaid_worker_female_percent</li>
+                                            </ul>
+                                        </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>"
