@@ -658,3 +658,27 @@ function process_nn_check_compatability(fid) {
 
 
 }
+
+function change_cleanse_na_opt(selectid) {
+    /**
+     * Change na option.
+     *
+     * Parameters:
+     *  fid       - function id
+     *  colname   - column name
+     */
+
+    var naoption = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_cleanse_na_opt", selectid, naoption);
+
+    if (naoption == "fillna")
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "8"));
+    else
+        window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "19"));
+
+    window.scroll_to('DCDataCleansing');
+
+
+}

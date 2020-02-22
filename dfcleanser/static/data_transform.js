@@ -272,7 +272,6 @@ function data_transform_display_add_cols_callback(optionId) {
     }
 
     addvals = get_input_form_parms(formid);
-    console.log("addvals", formid, addvals);
     inputs.push(addvals);
 
     window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);

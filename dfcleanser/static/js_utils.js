@@ -134,7 +134,9 @@
 
  window.reset_chapter = function(cellid) {
 
-     console.log("reset_chapter", cellid);
+     if (window.debug_flag)
+         console.log("reset_chapter", cellid);
+
      switch (cellid) {
 
          case 0:
@@ -765,7 +767,8 @@
   * 
   */
  window.preloaddfcleanser = function() {
-     if (debug_flag)
+
+     if (window.debug_flag)
          console.log(log_prefix + "\n" + "     preloaddfcleanser");
 
      var code = "dcpath = %pwd" + NEW_LINE;
@@ -1024,7 +1027,7 @@
  //
 
  window.handlecbcheck = function(cb) {
-     if (windows.debug_flag)
+     if (window.debug_flag)
          console.log("handlecbcheck", cb);
  };
 
@@ -1342,7 +1345,8 @@
  // 
  window.getdfcChaptersLoaded = function() {
 
-     console.log("getdfcChaptersLoaded");
+     if (window.debug_flag)
+         console.log(log_prefix + "\n" + "     getdfcChaptersLoaded");
 
      var cells = IPython.notebook.get_cells();
      var cell = window.empty_cell_id;
@@ -1449,9 +1453,7 @@
  // display help section by dfc help id
  //
  window.displayhelp = function(helpid) {
-
-     var url = "https://rickkrasinski.github.io/dfcleanser/html/help/dfcleanser_help#dfc_" + String(helpid);
-     window.open(url);
+     window.open(helpid);
  };
 
  //

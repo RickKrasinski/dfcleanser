@@ -289,7 +289,7 @@ function select_db(dblibid) {
      *  dblibid - database library is
      */
 
-    if (window.debug_detail_flag)
+    if (window.debug_flag)
         console.log("select_db", dblibid);
 
     window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "display_sql_details_form", JSON.stringify(dblibid)));

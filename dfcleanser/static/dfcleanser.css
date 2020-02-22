@@ -807,11 +807,12 @@ th.a:link {
 
 .dfcleanser-common-grid-note {
     text-align: center;
-    margin-left: 17%;
-    width: 65%;
+    margin-left: 14%;
+    width: 75%;
     border-width: 1px;
     border-style: solid;
     border-color: #67a1f3;
+    color: #67a1f3;
     background-color: #F8F5E1;
 }
 
@@ -2525,6 +2526,18 @@ th.a:link {
     overflow-y: hidden;
 }
 
+.dfcensus-show-selects-wrapper {
+    display: grid;
+    grid-template-columns: 360px 480px;
+    grid-template-areas: 'header header' 'left right';
+    background-color: #ffffff;
+    grid-gap: 20px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 .dfcensus-configure-data-wrapper {
     display: grid;
     grid-template-columns: 410px 410px;
@@ -2565,6 +2578,18 @@ th.a:link {
     display: grid;
     grid-template-columns: 620px;
     grid-template-areas: 'main' 'bottom' 'footer';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-loaded-dfs-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'top' 'bottom';
     background-color: #ffffff;
     grid-gap: 0px;
     margin-left: 0px;
@@ -2637,6 +2662,42 @@ th.a:link {
     display: grid;
     grid-template-columns: 360px;
     grid-template-areas: 'header' 'main' 'footer' 'bottom';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-datasets-loaded-wrapper {
+    display: grid;
+    grid-template-columns: 360px 480px;
+    grid-template-areas: 'header header' 'left right' 'main main';
+    background-color: #ffffff;
+    grid-gap: 20px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-datasets-in-dfs-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'header' 'main' 'bottom' 'footer';
+    background-color: #ffffff;
+    grid-gap: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.dfcensus-datasets-to-export-wrapper {
+    display: grid;
+    grid-template-columns: 540px;
+    grid-template-areas: 'header' 'main' 'footer';
     background-color: #ffffff;
     grid-gap: 0px;
     margin-left: 0px;

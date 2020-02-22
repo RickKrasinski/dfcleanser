@@ -57,17 +57,6 @@ function build_utility_callback(id) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 function build_utility_clear_callback() {
     /**
      * data structures utility clear inputs.
@@ -449,7 +438,8 @@ function get_geocode_form_id(gcid, gtype, gmode) {
         }
     }
 
-    console.log("get_geocode_form_id", id);
+    if (window.debug_flag) get_geocode_form_id
+    console.log(log_prefix + "\n" + "     getdfcChaptersLoaded", id);
 
     return (id);
 }
@@ -571,7 +561,10 @@ function process_batch_geocoder(fid, geotype) {
      */
 
     var fparms = get_input_form_parms("arcgisbatchgeocoder");
-    console.log("process_batch_geocoder", fid, fparms);
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     process_batch_geocoder", fid, fparms);
+
     var inputs = [fid, geotype, fparms];
 
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", ("20, " + JSON.stringify(inputs))));
@@ -852,7 +845,9 @@ function get_subset_callback(fid) {
      *  gcid - geocoder id
      */
 
-    console.log("get_subset_callback", fid);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     get_subset_callback", fid);
+
     switch (fid) {
         case 0:
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid));
@@ -862,7 +857,10 @@ function get_subset_callback(fid) {
             var inputs = new Array();
             var inputParms = window.get_input_form_parms("datasubsetdf");
             inputs.push(inputParms);
-            console.log("get_subset_callback", inputs);
+
+            if (window.debug_flag)
+                console.log(log_prefix + "\n" + "     get_subset_callback", inputs);
+
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "1" + "," + JSON.stringify(inputs)));
             break;
         case 2:
@@ -931,7 +929,7 @@ function set_filter_colname(colname) {
      */
 
     if (window.debug_flag)
-        console.log("set_filter_colname", colname);
+        console.log(log_prefix + "\n" + "     set_filter_colname", colname);
 
     var colnamefield = $('#gscolname');
     colnamefield.val(colname);
@@ -970,7 +968,8 @@ function iscolnamedefined() {
 
     var filtersstring = getlastclause();
 
-    console.log("iscolnamedefined", filtersstring);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     iscolnamedefined", filtersstring);
 
     if ((filtersstring.indexOf('df[') > -1))
         return (true);
@@ -982,7 +981,8 @@ function isvaluedefined() {
 
     var filtersstring = getlastclause();
 
-    console.log("isvaluedefined", filtersstring);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     isvaluedefined", filtersstring);
 
     var operatoroffset = 0;
     var operatorlength = 0;
@@ -1023,8 +1023,6 @@ function isvaluedefined() {
     }
 
     if (operatoroffset > 0) {
-        //console.log("is value defined", filtersstring.charAt((operatoroffset + operatorlength + 1)));
-        //console.log("is value defined", filtersstring.charAt((operatoroffset + operatorlength + 2)));
         if (filtersstring.charAt((operatoroffset + operatorlength + 1)) != ")") {
             return (true);
         }
@@ -1038,7 +1036,8 @@ function isoperatordefined() {
 
     var filtersstring = getlastclause();
 
-    console.log("isoperatordefined", filtersstring);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     isoperatordefined", filtersstring);
 
     if ((filtersstring.indexOf('==') > -1) ||
         (filtersstring.indexOf('!=') > -1) ||
@@ -1058,10 +1057,10 @@ function getlastclause() {
 
     var filtersstring = $("#gsfilterselectstring");
 
-    console.log("getlastclause", filtersstring.val());
+    //console.log("getlastclause", filtersstring.val());
 
-    console.log("getlastclause", filtersstring.val().indexOf('or'));
-    console.log("getlastclause", filtersstring.val().indexOf('and'));
+    //console.log("getlastclause", filtersstring.val().indexOf('or'));
+    //console.log("getlastclause", filtersstring.val().indexOf('and'));
 
 
     if ((filtersstring.val().indexOf('or') < 0) &&
@@ -1071,7 +1070,7 @@ function getlastclause() {
 
         var last_clause = filtersstring.val();
 
-        console.log("getlastclause last_clause", last_clause);
+        //console.log("getlastclause last_clause", last_clause);
 
 
         var max_loop = 10;
@@ -1081,7 +1080,7 @@ function getlastclause() {
             ((last_clause.indexOf("or") > -1) ||
                 (last_clause.indexOf("and") > -1))) {
 
-            console.log("getlastclause loop", last_clause);
+            //console.log("getlastclause loop", last_clause);
 
             loop_count = loop_count + 1;
 
@@ -1089,7 +1088,7 @@ function getlastclause() {
                 last_clause = last_clause.slice(last_clause.indexOf("or") + 3);
             else {
                 last_clause = last_clause.slice(last_clause.indexOf("and") + 4);
-                console.log("getlastclause and", last_clause);
+                //console.log("getlastclause and", last_clause);
             }
         }
 
@@ -1112,7 +1111,7 @@ function getgsval(uval) {
             var endisin = filtersstring.val().indexOf("])");
             newfstring = filtersstring.val().slice(0, (endisin));
 
-            console.log("newfstring", newfstring, endisin);
+            //console.log("newfstring", newfstring, endisin);
             if (filtersstring.val().indexOf('[]') > -1)
                 newfstring = newfstring + uval + "]) )";
             else
@@ -1198,7 +1197,7 @@ function keypad(keyvalue) {
             var endisin = filtersstring.val().indexOf("])");
             newfstring = filtersstring.val().slice(0, (endisin));
 
-            console.log("newfstring", newfstring, endisin);
+            //console.log("newfstring", newfstring, endisin);
             if (keyvalue == ",")
                 newfstring = newfstring + keyvalue + "]) )";
             else
@@ -1244,7 +1243,7 @@ function operpad(keyvalue) {
                 newfstring = newfstring + "isin([])" + " )";
             else
                 newfstring = newfstring + keyvalue + " )";
-            console.log(newfstring);
+            //console.log(newfstring);
             filtersstring.val(newfstring);
 
         } else {
@@ -1319,7 +1318,8 @@ function generic_function_callback(fid) {
      *  fid - function id
      */
 
-    console.log("generic_function_callback", fid);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     generic_function_callback", fid);
 
     switch (fid) {
         case 12:
@@ -1348,9 +1348,9 @@ function select_gen_function(genid) {
      * Parameters:
      *  genid - gen function id
      */
-    //var inputs = new Array();
-    //inputs.push(6, genid);
+
     var funcid = "'" + genid + "'";
+
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "17," + funcid));
     window.scroll_to('DCListUtility');
 }
@@ -1370,7 +1370,8 @@ function get_census_callback(fid) {
      *  fid - function id
      */
 
-    console.log("get_census_callback", fid);
+    if (window.debug_flag)
+        console.log("get_census_callback", fid);
 
     switch (fid) {
 
@@ -1386,6 +1387,13 @@ function get_census_callback(fid) {
         case 20:
         case 21:
         case 23:
+        case 30:
+        case 31:
+        case 32:
+        case 33:
+        case 35:
+        case 37:
+
             window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", fid));
             break;
 
@@ -1433,48 +1441,12 @@ function get_census_callback(fid) {
                 datasetcbs = new Array();
             }
 
-            //inputs.push(datasetcbs);
-
-            /*
-            var subdatacbs = new Array();
-            var subdatacount = [16, 12, 14, 17, 19, 9, 5, 5, 35, 11];
-
-            var subdataID = $('#SubdataHeading').text();
-
-            console.log("subdataID", subdataID);
-
-            var subid = -1
-
-            for (var i = 0; i < datasetids.length; i++) {
-                if (subdataID == datasetids[i])
-                    subid = i;
-            }
-
-            if (subid > -1) {
-
-                for (var j = 1; j < subdatacount[subid] + 1; j++) {
-
-                    ccb = "#CS" + datasetids[subid] + j.toString();
-                    console.log("ccb", ccb)
-
-                    var currentcb = $("#CS" + datasetids[subid] + j.toString()).prop("checked");
-
-                    if (currentcb == true)
-                        subdatacbs.push("True");
-                    else
-                        subdatacbs.push("False");
-                }
-            }
-
-            inputs.push(subdatacbs);
-            */
-
             window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("4, " + JSON.stringify(inputs))));
             break;
 
         case 24:
         case 25:
-
+        case 36:
             var inputs = new Array();
             var datasetids = ["Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation"];
             var datacontentcbs = new Array();
@@ -1497,10 +1469,18 @@ function get_census_callback(fid) {
             break;
 
         case 28:
+        case 29:
 
             var selected_values = $('#subdatacolnames').val();
             window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + JSON.stringify(selected_values))));
             break;
+
+        case 34:
+            var fparms = get_input_form_parms("insertcoldf");
+            window.clear_cell_output(window.SW_UTILS_CENSUS_TASK_BAR_ID);
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + fparms)));
+            break;
+
     }
 
     window.scroll_to('DCCensusUtility');
@@ -1527,11 +1507,15 @@ function get_census_subData_details(datasetid, subdataid) {
      *  subdataid - subset id
      */
 
+    if (window.debug_flag)
+        console.log("get_census_subData_details", datasetid, subdataid);
+
+
     var inputs = new Array();
     inputs.push(datasetid);
     inputs.push(subdataid);
 
-    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("13, " + JSON.stringify(inputs))));
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("22, " + JSON.stringify(inputs))));
     window.scroll_to('DCCensusUtility');
 }
 
@@ -1544,11 +1528,15 @@ function get_load_cols_subData_details(datasetid, subdataid) {
      *  subdataid - subset id
      */
 
+    if (window.debug_flag)
+        console.log("get_load_cols_subData_details", datasetid, subdataid);
+
     var inputs = new Array();
+
     inputs.push(datasetid);
     inputs.push(subdataid);
 
-    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("27, " + JSON.stringify(inputs))));
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("7, " + JSON.stringify(inputs))));
     window.scroll_to('DCCensusUtility');
 }
 
@@ -1561,6 +1549,9 @@ function get_configure_subData_details(datasetid, subdataid) {
      *  subdataid - subset id
      */
 
+    if (window.debug_flag)
+        console.log("get_configure_subData_details", datasetid, subdataid);
+
     var inputs = new Array();
     inputs.push(datasetid);
     inputs.push(subdataid);
@@ -1569,7 +1560,7 @@ function get_configure_subData_details(datasetid, subdataid) {
     window.scroll_to('DCCensusUtility');
 }
 
-function get_configure_dataset_details(datasetid) {
+function get_configure_dataset_details(dtid, datasetid) {
     /**
      * census process command callback.
      *
@@ -1577,9 +1568,20 @@ function get_configure_dataset_details(datasetid) {
      *  datasetid - dataset id
      */
 
-    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("21, " + JSON.stringify(datasetid))));
+    if (window.debug_flag)
+        console.log("get_configure_dataset_details", dtid, datasetid);
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(dtid);
+    inputs.push("1");
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("21, " + JSON.stringify(inputs))));
     window.scroll_to('DCCensusUtility');
 }
+
+
+get_df_census_dataset_details
 
 function get_df_census_dataset_details(dtid, datasetid) {
     /**
@@ -1588,11 +1590,17 @@ function get_df_census_dataset_details(dtid, datasetid) {
      * Parameters:
      *  datasetid - dataset id
      */
-    var inputs = new Array();
-    inputs.push(dtid);
-    inputs.push(datasetid);
 
-    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("7, " + JSON.stringify(inputs))));
+    if (window.debug_flag)
+        console.log("get_df_census_dataset_details", dtid, datasetid);
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(dtid);
+    inputs.push("0");
+
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("21, " + JSON.stringify(inputs))));
     window.scroll_to('DCCensusUtility');
 }
 
@@ -1613,9 +1621,30 @@ function scroll_census_cols(datasetid, subdataid, colnameid, direction) {
     inputs.push(colnameid);
     inputs.push(direction);
 
-    console.log("scroll_census_cols", inputs);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     scroll_census_cols", inputs);
 
     window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("15, " + JSON.stringify(inputs))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function get_select_cols_subData_details(datasetid, subdataid) {
+    /**
+     * census process command callback.
+     *
+     * Parameters:
+     *  datasetid - dataset id
+     *  subdataid - subset id
+     */
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subdataid);
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     get_select_cols_subData_details", inputs);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("30, " + JSON.stringify(inputs))));
     window.scroll_to('DCCensusUtility');
 }
 
@@ -1683,7 +1712,7 @@ function get_census_cols(dtid) {
     }
 
     window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("8, " + JSON.stringify(fparms))));
-
+    window.scroll_to('DCCensusUtility');
 }
 
 function change_get_center_pt_col(selectid) {
@@ -1739,4 +1768,141 @@ function change_get_center_pt(selectid) {
         $("#centerpt").prop("disabled", false);
         $("#centerpt").prop("readonly", false);
     }
+}
+
+function export_census_to_db(dfid) {
+    /**
+     * export a census df to a db
+     *
+     * Parameters:
+     *  dfid   - dataframe id
+     * 
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "export_census_to_db", dfid);
+
+}
+
+function export_census_to_df(dfid) {
+    /**
+     * export a census df to a destination
+     *
+     * Parameters:
+     *  dfid   - dataframe id
+     * 
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "export_census_to_df", dfid);
+
+}
+
+function select_new_insert_df(selectid) {
+    /**
+     * select a new df to insert cols into
+     *
+     * Parameters:
+     *  dfid   - dataframe id
+     * 
+     */
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_new_insert_df", dftitle);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", ("33, " + JSON.stringify(dftitle))));
+    window.scroll_to('DCCensusUtility');
+}
+
+function select_new_insert_df_index_type(selid) {
+    /**
+     * select a new col to use as index
+     *
+     * Parameters:
+     *  dfid   - dataframe id
+     * 
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_new_insert_df_index_type", selid);
+
+    $("#censusindexcols").val("");
+
+}
+
+function select_new_insert_df_col(selectid) {
+    /**
+     * select a new col to use as index
+     *
+     * Parameters:
+     *  dfid   - dataframe id
+     * 
+     */
+
+    var itype = $("#censusindextype").val();
+    var index = 0;
+
+    var icols = $("#censusindexcols").val();
+
+    var colname = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_new_insert_df_col", colname, itype, icols);
+
+    switch (itype) {
+
+        case "[zipcode]":
+            index = 0;
+            break;
+        case "[city,state]":
+            index = 1;
+            break;
+        case "[county,state]":
+            index = 2;
+            break;
+        default:
+            index = 3;
+            break;
+    }
+
+    if ((index == 0) || (index == 3)) {
+        $("#censusindexcols").val("[" + colname + "]");
+    } else {
+
+        if (icols.indexOf("[") > -1) {
+            if (icols.indexOf(",]") > -1) {
+                icols = icols.replace(",]", "," + colname + "]")
+                $("#censusindexcols").val(icols);
+            } else {
+                $("#censusindexcols").val("[" + colname + ",]");
+            }
+        } else {
+            $("#censusindexcols").val("[" + colname + ",]");
+        }
+    }
+}
+
+
+function export_df_from_census(datasetid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "export_df_from_census", datasetid);
+
+    window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", ("4" + ", " + JSON.stringify(datasetid))));
+    window.scroll_to('DCDataExport');
+
+}
+
+function export_to_db_from_census(datasetid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "export_to_db_from_census", datasetid);
+
+    window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", ("5" + ", " + JSON.stringify(datasetid))));
+    window.scroll_to('DCDataExport');
+
+
+
 }

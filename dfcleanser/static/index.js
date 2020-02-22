@@ -59,8 +59,10 @@ define([
                 if (window.confirm("Reset dfcleanser?")) {
                     process_pop_up_cmd(6);
                 } else {
-                    console.log(log_prefix + "\n" + "     toggle_dfcleanser : unload");
-                    window.unload_dfcleanser();
+                    if (window.confirm("Unload dfcleanser?")) {
+                        console.log(log_prefix + "\n" + "     toggle_dfcleanser : unload");
+                        window.unload_dfcleanser();
+                    }
                 }
             }
         } else {
