@@ -22,8 +22,6 @@ from dfcleanser.common.table_widgets import (dcTable)
 from dfcleanser.common.common_utils import (get_dtype_str_for_datatype, display_generic_grid, display_status_note,
                                             is_numeric_col, whitecolor, get_select_defaults, get_parms_for_input)
 
-#from dfcleanser.common.display_utils import get_df_col_names_table
-
 """
 * -----------------------------------------------------
 *   configuration variable keys
@@ -59,7 +57,7 @@ data_transform_tb_jsList                    =   ["transform_task_bar_callback("+
                                                  "transform_task_bar_callback("+str(dtm.DISPLAY_DATETIME_TRANSFORM)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "process_pop_up_cmd(6)",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + "')"]
 
 data_transform_tb_centered                  =   True
 
@@ -91,7 +89,7 @@ data_transform_tbB_keyTitleList             =   ["Clear","Reset","Help"]
 
 data_transform_tbB_jsList                   =   ["transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
                                                  "process_pop_up_cmd(6)",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + "')"]
 
 data_transform_tbB_centered                 =   True
 
@@ -120,7 +118,7 @@ datetime_transform_tb_jsList                =   ["dt_datetime_transform_task_bar
                                                  "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION)+")",
                                                  "dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_COMPONNETS_OPTION)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_TASKBAR_ID) + "')"]
 
 
 datetimeA_transform_tb_doc_title            =   "datetime Transform Options"
@@ -148,7 +146,7 @@ datetimeB_transform_tb_keyTitleList         =   ["Merge</br>Column</br>from</br>
 datetimeB_transform_tb_jsList               =   ["dt_datetime_transform_task_bar_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION)+")",
                                                  "dt_datetime_transform_task_bar_callback("+ str(dtm.DISPLAY_DATETIME_COMPONNETS_OPTION)+")",
                                                  "transform_task_bar_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_TASKBAR_ID) + "')"]
 
 
 """
@@ -184,7 +182,7 @@ datetime_format_input_jsList            =   [None,None,None,None,
                                              "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_OPTION) + ")",
                                              "process_datetime_format_transform_callback(" + str(dtm.DISPLAY_DATETIME_FORMAT_OPTION) + ")",
                                              "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_FORMAT_ID) + "')"]
 
 datetime_format_input_reqList           =   [0,1,2]
 
@@ -223,7 +221,7 @@ timedelta_format_input_placeholderList  =   ["column name",
 timedelta_format_input_jsList           =   [None,None,None,None,
                                              "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_TIMEDELTA_OPTION) + ")",
                                              "process_datetime_format_transform_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_DELTA_ID) + "')"]
 
 timedelta_format_input_reqList          =   [0,1,2,3]
 
@@ -272,7 +270,7 @@ datetime_tdelta_input_jsList            =   [None,None,None,None,None,
                                              "process_datetime_tdelta_callback(" + str(dtm.PROCESS_TIMEDELTA_CALCULATE_OPTION) + ")",
                                              "process_datetime_tdelta_callback(" + str(dtm.DISPLAY_TIMEDELTA_CALCULATE_OPTION) + ")",
                                              "process_datetime_tdelta_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_DELTA_COL_ID) + "')"]
 
 datetime_tdelta_input_reqList           =   [0,1,2,3,4]
 
@@ -310,7 +308,7 @@ datetime_merge_input_jsList             =   [None,None,None,None,
                                              "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_MERGE_OPTION) + ")",
                                              "process_datetime_merge_split_callback(" + str(dtm.DISPLAY_DATETIME_MERGE_OPTION) + ")",
                                              "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_MERGE_ID) + "')"]
 
 datetime_merge_input_reqList            =   [0,1,2,3]
 
@@ -344,7 +342,7 @@ datetime_split_input_jsList             =   [None,None,None,
                                              "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_SPLIT_OPTION) + ")",
                                              "process_datetime_merge_split_callback(" + str(dtm.DISPLAY_DATETIME_SPLIT_OPTION) + ")",
                                              "process_datetime_merge_split_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_SPLIT_ID) + "')"]
 
 datetime_split_input_reqList            =   [0,1,2]
 
@@ -377,7 +375,7 @@ datetime_comp_input_placeholderList     =   ["datetime column name",
 datetime_comp_input_jsList              =   [None,None,None,
                                              "process_datetime_components_callback(" + str(dtm.PROCESS_DATETIME_COMPONNETS_OPTION) + ")",
                                              "process_datetime_components_callback(" + str(dtm.PROCESS_DATETIME_RETURN) + ")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_DATETIME_COMP_ID) + "')"]
 
 datetime_comp_input_reqList             =   [0,1,2]
 

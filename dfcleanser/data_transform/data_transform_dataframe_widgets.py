@@ -48,7 +48,7 @@ dataframe_transform_tb_jsList               =   ["df_transform_task_bar_callback
                                                  "df_transform_task_bar_callback("+str(dtm.DISPLAY_SORT_COLUMN)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DISPLAY_DROP_DUPLICATE_ROWS)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_TASKBAR_ID) + "')"]
 
 dataframe_transform_tb_centered             =   True
 
@@ -77,7 +77,7 @@ dataframe_col_names_tb_jsList               =   ["df_transform_task_bar_callback
                                                  "df_transform_task_bar_callback("+str(dtm.PROCESS_DROP_COLUMN_NAMES_ROW)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DISPLAY_WHITESPACE_COLUMN_NAMES)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_COL_NAMES_TASKBAR_ID) + "')"]
 
 dataframe_col_names_tb_centered             =   True
 
@@ -104,7 +104,7 @@ dataframe_indices_tb_jsList                 =   ["df_transform_task_bar_callback
                                                  "df_transform_task_bar_callback("+str(dtm.DISPLAY_APPEND_TO_INDEX)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DISPLAY_SORT_DF_INDEX)+")",
                                                  "df_transform_task_bar_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_INDEX_TASKBAR_ID) + "')"]
 
 dataframe_indices_tb_centered               =   True
 
@@ -132,7 +132,7 @@ df_save_row_transform_input_placeholderList     = ["enter File name to save colu
 df_save_row_transform_input_jsList          =    [None,
                                                  "df_process_cmd_callback("+str(dtm.PROCESS_SAVE_COLUMN_NAMES_ROW) + ")",
                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_SAVE_COL_NAME_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_SAVE_COL_NAME_ID) + "')"]
 
 df_save_row_transform_input_reqList         =   [0]
 
@@ -163,7 +163,7 @@ df_add_row_transform_input_placeholderList  =   ["enter File name to read or bro
 df_add_row_transform_input_jsList           =   [None,None,
                                                  "df_process_cmd_callback("+str(dtm.PROCESS_ADD_COLUMN_NAMES_ROW) + ")",
                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_SET_COL_NAME_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_SET_COL_NAME_ID) + "')"]
 
 df_add_row_transform_input_reqList          =   [0,1]
 
@@ -196,7 +196,7 @@ df_change_row_transform_input_placeholderList  =   ["current column name",
 df_change_row_transform_input_jsList        =   [None,None,
                                                  "df_process_cmd_callback("+str(dtm.PROCESS_CHANGE_COLUMN_NAMES) + ")",
                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_DF_CHANGE_COL_NAMES_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_CHANGE_COL_NAMES_ID) + "')"]
 
 df_change_row_transform_input_reqList       =   [0,1]
 
@@ -226,7 +226,7 @@ df_cnames_row_remwhite_input_placeholderList =  ["whitespace chars",
 df_cnames_row_remwhite_input_jsList         =   [None,None,
                                                  "df_process_cmd_callback("+str(dtm.PROCESS_WHITESPACE_COLUMN_NAMES) + ")",
                                                  "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                 "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_DF_WHITESPACE_COL_NAMES_ID) + "')"]
 
 df_cnames_row_remwhite_input_reqList        =   [0,1]
 
@@ -260,7 +260,7 @@ df_set_index_transform_input_placeholderList  =  ["list or single of column name
 df_set_index_transform_input_jsList           =    [None,None,None,
                                                     "df_process_cmd_callback("+str(dtm.PROCESS_SET_DF_INDEX) + ")",
                                                     "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                    "display_help_url('" + str(dfchelp.SET_INDEX ) + "')"]
+                                                    "displayhelp('" + str(dfchelp.TRANSFORM_DF_SET_INDEX) + "')"]
 
 df_set_index_transform_input_reqList          =   [0,1,2]
 
@@ -288,7 +288,7 @@ df_reset_index_transform_input_placeholderList =  ["drop df column(default : Tru
 df_reset_index_transform_input_jsList       =    [None,
                                                   "df_process_cmd_callback("+str(dtm.PROCESS_RESET_DF_INDEX) + ")",
                                                   "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                  "display_help_url('" + str(dfchelp.RESET_INDEX) + "')"]
+                                                  "displayhelp('" + str(dfchelp.TRANSFORM_DF_RESET_INDEX) + "')"]
 
 df_reset_index_transform_input_reqList      =   [0]
 
@@ -321,7 +321,7 @@ df_append_index_transform_input_placeholderList   =  ["list or single name of co
 df_append_index_transform_input_jsList        =    [None,None,None,
                                                     "df_process_cmd_callback("+str(dtm.PROCESS_APPEND_TO_INDEX) + ")",
                                                     "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                    "display_help_url('" + str(dfchelp.RESET_INDEX) + "')"]
+                                                    "displayhelp('" + str(dfchelp.TRANSFORM_DF_RESET_INDEX) + "')"]
 
 df_append_index_transform_input_reqList       =   [0,1,2]
 
@@ -357,7 +357,7 @@ df_sort_index_transform_input_placeholderList  =   ["Order of sort : True - asce
 df_sort_index_transform_input_jsList           =    [None,None,None,
                                                      "df_process_cmd_callback("+str(dtm.PROCESS_SORT_DF_INDEX) +")",
                                                      "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) + ")",
-                                                     "display_help_url('" + str(dfchelp.SORT_INDEX) + "')"]
+                                                     "displayhelp('" + str(dfchelp.TRANSFORM_DF_SORT_INDEX) + "')"]
 
 df_sort_index_transform_input_reqList          =   [0,1,2]
 
@@ -391,7 +391,7 @@ df_drop_dups_transform_input_placeholderList =  ["enter list of columns to use a
 df_drop_dups_transform_input_jsList         =    [None,None,None,
                                                   "df_process_cmd_callback("+str(dtm.PROCESS_DROP_DUPLICATE_ROWS) +")",
                                                   "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN) +")",
-                                                  "display_help_url('" + str(dfchelp.DROP_DUPS) + "')"]
+                                                  "displayhelp('" + str(dfchelp.TRANSFORM_DF_DROP_DUPS) + "')"]
 
 df_drop_dups_transform_input_reqList        =   [0,1,2]
 
@@ -430,7 +430,7 @@ sort_column_input_placeholderList       =   ["column to sort by)",
 sort_column_input_jsList                =    [None,None,None,None,None,
                                               "df_process_cmd_callback("+str(dtm.PROCESS_SORT_COLUMN)+")",
                                               "df_process_cmd_callback("+str(dtm.DF_TRANSFORM_RETURN)+")",
-                                              "display_help_url('" + dfchelp.SORT_COL + "')"]
+                                              "displayhelp('" + dfchelp.TRANSFORM_DF_SORT_BY_COL_ID + "')"]
 
 sort_column_input_reqList               =   [0,1,2]
 

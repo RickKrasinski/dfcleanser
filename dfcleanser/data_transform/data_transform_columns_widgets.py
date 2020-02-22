@@ -59,7 +59,7 @@ columns_transform_tb_jsList                 =   ["cols_transform_tb_callback("+s
                                                  "cols_transform_tb_callback("+str(dtm.DISPLAY_COPY_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.MORE_TASKBAR)+")",
                                                  "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ID) + "')"]
 
 columns_transform_tb_centered               =   True
 
@@ -81,7 +81,7 @@ columns_transform_tb1_jsList                =   ["cols_transform_tb_callback("+s
                                                  "cols_transform_tb_callback("+str(dtm.DISPLAY_CAT_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.DISPLAY_DATATYPE_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ID) + "')"]
 
 columns_transform_tb1_centered              =   True
 
@@ -131,7 +131,7 @@ columns_transform_tbC_keyTitleList          =   ["Make</br> Column</br>Categoric
 columns_transform_tbC_jsList                =   ["cols_transform_tb_callback("+str(dtm.DISPLAY_CAT_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.DISPLAY_DATATYPE_COLUMN)+")",
                                                  "cols_transform_tb_callback("+str(dtm.DFC_TRANSFORM_RETURN)+")",
-                                                 "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MDC_ID) + ")"]
+                                                 "displayhelp('" + str(dfchelp.TRANSFORM_COLS_MDC_ID) + "')"]
 
 columns_transform_tbC_centered              =   True
 
@@ -226,7 +226,7 @@ add_column_file_input_placeholderList    =   ["enter the new column name",
 add_column_file_input_jsList             =    [None,None,None,None,None,
                                                "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_FILE_OPTION) + ")",
                                                "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_FILE_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_FILE_ID) + "')"]
 
 add_column_file_input_reqList            =   [0,1,2,3,4]
 
@@ -270,7 +270,7 @@ add_colind_file_input_placeholderList    =   ["enter the new column name",
 add_colind_file_input_jsList             =    [None,None,None,None,None,None,
                                                "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_FILE_WITH_INDEX_OPTION) + ")",
                                                "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_FILE_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_FILE_ID) + "')"]
 
 add_colind_file_input_reqList            =   [0,1,2,3,4,5]
 
@@ -328,7 +328,7 @@ add_column_code_dfc_funcs_input_jsList          =    [None,None,None,None,None,N
 add_column_code_dfc_funcs_input_jsListA         =    ["data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_DFC_FUNCS) + ")",
                                                       "data_transform_display_add_cols_callback(" + str(dtm.DISPLAY_ADD_FROM_CODE_OPTION) + ")",
                                                       "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                                      "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+                                                      "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_DFC_ID) + "')"]
 
 add_column_code_dfc_funcs_input_reqList         =   [0,1,2,3]
 
@@ -452,7 +452,7 @@ add_column_code_user_fns_input_jsList          =    [None,None,None,None,None,No
                                                      "data_transform_add_cols_callback(" + str(dtm.PROCESS_SAVE_USER_FUNC) + ")",
                                                      "data_transform_add_cols_callback(" + str(dtm.DISPLAY_MAINTAIN_USER_FUNC) + ")",
                                                      "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                                     "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+                                                     "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + "')"]
 
 add_column_code_user_fns_input_reqList         =   [0,1,2,3,4,5,6]
 
@@ -492,7 +492,7 @@ maintain_user_fns_input_jsList                  =    [None,None,None,None,
                                                      "data_transform_add_cols_callback(" + str(dtm.PROCESS_SAVE_USER_FUNC) + ")",
                                                      "data_transform_add_cols_callback(" + str(dtm.PROCESS_DELETE_USER_FUNC) + ")",
                                                      "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                                     "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+                                                     "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + "')"]
 
 maintain_user_fns_input_reqList                 =   [0,1,2,3]
 
@@ -585,7 +585,7 @@ add_column_df_input_jsList              =    [None,None,None,
                                               "data_transform_add_cols_callback(" + str(dtm.PROCESS_ADD_FROM_DF_OPTION) + ")",
                                               "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_CLEAR) + ")",
                                               "data_transform_add_cols_callback(" + str(dtm.ADD_COLUMN_RETURN) + ")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_ADD_USER_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.TRANSFORM_COLS_ADD_DF_ID) + "')"]
 
 add_column_df_input_reqList             =   [0,1,2]
 
@@ -624,7 +624,7 @@ rename_column_input_placeholderList     =   ["enter the new column name",
 rename_column_input_jsList              =   [None,None,
                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_RENAME_COLUMN)+")",
                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                             "display_help_url('" + dfchelp.RENAME_COL + "')"]
+                                             "display_help_url('" + dfchelp.TRANSFORM_COLS_RENAME_COL_ID + "')"]
 
 rename_column_input_reqList             =   [0,1]
 
@@ -666,7 +666,7 @@ drop_column_input_placeholderList       =   ["drop column name",
 drop_column_input_jsList                =    [None,None,None,None,None,
                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_DROP_COLUMN)+")",
                                               "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                              "display_help_url('" + dfchelp.DROP_COL + "')"]
+                                              "display_help_url('" + dfchelp.TRANSFORM_COLS_DROP_COL_ID + "')"]
 
 drop_column_input_reqList               =   [0,1,2,3,4]
 
@@ -702,7 +702,7 @@ save_column_input_placeholderList       =   ["column to save",
 save_column_input_jsList                =    [None,None,None,None,
                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_SAVE_COLUMN)+")",
                                               "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_SAVE_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.TRANSFORM_COLS_SAVE_ID) + "')"]
 
 save_column_input_reqList               =   [0,1,2,3]
 
@@ -740,7 +740,7 @@ save_colind_input_placeholderList       =   ["column to save",
 save_colind_input_jsList                =    [None,None,None,None,None,
                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_SAVE_COLUMN_WITH_INDEX)+")",
                                               "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_SAVE_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.TRANSFORM_COLS_SAVE_ID) + "')"]
 
 save_colind_input_reqList               =   [0,1,2,3,4]
 
@@ -772,7 +772,7 @@ reorder_columns_input_placeholderList    =   ["column to move",
 reorder_columns_input_jsList             =    [None,None,
                                                "data_transform_process_cols_callback("+str(dtm.PROCESS_REORDER_COLUMNS)+")",
                                                "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_REORDER_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.TRANSFORM_COLS_REORDER_ID) + "')"]
 
 reorder_columns_input_reqList            =   [0,1]
 
@@ -805,7 +805,7 @@ copy_columns_input_placeholderList      =   ["column to copy",
 copy_columns_input_jsList               =    [None,None,None,
                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_COPY_COLUMN)+")",
                                               "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_COPY_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.TRANSFORM_COLS_COPY_ID) + "')"]
 
 copy_columns_input_reqList              =   [0,1,2]
 
@@ -848,7 +848,7 @@ apply_column_lambda_input_jsList             =    [None,None,None,None,
                                                    "data_transform_process_cols_callback("+str(dtm.PROCESS_APPLY_COLUMN)+")",
                                                    "data_transform_process_cols_callback("+str(dtm.DISPLAY_CLEAR_COLUMN)+")",
                                                    "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                                   "displayhelp(" + str(dfchelp.TRANSFORM_COLS_APPLY_FN_ID) + ")"]
+                                                   "displayhelp('" + str(dfchelp.TRANSFORM_COLS_APPLY_FN_ID) + "')"]
 
 apply_column_lambda_input_reqList            =   [0,1,2,3]
 
@@ -888,7 +888,7 @@ apply_column_gf_input_jsList             =    [None,None,None,
                                                "data_transform_process_cols_callback(" + str(dtm.PROCESS_APPLY_USER_FN_COLUMN) + ")",
                                                "data_transform_process_cols_callback(" + str(dtm.DISPLAY_CLEAR_COLUMN)+")",
                                                "data_transform_process_cols_callback(" + str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                               "displayhelp(" + str(dfchelp.TRANSFORM_COLS_APPLY_FN_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.TRANSFORM_COLS_APPLY_USER_FN_ID) + "')"]
 
 apply_column_gf_input_reqList            =   [0,1,2]
 
@@ -939,7 +939,7 @@ transform_map_input_jsList              = [None,None,None,None,None,None,None,
                                            "data_transform_process_cols_callback("+str(dtm.PROCESS_MAP_COLUMN_VALUES)+")",
                                            "data_transform_process_cols_callback("+str(dtm.PROCESS_MAP_COLUMN_FUNCTION)+")",
                                            "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                           "displayhelp(" + str(dfchelp.TRANSFORM_COLS_MAP_ID) + ")"]
+                                           "displayhelp('" + str(dfchelp.TRANSFORM_COLS_MAP_ID) + "')"]
 
 transform_map_input_reqList             =   [0,1,2,3,4,5,6]
 
@@ -968,7 +968,7 @@ transform_dummy_input_placeholderList   =   ["column to set dummies for",
 transform_dummy_input_jsList            =   [None,None,
                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_DUMMIES_COLUMN)+")",
                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DUMMY_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DUMMY_ID) + "')"]
 
 transform_dummy_input_reqList           =   [0,1]
 
@@ -1000,7 +1000,7 @@ transform_category_input_placeholderList =  ["column to make categorical",
 transform_category_input_jsList         =   [None,None,None,
                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_CAT_COLUMN)+")",
                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_CAT_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_COLS_CAT_ID) + "')"]
 
 transform_category_input_reqList        =   [0,1,2]
 
@@ -1028,7 +1028,7 @@ transform_cat_exclude_input_placeholderList =  ["column to make categorical",
 transform_cat_exclude_input_jsList      =   [None,None,None,
                                              "data_transform_process_cols_callback("+str(dtm.PROCESS_CAT_COLUMN_EXCLUDE)+")",
                                              "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_CAT_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_COLS_CAT_ID) + "')"]
 
 transform_cat_exclude_input_reqList     =   [0,1,2]
 
@@ -1061,7 +1061,7 @@ dt_data_type_input_jsList               =   [None,None,
                                              "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",1)",
                                              "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",2)",
                                              "process_transform_datatype_callback(" + str(dtm.NO_NA_OPTION) + ",3)",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + "')"]
 
 dt_data_type_input_reqList              =   [0,1]
 
@@ -1107,7 +1107,7 @@ dt_nans_data_type_input_jsList          =   [None,None,None,None,None,None,
                                              "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",1)",
                                              "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",2)",
                                              "process_transform_datatype_callback(" + str(dtm.FILL_NA_OPTION) + ",3)",
-                                             "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + "')"]
 
 dt_nans_data_type_input_reqList         =   [0,1,2,3,4,5]
 
@@ -1150,7 +1150,7 @@ dt_drop_nans_data_type_input_jsList          =   [None,None,None,None,None,
                                                   "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",1)",
                                                   "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",2)",
                                                   "process_transform_datatype_callback(" + str(dtm.DROP_NA_OPTION) + ",3)",
-                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+                                                  "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + "')"]
 
 dt_drop_nans_data_type_input_reqList         =   [0,1,2,3]
 
@@ -1185,7 +1185,7 @@ dt_check_data_type_input_jsList          =   [None,None,None,
                                               "process_transform_check_compatability(0)",
                                               "process_transform_check_compatability(1)",
                                               "process_transform_check_compatability(3)",
-                                              "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + "')"]
 
 dt_check_data_type_input_reqList         =   [0,1]
 
@@ -1223,7 +1223,7 @@ dt_str_check_data_type_input_jsList          =   [None,None,None,None,
                                                   "process_transform_check_compatability(0)",
                                                   "process_transform_check_compatability(2)",
                                                   "process_transform_check_compatability(3)",
-                                                  "displayhelp(" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + ")"]
+                                                  "displayhelp('" + str(dfchelp.TRANSFORM_COLS_DTYPE_ID) + "')"]
 
 dt_str_check_data_type_input_reqList         =   [0,1]
 
