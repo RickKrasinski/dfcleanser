@@ -63,8 +63,8 @@ def display_export_forms(exportid, detid=0, notes=False) :
     
 def display_export_sql_details_form(cmd,dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
-    from dfcleanser.common.db_utils import SQL_EXPORT
-    display_dc_sql_connector_forms(dblibid)
+    #from dfcleanser.common.db_utils import SQL_EXPORT
+    display_dc_sql_connector_forms(dblibid,False)
 
 def display_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms=None) :
     dew.display_dc_pandas_export_sql_inputs(fId,dbId,dbconparms,exportparms)
@@ -91,10 +91,26 @@ def process_export_form(formid, parms, display=True) :
     if( not (cfg.is_a_dfc_dataframe_loaded()) ) :
         print("No Dataframe Currently Loadad")
         return()
+        
+    if(formid == dem.EXPORT_DF_FROM_CENSUS) :
+        
+        opstat  =   opStatus()
+        dfid    =   parms + "_df"
+        cfg.set_config_value(cfg.CURRENT_EXPORT_DF,dfid)  
+        
+        display_export_forms(0)        
+        
+    elif(formid == dem.EXPORT_TO_DB_FROM_CENSUS) :
+        
+        opstat  =   opStatus()
+        dfid    =   parms + "_df"
+        cfg.set_config_value(cfg.CURRENT_EXPORT_DF,dfid)
+        
+        dew.display_dc_export_forms(2, 4)        
     
-    if( (formid == dem.CSV_EXPORT)  or (formid == dem.EXCEL_EXPORT) or 
-        (formid == dem.JSON_EXPORT) or (formid == dem.HTML_EXPORT) or 
-        (formid == dem.CUSTOM_EXPORT) )  :
+    elif( (formid == dem.CSV_EXPORT)  or (formid == dem.EXCEL_EXPORT) or 
+          (formid == dem.JSON_EXPORT) or (formid == dem.HTML_EXPORT) or 
+          (formid == dem.CUSTOM_EXPORT) )  :
     
         opstat  =   opStatus()
     
@@ -233,9 +249,12 @@ def export_sql_table(parms,display=True) :
     * --------------------------------------------------------
     """
     
+    
     opstat  =   opStatus()
     
     dew.display_export_main_taskbar()
+    
+    print("export_sql_table",parms)
     
     save_data_export_start()
     clock = RunningClock()

@@ -50,7 +50,7 @@ export_task_bar_jsList          =   ["export_taskbar_callback(0)",
                                      "export_taskbar_callback(1)",
                                      "export_taskbar_callback(2)",
                                      "process_pop_up_cmd(6)",
-                                     "displayhelp(" + str(dfchelp.EXPORT_MAIN_TASKBAR_ID) + ")"]
+                                     "displayhelp('" + str(dfchelp.EXPORT_MAIN_TASKBAR_ID) + "')"]
 
 export_task_bar_centered        =   False
 
@@ -134,7 +134,7 @@ pandas_export_csv_jsList        =   [None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.CSV_EXPORT)+")",
                                      "pandas_details_export_clear_export_callback("+str(dem.CSV_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
-                                     "display_help_url('"+str(dfchelp.CSV_EXPORT_URL)+"')"]
+                                     "displayhelp('"+str(dfchelp.CSV_EXPORT_URL)+"')"]
 
 pandas_export_csv_reqList       =   [0,1]
 
@@ -183,7 +183,7 @@ pandas_export_excel_jsList      =   [None,None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.EXCEL_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.EXCEL_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
-                                     "display_help_url('"+str(dfchelp.EXCEL_EXPORT_URL)+"')"]
+                                     "displayhelp('"+str(dfchelp.EXCEL_EXPORT_URL)+"')"]
 
 pandas_export_excel_reqList     =   [0,1]
 
@@ -225,7 +225,7 @@ pandas_export_json_jsList       =   [None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.JSON_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.JSON_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
-                                     "display_help_url('"+str(dfchelp.JSON_EXPORT_URL)+"')"]
+                                     "displayhelpurl('"+str(dfchelp.JSON_EXPORT_URL)+"')"]
 
 pandas_export_json_reqList      =   [0,1]
 
@@ -274,7 +274,7 @@ pandas_export_html_jsList       =   [None,None,None,None,None,None,None,
                                      "pandas_details_export_callback("+str(dem.HTML_EXPORT)+")",
                                      "pandas_details_export_clear_callback("+str(dem.HTML_EXPORT)+")",
                                      "pandas_details_export_return_callback()",
-                                     "display_help_url('"+str(dfchelp.HTML_EXPORT_URL)+"')"]
+                                     "displayhelp('"+str(dfchelp.HTML_EXPORT_URL)+"')"]
 
 pandas_export_html_reqList      =   [0,1]
 
@@ -331,7 +331,7 @@ pandas_export_sqltable_jsList       =   [None,None,None,None,None,None,None,None
                                          "pandas_export_sql_callback(1)",
                                          "pandas_details_export_clear_callback("+str(dem.SQLTABLE_EXPORT)+")",
                                          "pandas_details_export_return_callback()",
-                                         "display_help_url('"+str(dfchelp.SQLTABLE_EXPORT_URL)+"')"]
+                                         "displayhelp('"+str(dfchelp.SQLTABLE_EXPORT_URL)+"')"]
 
 pandas_export_sqltable_reqList      =   [0,1]
 
@@ -369,7 +369,7 @@ custom_export_jsList            =   [None,None,None,
                                      "custom_export_callback(0)",
                                      "custom_export_callback(1)",
                                      "custom_export_callback(2)",
-                                     "displayhelp"+str(dfchelp.EXPORT_CUSTOM_ID)+")"]
+                                     "displayhelp('"+str(dfchelp.EXPORT_CUSTOM_ID)+"')"]
 
 custom_export_reqList           =   [0,1,2]
 
