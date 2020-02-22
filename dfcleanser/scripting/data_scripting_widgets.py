@@ -47,7 +47,7 @@ dc_script_tb_jsList                    =   ["scripting_tb_callback(" + str(dsm.T
                                             "scripting_tb_callback(" + str(dsm.DELETE_CURRENT_SCRIPT) + ")",
                                             "scripting_tb_callback(" + str(dsm.RETURN_CURRENT_SCRIPT) + ")",
                                             "process_pop_up_cmd(6)",
-                                            "displayhelp(" + str(SCRIPTING_MAIN_TASKBAR_ID) + ")"]
+                                            "displayhelp('" + str(SCRIPTING_MAIN_TASKBAR_ID) + "')"]
 
 dc_script_tb_centered                  =   True
 
@@ -79,7 +79,7 @@ dc_script_input_jsList       =    [None,
                                    "process_script_callback("+str(dsm.LOAD_BACKUP_SCRIPT)+")",
                                    "process_script_callback("+str(dsm.SAVE_BACKUP_SCRIPT)+")",
                                    "process_script_callback("+str(dsm.RETURN_SCRIPT)+")",
-                                   "displayhelp(" + str(SCRIPTING_SHOW_CURRENT_ID) + ")"]
+                                   "displayhelp('" + str(SCRIPTING_SHOW_CURRENT_ID) + "')"]
 
 dc_script_input_reqList      =   [0]
 
@@ -106,7 +106,7 @@ dc_add_code_input_placeholderList = ["new script python code",
 dc_add_code_input_jsList       =    [None,
                                      "process_script_add_code_callback("+str(dsm.ADD_CODE_SCRIPT)+")",
                                      "process_script_add_code_callback("+str(dsm.ADD_CODE_RETURN_SCRIPT)+")",
-                                     "displayhelp(" + str(SCRIPTING_SHOW_CURRENT_ID) + ")"]
+                                     "displayhelp('" + str(SCRIPTING_SHOW_CURRENT_ID) + "')"]
 
 dc_add_code_input_reqList      =   [0]
 
