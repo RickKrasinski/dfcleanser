@@ -54,7 +54,7 @@ data_inspection_tb_jsList          =   ["inspection_task_bar_callback(" + str(di
                                         "inspection_task_bar_callback(" + str(dim.DISPLAY_CATEGORIES_OPTION) + ")",
                                         "inspection_task_bar_callback(" + str(dim.MAIN_OPTION) + ")",
                                         "process_pop_up_cmd(6)",
-                                        "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
+                                        "displayhelp('" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + "')"]
 
 data_inspection_tb_centered        =   False
 
@@ -105,7 +105,7 @@ data_inspection_colsearch_idList           =   ["colsearchoutdf",
                                                 "colsearchvalues0",
                                                 "colsearchvalues1",
                                                 "colsearchvalues2",
-                                                None,None,None]
+                                                None,None,None,None]
 
 data_inspection_colsearch_labelList        =   ["df_output_title",
                                                 "column_names",
@@ -114,21 +114,22 @@ data_inspection_colsearch_labelList        =   ["df_output_title",
                                                 "column_values",
                                                 "Get Rows</br> Matching</br>Numeric</br>colunm_values",
                                                 "Get </br>Non Numeric</br>Colunms",
-                                                "Return"]
+                                                "Return","Help"]
 
-data_inspection_colsearch_typeList         =   ["text","selectmultiple","text","text","text","button","button","button"]
+data_inspection_colsearch_typeList         =   ["text","selectmultiple","text","text","text","button","button","button","button"]
 
 data_inspection_colsearch_placeholderList  =   ["df title to put search results in",
                                                 "columns to search in",
                                                 "numeric column values list to search for [0, ...] ",
                                                 "numeric column values list to search for [0, ...] ",
                                                 "numeric column values list to search for [0, ...] ",
-                                                None,None,None]
+                                                None,None,None,None]
 
 data_inspection_colsearch_jsList           =   [None,None,None,None,None,
                                                 "get_col_rows_callback(0)",
                                                 "get_col_rows_callback(1)",
-                                                "inspection_task_bar_callback(1)"]
+                                                "inspection_task_bar_callback(1)",
+                                                "displayhelp('" + str(dfchelp.INSPECT_ROW_SEARCH_ID) + "')"]
 
 data_inspection_colsearch_reqList          =   [0,1,2]
 
@@ -148,7 +149,7 @@ data_inspection_nn_colsearch_idList        =   ["colsearchoutdf",
                                                 "colsearchvalues0",
                                                 "colsearchvalues1",
                                                 "colsearchvalues2",
-                                                None,None,None]
+                                                None,None,None,None]
 
 data_inspection_nn_colsearch_labelList     =   ["df_output_title",
                                                 "column_names",
@@ -157,21 +158,22 @@ data_inspection_nn_colsearch_labelList     =   ["df_output_title",
                                                 "column_values",
                                                 "Get Rows</br> Matching</br>string</br>colunm_values",
                                                 "Get </br>Numeric</br>Colunms",
-                                                "Return"]
+                                                "Return","Help"]
 
-data_inspection_nn_colsearch_typeList      =   ["text","selectmultiple","text","text","text","button","button","button"]
+data_inspection_nn_colsearch_typeList      =   ["text","selectmultiple","text","text","text","button","button","button","button"]
 
 data_inspection_nn_colsearch_placeholderList=   ["df title to put search results in",
                                                  "columns to search in",
                                                 "string column values list to search for [0, ...] ",
                                                 "string column values list to search for [0, ...] ",
                                                 "string column values list to search for [0, ...] ",
-                                                None,None,None]
+                                                None,None,None,None]
 
 data_inspection_nn_colsearch_jsList        =   [None,None,None,None,None,
                                                 "get_col_rows_callback(2)",
                                                 "get_col_rows_callback(3)",
-                                                "inspection_task_bar_callback(1)"]
+                                                "inspection_task_bar_callback(1)",
+                                                "displayhelp('" + str(dfchelp.INSPECT_ROW_NN_SEARCH_ID) + "')"]
 
 data_inspection_nn_colsearch_reqList       =   [0,1,2]
 
@@ -190,19 +192,21 @@ data_inspection_nn_colsearch_form          =   [data_inspection_nn_colsearch_id,
 """
 drop_rows_input_title                =   ""
 drop_rows_input_id                   =   "droprowsinput"
-drop_rows_input_idList               =   ["droprowthreshold",None,None]
+drop_rows_input_idList               =   ["droprowthreshold",None,None,None]
 
 drop_rows_input_labelList            =   ["Nan_Threshold",
                                           "Drop Rows </br> with % of Cols</br>  > Threshold",
-                                          "Drop Rows </br> with Nan Count</br>  > Threshold"]
+                                          "Drop Rows </br> with Nan Count</br>  > Threshold",
+                                          "Help"]
 
-drop_rows_input_typeList             =   ["text","button","button"]
+drop_rows_input_typeList             =   ["text","button","button","button"]
 
-drop_rows_input_placeholderList      =   ["",None,None]
+drop_rows_input_placeholderList      =   ["",None,None,None]
 
 drop_rows_input_jsList               =   [None,
                                           "dc_drop_rows_callback(0)",
-                                          "dc_drop_rows_callback(1)"]
+                                          "dc_drop_rows_callback(1)",
+                                          "displayhelp('" + str(dfchelp.INSPECT_ROW_NANS_ID) + "')"]
 
 drop_rows_input_reqList              =   [0]
 
@@ -210,19 +214,21 @@ drop_rows_input_short                =   True
 
 drop_columns_input_title                =   ""
 drop_columns_input_id                   =   "dropcolsinput"
-drop_columns_input_idList               =   ["dropcolthreshold",None,None]
+drop_columns_input_idList               =   ["dropcolthreshold",None,None,None]
 
 drop_columns_input_labelList            =   ["Nan_Threshold",
                                              "Drop Columns </br> with % of Rows</br>  > Threshold",
-                                             "Drop Columns </br> with Nan</br>Row Count</br>  > Threshold"]
+                                             "Drop Columns </br> with Nan</br>Row Count</br>  > Threshold",
+                                             "Help"]
 
-drop_columns_input_typeList             =   ["text","button","button"]
+drop_columns_input_typeList             =   ["text","button","button","button"]
 
-drop_columns_input_placeholderList      =   ["",None,None]
+drop_columns_input_placeholderList      =   ["",None,None,None]
 
 drop_columns_input_jsList               =   [None,
                                             "dc_drop_cols_callback(0)",
-                                            "dc_drop_cols_callback(1)"]
+                                            "dc_drop_cols_callback(1)",
+                                            "displayhelp('" + str(dfchelp.INSPECT_COL_NANS_ID) + "')"]
 
 drop_columns_input_reqList              =   [0]
 
@@ -443,7 +449,7 @@ def get_colsearch_form(df,numeric=True) :
 
     colsearch_form.set_shortForm(True)
     colsearch_form.set_gridwidth(480)
-    colsearch_form.set_buttonstyle({"font-size":12, "height":90, "width":120, "left-margin":40})
+    colsearch_form.set_buttonstyle({"font-size":12, "height":90, "width":110, "left-margin":5})
     colsearch_form.set_fullparms(True)
     
     return(colsearch_form)
@@ -504,8 +510,8 @@ def display_drop_rows() :
                               drop_rows_input_jsList,
                               drop_rows_input_reqList)
     
-    drop_form.set_buttonstyle({"font-size":12})
-    drop_form.set_gridwidth(240)
+    drop_form.set_buttonstyle({"font-size":12, "height":75, "width":110, "left-margin":1})
+    drop_form.set_gridwidth(360)
     return(drop_form.get_html())
     
     
@@ -528,8 +534,8 @@ def display_drop_cols() :
                               drop_columns_input_jsList,
                               drop_columns_input_reqList)
     
-    drop_form.set_buttonstyle({"font-size":12,"height":85})
-    drop_form.set_gridwidth(240)    
+    drop_form.set_buttonstyle({"font-size":12, "height":75, "width":110, "left-margin":1})
+    drop_form.set_gridwidth(360)    
     return(drop_form.get_html())
 
 
