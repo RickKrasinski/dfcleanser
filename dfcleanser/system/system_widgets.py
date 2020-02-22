@@ -51,7 +51,7 @@ dfmgr_input_labelList             =   ["df_title",
                                        "df_notes",
                                        "Add df</br>to</br>dfc mgr",
                                        "Drop df</br>from</br>dfc mgr",
-                                       "Update df</br>in</br>dfc mgr",
+                                       "Update df</br>Notes in</br>dfc mgr",
                                        "Return",
                                        "Help"]
 
@@ -69,7 +69,7 @@ dfmgr_input_jsList                =   [None,None,None,None,
                                        "dfmgr_callback("+str(sysm.DROP_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.UPDATE_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.RETURN_DATAFRAME)+")",
-                                       "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
+                                       "displayhelp('" + str(dfchelp.SYS_ENVIRONMENT_DFMGR_TASKBAR_ID) + "')"]
 
 dfmgr_input_reqList               =   [0]
 
@@ -107,7 +107,7 @@ dfmgr_add_input_placeholderList   =   ["dfc mgr dataframe title",
 dfmgr_add_input_jsList            =   [None,None,None,
                                        "dfmgr_callback("+str(sysm.PROCESS_ADD_DATAFRAME)+")",
                                        "dfmgr_callback("+str(sysm.RETURN_DATAFRAME)+")",
-                                       "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
+                                       "displayhelp('" + str(dfchelp.SYS_ENVIRONMENT_DFMGR_ADD_ID) + "')"]
 
 dfmgr_add_input_reqList           =   [0,1]
 
@@ -170,7 +170,7 @@ system_environment_jsList               =   ["process_system_tb_callback("+str(s
                                              "process_system_tb_callback("+str(sysm.DISPLAY_EULA)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
                                              "process_pop_up_cmd(6)",
-                                             "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + "')"]
 
 system_environment_centered             =   True
 
@@ -198,7 +198,7 @@ system_environmentB_jsList              =   ["process_system_tb_callback("+str(s
                                              "process_system_tb_callback("+str(sysm.DISPLAY_EULA)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
                                              "process_pop_up_cmd(6)",
-                                             "displayhelp(" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.SYS_ENVIRONMENT_MAIN_TASKBAR_ID) + "')"]
 
 system_environmentB_centered            =   True
 
@@ -236,10 +236,11 @@ system_chapters_tb_doc_title           =   "Chapters"
 system_chapters_tb_doc_id              =   "chaptersoptions"
 system_chapters_tb_title               =   None
 
-system_chapters_tb_keyTitleList        =   ["Load Utilities</br>Selected","Return"]
+system_chapters_tb_keyTitleList        =   ["Load Utilities</br>Selected","Return","Help"]
 
 system_chapters_tb_jsList              =   ["process_system_tb_callback("+str(sysm.PROCESS_CHAPTERS)+")",
-                                            "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")"]
+                                            "process_system_tb_callback("+str(sysm.DISPLAY_MAIN)+")",
+                                            "displayhelp('" + str(dfchelp.SYS_ENVIRONMENT_UTILS_TASKBAR_ID) + "')"]
 
 system_chapters_tb_centered            =   True
 
@@ -380,7 +381,7 @@ def display_system_chapters_taskbar() :
                                                         system_chapters_tb_centered)
     
     dfc_script_modules_tb.set_gridwidth(480)
-    dfc_script_modules_tb.set_custombwidth(240)
+    dfc_script_modules_tb.set_custombwidth(160)
     
     dfc_script_modules_tb_html      =   dfc_script_modules_tb.get_html()
 
