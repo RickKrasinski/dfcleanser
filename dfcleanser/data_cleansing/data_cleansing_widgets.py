@@ -84,7 +84,7 @@ data_cleansing_tb_jsList                =   ["cleansing_tb_callback(0)",
                                              "cleansing_tb_callback(2)",
                                              "cleansing_tb_callback(3)",
                                              "process_pop_up_cmd(6)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_MAIN_TASKBAR_ID) + "')"]
 
 data_cleansing_tb_centered              =   True
 
@@ -93,9 +93,21 @@ data_cleansing_pu_tb_keyTitleList       =   ["Cleanse</br>Numeric</br>Column",
                                              "Cleanse</br>Row",
                                              "Clear","Reset","Help"]
 
+
+
+
+
 """
 #--------------------------------------------------------------------------
-#    columns uniques change values input
+#--------------------------------------------------------------------------
+#    columns change values forms
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#    numeric columns change values input
 #--------------------------------------------------------------------------
 """
 change_values_input_title               =   "Change Data Value"
@@ -117,14 +129,14 @@ change_values_input_jsList              =   [None,None,
                                              "show_uniques_callback()",
                                              "change_uvals_callback(0)",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_CHANGE_ID) + "')"]
 
 change_values_input_reqList             =   [0,1]
 change_values_input_short               =   True
 
 """
 #--------------------------------------------------------------------------
-#    non numeric columns uniques change values input
+#    non numeric columns change values input
 #--------------------------------------------------------------------------
 """
 nn_change_values_input_title            =   "Change Data Value"
@@ -146,41 +158,23 @@ nn_change_values_input_jsList           =   [None,None,
                                              "show_uniques_callback()",
                                              "change_uvals_callback(1)",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_NO_NANS_CHANGE_ID) + "')"]
 
 nn_change_values_input_reqList          =   [0,1]
 nn_change_values_input_short            =   True
 
-"""
-#--------------------------------------------------------------------------
-#    non numeric columns uniques change values input
-#--------------------------------------------------------------------------
-"""
-cat_change_values_input_title           =   "Change Data Value"
-cat_change_values_input_id              =   "dccatchangevalsinput"
-cat_change_values_input_idList          =   ["changecatval","changencatval",None,None,None]
-
-cat_change_values_input_labelList       =   ["current_category",
-                                             "new_category",
-                                             "Rename</br>Category",
-                                             "Return",
-                                             "Help"]
-
-cat_change_values_input_typeList        =   ["text","text","button","button","button"]
-
-cat_change_values_input_placeholderList =   ["","",None,None,None]
-
-cat_change_values_input_jsList          =   [None,None,
-                                             "process_cols_callback("+ str(dcm.PROCESS_RENAME_CATEGORY) + ")",
-                                             "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
-
-cat_change_values_input_reqList         =   [0,1]
-cat_change_values_input_short           =   True
 
 """
 #--------------------------------------------------------------------------
-#    numeric find values input
+#--------------------------------------------------------------------------
+#    columns find unique values forms
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#    numeric find unique values input
 #--------------------------------------------------------------------------
 """
 find_values_input_title                 =   "Find Data Value"
@@ -201,16 +195,15 @@ find_values_input_placeholderList       =   ["(default : min column value)",
 
 find_values_input_jsList                =   [None,None,
                                              "find_uvals_callback()",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_UNIQUE_VALS_ID) + "')"]
 
 find_values_input_reqList               =   [0,1]
 find_values_input_short                 =   True
 
 
-
 """
 #--------------------------------------------------------------------------
-#    non numeric find values input
+#    non numeric find unique values input
 #--------------------------------------------------------------------------
 """
 nn_find_values_input_title              =   "Find Data Value"
@@ -228,14 +221,17 @@ nn_find_values_input_placeholderList    =   ["string to find in column",None,Non
 
 nn_find_values_input_jsList             =   [None,
                                              "find_nn_uvals_callback()",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_UNIQUE_VALS_ID) + "')"]
 
 nn_find_values_input_reqList            =   [0]
 nn_find_values_input_short              =   True
 
+
 """
 #--------------------------------------------------------------------------
-#    change row values input
+#--------------------------------------------------------------------------
+#    df row cleanser input
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 change_row_values_input_title            =   "Change Data Value"
@@ -257,10 +253,20 @@ change_row_values_input_jsList           =   [None,None,
                                              "change_rowvals_callback(0)",
                                              "change_rowvals_callback(1)",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_ROW_ID) + "')"]
 
 change_row_values_input_reqList          =   [0,1]
 change_row_values_input_short            =   True
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    column operations input forms
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -283,10 +289,11 @@ col_round_input_placeholderList         =   ["",None,None,None]
 col_round_input_jsList                  =   [None,
                                              "round_col_vals_callback()",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_ROUND_COLUMN_ID) + "')"]
 
 col_round_input_reqList                 =   [0]
 col_round_input_short                   =   True
+
 
 """
 #--------------------------------------------------------------------------
@@ -313,7 +320,7 @@ transform_remwhite_input_placeholderList =  ["whitespace chars",
 transform_remwhite_input_jsList         =   [None,None,
                                              "whitespace_vals_callback()",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_ROW_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_REMOVE_WHITESPACE_ID) + "')"]
 
 transform_remwhite_input_reqList        =   [0,1]
 
@@ -496,6 +503,7 @@ cata_cleanse_change_tb_jsList           =   ["process_cols_callback(" + str(dcm.
 
 cata_cleanse_change_tb_centered         =   True
 
+
 """
 #--------------------------------------------------------------------------
 #    cleanse numeric nonans cols change task bar
@@ -580,39 +588,12 @@ nn_nonans_col_cleanse_change_pu_tb_keyTitleList =   ["Drop</br>Column",
                                                      "Change</br>Data</br>Type"]
 
 
-"""
-#--------------------------------------------------------------------------
-#    convert datatype task bar
-#--------------------------------------------------------------------------
-"""
-conv_datatype_doc_title                 =   ""
-conv_datatype_title                     =   ""
-conv_datatype_id                        =   "convdatatype"
-
-conv_datatype_keyTitleList              =   ["Convert DataType"]
-conv_datatype_jsList                    =   ["process_cols_na_callback(41)"]
-
-conv_datatype_centered                  =   True
-
-"""
-#--------------------------------------------------------------------------
-#    list unique values task bar
-#--------------------------------------------------------------------------
-"""
-list_unique_doc_title                   =   ""
-list_unique_title                       =   ""
-list_unique_id                          =   "listuniques"
-
-list_unique_keyTitleList                =   ["Cleanse Column"]
-list_unique_jsList                      =   ["show_details_callback()"]
-
-list_unique_centered                    =   True
 
 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   data type components 
+#   na components 
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -620,138 +601,116 @@ list_unique_centered                    =   True
 
 """
 #--------------------------------------------------------------------------
-#   numeric data type input (fillna) 
+#   numeric fillna form
 #--------------------------------------------------------------------------
 """
-dt_data_type_fn_input_title             =   "Change Data Type"
-dt_data_type_fn_input_id                =   "dtfndatatypeinput"
-dt_data_type_fn_input_idList            =   ["dtnaoption",
-                                             "dtfillvalue",
-                                             "dtfillmethod",
-                                             "dtfilllimit",
+col_fillna_input_title                  =   "Change Data Type"
+col_fillna_input_id                     =   "fillnainput"
+col_fillna_input_idList                 =   ["naoption",
+                                             "fillvalue",
+                                             "fillmethod",
+                                             "filllimit",
                                              None,None,None]
 
-dt_data_type_fn_input_labelList         =   ["na_option",
+col_fillna_input_labelList              =   ["na_option",
                                              "fillna_value",
-                                             "fillna_method",
-                                             "limit",
-                                             "Change</br> DataType",
-                                             "Return","Help"]
-
-dt_data_type_fn_input_typeList          =   ["select","text","select","text",
-                                             "button","button","button"]
-
-dt_data_type_fn_input_placeholderList   =   ["na option",
-                                             "fillna value",
-                                             "fillna method",
-                                             "limit (default = None)",
-                                             None,None,None]
-
-dt_data_type_fn_input_jsList            =   [None,None,None,None,
-                                             "process_cleanse_datatype_callback(" + str(dcm.FILL_NA_OPTION) + ",0,1)",
-                                             "process_cleanse_datatype_callback(" + str(dcm.FILL_NA_OPTION) + ",1,1)",
-                                             "display_help_url('" + str(dfchelp.PANDAS_FILLNA) + "')"]
-
-dt_data_type_fn_input_reqList           =   [0,1,2]
-
-
-"""
-#--------------------------------------------------------------------------
-#   numeric non data type input (fillna) 
-#--------------------------------------------------------------------------
-"""
-ndt_data_type_fn_input_title            =   "Change Data Type"
-ndt_data_type_fn_input_id               =   "dtfndatatypeinput"
-ndt_data_type_fn_input_idList           =   ["dtfillvalue",
-                                             "dtfillmethod",
-                                             "dtfilllimit",
-                                             None,None,None]
-
-ndt_data_type_fn_input_labelList        =   ["fillna_value",
                                              "fillna_method",
                                              "limit",
                                              "Fill</br>Nans",
                                              "Return","Help"]
 
-ndt_data_type_fn_input_typeList         =   ["text","select","text",
+col_fillna_input_typeList               =   ["select","text","select","text",
                                              "button","button","button"]
 
-ndt_data_type_fn_input_placeholderList  =   ["fillna value",
+col_fillna_input_placeholderList        =   ["na option",
+                                             "fillna value",
                                              "fillna method",
                                              "limit (default = None)",
                                              None,None,None]
 
-ndt_data_type_fn_input_jsList           =   [None,None,None,
-                                             "process_cols_dropna_fillna_transform_callback(" + str(dcm.PROCESS_FILLNA_OPTION) + ")",
-                                             "process_cols_dropna_fillna_transform_callback(" + str(dcm.MAIN_OPTION) + ")",
-                                             "display_help_url('" + str(dfchelp.PANDAS_FILLNA) + "')"]
-
-ndt_data_type_fn_input_reqList          =   [0,1]
-
-
-"""
-#--------------------------------------------------------------------------
-#   non numeric data type fill na input 
-#--------------------------------------------------------------------------
-"""
-dt_nn_fn_data_type_input_title           =   "Change Data Type"
-dt_nn_fn_data_type_input_id              =   "dtdatatypeinput"
-dt_nn_fn_data_type_input_idList          =   ["dtnnnaoption",
-                                              "dtnnfillvalue",
-                                              "dtnnfilllimit",
-                                              None,None,None]
-
-dt_nn_fn_data_type_input_labelList       =   ["na_option",
-                                              "fillna_value",
-                                              "limit",
-                                              "Change</br> DataType",
-                                              "Return","Help"]
-
-dt_nn_fn_data_type_input_typeList        =   ["select","text","text",
-                                             "button","button","button"]
-
-dt_nn_fn_data_type_input_placeholderList =   ["na option",
-                                              "fillna value",
-                                              "limit (default = None)",
-                                              None,None,None]
-
-dt_nn_fn_data_type_input_jsList          =   [None,None,None,
-                                              "process_cleanse_datatype_callback(" + str(dcm.FILL_NA_OPTION) + ",0,0)",
-                                              "process_cleanse_datatype_callback(" + str(dcm.FILL_NA_OPTION) + ",1,0)",
-                                              "display_help_url('" + str(dfchelp.PANDAS_FILLNA) + "')"]
-
-dt_nn_fn_data_type_input_reqList         =   [0,1]
-
-
-"""
-#--------------------------------------------------------------------------
-#   non numeric non data type fill na input 
-#--------------------------------------------------------------------------
-"""
-ndt_nn_fn_data_type_input_title          =   "Change Data Type"
-ndt_nn_fn_data_type_input_id             =   "dtdatatypeinput"
-ndt_nn_fn_data_type_input_idList         =   ["dtnnfillvalue",
-                                              "dtnnfilllimit",
-                                              None,None,None]
-
-ndt_nn_fn_data_type_input_labelList      =   ["fillna_value",
-                                              "limit",
-                                              "Fill</br>Nans",
-                                              "Return","Help"]
-
-ndt_nn_fn_data_type_input_typeList       =   ["text","text",
-                                             "button","button","button"]
-
-ndt_nn_fn_data_type_input_placeholderList =   ["fillna value",
-                                              "limit (default = None)",
-                                              None,None,None]
-
-ndt_nn_fn_data_type_input_jsList         =   [None,None,None,
+col_fillna_input_jsList                 =   [None,None,None,None,
                                               "process_cols_dropna_fillna_transform_callback(" + str(dcm.PROCESS_FILLNA_OPTION) + ")",
                                               "process_cols_dropna_fillna_transform_callback(" + str(dcm.MAIN_OPTION) + ")",
-                                              "display_help_url('" + str(dfchelp.PANDAS_FILLNA) + "')"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_FILLNA_COLUMN_ID) + "')"]
 
-ndt_nn_fn_data_type_input_reqList        =   [0]
+col_fillna_input_reqList                =   [0,1,2]
+
+
+"""
+#--------------------------------------------------------------------------
+#   non numeric fillna form
+#--------------------------------------------------------------------------
+"""
+nn_col_fillna_input_title               =   "Fill Na"
+nn_col_fillna_input_id                  =   "nnfillna"
+nn_col_fillna_input_idList              =   ["naoption",
+                                             "dropanyall",
+                                              "dropthresh",
+                                              None,None,None]
+
+nn_col_fillna_input_labelList           =   ["na_option",
+                                             "dropna_any_or_all",
+                                             "dropna_threshold",
+                                              "Drop</br>Nans",
+                                              "Return","Help"]
+
+nn_col_fillna_input_typeList            =   ["select","text","text",
+                                             "button","button","button"]
+
+nn_col_fillna_input_placeholderList     =   ["na option",
+                                             "dropna type",
+                                              "threshold (default = None)",
+                                              None,None,None]
+
+nn_col_fillna_input_jsList              =   [None,None,None,
+                                              "process_cols_dropna_fillna_transform_callback(" + str(dcm.PROCESS_DROPNA_OPTION) + ")",
+                                              "process_cols_dropna_fillna_transform_callback(" + str(dcm.MAIN_OPTION) + ")",
+                                              "displayhelp('" + str(dfchelp.CLEANSE_FILLNA_COLUMN_ID) + "')"]
+
+nn_col_fillna_input_reqList             =   [0]
+
+
+"""
+#--------------------------------------------------------------------------
+#   numeric fillna form
+#--------------------------------------------------------------------------
+"""
+col_dropna_input_title                  =   "Drop Na"
+col_dropna_input_id                     =   "dropnainput"
+col_dropna_input_idList                 =   ["naoption",
+                                             "dropnaanyall",
+                                             "dropnathreshold",
+                                             None,None,None]
+
+col_dropna_input_labelList              =   ["na_option",
+                                             "dropna_any_or_all",
+                                             "dropna_threshold",
+                                             "Drop</br>Nans",
+                                             "Return","Help"]
+
+col_dropna_input_typeList               =   ["select","select","text",
+                                             "button","button","button"]
+
+col_dropna_input_placeholderList        =   ["na option",
+                                             "dropna type",
+                                             "dropna threshold (default = None)",
+                                             None,None,None]
+
+col_dropna_input_jsList                 =   [None,None,None,
+                                              "process_cols_dropna_fillna_transform_callback(" + str(dcm.PROCESS_DROPNA_OPTION) + ")",
+                                              "process_cols_dropna_fillna_transform_callback(" + str(dcm.MAIN_OPTION) + ")",
+                                             "displayhelp('" + str(dfchelp.CLEANSE_DROPNA_COLUMN_ID) + "')"]
+
+col_dropna_input_reqList                =   [0,1,2]
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    compatability check forms
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 
 """
@@ -775,7 +734,7 @@ nn_alpha_compat_input_placeholderList   =   ["check sample size (default : 100%"
 nn_alpha_compat_input_jsList            =   [None,
                                              "process_nn_check_compatability(0)",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_CHECK_ALPHA_ID) + "')"]
 
 nn_alpha_compat_input_reqList           =   [0]
 nn_alpha_compat_input_short             =   True
@@ -802,7 +761,7 @@ nn_numeric_compat_input_placeholderList  =   ["check sample size (default : 100%
 nn_numeric_compat_input_jsList           =   [None,
                                              "process_nn_check_compatability(1)",
                                              "cleansing_tb_callback(3)",
-                                             "displayhelp(" + str(dfchelp.CLEANSE_NUM_UNIQUE_ID) + ")"]
+                                             "displayhelp('" + str(dfchelp.CLEANSE_CHECK_NUMERIC_ID) + "')"]
 
 nn_numeric_compat_input_reqList          =   [0]
 nn_numeric_compat_input_short            =   True
@@ -815,6 +774,35 @@ nn_numeric_compat_input_short            =   True
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
+
+"""
+#--------------------------------------------------------------------------
+#    category add forms
+#--------------------------------------------------------------------------
+"""
+
+cat_change_values_input_title           =   "Change Data Value"
+cat_change_values_input_id              =   "dccatchangevalsinput"
+cat_change_values_input_idList          =   ["changecatval","changencatval",None,None,None]
+
+cat_change_values_input_labelList       =   ["current_category",
+                                             "new_category",
+                                             "Rename</br>Category",
+                                             "Return",
+                                             "Help"]
+
+cat_change_values_input_typeList        =   ["text","text","button","button","button"]
+
+cat_change_values_input_placeholderList =   ["","",None,None,None]
+
+cat_change_values_input_jsList          =   [None,None,
+                                             "process_cols_callback("+ str(dcm.PROCESS_RENAME_CATEGORY) + ")",
+                                             "cleansing_tb_callback(3)",
+                                             "displayhelp('" + str(dfchelp.CLEANSE_CAT_COL_RENAME_ID) + "')"]
+
+cat_change_values_input_reqList         =   [0,1]
+cat_change_values_input_short           =   True
+
 
 """
 #--------------------------------------------------------------------------
@@ -838,7 +826,7 @@ add_category_input_placeholderList        =   ["new category name",None,None,Non
 add_category_input_jsList                 =   [None,
                                                "process_cat_function_callback(" + str(dcm.PROCESS_ADD_CATEGORY) + ")",
                                                "cleansing_tb_callback(3)",
-                                               "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.CLEANSE_CAT_COL_ADD_ID) + "')"]
 
 add_category_input_reqList                =   [0]
 
@@ -864,7 +852,7 @@ remove_category_input_placeholderList      =   ["new category name",None,None,No
 remove_category_input_jsList               =   [None,
                                                "process_cat_function_callback(" + str(dcm.PROCESS_REMOVE_CATEGORY) + ")",
                                                "cleansing_tb_callback(3)",
-                                               "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.CLEANSE_CAT_COL_REMOVE_ID) + "')"]
 
 remove_category_input_reqList              =   [0]
 
@@ -878,7 +866,7 @@ remove_cat_whtspc_input_id                 =   "removewscatinput"
 remove_cat_whtspc_input_idList             =   ["remwhtspccatname",
                                                None,None,None]
 
-remove_cat_whtspc_input_labelList          =   ["category_name_to_remove_whitespace",
+remove_cat_whtspc_input_labelList          =   ["category_name(s)_to_remove_whitespace_from",
                                                "Remove</br>Whitespace",
                                                "Return",
                                                "Help"]
@@ -890,7 +878,7 @@ remove_cat_whtspc_input_placeholderList    =   ["category name",None,None,None]
 remove_cat_whtspc_input_jsList             =   [None,
                                                "process_cat_function_callback(" + str(dcm.PROCESS_REMOVE_CATEGORY_WHITESPACE) + ")",
                                                "cleansing_tb_callback(3)",
-                                               "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.CLEANSE_CAT_COL_WHITESPACE_ID) + "')"]
 
 remove_cat_whtspc_input_reqList            =   [0]
 
@@ -918,7 +906,7 @@ reorder_category_input_placeholderList    =   ["new categories ordered list","or
 reorder_category_input_jsList             =   [None,None,
                                                "process_cat_function_callback(" + str(dcm.PROCESS_REORDER_CATEGORY) + ")",
                                                "cleansing_tb_callback(3)",
-                                               "displayhelp(" + str(dfchelp.INSPECT_MAIN_TASKBAR_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.CLEANSE_CAT_COL_REORDER_ID) + "')"]
 
 reorder_category_input_reqList            =   [0]
 
@@ -933,9 +921,11 @@ cat_cleansing_tb_id                     =   "category cleanseingoptionstb"
 
 cat_cleansing_tb_keyTitleList           =   ["ReCleanse Category Column"]
 
-cat_cleansing_tb_jsList                 =   ["process_cols_callback(" + str(dcm.CLEANSE_CURRENT_CATEGORY_COLUMN) + ")"]
+cat_cleansing_tb_jsList                 =   ["process_cols_callback(" + str(dcm.GENERIC_COLUMN_OPTION) + ")"]
 
 cat_cleansing_tb_centered               =   True
+
+
 
 
 
@@ -944,8 +934,7 @@ import dfcleanser.data_inspection.data_inspection_widgets as diw
 
 datacleansing_inputs        =   [change_values_input_id, nn_change_values_input_id, cat_change_values_input_id,
                                  find_values_input_id, nn_find_values_input_id, change_row_values_input_id,
-                                 col_round_input_id, transform_remwhite_input_id, dt_data_type_fn_input_id,
-                                 ndt_data_type_fn_input_id, dt_nn_fn_data_type_input_id, ndt_nn_fn_data_type_input_id,
+                                 col_round_input_id, transform_remwhite_input_id, col_fillna_input_id, nn_col_fillna_input_title,
                                  nn_alpha_compat_input_id, nn_numeric_compat_input_id, add_category_input_id,
                                  remove_category_input_id, remove_cat_whtspc_input_id, reorder_category_input_id,
                                  diw.data_cleansing_df_input_id]
@@ -1943,27 +1932,6 @@ def display_option(df,colname,input_html,heading_html) :
     display_pop_up_buffer()
 
 
-def display_fillna_option() :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display fillna option
-    * 
-    * parms :
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-                
-    df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
-    colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-    
-    common_column_heading_html  =   "<div>Fill Na</div><br>"
-    cleansing_text_input_html   =   get_fillna_display(df,colname,False,cfg.DataCleansing_ID)+"<br><br><br><br><br><br>"
-
-    display_option(df,colname,cleansing_text_input_html,common_column_heading_html)
-
-
 def display_round_option() :
     """
     * -------------------------------------------------------------------------- 
@@ -2110,7 +2078,28 @@ def get_dt_js_list(jslist,dfc_id) :
     return(new_js_list)
 
 
-def get_fillna_display(df,colname,withdt,dfc_id) :
+def display_fillna_option() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display fillna option
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+                
+    df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+    colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
+    
+    common_column_heading_html  =   "<div>Fill Na</div><br>"
+    cleansing_text_input_html   =   get_fillna_display(df,colname,cfg.DataCleansing_ID)+"<br><br><br><br><br><br>"
+
+    display_option(df,colname,cleansing_text_input_html,common_column_heading_html)
+
+
+def get_fillna_display(df,colname,dfc_id) :
     """
     * -------------------------------------------------------------------------- 
     * function : get the fillna html
@@ -2126,97 +2115,38 @@ def get_fillna_display(df,colname,withdt,dfc_id) :
 
     if(is_numeric_col(df,colname)) :
         
-        if(withdt) :
-
-            grid_input_form     =   InputForm(dt_data_type_fn_input_id,
-                                              dt_data_type_fn_input_idList,
-                                              dt_data_type_fn_input_labelList,
-                                              dt_data_type_fn_input_typeList,
-                                              dt_data_type_fn_input_placeholderList,
-                                              get_dt_js_list(dt_data_type_fn_input_jsList,dfc_id),
-                                              dt_data_type_fn_input_reqList)
+        grid_input_form     =   InputForm(col_fillna_input_id,
+                                          col_fillna_input_idList,
+                                          col_fillna_input_labelList,
+                                          col_fillna_input_typeList,
+                                          col_fillna_input_placeholderList,
+                                          col_fillna_input_jsList,
+                                          col_fillna_input_reqList)
             
-        else :
-            
-            grid_input_form     =   InputForm(ndt_data_type_fn_input_id,
-                                              ndt_data_type_fn_input_idList,
-                                              ndt_data_type_fn_input_labelList,
-                                              ndt_data_type_fn_input_typeList,
-                                              ndt_data_type_fn_input_placeholderList,
-                                              ndt_data_type_fn_input_jsList,
-                                              ndt_data_type_fn_input_reqList)
-                
     else :
         
-        if(withdt) :
-            
-            grid_input_form     =   InputForm(dt_nn_fn_data_type_input_id,
-                                              dt_nn_fn_data_type_input_idList,
-                                              dt_nn_fn_data_type_input_labelList,
-                                              dt_nn_fn_data_type_input_typeList,
-                                              dt_nn_fn_data_type_input_placeholderList,
-                                              get_dt_js_list(dt_nn_fn_data_type_input_jsList,dfc_id),
-                                              dt_nn_fn_data_type_input_reqList)
-            
-        else :
-            
-            grid_input_form     =   InputForm(ndt_nn_fn_data_type_input_id,
-                                              ndt_nn_fn_data_type_input_idList,
-                                              ndt_nn_fn_data_type_input_labelList,
-                                              ndt_nn_fn_data_type_input_typeList,
-                                              ndt_nn_fn_data_type_input_placeholderList,
-                                              ndt_nn_fn_data_type_input_jsList,
-                                              ndt_nn_fn_data_type_input_reqList)
+        grid_input_form     =   InputForm(nn_col_fillna_input_id,
+                                          nn_col_fillna_input_idList,
+                                          nn_col_fillna_input_labelList,
+                                          nn_col_fillna_input_typeList,
+                                          nn_col_fillna_input_placeholderList,
+                                          nn_col_fillna_input_jsList,
+                                          nn_col_fillna_input_reqList)
     
     selectDicts     =   []
     
-    if(withdt) : 
-        if(dfc_id == cfg.DataTransform_ID) :
-            naoption         =   {"default" : "fillna", "list" : ["dropna","fillna"],"callback":"dtselect_dropna_change"}
-        else :
-            naoption         =   {"default" : "fillna", "list" : ["dropna","fillna"],"callback":"dtcselect_dropna_change"}
-        
-        selectDicts.append(naoption)
+    naopts          =   {"default" : "fillna", "list" : ["fillna","dropna"],"callback" : "change_cleanse_na_opt"}
+    selectDicts.append(naopts)
+    
     
     if(is_numeric_col(df,colname)) :
         fillnas         =   {"default" : "None - use fillna_value", "list" : ["None - use fillna_value","mean","bfill","ffill"]}
         selectDicts.append(fillnas)
     
-    if(is_numeric_col(df,colname)) :
-        
-        if(withdt) :
-        
-            get_select_defaults(grid_input_form,
-                                dt_data_type_fn_input_id,
-                                dt_data_type_fn_input_idList,
-                                dt_data_type_fn_input_typeList,
-                                selectDicts)
-            
-        else :
-            
-            get_select_defaults(grid_input_form,
-                                ndt_data_type_fn_input_id,
-                                ndt_data_type_fn_input_idList,
-                                ndt_data_type_fn_input_typeList,
-                                selectDicts)
-            
-    
-    else :
-    
-        if(withdt) :
-            
-            get_select_defaults(grid_input_form,
-                                dt_nn_fn_data_type_input_id,
-                                dt_nn_fn_data_type_input_idList,
-                                dt_nn_fn_data_type_input_typeList,
-                                selectDicts)
-            
-        else :
-            
-            get_select_defaults(grid_input_form,
-                                ndt_nn_fn_data_type_input_id,
-                                ndt_nn_fn_data_type_input_idList,
-                                ndt_nn_fn_data_type_input_typeList,
+        get_select_defaults(grid_input_form,
+                                col_fillna_input_id,
+                                col_fillna_input_idList,
+                                col_fillna_input_typeList,
                                 selectDicts)
     
     grid_input_form.set_gridwidth(400)
@@ -2226,10 +2156,10 @@ def get_fillna_display(df,colname,withdt,dfc_id) :
     return(grid_input_form.get_html())
 
 
-def display_fillna(df,colname,withdt,dfc_id) :
+def display_dropna_option() :
     """
     * -------------------------------------------------------------------------- 
-    * function : display dropna form
+    * function : display dropna option
     * 
     * parms :
     *
@@ -2237,29 +2167,58 @@ def display_fillna(df,colname,withdt,dfc_id) :
     *  N/A
     * --------------------------------------------------------
     """
+                
+    df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+    colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
     
-    print("display_fillna",colname,withdt,dfc_id)
-    
-    from dfcleanser.data_transform.data_transform_columns_widgets import display_column_uniques
-    uniques_html    =   display_column_uniques(df,colname,False)        
+    common_column_heading_html  =   "<div>Drop Na</div><br>"
+    cleansing_text_input_html   =   get_dropna_display(df,colname,cfg.DataCleansing_ID)+"<br><br><br><br><br><br>"
 
-    from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
-    col_stats_html  =   display_col_stats(df,colname,False,True)
-    
-    fillna_html     =   get_fillna_display(df,colname,withdt) + "<br><br><br><br>"
-    
-    heading_html    =   "<div>Fill nas</div><br>"
+    display_option(df,colname,cleansing_text_input_html,common_column_heading_html)
 
-    gridclasses     =   ["dfc-top","dfc-middle","dfcleanser-common-grid-header","dfc-bottom"]
-    gridhtmls       =   [uniques_html,col_stats_html,heading_html,fillna_html]
 
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) : 
-        display_generic_grid("col-change-datatype-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("col-change-datatype-pop-up-wrapper",gridclasses,gridhtmls)
-                    
-    from dfcleanser.common.display_utils import display_pop_up_buffer
-    display_pop_up_buffer()
+def get_dropna_display(df,colname,dfc_id) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the dropna html
+    * 
+    * parms :
+    *   df      -   dataframe
+    *   colname -   column name
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    grid_input_form     =   InputForm(col_dropna_input_id,
+                                      col_dropna_input_idList,
+                                      col_dropna_input_labelList,
+                                      col_dropna_input_typeList,
+                                      col_dropna_input_placeholderList,
+                                      col_dropna_input_jsList,
+                                      col_dropna_input_reqList)
+            
+    
+    selectDicts     =   []
+    
+    naopts          =   {"default" : "dropna", "list" : ["fillna","dropna"],"callback" : "change_cleanse_na_opt"}
+    selectDicts.append(naopts)
+    
+    droptype        =   {"default" : "any", "list" : ["any","all"]}
+    selectDicts.append(droptype)
+    
+    get_select_defaults(grid_input_form,
+                        col_dropna_input_id,
+                        col_dropna_input_idList,
+                        col_dropna_input_typeList,
+                        selectDicts)
+    
+    grid_input_form.set_gridwidth(400)
+    grid_input_form.set_shortForm(True)
+    grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":120, "left-margin":5})
+    
+    return(grid_input_form.get_html())
 
 
 def display_check_alpha_num(option,colname) :
@@ -2285,9 +2244,6 @@ def display_check_alpha_num(option,colname) :
         from dfcleanser.common.table_widgets import get_table_value
         nn_df_describe_table = get_table_value("dcnngendfdesc")        
 
-        #set_col_major_table_scroll(nn_df_describe_table,SCROLL_LEFT)
-
-        #from dfcleanser.common.display_utils import display_df_nn_describe
         nn_cols_html    =   nn_df_describe_table.get_html() 
                     
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]

@@ -377,6 +377,29 @@ def display_data_cleansing(option,parms=None) :
             
                 dcw.display_col_data()
                 
+        elif(option ==  dcm.DISPLAY_DROPNA_OPTION ) :
+            dcw.display_dropna_option()
+            
+        elif(option ==  dcm.PROCESS_DROPNA_OPTION) :
+            
+            print("PROCESS_DROPNA_OPTION")
+            return()
+                
+            clock = RunningClock()
+            clock.start()
+            opstat  =   fillna_column_data(parms)
+            clock.stop()
+                
+            print("\n")
+            
+            if(opstat.get_status()) :
+                display_grid_status("Column " + cfg.get_config_value(cfg.CLEANSING_COL_KEY) + " nan rows filled successfully.")
+            else :
+                display_exception(opstat)                
+            
+                dcw.display_col_data()
+
+                
         elif(option ==  dcm.DISPLAY_DATA_TYPE_OPTION) :
             
             df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
