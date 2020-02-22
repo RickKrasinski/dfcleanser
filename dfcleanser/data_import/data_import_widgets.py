@@ -59,7 +59,7 @@ import_task_bar_jsList          =   ["import_taskbar_callback(0)",
                                      "import_taskbar_callback(1)",
                                      "import_taskbar_callback(2)",
                                      "process_pop_up_cmd(6)",
-                                     "displayhelp(" + str(dfchelp.IMPORT_MAIN_TASKBAR_ID) + ")"]
+                                     "displayhelp('" + str(dfchelp.IMPORT_MAIN_TASKBAR_ID) + "')"]
 
 import_task_bar_centered        =   True
 
@@ -554,7 +554,7 @@ custom_import_jsList            =   [None,None,None,
                                      "custom_import_callback("+str(dim.PROCESS_CUSTOM_IMPORT)+")",
                                      "custom_import_callback("+str(dim.CLEAR_CUSTOM_IMPORT)+")",
                                      "custom_import_callback("+str(dim.RETURN_CUSTOM_IMPORT)+")",
-                                     "displayhelp(" + str(dfchelp.IMPORT_CUSTOM_ID) + ")"]
+                                     "displayhelp('" + str(dfchelp.IMPORT_CUSTOM_ID) + "')"]
 
 custom_import_reqList           =   [0,1]
 
@@ -857,7 +857,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
             
 
 
-def display_dc_sql_connector_forms(dblibid) :
+def display_dc_sql_connector_forms(dblibid,forImport=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : get sql connector form
@@ -941,13 +941,16 @@ def display_dc_sql_connector_forms(dblibid) :
     sqlimportid     =   cfg.get_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY) 
     if(sqlimportid is None) :
         sqlimportid =  dim.SQLTABLE_IMPORT  
+    
         
     from dfcleanser.common.db_utils import display_db_connector_inputs, SQL_IMPORT, SQL_QUERY, SQL_EXPORT
-    if(sqlimportid == dim.SQLTABLE_IMPORT) :
-        display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_IMPORT)
+    
+    if(forImport) :
+        if(sqlimportid == dim.SQLTABLE_IMPORT) :
+            display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_IMPORT)
         
-    elif(sqlimportid == dim.SQLQUERY_IMPORT) :
-        display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_QUERY)
+        elif(sqlimportid == dim.SQLQUERY_IMPORT) :
+            display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_QUERY)
         
     else :
         display_db_connector_inputs(cfg.get_config_value(cfg.CURRENT_DB_ID_KEY),inparms,SQL_EXPORT)
