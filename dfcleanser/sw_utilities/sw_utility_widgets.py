@@ -50,7 +50,7 @@ build_utility_tb_jsList           =   ["build_utility_callback("+str(swum.LIST_O
                                        "build_utility_callback("+str(swum.FUNCS_OPTION)+")",
                                        "build_utility_clear_callback()",
                                        "process_pop_up_cmd(6)",
-                                       "displayhelp(" + str(dfchelp.LIST_UTILITY_MAIN_TASKBAR_ID) + ")"]
+                                       "displayhelp('" + str(dfchelp.DS_UTILITY_MAIN_TASKBAR_ID) + "')"]
 
 build_utility_tb_centered         =   True
 
@@ -80,7 +80,7 @@ build_list_utility_input_placeholderList = ["enter list name in 'Notebook' lists
 build_list_utility_input_jsList         =    [None,None,
                                               "build_utility_callback(" + str(swum.MAINT_LIST_OPTION) + ")",
                                               "build_utility_clear_callback()",
-                                              "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_LIST_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.DS_LIST_UTILITY_ID) + "')"]
 
 build_list_utility_input_reqList        =   [0,1]
 
@@ -126,7 +126,7 @@ maint_list_utility_input_jsList         =    [None,None,None,None,
                                               "build_utility_callback("+str(swum.ADD_LIST_OPTION)+")",
                                               "build_utility_callback("+str(swum.CLEAR_LIST_OPTION)+")",
                                               "build_utility_clear_callback()",
-                                              "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_LIST_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.DS_LIST_UTILITY_USER_ID) + "')"]
 
 maint_list_utility_input_reqList        =   [0,1,2]
 
@@ -165,7 +165,7 @@ build_dict_utility_input_placeholderList = ["enter dict name in 'Notebook' dicts
 build_dict_utility_input_jsList         =    [None,None,
                                               "build_utility_callback(" + str(swum.MAINT_DICT_OPTION) + ")",
                                               "build_utility_clear_callback()",
-                                              "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_DICT_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.DS_DICT_UTILITY_ID) + "')"]
 
 build_dict_utility_input_reqList        =   [0,1]
 
@@ -212,7 +212,7 @@ maint_dict_utility_input_jsList         =    [None,None,None,None,
                                               "build_utility_callback("+str(swum.ADD_DICT_OPTION)+")",
                                               "build_utility_callback("+str(swum.CLEAR_DICT_OPTION)+")",
                                               "build_utility_clear_callback()",
-                                              "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_LIST_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.DS_LIST_UTILITY_USER_ID) + "')"]
 
 maint_dict_utility_input_reqList        =   [0,1,2]
 
@@ -256,7 +256,7 @@ build_funcs_utility_input_placeholderList = ["select function name",
 
 build_funcs_utility_input_jsList         =    [None,None,None,
                                               "build_utility_clear_callback()",
-                                              "displayhelp(" + str(dfchelp.LIST_UTILITY_BUILD_DICT_ID) + ")"]
+                                              "displayhelp('" + str(dfchelp.DS_FN_UTILITY_ID) + "')"]
 
 build_funcs_utility_input_reqList        =   [0,1,2]
 

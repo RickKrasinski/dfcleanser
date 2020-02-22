@@ -13,6 +13,8 @@ import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_widgets as subgw
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_control as subgc
 
+import dfcleanser.common.help_utils as dfchelp
+
 import dfcleanser.common.cfg as cfg
 
 from dfcleanser.common.table_widgets import  (dcTable, ROW_MAJOR, get_row_major_table, SCROLL_DOWN, 
@@ -97,7 +99,7 @@ bulk_geocode_proc_input_jsList            =   [None,None,None,
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CONCAT_PROCESS) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CONCAT_CLEAR) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CONCAT_RETURN) + ")",
-                                               "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CONCAT_HELP) + ")"]
+                                               "displayhelp('" + str(dfchelp.PROCESS_BULK_RESULTS_CONCAT_HELP) + "')"]
 
 bulk_geocode_proc_input_reqList           =   [0,1,2]
 
@@ -138,7 +140,7 @@ bulk_geocode_procr_input_jsList           =   [None,None,None,
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_REVERSE_RESULTS_CONCAT_PROCESS) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_REVERSE_RESULTS_CONCAT_CLEAR) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_REVERSE_RESULTS_CONCAT_RETURN) + ")",
-                                               "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_REVERSE_RESULTS_CONCAT_HELP) + ")"]
+                                               "displayhelp('" + str(dfchelp.PROCESS_BULK_REVERSE_RESULTS_CONCAT_HELP) + "')"]
 
 bulk_geocode_procr_input_reqList          =   [0,1]
 
@@ -175,7 +177,7 @@ bulk_geocode_export_input_jsList           =   [None,
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CSV_PROCESS) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CSV_CLEAR) + ")",
                                                "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CSV_RETURN) + ")",
-                                               "process_bulk_geocoding_results(" + str(sugm.PROCESS_BULK_RESULTS_CSV_HELP) + ")"]
+                                               "displayhelp('" + str(dfchelp.PROCESS_BULK_RESULTS_CSV_HELP) + "')"]
 
 bulk_geocode_export_input_reqList          =   [0]
 

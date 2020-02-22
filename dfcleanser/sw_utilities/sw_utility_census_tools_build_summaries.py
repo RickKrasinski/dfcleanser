@@ -23,6 +23,366 @@ from dfcleanser.common.common_utils import (display_exception, display_status, o
                                             is_numeric_col, is_int_col, single_quote, RunningClock,
                                             get_dtype_str_for_datatype)
 
+
+
+toc_html    =   """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0042)file:///C:/Downloads/dfcleanser_index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <!--<title>pandas.to_datetime — pandas 0.25.3 documentation</title>-->
+    <title>Pandas Dataframe Cleanser System Environment</title>
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/nature.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/help/pygments.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/dfc_styles.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://rickkrasinski.github.io/dfcleanser/dfcleanser/static/help.js"></script>
+</head>
+
+<body>
+    <div id="MathJax_Message" style="display: none;"></div>
+
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="document">
+
+                <div class="sphinxsidebar">
+                    <h3>Table Of Contents</h3>
+                    <ul class="current">
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html">Dataframe Cleanser Intro</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_install">Installation</a></li>
+                        <li class="toctree-l1"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_get_started">Getting started</a></li>
+                        <li class="toctree-l1 current">User Guide</li>
+                        <ul class="current">
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html">System Environment</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_Utilities_manager">Utilities Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_dataframe_manager">dataframe Manager</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_system">System</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_about">About</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html#dfc_system_eula">EULA</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html">Data Import</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_fwf">Fixed Width File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_table">SQL Table</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql_query">SQL Query</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html">Data Inspection</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_datatypes">Data Types</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans">Nans</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows">Rows</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_categories">Categories</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html">Data Cleansing</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_numeric">Cleanse Numeric Column</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_non_numeric">Cleanse Non Numeric Columns</a></li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row">Cleanse Row</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html">Data Transform</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dataframe_transform">dataframe Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row">Column Names Row</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_index">Single Level dataframe Indices</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_sort">Sort df by Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_drop_duplicates">Drop Duplicate Rows</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="./dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform">columns Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename">Rename Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add">Add Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop">Drop Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder">Reorder Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save">Save Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy">Copy Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn">Apply fn To Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_map">Map Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_dummies">Dummies For Column</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_categorical">Make Column Categorical</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_change_datatype">Change Column Datatype</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime">datetime Transform</a>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert">Convert Column to datetime</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Convert Column to timedelta</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta">Calculate timedelta Cloumn</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Split Column to date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge">Merge Column from date, time Columns</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_components">Get datetime Components Column</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 current"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html">Data Export</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_files">Files</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_csv">CSV File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_excel">Excel File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_json">JSON  File</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_html">HTML File</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_import_pandas_sql">SQL</a></li>
+
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_libs">SQL Libs</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_connect">SQL Connections</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_sql_table">SQL Table</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-import.html#dfc_data_export_pandas_custom_import">Custom</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html">Software Utilities</a>
+                                <ul class="current">
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures">Common Data Structures</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists">Lists</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts">Dicts</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs">Functions</a></li>
+                                    </ul>
+                                    <li class="toctree-l3"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding">Geocoding</a></li>
+                                    <ul class="current">
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_select_geocoder">Geocoder Service</a></li>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive">Interactive Geoocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_interactive_reverse">Reverse Geocoding</a></li>
+                                        </ul>
+                                        <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk">Bulk Geocoding</a></li>
+                                        <ul class="current">
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_geocoding_geocoding">Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_geocoding_reverse">Reverse Geocoding</a></li>
+                                            <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console">Console</a></li>
+                                            <ul class="current">
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_states">States</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_progress_bars">Progress</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_checkpoint">Checkpointing</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_errors">Errors</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_limits">Limits</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results">Results</a></li>
+                                                <li class="toctree-l4"><a class="reference internal" href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_pricing">Pricing</a></li>
+                                            </ul>
+                                        </ul>
+                                        <li class="toctree-l4">
+                                            <a class="reference internal" href=https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities ">Geocode Utilities</a></li>
+                                        <ul class="current ">
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_interactive_distance ">Geocode Distance</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_interactive_center ">Center Point</a></li>
+                                            <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_distance_from_center ">Distance From Center Point</a></li>
+                                        </ul>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset ">Dataframe Subset</a></li>
+                                    <ul class="current ">
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define ">Get Dataframe Subset</a></li>
+                                        <li class="toctree-l4 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters ">Define Subset Filter</a></li>
+                                    </ul>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_census ">Census</a></li>
+                                    <li class="toctree-l3 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting ">Scripting</a></li>
+                                </ul>
+                            </li>
+                            <li class="toctree-l2 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html#pandas_dfc_restrict ">Restricted</a></li>
+                        </ul>
+                        </li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/development/index.html ">Development</a></li>
+                        <li class="toctree-l1 "><a class="reference internal " href="https://rickkrasinski.github.io/dfcleanser/help/whatsnew/index.html ">Release Notes</a></li>
+                    </ul>
+                </div>
+"""
+
+doc_body_html = """
+                <div class="documentwrapper ">
+                    <div class="bodywrapper ">
+                        <div class="body ">
+
+                            <div class="section ">
+                                <h1>dfCleanser Census Data Economic Fields</h1>
+                                <dl class="function ">
+                                    <dt id='dfcleanser_census_economic'></dt>
+"""
+
+doc_subdata_start_html = """
+                                    <dd>
+                                        <h2>General Income</h2>
+                                        <ul class="current ">
+                                            <li class="toctree-l3 ">economic_income</li> 
+                                            <br>
+                                            <ul class="current ">
+"""
+
+doc_subdata_end_html = """
+                                            </ul>
+                                        </ul>
+                                    </dd>
+"""
+
+doc_subdata_colname_html = """
+                                                <li class="toctree-l3 ">XXXX</li>
+
+"""
+
+doc_end_html = """
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
+"""
+
+
+
+
+
+
+def build_colnames_html() :
+    
+    
+    from dfcleanser.sw_utilities.sw_utility_census_model import education_col_names, education_subdata_names, employment_col_names, employment_subdata_names
+    from dfcleanser.sw_utilities.sw_utility_census_model import health_insurance_col_names, health_insurance_subdata_names, housing_col_names, housing_subdata_names
+    from dfcleanser.sw_utilities.sw_utility_census_model import immigration_col_names, immigration_subdata_names, internet_col_names, internet_subdata_names
+    from dfcleanser.sw_utilities.sw_utility_census_model import population_col_names, population_subdata_names
+    from dfcleanser.sw_utilities.sw_utility_census_model import social_col_names, social_subdata_names, transportation_col_names, transportation_subdata_names
+
+    page_titles     =   ["Pandas Dataframe Cleanser Census Education Columns",
+                         "Pandas Dataframe Cleanser Census Employment Columns",
+                         "Pandas Dataframe Cleanser Census Insurance Columns",
+                         "Pandas Dataframe Cleanser Census Housing Columns",
+                         "Pandas Dataframe Cleanser Census Immigration Columns",
+                         "Pandas Dataframe Cleanser Census Internet Columns",
+                         "Pandas Dataframe Cleanser Census Population Columns",
+                         "Pandas Dataframe Cleanser Census Social Columns",
+                         "Pandas Dataframe Cleanser Census Transportation Columns"]
+    
+    h1_titles     =   ["dfCleanser Census Education Data Fields",
+                         "dfCleanser Census Employment Data Fields",
+                         "dfCleanser Census Insurance Data Fields",
+                         "dfCleanser Census Housing Data Fields",
+                         "dfCleanser Census Immigration Data Fields",
+                         "dfCleanser Census Internet Data Fields",
+                         "dfCleanser Census Population Data Fields",
+                         "dfCleanser Census Social Data Fields",
+                         "dfCleanser Census Transportation Data Fields"]
+    
+    h1_ids     =   ["education",
+                         "employment",
+                         "insurance",
+                         "housing",
+                         "immigration",
+                         "internet",
+                         "population",
+                         "social",
+                         "transportation"]
+    
+    for i in range(len(page_titles)) :
+        
+        print("build_colnames_html",i)
+        
+        current_html    =   ""
+        current_html    =   (current_html + toc_html)
+        current_html    =   current_html.replace("Pandas Dataframe Cleanser System Environment",page_titles[i])    
+        current_html    =   (current_html + doc_body_html)
+        current_html    =   current_html.replace("dfCleanser Census Data Economic Fields",h1_titles[i])
+        current_html    =   current_html.replace("dfcleanser_census_economic","dfcleanser_census_" + h1_ids[i])
+        
+        if(i==0) :
+            cnames  =   education_col_names
+            snames  =   education_subdata_names
+        elif(i==1) :
+            cnames  =   employment_col_names
+            snames  =   employment_subdata_names
+        elif(i==2) :
+            cnames  =   health_insurance_col_names
+            snames  =   health_insurance_subdata_names
+        elif(i==3) :
+            cnames  =   housing_col_names
+            snames  =   housing_subdata_names
+        elif(i==4) :
+            cnames  =   immigration_col_names
+            snames  =   immigration_subdata_names
+        elif(i==5) :
+            cnames  =   internet_col_names
+            snames  =   internet_subdata_names
+        elif(i==6) :
+            cnames  =   population_col_names
+            snames  =   population_subdata_names
+        elif(i==7) :
+            cnames  =   social_col_names
+            snames  =   social_subdata_names
+        else :
+            cnames  =   transportation_col_names
+            snames  =   transportation_subdata_names
+            
+        for j in range(len(snames)) :
+            
+            if(j>0) :
+                
+                print("snames",j,snames[j])
+                
+                current_html    =   (current_html + doc_subdata_start_html)
+                current_html    =   current_html.replace("General Income",snames[j])
+                        
+                tsname          =   snames[j]
+                tsname          =   tsname.replace(" ","_")
+                current_html    =   current_html.replace("economic_income",tsname)
+                
+                print("cnames",j,len(cnames[j]))
+                
+                for l in range(len(cnames[j])) :
+                    
+                    current_html    =   (current_html + doc_subdata_colname_html)
+                    current_html    =   current_html.replace("XXXX",cnames[j][l])
+                            
+                current_html    =   (current_html + doc_subdata_end_html)
+                        
+        current_html    =   (current_html + doc_end_html) 
+        
+        import os,json
+        cfgdir = os.path.join(cfg.get_notebook_path(),cfg.get_notebook_name()+"_files")
+        cfgfilename = os.path.join(cfgdir,"dfcleanser-census-" + h1_ids[i] + ".html")
+        with open(cfgfilename, 'w') as cfg_file :
+            json.dump(current_html,cfg_file)
+            cfg_file.close()
+
+
    
 """
 #--------------------------------------------------------------------------

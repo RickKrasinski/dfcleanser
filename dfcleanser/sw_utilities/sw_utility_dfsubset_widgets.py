@@ -40,7 +40,7 @@ dfsubset_tb_keyTitleList            =   ["Get Dataframe Subset",
 dfsubset_tb_jsList                  =   ["get_subset_callback("+str(swsm.DISPLAY_GET_SUBSET)+")",
                                          "get_subset_callback("+str(swsm.DISPLAY_MAIN)+")",
                                          "process_pop_up_cmd(6)",
-                                         "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                         "displayhelp('" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + "')"]
 
 dfsubset_tb_centered                =   False
 
@@ -82,7 +82,7 @@ get_subset_input_jsList                 =   [None,None,None,None,None,
                                              "get_subset_callback("+str(swsm.PROCESS_GET_SUBSET)+")",
                                              "get_subset_callback("+str(swsm.CLEAR_SUBSET_FORM)+")",
                                              "get_subset_callback("+str(swsm.DISPLAY_MAIN)+")",
-                                             "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + ")"]
+                                             "'displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + "')"]
 
 get_subset_input_reqList                =   [0,1,2]
 
@@ -126,7 +126,7 @@ get_subset_filter_input_jsList            =   [None,None,None,
                                                "get_subset_callback("+str(swsm.PROCESS_GET_SUBSET_FILTERED)+")",
                                                "get_subset_callback("+str(swsm.CLEAR_FILTER_FORM)+")",
                                                "get_subset_callback("+str(swsm.DISPLAY_MAIN)+")",
-                                               "displayhelp(" + str(dfchelp.DFSUBSET_FILTER_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.DFSUBSET_FILTER_ID) + "')"]
 
 get_subset_filter_input_reqList           =   [0,1,2]
 
@@ -139,50 +139,10 @@ get_subset_filter_input_form              =   [get_subset_filter_input_id,
                                                get_subset_filter_input_reqList]  
 
 
-"""
-#--------------------------------------------------------------------------
-#   get subset input 
-#--------------------------------------------------------------------------
-"""
-get_subset_filters                      =   "Dataframe Subset Filters"
-get_subset_filters_id                   =   "dcdfsubsetfilters"
-get_subset_filters_idList               =   ["gsfiltername",
-                                             "gsfilterlogic",
-                                             None,None,None,None]
-
-get_subset_filters_labelList            =   ["filter_name",
-                                             "filter_logic",
-                                             "Edit</br>Filter",
-                                             "Delete</br>Filter",
-                                             "Return","Help"]
-
-get_subset_filters_typeList             =   ["text",maketextarea(10),
-                                             "button","button","button","button"]
-
-get_subset_filters_placeholderList      =   ["filter name",
-                                             "filter logic",
-                                             "df subset selection criteria",
-                                             None,None,None,None]
-
-get_subset_filters_jsList               =   [None,None,
-                                             "get_subset_callback("+str(swsm.EDIT_FILTER)+")",
-                                             "get_subset_callback("+str(swsm.DELETE_FILTER)+")",
-                                             "get_subset_callback("+str(swsm.DISPLAY_GET_SUBSET_FILTER)+")",
-                                             "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_ID) + ")"]
-
-get_subset_filters_reqList              =   [0,1]
-
-get_subset_filters_form                 =   [get_subset_filters_id,
-                                             get_subset_filters_idList,
-                                             get_subset_filters_labelList,
-                                             get_subset_filters_typeList,
-                                             get_subset_filters_placeholderList,
-                                             get_subset_filters_jsList,
-                                             get_subset_filters_reqList]  
 
 import dfcleanser.data_inspection.data_inspection_widgets as diw
 
-SWUtility_subset_inputs                 =   [get_subset_input_id, get_subset_filter_input_id, get_subset_filters_id, diw.data_subset_df_input_id] 
+SWUtility_subset_inputs                 =   [get_subset_input_id, get_subset_filter_input_id, diw.data_subset_df_input_id] 
 
 
 keypad_container = """

@@ -10,13 +10,16 @@ Created on Tue June 6 22:00:00 2019
 """
 
 import sys
+import os
+
+import dfcleanser.common.cfg as cfg 
+
 this = sys.modules[__name__]
 
 
 DISPLAY_MAIN                        =   0
 
 DISPLAY_DOWNLOAD_CENSUS_DATA        =   1
-PROCESS_DOWNLOAD_CENSUS_DATA        =   2
 
 DISPLAY_CONFIGURE_CENSUS_DATA       =   3
 PROCESS_CONFIGURE_CENSUS_DATA       =   4
@@ -26,41 +29,34 @@ DISPLAY_LOAD_CENSUS_DATA            =   5
 DISPLAY_LOAD_CENSUS_DATA_TO_DB      =   6
 
 DISPLAY_GET_CENSUS_DATA             =   7
-PROCESS_GET_CENSUS_DATA             =   8
 
 CLEAR_CENSUS                        =   9
 HELP_CENSUS                         =   10
 
-DISPLAY_CENSUS_DATA_DETAILS         =   11
-PROCESS_CENSUS_DATA_DETAILS         =   12
-
-DISPLAY_CENSUS_SUBDATA_DETAILS      =   13
-
 DISPLAY_SCROLL_CENSUS_COL_NAMES     =   15
 
-VERIFY_DOWNLOAD_CENSUS_DATA         =   17
-
-
-DISPLAY_DOWNLOADED_ZIP_FILES        =   18
-DISPLAY_PROCESSED_ZIP_FILES         =   19
-
-PROCESS_DOWNLOADED_ZIP_FILES        =   20
-
-DISPLAY_CONFIGURE_DATA_DETAILS      =   21
-
-DISPLAY_CONFIGURE_SUBDATA_DETAILS   =   22
+DISPLAY_DATASET_DETAILS             =   21
+DISPLAY_DATASET_SUBDATA_DETAILS     =   22
 
 DROP_CENSUS_DATA                    =   23
 
-PROCESS_LOAD_CENSUS_DATA_TO_DF      =   24
 PROCESS_LOAD_CENSUS_DATA_TO_DB      =   25
 
 GET_DF_COLUMNS_DATA_PARMS           =   26
-DISPLAY_COLS_SUBDATA_DETAILS        =   27
-PROCESS_COLS_SUBDATA_DETAILS        =   28
 
+MORE_COLS_SUBDATA_DETAILS           =   29
 
+SHOW_SELECTED_COLUMNS               =   30
 
+DISPLAY_EXPORT_CENSUS_DFS           =   31
+PROCESS_EXPORT_CENSUS_DFS           =   32
+
+DISPLAY_INSERT_CENSUS_COLS          =   33
+PROCESS_INSERT_CENSUS_COLS          =   34
+
+DISPLAY_LOAD_CENSUS_TO_DFC_DFS      =   35
+VERIFY_LOAD_CENSUS_TO_DFC_DFS       =   36
+PROCESS_LOAD_TO_DFC_DFS             =   37
 
 
 ZIPCODE_INDEXING                    =   0
@@ -76,6 +72,7 @@ CITY_KEY                            =   "City"
 COUNTY_KEY                          =   "County"
 ZIP_CODE_KEY                        =   "Zip Code"
 
+index_fnames                        =   ["zipcode","cities","counties","states"]
 
 
 census_datasets                     =   ["Economic","Education","Employment","Health_Insurance","Housing","Immigration","Internet","Population","Social","Transportation"]    
@@ -119,6 +116,930 @@ zip_file_names                      =   [["economic.zip"],
                                          ["population.zip"],
                                          ["social.zip"],
                                          ["transportation.zip"]]
+
+
+
+"""
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+                         Census Data Utilities
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+"""
+
+"""
+* ------------------------------------------------------------------------
+#                        Census Dataset Objects
+* ------------------------------------------------------------------------
+"""
+
+class dfc_census_dataset :
+    
+    # instance variables
+    dataset_id      =   -1
+    
+    # full constructor
+    def __init__(self,dataset_id) :
+        self.dataset_id     =   dataset_id
+        
+    def get_dataset_id(self) :
+        return(self.dataset_id)
+        
+    def get_datasetid_offset(dataset_id) :
+    
+        if(   (dataset_id == census_datasets[0]) or (dataset_id == census_data_dirs[0]) ) :    dsid    =   0
+        elif( (dataset_id == census_datasets[1]) or (dataset_id == census_data_dirs[1]) ) :    dsid    =   1
+        elif( (dataset_id == census_datasets[2]) or (dataset_id == census_data_dirs[2]) ) :    dsid    =   2
+        elif( (dataset_id == census_datasets[3]) or (dataset_id == census_data_dirs[3]) ) :    dsid    =   3
+        elif( (dataset_id == census_datasets[4]) or (dataset_id == census_data_dirs[4]) ) :    dsid    =   4
+        elif( (dataset_id == census_datasets[5]) or (dataset_id == census_data_dirs[5]) ) :    dsid    =   5
+        elif( (dataset_id == census_datasets[6]) or (dataset_id == census_data_dirs[6]) ) :    dsid    =   6
+        elif( (dataset_id == census_datasets[7]) or (dataset_id == census_data_dirs[7]) ) :    dsid    =   7
+        elif( (dataset_id == census_datasets[8]) or (dataset_id == census_data_dirs[8]) ) :    dsid    =   8
+        elif( (dataset_id == census_datasets[9]) or (dataset_id == census_data_dirs[9]) ) :    dsid    =   9
+    
+        return(dsid)
+
+    def get_dataset_subset_groupby_columns_names_list(self,dataset_id) :
+        return(subdata_lists[dataset_id])
+    
+
+"""
+* ------------------------------------------------------------------------
+#                        Census Subset Objects
+* ------------------------------------------------------------------------
+"""
+
+class dfc_census_subset :
+    
+    # instance variables
+    dataset_id      =   -1
+    subset_id       =   -1
+    
+    # full constructor
+    def __init__(self,dataset_id,subset_id) :
+        self.dataset_id     =   dataset_id
+        self.subset_id      =   subset_id
+        
+    def get_dataset_id(self) :
+        return(self.dataset_id)
+        
+    def get_subset_id(self) :
+        return(self.subset_id)
+        
+    def get_subset_colnames_list(self,dataset_id,subset_id) :
+        return(subdata_colnames_lists[get_datasetid_offset[dataset_id]])        
+        
+    def get_subset_colnames_list_column(self,dataset_id,subset_id,offset) :
+        return(subdata_colnames_lists[get_datasetid_offset[dataset_id]][offset])        
+
+
+def get_dataset_index(datasetid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get list index for a dataset id
+    * 
+    * parms :
+    *   datasetid     -   dataset id
+    *
+    * returns : 
+    *  index in lists
+    * --------------------------------------------------------
+    """
+    
+    if(datasetid == census_datasets[0])    :       return(0)
+    elif(datasetid == census_datasets[1])  :       return(1)
+    elif(datasetid == census_datasets[2])  :       return(2)
+    elif( (datasetid == census_datasets[3]) or 
+          (datasetid == "Health Insurance") )   :  return(3)
+    elif(datasetid == census_datasets[4])  :       return(4)
+    elif(datasetid == census_datasets[5])  :       return(5)
+    elif(datasetid == census_datasets[6])  :       return(6)
+    elif(datasetid == census_datasets[7])  :       return(7)
+    elif(datasetid == census_datasets[8])  :       return(8)
+    elif(datasetid == census_datasets[9])  :       return(9)
+    else :                                         return(-1)    
+
+
+def get_subset_size(subdataid,datasetid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the subset size of of subdata
+    * 
+    * parms :
+    *   subdataid       -   subset key (ziocode,city,county,state,all)
+    *   datasetid       -   dataset id
+    *
+    * returns : 
+    *  dataset size
+    * --------------------------------------------------------
+    """
+    
+    totalsize   =   0
+    
+    if(subdataid == 4) :
+        
+        for i in range(len(census_datasets_csvs_size_mb[datasetid])) :
+            totalsize   =   totalsize + census_datasets_csvs_size_mb[datasetid][i]
+            
+    else :
+        
+        totalsize   =   totalsize + census_datasets_csvs_size_mb[datasetid][subdataid]
+            
+    displaysize      =   "{:,d}".format(totalsize)
+            
+    return(displaysize)        
+
+
+
+SUBSET_COLUMNS          =   0
+SUBSET_COLUMN_NAMES     =   1
+SUBSET_COLUMN_NANS      =   2
+
+
+def get_subset_data_lists(datasetid) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get dataset subset lists of cols, colnames and nans
+    * 
+    * parms :
+    *   datasetid     -   dataset id
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    print("get_subset_data_lists",datasetid)    
+    
+    if( (datasetid == census_datasets[0]) or (datasetid == census_data_dirs[0]) ) :      
+        subdatacols         =   economic_col_names
+        subdatacolstext     =   economic_subdata_names
+        subdatacolsnans     =   economic_nan_counts
+
+    elif( (datasetid == census_datasets[1]) or (datasetid == census_data_dirs[1]) ) :
+        subdatacols         =   education_col_names
+        subdatacolstext     =   education_subdata_names
+        subdatacolsnans     =   education_nan_counts
+
+    elif( (datasetid == census_datasets[2]) or (datasetid == census_data_dirs[2]) ) :
+        subdatacols         =   employment_col_names
+        subdatacolstext     =   employment_subdata_names
+        subdatacolsnans     =   employment_nan_counts
+    
+    elif( (datasetid == census_datasets[3]) or (datasetid == "Health Insurance") or 
+          (datasetid == census_data_dirs[3]) ) :
+        subdatacols         =   health_insurance_col_names
+        subdatacolstext     =   health_insurance_subdata_names
+        subdatacolsnans     =   health_insurance_nan_counts
+
+    elif( (datasetid == census_datasets[4]) or (datasetid == census_data_dirs[4]) ) :
+        subdatacols         =   housing_col_names
+        subdatacolstext     =   housing_subdata_names
+        subdatacolsnans     =   housing_nan_counts
+
+    elif( (datasetid == census_datasets[5]) or (datasetid == census_data_dirs[5]) ) :
+        subdatacols         =   immigration_col_names
+        subdatacolstext     =   immigration_subdata_names
+        subdatacolsnans     =   immigration_nan_counts
+
+    elif( (datasetid == census_datasets[6]) or (datasetid == census_data_dirs[6]) ) :
+        subdatacols         =   internet_col_names
+        subdatacolstext     =   internet_subdata_names
+        subdatacolsnans     =   internet_nan_counts
+
+    elif( (datasetid == census_datasets[7]) or (datasetid == census_data_dirs[7]) ) :
+        subdatacols         =   population_col_names
+        subdatacolstext     =   population_subdata_names
+        subdatacolsnans     =   population_nan_counts
+
+    elif( (datasetid == census_datasets[8]) or (datasetid == census_data_dirs[8]) ) :
+        subdatacols         =   social_col_names
+        subdatacolstext     =   social_subdata_names
+        subdatacolsnans     =   social_nan_counts
+
+    elif( (datasetid == census_datasets[9]) or (datasetid == census_data_dirs[9]) ) :
+        subdatacols         =   transportation_col_names
+        subdatacolstext     =   transportation_subdata_names
+        subdatacolsnans     =   transportation_nan_counts
+    
+    
+    return([subdatacols,subdatacolstext,subdatacolsnans])    
+    
+    
+def is_any_part_of_dataset_processed(datasetid, files_processed) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : determine if any dataset type is processed
+    * 
+    * parms :
+    *
+    * returns : 
+    *  True or False
+    * --------------------------------------------------------
+    """
+    
+    for i in range(len(files_processed[datasetid])) :   
+        if(files_processed[datasetid][i]) :
+            return(True)
+            
+    return(False)
+
+
+def get_dataset_type_name(index) :
+    
+    if(index == 0)      :   return("zipcode")
+    elif(index == 1)    :   return("cities")
+    elif(index == 2)    :   return("counties")
+    elif(index == 3)    :   return("states")
+    else                :   return("")
+
+
+def get_datasets_loaded_to_dfs() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get list of datasets loaded to a df
+    * 
+    * parms :
+    *
+    * returns : 
+    *  list of datasets loaded into dfs
+    * --------------------------------------------------------
+    """
+    
+    dfs_loaded     =   []
+    
+    for i in range(len(census_data_dirs) ) :
+        
+        dataset_dfs    =   []
+        
+        for j in range(4) :
+            
+            ctype   =   get_dataset_type_name(j)
+            
+            #if(j==0)        :   ctype   =   "zipcode"
+            #elif(j==1)      :   ctype   =   "cities"
+            #elif(j==2)      :   ctype   =   "counties"
+            #else            :   ctype   =   "states"
+            
+            dfname    =   census_data_dirs[i] + "_" + ctype + "_df"
+            if(cfg.get_dfc_dataframe_df(dfname) is None) :
+                dataset_dfs.append(False)
+            else :
+                dataset_dfs.append(True)
+                
+        dfs_loaded.append(dataset_dfs)
+        
+    return(dfs_loaded)
+
+
+def get_colname(cname,maxlen) :
+    """
+    * --------------------------------------------------------- 
+    * function : get the column name shortened if necessary
+    * 
+    * parms :
+    *   cname       -   column name
+    *   maxlen      -   max length of name
+    *
+    * returns : 
+    *  column name
+    * --------------------------------------------------------
+    """
+
+    if(len(cname) > maxlen) :
+        halflength = int(maxlen/2) - 2
+        shortelement = cname[0:halflength] + "...." + cname[(len(cname)-halflength) : (len(cname))]
+        shortelement = '<a href="#" data-toggle="tooltip" data-placement="top" title="' + cname + '">' + shortelement + '</a>' 
+            
+    else :
+        shortelement = cname
+            
+    return(shortelement)
+
+    
+
+"""
+* ------------------------------------------------------------------------
+#                        Census Datasets Downloaded
+* ------------------------------------------------------------------------
+"""
+class dfc_datasets_downloaded :
+    
+    # instance variables
+    datasets_downloaded_path    =   ""
+    
+    # full constructor
+    def __init__(self) :
+        self.datasets_downloaded_path    =   ""    
+        
+    def get_datasets_downloaded_names(self) :
+        return()
+        
+    def get_datasets_downloaded_count(self) :
+        return(0)
+        
+    def get_datasets_downloaded_file(self,filename) :
+        return(0)    
+
+    def is_dataset_downloaded(self,dataset_id) :
+        return(False)
+        
+    def download_dataset(self,dataset_id) :
+        return(False)
+    
+dfc_downloaded_datasets     =   dfc_datasets_downloaded()
+
+
+"""
+* ------------------------------------------------------------------------
+#                        Census Datasets Built
+* ------------------------------------------------------------------------
+"""
+
+ZIPCODE_INDEXING                    =   0
+CITY_INDEXING                       =   1
+COUNTY_INDEXING                     =   2
+STATE_INDEXING                      =   3
+
+STATE_KEY                           =   "[State]"
+CITY_KEY                            =   "[City,State]"
+COUNTY_KEY                          =   "[County,State]"
+ZIP_CODE_KEY                        =   "[Zip Code]"
+
+class dfc_datasets_built :
+    
+    # instance variables
+    datasets_built_path    =   ""
+    
+    # full constructor
+    def __init__(self) :
+        self.datasets_built_path    =   ""    
+        
+    def get_datasets_built_names(self) :
+        return()
+        
+    def get_datasets_built_count(self) :
+        return(0)
+        
+    def get_datasets_built_file(self,filename, index_type) :
+        return(0)    
+
+    def is_dataset_built(self,dataset_id, index_type) :
+        return(False)
+        
+    def build_dataset(self,dataset_id, index_type) :
+        return(False)
+    
+dfc_built_datasets     =   dfc_datasets_built()
+
+
+
+
+
+"""
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+#                   Census Datasets dfs
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+"""
+
+class dfc_census_dfs :
+    
+    
+    # full constructor
+    def __init__(self) :
+        self.datasets_built_path    =   "" 
+    
+    @staticmethod    
+    def get_census_df_path() :
+        
+        dfc_census_path    =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
+        dfc_census_path    =   (dfc_census_path + "\\datasets\\")
+        return(dfc_census_path)
+        
+    @staticmethod
+    def get_census_df_filename(datasetid,indexid) :
+        
+        return(cfg.get_dfc_dataframe_df(census_data_dirs[get_datasetid_offset(datasetid)] + "_" + index_fnames[indexid] + "_df"))
+    
+    @staticmethod    
+    def get_census_datasets_loaded_as_dfs() :
+        
+        census_dfs  =   []
+        
+        for i in range(len(census_data_dirs)) :
+            for j in range(len(index_fnames)) :
+                if(not (cfg.get_dfc_dataframe_df(dfc_census_dfs.get_census_df_filename(i,j)) is None) ) :
+                    census_dfs.append(census_data_dirs[j] + "_" + index_fnames[j] + "_df") 
+                    
+        return(census_dfs)
+    
+    @staticmethod    
+    def get_count_census_datasets_loaded_as_dfs() :
+        return(len(dfc_census_dfs.get_census_datasets_loaded_as_dfs()))
+    
+    @staticmethod    
+    def get_dfc_census_df(datasetid,indexid) :
+        return(cfg.get_dfc_dataframe_df(dfc_census_dfs.get_census_df_filename(datasetid,indexid)))    
+    
+    @staticmethod
+    def is_census_dataset_loaded_as_df(datasetid,indexid) :
+        
+        df  =   cfg.get_dfc_dataframe(dfc_census_dfs.get_census_df_filename(datasetid,indexid))
+        if(df is None) :
+            return(False)
+        else :
+            return(True)
+        
+    @staticmethod
+    def load_census_dataset_as_df(datasetid,indexid,opstat) :
+        
+        import pandas as pd
+        
+        if(indexid == ZIPCODE_INDEXING) :
+            csv_title   =   census_data_dirs[get_datasetid_offset(datasetid)] + "_zipcode.csv"
+            df_title    =   census_data_dirs[get_datasetid_offset(datasetid)] + "_zipcode_df"
+        elif(indexid == CITY_INDEXING) :
+            csv_title   =   census_data_dirs[get_datasetid_offset(datasetid)] + "_cities.csv"
+            df_title    =   census_data_dirs[get_datasetid_offset(datasetid)] + "_cities_df"
+        elif(indexid == COUNTY_INDEXING) :
+            csv_title   =   census_data_dirs[get_datasetid_offset(datasetid)] + "_counties.csv"
+            df_title    =   census_data_dirs[get_datasetid_offset(datasetid)] + "_counties_df"
+        elif(indexid == STATE_INDEXING) :
+            csv_title   =   census_data_dirs[get_datasetid_offset(datasetid)] + "_states.csv"
+            df_title    =   census_data_dirs[get_datasetid_offset(datasetid)] + "_states_df"
+        else :
+            csv_title   =   None
+            df_title    =   None
+        
+        try :
+            
+            df1         =   pd.read_csv(dfc_census_dfs.get_census_df_path() + csv_title)
+            dfc_df1     =   cfg.dfc_dataframe(df_title,df1,df_title + " Census Dataset")
+            cfg.add_dfc_dataframe(dfc_df1)
+            
+        except :
+            opstat.set_status(False)
+            opstat.set_errorMsg("Error : Loading " + csv_title + " into " + df_title)            
+
+    
+
+"""
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+#              Census Columns Selected for Load Into df
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+"""
+
+class dfc_census_columns_selected_to_load_in_df :
+    
+    census_columns_selected    =   {}
+    
+    # full constructor
+    def __init__(self) :
+        self.census_columns_selected    =   {} 
+    def clear_columns(self) :
+        self.census_columns_selected    =   {} 
+    
+        
+    def get_dfc_census_columns_selected_to_load_in_df(self) :
+        if(len(self.census_columns_selected) == 0) :
+            return(None)
+        else :
+            return(self.census_columns_selected)
+    def set_dfc_census_columns_selected_to_load_in_df(self, census_columns_selected_parm) :
+        self.census_columns_selected    =   census_columns_selected_parm
+
+    """
+    * ------------------------------------------------------------------------
+    *      Datasets - Census Columns Selected for Load Into df
+    * ------------------------------------------------------------------------
+    """    
+
+    def get_dfc_census_columns_selected_dataset(self, dataset_id) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get the columns selected for a dataset
+        * 
+        * parms :
+        *   datasetid     -   dataset id
+        *
+        * returns : 
+        *  dict of dataset cols keyed by subset id
+        * --------------------------------------------------------
+        """
+        return(self.census_columns_selected.get(dataset_id, None))
+        
+        
+    def set_dfc_census_columns_selected_dataset(self, dataset_id, dataset_dict) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get the columns selected for a dataset
+        * 
+        * parms :
+        *   datasetid       -   dataset id
+        *   dataset_dict    -   dataset cols dict
+        *
+        * returns : 
+        *  NA
+        * --------------------------------------------------------
+        """
+        self.census_columns_selected.update({dataset_id:dataset_dict})
+        
+        
+    def get_datasets_selected_to_load_in_df_list(self) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get list of datasets selected to add cols
+        * 
+        * parms :
+        *
+        * returns : 
+        *  list of datasets adding cols
+        * --------------------------------------------------------
+        """
+        datasets_selected   =   list(self.census_columns_selected.keys())
+        return(datasets_selected)
+        
+    def get_datasets_selected_to_load_in_df_count(self) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get count of list of datasets selected to add cols
+        * 
+        * parms :
+        *
+        * returns : 
+        *  count of list of datasets adding cols
+        * --------------------------------------------------------
+        """
+        return(len(self.get_datasets_selected_to_load_in_df_list(self)))
+        
+    def is_dataset_selected_to_load_in_df(self, dataset_id) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : check if dataset is adding cols
+        * 
+        * parms :
+        *   datasetid       -   dataset id
+        *
+        * returns : 
+        *  Boolean flag
+        * --------------------------------------------------------
+        """
+        dataset_to_load     =   self.census_columns_selected.get(dataset_id, None)
+        if(dataset_to_load is None) :
+            return(False)
+        else :
+            return(True)
+            
+    """
+    * ------------------------------------------------------------------------
+    *      Subsets - Census Columns Selected for Load Into df
+    * ------------------------------------------------------------------------
+    """    
+    
+    def get_dfc_census_columns_selected_subset(self, datasetid, subsetid) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get cols list for a census dataset subset
+        * 
+        * parms :
+        *   datasetid       -   dataset id
+        *   subsetid       -    subset id
+        *
+        * returns : 
+        *  list of cols for dataset-subset
+        * --------------------------------------------------------
+        """
+
+        dataset_dict    =   self.get_dfc_census_columns_selected_dataset(datasetid,None)
+        if(dataset_dict is None) :
+            return(None)
+        else :
+            subset_list    =   dataset_dict.get(subsetid,None) 
+            if(subset_list is None) :
+                return(None)
+            else :
+                return(subset_list)
+        
+    def set_dfc_census_columns_selected_subset(self, datasetid, subsetid, columns_list) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get cols list for a census dataset subset
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *   subsetid       -    subset id
+        *   columns_list   -    list of columns
+        *
+        * returns : 
+        *  NA
+        * --------------------------------------------------------
+        """
+        
+        dataset_dict        =   self.get_dfc_census_columns_selected_dataset(datasetid,None)
+        
+        if(dataset_dict is None) :
+            new_subset_dict     =   {subsetid : columns_list} 
+            dataset_dict.update({subsetid:new_subset_dict})
+            self.set_dfc_census_columns_selected_dataset(datasetid,dataset_dict)
+            
+        else :
+            new_subset_dict     =   {subsetid : columns_list} 
+            dataset_dict.update({subsetid:new_subset_dict})
+            self.set_dfc_census_columns_selected_dataset(datasetid,dataset_dict)
+
+    def get_dataset_subsets_selected_to_load_in_df_list(self, dataset_id) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get the subsets of a dataset selected to load
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *
+        * returns : 
+        *  dict of subseys to load for a dataset
+        * --------------------------------------------------------
+        """
+        
+        dataset_to_load_dict     =   self.census_columns_selected.get(dataset_id, None)
+        if(dataset_to_load_dict is None) :
+            return(None)
+        else :
+            return(dataset_to_load_dict)
+        
+    def get_dataset_subsets_selected_to_load_in_df_count(self, dataset_id) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get the count of subsets of a dataset selected to load
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *
+        * returns : 
+        *  count of subsets to load for a dataset
+        * --------------------------------------------------------
+        """
+        
+        dataset_to_load_dict     =   self.census_columns_selected.get(dataset_id, None)
+        if(dataset_to_load_dict is None) :
+            return(0)
+        else :
+            return(len(dataset_to_load_dict))
+    
+    def is_dataset_subset_selected_to_load_in_df(self, datasetid, subsetid) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : determine if a dataset subset is selected to load
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *   subsetid       -    subset id
+        *
+        * returns : 
+        *  Boolean flag
+        * --------------------------------------------------------
+        """
+        
+        dataset_to_load_dict     =   self.census_columns_selected.get(datasetid, None)
+        if(dataset_to_load_dict is None) :
+            return(False)
+        else :
+            subset_to_load_list     =   dataset_to_load_dict.get(subsetid, None)
+            if(subset_to_load_list is None) :
+                return(False)
+            else :
+                return(True)
+
+    def add_columns_selected_to_load_in_df(self, datasetid, subsetid, columns_list) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : add a columns list for a dataset subset
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *   subsetid       -    subset id
+        *   columns_list   -    columns list
+        *
+        * returns : 
+        *  NA
+        * --------------------------------------------------------
+        """
+        
+        dataset_dict     =   self.census_columns_selected.get(datasetid,None)
+        dataset_dict.update({subsetid:columns_list})
+        self.census_columns_selected.update({datasetid:dataset_dict})
+
+    def get_columns_selected_to_load_in_df(self, datasetid, subsetid) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : get columns list for a dataset subset
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *   subsetid       -    subset id
+        *   columns_list   -    columns list
+        *
+        * returns : 
+        *  NA
+        * --------------------------------------------------------
+        """
+        
+        dataset_dict    =   self.census_columns_selected.get(datasetid,None)
+        
+        if(dataset_dict is None) :
+            return(None)
+        else :
+            columns_list    =   dataset_dict.get(subsetid,None)
+            if(columns_list is None) :
+                return(None)
+            else :
+                return(columns_list)
+        
+    def drop_columns_selected_to_load_in_df(self, datasetid, subsetid) :
+        """
+        * -------------------------------------------------------------------------- 
+        * function : drop columns list for a dataset subset
+        * 
+        * parms :
+        *   datasetid      -    dataset id
+        *   subsetid       -    subset id
+        *
+        * returns : 
+        *  NA
+        * --------------------------------------------------------
+        """
+        
+        dataset_dict    =   self.census_columns_selected.get(datasetid,None)
+        
+        if(not (dataset_dict is None)) :
+            dataset_dict.drop(subsetid)
+        self.census_columns_selected.update({datasetid:dataset_dict})
+            
+    
+dfc_census_columns_selected     =   dfc_census_columns_selected_to_load_in_df()
+
+     
+        
+"""
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+                         Census Column Utilities
+* ------------------------------------------------------------------------
+* ------------------------------------------------------------------------
+"""
+
+
+def get_datasetid_offset(datasetid) :
+    
+    if( (datasetid == census_datasets[0]) or (datasetid == census_data_dirs[0]) ) :      dsid    =   0
+    elif( (datasetid == census_datasets[1]) or (datasetid == census_data_dirs[1]) ) :    dsid    =   1
+    elif( (datasetid == census_datasets[2]) or (datasetid == census_data_dirs[2]) ) :    dsid    =   2
+    elif( (datasetid == census_datasets[3]) or (datasetid == census_data_dirs[3]) ) :    dsid    =   3
+    elif( (datasetid == census_datasets[4]) or (datasetid == census_data_dirs[4]) ) :    dsid    =   4
+    elif( (datasetid == census_datasets[5]) or (datasetid == census_data_dirs[5]) ) :    dsid    =   5
+    elif( (datasetid == census_datasets[6]) or (datasetid == census_data_dirs[6]) ) :    dsid    =   6
+    elif( (datasetid == census_datasets[7]) or (datasetid == census_data_dirs[7]) ) :    dsid    =   7
+    elif( (datasetid == census_datasets[8]) or (datasetid == census_data_dirs[8]) ) :    dsid    =   8
+    elif( (datasetid == census_datasets[9]) or (datasetid == census_data_dirs[9]) ) :    dsid    =   9
+    
+    return(dsid)
+    
+def get_subdata_name(datasetid,subdataid) :
+    
+    return(subdata_lists[get_datasetid_offset(datasetid)][subdataid])
+        
+def get_subdata_colnames(datasetid,subdataid) :
+    
+    return(subdata_colnames_lists[get_datasetid_offset(datasetid)][subdataid])
+
+def get_census_colnames(datasetid) :
+    
+    if(datasetid == "economic") :               dcolnames       =  economic_col_names 
+    elif(datasetid == "education") :            dcolnames       =  education_col_names 
+    elif(datasetid == "employment") :           dcolnames       =  employment_col_names 
+    elif(datasetid == "health_insurance") :     dcolnames       =  health_insurance_col_names 
+    elif(datasetid == "housing") :              dcolnames       =  housing_col_names 
+    elif(datasetid == "immigration") :          dcolnames       =  immigration_col_names 
+    elif(datasetid == "internet") :             dcolnames       =  internet_col_names 
+    elif(datasetid == "population") :           dcolnames       =  population_col_names 
+    elif(datasetid == "social") :               dcolnames       =  social_col_names 
+    elif(datasetid == "transportation") :       dcolnames       =  transportation_col_names
+    
+    
+    colnames    =   []
+    
+    for i in range(len(dcolnames)) :
+        
+        if(type(dcolnames[i]) == list) :
+            
+            for j in range(len(dcolnames[i])) :
+                colnames.append(dcolnames[i][j])
+            
+        else :
+            colnames.append(dcolnames[i])
+   
+    return(colnames)
+
+
+def get_census_subdata_indices(datasetid,subdataindex) :
+
+    if( (datasetid == census_datasets[0]) or (datasetid == census_data_dirs[0]) ) :            dcolnames       =  economic_col_names 
+    elif( (datasetid == census_datasets[1]) or (datasetid == census_data_dirs[1]) ) :          dcolnames       =  education_col_names 
+    elif( (datasetid == census_datasets[2]) or (datasetid == census_data_dirs[2]) ) :          dcolnames       =  employment_col_names 
+    elif( (datasetid == census_datasets[3]) or (datasetid == census_data_dirs[3]) or
+          (datasetid == "Health Insurance") ) :                                                dcolnames       =  health_insurance_col_names 
+    elif( (datasetid == census_datasets[4]) or (datasetid == census_data_dirs[4]) ) :          dcolnames       =  housing_col_names 
+    elif( (datasetid == census_datasets[5]) or (datasetid == census_data_dirs[5]) ) :          dcolnames       =  immigration_col_names 
+    elif( (datasetid == census_datasets[6]) or (datasetid == census_data_dirs[6]) ) :          dcolnames       =  internet_col_names 
+    elif( (datasetid == census_datasets[7]) or (datasetid == census_data_dirs[7]) ) :          dcolnames       =  population_col_names 
+    elif( (datasetid == census_datasets[8]) or (datasetid == census_data_dirs[8]) ) :          dcolnames       =  social_col_names 
+    elif( (datasetid == census_datasets[9]) or (datasetid == census_data_dirs[8]) ) :          dcolnames       =  transportation_col_names
+    
+    startindex      =   0
+    
+    indices         =   []
+    
+    for i in range(len(dcolnames)) :
+        
+        if(i==0) :
+            startindex  =   1
+        else :
+        
+            if(i == subdataindex) :
+            
+                for j in range(len(dcolnames[i])) :
+                    indices.append(startindex+j)
+                break;
+        
+            else :
+                startindex  =   startindex + len(dcolnames[i])
+   
+    return(indices)
+
+
+def is_dfc_census_dataset_name(dataname) :
+    
+    for i in range(len(census_data_dirs)) :
+        
+        if( (dataname == census_data_dirs[i]+"_zipcode") or
+            (dataname == census_data_dirs[i]+"_cities") or
+            (dataname == census_data_dirs[i]+"_counties") or
+            (dataname == census_data_dirs[i]+"_states") ) :
+            
+            return(True)
+            
+    return(False)
+
+
+"""
+* ----------------------------------------------------
+# dfcleanser census store
+* ----------------------------------------------------
+""" 
+
+     
+def set_content_cbs(cbs) :
+    dfcCensusStore.set_content_cbs(cbs)
+
+def set_keys_cbs(cbs) :
+    dfcCensusStore.set_keys_cbs(cbs)
+    
+    
+def get_index_for_colname(colslist,cname) :
+    
+    try :
+        return(colslist.index(cname))
+    except :
+        return(-1)
+    
+    
+    
+
+class dfc_census_data :
+    
+    # instance variables
+    content_cbs     =   []
+    keys_cbs        =   []
+    
+    
+    
+    # full constructor
+    def __init__(self) :
+        self.content_cbs     =   []
+        self.keys_cbs        =   []
+        
+    def set_content_cbs(self,cbs) :
+        self.content_cbs  =   cbs
+
+    def set_keys_cbs(self,cbs) :
+        self.keys_cbs  =   cbs
+   
+
+dfcCensusStore     =   dfc_census_data()    
 
 
 """
@@ -913,7 +1834,6 @@ economic_nan_counts                 =   [0, 0, 0, 0, 0, 573, 779, 898, 1162, 573
                                          0, 0, 4919, 0, 4919, 0, 0, 5873, 0, 5873, 0, 0, 11609, 0, 11609, 0, 0, 12133, 0, 12133, 0, 0, 6215, 0, 6215, 0, 0, 7373, 0, 7373, 0, 0, 
                                          13088, 0, 13088, 0, 0, 5412, 0, 5412, 0, 0, 7802, 0, 7802, 0, 0, 27280, 0, 27280, 0, 0, 8657, 0, 8657, 0, 0, 2269, 0, 2269, 0, 0, 4363, 
                                          0, 4363, 0, 0, 3243, 0, 3243, 0, 0, 6569, 0, 6569, 0, 0, 13795, 0, 13795, 0, 0, 7953, 0, 7953, 0, 0, 909]
-
 
 
 
@@ -3158,7 +4078,8 @@ health_insurance_nan_counts     =   [0, 0, 0, 410, 0, 410, 0, 0, 2877, 0, 2877, 
                                      1, 1, 1]
 
 
- 
+
+
 """
 * ------------------------------------------------------------------------
 * ------------------------------------------------------------------------
@@ -4773,7 +5694,9 @@ immigration_nan_counts          =   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                                      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]        
         
-        
+  
+
+       
 """
 * ------------------------------------------------------------------------
 * ------------------------------------------------------------------------
@@ -5305,6 +6228,8 @@ population_nan_counts           =   [0, 0, 0, 317, 0, 317, 499, 0, 317, 0, 317, 
                                      317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 
                                      383, 0, 433, 0, 383, 0, 433, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 383, 0, 433, 0, 317, 0, 
                                      383, 0, 433, 383, 0, 433, 0, 383, 0, 433, 0, 383, 0, 433, 0, 0, 567, 864, 917, 713, 1113, 1417, 0, 0, 0, 0, 0, 0, 0, 0, 0]        
+
+
         
 """
 * ------------------------------------------------------------------------
@@ -6688,16 +7613,6 @@ transportation_nan_counts       =   [0, 0, 0, 0, 0, 554, 554, 554, 554, 554, 554
                                      771, 771, 771, 926, 926, 926, 926, 3517, 3517, 3517, 3517, 18419, 18419, 18419, 18419]
         
         
-        
-        
-"""
-* ------------------------------------------------------------------------
-* ------------------------------------------------------------------------
-                         Census Column Utilities
-* ------------------------------------------------------------------------
-* ------------------------------------------------------------------------
-"""
-
 subdata_lists               =   [economic_subdata_names,education_subdata_names,employment_subdata_names,health_insurance_subdata_names,housing_subdata_names,
                                  immigration_subdata_names,internet_subdata_names,population_subdata_names,social_subdata_names,transportation_subdata_names]
 
@@ -6705,157 +7620,6 @@ subdata_colnames_lists      =   [economic_col_names,education_col_names,employme
                                  immigration_col_names,internet_col_names,population_col_names,social_col_names,transportation_col_names]
 
 
-def get_datasetid_offset(datasetid) :
-    
-    if( (datasetid == census_datasets[0]) or (datasetid == census_data_dirs[0]) ) :      dsid    =   0
-    elif( (datasetid == census_datasets[1]) or (datasetid == census_data_dirs[1]) ) :    dsid    =   1
-    elif( (datasetid == census_datasets[2]) or (datasetid == census_data_dirs[2]) ) :    dsid    =   2
-    elif( (datasetid == census_datasets[3]) or (datasetid == census_data_dirs[3]) ) :    dsid    =   3
-    elif( (datasetid == census_datasets[4]) or (datasetid == census_data_dirs[4]) ) :    dsid    =   4
-    elif( (datasetid == census_datasets[5]) or (datasetid == census_data_dirs[5]) ) :    dsid    =   5
-    elif( (datasetid == census_datasets[6]) or (datasetid == census_data_dirs[6]) ) :    dsid    =   6
-    elif( (datasetid == census_datasets[7]) or (datasetid == census_data_dirs[7]) ) :    dsid    =   7
-    elif( (datasetid == census_datasets[8]) or (datasetid == census_data_dirs[8]) ) :    dsid    =   8
-    elif( (datasetid == census_datasets[9]) or (datasetid == census_data_dirs[9]) ) :    dsid    =   9
-    
-    return(dsid)
-    
-def get_subdata_name(datasetid,subdataid) :
-    
-    return(subdata_lists[get_datasetid_offset(datasetid)][subdataid])
-        
-def get_subdata_colnames(datasetid,subdataid) :
-    
-    return(subdata_colnames_lists[get_datasetid_offset(datasetid)][subdataid])
-
-def get_census_colnames(datasetid) :
-    
-    if(datasetid == "economic") :               dcolnames       =  economic_col_names 
-    elif(datasetid == "education") :            dcolnames       =  education_col_names 
-    elif(datasetid == "employment") :           dcolnames       =  employment_col_names 
-    elif(datasetid == "health_insurance") :     dcolnames       =  health_insurance_col_names 
-    elif(datasetid == "housing") :              dcolnames       =  housing_col_names 
-    elif(datasetid == "immigration") :          dcolnames       =  immigration_col_names 
-    elif(datasetid == "internet") :             dcolnames       =  internet_col_names 
-    elif(datasetid == "population") :           dcolnames       =  population_col_names 
-    elif(datasetid == "social") :               dcolnames       =  social_col_names 
-    elif(datasetid == "transportation") :       dcolnames       =  transportation_col_names
-    
-    
-    colnames    =   []
-    
-    for i in range(len(dcolnames)) :
-        
-        if(type(dcolnames[i]) == list) :
-            
-            for j in range(len(dcolnames[i])) :
-                colnames.append(dcolnames[i][j])
-            
-        else :
-            colnames.append(dcolnames[i])
-   
-    return(colnames)
-
-
-def get_census_subdata_indices(datasetid,subdataindex) :
-
-    if( (datasetid == census_datasets[0]) or (datasetid == census_data_dirs[0]) ) :            dcolnames       =  economic_col_names 
-    elif( (datasetid == census_datasets[1]) or (datasetid == census_data_dirs[1]) ) :          dcolnames       =  education_col_names 
-    elif( (datasetid == census_datasets[2]) or (datasetid == census_data_dirs[2]) ) :          dcolnames       =  employment_col_names 
-    elif( (datasetid == census_datasets[3]) or (datasetid == census_data_dirs[3]) or
-          (datasetid == "Health Insurance") ) :                                                dcolnames       =  health_insurance_col_names 
-    elif( (datasetid == census_datasets[4]) or (datasetid == census_data_dirs[4]) ) :          dcolnames       =  housing_col_names 
-    elif( (datasetid == census_datasets[5]) or (datasetid == census_data_dirs[5]) ) :          dcolnames       =  immigration_col_names 
-    elif( (datasetid == census_datasets[6]) or (datasetid == census_data_dirs[6]) ) :          dcolnames       =  internet_col_names 
-    elif( (datasetid == census_datasets[7]) or (datasetid == census_data_dirs[7]) ) :          dcolnames       =  population_col_names 
-    elif( (datasetid == census_datasets[8]) or (datasetid == census_data_dirs[8]) ) :          dcolnames       =  social_col_names 
-    elif( (datasetid == census_datasets[9]) or (datasetid == census_data_dirs[8]) ) :          dcolnames       =  transportation_col_names
-    
-    startindex      =   0
-    
-    indices         =   []
-    
-    for i in range(len(dcolnames)) :
-        
-        if(i==0) :
-            startindex  =   1
-        else :
-        
-            if(i == subdataindex) :
-            
-                for j in range(len(dcolnames[i])) :
-                    indices.append(startindex+j)
-                break;
-        
-            else :
-                startindex  =   startindex + len(dcolnames[i])
-   
-    return(indices)
-
-
-def is_dfc_census_dataset_name(dataname) :
-    
-    for i in range(len(census_data_dirs)) :
-        
-        if( (dataname == census_data_dirs[i]+"_zipcode") or
-            (dataname == census_data_dirs[i]+"_cities") or
-            (dataname == census_data_dirs[i]+"_counties") or
-            (dataname == census_data_dirs[i]+"_states") ) :
-            
-            return(True)
-            
-    return(False)
-
-
-"""
-* ----------------------------------------------------
-# dfcleanser census store
-* ----------------------------------------------------
-""" 
-
-     
-def set_content_cbs(cbs) :
-    dfcCensusStore.set_content_cbs(cbs)
-
-def set_keys_cbs(cbs) :
-    dfcCensusStore.set_keys_cbs(cbs)
-    
-    
-def get_index_for_colname(colslist,cname) :
-    
-    try :
-        return(colslist.index(cname))
-    except :
-        return(-1)
-    
-    
-    
-
-class dfc_census_data :
-    
-    # instance variables
-    content_cbs     =   []
-    keys_cbs        =   []
-    
-    
-    
-    # full constructor
-    def __init__(self) :
-        self.content_cbs     =   []
-        self.keys_cbs        =   []
-        
-    def set_content_cbs(self,cbs) :
-        self.content_cbs  =   cbs
-
-    def set_keys_cbs(self,cbs) :
-        self.keys_cbs  =   cbs
-   
-
-dfcCensusStore     =   dfc_census_data()    
-
-
-
-
-
+ 
 
 

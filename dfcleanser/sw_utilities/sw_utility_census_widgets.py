@@ -9,7 +9,10 @@ Created on Tue June 6 22:00:00 2019
 @author: Rick
 """
 
+
 import sys
+import os
+
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
@@ -18,9 +21,10 @@ import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.sw_utilities.sw_utility_census_model as swcm
 import dfcleanser.sw_utilities.sw_utility_census_control as swcc
 
-from dfcleanser.common.html_widgets import (ButtonGroupForm, maketextarea)
+from dfcleanser.common.html_widgets import (ButtonGroupForm)
 
-from dfcleanser.common.common_utils import (display_generic_grid, get_select_defaults)
+from dfcleanser.common.common_utils import (display_generic_grid, get_select_defaults, display_notes,
+                                            does_dir_exist, does_file_exist)
 
 """
 #--------------------------------------------------------------------------
@@ -39,21 +43,24 @@ census_tb_doc_title               =   "Census"
 census_tb_title                   =   "Census"
 census_tb_id                      =   "census"
 
-census_tb_keyTitleList            =   ["Build</br>Census Data",
-                                       "Configure</br>Census Data",
+census_tb_keyTitleList            =   ["Download</br>Census</br>Data",
+                                       "Configure</br>Census</br>Data",
                                        "Load</br>Census Data</br>to df(s)",
-                                       "Load</br>Census Data</br>to db(s)",
                                        "Get Census</br>Column</br>for df",
+                                       "Export</br>Census</br>df(s)",
+                                       "Load</br>Census Data</br>to db(s)",
+                                       
                                        "Clear","Reset","Help"]
 
 census_tb_jsList                  =   ["get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")",
                                        "get_census_callback("+str(swcm.DISPLAY_CONFIGURE_CENSUS_DATA)+")",
-                                       "get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_DATA)+")",
-                                       "get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_DATA_TO_DB)+")",
+                                       "get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_TO_DFC_DFS)+")",
                                        "get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
+                                       "get_census_callback("+str(swcm.DISPLAY_EXPORT_CENSUS_DFS)+")",
+                                       "get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_DATA_TO_DB)+")",
                                        "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
                                        "process_pop_up_cmd(6)",
-                                       "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                       "displayhelp('" + str(dfchelp.DF_CENSUS_MAIN_TASKBAR_ID) + "')"]
 
 census_tb_centered                =   True
 
@@ -65,59 +72,6 @@ census_tb_centered                =   True
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-
-"""
-#--------------------------------------------------------------------------
-#    dfcensus data download task bar
-#--------------------------------------------------------------------------
-"""
-data_download_tb_doc_title               =   "Census Data Download"
-data_download_tb_title                   =   "Census Data Download"
-data_download_tb_id                      =   "censusdatadownload"
-
-data_download_tb_keyTitleList            =   ["Build</br>Selected</br>Datasets",
-                                              "Clear","Return","Help"]
-
-data_download_tb_jsList                  =   ["get_census_callback("+str(swcm.PROCESS_DOWNLOAD_CENSUS_DATA)+")",
-                                              "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")",
-                                              "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                              "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
-
-data_download_tb_centered                =   True
-
-"""
-#--------------------------------------------------------------------------
-#    dfcensus confirm data download task bar
-#--------------------------------------------------------------------------
-"""
-data_confirm_download_tb_doc_title               =   "Census Confirm Data Download"
-data_confirm_download_tb_title                   =   "Census Confirm Data Download"
-data_confirm_download_tb_id                      =   "censusconfirmdatadownload"
-
-data_confirm_download_tb_keyTitleList            =   ["Verify Census Zip Files</br>Are Downloaded",
-                                                      "Return"]
-
-data_confirm_download_tb_jsList                  =   ["get_census_callback("+str(swcm.VERIFY_DOWNLOAD_CENSUS_DATA)+")",
-                                                      "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")"]
-
-data_confirm_download_tb_centered                =   True
-
-"""
-#--------------------------------------------------------------------------
-#    dfcensus confirm data download task bar
-#--------------------------------------------------------------------------
-"""
-data_confirm_download_complete_tb_doc_title               =   "Census Confirm Data Download Complete"
-data_confirm_download_complete_tb_title                   =   "Census Confirm Data Download Complete"
-data_confirm_download_complete_tb_id                      =   "censusconfirmdatadownloadcomplete"
-
-data_confirm_download_complete_tb_keyTitleList            =   ["Process Downloaded</br>Census Zip Files",
-                                                               "Return"]
-
-data_confirm_download_complete_tb_jsList                  =   ["get_census_callback("+str(swcm.DISPLAY_PROCESSED_ZIP_FILES)+")",
-                                                               "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")"]
-
-data_confirm_download_complete_tb_centered                =   True
 
 """
 #--------------------------------------------------------------------------
@@ -159,7 +113,7 @@ data_configure_tb_keyTitleList            =   ["Configure</br>Selected</br>Datas
 data_configure_tb_jsList                  =   ["get_census_callback("+str(swcm.PROCESS_CONFIGURE_CENSUS_DATA)+")",
                                                "get_census_callback("+str(swcm.DISPLAY_CONFIGURE_CENSUS_DATA)+")",
                                                "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                               "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                               "displayhelp('" + str(dfchelp.DF_CENSUS_CONFIGURE_ID) + "')"]
 
 data_configure_tb_centered                =   True
 
@@ -178,7 +132,7 @@ data_configure_no_datasets_tb_keyTitleList            =   ["Configure</br>Datase
 
 data_configure_no_datasets_tb_jsList                  =   ["get_census_callback("+str(swcm.DISPLAY_CONFIGURE_CENSUS_DATA)+")",
                                                            "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                           "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                                           "displayhelp('" + str(dfchelp.DF_CENSUS_CONFIGURE_NO_CHANGE_ID) + "')"]
 
 data_configure_no_datasets_tb_centered                =   True
 
@@ -192,38 +146,16 @@ data_configure_verify_tb_doc_title               =   "Census Data Verify"
 data_configure_verify_tb_title                   =   "Census Data Verify"
 data_configure_verify_tb_id                      =   "censusdataverify"
 
-data_configure_verify_tb_keyTitleList            =   ["Configure</br>Selected</br>Datasets",
-                                                      "Clear","Return","Help"]
+data_configure_verify_tb_keyTitleList            =   ["Add/Drop</br>Selected</br>Datasets",
+                                                      "Return","Help"]
 
 data_configure_verify_tb_jsList                  =   ["get_census_callback("+str(swcm.DROP_CENSUS_DATA)+")",
-                                                      "get_census_callback("+str(swcm.DISPLAY_CONFIGURE_CENSUS_DATA)+")",
                                                       "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
                                                       "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
 
 data_configure_verify_tb_centered                =   True
 
-
-
-
-
-   
-"""
-#--------------------------------------------------------------------------
-#    dfcensus process data load task bar
-#--------------------------------------------------------------------------
-"""
-data_process_load_tb_doc_title               =   "Census Confirm Data Load"
-data_process_load_tb_title                   =   "Census Confirm Data Load"
-data_process_load_tb_id                      =   "censusconfirmdataload"
-
-data_process_load_tb_keyTitleList            =   ["Process Downloaded</br>Census Zip Files",
-                                                  "Return"]
-
-data_process_load_tb_jsList                  =   ["get_census_callback("+str(swcm.PROCESS_DOWNLOADED_ZIP_FILES)+")",
-                                                  "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")"]
-
-data_process_load_tb_centered                =   True
-
+  
 
 """
 #--------------------------------------------------------------------------
@@ -257,35 +189,57 @@ data_load_datasets_to_df_tb_doc_title                 =   "Census Confirm Data L
 data_load_datasets_to_df_tb_title                     =   "Census Confirm Data Load"
 data_load_datasets_to_df_tb_id                        =   "censusdfload"
 
-data_load_datasets_to_df_tb_keyTitleList              =   ["Load</br>Census</br>Data to df(s)",
+data_load_datasets_to_df_tb_keyTitleList              =   ["Load/Unload</br>Census</br>Data to df(s)",
                                                            "Clear","Return","Help"]
 
-data_load_datasets_to_df_tb_jsList                    =   ["get_census_callback("+str(swcm.PROCESS_LOAD_CENSUS_DATA_TO_DF)+")",
-                                                           "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")",
+data_load_datasets_to_df_tb_jsList                    =   ["get_census_callback("+str(swcm.VERIFY_LOAD_CENSUS_TO_DFC_DFS)+")",
+                                                           "get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_TO_DFC_DFS)+")",
                                                            "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                           "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                                           "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_TO_DF_ID) + "')"]
 
 data_load_datasets_to_df_tb_centered                  =   True
 
 
 """
 #--------------------------------------------------------------------------
-#    dfcensus load datasets to db task bar
+#    dfcensus configure no datasets task bar
 #--------------------------------------------------------------------------
 """
-data_load_datasets_to_db_tb_doc_title                 =   "Census Confirm Data Load"
-data_load_datasets_to_db_tb_title                     =   "Census Confirm Data Load"
-data_load_datasets_to_db_tb_id                        =   "censusdfload"
+load_datasets_to_df_no_datasets_tb_title              =   "Census Data Load None"
+load_datasets_to_df_no_datasets_tb_title              =   "Census Data Load None"
+load_datasets_to_df_no_datasets_tb_id                 =   "censusdataloaddfnone"
 
-data_load_datasets_to_db_tb_keyTitleList              =   ["Load</br>Census</br>Data to db(s)",
-                                                          "Clear","Return","Help"]
+load_datasets_to_df_no_datasets_tb_keyTitleList       =   ["Load/Unload</br>Datasets</br>to df(s)",
+                                                           "Return","Help"]
 
-data_load_datasets_to_db_tb_jsList                    =   ["get_census_callback("+str(swcm.PROCESS_LOAD_CENSUS_DATA_TO_DB)+")",
-                                                           "get_census_callback("+str(swcm.DISPLAY_DOWNLOAD_CENSUS_DATA)+")",
+load_datasets_to_df_no_datasets_tb_jsList             =   ["get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_TO_DFC_DFS)+")",
                                                            "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                           "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                                           "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_TO_DF_ID) + "')"]
 
-data_load_datasets_to_db_tb_centered                  =   True
+load_datasets_to_df_no_datasets_tb_centered           =   True
+
+
+"""
+#--------------------------------------------------------------------------
+#    dfcensus configure verification task bar
+#--------------------------------------------------------------------------
+"""
+load_datasets_to_df_verify_tb_doc_title               =   "Census Data Verify"
+load_datasets_to_df_verify_tb_title                   =   "Census Data Verify"
+load_datasets_to_df_verify_tb_id                      =   "censusdataverify"
+
+load_datasets_to_df_verify_tb_keyTitleList            =   ["Load/Unload</br>Datasets</br>to df(s)",
+                                                           "Return","Help"]
+
+load_datasets_to_df_verify_tb_jsList                  =   ["get_census_callback("+str(swcm.PROCESS_LOAD_TO_DFC_DFS)+")",
+                                                           "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
+                                                           "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_TO_DF_SELECT_ID) + "')"]
+
+load_datasets_to_df_verify_tb_centered                =   True
+
+
+
+
 
 
 """
@@ -316,10 +270,11 @@ get_dataset_columns_tb_doc_title                    =   "Census Confirm Data Loa
 get_dataset_columns_tb_title                        =   "Census Confirm Data Load"
 get_dataset_columns_tb_id                           =   "censusdfload"
 
-get_dataset_columns_tb_keyTitleList                 =   ["Return","Help"]
+get_dataset_columns_tb_keyTitleList                 =   ["Show</br>Selected</br>Columns","Return","Help"]
 
-get_dataset_columns_tb_jsList                       =   ["get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                         "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+get_dataset_columns_tb_jsList                       =   ["get_census_callback("+str(swcm.SHOW_SELECTED_COLUMNS)+")",
+                                                         "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
+                                                         "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_COL_TO_DF_SELECT_ID) + "')"]
 
 get_dataset_columns_tb_centered                     =   True
 
@@ -338,7 +293,7 @@ get_dataset_columns_no_df_tb_keyTitleList           =   ["Load</br>Census</br>Da
 
 get_dataset_columns_no_df_tb_jsList                 =   ["get_census_callback("+str(swcm.DISPLAY_LOAD_CENSUS_DATA)+")",
                                                          "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                         "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                                         "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_COL_TO_DF_SELECT_ID) + "')"]
 
 get_dataset_columns_no_df_tb_centered               =   True
 
@@ -352,11 +307,12 @@ get_subdata_columns_tb_doc_title                    =   "Census Confirm Data Loa
 get_subdata_columns_tb_title                        =   "Census Confirm Data Load"
 get_subdata_columns_tb_id                           =   "censusdfload"
 
-get_subdata_columns_tb_keyTitleList                 =   ["Clear","Return","Help"]
+get_subdata_columns_tb_keyTitleList                 =   ["Change</br>Dataset","Show</br>Selected</br>Columns","Return","Help"]
 
 get_subdata_columns_tb_jsList                       =   ["get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
+                                                         "get_census_callback("+str(swcm.SHOW_SELECTED_COLUMNS)+")",
                                                          "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                         "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+                                                         "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_COL_TO_DF_COLS_ID) + "')"]
 
 get_subdata_columns_tb_centered                     =   True
 
@@ -370,12 +326,12 @@ get_col_names_list_tb_doc_title                    =   "Census Confirm Data Load
 get_col_names_list_tb_title                        =   "Census Confirm Data Load"
 get_col_names_list_tb_id                           =   "censusdfload"
 
-get_col_names_list_tb_keyTitleList                 =   ["Get </br>Columns","Clear","Return","Help"]
+get_col_names_list_tb_keyTitleList                 =   ["Select</br>More</br>Columns","Show</br>Selected</br>Columns","Return","Help"]
 
-get_col_names_list_tb_jsList                       =   ["get_census_callback("+str(swcm.PROCESS_COLS_SUBDATA_DETAILS)+")",
-                                                        "get_census_callback("+str(swcm.DISPLAY_COLS_SUBDATA_DETAILS)+")",
-                                                         "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                         "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+get_col_names_list_tb_jsList                       =   ["get_census_callback("+str(swcm.MORE_COLS_SUBDATA_DETAILS)+")",
+                                                        "get_census_callback("+str(swcm.SHOW_SELECTED_COLUMNS)+")",
+                                                        "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
+                                                        "displayhelp('" + str(dfchelp.DF_CENSUS_LOAD_COL_TO_DF_MORE_COLS_ID) + "')"]
 
 get_col_names_list_tb_centered                     =   True
 
@@ -383,200 +339,56 @@ get_col_names_list_tb_centered                     =   True
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   get census columns input 
+#   insert columns into df input 
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
+
 """
 #--------------------------------------------------------------------------
-#   zip codes 
+#    insert cols into df inputs
 #--------------------------------------------------------------------------
 """
-get_census_cols_input_title                     =   "Get Census Columns"
-get_census_cols_input_id                        =   "dcdfcensusgetcolsinput"
-get_census_cols_input_idList                    =   ["swcgetcolsdataframe",
-                                                     "swcgetcolsdfzipcodecolumn",
-                                                     "swcgetcolscolnames",
-                                                     "swcgetcolsdfnafill",
+insert_cols_in_df_input_title                   =   "Insert Columns in df"
+insert_cols_in_df_input_id                      =   "insertcoldf"
+insert_cols_in_df_input_idList                  =   ["censusindextype",
+                                                     "censusdftoinsertinto",
+                                                     "censusdftoinsertintocols",
+                                                     "censusindexcols",
+                                                     "censusnanvalue",
                                                      None,None,None,None]
 
-get_census_cols_input_labelList                 =   ["dataframe_to_add_to",
-                                                     "zip_code_column",
-                                                     "census_column_names_list",
-                                                     "na_fill_value",
-                                                     "Add</br>Column(s)</br>to df",
-                                                     "Clear","Return","Help"]
+insert_cols_in_df_input_labelList               =   ["census_index_type",
+                                                     "df_to_insert_into",
+                                                     "df_to_insert_into_columns",
+                                                     "df_to_insert_index_column(s)",
+                                                     "nan_value",
+                                                     "Insert</br>Columns</br>into df",
+                                                     "Show</br>Selected</br>Columns",
+                                                     "Return",
+                                                     "Help"]
 
-get_census_cols_input_typeList                  =   ["select","select",maketextarea(6),"text",
+insert_cols_in_df_input_typeList               =   ["select","select","selectmultiple","text","text",
                                                      "button","button","button","button"]
 
-get_census_cols_input_placeholderList           =   ["dataframe to add columns to",
-                                                     "dataframe zipcode column",
-                                                     "census column names list",
-                                                     "nan fill value",
+insert_cols_in_df_input_placeholderList        =   ["census index type",
+                                                     "df to insert into",
+                                                     "df to insert into columns",
+                                                     "census index type",
+                                                     "enter the nan vakue eo use (Default : Nan)",
                                                      None,None,None,None]
 
-get_census_cols_input_jsList                    =   [None,None,None,None,
-                                                     "get_census_cols(0)",
-                                                     "get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
-                                                     "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                     "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
+insert_cols_in_df_input_jsList                 =   [None,None,None,None,None,
+                                                    "get_census_callback("+str(swcm.PROCESS_INSERT_CENSUS_COLS)+")",
+                                                    "get_census_callback("+str(swcm.SHOW_SELECTED_COLUMNS)+")",
+                                                    "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
+                                                    "displayhelp('" + str(dfchelp.DF_CENSUS_INSERT_COL_TO_DF_ID) + "')"]
 
-get_census_cols_input_reqList                   =   [0,1,2,3]
-
-get_census_cols_input_form                      =   [get_census_cols_input_id,
-                                                     get_census_cols_input_idList,
-                                                     get_census_cols_input_labelList,
-                                                     get_census_cols_input_typeList,
-                                                     get_census_cols_input_placeholderList,
-                                                     get_census_cols_input_jsList,
-                                                     get_census_cols_input_reqList]  
-
-"""
-#--------------------------------------------------------------------------
-#   cities 
-#--------------------------------------------------------------------------
-"""
-get_city_census_cols_input_title                =   "Get Census Columns"
-get_city_census_cols_input_id                   =   "dcdfcensusgetcolscityinput"
-get_city_census_cols_input_idList               =   ["swcgetcolscitydataframe",
-                                                     "swcgetcolscitydfcitycolumn",
-                                                     "swcgetcolscitydfstatecolumn",
-                                                     "swcgetcolscitycolnames",
-                                                     "swcgetcolscitydfnafill",
-                                                     None,None,None,None]
-
-get_city_census_cols_input_labelList            =   ["dataframe_to_add_to",
-                                                     "city_column",
-                                                     "state_column",
-                                                     "census_column_names_list",
-                                                     "na_fill_value",
-                                                     "Add</br>Column(s)</br>to df",
-                                                     "Clear","Return","Help"]
-
-get_city_census_cols_input_typeList             =   ["select","select","select",maketextarea(6),"text",
-                                                     "button","button","button","button"]
-
-get_city_census_cols_input_placeholderList      =   ["dataframe to add columns to",
-                                                     "dataframe city column",
-                                                     "dataframe state column",
-                                                     "census column names list",
-                                                     "nan fill value",
-                                                     None,None,None,None]
-
-get_city_census_cols_input_jsList               =   [None,None,None,None,None,
-                                                     "get_census_cols(1)",
-                                                     "get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
-                                                     "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                     "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
-
-get_city_census_cols_input_reqList              =   [0,1,2,3,4]
-
-get_city_census_cols_input_form                 =   [get_city_census_cols_input_id,
-                                                     get_city_census_cols_input_idList,
-                                                     get_city_census_cols_input_labelList,
-                                                     get_city_census_cols_input_typeList,
-                                                     get_city_census_cols_input_placeholderList,
-                                                     get_city_census_cols_input_jsList,
-                                                     get_city_census_cols_input_reqList]  
-
-"""
-#--------------------------------------------------------------------------
-#   counties 
-#--------------------------------------------------------------------------
-"""
-get_county_census_cols_input_title              =   "Get Census Columns"
-get_county_census_cols_input_id                 =   "dcdfcensusgetcolscountyinput"
-get_county_census_cols_input_idList             =   ["swcgetcolscountydataframe",
-                                                     "swcgetcolscountydfcountycolumn",
-                                                     "swcgetcolscountydfstatecolumn",
-                                                     "swcgetcolscountycolnames",
-                                                     "swcgetcolscountydfnafill",
-                                                     None,None,None,None]
-
-get_county_census_cols_input_labelList          =   ["dataframe_to_add_to",
-                                                     "county_column",
-                                                     "state_column",
-                                                     "census_column_names_list",
-                                                     "na_fill_value",
-                                                     "Add</br>Column(s)</br>to df",
-                                                     "Clear","Return","Help"]
-
-get_county_census_cols_input_typeList           =   ["select","select","select",maketextarea(6),"text",
-                                                     "button","button","button","button"]
-
-get_county_census_cols_input_placeholderList    =   ["dataframe to add columns to",
-                                                     "dataframe county column",
-                                                     "dataframe state column",
-                                                     "census column names list",
-                                                     "nan fill value",
-                                                     None,None,None,None]
-
-get_county_census_cols_input_jsList             =   [None,None,None,None,None,
-                                                     "get_census_cols(2)",
-                                                     "get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
-                                                     "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                     "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
-
-get_county_census_cols_input_reqList            =   [0,1,2,3,4]
-
-get_county_census_cols_input_form               =   [get_county_census_cols_input_id,
-                                                     get_county_census_cols_input_idList,
-                                                     get_county_census_cols_input_labelList,
-                                                     get_county_census_cols_input_typeList,
-                                                     get_county_census_cols_input_placeholderList,
-                                                     get_county_census_cols_input_jsList,
-                                                     get_county_census_cols_input_reqList]  
+insert_cols_in_df_input_reqList                =   [0,1,2,3,4]
 
 
-"""
-#--------------------------------------------------------------------------
-#   states 
-#--------------------------------------------------------------------------
-"""
-get_states_census_cols_input_title              =   "Get Census Columns"
-get_states_census_cols_input_id                 =   "dcdfcensusgetcolsstatesinput"
-get_states_census_cols_input_idList             =   ["swcgetcolsstatesdataframe",
-                                                     "swcgetcolsstatesdfstatecolumn",
-                                                     "swcgetcolsstatescolnames",
-                                                     "swcgetcolsstatesdfnafill",
-                                                     None,None,None,None]
-
-get_states_census_cols_input_labelList          =   ["dataframe_to_add_to",
-                                                     "state_column",
-                                                     "census_column_names_list",
-                                                     "na_fill_value",
-                                                     "Add</br>Column(s)</br>to df",
-                                                     "Clear","Return","Help"]
-
-get_states_census_cols_input_typeList           =   ["select","select",maketextarea(6),"text",
-                                                     "button","button","button","button"]
-
-get_states_census_cols_input_placeholderList    =   ["dataframe to add columns to",
-                                                     "dataframe state column",
-                                                     "census column names list",
-                                                     "nan fill value",
-                                                     None,None,None,None]
-
-get_states_census_cols_input_jsList             =   [None,None,None,None,
-                                                     "get_census_cols(3)",
-                                                     "get_census_callback("+str(swcm.DISPLAY_GET_CENSUS_DATA)+")",
-                                                     "get_census_callback("+str(swcm.DISPLAY_MAIN)+")",
-                                                     "displayhelp(" + str(dfchelp.DFSUBSET_MAIN_TASKBAR_ID) + ")"]
-
-get_states_census_cols_input_reqList            =   [0,1,2,3]
-
-get_states_census_cols_input_form               =   [get_states_census_cols_input_id,
-                                                     get_states_census_cols_input_idList,
-                                                     get_states_census_cols_input_labelList,
-                                                     get_states_census_cols_input_typeList,
-                                                     get_states_census_cols_input_placeholderList,
-                                                     get_states_census_cols_input_jsList,
-                                                     get_states_census_cols_input_reqList]  
-
-SWUtility_census_inputs                         =   [get_census_cols_input_id, get_city_census_cols_input_id, get_county_census_cols_input_id, get_states_census_cols_input_id]
-
+SWUtility_census_inputs                        =   [insert_cols_in_df_input_id]
 
 
 """
@@ -590,14 +402,16 @@ SWUtility_census_inputs                         =   [get_census_cols_input_id, g
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #                   Census Download Datasets html
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
 census_download_html ="""
-        <div class='container dc-tbl-container' style="width:360px;" id="dfCensusLoadOptions">
+        <div class='container dc-tbl-container' style='width:360px;' id="dfCensusLoadOptions">
             <div class="panel panel-primary" style="border:0;">
-                <div class="panel-heading clearfix dc-table-panel-heading" style="width:360px;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style='width:360px;'>
                     <div class="input-group">
                         <div class="input-group-btn">
                             <div class="input-group-btn">
@@ -607,21 +421,19 @@ census_download_html ="""
                     </div>
                 </div>
                 <div>
-                    <table class="table dc-table" id="DIsamplerows" style="width:360px;">
+                    <table class="table dc-table" id="DIsamplerows" style='width:360px;'>
                         <thead>
                             <tr class="dcrowhead">
-                                <th style=" width:22%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
-                                <th style=" width:10%; font-size:13px;" class="dccolhead">&nbsp;Zip</br>Code</th>
-                                <th style=" width:10%; font-size:13px;" class="dccolhead">City</th>
-                                <th style=" width:15%; font-size:13px;" class="dccolhead">County</th>
-                                <th style=" width:10%; font-size:13px;" class="dccolhead">&nbsp;&nbsp;US</br>State</th>
-                                <th style=" width:10%; font-size:13px;" class="dccolhead">All</th>
+                                <th style=" width:30%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
+                                <th style=" width:10%; font-size:13px; text-align:center;" class="dccolhead">&nbsp;Zip</br>Code</th>
+                                <th style=" width:10%; font-size:13px; text-align:center;" class="dccolhead">City</th>
+                                <th style=" width:17%; font-size:13px; text-align:center;" class="dccolhead">County</th>
+                                <th style=" width:10%; font-size:13px; text-align:center;" class="dccolhead">&nbsp;&nbsp;US</br>State</th>
                                 <th style=" width:13%; font-size:13px; text-align:center;" class="dccolhead"></th>
                             </tr>
                         </thead>
                         <tbody>
 """
-
 
 census_download_end_html ="""
                         </tbody>
@@ -631,10 +443,9 @@ census_download_end_html ="""
         </div>
 """
 
-
 census_download_row_html ="""
                             <tr class="dc-describe-table-body-row">
-                                <td style=" width:22%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
+                                <td style=" width:30%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
                                 <td style=" width:10%; font-size:13px;" class="dccolwrap">
                                     <div class='row text-left' style='margin: 0px auto; text-align:center;'>
                                         <label class='btn' style='font-family:arial; font-size:13px;' for="cb1XXXDatasetID">
@@ -649,7 +460,7 @@ census_download_row_html ="""
                                         </label>
                                     </div>
                                 </td>               
-                                <td style=" width:15%; text-align:center;" class="dccolwrap">
+                                <td style=" width:17%; text-align:center;" class="dccolwrap">
                                     <div class='row text-left' style='margin: 0px auto; text-align:center;'>
                                         <label class='btn' style='font-family:arial; font-size:13px;' for="cb3XXXDatasetID">
                                             <input  type='checkbox' id="cb3XXXDatasetID" onclick="set_census_cbs('cb3XXXDatasetID')" cb3flag cb3disabled></input>
@@ -663,16 +474,9 @@ census_download_row_html ="""
                                         </label>
                                     </div>
                                 </td>               
-                                <td style=" width:10%; " class="dccolwrap">
-                                    <div class='row text-left' style='margin: 0px auto; text-align:center;'>
-                                        <label class='btn' style='font-family:arial; font-size:13px;' for="cb5XXXDatasetID">
-                                            <input type='checkbox' id="cb5XXXDatasetID" onclick="set_census_cbs('cb5XXXDatasetID')" cb5flag cb5disabled></input>
-                                        </label>
-                                    </div>
-                                </td>               
                                 <td style=" width:13%; text-align:center;" class="dccolwrap">
                                     <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
-                                        <a onclick="get_census_dataset_details('XXXDatasetID')">
+                                        <a onclick="get_census_dataset_details('0','XXXDatasetID')">
                                             <img style='margin: 0px auto; text-align:center;' title="XXXTDatasetID Details" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="20px" width="20px" id="CXXXDatasetID"></img>
                                         </a>
                                     </div>
@@ -680,9 +484,191 @@ census_download_row_html ="""
                             </tr>
 """
 
+
+census_no_details_download_html ="""
+        <div class='container dc-tbl-container' style='width:360px;' id="dfCensusLoadOptions">
+            <div class="panel panel-primary" style="border:0;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style='width:360px;'>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="input-group-btn">
+                                <p class="panel-title pull-left" style="padding-right:20px;">Census Datasets</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table dc-table" id="DIsamplerows" style='width:360px;'>
+                        <thead>
+                            <tr class="dcrowhead">
+                                <th style=" width:37%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
+                                <th style=" width:14%; font-size:13px; text-align:center;" class="dccolhead">&nbsp;Zip</br>Code</th>
+                                <th style=" width:14%; font-size:13px; text-align:center;" class="dccolhead">City</th>
+                                <th style=" width:21%; font-size:13px; text-align:center;" class="dccolhead">County</th>
+                                <th style=" width:14%; font-size:13px; text-align:center;" class="dccolhead">&nbsp;&nbsp;US</br>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+"""
+
+census_no_details_download_end_html ="""
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+"""
+
+census_no_details_download_row_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:37%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
+                                <td style=" width:14%; font-size:13px;" class="dccolwrap">
+                                    <div class='row text-left' style='margin: 0px auto; text-align:center;'>
+                                        <label class='btn' style='font-family:arial; font-size:13px;' for="cb1XXXDatasetID">
+                                            <input type='checkbox' id="cb1XXXDatasetID" onclick="set_census_cbs('cb1XXXDatasetID')" cb1flag cb1disabled></input>
+                                        </label>
+                                    </div>
+                                </td>               
+                                <td style=" width:14%; " class="dccolwrap">
+                                    <div class='row text-left' style='margin: 0px auto; text-align:center;'>
+                                        <label class='btn' style='font-family:arial; font-size:13px;' for="cb2XXXDatasetID">
+                                            <input type='checkbox' style="text-align:center" id="cb2XXXDatasetID" onclick="set_census_cbs('cb2XXXDatasetID')" cb2flag cb2disabled></input>
+                                        </label>
+                                    </div>
+                                </td>               
+                                <td style=" width:21%; text-align:center;" class="dccolwrap">
+                                    <div class='row text-left' style='margin: 0px auto; text-align:center;'>
+                                        <label class='btn' style='font-family:arial; font-size:13px;' for="cb3XXXDatasetID">
+                                            <input  type='checkbox' id="cb3XXXDatasetID" onclick="set_census_cbs('cb3XXXDatasetID')" cb3flag cb3disabled></input>
+                                        </label>
+                                    </div>
+                                </td>               
+                                <td style=" width:14%; " class="dccolwrap">
+                                    <div class='row text-left' style='margin: 0px auto; text-align:center;'>
+                                        <label class='btn' style='font-family:arial; font-size:13px;' for="cb4XXXDatasetID">
+                                            <input type='checkbox' id="cb4XXXDatasetID" onclick="set_census_cbs('cb4XXXDatasetID')" cb4flag cb4disabled></input>
+                                        </label>
+                                    </div>
+                                </td>               
+                            </tr>
+"""
+
+
+census_export_dfs_row_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:37%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
+                                <td style=" width:14%; font-size:13px;" class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_df_from_census('XXXsubsetID1')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXsubsetID1" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df.png' height="20px" width="20px" id="CXXXDatasetID"></img>
+                                        </a>
+                                    </div>
+                                </td>               
+                                <td style=" width:14%; " class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_df_from_census('XXXsubsetID2')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXsubsetID2" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df.png' height="20px" width="20px" id="CXXXDatasetID"></img>
+                                        </a>
+                                    </div>
+                                </td>               
+                                <td style=" width:21%; text-align:center;" class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_df_from_census('XXXsubsetID3')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXsubsetID3" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df.png' height="20px" width="20px" id="CXXXDatasetID"></img>
+                                        </a>
+                                    </div>
+                                </td>               
+                                <td style=" width:14%; " class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_df_from_census('XXXsubsetID4')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXsubsetID4" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df.png' height="20px" width="20px" id="CXXXDatasetID"></img>
+                                        </a>
+                                    </div>
+                                </td>               
+                            </tr>
+"""
+
+
+
+
+selected_columns_table_html = """
+        <div class='dc-tbl-container' style="width:360px;" id="dfCensusLoadOptions">
+            <div class="panel panel-primary" style="border:0;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style="width:360px;">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="input-group-btn">
+                                <p class="panel-title pull-left" style="padding-right:20px;  font-size:15px;">Columns Selected To Add To df</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:360px;">
+                    <table class="table dc-table">
+                        <thead>
+                        </thead>
+                        <tbody>
+"""
+
+selected_columns_dataset_row_html = """
+                            <tr class="dcrowhead"  style="color: white; background-color:#6FA6DA;">
+                                <td style=" width:60%; font-size:12px; text-align:left;" class="dcleftcolhead">&nbsp;&nbsp;XXXXDATASET Subsets</td>
+                                <td style=" width:20%; font-size:12px; text-align:center;" class="dccolhead">Columns</br>Count</td>
+                                <td style=" width:20%; font-size:12px; text-align:center;" class="dccolhead">Columns</br>Details</td>
+                            </tr>
+"""
+
+selected_columns_subset_row_html = """
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:60%; font-size:12px; text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;XXXXSUBSET</td>
+                                <td style=" width:20%; font-size:11px; text-align:center;">XXXXSUBSETCOUNT</td>
+                                <td style=" width:20%; font-size:11px; text-align:center;">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="get_select_cols_subData_details('XXXXDATASETID','XXXXSUBSETID')">
+                                            <img style='margin: 0px auto; text-align:center;' title="XXXXSUBSETTITLE" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="15px" width="15px"></img>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+"""
+                        
+selected_columns_table_html_end = """
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+"""
+
+selected_columns_blank_line_html = """
+                            <tr>
+                                <td style=" width:60%; font-size:11px; text-align:left;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td style=" width:20%; font-size:11px; text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td style=" width:20%; font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+"""
+
+selected_columns_no_selects_html = """
+                            <tr>
+                                <td style=" width:60%; font-size:11px; text-align:left;">No columns selected to load in df(s)</td>
+                                <td style=" width:20%; font-size:11px; text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                <td style=" width:20%; font-size:11px;">&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+"""
+
+
+
+
+
+
+
+
+
 """
 #--------------------------------------------------------------------------
-#                  Census Subset Table html
+#--------------------------------------------------------------------------
+#                  Census Subset Details html
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
@@ -720,6 +706,10 @@ census_subdata_table_row_html = """
                                     </div>
                                 </td>
                             </tr>"""
+                            
+
+                                            
+                            
 
 load_cols_subdata_table_html = """
         <div class='container dc-tbl-container' style="width:540px;" id="dfCensusLoadOptions">
@@ -728,7 +718,7 @@ load_cols_subdata_table_html = """
                     <div class="input-group">
                         <div class="input-group-btn">
                             <div class="input-group-btn">
-                                <p class="panel-title pull-left" style="padding-right:20px;">XXXDatasetID Datasets</p>
+                                <p class="panel-title pull-left" style="padding-right:20px;">XXXDatasetID Subsets</p>
                             </div>
                         </div>
                     </div>
@@ -740,7 +730,7 @@ load_cols_subdata_table_html = """
                                 <th style=" width:55%; font-size:13px; text-align:left;" class="dcleftcolhead">Subset</th>
                                 <th style=" width:15%; font-size:13px;" class="dccolhead">Num Cols</th>
                                 <th style=" width:15%; font-size:13px;" class="dccolhead">Nan Pct</th>
-                                <th style=" width:15%; font-size:13px;" class="dccolhead">Details</th>
+                                <th style=" width:15%; font-size:13px;" class="dccolhead">Columns</th>
                             </tr>
                         </thead>
                         <tbody>"""
@@ -753,12 +743,48 @@ load_cols_subdata_table_end_html ="""
         </div>
 """                        
                         
-                        
+"""
+#--------------------------------------------------------------------------
+#                  Census Datasets Zip Sizes Table html
+#--------------------------------------------------------------------------
+"""
+
+census_zip_size_head = """
+                        <thead>
+                            <tr class="dcrowhead">
+                                <th style=" width:20%; font-size:13px;">&nbsp;Zip</br>Code</br>Size</th>
+                                <th style=" width:20%; font-size:13px;">City</br>Size</th>
+                                <th style=" width:20%; font-size:13px;">County</br>Size</th>
+                                <th style=" width:20%; font-size:13px;">State</br>Size</th>
+                                <th style=" width:20%; font-size:13px;">Total</br>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>"""
+
+
+census_zip_size_row_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:20%; font-size:13px;" class="dcleftcolhead">XXXZipCodeSize</td>
+                                <td style=" width:20%; font-size:13px;">XXXCitySize</td>
+                                <td style=" width:20%; font-size:13px;">XXXCountySize</td>
+                                <td style=" width:20%; font-size:13px;">XXXStateSize</td>
+                                <td style=" width:20%; font-size:13px;">XXXTotalSize</td>
+                            </tr>"""
+
+
+ 
+
+
+
+
+                       
                         
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #                  Configure Subset Table html
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
@@ -797,48 +823,6 @@ configure_subdata_table_row_html = """
                                 </td>
                             </tr>"""
 
-
-"""
-#--------------------------------------------------------------------------
-#              Census Datasets Details and Subdata Table html
-#--------------------------------------------------------------------------
-"""
-
-census_load_details_html ="""
-    <div class='container dc-tbl-container' id="dfCensusDetails">
-        <div class="row">
-            <div class="panel panel-primary" style="border:0; width:480px;">
-                <div class="panel-heading clearfix dc-table-panel-heading" style="width:480px;">
-                    <div class="input-group">
-                        <div class="input-group-btn">
-                            <div class="input-group-btn">
-                                <p class="panel-title dc-search-panel-title pull-left" id="SubdataHeading" style="padding-right:20px">XXXdatasetid</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="width:480px;">
-                    <table class="table dc-table">
-"""
-
-census_load_details_table_end_html ="""
-                        </tbody>
-                    </table>
-"""
-census_load_details_end_html ="""
-                </div>
-            </div>
-        </div>
-    </div>
-"""
-
-census_load_subdata_end_html ="""
-            </div>
-        </div>
-    </div>
-"""
-
-
 """
 #--------------------------------------------------------------------------
 #                  Census Datasets Description Table html
@@ -859,71 +843,6 @@ census_datasets_description_row_html ="""                            <tr class="
                             </tr>
 """
 
-"""
-#--------------------------------------------------------------------------
-#                  Census Datasets Zip Sizes Table html
-#--------------------------------------------------------------------------
-"""
-
-census_zip_size_head = """
-                        <thead>
-                            <tr class="dcrowhead">
-                                <th style=" width:20%; font-size:13px;">&nbsp;Zip</br>Code</br>Size</th>
-                                <th style=" width:20%; font-size:13px;">City</br>Size</th>
-                                <th style=" width:20%; font-size:13px;">County</br>Size</th>
-                                <th style=" width:20%; font-size:13px;">State</br>Size</th>
-                                <th style=" width:20%; font-size:13px;">Total</br>Size</th>
-                            </tr>
-                        </thead>
-                        <tbody>"""
-
-
-census_zip_size_row_html ="""
-                            <tr class="dc-describe-table-body-row">
-                                <td style=" width:20%; font-size:13px;" class="dcleftcolhead">XXXZipCodeSize</td>
-                                <td style=" width:20%; font-size:13px;">XXXCitySize</td>
-                                <td style=" width:20%; font-size:13px;">XXXCountySize</td>
-                                <td style=" width:20%; font-size:13px;">XXXStateSize</td>
-                                <td style=" width:20%; font-size:13px;">XXXTotalSize</td>
-                            </tr>"""
-
-
-""""
-#--------------------------------------------------------------------------
-#                Census Subset Column Names Table html
-#--------------------------------------------------------------------------
-"""
-
-census_colnames_table_html = """
-                        <thead>
-                            <tr class="dcrowhead">
-                                <th style=" width:85%; font-size:13px; text-align:left;" class="dcleftcolhead">Column Name</th>
-                                <th style=" width:15%; font-size:13px;" class="dccolhead">Nan Pct</th>
-                            </tr>
-                        </thead>
-                        <tbody>"""
-                        
-census_colnames_table_html_end = """
-                        </tbody>
-                    </table>
-                </div>"""
-
-census_colnames_table_row_html = """
-                            <tr class="dc-describe-table-body-row">
-                                <td style=" width:85%; font-size:11px; text-align:left;" class="dccolleft">XXXcolname</td>
-                                <td style=" width:15%; font-size:11px;">XXXcnamenans</td>
-                            </tr>"""
-
-census_colnames_scroll_html = """
-                <div style="margin-top:10px; width:480px; background-color:#F8F5E1;" id="censuscolscroll ">
-                    <div class="container dc-container dc-default-input-button-container btn-grp-center">
-                        <div class="btn-group btn-center"   style=" width: 100%; ">
-                            <button type="button" class="btn btn-primary" style = ' font-size: 11px;  margin-left: 130px;  height: 30px;  width: 80px; ' onclick="scroll_census_cols('XXXDatasetID','XXXSubDataID','XXXcolid','0')">More</button>
-                            <button type="button" class="btn btn-primary" style = ' font-size: 11px;  height: 30px;  width: 80px; ' onclick="scroll_census_cols('XXXDatasetID','XXXSubDataID','XXXcolid','1')">Previous</button>
-                        </div>
-                    </div>
-                </div>
-"""
 
 
 """"
@@ -940,7 +859,7 @@ get_cols_colnames_table_html = """
                             <div class="container dc-container dc-default-input-inner-div">
                                 <div class="form-group-sm">
                                     <label  for="subdatacolnames" style="text-align:left; font-size: 13px;">XXXColumnsTitle</label>
-                                    <select id="subdatacolnames" multiple="multiple" size="30" style="margin-left:1px; font-size: 11px;" class="form-control">
+                                    <select id="subdatacolnames" multiple="multiple" size="30" style="margin-left:1px; font-size: 11px;" class="form-control" enabled>
 """
 
 get_cols_colnames_table_row_html = """                              <option style='text-align:left; font-size:11px;' value="XXXColname">XXXSColname</option>
@@ -955,6 +874,24 @@ get_cols_colnames_table_end_html = """
                 </div>
 """
 
+get_cols_colnames_table_selects_end_html = """
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-top:10px;"  id="censusdfinsertcols">
+                                <div class="container dc-container dc-default-input-button-container btn-grp-center">
+                                    <div class="btn-group btn-center"   style=" width: 100%; ">
+                                        <button type="button" class="btn btn-primary" style = ' font-size: 13px;  margin-left: 58px;  height: 75px;  width: 80px; ' onclick="get_census_callback(33)">Insert</br>Columns</br>Into df(s)</button>
+                                        <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 80px; ' onclick="get_census_callback(29)">Select</br>More</br>Columns</button>
+                                        <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 80px; ' onclick="get_census_callback(0)">Return</button>
+                                        <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 80px; ' onclick="displayhelp(https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset)">Help</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -1006,7 +943,7 @@ census_confirm_row_html ="""
 census_confirm_row_highlighted_html ="""
                             <tr class="dc-describe-table-body-row">
                                 <td style=" width:40%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>              
-                                <td bgcolor="#e6ffe6" style=" width:40%; font-size:12px; text-align:left;" class="dccolwrap"><a href="https://github.com/RickKrasinski/dfc_census_zips.git/XXXfilename" target="_blank">XXXfilename</a></td>               
+                                <td style=" width:40%; font-size:12px; text-align:left;" class="dccolwrap"><a href="https://github.com/RickKrasinski/dfc_census_zips/raw/master/housing.zip/XXXfilename" target="_blank">XXXfilename</a></td>               
                                 <td style=" width:20%; font-size:12px;" class="dccolwrap">XXXtotalsize</td>
                             </tr>
 """
@@ -1017,46 +954,6 @@ census_confirm_row_highlighted_html ="""
 #                   Configure Verification html
 #--------------------------------------------------------------------------
 """
-
-configure_verification_html ="""
-        <div class='container dc-tbl-container' style="width:100%;" id="dfCensusLoadOptions">
-            <div class="panel panel-primary" style="border:0;">
-                <div class="panel-heading clearfix dc-table-panel-heading" style="width:100%;">
-                    <div class="input-group">
-                        <div class="input-group-btn">
-                            <div class="input-group-btn">
-                                <p class="panel-title pull-left" style="padding-right:20px;">Census Datasets To Drop</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <table class="table dc-table" id="DIsamplerows" style="width:100%;">
-                        <thead>
-                            <tr class="dcrowhead">
-                                <th style=" width:35%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
-                                <th style=" width:65%; font-size:13px; text-align:left;" class="dccolheadleft">File</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-"""
-
-configure_verification_end_html ="""
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-"""
-
-
-configure_verification_row_html ="""
-                            <tr class="dc-describe-table-body-row">
-                                <td style=" width:35%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>
-                                <td style=" width:65%; font-size:13px; text-align:left;" class="dccolleft">XXXFileName</td>               
-                            </tr>
-"""
-
 
 configure_subdata_verification_html ="""
         <div class='container dc-tbl-container' style="width:100%;" id="dfCensusLoadOptions">
@@ -1107,37 +1004,39 @@ configure_drop_notes_html="""
 
 
 
-
 """
 #--------------------------------------------------------------------------
-#                   Census Download File To Process html
+#--------------------------------------------------------------------------
+#                   Census dfs Loaded html
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
-census_process_html ="""
-        <div class='container dc-tbl-container' style="width:620px;" id="dfCensusLoadOptions">
+census_loaded_html ="""
+        <div class='container dc-tbl-container' style="width:520px;" id="dfCensusLoadedDfs">
             <div class="panel panel-primary" style="border:0;">
-                <div class="panel-heading clearfix dc-table-panel-heading" style="width:620px;">
+                <div class="panel-heading clearfix dc-table-panel-heading">
                     <div class="input-group">
                         <div class="input-group-btn">
                             <div class="input-group-btn">
-                                <p class="panel-title pull-left">Downloaded Census Files To Process</p>
+                                <p class="panel-title pull-left">Census dfs Loaded</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <table class="table dc-table" style="width:620px;">
+                    <table class="table dc-table">
                         <thead>
                             <tr class="dcrowhead">
                                 <th style=" width:30%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
-                                <th style=" width:70%; font-size:13px; text-align:left;" class="dccolhead">Census FIle To Process</th>
+                                <th style=" width:60%; font-size:13px; text-align:left;" class="dccolhead">Census df Loaded</th>
+                                <th style=" width:10%; font-size:13px; text-align:left;" class="dccolhead">&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
 """
 
-census_process_end_html ="""
+census_loaded_end_html ="""
                         </tbody>
                     </table>
                 </div>
@@ -1146,24 +1045,24 @@ census_process_end_html ="""
 """
 
 
-census_process_row_html ="""
+census_loaded_row_html ="""
                             <tr class="dc-describe-table-body-row">
-                                <td style=" width:30%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>              
-                                <td style=" width:70%; font-size:12px; text-align:left;" class="dccolwrap">XXXfilename</td>               
-                            </tr>
-"""
-
-census_process_row_highlighted_html ="""
-                            <tr class="dc-describe-table-body-row">
-                                <td style=" width:30%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>              
-                                <td bgcolor="#99ffcc" style=" width:70%; font-size:12px; text-align:left;" class="dccolwrap">XXXfilename</td>               
+                                <td style=" width:30%; font-size:13px; text-align:left;" class="dccolleft">XXXXDatasetID</td>              
+                                <td style=" width:60%; font-size:12px; text-align:left;" class="dccolwrap">XXXXdfname</td>
+                                <td style=" width:10%; font-size:12px; text-align:left;" class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="XXXXcallback('XXXXdfname')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXXdfname df" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="20px" width="20px" id="CXXXXdfname"></img>
+                                        </a>
+                                    </div>
+                                </td>               
                             </tr>
 """
 
 
 """
 #--------------------------------------------------------------------------
-#                   Census Load Datasets to memory html
+#                   Census Load Datasets to dfc dfs html
 #--------------------------------------------------------------------------
 """
 
@@ -1259,11 +1158,12 @@ census_get_cols_for_df_html ="""
                     <table class="table dc-table" id="DIsamplerows" style="width:100%;">
                         <thead>
                             <tr class="dcrowhead">
-                                <th style=" width:38%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
-                                <th style=" width:14%; font-size:13px;" class="dccolhead">Zip</br>Code</th>
-                                <th style=" width:14%; font-size:13px;" class="dccolhead">City</th>
-                                <th style=" width:20%; font-size:13px;" class="dccolhead">County</th>
-                                <th style=" width:14%; font-size:13px;" class="dccolhead">&nbsp;US</br>State</th>
+                                <th style=" width:32%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
+                                <th style=" width:12%; font-size:13px;" class="dccolhead">Zip</br>Code</th>
+                                <th style=" width:12%; font-size:13px;" class="dccolhead">City</th>
+                                <th style=" width:18%; font-size:13px;" class="dccolhead">County</th>
+                                <th style=" width:12%; font-size:13px;" class="dccolhead">&nbsp;US</br>State</th>
+                                <th style=" width:14%; font-size:13px;" class="dccolhead">Columns</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1280,27 +1180,34 @@ census_get_cols_for_df_end_html ="""
 
 census_get_cols_for_df_row_html ="""
                             <tr class="dc-describe-table-body-row">
-                                <td style=" width:38%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
-                                <td style=" width:14%;" class="dccolwrap text-center align-middle">
+                                <td style=" width:32%; font-size:13px; text-align:left;" class="dccolleft">XXXTDatasetID</td>
+                                <td style=" width:12%;" class="dccolwrap text-center align-middle">
                                     <div class='row'>
-                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" onclick="get_df_census_dataset_details('0','XXXDatasetID')" rb0checked rb0disabled>&nbsp;&nbsp;</input>
+                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" rb0checked disabled>&nbsp;&nbsp;</input>
                                     </div>
                                 </td>               
-                                <td style="width:14%;" class="dccolwrap text-center align-middle">
+                                <td style="width:12%;" class="dccolwrap text-center align-middle">
                                     <div class='row'>
-                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" onclick="get_df_census_dataset_details('1','XXXDatasetID')" rb1checked rb1disabled></input>
+                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" rb1checked disabled></input>
                                     </div>
                                 </td>               
-                                <td style="width:20%;" class="dccolwrap text-center align-middle">
+                                <td style="width:18%;" class="dccolwrap text-center align-middle">
                                     <div class='row'>
-                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" onclick="get_df_census_dataset_details('2','XXXDatasetID')" rb2checked rb2disabled></input>
+                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" rb2checked disabled></input>
                                     </div>
                                 </td>               
-                                <td style="width:14%;" class="dccolwrap text-center align-middle">
+                                <td style="width:12%;" class="dccolwrap text-center align-middle">
                                     <div class='row'>
-                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" onclick="get_df_census_dataset_details('3','XXXDatasetID')" rb3checked rb3disabled></input>
+                                        <input type='radio' style="padding-left:10px;" name="rbXXXDatasetID" rb3checked disabled></input>
                                     </div>
-                                </td>               
+                                </td> 
+                                <td style=" width:14%; font-size:11px; text-align:center;">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a  onclick="get_df_census_dataset_details('0','XXXDatasetID')">
+                                            <img style='margin: 0px auto; text-align:center;' title="XXXDatasetID subsets" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="15px" width="15px"></img>
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
 """
 
@@ -1332,31 +1239,13 @@ mult_line_separator="&nbsp;&nbsp;<font color='#67a1f3'>-------------------------
 download_notes_info_html="<div class='dfcleanser-common-grid-note'>To get detailed info on the datasets click on the details icons.<br><br>Select which datasets to download and process by checking the appropriate checkboxes above and clicking on the Download Selected Datasets button.</div>"
 download_notes_subdata_info_html="<div class='dfcleanser-common-grid-note'>Once you review dataset details and decide which datasets to buid by checking the appropriate checkboxes above then click on the Build Selected Datasets button.</div>"
 
-
-
-confirm_download_notes_html="<br><div class='dfcleanser-common-grid-note' >Please download the zip files highlighted above via clicking on the highlighted links above or go to the <a href='https://github.com/RickKrasinski/dfc_census_zips.git' target='_blank'>dfc_census_repository</a> directly.<br><br>Download zips to the XXXCensusWorkingDir location. To learn how to change your browser download location click <a href='https://support.google.com/chrome/answer/95759?co=GENIE.Platform%3DDesktop&hl=en' target='_blank'>here.</a></div><br>"
-confirm_download_none_notes_html="<br><div class='dfcleanser-common-grid-note'>Please return and select datasets to download.</div><br>"
-confirm_download_incomplete_notes_html="<br><div class='dfcleanser-common-grid-note'>Not all selected datasets have been downloaded.<br>Please download the zip files highlighted above via clicking on the highlighted links above or go to the <a href='https://github.com/RickKrasinski/dfc_census.git' target='_blank'>dfc_census_repository</a> directly.<br>Download zips to the XXXCensusWorkingDir location.</div><br>"
-confirm_download_complete_notes_html="<br><div class='dfcleanser-common-grid-note'>All selected datasets have been downloaded. Please process downloaded census files.</div><br>"
-
-
-process_notes_html="<br><div class='dfcleanser-common-grid-note'>Please click on the Process Downloaded Files key to process zip files.</div>"
-process_notes_complete_html="<br><div class='dfcleanser-common-grid-note'>All census datasets have been processed successfully.<br>Click on Configure Selected Datasets to configure census datasets.<br>Click on Load Census Data to df(s) to load datasets to df(s).</div>"
-
-
-configure_notes_info_html="<br><div class='dfcleanser-common-grid-note'>To drop a dataset unselect the checked dataset(s) to drop.<br><br>To add a dataset select the unchecked dataset(s) you want to add.</div>"
-configure_no_select_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:'60%;'>No datasets to configure were selected.<br><br>To go back and select datasets to configure click on Clear.</div>"
+configure_notes_info_html="<br><div class='dfcleanser-common-grid-note'>To drop a dataset unselect the checked dataset(s) to drop.<br>To add a dataset select the unchecked dataset(s) you want to add.</div>"
+configure_no_select_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:'60%;'>No datasets to configure were selected.<br>To go back and select datasets to configure click on 'Configure Datasets'.</div>"
 configure_no_datasets_notes_info_html="<br><div class='dfcleanser-common-grid-note'>No datasets are currently downloaded and processed.</div><br>"
-configure_process_html="<div class='dfcleanser-common-grid-note'>To process datasets selected click on the Configure Selected Datasets.</div><br>"
-
-only_datasets_to_drop_html="<br><div class='dfcleanser-common-grid-note'>To drop the selected datasets click on Drop Selected Data.</div>"
-only_subdatas_to_drop_html="<br><div class='dfcleanser-common-grid-note'>To drop the selected data subsets click on Drop Selected Data.</div><br>"
-both_subdatas_to_drop_html="<br><div class='dfcleanser-common-grid-note'>To drop the selected data click on Drop Selected Data.</div><br>"
-
 
 
 load_datasets_html="<br><div class='dfcleanser-common-grid-note'>Once you select datasets to load click on the Load Census Data to df(s) button to laod the datasets as dfc datframes..</div>"
-load_datasets_db_html="<br><div class='dfcleanser-common-grid-note'>Once you select datasets to load click on the Define db Connector button to define a bd connector and laod the datasets to your database.</div>"
+load_datasets_db_html="<br><div class='dfcleanser-common-grid-note'>Once you select datasets to load click on the Define db Connector button to define a db connector and laod the datasets to your database.</div>"
 load_datasets_none_html="<br><div class='dfcleanser-common-grid-note'>No census datasets are downloaded for loading into dataframes.</div><br>"
 
 
@@ -1364,9 +1253,9 @@ load_datasets_none_html="<br><div class='dfcleanser-common-grid-note'>No census 
 #  Get Census Columns Dataset and Subdata Selects
 """
 
-get_dataset_columns_notes_html="<br><div class='dfcleanser-common-grid-note'>Select a dataset to show subdata columns for.</div><br>"
-get_dataset_cols_subdata_list_notes_html="<br><div class='dfcleanser-common-grid-note'>Select a subdata set to select columns from via clicking on the details button above.</div><br>"
-get_dataset_cols_columns_list_notes_html="<br><div class='dfcleanser-common-grid-note'>Once you select the columns to retrieve hit the Get Columns button.</div><br>"
+get_dataset_columns_notes_html="<br><div class='dfcleanser-common-grid-note'>Select a dataset to show subset columns for by ckicking on the correspondng 'Columns' button.</div><br>"
+get_dataset_cols_subdata_list_notes_html="<br><div class='dfcleanser-common-grid-note'>Select a dataset subset to select columns from via clicking on the Columns button above.</div><br>"
+get_dataset_cols_columns_list_notes_html="<br><div class='dfcleanser-common-grid-note'>Once you select all the columns to retrieve click on the 'Show Selected Columns' button to review and put the columns in a df.<br><br>To select more columns click on the 'Select More Columns' button.</div><br>"
 
 
 """
@@ -1378,14 +1267,10 @@ get_dataset_city_cols_to_add_notes_html="<br><div style ='margin-left:130px;' cl
 get_dataset_county_cols_to_add_notes_html="<br><div style ='margin-left:130px;' class='dfcleanser-common-grid-note'>You can change the column names used in the df by editing the census_column_names_list above.<br><br>The na_fill_value is used if the county_column value in the output dataframe is nan or if there is no county in the census county dataset that matches the county in the county_name column.</div><br>"
 get_dataset_state_cols_to_add_notes_html="<br><div style ='margin-left:130px;' class='dfcleanser-common-grid-note'>You can change the column names used in the df by editing the columns names list above.<br><br>The na_fill_value is used if the state_column value in the output dataframe is nan or if there is no state in the census state dataset that matches the state in the state_name column.<br><br>Use a state value of US to get columns for the United States.</div><br>"
 
-
-
-
-
 get_dataset_columns_no_datasetid_notes_html="<br><div class='dfcleanser-common-grid-note'>No dataset selected yet.</div><br>"
-
 get_dataset_columns_no_dfs_loaded_html="<br><div class='dfcleanser-common-grid-note'>No Census df(s) are loaded. Go back to Load Census df(s) to load df(s) for column retrieval.</div><br>"
 
+get_dataset_loaded_html="<br><div class='dfcleanser-common-grid-note'>To export a df click on the df name above.</div><br>"
 
     
 """
@@ -1410,10 +1295,785 @@ def get_census_main_taskbar() :
 #--------------------------------------------------------------------------
 """
 
-def get_datasets_downloaded() :
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Datasets Details Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""  
+
+"""
+#--------------------------------------------------------------------------
+#              Census Datasets Details and Subdata Table html
+#--------------------------------------------------------------------------
+"""
+
+census_load_details_html ="""
+    <div class='container dc-tbl-container' id="dfCensusDetails">
+        <div class="row">
+            <div class="panel panel-primary" style="border:0; width:480px;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style="width:480px;">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="input-group-btn">
+                                <p class="panel-title dc-search-panel-title pull-left" id="SubdataHeading" style="padding-right:20px">XXXdatasetid</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:480px;">
+                    <table class="table dc-table">
+"""
+
+census_load_details_table_end_html ="""
+                        </tbody>
+                    </table>
+"""
+census_load_details_end_html ="""
+                </div>
+            </div>
+        </div>
+    </div>
+"""
+
+census_load_subdata_end_html ="""
+            </div>
+        </div>
+    </div>
+"""
+
+""""
+#--------------------------------------------------------------------------
+#                Census Subset Column Names Table html
+#--------------------------------------------------------------------------
+"""
+
+census_colnames_table_html = """
+                        <thead>
+                            <tr class="dcrowhead">
+                                <th style=" width:85%; font-size:13px; text-align:left;" class="dcleftcolhead">Column Name</th>
+                                <th style=" width:15%; font-size:13px;" class="dccolhead">Nan Pct</th>
+                            </tr>
+                        </thead>
+                        <tbody>"""
+                        
+census_colnames_table_html_end = """
+                        </tbody>
+                    </table>
+                </div>"""
+
+census_colnames_table_row_html = """
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:85%; font-size:11px; text-align:left;" class="dccolleft">XXXcolname</td>
+                                <td style=" width:15%; font-size:11px;">XXXcnamenans</td>
+                            </tr>"""
+
+census_colnames_scroll_html = """
+                <div style="margin-top:10px; width:480px; background-color:#F8F5E1;" id="censuscolscroll ">
+                    <div class="container dc-container dc-default-input-button-container btn-grp-center">
+                        <div class="btn-group btn-center"   style=" width: 100%; ">
+                            <button type="button" class="btn btn-primary" style = ' font-size: 11px;  margin-left: 130px;  height: 30px;  width: 80px; ' onclick="scroll_census_cols('XXXDatasetID','XXXSubDataID','XXXcolid','0')">More</button>
+                            <button type="button" class="btn btn-primary" style = ' font-size: 11px;  height: 30px;  width: 80px; ' onclick="scroll_census_cols('XXXDatasetID','XXXSubDataID','XXXcolid','1')">Previous</button>
+                        </div>
+                    </div>
+                </div>
+"""
+
+    
+def get_load_datasets_details_html(datasetid=None,subdataid=None,colnameid=None,direction=None) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get list of datasets downloaded
+    * function : get display datasets details html
+    * 
+    * parms :
+    *   datasetid     -   dataset id
+    *   subdataid     -   data subset id 
+    *   colnameid     -   column name id
+    *   direction     -   scroll direction
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    
+    print("get_load_datasets_details_html",datasetid,subdataid,colnameid,direction)
+    
+    load_datasets_details_html  =   ""
+    
+    if(datasetid is None) :
+        
+        header_html                 =   census_load_details_html
+        header_html                 =   header_html.replace("XXXdatasetid","Description")
+        load_datasets_details_html  =   (load_datasets_details_html + header_html) 
+        
+        load_datasets_details_html  =   (load_datasets_details_html + census_datasets_description_head)        
+    
+        for i in range(len(swcm.census_datasets)) : 
+        
+            dsid     =  swcm.census_datasets[i].replace("_"," ")
+            row_html =  census_datasets_description_row_html.replace("XXXDatasetID",dsid)
+            row_html =  row_html.replace("XXXDatasetText",swcm.census_dataset_details[i])
+            row_html =  row_html.replace("XXXDatasetNumCols",str(swcm.census_datasets_num_cols[i]))
+        
+            load_datasets_details_html  =   (load_datasets_details_html + row_html)
+
+        load_datasets_details_html  =   (load_datasets_details_html + census_load_details_table_end_html)
+        load_datasets_details_html  =   (load_datasets_details_html + census_load_details_end_html)
+            
+    else :
+        
+        if(subdataid is None) :
+        
+            header_html                 =   census_load_details_html
+            dsid                        =   datasetid.replace("_"," ")
+            header_html                 =   header_html.replace("XXXdatasetid",dsid)
+            load_datasets_details_html  =   (load_datasets_details_html + header_html) 
+    
+            load_datasets_details_html  =   (load_datasets_details_html + census_zip_size_head) 
+            
+            dsinndex    =   swcm.get_dataset_index(datasetid)
+            
+            zcsize      =   swcm.get_subset_size(0,dsinndex)
+            citysize    =   swcm.get_subset_size(1,dsinndex)
+            countysize  =   swcm.get_subset_size(2,dsinndex)
+            statesize   =   swcm.get_subset_size(3,dsinndex)
+            totalsize   =   swcm.get_subset_size(4,dsinndex)
+        
+            row_html =  census_zip_size_row_html.replace("XXXZipCodeSize",zcsize)
+            row_html =  row_html.replace("XXXCitySize",citysize)
+            row_html =  row_html.replace("XXXCountySize",countysize)
+            row_html =  row_html.replace("XXXStateSize",statesize)
+            row_html =  row_html.replace("XXXTotalSize",totalsize)
+        
+            load_datasets_details_html  =   (load_datasets_details_html + row_html)
+            load_datasets_details_html  =   (load_datasets_details_html + census_load_details_table_end_html)
+
+        else :
+        
+            header_html                 =   census_load_details_html
+            header_html                 =   header_html.replace("XXXdatasetid",swcm.get_subdata_name(datasetid,subdataid))
+            load_datasets_details_html  =   (load_datasets_details_html + header_html) 
+    
+
+        # append the details table
+        load_datasets_details_html  =   (load_datasets_details_html + get_load_subdata_table_html(datasetid,subdataid,colnameid,direction))
+        if(subdataid is None) :
+            load_datasets_details_html  =   (load_datasets_details_html + census_load_details_end_html)
+        else :
+            load_datasets_details_html  =   (load_datasets_details_html + census_load_subdata_end_html)        
+    
+    return(load_datasets_details_html)
+    
+
+def get_load_subdata_table_html(datasetid,subdataindex=None,colnameid=None,direction=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get dataset subset details html
+    * 
+    * parms :
+    *   datasetid     -   dataset id
+    *   subdataid     -   data subset id 
+    *   colnameid     -   column name id
+    *   direction     -   scroll direction
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    print("get_load_subdata_table_html",datasetid,subdataindex,colnameid,direction)
+    
+    census_datasets_details_table     =   ""
+    
+    subdata_data        =   swcm.get_subset_data_lists(datasetid)
+    subdatacols         =   subdata_data[swcm.SUBSET_COLUMNS]    
+    subdatacolstext     =   subdata_data[swcm.SUBSET_COLUMN_NAMES]
+    subdatacolsnans     =   subdata_data[swcm.SUBSET_COLUMN_NANS]
+    
+    if(subdataindex is None) :
+        
+        census_datasets_details_table     =   (census_datasets_details_table + configure_subdata_table_html)
+
+        for i in range(len(subdatacols)) :
+
+            if(not (i==0)) :
+            
+                row_html    =   configure_subdata_table_row_html
+                    
+                row_html    =   row_html.replace("XXXsubdatatitle",subdatacolstext[i])
+                row_html    =   row_html.replace("XXXsubdatacols",str(len(subdatacols[i])))
+            
+                nanindices  =   swcm.get_census_subdata_indices(datasetid,i)
+                total_nans  =   0
+            
+                for j in range(len(nanindices)) :
+                    total_nans  =   total_nans + subdatacolsnans[nanindices[j]]
+            
+                nanpct      =   100 * (total_nans / (swcm.total_zips_count * len(nanindices)))   
+                pct_str     =   '{:4.2f}'.format(nanpct)
+            
+                row_html    =   row_html.replace("XXXsubdatanans",pct_str + "%")
+                row_html    =   row_html.replace("XXXSubDataText",subdatacolstext[i])
+                row_html    =   row_html.replace("XXXSubDataID",str(i))
+            
+                row_html    =   row_html.replace("XXXDatasetID",datasetid)
+                
+                census_datasets_details_table     =   (census_datasets_details_table + row_html)
+        
+        census_datasets_details_table     =   (census_datasets_details_table + configure_subdata_table_html_end)
+
+    else :
+        
+        census_datasets_details_table     =   (census_datasets_details_table + census_colnames_table_html)
+        
+        subdata_col_names               =   subdatacols[subdataindex]
+        nanindices                      =   swcm.get_census_subdata_indices(datasetid,subdataindex)
+
+        if(len(subdata_col_names) > 15) :
+            
+            if(colnameid is None) :
+                rowcount    =   15 
+            else :
+                
+                if(direction == 0) :
+                
+                    if((colnameid + 15) > len(subdata_col_names)) :
+                        rowcount    =   len(subdata_col_names) - colnameid
+                    else :
+                        rowcount    =   15
+                        
+                else :
+                    rowcount    =   15
+                
+            if(colnameid is None) :
+                rowstart    =   0
+                
+            else :
+                
+                if(direction == 0) :
+                    rowstart    =   colnameid
+                else :
+                    rowstart    =   colnameid - (2*15)
+                    if(rowstart < 0) :
+                        rowstart    =   0
+                
+        else :
+            rowcount    =   len(subdata_col_names)
+            rowstart    =   0
+        
+        for i in range(rowcount) :
+
+            row_html    =   census_colnames_table_row_html
+            
+            colname     =   swcm.get_colname(subdata_col_names[i+rowstart],70)
+                
+            row_html    =   row_html.replace("XXXcolname",colname)
+            pct_str     =   '{:4.2f}'.format(100 * (subdatacolsnans[nanindices[i+rowstart]]/swcm.total_zips_count))
+            row_html    =   row_html.replace("XXXcnamenans",pct_str + "%")
+                                             
+            census_datasets_details_table     =   (census_datasets_details_table + row_html)
+
+        census_datasets_details_table     =   (census_datasets_details_table + census_colnames_table_html_end)
+        
+        if(len(subdata_col_names) > 15) :
+            
+            scroll_html    =   census_colnames_scroll_html
+            scroll_html    =   scroll_html.replace("XXXDatasetID",datasetid)
+            scroll_html    =   scroll_html.replace("XXXSubDataID",str(subdataindex))
+            
+            if(colnameid is None) :
+                colid   =   15
+            else :
+                
+                if(direction == 0) :
+                    
+                    if((colnameid + 15) > len(subdata_col_names)) :
+                        colid   =   0
+                    else :
+                        colid   =   colnameid + 15
+                        
+                else :
+                    
+                    if((colnameid - (2*15)) < 0) :
+                        colid   =   15
+                    else :
+                        colid   =   colnameid - (2*15)
+                    
+            scroll_html    =   scroll_html.replace("XXXcolid",str(colid))
+            
+            census_datasets_details_table     =   (census_datasets_details_table + scroll_html)
+            
+        #print(load_datasets_details_table)
+ 
+    return(census_datasets_details_table)
+
+    
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Datasets Download Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""    
+datasets_downloaded_start_html  =   """
+        <div style="width:240px;">
+            <div class='container dc-tbl-container' id="dfCensusLoadOptions" style="width:360px;">
+                <div class="row">
+                    <div class="panel panel-primary" style="border:0;">
+                        <div class="panel-heading clearfix dc-table-panel-heading">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <div class="input-group-btn">
+                                        <p class="panel-title dc-search-panel-title pull-left" style="padding-right:20px">Census Datasets</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <table class="table dc-table" id="DIsamplerows">
+                                <thead>
+                                    <tr class="dcrowhead" id="DIsamplerows_thr">
+                                        <th style=" width:54%; text-align:left;" class="dcleftcolhead">Dataset</th>
+                                        <th style=" width:30%; " class="dccolhead">Download</th>
+                                        <th style=" width:14%; " class="dccolhead">Details</th>
+                                        <th style=" width:2%; text-align:left;" class="dcleftcolhead"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+"""    
+    
+datasets_downloaded_end_html  =   """
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+"""
+
+datasets_download_row_html  =   """
+                                    <tr class="dc-describe-table-body-row">
+                                        <td style=" width:54%; font-size:12px;" class="dccolleft">XXXDataset</td>
+                                        <td style=" width:30%; " class="dccolwrap">
+                                            <div class="input-group-btn" style="padding-right:0px; padding-left:0px">
+                                                <a class="dc-table-row-link" style="text-decoration:none;" href="https://github.com/RickKrasinski/dfc_census_zips/raw/master/XXXdsfname.zip">
+                                                    <img title="Download XXXDataset" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_download.png' height="25px" width="77px" id="CDXXXDataset"></img>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style=" width:14%; font-size:11px; text-align:center;">
+                                            <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                                <a  onclick="get_df_census_dataset_details('0','XXXDataset')">
+                                                    <img style='margin: 0px auto; text-align:center;' title="XXXDataset Details" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="15px" width="15px"></img>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style=" width:2%; font-size:12px;" class="dccolleft"></td>
+                                    </tr>
+"""
+
+datasets_no_download_row_html  =   """
+                                    <tr class="dc-describe-table-body-row">
+                                        <td style=" width:70%; font-size:12px;" class="dccolleft">XXXDataset</td>
+                                        <td style=" width:30%; " class="dccolwrap"><span style="font-weight:bold">Downloaded</span></td>
+                                        <td style=" width:14%; font-size:11px; text-align:center;">
+                                            <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                                <a  onclick="get_df_census_dataset_details('0','XXXDataset')">
+                                                    <img style='margin: 0px auto; text-align:center;' title="XXXDataset Details" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="15px" width="15px"></img>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td style=" width:2%; font-size:12px;" class="dccolleft"></td>
+
+                                    </tr>
+"""
+
+download_notes_html="<br><div style='text-align:center; margin-left:50px; width:720px; background-color: #F8F5E1; color:#67a1f3; border: 1px solid #67a1f3; word-wrap:break-word'>Please download the zip files highlighted above via clicking on the download links above or go to the <a href='https://github.com/RickKrasinski/dfc_census_zips' target='_blank'>dfc_census_repository</a> directly.<br><br>Download zips to the XXXCensusWorkingDir location. To learn how to change your browser download location click <a href='https://support.google.com/chrome/answer/95759?co=GENIE.Platform%3DDesktop&hl=en' target='_blank'>here.</a></div><br><br><br><br><br>"
+
+def get_datasets_downloaded_list() :
+    
+    dfc_census_path    =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
+    dfc_census_path    =   (dfc_census_path + "\\working\\")
+    
+    datasets_downloaded     =   []
+    
+    if(does_dir_exist(dfc_census_path)) :
+
+        for i in range(len(swcm.census_datasets)) :   
+            
+            dataset_zip     =   dfc_census_path + swcm.census_data_dirs[i] + ".zip"
+            
+            if(does_file_exist(dataset_zip)) :
+                datasets_downloaded.append(True) 
+            else :
+                datasets_downloaded.append(False) 
+
+    else :
+        
+        for i in range(len(swcm.census_datasets)) :   
+            datasets_downloaded.append(False) 
+
+    return(datasets_downloaded)    
+    
+    
+def get_downloaded_census_data_html() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the html for datasets downloaded
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    downloaded_census_html  =   ""
+    downloaded_census_html  =   (downloaded_census_html + datasets_downloaded_start_html)
+    
+    datasets_downloaded     =   get_datasets_downloaded_list()
+        
+    for i in range(len(datasets_downloaded)) :
+        
+        if(not (datasets_downloaded[i])) :
+            
+            row_html    =   datasets_download_row_html
+            row_html    =   row_html.replace("XXXDataset",swcm.census_datasets[i])
+            row_html    =   row_html.replace("XXXdsfname",swcm.census_data_dirs[i]) 
+            row_html    =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i]) 
+            
+        else :
+            
+            row_html    =   datasets_no_download_row_html
+            row_html    =   row_html.replace("XXXDataset",swcm.census_datasets[i])
+            row_html    =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i]) 
+            
+        downloaded_census_html  =   (downloaded_census_html + row_html)
+        
+    downloaded_census_html  =   (downloaded_census_html + datasets_downloaded_end_html)
+                   
+    return(downloaded_census_html)
+
+
+def display_downloaded_census_data(datasetid=None,subdataid=None,colnameid=None,direction=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the datasets download census screen
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+
+    print("display_downloaded_census_data",datasetid,subdataid,colnameid,direction)
+    
+    datasets_loaded_html        =   get_downloaded_census_data_html()
+    
+    load_details_html           =   get_load_datasets_details_html(datasetid,subdataid,colnameid,direction)
+
+    #load_details_html           =   get_load_datasets_details_html()
+    load_details_heading_html   =   "<div>Census Datasets Downloaded</div><br>"
+        
+    dfc_census_path             =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
+    dfc_census_path             =   (dfc_census_path + "\\working\\")
+    new_download_notes_html     =   download_notes_html.replace("XXXCensusWorkingDir",dfc_census_path)
+
+    #print(datasets_loaded_html)
+    #print(new_download_notes_html)
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-main","dfc-right"]
+    gridhtmls       =   [load_details_heading_html,datasets_loaded_html,new_download_notes_html,load_details_html]
+        
+    
+    print("\n")
+    display_generic_grid("dfcensus-datasets-loaded-wrapper",gridclasses,gridhtmls)
+    print("\n")
+        
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Datasets To Configure Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""  
+
+
+def get_configure_datasets_html(forconfigure=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get html for the load datasets table
+    * 
+    * parms :
+    *
+    * returns : 
+    *  html
+    * --------------------------------------------------------
+    """
+
+    print("get_download_datasets_html",forconfigure)    
+    load_datasets_html  =   ""
+    
+    load_datasets_html  =   (load_datasets_html + census_download_html)  
+
+    #datasets_downloaded =   get_datasets_downloaded()
+    #download_lists      =   cfg.get_config_value(cfg.CENSUS_DOWNLOAD_LISTS)
+    datasets_processed  =   get_datasets_processed()
+    
+    #print("datasets_downloaded",datasets_downloaded)
+    #print("download_lists",download_lists)
+    #print("datasets_processed",datasets_processed)
+    
+    for i in range(len(swcm.census_datasets)) : 
+        
+        dsid                =   swcm.census_datasets[i]
+        dsid                =   dsid.replace("_"," ")
+        row_html            =   census_download_row_html.replace("XXXTDatasetID",dsid)
+        row_html            =   row_html.replace("XXXDatasetID",swcm.census_datasets[i])
+            
+        if(forconfigure) :
+            row_html            =   row_html.replace("get_census_dataset_details","get_configure_dataset_details") 
+            
+        for j in range(len(datasets_processed[i])) :
+                
+            cbflg   =   "cb" + str(j+1) + "flag"
+            cbdis   =   "cb" + str(j+1) + "disabled"
+                
+            if(datasets_processed[i][j]) :
+                row_html            =   row_html.replace(cbflg,"checked") 
+                row_html            =   row_html.replace(cbdis,"")
+                    
+            else :
+                row_html            =   row_html.replace(cbflg,"") 
+                row_html            =   row_html.replace(cbdis,"")
+                    
+                    
+            cbdis   =   "cb" + str(j+1) + "disabled"
+            
+        if(forconfigure) :
+            row_html            =   row_html.replace("cb5flag","")         
+            row_html            =   row_html.replace("cb5disabled","disabled")         
+            
+        load_datasets_html  =   (load_datasets_html + row_html)
+    
+    load_datasets_html  =   (load_datasets_html + census_download_end_html)
+    
+    return(load_datasets_html)
+
+    
+def display_configure_census_data(datasetid=None,forconfigure=False,subdataid=None,colnameid=None,direction=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display the main download census screen
+    * 
+    * parms :
+    *   datasetid     -   dataset id
+    *   subdataid     -   data subset id 
+    *   colnameid     -   column name id
+    *   direction     -   scroll direction
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    print("display_configure_census_data",datasetid,forconfigure,subdataid,colnameid,direction)
+    
+    
+    configure_census_html    =   get_configure_datasets_html(forconfigure)
+    
+    if(forconfigure) :
+        dropsubs    =   cfg.get_config_value(cfg.CENSUS_DROP_DATASET_LISTS)
+        
+        if(any_datasets_processed(get_datasets_processed())) :
+            
+            if( not (dropsubs is None)) :
+                if(dropsubs =="NO DATASETS SELECTED") :
+                    configure_notes_html     =   configure_no_select_notes_info_html
+                    cfg.drop_config_value(cfg.CENSUS_DROP_DATASET_LISTS)
+                
+            else :
+                configure_notes_html     =   configure_notes_info_html
+                    
+        else :
+            configure_notes_html     =   configure_no_datasets_notes_info_html    
+                
+        configure_details_heading_html       =   "<div>Configure Census Data</div><br>"
+                
+    else :
+        
+        if(not(subdataid is None)) :
+            configure_notes_html     =   download_notes_subdata_info_html
+        else :
+            configure_notes_html     =   download_notes_info_html
+            
+        configure_details_heading_html       =   "<div>Build Census Datasets</div>"
+    
+    
+    
+    configure_details_html               =   get_load_datasets_details_html(datasetid,subdataid,colnameid,direction)
+    
+
+
+    if(forconfigure) :
+        
+        #print("get_datasets_processed",get_datasets_processed())
+        
+        if(any_datasets_processed(get_datasets_processed())) :
+        
+            configure_data_tb        =   ButtonGroupForm(data_configure_tb_id,
+                                                    data_configure_tb_keyTitleList,
+                                                    data_configure_tb_jsList,
+                                                    data_configure_tb_centered)
+    
+            configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":225})
+        
+            configure_census_html    =   configure_census_html.replace("Census Datasets","Census Datasets To Configure")
+            
+        else :
+            
+            configure_data_tb        =   ButtonGroupForm(data_configure_no_datasets_tb_id,
+                                                    data_configure_no_datasets_tb_keyTitleList,
+                                                    data_configure_no_datasets_tb_jsList,
+                                                    data_configure_no_datasets_tb_centered)
+            
+            configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":100, "left-margin":32})
+        
+            configure_census_html    =   configure_census_html.replace("Census Datasets","Census Datasets To Configure")
+            
+        
+        configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":210})
+        
+        configure_census_html    =   configure_census_html.replace("Census Datasets","Census Datasets To Build")
+                        
+    configure_data_tb_html           =   configure_data_tb.get_html()
+    
+    
+    
+    
+
+    if( (forconfigure) and (not (any_datasets_processed(get_datasets_processed()))) ) :   
+    
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer","dfc-bottom"]
+        gridhtmls       =   [configure_details_heading_html,configure_census_html,configure_notes_html,configure_data_tb_html]
+        
+        #print(load_census_html)
+        #print(load_notes_html)
+        #print(load_data_tb_html)        
+    
+        print("\n")
+        display_generic_grid("dfcensus-datasets-none-data-wrapper",gridclasses,gridhtmls)
+        print("\n")
+        
+    else :
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-main","dfc-right","dfc-footer"]
+        gridhtmls       =   [configure_details_heading_html,configure_census_html,configure_notes_html,configure_details_html,configure_data_tb_html]
+        
+        """
+        import os,json
+        cfgdir = os.path.join(cfg.get_notebook_path(),cfg.get_notebook_name()+"_files")
+        cfgfilename = os.path.join(cfgdir,cfg.get_notebook_name()+"_load_details.html")
+        with open(cfgfilename, 'w') as cfg_file :
+            json.dump(load_details_html,cfg_file)
+            cfg_file.close()
+        """
+        
+        #print(load_census_html)
+        #print(load_notes_html)
+        #print(load_details_html)
+        #print(load_data_tb_html)        
+    
+    
+        print("\n")
+        display_generic_grid("dfcensus-download-data-wrapper",gridclasses,gridhtmls)
+        print("\n")
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Datasets To Load In dfs Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""  
+
+datasets_to_load_verification_html ="""
+        <div class='container dc-tbl-container' style="width:100%;" id="dfCensusLoadOptions">
+            <div class="panel panel-primary" style="border:0;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style="width:100%;">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="input-group-btn">
+                                <p class="panel-title pull-left" style="padding-right:20px;">Census Datasets df(s) To Unload</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table dc-table" id="DIsamplerows" style="width:100%;">
+                        <thead>
+                            <tr class="dcrowhead">
+                                <th style=" font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+"""
+
+datasets_to_load_verification_end_html ="""
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+"""
+
+
+datasets_to_load_verification_row_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>
+                            </tr>
+"""
+
+datasets_to_load_process_html="<div class='dfcleanser-common-grid-note'>To Add/Drop datasets selected click on the Add/Drop Selected Datasets.</div><br>"
+verify_datasets_to_load_process_html="<div class='dfcleanser-common-grid-note'>To Load/Unload datasets selected click on the Load/Unload Selected Datasets.</div><br>"
+verify_no_datasets_to_load_process_html="<div class='dfcleanser-common-grid-note'>No datasets selected to Load or Unload.</div><br>"
+
+
+def any_datasets_processed(files_processed) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : see if any Trues in a list of datasets processed
     * 
     * parms :
     *
@@ -1421,26 +2081,6 @@ def get_datasets_downloaded() :
     *  list of processed datasets
     * --------------------------------------------------------
     """
-    
-    import os
-    from dfcleanser.common.common_utils import does_file_exist
-    
-    dfc_census_dataset_path     =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
-    dfc_census_dataset_path     =   (dfc_census_dataset_path + "\\working\\")
-    
-    files_loaded     =   []
-    
-    for i in range(len(swcm.zip_file_names) ) :
-            
-        if(does_file_exist(dfc_census_dataset_path+swcm.zip_file_names[i][0])) :
-            files_loaded.append(swcm.zip_file_names[i])
-        else :
-            files_loaded.append(None)
-        
-    return(files_loaded)
-
-
-def any_datasets_processed(files_processed) :
     
     for i in range(len(files_processed)) :
         for j in range(len(files_processed[i])) :
@@ -1492,105 +2132,133 @@ def get_datasets_processed() :
     return(files_processed)
 
 
-def is_complete_dataset_processed(datasetid, files_processed) :
+def any_datasets_loaded_to_dfs(datasets_loaded_to_dfs) :
     """
     * -------------------------------------------------------------------------- 
-    * function : determine if the complete dataset is processed
+    * function : see if any Trues in a list of datasets loaded to dfs
     * 
     * parms :
     *
     * returns : 
-    *  True or False
+    *  list of processed datasets
     * --------------------------------------------------------
     """
     
-    for i in range(len(files_processed[datasetid])) :   
-        if(not (files_processed[datasetid][i]) ) :
-            return(False)
-            
-    return(True)
+    for i in range(len(datasets_loaded_to_dfs)) :
+        for j in range(len(datasets_loaded_to_dfs[i])) :
+            if(datasets_loaded_to_dfs[i][j]) :
+                return(True)
     
-
-def is_any_part_of_dataset_processed(datasetid, files_processed) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : determine if any dataset type is processed
-    * 
-    * parms :
-    *
-    * returns : 
-    *  True or False
-    * --------------------------------------------------------
-    """
-    
-    for i in range(len(files_processed[datasetid])) :   
-        if(files_processed[datasetid][i]) :
-            return(True)
-            
     return(False)
 
 
-def get_subset_size(subdataid,datasetid) :
+
+datasets_in_dfs_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:480px; margin-left:45px;'>To load a dataset to a df check the dataset that is not currently checked.<br>To delete a dataset df uncheck a currently checked box.</div>"
+export_dfs_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:480px; margin-left:45px;'>To export a dataset click on the export icon above.</div>"
+load_to_db_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:480px; margin-left:45px;'>To load a dataset to a db click on the load to db icon above.</div>"
+
+no_export_dfs_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:480px; margin-left:45px;'>No census datasets loaded to df(s) for export.</div>"
+no_load_to_db_notes_info_html="<div class='dfcleanser-common-grid-note' style='width:480px; margin-left:45px;'>No census datasets loaded to df(s) for load to a db.</div>"
+
+
+
+LOAD_DFC_DFS            =   0
+EXPORT_DFC_DFS          =   1
+EXPORT_TO_DC            =   2
+
+
+
+census_export_dfs_row_start_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:37%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>
+"""
+
+census_export_dfs_row_html ="""
+                                <td style=" width:XXXWidth%; font-size:13px;" class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_df_from_census('XXXsubsetID')">
+                                            <img style='margin: 0px auto; text-align:center;' title="export XXXsubsetID" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df.png' height="20px" width="20px" id="CXXXsubsetID"></img>
+                                        </a>
+                                    </div>
+                                </td>"""
+                                
+census_export_dfs_to_db_row_html ="""
+                                <td style=" width:XXXWidth%; font-size:13px;" class="dccolwrap">
+                                    <div class="input-group-btn" style="padding-right:0px; padding-left:0px; text-align:center;">
+                                        <a onclick="export_to_db_from_census('XXXsubsetID')">
+                                            <img style='margin: 0px auto; text-align:center;' title="load XXXsubsetID to db" src='https://rickkrasinski.github.io/dfcleanser/graphics/export_df_to_db.png' height="20px" width="20px" id="CXXXsubsetID"></img>
+                                        </a>
+                                    </div>
+                                </td>"""
+
+census_export_no_dfs_row_html ="""
+                                <td style=" width:XXXWidth%; font-size:13px;" class="dccolwrap"></td>"""
+
+census_export_dfs_row_end_html ="""
+                            </tr>
+"""
+
+
+def get_datasets_to_export_html(to_db=False) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get the subset size of of subdata
+    * function : get html for the export of dfs
     * 
     * parms :
-    *   subdataid       -   subset key (ziocode,city,county,state,all)
-    *   datasetid       -   dataset id
     *
     * returns : 
-    *  dataset size
-    * --------------------------------------------------------
-    """
-    
-    totalsize   =   0
-    
-    if(subdataid == 4) :
-        
-        for i in range(len(swcm.census_datasets_csvs_size_mb[datasetid])) :
-            totalsize   =   totalsize + swcm.census_datasets_csvs_size_mb[datasetid][i]
-            
-    else :
-        
-        totalsize   =   totalsize + swcm.census_datasets_csvs_size_mb[datasetid][subdataid]
-            
-    displaysize      =   "{:,d}".format(totalsize)
-            
-    return(displaysize)        
-
-
-def get_colname(cname,maxlen) :
-    """
-    * --------------------------------------------------------- 
-    * function : get the column name shortened if necessary
-    * 
-    * parms :
-    *   cname       -   column name
-    *   maxlen      -   max length of name
-    *
-    * returns : 
-    *  column name
+    *  html
     * --------------------------------------------------------
     """
 
-    if(len(cname) > maxlen) :
-        halflength = int(maxlen/2) - 2
-        shortelement = cname[0:halflength] + "...." + cname[(len(cname)-halflength) : (len(cname))]
-        shortelement = '<a href="#" data-toggle="tooltip" data-placement="top" title="' + cname + '">' + shortelement + '</a>' 
-            
-    else :
-        shortelement = cname
-            
-    return(shortelement)
+    print("get_datasets_to_export_html",to_db)
+    
+    datasets_to_export_html     =   ""
+    datasets_to_export_html     =   (datasets_to_export_html + census_no_details_download_html)  
+
+    datasets_loaded_to_dfs      =   swcm.get_datasets_loaded_to_dfs()
+    
+    for i in range(len(swcm.census_datasets)) : 
+    
+        row_html    =   census_export_dfs_row_start_html  
+        row_html    =   row_html.replace("XXXDatasetID",swcm.census_datasets[i])
+        
+        for j in range(4) :
+                
+            if(datasets_loaded_to_dfs[i][j]) :
+                
+                if(to_db) :
+                    row_html    =   (row_html + census_export_dfs_to_db_row_html)
+                else :
+                    row_html    =   (row_html + census_export_dfs_row_html) 
+                
+                if((j==2)) :
+                    row_html    =   row_html.replace("XXXWidth","21")  
+                else :
+                    row_html    =   row_html.replace("XXXWidth","14")
+                
+                subsetid    =   swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j)
+                row_html    =   row_html.replace('CXXXsubsetID',subsetid + "id")                
+                row_html    =   row_html.replace('XXXsubsetID',subsetid)
+                    
+            else :
+                
+                row_html    =   (row_html + census_export_no_dfs_row_html)
+                
+                if((j==2)) :
+                    row_html    =   row_html.replace("XXXWidth","21")  
+                else :
+                    row_html    =   row_html.replace("XXXWidth","14")
+                    
+        row_html    =   (row_html + census_export_dfs_row_end_html)
+        datasets_to_export_html  =   (datasets_to_export_html + row_html)
+    
+    datasets_to_export_html  =   (datasets_to_export_html + census_no_details_download_end_html)
+    
+    return(datasets_to_export_html)
 
 
-"""
-#--------------------------------------------------------------------------
-#                   Downoad Datasets Display functions
-#--------------------------------------------------------------------------
-"""
-def get_download_datasets_html(forconfigure=False) :
+def display_datasets_to_export() :
     """
     * -------------------------------------------------------------------------- 
     * function : get html for the load datasets table
@@ -1601,503 +2269,348 @@ def get_download_datasets_html(forconfigure=False) :
     *  html
     * --------------------------------------------------------
     """
-    
-    load_datasets_html  =   ""
-    
-    load_datasets_html  =   (load_datasets_html + census_download_html)  
 
-    #datasets_downloaded =   get_datasets_downloaded()
-    #download_lists      =   cfg.get_config_value(cfg.CENSUS_DOWNLOAD_LISTS)
-    datasets_processed  =   get_datasets_processed()
+    print("display_datasets_loaded_to_dfs")    
+
+    export_dfs_html             =   get_datasets_to_export_html()
     
-    #print("datasets_downloaded",datasets_downloaded)
-    #print("download_lists",download_lists)
-    #print("datasets_processed",datasets_processed)
+    export_dfs_html             =   export_dfs_html.replace('Census Datasets','Datasets To Export')
+    export_dfs_html             =   export_dfs_html.replace("dc-tbl-container' style='width:360px;","dc-tbl-container' style='width:540px;")
+    export_dfs_html             =   export_dfs_html.replace('width:360px;','width:540px;')
+
+    export_dfs_heading_html     =   "<div>Export Census df(s)</div><br>"
+    
+    datasets_loaded_to_dfs      =   swcm.get_datasets_loaded_to_dfs()
+    dataset_loaded_to_df        =   False
+    
+    for i in range(len(datasets_loaded_to_dfs)) :
+        for j in range(4) :
+            if(datasets_loaded_to_dfs[i][j]) :
+                dataset_loaded_to_df    =   True    
+
+    if(dataset_loaded_to_df) :
+        export_dfs_notes_html       =   export_dfs_notes_info_html
+    else :
+        export_dfs_notes_html       =   no_export_dfs_notes_info_html
+    
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+    gridhtmls       =   [export_dfs_heading_html,export_dfs_html,export_dfs_notes_html]
+        
+    print("\n")
+    display_generic_grid("dfcensus-datasets-to-export-wrapper",gridclasses,gridhtmls)
+    print("\n")
+
+
+def display_datasets_to_load_to_db() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get html for the load datasets table
+    * 
+    * parms :
+    *
+    * returns : 
+    *  html
+    * --------------------------------------------------------
+    """
+
+    print("display_datasets_loaded_to_dfs")    
+
+    export_dfs_html             =   get_datasets_to_export_html(True)
+    
+    export_dfs_html             =   export_dfs_html.replace('Census Datasets','Datasets To Load To db')
+    export_dfs_html             =   export_dfs_html.replace("dc-tbl-container' style='width:360px;","dc-tbl-container' style='width:540px;")
+    export_dfs_html             =   export_dfs_html.replace('width:360px;','width:540px;')
+    
+    export_dfs_heading_html     =   "<div>Load Census df(s) to db(s)</div><br>"
+    
+    datasets_loaded_to_dfs      =   swcm.get_datasets_loaded_to_dfs()
+    dataset_loaded_to_df        =   False
+    
+    for i in range(len(datasets_loaded_to_dfs)) :
+        for j in range(4) :
+            if(datasets_loaded_to_dfs[i][j]) :
+                dataset_loaded_to_df    =   True    
+
+    if(dataset_loaded_to_df) :
+        export_dfs_notes_html       =   load_to_db_notes_info_html
+    else :
+        export_dfs_notes_html       =   no_load_to_db_notes_info_html
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer"]
+    gridhtmls       =   [export_dfs_heading_html,export_dfs_html,export_dfs_notes_html]
+        
+    print("\n")
+    display_generic_grid("dfcensus-datasets-to-export-wrapper",gridclasses,gridhtmls)
+    print("\n")
+
+
+def get_datasets_loaded_to_dfs_html() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get html for the load datasets table
+    * 
+    * parms :
+    *
+    * returns : 
+    *  html
+    * --------------------------------------------------------
+    """
+
+    print("get_datasets_loaded_to_dfs_html")    
+    datasets_loaded_html    =   ""
+    datasets_loaded_html    =   (datasets_loaded_html + census_no_details_download_html)  
+
+    datasets_loaded_to_dfs  =   swcm.get_datasets_loaded_to_dfs()
+    datasets_processed      =   get_datasets_processed()
     
     for i in range(len(swcm.census_datasets)) : 
         
         dsid                =   swcm.census_datasets[i]
         dsid                =   dsid.replace("_"," ")
-        row_html            =   census_download_row_html.replace("XXXTDatasetID",dsid)
+        
+        
+        row_html            =   census_no_details_download_row_html.replace("XXXTDatasetID",dsid)
         row_html            =   row_html.replace("XXXDatasetID",swcm.census_datasets[i])
             
-        if(forconfigure) :
-            row_html            =   row_html.replace("get_census_dataset_details","get_configure_dataset_details") 
+        row_html            =   row_html.replace("get_census_dataset_details","get_load_to_df_dataset_details") 
             
-        for j in range(len(datasets_processed[i])) :
+        for j in range(len(datasets_loaded_to_dfs[i])) :
                 
             cbflg   =   "cb" + str(j+1) + "flag"
             cbdis   =   "cb" + str(j+1) + "disabled"
+            
+            if(datasets_loaded_to_dfs[i][j]) :
                 
-            if(datasets_processed[i][j]) :
                 row_html            =   row_html.replace(cbflg,"checked") 
                 row_html            =   row_html.replace(cbdis,"")
                     
             else :
-                row_html            =   row_html.replace(cbflg,"") 
-                row_html            =   row_html.replace(cbdis,"")
+                
+                if(datasets_processed[i][j]) :
                     
+                    row_html            =   row_html.replace(cbflg,"") 
+                    row_html            =   row_html.replace(cbdis,"")
+                
+                else :
                     
-            cbdis   =   "cb" + str(j+1) + "disabled"
-            
-        if(forconfigure) :
-            row_html            =   row_html.replace("cb5flag","")         
-            row_html            =   row_html.replace("cb5disabled","disabled")         
-            
-        load_datasets_html  =   (load_datasets_html + row_html)
+                    row_html            =   row_html.replace(cbflg,"") 
+                    row_html            =   row_html.replace(cbdis,"disabled")
+                
+        datasets_loaded_html  =   (datasets_loaded_html + row_html)
     
-    load_datasets_html  =   (load_datasets_html + census_download_end_html)
+    datasets_loaded_html  =   (datasets_loaded_html + census_no_details_download_end_html)
     
-    return(load_datasets_html)
+    return(datasets_loaded_html)
 
 
-def get_dataset_index(datasetid) :
+
+
+
+
+def display_datasets_loaded_to_dfs() :
     """
     * -------------------------------------------------------------------------- 
-    * function : get list index for a dataset id
+    * function : get html for the load datasets table
     * 
     * parms :
-    *   datasetid     -   dataset id
     *
     * returns : 
-    *  index in lists
+    *  html
     * --------------------------------------------------------
     """
+
+    print("display_datasets_loaded_to_dfs")    
+
+    loaded_dfs_html             =   get_datasets_loaded_to_dfs_html()
+    loaded_dfs_html             =   loaded_dfs_html.replace('Census Datasets','Datasets Loaded To df(s)')
+    loaded_dfs_html             =   loaded_dfs_html.replace("dc-tbl-container' style='width:360px;","dc-tbl-container' style='width:540px;")
+    loaded_dfs_html             =   loaded_dfs_html.replace('width:360px;','width:540px;')
+
+    loaded_dfs_heading_html     =   "<div>Load Census Datasets To df(s)</div><br>"
     
-    if(datasetid == swcm.census_datasets[0])    :       return(0)
-    elif(datasetid == swcm.census_datasets[1])  :       return(1)
-    elif(datasetid == swcm.census_datasets[2])  :       return(2)
-    elif( (datasetid == swcm.census_datasets[3]) or 
-          (datasetid == "Health Insurance") )   :       return(3)
-    elif(datasetid == swcm.census_datasets[4])  :       return(4)
-    elif(datasetid == swcm.census_datasets[5])  :       return(5)
-    elif(datasetid == swcm.census_datasets[6])  :       return(6)
-    elif(datasetid == swcm.census_datasets[7])  :       return(7)
-    elif(datasetid == swcm.census_datasets[8])  :       return(8)
-    elif(datasetid == swcm.census_datasets[9])  :       return(9)
-    else :                                              return(-1)    
+    loaded_dfs_notes_html       =   datasets_in_dfs_notes_info_html
     
-    
-def get_load_datasets_details_html(datasetid=None,forconfigure=False,subdataid=None,colnameid=None,direction=None) :
+    loaded_dfs_tb               =   ButtonGroupForm(data_load_datasets_to_df_tb_id,
+                                                    data_load_datasets_to_df_tb_keyTitleList,
+                                                    data_load_datasets_to_df_tb_jsList,
+                                                    data_load_datasets_to_df_tb_centered)
+            
+    loaded_dfs_tb.set_customstyle({"font-size":13, "height":75, "width":100, "left-margin":75})
+    loaded_dfs_tb_html          =   loaded_dfs_tb.get_html()
+
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-bottom","dfc-footer"]
+    gridhtmls       =   [loaded_dfs_heading_html,loaded_dfs_html,loaded_dfs_notes_html,loaded_dfs_tb_html]
+        
+    print("\n")
+    display_generic_grid("dfcensus-datasets-in-dfs-wrapper",gridclasses,gridhtmls)
+    print("\n")
+
+
+def get_datasets_to_load_verification_html(datasets_to_load_to_dfs) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get display datasets details html
+    * function : verify datasets to load
     * 
     * parms :
-    *   datasetid     -   dataset id
-    *   subdataid     -   data subset id 
-    *   colnameid     -   column name id
-    *   direction     -   scroll direction
+    *   datasets_to_load     -   datasets to load
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
-    
-    
-    #print("get_load_datasets_details_html",datasetid,forconfigure,subdataid,colnameid,direction)
-    
-    load_datasets_details_html  =   ""
-    
-    if(datasetid is None) :
-        
-        header_html                 =   census_load_details_html
-        header_html                 =   header_html.replace("XXXdatasetid","Description")
-        load_datasets_details_html  =   (load_datasets_details_html + header_html) 
-        
-        load_datasets_details_html  =   (load_datasets_details_html + census_datasets_description_head)        
-    
-        for i in range(len(swcm.census_datasets)) : 
-        
-            dsid     =  swcm.census_datasets[i].replace("_"," ")
-            row_html =  census_datasets_description_row_html.replace("XXXDatasetID",dsid)
-            row_html =  row_html.replace("XXXDatasetText",swcm.census_dataset_details[i])
-            row_html =  row_html.replace("XXXDatasetNumCols",str(swcm.census_datasets_num_cols[i]))
-        
-            load_datasets_details_html  =   (load_datasets_details_html + row_html)
 
-        load_datasets_details_html  =   (load_datasets_details_html + census_load_details_table_end_html)
-        load_datasets_details_html  =   (load_datasets_details_html + census_load_details_end_html)
+    #print("get_configure_datasets_verification_html\n",datasets_to_configure,"\n\n",datasets_processed)
+    
+    add_ds_html     =   datasets_to_load_verification_html
+    add_ds_html     =   add_ds_html.replace("df(s) To Unload","To Load to df(s)")
+    drop_ds_html    =   datasets_to_load_verification_html 
+    
+    add_datasets    =   []
+    drop_datasets   =   []
+    
+    datasets_loaded_to_dfs  =   swcm.get_datasets_loaded_to_dfs()
+    
+    print("datasets_loaded_to_dfs",datasets_loaded_to_dfs)
+    
+    for i in range(len(datasets_to_load_to_dfs)) :
+        
+        for j in range(4) :
             
+            if(datasets_to_load_to_dfs[i][j] == "True") :
+                
+                if(not (datasets_loaded_to_dfs[i][j])) :
+                
+                    row_html        =   datasets_to_load_verification_row_html
+                    row_html        =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
+                                    
+                    add_ds_html     =   (add_ds_html + row_html)
+                
+                    add_datasets.append(swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
+                    
+            else :
+                
+                if(datasets_loaded_to_dfs[i][j]) :
+                
+                    drop_ds_html  =   drop_ds_html.replace("Downloaded","")
+                
+                    row_html        =   datasets_to_load_verification_row_html
+                    row_html        =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j) + "_df")
+                                    
+                    drop_ds_html    =   (drop_ds_html + row_html)
+                    
+                    drop_datasets.append(swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
+                
+    
+    add_ds_html   =   (add_ds_html + datasets_to_load_verification_end_html)  
+    drop_ds_html  =   (drop_ds_html + datasets_to_load_verification_end_html)
+    
+    if(len(add_datasets) > 0) :
+        cfg.set_config_value(cfg.CENSUS_ADD_DATASETS_LIST,add_datasets)
     else :
+        cfg.drop_config_value(cfg.CENSUS_ADD_DATASETS_LIST)
+
+    if(len(drop_datasets) > 0) :
+        cfg.set_config_value(cfg.CENSUS_DROP_DATASETS_LIST,drop_datasets)
+    else :
+        cfg.drop_config_value(cfg.CENSUS_DROP_DATASETS_LIST)
         
-        if(subdataid is None) :
-        
-            header_html                 =   census_load_details_html
-            dsid                        =   datasetid.replace("_"," ")
-            header_html                 =   header_html.replace("XXXdatasetid",dsid)
-            load_datasets_details_html  =   (load_datasets_details_html + header_html) 
+    return([add_ds_html,drop_ds_html])    
+
+
+def any_datasets_to_load_to_dfs(datasets_to_load_to_dfs) :
     
-            load_datasets_details_html  =   (load_datasets_details_html + census_zip_size_head) 
+    datasets_loaded_to_dfs  =   swcm.get_datasets_loaded_to_dfs()
+
+    for i in  range(len(datasets_to_load_to_dfs)) :
+        for j in range(4) :
             
-            dsinndex    =   get_dataset_index(datasetid)
+            if(datasets_to_load_to_dfs[i][j] == "True") :
+                if(not (datasets_loaded_to_dfs[i][j])) :
+                    return(True)
+
+    return(False)
+    
+    
+def any_datasets_to_unload_from_dfs(datasets_to_load_to_dfs) :
+    
+    datasets_loaded_to_dfs  =   swcm.get_datasets_loaded_to_dfs()
+
+    for i in  range(len(datasets_to_load_to_dfs)) :
+        for j in range(4) :
             
-            zcsize      =   get_subset_size(0,dsinndex)
-            citysize    =   get_subset_size(1,dsinndex)
-            countysize  =   get_subset_size(2,dsinndex)
-            statesize   =   get_subset_size(3,dsinndex)
-            totalsize   =   get_subset_size(4,dsinndex)
-        
-            row_html =  census_zip_size_row_html.replace("XXXZipCodeSize",zcsize)
-            row_html =  row_html.replace("XXXCitySize",citysize)
-            row_html =  row_html.replace("XXXCountySize",countysize)
-            row_html =  row_html.replace("XXXStateSize",statesize)
-            row_html =  row_html.replace("XXXTotalSize",totalsize)
-        
-            load_datasets_details_html  =   (load_datasets_details_html + row_html)
-            load_datasets_details_html  =   (load_datasets_details_html + census_load_details_table_end_html)
+            if(datasets_loaded_to_dfs[i][j]) :
+                if(datasets_to_load_to_dfs[i][j] == "False") :
+                    return(True)
 
-        else :
-        
-            header_html                 =   census_load_details_html
-            header_html                 =   header_html.replace("XXXdatasetid",swcm.get_subdata_name(datasetid,subdataid))#datasetid)
-            load_datasets_details_html  =   (load_datasets_details_html + header_html) 
+    return(False)
     
 
-        # append the details table
-        load_datasets_details_html  =   (load_datasets_details_html + get_load_subdata_table_html(datasetid,forconfigure,subdataid,colnameid,direction))
-        if(subdataid is None) :
-            load_datasets_details_html  =   (load_datasets_details_html + census_load_details_end_html)
-        else :
-            load_datasets_details_html  =   (load_datasets_details_html + census_load_subdata_end_html)        
-    
-    
-    return(load_datasets_details_html)
-
-
-def get_subdata_lists(datasetid) :
+def display_load_to_df_verification_data(datasets_to_load_to_dfs) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get dataset subset lists of cols, colnames and nans
+    * function : display the verify load unload dtatsets yo df
     * 
     * parms :
-    *   datasetid     -   dataset id
+    *   datasets_to_load_to_df   -   dataset to load
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
+    print("display_load_to_df_verification_data",datasets_to_load_to_dfs)
     
+    [datasets_to_load_to_df_html,datasets_to_unload_to_df_html]    =   get_datasets_to_load_verification_html(datasets_to_load_to_dfs)
     
-    if( (datasetid == swcm.census_datasets[0]) or (datasetid == swcm.census_data_dirs[0]) ) :      
-        subdatacols         =   swcm.economic_col_names
-        subdatacolstext     =   swcm.economic_subdata_names
-        subdatacolsnans     =   swcm.economic_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[1]) or (datasetid == swcm.census_data_dirs[1]) ) :
-        subdatacols         =   swcm.education_col_names
-        subdatacolstext     =   swcm.education_subdata_names
-        subdatacolsnans     =   swcm.education_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[2]) or (datasetid == swcm.census_data_dirs[2]) ) :
-        subdatacols         =   swcm.employment_col_names
-        subdatacolstext     =   swcm.employment_subdata_names
-        subdatacolsnans     =   swcm.employment_nan_counts
+    print("any_datasets_to_load_to_dfs",any_datasets_to_load_to_dfs(datasets_to_load_to_dfs),any_datasets_to_unload_from_dfs(datasets_to_load_to_dfs))
     
-    elif( (datasetid == swcm.census_datasets[3]) or (datasetid == "Health Insurance") or 
-           (datasetid == swcm.census_data_dirs[3]) ) :
-        subdatacols         =   swcm.health_insurance_col_names
-        subdatacolstext     =   swcm.health_insurance_subdata_names
-        subdatacolsnans     =   swcm.health_insurance_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[4]) or (datasetid == swcm.census_data_dirs[4]) ) :
-        subdatacols         =   swcm.housing_col_names
-        subdatacolstext     =   swcm.housing_subdata_names
-        subdatacolsnans     =   swcm.housing_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[5]) or (datasetid == swcm.census_data_dirs[5]) ) :
-        subdatacols         =   swcm.immigration_col_names
-        subdatacolstext     =   swcm.immigration_subdata_names
-        subdatacolsnans     =   swcm.immigration_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[6]) or (datasetid == swcm.census_data_dirs[6]) ) :
-        subdatacols         =   swcm.internet_col_names
-        subdatacolstext     =   swcm.internet_subdata_names
-        subdatacolsnans     =   swcm.internet_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[7]) or (datasetid == swcm.census_data_dirs[7]) ) :
-        subdatacols         =   swcm.population_col_names
-        subdatacolstext     =   swcm.population_subdata_names
-        subdatacolsnans     =   swcm.population_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[8]) or (datasetid == swcm.census_data_dirs[8]) ) :
-        subdatacols         =   swcm.social_col_names
-        subdatacolstext     =   swcm.social_subdata_names
-        subdatacolsnans     =   swcm.social_nan_counts
-
-    elif( (datasetid == swcm.census_datasets[9]) or (datasetid == swcm.census_data_dirs[9]) ) :
-        subdatacols         =   swcm.transportation_col_names
-        subdatacolstext     =   swcm.transportation_subdata_names
-        subdatacolsnans     =   swcm.transportation_nan_counts
-    
-    
-    return([subdatacols,subdatacolstext,subdatacolsnans])    
-    
-    
-    
-
-def get_load_subdata_table_html(datasetid,forconfigure=False,subdataindex=None,colnameid=None,direction=None) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : get dataset subset details html
-    * 
-    * parms :
-    *   datasetid     -   dataset id
-    *   subdataid     -   data subset id 
-    *   colnameid     -   column name id
-    *   direction     -   scroll direction
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    #print("get_load_subdata_table_html",datasetid,forconfigure,subdataindex,colnameid,direction)
-    
-    load_datasets_details_table     =   ""
-    
-    subdata_data        =   get_subdata_lists(datasetid)
-    subdatacols         =   subdata_data[0]    
-    subdatacolstext     =   subdata_data[1]
-    subdatacolsnans     =   subdata_data[2]
-    
-    if(subdataindex is None) :
+    if( (any_datasets_to_load_to_dfs(datasets_to_load_to_dfs)) or 
+        (any_datasets_to_unload_from_dfs(datasets_to_load_to_dfs)) ) :
         
-        if(forconfigure) :
-            load_datasets_details_table     =   (load_datasets_details_table + configure_subdata_table_html)
-        else :
-            load_datasets_details_table     =   (load_datasets_details_table + census_subdata_table_html)
+        loaded_to_dfs_notes_html       =   verify_datasets_to_load_process_html
+        
+        loaded_to_dfs_tb               =   ButtonGroupForm(load_datasets_to_df_verify_tb_id,
+                                                           load_datasets_to_df_verify_tb_keyTitleList,
+                                                           load_datasets_to_df_verify_tb_jsList,
+                                                           load_datasets_to_df_verify_tb_centered)
+    
+        loaded_to_dfs_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":240})
+        loaded_to_dfs_tb_html          =   loaded_to_dfs_tb.get_html()
 
-        for i in range(len(subdatacols)) :
-
-            if(not (i==0)) :
-            
-                if(forconfigure) :
-                    row_html    =   configure_subdata_table_row_html
-                else :
-                    row_html    =   census_subdata_table_row_html
-                    
-                row_html    =   row_html.replace("XXXsubdatatitle",subdatacolstext[i])
-                row_html    =   row_html.replace("XXXsubdatacols",str(len(subdatacols[i])))
-            
-                nanindices  =   swcm.get_census_subdata_indices(datasetid,i)
-                total_nans  =   0
-            
-                for j in range(len(nanindices)) :
-                    total_nans  =   total_nans + subdatacolsnans[nanindices[j]]
-            
-                nanpct      =   100 * (total_nans / (swcm.total_zips_count * len(nanindices)))   
-                pct_str     =   '{:4.2f}'.format(nanpct)
-            
-                row_html    =   row_html.replace("XXXsubdatanans",pct_str + "%")
-                row_html    =   row_html.replace("XXXSubDataText",subdatacolstext[i])
-                row_html    =   row_html.replace("XXXSubDataID",str(i))
-            
-                row_html    =   row_html.replace("XXXDatasetID",datasetid)
-                
-                load_datasets_details_table     =   (load_datasets_details_table + row_html)
-        
-        if(forconfigure) :
-            load_datasets_details_table     =   (load_datasets_details_table + configure_subdata_table_html_end)
-        else :
-            load_datasets_details_table     =   (load_datasets_details_table + census_subdata_table_html_end)
-            
-
-    else :
-        
-        load_datasets_details_table     =   (load_datasets_details_table + census_colnames_table_html)
-        
-        subdata_col_names               =   subdatacols[subdataindex]
-        nanindices                      =   swcm.get_census_subdata_indices(datasetid,subdataindex)
-
-        if(len(subdata_col_names) > 15) :
-            
-            if(colnameid is None) :
-                rowcount    =   15 
-            else :
-                
-                if(direction == 0) :
-                
-                    if((colnameid + 15) > len(subdata_col_names)) :
-                        rowcount    =   len(subdata_col_names) - colnameid
-                    else :
-                        rowcount    =   15
-                        
-                else :
-                    rowcount    =   15
-                
-            if(colnameid is None) :
-                rowstart    =   0
-                
-            else :
-                
-                if(direction == 0) :
-                    rowstart    =   colnameid
-                else :
-                    rowstart    =   colnameid - (2*15)
-                    if(rowstart < 0) :
-                        rowstart    =   0
-                
-        else :
-            rowcount    =   len(subdata_col_names)
-            rowstart    =   0
-        
-        for i in range(rowcount) :
-
-            row_html    =   census_colnames_table_row_html
-            
-            colname     =   get_colname(subdata_col_names[i+rowstart],70)
-                
-            row_html    =   row_html.replace("XXXcolname",colname)
-            pct_str     =   '{:4.2f}'.format(100 * (subdatacolsnans[nanindices[i+rowstart]]/swcm.total_zips_count))
-            row_html    =   row_html.replace("XXXcnamenans",pct_str + "%")
-                                             
-            load_datasets_details_table     =   (load_datasets_details_table + row_html)
-
-        load_datasets_details_table     =   (load_datasets_details_table + census_colnames_table_html_end)
-        
-        if(len(subdata_col_names) > 15) :
-            
-            scroll_html    =   census_colnames_scroll_html
-            scroll_html    =   scroll_html.replace("XXXDatasetID",datasetid)
-            scroll_html    =   scroll_html.replace("XXXSubDataID",str(subdataindex))
-            
-            if(colnameid is None) :
-                colid   =   15
-            else :
-                
-                if(direction == 0) :
-                    
-                    if((colnameid + 15) > len(subdata_col_names)) :
-                        colid   =   0
-                    else :
-                        colid   =   colnameid + 15
-                        
-                else :
-                    
-                    if((colnameid - (2*15)) < 0) :
-                        colid   =   15
-                    else :
-                        colid   =   colnameid - (2*15)
-                    
-            scroll_html    =   scroll_html.replace("XXXcolid",str(colid))
-            
-            load_datasets_details_table     =   (load_datasets_details_table + scroll_html)
-    
-    
-    return(load_datasets_details_table)
-
-    
-def display_load_census_data(datasetid=None,forconfigure=False,subdataid=None,colnameid=None,direction=None) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the main download census screen
-    * 
-    * parms :
-    *   datasetid     -   dataset id
-    *   subdataid     -   data subset id 
-    *   colnameid     -   column name id
-    *   direction     -   scroll direction
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    #print("display_load_census_data",datasetid,forconfigure,subdataid,colnameid,direction)
-    
-    
-    load_census_html    =   get_download_datasets_html(forconfigure)
-    
-    if(forconfigure) :
-        dropsubs    =   cfg.get_config_value(cfg.CENSUS_DROP_DATASET_LISTS)
-        
-        if(any_datasets_processed(get_datasets_processed())) :
-            
-            if( not (dropsubs is None)) :
-                if(dropsubs =="NO DATASETS SELECTED") :
-                    load_notes_html     =   configure_no_select_notes_info_html
-                    cfg.drop_config_value(cfg.CENSUS_DROP_DATASET_LISTS)
-                
-            else :
-                load_notes_html     =   configure_notes_info_html
-                    
-        else :
-            load_notes_html     =   configure_no_datasets_notes_info_html    
-                
-        load_details_heading_html       =   "<div>Configure Census Data</div><br>"
-                
-    else :
-        
-        if(not(subdataid is None)) :
-            load_notes_html     =   download_notes_subdata_info_html
-        else :
-            load_notes_html     =   download_notes_info_html
-            
-        load_details_heading_html       =   "<div>Build Census Datasets</div>"
-    
-    load_details_html               =   get_load_datasets_details_html(datasetid,forconfigure,subdataid,colnameid,direction)
-    
-
-
-    if(forconfigure) :
-        
-        #print("get_datasets_processed",get_datasets_processed())
-        
-        if(any_datasets_processed(get_datasets_processed())) :
-        
-            load_data_tb        =   ButtonGroupForm(data_configure_tb_id,
-                                                    data_configure_tb_keyTitleList,
-                                                    data_configure_tb_jsList,
-                                                    data_configure_tb_centered)
-    
-            load_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":225})
-        
-            load_census_html    =   load_census_html.replace("Census Datasets","Census Datasets To Configure")
-            
-        else :
-            
-            load_data_tb        =   ButtonGroupForm(data_configure_no_datasets_tb_id,
-                                                    data_configure_no_datasets_tb_keyTitleList,
-                                                    data_configure_no_datasets_tb_jsList,
-                                                    data_configure_no_datasets_tb_centered)
-            
-            load_data_tb.set_customstyle({"font-size":13, "height":75, "width":100, "left-margin":32})
-        
-            load_census_html    =   load_census_html.replace("Census Datasets","Census Datasets To Configure")
-            
         
     else :
         
-        load_data_tb        =   ButtonGroupForm(data_download_tb_id,
-                                                data_download_tb_keyTitleList,
-                                                data_download_tb_jsList,
-                                                data_download_tb_centered)
+        loaded_to_dfs_notes_html       =   verify_no_datasets_to_load_process_html
         
-        load_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":210})
+        loaded_to_dfs_tb               =   ButtonGroupForm(load_datasets_to_df_no_datasets_tb_id,
+                                                           load_datasets_to_df_no_datasets_tb_keyTitleList,
+                                                           load_datasets_to_df_no_datasets_tb_jsList,
+                                                           load_datasets_to_df_no_datasets_tb_centered)
+    
+        loaded_to_dfs_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":240})
+        loaded_to_dfs_tb_html          =   loaded_to_dfs_tb.get_html()
         
-        load_census_html    =   load_census_html.replace("Census Datasets","Census Datasets To Build")
-                        
-    load_data_tb_html           =   load_data_tb.get_html()
+        
+    loaded_to_dfs_heading_html          =   "<div>Load Datasets To df(s)</div><br></br>"
 
-    if( (forconfigure) and (not (any_datasets_processed(get_datasets_processed()))) ) :   
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","dfc-main","dfc-footer"]
+    gridhtmls       =   [loaded_to_dfs_heading_html,datasets_to_load_to_df_html,datasets_to_unload_to_df_html,loaded_to_dfs_notes_html,loaded_to_dfs_tb_html]
     
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer","dfc-bottom"]
-        gridhtmls       =   [load_details_heading_html,load_census_html,load_notes_html,load_data_tb_html]
+    #print(configure_drop_datset_html)
+    #print(configure_add_datset_html)
+    #print(configure_add_datset_html)
     
-        print("\n")
-        display_generic_grid("dfcensus-datasets-none-data-wrapper",gridclasses,gridhtmls)
-        print("\n")
-        
-    else :
-        
-        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-main","dfc-right","dfc-footer"]
-        gridhtmls       =   [load_details_heading_html,load_census_html,load_notes_html,load_details_html,load_data_tb_html]
-    
-        print("\n")
-        display_generic_grid("dfcensus-download-data-wrapper",gridclasses,gridhtmls)
-        print("\n")
-        
+    print("\n")
+    display_generic_grid("dfcensus-configure-data-wrapper",gridclasses,gridhtmls)
+    print("\n")
+
+
+
+
+
+
+
+
+
     
 
 """
@@ -2162,150 +2675,119 @@ def get_confirm_load_datasets_html(downloadlists) :
     return(confirm_load_datasets_html)
 
 
-def display_download_census_confirmation(downloadlists,verify=False) :
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#           Census Datasets Loaded into dfs Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+def get_census_dfs_loaded_html(fordbexport=False) :
     """
     * -------------------------------------------------------------------------- 
-    * function : display the main download census screen
+    * function : display the list of currently loaded census dfs
     * 
     * parms :
-    *   downloadlists  -   list of downloads selected
+    *   fordbexport  -   for db export flag
     *
     * returns : 
     *  N/A
     * --------------------------------------------------------
     """
     
-    print("display_load_census_data",downloadlists,verify)
+    print("get_census_dfs_loaded_html",fordbexport)
     
-    confirm_load_census_html            =   get_confirm_load_datasets_html(downloadlists)
+    dfc_loaded_datasets_html  =   ""
+    
+    dfc_loaded_datasets_html  =   (dfc_loaded_datasets_html + census_loaded_html) 
+    
+    dfs_loaded  =   cfg.get_dfc_dataframes_titles_list()
+    dfs_dict    =   {} 
+    
+    if(not(dfs_loaded) is None) :
+        
+        dfs_loaded.sort()
 
-    import os
-    
-    dfc_census_path     =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
-    dfc_census_path     =   (dfc_census_path + "\\working\\")
-    
-    no_downloads_found  =   False
-    
-    if(swcc.are_downloads_selected(downloadlists)) :
         
-        census_files        =   swcc.verify_downloads(downloadlists)
     
-        files_missing       =   census_files[0]
-        #files_found         =   census_files[1]
+        for i in range(len(swcm.census_data_dirs)) : 
         
-        if(len(files_missing) > 0) :
+            dfs_list    =   []
         
-            if(not(verify)) :
-                confirm_load_census_notes_html      =   confirm_download_notes_html
-            else :
-                vfiles = swcc.verify_downloads(downloadlists)
-                if(len(vfiles[0]) > 0) :
-                    confirm_load_census_notes_html      =   confirm_download_incomplete_notes_html
-                else :
-                    confirm_load_census_notes_html      =   confirm_download_complete_notes_html
+            for j in range(len(dfs_loaded)) :
             
-            confirm_load_census_notes_html      =   confirm_load_census_notes_html.replace("XXXCensusWorkingDir",dfc_census_path)
-            
-        else :
-            confirm_load_census_notes_html      =   confirm_download_complete_notes_html
-
-    else :
-        confirm_load_census_notes_html      =   confirm_download_none_notes_html
-        no_downloads_found  =   True
-        
-    if(no_downloads_found) :
-        
-        confirm_load_data_tb                =   ButtonGroupForm(data_confirm_download_none_tb_id,
-                                                                data_confirm_download_none_tb_keyTitleList,
-                                                                data_confirm_download_none_tb_jsList,
-                                                                data_confirm_download_none_tb_centered)
-        
-        confirm_load_data_tb.set_customstyle({"font-size":13, "height":50, "width":180, "left-margin":220})
-        
-    else :
-        
-        if(len(files_missing) > 0) :
-
-            confirm_load_data_tb                =   ButtonGroupForm(data_confirm_download_tb_id,
-                                                                    data_confirm_download_tb_keyTitleList,
-                                                                    data_confirm_download_tb_jsList,
-                                                                    data_confirm_download_tb_centered)
-        
-            confirm_load_data_tb.set_customstyle({"font-size":13, "height":50, "width":180, "left-margin":130})
-        
-        else :
-        
-            confirm_load_data_tb                =   ButtonGroupForm(data_confirm_download_complete_tb_id,
-                                                                    data_confirm_download_complete_tb_keyTitleList,
-                                                                    data_confirm_download_complete_tb_jsList,
-                                                                    data_confirm_download_complete_tb_centered)
-        
-            confirm_load_data_tb.set_customstyle({"font-size":13, "height":50, "width":180, "left-margin":130})
-        
-    confirm_load_data_tb_html           =   confirm_load_data_tb.get_html()    
-    
-    gridclasses     =   ["dfc-main","dfc-bottom","dfc-footer"]
-    gridhtmls       =   [confirm_load_census_html,confirm_load_census_notes_html,confirm_load_data_tb_html]
-    
-    print("\n")
-    display_generic_grid("dfcensus-confirm-load-data-wrapper",gridclasses,gridhtmls)
-    print("\n")
-    
-
-"""
-#--------------------------------------------------------------------------
-#           Process Datasets Confirmation Display functions
-#--------------------------------------------------------------------------
-"""
-
-def get_process_download_datasets_html(zips_not_processed) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display the main download confirmation census screen
-    * 
-    * parms :
-    *   downloadlists  -   list of downloads selected
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-    
-    confirm_process_datasets_html  =   ""
-    
-    confirm_process_datasets_html  =   (confirm_process_datasets_html + census_process_html) 
-    
-    if(len(zips_not_processed) > 0) :
-    
-        for i in range(len(zips_not_processed)) : 
-        
-            for j in range(len(zips_not_processed[i])) :
+                if(dfs_loaded[j].find(swcm.census_data_dirs[i]) > -1 ) :
+                    dfs_list.append(dfs_loaded[j])
                 
-                if(type(zips_not_processed[i][j]) == list) :
-                    
-                    for k in range(len(zips_not_processed[i][j])) :
-                        dsid                            =   swcm.census_datasets[i]
-                        dsid                            =   dsid.replace(" ","_")
-                        row_html                        =   census_process_row_html.replace("XXXDatasetID",dsid)
-                        row_html                        =   row_html.replace("XXXfilename",zips_not_processed[i][j][k])
-                        confirm_process_datasets_html   =   (confirm_process_datasets_html + row_html)
-                    
+            if(len(dfs_list) > 0) :
+                dfs_dict.update({swcm.census_datasets[i] : dfs_list})
+                
+    else :
+        
+        row_html    =   ""
+        row_html    =   (row_html + census_loaded_row_html)
+        row_html    =   row_html.replace("XXXXDatasetID","&nbsp;")
+        row_html    =   row_html.replace("XXXXfilename","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Census df(s) currently loaded")
+        
+        dfc_loaded_datasets_html  =   (dfc_loaded_datasets_html + row_html) 
+            
+    print("dfs_dict",dfs_dict)
+
+    if(len(dfs_dict) == 0) :
+        
+        row_html    =   ""
+        row_html    =   (row_html + census_loaded_row_html)
+        row_html    =   row_html.replace("XXXXDatasetID","&nbsp;")
+        row_html    =   row_html.replace("XXXXfilename","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Census df(s) currently loaded")
+        
+        dfc_loaded_datasets_html  =   (dfc_loaded_datasets_html + row_html) 
+
+    else :
+        
+        dfs_dict_list   =  list(dfs_dict.keys()) 
+        
+        for i in range(len(dfs_dict_list)) :
+            
+            current_dfs_list    =   dfs_dict.get(dfs_dict_list[i]) 
+            
+            print("current_dfs_list",current_dfs_list)
+            
+            for j in range(len(current_dfs_list)) :
+                
+                row_html    =   ""
+                row_html    =   (row_html + census_loaded_row_html)
+                
+                if(j==0) :
+                    row_html    =   row_html.replace("XXXXDatasetID",dfs_dict_list[i])
                 else :
-                    dsid                            =   swcm.census_datasets[i]
-                    dsid                            =   dsid.replace(" ","_")
-                    row_html                        =   census_process_row_html.replace("XXXDatasetID",dsid)
-                    row_html                        =   row_html.replace("XXXfilename",zips_not_processed[i][j])
-                    confirm_process_datasets_html   =   (confirm_process_datasets_html + row_html)
-    
-    confirm_process_datasets_html  =   (confirm_process_datasets_html + census_process_end_html)
-    
-    return(confirm_process_datasets_html)
+                    row_html    =   row_html.replace("XXXXDatasetID","&nbsp;")
+                    
+                row_html    =   row_html.replace("XXXXdfname",current_dfs_list[j])
+                
+                if(fordbexport) :
+                    row_html    =   row_html.replace("XXXXcallback","export_census_to_db")
+                else :
+                    row_html    =   row_html.replace("XXXXcallback","export_census_to_df")
+
+                
+                dfc_loaded_datasets_html  =   (dfc_loaded_datasets_html + row_html) 
+            
+            
+    dfc_loaded_datasets_html  =   (dfc_loaded_datasets_html + census_loaded_end_html) 
+            
+    return(dfc_loaded_datasets_html)
 
 
-def display_process_downloaded_files(downloadlists) :
+def display_census_dfs_loaded(fordbexport=False) :
     """
     * -------------------------------------------------------------------------- 
-    * function : display the process downloaded zip files
+    * function : display the loaded census dfs
     * 
     * parms :
     *   NA
@@ -2315,60 +2797,79 @@ def display_process_downloaded_files(downloadlists) :
     * --------------------------------------------------------
     """
     
-    print("display_process_downloaded_files",downloadlists)
+    dfs_loaded_html     =   get_census_dfs_loaded_html(fordbexport) 
+    dfs_loaded_note     =   get_dataset_loaded_html    
     
-
-    import os
+    gridclasses         =   ["dfc-top","dfc-bottom"]
+    gridhtmls           =   [dfs_loaded_html,dfs_loaded_note]
     
-    dfc_census_path    =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
-    dfc_census_path    =   (dfc_census_path + "\\working\\")
-    
-    #download_files      =   swcc.verify_downloads(downloadlists)
-    #zips_to_process     =   swcc.get_zips_to_process(download_files[1],downloadlists)
-    zips_not_processed  =   swcc.get_zips_not_processed()
-    
-    print("display_process_downloaded_files\n",zips_not_processed)
-    
-    process_load_census_html            =   get_process_download_datasets_html(zips_not_processed)
-    
-    if(swcc.any_zips_not_processed(zips_not_processed)) :
-        process_load_census_notes_html  =   process_notes_html
-        
-    else :
-        process_load_census_notes_html  =   process_notes_complete_html
-        
-    if(swcc.any_zips_not_processed(zips_not_processed)) :
-
-        process_load_data_tb                =   ButtonGroupForm(data_process_load_tb_id,
-                                                                data_process_load_tb_keyTitleList,
-                                                                data_process_load_tb_jsList,
-                                                                data_process_load_tb_centered)
-        
-    else :
-        
-        process_load_data_tb                =   ButtonGroupForm(data_process_load_complete_tb_id,
-                                                                data_process_load_complete_tb_keyTitleList,
-                                                                data_process_load_complete_tb_jsList,
-                                                                data_process_load_complete_tb_centered)
-                        
-    process_load_data_tb.set_customstyle({"font-size":13, "height":50, "width":180, "left-margin":130})
-    process_load_data_tb_html           =   process_load_data_tb.get_html()    
-    
-    gridclasses     =   ["dfc-main","dfc-bottom","dfc-footer"]
-    gridhtmls       =   [process_load_census_html,process_load_census_notes_html,process_load_data_tb_html]
+    print(dfs_loaded_html)
+    print(dfs_loaded_note)
     
     print("\n")
-    display_generic_grid("dfcensus-confirm-load-data-wrapper",gridclasses,gridhtmls)
+    display_generic_grid("dfcensus-loaded-dfs-wrapper",gridclasses,gridhtmls)
     print("\n")
 
 
-def get_dataset_type_name(index) :
-    
-    if(index == 0)      :   return("zipcode")
-    elif(index == 1)    :   return("cities")
-    elif(index == 2)    :   return("counties")
-    elif(index == 3)    :   return("states")
-    else                :   return("")
+
+
+
+
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#           Datasets Configuration Verification Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+configure_verification_html ="""
+        <div class='container dc-tbl-container' style="width:100%;" id="dfCensusLoadOptions">
+            <div class="panel panel-primary" style="border:0;">
+                <div class="panel-heading clearfix dc-table-panel-heading" style="width:100%;">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <div class="input-group-btn">
+                                <p class="panel-title pull-left" style="padding-right:20px;">Census Datasets To Drop</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table dc-table" id="DIsamplerows" style="width:100%;">
+                        <thead>
+                            <tr class="dcrowhead">
+                                <th style=" width:65%; font-size:13px; text-align:left;" class="dccolheadleft">Dataset</th>
+                                <th style=" width:35%; font-size:13px; text-align:left;" class="dccolheadleft">Downloaded</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+"""
+
+configure_verification_end_html ="""
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+"""
+
+
+configure_verification_row_html ="""
+                            <tr class="dc-describe-table-body-row">
+                                <td style=" width:65%; font-size:13px; text-align:left;" class="dccolleft">XXXDatasetID</td>
+                                <td style=" width:35%; font-size:13px; text-align:left;" class="dccolleft">XXXFileName</td>               
+                            </tr>
+"""
+
+configure_process_html="<div class='dfcleanser-common-grid-note'>To Add/Drop datasets selected click on the Add/Drop Selected Datasets.<br>Any datasets highlighted must be downloaded before being added.</div><br>"
+
+
 
 
 def any_datasets_to_drop(datasets_to_configure,datasets_processed) :
@@ -2392,6 +2893,7 @@ def any_datasets_to_add(datasets_to_configure,datasets_processed) :
     return(False)                
     
 
+
 def get_configure_datasets_verification_html(datasets_to_configure,datasets_processed) :
     """
     * -------------------------------------------------------------------------- 
@@ -2405,7 +2907,7 @@ def get_configure_datasets_verification_html(datasets_to_configure,datasets_proc
     * --------------------------------------------------------
     """
 
-    print("get_configure_datasets_verification_html\n",datasets_to_configure,"\n\n",datasets_processed)
+    #print("get_configure_datasets_verification_html\n",datasets_to_configure,"\n\n",datasets_processed)
     
     add_ds_html     =   configure_verification_html
     add_ds_html     =   add_ds_html.replace("To Drop","To Add")
@@ -2413,6 +2915,9 @@ def get_configure_datasets_verification_html(datasets_to_configure,datasets_proc
     
     add_datasets    =   []
     drop_datasets   =   []
+    
+    datasets_downloaded     =   get_datasets_downloaded_list()
+
     
     for i in range(len(datasets_to_configure)) :
         
@@ -2423,31 +2928,37 @@ def get_configure_datasets_verification_html(datasets_to_configure,datasets_proc
                 if(not (datasets_processed[i][j])) :
                     
                     row_html    =   configure_verification_row_html
-                    row_html    =   row_html.replace("XXXDatasetID",swcm.census_datasets[i])
+                    row_html    =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
                     
-                    filename    =   swcm.census_data_dirs[i] + "_" + get_dataset_type_name(j) + ".csv"
-                    row_html    =   row_html.replace("XXXFileName",filename)
+                    
+                    
+                    if(datasets_downloaded[i]) :
+                        row_html    =   row_html.replace("XXXFileName","True")
+                        add_datasets.append(swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
+                    else :
+                        row_html    =   row_html.replace('<tr class="dc-describe-table-body-row">','<tr class="dc-describe-table-body-row" style="background-color:#ffffcc">')
+                        row_html    =   row_html.replace("XXXFileName","False")
                                     
                     add_ds_html   =   (add_ds_html + row_html)
                     
-                    add_datasets.append(filename)
-                    
             else :
+                
+                drop_ds_html  =   drop_ds_html.replace("Downloaded","")
                 
                 if(datasets_processed[i][j]) :
                     
                     row_html    =   configure_verification_row_html
-                    row_html    =   row_html.replace("XXXDatasetID",swcm.census_datasets[i])
+                    row_html    =   row_html.replace("XXXDatasetID",swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
                     
-                    filename    =   swcm.census_data_dirs[i] + "_" + get_dataset_type_name(j) + ".csv"
-                    row_html    =   row_html.replace("XXXFileName",filename) 
+                    row_html    =   row_html.replace("XXXFileName"," ") 
                                     
                     drop_ds_html   =   (drop_ds_html + row_html)
                     
-                    drop_datasets.append(filename)
+                    drop_datasets.append(swcm.census_data_dirs[i] + "_" + swcm.get_dataset_type_name(j))
                 
     
-    add_ds_html   =   (add_ds_html + configure_verification_end_html)   
+    add_ds_html   =   (add_ds_html + configure_verification_end_html)  
+    #print(add_ds_html)
     drop_ds_html  =   (drop_ds_html + configure_verification_end_html)
     
     if(len(add_datasets) > 0) :
@@ -2478,7 +2989,7 @@ def display_configure_verification_data(datasets_to_configure) :
     * --------------------------------------------------------
     """
     datasets_processed  =   get_datasets_processed()
-    print("display_configure_verification_data\n",datasets_to_configure,"\n",datasets_processed)
+    #print("display_configure_verification_data\n",datasets_to_configure,"\n",datasets_processed)
     
     [configure_drop_datset_html,configure_add_datset_html]    =   get_configure_datasets_verification_html(datasets_to_configure,datasets_processed)
     
@@ -2488,12 +2999,12 @@ def display_configure_verification_data(datasets_to_configure) :
         
         configure_drop_notes_html       =   configure_process_html
         
-        configure_data_tb        =   ButtonGroupForm(data_configure_verify_tb_id,
-                                                     data_configure_verify_tb_keyTitleList,
-                                                     data_configure_verify_tb_jsList,
-                                                     data_configure_verify_tb_centered)
+        configure_data_tb               =   ButtonGroupForm(data_configure_verify_tb_id,
+                                                            data_configure_verify_tb_keyTitleList,
+                                                            data_configure_verify_tb_jsList,
+                                                            data_configure_verify_tb_centered)
     
-        configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":195})
+        configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":240})
         configure_data_tb_html          =   configure_data_tb.get_html()
 
         
@@ -2501,10 +3012,10 @@ def display_configure_verification_data(datasets_to_configure) :
         
         configure_drop_notes_html       =   configure_no_select_notes_info_html
         
-        configure_data_tb        =   ButtonGroupForm(data_configure_no_datasets_tb_id,
-                                                     data_configure_no_datasets_tb_keyTitleList,
-                                                     data_configure_no_datasets_tb_jsList,
-                                                     data_configure_no_datasets_tb_centered)
+        configure_data_tb               =   ButtonGroupForm(data_configure_no_datasets_tb_id,
+                                                            data_configure_no_datasets_tb_keyTitleList,
+                                                            data_configure_no_datasets_tb_jsList,
+                                                            data_configure_no_datasets_tb_centered)
     
         configure_data_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":240})
         configure_data_tb_html          =   configure_data_tb.get_html()
@@ -2514,6 +3025,10 @@ def display_configure_verification_data(datasets_to_configure) :
 
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","dfc-main","dfc-footer"]
     gridhtmls       =   [configure_heading_html,configure_drop_datset_html,configure_add_datset_html,configure_drop_notes_html,configure_data_tb_html]
+    
+    #print(configure_drop_datset_html)
+    #print(configure_add_datset_html)
+    #print(configure_add_datset_html)
     
     print("\n")
     display_generic_grid("dfcensus-configure-data-wrapper",gridclasses,gridhtmls)
@@ -2554,7 +3069,7 @@ def get_load_datasets_html() :
         
         if(len(datasets_built[i]) > 0) :
             
-            if(is_any_part_of_dataset_processed(i,datasets_built)) :
+            if(swcm.is_any_part_of_dataset_processed(i,datasets_built)) :
             
                 dsid                =   swcm.census_datasets[i]
                 dsid                =   dsid.replace("_"," ")
@@ -2609,7 +3124,7 @@ def get_load_datasets_html() :
     return(load_datasets_html)
 
 
-def display_load_datasets(for_dataframes=True) :
+def display_load_datasets() :
     """
     * -------------------------------------------------------------------------- 
     * function : display the load datasets screen
@@ -2622,23 +3137,14 @@ def display_load_datasets(for_dataframes=True) :
     """
     
     load_datasets_to_df_html    =   get_load_datasets_html()
+    
     load_datasets_to_df_html    =   load_datasets_to_df_html.replace("Census Datasets","Census Datasets Ready To Load to df(s)")
     
-    if(for_dataframes) :
-    
-        load_datasets_to_df_tb      =   ButtonGroupForm(data_load_datasets_to_df_tb_id,
-                                                        data_load_datasets_to_df_tb_keyTitleList,
-                                                        data_load_datasets_to_df_tb_jsList,
-                                                        data_load_datasets_to_df_tb_centered)
+    load_datasets_to_df_tb      =   ButtonGroupForm(data_load_datasets_to_df_tb_id,
+                                                    data_load_datasets_to_df_tb_keyTitleList,
+                                                    data_load_datasets_to_df_tb_jsList,
+                                                    data_load_datasets_to_df_tb_centered)
         
-    else :
-        
-        load_datasets_to_df_tb      =   ButtonGroupForm(data_load_datasets_to_db_tb_id,
-                                                        data_load_datasets_to_db_tb_keyTitleList,
-                                                        data_load_datasets_to_db_tb_jsList,
-                                                        data_load_datasets_to_db_tb_centered)
-        
-
     load_datasets_to_df_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":40})
     load_datasets_to_df_tb_html          =   load_datasets_to_df_tb.get_html()
     
@@ -2650,8 +3156,11 @@ def display_load_datasets(for_dataframes=True) :
                 dsbuilt     =   True
 
     if(dsbuilt) :
+        
         load_notes  =   load_datasets_html
+            
     else :
+        
         load_notes  =   load_datasets_none_html
         
         load_datasets_none_tb       =   ButtonGroupForm(data_load_datasets_none_tb_id,
@@ -2665,9 +3174,18 @@ def display_load_datasets(for_dataframes=True) :
     gridclasses     =   ["dfc-main","dfc-footer","dfc-bottom"]
     gridhtmls       =   [load_datasets_to_df_html,load_notes,load_datasets_to_df_tb_html]
     
+    
+    #print(load_datasets_to_df_html)
+    #print(load_notes)
+    
     print("\n")
     display_generic_grid("dfcensus-load-data-wrapper",gridclasses,gridhtmls)
     print("\n")
+
+
+
+
+
 
 
 """
@@ -2678,34 +3196,486 @@ def display_load_datasets(for_dataframes=True) :
 #--------------------------------------------------------------------------
 """
 
-def get_colnames_for_get_cols_html(datasetid,subdataindex) :
+def get_colnames_for_get_cols_html(datasetid,subdataindex,forselects=False,forinserts=False) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get colnames for a subset
+    * 
+    * parms :
+    *
+    *   datasetid       -   dataset id
+    *   subdataindex    -   subset id
+    *   forselects      -   for selects flag
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    print("\n\nget_colnames_for_get_cols_html",datasetid,subdataindex,forselects,forinserts)
     
     get_cols_colnames_html  =   ""
-    
-    subdata_data            =   get_subdata_lists(datasetid)
-    subdatacols             =   subdata_data[0]    
-
     get_cols_colnames_html  =   (get_cols_colnames_html + get_cols_colnames_table_html)
-
-    subdata_col_names       =   subdatacols[subdataindex]
-
-    get_cols_colnames_html  =   get_cols_colnames_html.replace("XXXColumnsTitle",("* " + datasetid + " : " + swcm.get_subdata_name(datasetid,int(subdataindex)) + " column names"))        
     
-    for i in range(len(subdata_col_names)) :
-
-        row_html    =   get_cols_colnames_table_row_html
-        colname     =   get_colname(subdata_col_names[i],90)
-        row_html    =   row_html.replace("XXXColname",str(i))#subdata_col_names[i])
-        row_html    =   row_html.replace("XXXSColname",colname)
+    if(datasetid is None) :
         
+        row_html    =   get_cols_colnames_table_row_html
+        row_html    =   row_html.replace("XXXColname","&nbsp;")
+        row_html    =   row_html.replace("XXXSColname","No columns selected")
+            
         get_cols_colnames_html     =   (get_cols_colnames_html +  row_html)       
         
-    get_cols_colnames_html     =   (get_cols_colnames_html + get_cols_colnames_table_end_html)
+    else :
+    
+        subdata_data            =   swcm.get_subset_data_lists(datasetid)
+        subdatacols             =   subdata_data[swcm.SUBSET_COLUMNS] 
+        
+        #print("subdatacols",subdatacols)
+    
+        if( (forinserts) or (forselects) ):
+            get_cols_colnames_html  =   get_cols_colnames_html.replace("width:540px;","width:480px;")
+
+        if( (forinserts) or (forselects) ):
+            
+            all_subdata_col_names   =   subdatacols[subdataindex]
+            subdata_col_names       =   [] 
+            
+            
+            print("all_subdata_col_names",all_subdata_col_names)
+            
+            #old versioninsert_cols_dict        =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID)
+            #old versioninsert_dataset_dict     =   insert_cols_dict.get(datasetid,None)
+            
+            insert_dataset_dict     =   swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_dataset(datasetid)
+            
+            print("insert_dataset_dict",insert_dataset_dict)
+            
+            if(not (insert_dataset_dict is None)) :
+                insert_cols_list    =   insert_dataset_dict.get(int(subdataindex),None)
+                
+                print("insert_cols_list",insert_cols_list)
+                
+                if(not (insert_cols_list is None)) :
+                    if(insert_cols_list[0] == -1):#"All") :
+                        subdata_col_names.append("All") 
+                        get_cols_colnames_html  =   get_cols_colnames_html.replace('multiple="multiple" size="30"','multiple="multiple" size="2"')
+                    else :
+                        for i in range(len(insert_cols_list)) :
+                            subdata_col_names.append(all_subdata_col_names[i])    
+            
+        else :
+            subdata_col_names       =   subdatacols[subdataindex]
+            
+        print("\nsubdata_col_names",subdata_col_names,"\n")
+
+        get_cols_colnames_html  =   get_cols_colnames_html.replace("XXXColumnsTitle",("* " + datasetid + " : " + swcm.get_subdata_name(datasetid,int(subdataindex)) + " column names")) 
+
+        if(forselects)   :
+        
+            # old version dataset_cols_dict    =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID)
+            dataset_cols_dict    =   swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_to_load_in_df()
+            print("get_colnames_for_get_cols_html - dataset_cols_dict : start",dataset_cols_dict)
+        
+            if(dataset_cols_dict is None) :
+                selects     =   []
+            else :
+        
+                # old versioin subdata_cols_dict    =  dataset_cols_dict.get(datasetid)
+                subdata_cols_dict    =  swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_dataset(datasetid)
+                
+                if(subdata_cols_dict is None) :
+                    selects     =   []
+                else :
+                    selects     =   subdata_cols_dict.get(subdataindex,[])
+        
+            print("selects",selects)
+            
+        else :
+            
+            if(not (forinserts)) :
+                row_html    =   get_cols_colnames_table_row_html
+                row_html    =   row_html.replace("XXXColname",str(-1))#subdata_col_names[i])
+                row_html    =   row_html.replace("XXXSColname","All")
+        
+                get_cols_colnames_html     =   (get_cols_colnames_html +  row_html) 
+            
+    
+        print("\nget_colnames_for_get_cols_html subdata_col_names",subdata_col_names,len(subdata_col_names))
+        #print("\nget_colnames_for_get_cols_html selects",selects,len(selects))
+        
+        if( (forselects) or (forinserts) ) :
+                
+            sellen  =   len(subdata_col_names) + 1
+            if(sellen > 30) :
+                sellen = 30
+            get_cols_colnames_html  =   get_cols_colnames_html.replace('multiple="multiple" size="30"','multiple="multiple" size="' + str(sellen) +'"')
+            get_cols_colnames_html  =   get_cols_colnames_html.replace("enabled","disabled")
+        
+        
+        for i in range(len(subdata_col_names)) :
+        
+            if(forselects) :
+                
+                if(len(selects) == 0) :
+        
+                    row_html    =   get_cols_colnames_table_row_html
+                    colname     =   swcm. get_colname(subdata_col_names[i],70)
+                    row_html    =   row_html.replace("XXXColname",str(i))#subdata_col_names[i])
+                    row_html    =   row_html.replace("XXXSColname",colname)
+            
+                    get_cols_colnames_html     =   (get_cols_colnames_html +  row_html)       
+                
+                else :
+                
+                    if( (len(selects) == 1) and (selects[0] == -1)) :
+                    
+                        row_html    =   get_cols_colnames_table_row_html
+                        colname     =   "All"
+                        row_html    =   row_html.replace("XXXColname",str(i))#subdata_col_names[i])
+                        row_html    =   row_html.replace("XXXSColname",colname)
+            
+                        get_cols_colnames_html     =   (get_cols_colnames_html +  row_html)       
+                    
+                    else :
+                
+                        if(1):#i in selects) :
+                            
+                            print("i in selects",i)
+
+                            row_html    =   get_cols_colnames_table_row_html
+                            colname     =   swcm.get_colname(subdata_col_names[i],70)
+                            row_html    =   row_html.replace("XXXColname",str(i))#subdata_col_names[i])
+                            row_html    =   row_html.replace("XXXSColname",colname)
+            
+                            get_cols_colnames_html     =   (get_cols_colnames_html +  row_html)  
+                            
+                
+                
+            else :  
+                
+                if(forinserts) :
+                    print("forinserts : ",subdata_col_names[i])
+                    colname     =   swcm.get_colname(subdata_col_names[i],70)
+                    
+                else :
+                    colname     =   swcm.get_colname(subdata_col_names[i],90)
+                    
+
+                row_html    =   get_cols_colnames_table_row_html
+
+                if(forinserts) :
+                    
+                    if(colname == "All") :
+                        row_html    =   row_html.replace("XXXColname",str(-1))
+                    else :
+                        row_html    =   row_html.replace("XXXColname",str(i))
+                        
+                else :
+                    row_html    =   row_html.replace("XXXColname",str(i))#subdata_col_names[i])
+                    
+                row_html    =   row_html.replace("XXXSColname",colname)
+        
+                get_cols_colnames_html     =   (get_cols_colnames_html +  row_html)       
+
+    if(forselects) :
+        get_cols_colnames_html     =   (get_cols_colnames_html + get_cols_colnames_table_selects_end_html) 
+    else :
+        get_cols_colnames_html     =   (get_cols_colnames_html + get_cols_colnames_table_end_html)
      
     return(get_cols_colnames_html)
 
 
-def get_dataset_columns_subdata_table_html(datasetid,forloadcols=False) :
+
+
+def display_dataset_columns_selected(parms) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get dataset columns selected html
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    print("get_dataset_columns_selected_table_html",parms)
+    
+    get_selected_cols_heading_html       =   "<div>Census Column(s) Selected</div><br></br>"
+
+    subsets_html    =   ""
+    subsets_html    =   (subsets_html + selected_columns_table_html)
+    
+    # old version dataset_cols_dict    =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID)
+    dataset_cols_dict    =   swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_to_load_in_df()
+        
+    print("get_dataset_columns_selected_table_html - dataset_cols_dict : start",dataset_cols_dict)
+        
+    if(dataset_cols_dict is None) :
+        
+        loadnotes = ["No subset columns defined"]
+        display_notes(loadnotes,display=True)
+        
+        cfg.drop_config_value(cfg.CENSUS_SELECTED_DATASET_ID)
+        cfg.drop_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
+        
+    else :
+        
+        # old version select_columns_datasets    =   list(dataset_cols_dict.keys())
+        select_columns_datasets    =   swcm.dfc_census_columns_selected.get_datasets_selected_to_load_in_df_list()
+        print("\nselect_columns_datasets",select_columns_datasets,len(select_columns_datasets))
+        
+        if(parms is None) :
+            
+            datasetid   =   select_columns_datasets[0]
+            subsetid    =   1
+            
+        else :
+            
+            datasetid   =   parms[0]
+            subsetid    =   int(parms[1])
+            
+        print("\ndisplay_dataset_columns_selected",datasetid,subsetid)
+        
+        for i in range(len(select_columns_datasets)) : 
+            
+            if(not (i == 0)) :
+                subsets_html   =   (subsets_html + selected_columns_blank_line_html)  
+                
+            subsets_html    =   (subsets_html + selected_columns_dataset_row_html)
+            subsets_html    =   subsets_html.replace("XXXXDATASET",select_columns_datasets[i]) 
+                
+            # old version select_columns_subsets_dict     =   dataset_cols_dict.get(select_columns_datasets[i])
+            select_columns_subsets_dict     =   swcm.dfc_census_columns_selected.get_dataset_subsets_selected_to_load_in_df_list(select_columns_datasets[i])
+            select_columns_subsets_keys     =   list(select_columns_subsets_dict.keys())
+                        
+            print("\nselect_columns_datasets : ",i,select_columns_datasets[i])
+
+            print("\nselect_columns_subsets_dict",select_columns_subsets_dict)
+            print("\nselect_columns_subsets_keys",select_columns_subsets_keys)
+            select_columns_subsets_keys.sort()
+            
+            subdata_lists   =   swcm.get_subset_data_lists(select_columns_datasets[i])
+            
+            #print("subdata_lists",subdata_lists)
+            
+            subdata_titles  =   subdata_lists[swcm.SUBSET_COLUMN_NAMES]
+            
+            print("subdata_titles",subdata_titles)
+            
+            for j in range(len(select_columns_subsets_keys)) :
+                
+                subset_columns_list     =    select_columns_subsets_dict.get(select_columns_subsets_keys[j]) 
+                
+                print("\nsubset_columns_list : ",select_columns_subsets_keys[j],subset_columns_list)
+            
+                subsets_html    =   (subsets_html + selected_columns_subset_row_html)
+                
+                if(subset_columns_list[0] == -1) :
+                    subsets_html    =   subsets_html.replace("XXXXSUBSETCOUNT","All")            
+                else :
+                    subsets_html    =   subsets_html.replace("XXXXSUBSETCOUNT",str(len(subset_columns_list)))
+                
+                subsets_html    =   subsets_html.replace("XXXXSUBSETTITLE",subdata_titles[select_columns_subsets_keys[j]])
+                
+                subsets_html    =   subsets_html.replace("XXXXSUBSETID",str(select_columns_subsets_keys[j]))
+                    
+                subsets_html    =   subsets_html.replace("XXXXSUBSET",subdata_titles[select_columns_subsets_keys[j]])
+                    
+                subsets_html    =   subsets_html.replace("XXXXDATASETID",select_columns_datasets[i])
+    
+        subsets_html    =   (subsets_html + selected_columns_table_html_end) 
+    
+        select_columns_subsets_dict     =   dataset_cols_dict.get(select_columns_datasets[0]) 
+        select_columns_subsets_keys     =   list(select_columns_subsets_dict.keys())
+    
+        colnames_html   =   get_colnames_for_get_cols_html(datasetid,subsetid,forselects=True)
+    
+        cfg.set_config_value(cfg.CENSUS_SELECTED_DATASET_ID,datasetid)
+        cfg.set_config_value(cfg.CENSUS_SELECTED_SUBSET_ID,subsetid)
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        gridhtmls       =   [get_selected_cols_heading_html,subsets_html,colnames_html]
+    
+        print(subsets_html)
+        print(colnames_html)
+    
+        print("\n")
+        display_generic_grid("dfcensus-show-selects-wrapper",gridclasses,gridhtmls)
+        print("\n")
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Insert Columns Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+NO_USER_DFS             =   0
+NO_DATASETS_LOADED      =   1
+
+
+def display_columns_to_insert(dftitle=None) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get dataset columns to insert
+    * 
+    * parms :
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    datasetid           =   cfg.get_config_value(cfg.CENSUS_SELECTED_DATASET_ID)
+    subsetid            =   cfg.get_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
+
+    print("display_columns_to_insert",datasetid,subsetid,dftitle)    
+    invalid_cfg_code    =   None
+    
+    from dfcleanser.common.html_widgets import InputForm
+    insert_cols_input_form = InputForm(insert_cols_in_df_input_id,
+                                       insert_cols_in_df_input_idList,
+                                       insert_cols_in_df_input_labelList,
+                                       insert_cols_in_df_input_typeList,
+                                       insert_cols_in_df_input_placeholderList,
+                                       insert_cols_in_df_input_jsList,
+                                       insert_cols_in_df_input_reqList)
+    
+    selectDicts             =   []
+    
+    index_types  =   []   
+    
+    datasets_processed  =   get_datasets_processed()
+        
+    print("datasets_processed",datasets_processed)
+    
+    if(datasets_processed[swcm.get_datasetid_offset(datasetid)][0]) :
+        index_types.append("[zipcode]")
+    if(datasets_processed[swcm.get_datasetid_offset(datasetid)][1]) :
+        index_types.append("[city,state]")
+    if(datasets_processed[swcm.get_datasetid_offset(datasetid)][2]) :
+        index_types.append("[county,state]")
+    if(datasets_processed[swcm.get_datasetid_offset(datasetid)][3]) :
+        index_types.append("[state]")
+
+    print("\nindex_types",index_types) 
+    
+    if(len(index_types) > 0) :
+        
+        index_types_list    =   index_types
+        index_types_default =   None
+        subdata_name        =   swcm.get_subdata_name(datasetid,subsetid)
+        
+    else :
+        
+        invalid_cfg_code    =   NO_DATASETS_LOADED
+
+    if(invalid_cfg_code is None) :
+    
+        index_types_dict    =   {"default":index_types_default,"list":index_types_list,"callback":"select_new_insert_df_index_type"}
+        selectDicts.append(index_types_dict)
+    
+        non_census_df_titles    =   []
+    
+        df_titles   =   cfg.get_dfc_dataframes_titles_list()
+    
+        if(not (df_titles is None)) :
+    
+            for i in range(len(df_titles)) :
+        
+                if(not( ((swcm.census_data_dirs[i] + "_zipcode" + "_df") in df_titles) or 
+                        ((swcm.census_data_dirs[i] + "_cities" + "_df") in df_titles) or 
+                        ((swcm.census_data_dirs[i] + "_counties" + "_df") in df_titles) or 
+                        ((swcm.census_data_dirs[i] + "_states" + "_df") in df_titles)  )) :
+            
+                    non_census_df_titles.append(df_titles[i])
+        
+        print("\nnon_census_df_titles",non_census_df_titles)
+    
+        #if(df_titles is None) :
+        if(len(non_census_df_titles) > 0) :
+        
+            if(dftitle is None) :
+                df_default          =   non_census_df_titles[0]
+            else :
+                df_default          =   dftitle
+            
+            dfs                 =   non_census_df_titles
+            df                  =   cfg.get_dfc_dataframe_df(non_census_df_titles[0])
+            colslist            =   df.columns.tolist()
+            cols_default        =   None
+        
+        else : 
+        
+            invalid_cfg_code    =   NO_USER_DFS
+        
+        if(invalid_cfg_code is None) :
+        
+            dfs_dict        =   {"default":df_default,"list":dfs,"callback":"select_new_insert_df"}
+            selectDicts.append(dfs_dict)
+    
+            df_cols_dict    =   {"default":cols_default,"list":colslist,"callback":"select_new_insert_df_col"}
+            selectDicts.append(df_cols_dict)
+    
+            print("\ndfs_dict",dfs_dict)
+            print("\ndf_cols_dict",df_cols_dict)
+            print("\ndf_titles",df_titles)    
+            
+            get_select_defaults(insert_cols_input_form,
+                                insert_cols_in_df_input_id,
+                                insert_cols_in_df_input_idList,
+                                insert_cols_in_df_input_typeList,
+                                selectDicts)
+                    
+            insert_cols_input_form.set_shortForm(True)
+            insert_cols_input_form.set_gridwidth(360)
+            insert_cols_input_form.set_custombwidth(85)
+            insert_cols_input_form.set_fullparms(True)
+    
+            cfg.set_config_value(insert_cols_in_df_input_id+"Parms",[subdata_name,df_default,cols_default,index_types_default,"",""])
+    
+            if(invalid_cfg_code) :
+                cfg.set_config_value(insert_cols_in_df_input_id+"ParmsProtect",["True","True","True","True","True","True"])
+            else :
+                cfg.set_config_value(insert_cols_in_df_input_id+"ParmsProtect",["True","False","False","False","False","False"])
+        
+            insert_cols_input_html = insert_cols_input_form.get_html()
+    
+            insert_cols_heading_html       =   "<div>Insert Census Columns into df</div>"
+    
+            colnames_html   =   get_colnames_for_get_cols_html(datasetid,subsetid,forselects=False,forinserts=True)
+    
+            gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+            gridhtmls       =   [insert_cols_heading_html,insert_cols_input_html,colnames_html]
+    
+            print(insert_cols_input_html)
+            print(colnames_html)
+    
+            print("\n")
+            display_generic_grid("dfcensus-show-selects-wrapper",gridclasses,gridhtmls)
+            print("\n")
+            
+    if( not (invalid_cfg_code is None)) :
+        
+        if(invalid_cfg_code == NO_USER_DFS) :
+            loadnotes = ["No user dfs defined to load census columns into"]
+        elif(invalid_cfg_code == NO_DATASETS_LOADED) :
+            loadnotes = ["No census datasets downloaded and built for " + datasetid]
+        
+        display_notes(loadnotes,display=True)
+            
+    
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#                   Dataset Details Display functions
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+def get_dataset_columns_subdata_table_html(datasetid,excludes=None,forloadcols=False) :
     """
     * -------------------------------------------------------------------------- 
     * function : get dataset subset details html
@@ -2719,6 +3689,8 @@ def get_dataset_columns_subdata_table_html(datasetid,forloadcols=False) :
     * --------------------------------------------------------
     """
     
+    print("get_dataset_columns_subdata_table_html",datasetid,excludes,forloadcols)
+    
     load_datasets_details_table     =   ""
     
     if(not forloadcols) :
@@ -2729,16 +3701,18 @@ def get_dataset_columns_subdata_table_html(datasetid,forloadcols=False) :
         
     if(not(datasetid is None)) :
         
-        subdata_data        =   get_subdata_lists(datasetid)
+        subdata_data        =   swcm.get_subset_data_lists(datasetid)
         
-        subdatacols         =   subdata_data[0]    
-        subdatacolstext     =   subdata_data[1]
-        subdatacolsnans     =   subdata_data[2]
+        subdatacols         =   subdata_data[swcm.SUBSET_COLUMNS]    
+        subdatacolstext     =   subdata_data[swcm.SUBSET_COLUMN_NAMES]
+        subdatacolsnans     =   subdata_data[swcm.SUBSET_COLUMN_NANS]
     
-
+        if(excludes is None) :
+            excludes    =   []
+            
         for i in range(len(subdatacols)) :
 
-            if(not (i==0)) :
+            if( (not (i==0)) and (not(i in excludes)) ):
             
                 row_html    =   census_subdata_table_row_html
                     
@@ -2772,7 +3746,9 @@ def get_dataset_columns_subdata_table_html(datasetid,forloadcols=False) :
                 
     else :
         load_datasets_details_table     =   (get_dataset_columns_no_datasetid_notes_html)
-        
+    
+
+    print(load_datasets_details_table)    
     return(load_datasets_details_table)
 
 
@@ -2798,23 +3774,22 @@ def get_dataset_columns_html() :
     *  html
     * --------------------------------------------------------
     """
-    #print("get_dataset_columns_html")
+    print("get_dataset_columns_html")
     
     load_datasets_html  =   ""
-    
     load_datasets_html  =   (load_datasets_html + census_get_cols_for_df_html)  
     
-    dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
+    datasets_loaded     =   get_datasets_processed()
     
-    print("get_dataset_columns_html",dataframes_loaded)
+    print("get_dataset_columns_html",datasets_loaded)
     
-    if(not(dataframes_loaded is None)) :
+    if(not(datasets_loaded is None)) :
     
         for i in range(len(swcm.census_data_dirs)) : 
             
-            print("any_dataframes_loaded_for_dataset",any_dataframes_loaded_for_dataset(swcm.census_data_dirs[i]))
+            #print("any_dataframes_loaded_for_dataset",datasets_loaded)
             
-            if(any_dataframes_loaded_for_dataset(swcm.census_data_dirs[i])) :
+            if(1):#any_dataframes_loaded_for_dataset(swcm.census_data_dirs[i])) :
                 
                 dsid                =   swcm.census_datasets[i]
                 dsid                =   dsid.replace("_"," ")
@@ -2824,35 +3799,25 @@ def get_dataset_columns_html() :
                 for j in range(4)  : 
                 
                     if(j==0)        :   
-                        dftype  =   "zipcode"
-                        cbdis   =   "rb0disabled"
+                        #dftype  =   "zipcode"
                         cbchk   =   "rb0checked"
                             
                     elif(j==1)      :   
-                        dftype  =   "cities" 
-                        cbdis   =   "rb1disabled"
+                        #dftype  =   "cities" 
                         cbchk   =   "rb1checked"
                             
                     elif(j==2)      :   
-                        dftype  =   "counties" 
-                        cbdis   =   "rb2disabled"
+                        #dftype  =   "counties" 
                         cbchk   =   "rb2checked"
                             
                     elif(j==3)      :   
-                        dftype  =   "states"
-                        cbdis   =   "rb3disabled"
+                        #dftype  =   "states"
                         cbchk   =   "rb3checked"
                         
-                    print("swcm.census_data_dirs[i] + '_' + dftype",swcm.census_data_dirs[i] + "_" + dftype + "_df")
-            
-                    if((swcm.census_data_dirs[i] + "_" + dftype + "_df") in dataframes_loaded) :
-                            
-                        row_html            =   row_html.replace(cbdis,"")
+                    if(not (datasets_loaded[i][j])) :
                         row_html            =   row_html.replace(cbchk,"")
-                                
                     else :
-                        row_html            =   row_html.replace(cbdis,"disabled") 
-                        row_html            =   row_html.replace(cbchk,"")
+                        row_html            =   row_html.replace(cbchk,"checked")
 
                 load_datasets_html  =   (load_datasets_html + row_html)    
     
@@ -2861,7 +3826,7 @@ def get_dataset_columns_html() :
     return(load_datasets_html)
 
 
-def display_get_dataset_columns(datasetid=None,datasettype=None,subdataid=None) :
+def display_get_dataset_columns(datasetid=None,excludes=None,subdataid=None) :
     """
     * ------------------------------------------------------- 
     * function : display the get dataset columnss screen
@@ -2872,45 +3837,30 @@ def display_get_dataset_columns(datasetid=None,datasettype=None,subdataid=None) 
     *  N/A
     * --------------------------------------------------------
     """
-    print("display_get_dataset_columns",datasetid,datasettype,subdataid)
+    print("display_get_dataset_columns",datasetid,excludes,subdataid)
     
-    dataframes_loaded   =   cfg.get_dfc_dataframes_titles_list()
-    print("dataframes_loaded",dataframes_loaded)
+    if(datasetid is None) :
         
-    if( (datasetid is None) or (dataframes_loaded is None) ) :
-
         get_dataset_cols_html       =   get_dataset_columns_html()
-        get_dataset_cols_html       =   get_dataset_cols_html.replace("Census Datasets","dfc Census Datasets Loaded to df(s)") 
+        get_dataset_cols_html       =   get_dataset_cols_html.replace("Census Datasets","Census Datasets Loaded") 
         
-        if(dataframes_loaded is None) :
-        
-            get_dataset_notes_html      =   get_dataset_columns_no_dfs_loaded_html 
-    
-            get_dataset_columns_tb      =   ButtonGroupForm(get_dataset_columns_no_df_tb_id,
-                                                            get_dataset_columns_no_df_tb_keyTitleList,
-                                                            get_dataset_columns_no_df_tb_jsList,
-                                                            get_dataset_columns_no_df_tb_centered)
+        get_dataset_notes_html      =   get_dataset_columns_notes_html 
             
-            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":100})
-            get_dataset_columns_tb_html =   get_dataset_columns_tb.get_html()
+        get_dataset_columns_tb      =   ButtonGroupForm(get_dataset_columns_tb_id,
+                                                        get_dataset_columns_tb_keyTitleList,
+                                                        get_dataset_columns_tb_jsList,
+                                                        get_dataset_columns_tb_centered)
             
-        else :
-            
-            get_dataset_notes_html      =   get_dataset_columns_notes_html 
-            
-            get_dataset_columns_tb      =   ButtonGroupForm(get_dataset_columns_tb_id,
-                                                            get_dataset_columns_tb_keyTitleList,
-                                                            get_dataset_columns_tb_jsList,
-                                                            get_dataset_columns_tb_centered)
-            
-            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":160})
-            get_dataset_columns_tb_html =   get_dataset_columns_tb.get_html()
+        get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":100})
+        get_dataset_columns_tb_html =   get_dataset_columns_tb.get_html()
             
     else :
         
         if(subdataid is None) :
-        
-            get_dataset_cols_subdata_html   =   get_dataset_columns_subdata_table_html(datasetid,True)
+            
+            print("display_get_dataset_columns : all subset ids",datasetid,excludes,subdataid)
+       
+            get_dataset_cols_subdata_html   =   get_dataset_columns_subdata_table_html(datasetid,excludes,True)
         
             get_dataset_notes_html          =   get_dataset_cols_subdata_list_notes_html 
             
@@ -2919,10 +3869,12 @@ def display_get_dataset_columns(datasetid=None,datasettype=None,subdataid=None) 
                                                                 get_subdata_columns_tb_jsList,
                                                                 get_subdata_columns_tb_centered)
                         
-            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":110})
+            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":85, "left-margin":100})
             get_dataset_columns_tb_html =   get_dataset_columns_tb.get_html()
             
         else :
+            
+            print("display_get_dataset_columns : subset ids",datasetid,excludes,subdataid)
             
             get_dataset_cols_subdata_html   =   get_colnames_for_get_cols_html(datasetid,subdataid)
         
@@ -2933,23 +3885,30 @@ def display_get_dataset_columns(datasetid=None,datasettype=None,subdataid=None) 
                                                                 get_col_names_list_tb_jsList,
                                                                 get_col_names_list_tb_centered)
                         
-            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":110, "left-margin":40})
+            get_dataset_columns_tb.set_customstyle({"font-size":13, "height":75, "width":85, "left-margin":100})
             get_dataset_columns_tb_html =   get_dataset_columns_tb.get_html()
             
 
     if(datasetid is None) :
         
-        get_cols_heading_html       =   "<div>Select dfc Dataframe To Get Census Column(s) from</div><br></br>"
+        get_cols_heading_html       =   "<div>Select Census Dataset To Get Census Column(s) from</div><br></br>"
 
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer","dfc-bottom"]
         gridhtmls       =   [get_cols_heading_html,get_dataset_cols_html,get_dataset_notes_html,get_dataset_columns_tb_html]
         
+        #print(get_dataset_cols_html)
+        #print(get_dataset_notes_html)
+        
     else :
         
         if(subdataid is None) :
-            get_cols_heading_html       =   "<div>Select Subdata Columns</div><br></br>"
+            get_cols_heading_html       =   "<div>Select Census Dataset Columns</div><br></br>"
         else :
-            get_cols_heading_html       =   "<div>Select Column Names from Census Dataset</div><br></br>"
+            get_cols_heading_html       =   "<div>Select Column Names from Census Subset</div><br></br>"
+
+        #print(get_dataset_cols_subdata_html)
+        #print(get_dataset_notes_html)
+
 
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-main","dfc-footer","dfc-bottom"]
         gridhtmls       =   [get_cols_heading_html,get_dataset_cols_subdata_html,get_dataset_notes_html,get_dataset_columns_tb_html]
@@ -2970,8 +3929,8 @@ def display_get_census_columns(datasetid,dsdtype,subdataid,colslist) :
     *  N/A
     * --------------------------------------------------------
     """
-    #print("display_get_census_columns",datasetid,dsdtype,subdataid,colslist)
-    
+    print("display_get_census_columns",datasetid,dsdtype,subdataid,colslist)
+    """
     from dfcleanser.common.html_widgets import InputForm
     
     if(dsdtype == 0) :
@@ -3115,10 +4074,10 @@ def display_get_census_columns(datasetid,dsdtype,subdataid,colslist) :
         
     print("\n")
     display_generic_grid("dfcensus-get-cols-wrapper",gridclasses,gridhtmls)
-        
+    """    
 
 
-short_note_html="<div style='text-align:center; margin-left:1px; width:360px; background-color: #F8F5E1; border: 1px solid #67a1f3; word-wrap:break-word'>XXXNote</div>"
+short_note_html="<div style='text-align:center; margin-left:40px; width:360px; background-color: #F8F5E1; color:#67a1f3; border: 1px solid #67a1f3; word-wrap:break-word'>XXXNote</div>"
 
 def display_short_note(msg) :
     

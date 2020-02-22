@@ -94,9 +94,6 @@ def display_dfsubset_utility(optionId,parms=None) :
         elif(optionId ==  dfsm.PROCESS_GET_SUBSET_FILTERED) :
             get_df_subset(parms,True)
         
-        elif(optionId ==  dfsm.DISPLAY_FILTERS) :
-            dfsw.display_filters(get_subset_df())
-
         elif(optionId ==  dfsm.ADD_FILTER) :
 
             newfilter   =   parms[0]
@@ -133,36 +130,6 @@ def display_dfsubset_utility(optionId,parms=None) :
 
             cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",["","",newcriteria])
             dfsw.display_df_subset(get_subset_df(),True)
-            
-        elif(optionId ==  dfsm.EDIT_FILTER) :
-            fparms  =   get_parms_for_input(parms,dfsw.get_subset_filters_idList)
-            filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
-            currentfilter   =   filtersDict.get(cfg.get_config_value(cfg.CURRENT_SUBSET_FILTER))
-            currentfilter.update({"title":fparms[0]})
-            currentfilter.update({"code":fparms[1]})
-            
-            cfg.set_config_value(dfsw.get_subset_filters_id+"Parms",[fparms[0],fparms[1]])
-            
-            dfsw.display_filters(get_subset_df())            
-        
-        elif(optionId ==  dfsm.DELETE_FILTER) :
-            filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
-            currentfilter   =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTER)
-            filtersDict.pop(currentfilter)
-            dfsw.display_filters(get_subset_df())        
-        
-        elif(optionId ==  dfsm.EDIT_CRITERIA) :
-            dfsw.display_filters(get_subset_df())        
-        
-        elif(optionId ==  dfsm.SELECT_FILTER) :
-            
-            filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
-            for key in filtersDict.keys() :
-                if(filtersDict.get(key).get("title") == parms[0]) :
-                    newparms    =   [parms[0],filtersDict.get(key).get("code")]
-                    
-            cfg.set_config_value(dfsw.get_subset_filters_id+"Parms",newparms)
-            dfsw.display_filters(get_subset_df()) 
             
         elif(optionId ==  dfsm.GET_COLUMN_NAMES) :
             parmslist = get_parms_for_input(parms,dfsw.get_subset_filter_input_idList)
@@ -893,7 +860,6 @@ def clear_sw_utility_dfsubset_cfg_values() :
     
     cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
     cfg.drop_config_value(dfsw.get_subset_filter_input_id+"Parms")
-    cfg.drop_config_value(dfsw.get_subset_filters_id+"Parms")
     
     return()
 

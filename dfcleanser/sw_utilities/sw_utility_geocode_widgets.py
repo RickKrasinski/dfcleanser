@@ -56,7 +56,7 @@ geocode_main_tb_jsList                  =   ["display_geocoders(-1," + str(sugm.
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_GEOUTILS) + ")",
                                              "geocode_return()",
                                              "process_pop_up_cmd(6)",
-                                             "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(GEOCODING_MAIN_TASKBAR_ID) + "')"]
 
 geocode_main_tb_centered                =   False
 
@@ -83,7 +83,7 @@ geocode_utilities_tb_jsList             =   ["process_geoutils_callback(" + str(
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_DF_CENTER) + ")",
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_DIST_CENTER) + ")",
                                              "geocode_return()",
-                                             "displayhelp(" + str(GEOCODING_MAIN_TASKBAR_ID) + ")"]
+                                             "displayhelp('" + str(GEOCODING_MAIN_TASKBAR_ID) + "')"]
 
 geocode_utilities_tb_centered           =   False
 
@@ -139,7 +139,7 @@ arcgis_geocoder_jsList              =   [None,None,None,None,None,None,
                                          "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.ArcGISInitHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.ArcGISInitHelp) + "')"]
 
 
 arcgis_geocoder_reqList             =   [0,1,2]
@@ -213,7 +213,7 @@ google_geocoder_jsList              =   [None,None,None,None,None,None,None,None
                                          "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.GoogleInitHelp) + "')"]
 
 google_geocoder_reqList             =   [0,1]
 
@@ -275,7 +275,7 @@ bing_geocoder_jsList                =   [None,None,None,None,None,None,
                                          "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.BingInitHelp) + "')"]
 
 bing_geocoder_reqList               =   [0]
 
@@ -343,7 +343,7 @@ mapquest_geocoder_jsList                =   [None,None,None,None,None,None,None,
                                              "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
                                              "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                              "geocode_return()",
-                                             "display_help_url('" + str(dfchelp.OpenMapQuestInitHelp) + "')"]
+                                             "displayhelp('" + str(dfchelp.OpenMapQuestInitHelp) + "')"]
 
 
 mapquest_geocoder_reqList               =   [0]
@@ -410,7 +410,7 @@ nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,
                                          "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.NominatimInitHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.NominatimInitHelp) + "')"]
 
 
 nomin_geocoder_reqList              =   [0]
@@ -479,7 +479,7 @@ baidu_geocoder_jsList               =   [None,None,None,None,None,None,None,None
                                          "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.BingInitHelp) + "')"]
 
 baidu_geocoder_reqList              =   [0]
 
@@ -540,7 +540,7 @@ arcgis_query_jsList                 =   [None,None,None,
                                          "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.ArcGISQueryHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.ArcGISQueryHelp) + "')"]
 
 
 arcgis_query_reqList                =   [0]
@@ -606,7 +606,7 @@ google_query_jsList                 =   [None,None,None,None,None,None,None,None
                                          "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 google_query_reqList                =   [0]
 
@@ -666,7 +666,7 @@ bing_query_jsList                   =   [None,None,None,None,None,None,None,
                                          "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.BingQueryHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.BingQueryHelp) + "')"]
 
 
 bing_query_reqList                  =   [0]
@@ -716,7 +716,7 @@ mapquest_query_jsList                    =    [None,None,None,
                                                "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.OpenMapQuestQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.OpenMapQuestQueryHelp) + "')"]
 
 
 mapquest_query_reqList                   =   [0]
@@ -774,7 +774,7 @@ nomin_query_jsList                       =    [None,None,None,None,None,None,
                                                "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.NominatimQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.NominatimQueryHelp) + "')"]
 
 
 nomin_query_reqList                      =   [0]
@@ -823,7 +823,7 @@ baidu_query_jsList                  =   [None,None,None,
                                          "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + str(dfchelp.BingQueryHelp) + "')"]
+                                         "displayhelp('" + str(dfchelp.BingQueryHelp) + "')"]
 
 
 baidu_query_reqList                 =   [0]
@@ -884,7 +884,7 @@ google_reverse_jsList                  =   [None,None,None,None,None,
                                             "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                             "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                             "geocode_return()",
-                                            "display_help_url('" + str(dfchelp.GoogleReverseHelp) + "')"]
+                                            "displayhelp('" + str(dfchelp.GoogleReverseHelp) + "')"]
 
 
 google_reverse_reqList                 =   [0]
@@ -939,7 +939,7 @@ arcgis_reverse_jsList                  =   [None,None,None,None,None,
                                             "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.BULK) + ")",
                                             "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                             "geocode_return()",
-                                            "display_help_url('" + str(dfchelp.ArcGISReverseHelp) + "')"]
+                                            "displayhelp('" + str(dfchelp.ArcGISReverseHelp) + "')"]
 
 
 arcgis_reverse_reqList                 =   [0]
@@ -994,7 +994,7 @@ bing_reverse_jsList                    =   [None,None,None,None,None,
                                             "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK) + ")",
                                             "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                             "geocode_return()",
-                                            "display_help_url('" + str(dfchelp.BingReverseHelp) + "')"]
+                                            "displayhelp('" + str(dfchelp.BingReverseHelp) + "')"]
 
 
 bing_reverse_reqList                   =   [0]
@@ -1049,7 +1049,7 @@ mapquest_reverse_jsList                    =   [None,None,None,None,None,
                                                 "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
                                                 "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                                 "geocode_return()",
-                                                "display_help_url('" + str(dfchelp.OpenMapQuestReverseHelp) + "')"]
+                                                "displayhelp('" + str(dfchelp.OpenMapQuestReverseHelp) + "')"]
 
 
 mapquest_reverse_reqList                   =   [0]
@@ -1101,7 +1101,7 @@ nomin_reverse_jsList                       =   [None,None,None,None,
                                                 "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
                                                 "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                                 "geocode_return()",
-                                                "display_help_url('" + str(dfchelp.NominatimReverseHelp) + "')"]
+                                                "displayhelp('" + str(dfchelp.NominatimReverseHelp) + "')"]
 
 
 nomin_reverse_reqList                      =   [0]
@@ -1150,7 +1150,7 @@ baidu_reverse_jsList                   =   [None,None,None,
                                             "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
                                             "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                             "geocode_return()",
-                                            "display_help_url('" + str(dfchelp.BingReverseHelp) + "')"]
+                                            "displayhelp('" + str(dfchelp.BingReverseHelp) + "')"]
 
 
 baidu_reverse_reqList                  =   [0]
@@ -1162,6 +1162,18 @@ baidu_reverse_form                     =   [baidu_reverse_id,
                                             baidu_reverse_placeholderList,
                                             baidu_reverse_jsList,
                                             baidu_reverse_reqList]
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#    geocoding utilities input form
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -1201,7 +1213,7 @@ addr_dist_utility_input_jsList            =    [None,None,None,None,None,
                                                 "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
                                                 "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
                                                 "geocode_return()",
-                                                "displayhelp(" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + ")"]
+                                                "displayhelp('" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + "')"]
 
 addr_dist_utility_input_reqList           =   [0,1]
 
@@ -1249,7 +1261,7 @@ addr_df_dist_utility_input_jsList            =    [None,None,None,None,None,None
                                                    "process_geoutils_callback("+str(sugm.PROCESS_DF_DISTANCE)+")",
                                                    "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
                                                    "geocode_return()",
-                                                   "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+                                                   "displayhelp('" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + "')"]
 
 addr_df_dist_utility_input_reqList           =   [0,1,2]
 
@@ -1280,7 +1292,7 @@ addr_center_utility_input_jsList            =    [None,
                                                   "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
                                                   "process_geoutils_callback("+str(sugm.DISPLAY_CENTER)+")",
                                                   "geocode_return()",
-                                                  "displayhelp(" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + ")"]
+                                                  "displayhelp('" + str(dfchelp.GEOCODING_CALC_CENTER_ID) + "')"]
 
 addr_center_utility_input_reqList           =   [0,1]
 
@@ -1314,7 +1326,7 @@ addr_df_center_utility_input_jsList            =    [None,None,
                                                      "process_geoutils_callback("+str(sugm.PROCESS_DF_CENTER)+")",
                                                      "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
                                                      "geocode_return()",
-                                                     "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+                                                     "displayhelp('" + str(dfchelp.GEOCODING_CALC_DF_CENTER_ID) + "')"]
 
 addr_df_center_utility_input_reqList           =   [0,1]
 
@@ -1355,7 +1367,7 @@ addr_df_center_dist_utility_input_jsList            =    [None,None,None,None,No
                                                           "process_geoutils_callback("+str(sugm.PROCESS_DIST_CENTER)+")",
                                                           "process_geoutils_callback("+str(sugm.DISPLAY_DIST_CENTER)+")",
                                                           "geocode_return()",
-                                                          "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+                                                          "displayhelp('" + str(dfchelp.GEOCODING_CALC_CENTER_DIST_ID) + "')"]
 
 addr_df_center_dist_utility_input_reqList           =    [0,1]
 
@@ -1387,7 +1399,7 @@ bulk_tune_utility_input_jsList                  =    [None,None,
                                                       "process_geoutils_callback("+str(sugm.PROCESS_TUNING)+")",
                                                       "process_geoutils_callback("+str(sugm.DISPLAY_TUNING)+")",
                                                       "geocode_return()",
-                                                      "displayhelp(" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + ")"]
+                                                      "displayhelp('" + str(dfchelp.GEOCODING_UTILITIES_TASKBAR_ID) + "')"]
 
 bulk_tune_utility_input_reqList                 =   [0,1]
 

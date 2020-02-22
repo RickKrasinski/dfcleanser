@@ -27,12 +27,3 @@ GET_COLUMN_NAMES                =   9
 
 DISPLAY_GET_COL_VALUES          =   8
 
-DISPLAY_FILTERS                 =   10
-EDIT_FILTER                     =   11
-DELETE_FILTER                   =   12
-EDIT_CRITERIA                   =   13
-SELECT_FILTER                   =   14
-
-import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as swdfw
-
-dfsubset_inputs             =   [swdfw.get_subset_input_id,swdfw.get_subset_filter_input_id,swdfw.get_subset_filters_id]

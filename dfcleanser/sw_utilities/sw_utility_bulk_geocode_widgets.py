@@ -96,7 +96,7 @@ google_bulk_geocoder_jsList              =   [None,None,None,None,None,None,None
                                               "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK_TUNING) + ")",
                                               "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
-                                              "display_help_url('" + str(dfchelp.GoogleInitHelp) + "')"]
+                                              "displayhelp('" + str(dfchelp.GoogleInitHelp) + "')"]
 
 google_bulk_geocoder_reqList             =   [0,1,2]
 
@@ -190,7 +190,7 @@ bulk_google_query_ltypes_input_jsList     =   [None,None,None,None,None,None,Non
                                                "display_geocoding_callback(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelpurl('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_google_query_input_reqList           =   [0,1,2,3]
 
@@ -258,7 +258,7 @@ bulk_google_reverse_input_jsList          =   [None,None,None,None,None,None,Non
                                                "get_geocoding_table(" + str(sugm.LOCATION_TYPES_TABLE) + "," + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_google_reverse_input_reqList         =   [0,1,2,3,4,5,6]
 
@@ -344,7 +344,7 @@ batch_arcgis_geocoder_jsList              =   [None,None,None,None,None,None,Non
                                               "display_geocoders(" + str(sugm.ArcGISId) + "," + str(sugm.INTERACTIVE) + ")",
                                               "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
-                                              "display_help_url('" + arcgis_connect_help + "')"]
+                                              "displayhelp('" + arcgis_connect_help + "')"]
 
 batch_arcgis_geocoder_reqList             =   [0,1,2]
 
@@ -416,7 +416,7 @@ batch_arcgis_query_jsList           =   [None,None,None,None,None,None,None,None
                                          "process_geocoding_callback(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.ArcGISId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                          "geocode_return()",
-                                         "display_help_url('" + arcgis_geocode_help + "')"]
+                                         "displayhelp('" + arcgis_geocode_help + "')"]
 
 batch_arcgis_query_reqList          =   [0,1,2,3,4,5,6]
 
@@ -484,7 +484,7 @@ bing_bulk_geocoder_jsList                 =   [None,None,None,None,None,None,
                                               "display_geocoders(" + str(sugm.BingId) + "," + str(sugm.BULK_TUNING) + ")",
                                               "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.BingInitHelp) + "')"]
 
 bing_bulk_geocoder_reqList               =   [0]
 
@@ -550,7 +550,7 @@ bulk_bing_query_input_jsList              =   [None,None,None,None,None,None,Non
                                                "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_bing_query_input_reqList             =   [0,1,2]
 
@@ -604,7 +604,7 @@ bulk_bing_reverse_input_jsList            =   [None,None,None,None,None,None,
                                                "display_geocoding_callback(" + str(sugm.BingId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BingId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_bing_reverse_input_reqList           =   [0,1,2]
 
@@ -678,7 +678,7 @@ baidu_bulk_geocoder_jsList               =   [None,None,None,None,None,None,None
                                               "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK_TUNING) + ")",
                                               "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                               "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.BingInitHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.BingInitHelp) + "')"]
 
 baidu_bulk_geocoder_reqList              =   [0]
 
@@ -732,7 +732,7 @@ bulk_baidu_query_input_jsList             =   [None,None,None,None,None,None,
                                                "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_baidu_query_input_reqList            =   [0,1,2]
 
@@ -779,7 +779,7 @@ bulk_baidu_reverse_input_jsList           =   [None,None,None,None,None,None,
                                                "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.BULK) + ")",
                                                "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.BULK) + ")",
                                                "geocode_return()",
-                                               "display_help_url('" + str(dfchelp.GoogleQueryHelp) + "')"]
+                                               "displayhelp('" + str(dfchelp.GoogleQueryHelp) + "')"]
 
 bulk_baidu_reverse_input_reqList          =   [0,1,2]
 
