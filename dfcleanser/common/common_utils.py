@@ -1587,7 +1587,52 @@ def get_dfsubset_vals(parms) :
     else :
         change_title_js = "$('#dcsubsetcolnamesTableTitle').text('Column Names')"
         run_jscript(change_title_js,"fail to get unique vals for : ")
+
+
+col_names_table_start   =   """
+                    <div class="container" style="padding:5px; margin:auto; width:100%; border:0px;" id="subdatacolnamescontainer">
+                        <div class="container" style="padding:5px; margin:auto; width:100%;"  id="subdatacolnamesselectdiv">
+                            <div class="container dc-container dc-default-input-inner-div">
+                                <div class="form-group-sm">
+                                    <label  for="subdatacolnames" style="text-align:left; font-size: 13px;">* XXXXDSSUBID</label>
+                                    <select id="subdatacolnames" multiple="multiple" size="30" style="margin-left:1px; font-size: 11px;" class="form-control">
+"""
+
+
+col_names_table_end1   =   """
+                                    </select>
+                                </div>
+                                <div style="margin-top:10px;"  id="censusdfinsertcols">
+
+"""
+
+col_names_table_end2   =   """
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+"""
+
+col_names_buttons   =   """
+                                    <div class="container dc-container dc-default-input-button-container btn-grp-center">
+                                        <div class="btn-group btn-center"   style=" width: 100%; ">
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  margin-left: 50px;  height: 75px;  width: 110px; ' onclick="get_census_callback(33)">Insert</br>Columns</br>Into df(s)</button>
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px; ' onclick="get_census_callback(0)">Return</button>
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px; ' onclick="displayhelp(https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset)">Help</button>
+                                        </div>
+                                    </div>
+"""
+
+col_names_table_end     =   col_names_table_end1 + col_names_buttons + col_names_table_end2
  
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser df census utility dynamic html methods
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
 
 """
 #--------------------------------------------------------------------------
@@ -3038,6 +3083,8 @@ def does_file_exist(path) :
             return(True)
         else :
             return(False)
+    else :
+        return(False)
     
 def does_dir_exist(path) :
     
@@ -3096,7 +3143,105 @@ def handle_confirm(parms) :
             alert_user("Reset the Kernel and after completion Reset the dfcleanser notebook.")
     
     
+"""
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+#   generic error logger
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+"""     
+
+class DataframeCleanserErrorLogger :
     
+    # instance variables
+    
+    # error log
+    error_log               =   {}
+    
+    # full constructor
+    def __init__(self) :
+ 
+        self.init_errorlog_file()        
+    
+    def init_errorlog_file(self) :
+        
+        if( (self.notebookName == "") or (self.notebookPath == "") ) :
+            self.cfgfilename = ""
+            return()
+        
+        if(self.cfgfilename == "")  :
+            # check if notebook specific dir exists
+            cfgdir = os.path.join(self.notebookPath,self.notebookName+"_files")
+            if(not (does_dir_exist(cfgdir))) :
+                make_dir(cfgdir)
+                
+            self.cfgfilename = os.path.join(cfgdir,self.notebookName+"_config.json")
+            if(not (does_file_exist(self.cfgfilename))) :
+
+                with open(self.cfgfilename, 'w') as cfg_file :
+                    json.dump(self.cfg_data,cfg_file)
+                    cfg_file.close()
+        else :
+            return()
+            
+        
+    def get_cfg_file_name(self) :
+        
+        if(self.cfgfilename == "") :
+            self.init_cfg_file()
+            return(self.cfgfilename)
+        else :
+            return(self.cfgfilename)    
+            
+    def load_cfg_file(self) :
+        
+        cfg_fname   =   self.get_cfg_file_name()
+        
+        if(cfg_fname == "") :
+            return()
+        
+        try :
+            if(len(self.cfgfilename) > 0) :
+                with open(cfg_fname, 'r') as cfg_file :
+                    self.cfg_data = json.load(cfg_file)
+                    cfg_file.close()
+                    
+            self.cfg_file_loaded    =   True
+                    
+        except json.JSONDecodeError :
+            
+            from dfcleanser.common.common_utils import confirm_user,CORRUPTED_CFG_FILE_ID 
+            confirm_user("Config File Corrupted : Use blank default file",CORRUPTED_CFG_FILE_ID)
+
+            self.cfg_data   =   {}
+            os.rename(self.cfgfilename,self.cfgfilename+"_corrupted")
+                        
+        except :
+            if(len(self.get_notebookname()) > 0) :
+                
+                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID 
+                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
+
+                print("[load_config_file Error] " + "[" + cfg_fname + "] " + str(sys.exc_info()[0].__name__))
+                
+            else :
+                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID
+                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
+        
+    
+    def save_cfg_file(self) :
+        
+        if(not(self.cfg_file_loaded)) :
+            self.load_cfg_file()
+    
+        try :
+            if(len(self.cfgfilename) > 0) :
+                with open(self.get_cfg_file_name(), 'w') as cfg_file :
+                    json.dump(self.cfg_data,cfg_file)
+                    cfg_file.close()
+        except :
+            if(len(self.get_notebookname()) > 0) :
+                print("[save_config_file Error] " + "[" + self.get_cfg_file_name() + "] " + str(sys.exc_info()[0].__name__))
     
     
     

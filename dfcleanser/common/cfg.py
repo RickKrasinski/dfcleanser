@@ -461,7 +461,11 @@ def get_dfc_dataframe_df(title) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    return(dfc_dfs.get_dfc_dataframe(title).get_df())
+    dfc_df  =  dfc_dfs.get_dfc_dataframe(title)
+    if(dfc_df is None) :
+        return(None)
+    else :
+        return(dfc_df.get_df())
     
 def set_dfc_dataframe_df(title,df) :
     """
@@ -981,12 +985,14 @@ CENSUS_DROP_DATASET_LISTS               =   "censusdropdataset"
 CENSUS_DROP_SUBDATASET_LIST             =   "censusdropsubdataset"
 CENSUS_CURRENT_DATASET                  =   "censuscurrentdataset"
 CENSUS_CURRENT_GET_COLS_SUBDATA_ID      =   "censuscurrentgetcolssubdataid"
-CENSUS_CURRENT_GET_COLS_DTYPE_ID        =   "censuscurrentgetcolsdtypeid"
+CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID      =   "censuscurrentgetcolssubdataidlists"
+
 CENSUS_GET_COLS_COLUMNS_LIST_ID         =   "censusgetcolscolslist"
 CENSUS_ADD_DATASETS_LIST                =   "censusadddatasets"
 CENSUS_DROP_DATASETS_LIST               =   "censusdropdatasets"
 
-
+CENSUS_SELECTED_DATASET_ID              =   "censusdatasetid"
+CENSUS_SELECTED_SUBSET_ID               =   "censussubsetid"
 
 """
 #--------------------------------------------------------------------------
