@@ -123,10 +123,13 @@ def addattribute(name,value) :
     attribute = attribute + " " + name + "=" + '"' + str(value) + '"'
     return(attribute)
 
-def addstyleattribute(name,value) :
+def addstyleattribute(name,value,endattr=False) :
     
     styleattribute = ""
-    styleattribute = styleattribute + " " + name + ": " + value + "; "
+    if(endattr) :
+        styleattribute = styleattribute + " " + name + ": " + value + " "  
+    else :
+        styleattribute = styleattribute + " " + name + ": " + value + "; "
     return(styleattribute)
 
 def addjscript(url) :
@@ -170,8 +173,8 @@ def containscheckbox(forms) :
 #  common html form functions
 #--------------------------------------------------------------------------
 """
-def maketextarea(rows) :
-    return(["textarea",str(rows)])
+def maketextarea(rows,scroll=False) :
+    return(["textarea",str(rows),scroll])
 
 def isenlargedtextarea(taObject) :
     if(type(taObject) == list) :
@@ -185,6 +188,23 @@ def gettextarearows(taObject) :
     else:
         return(3)
 
+def gettextareascroll(taObject) :
+    return(taObject[2])
+
+
+def makefilearea(rows) :
+    return(["filearea",str(rows)])
+    
+def getfilearearows(faObject) :
+    return(faObject[1])
+    
+def isfilearea(typeobj) :
+    if(type(typeobj) == list) :
+        if(typeobj[0] == "filearea") :
+            return(True)
+            
+    return(False)
+    
 
 """
 #--------------------------------------------------------------------------
@@ -372,7 +392,7 @@ def get_composite_form_doc(forms) :
 * -----------------------------------------------------------------------*
 """
 button_group_form_start = """
-  <div style="margin-top:10px;" """
+  <div style="margin-top: 10px" """
 button_group_form_end = """  </div>"""
 
 button_group_form_div_start = """
@@ -472,7 +492,7 @@ def get_button_style(index, height, width, margin, buttonGroup) :
             html = (html + addstyleattribute("margin-left",str(margin) + "px"))
             
     html = (html + addstyleattribute("height",str(height)+"px"))
-    html = (html + addstyleattribute("width",width) + "'")
+    html = (html + addstyleattribute("width",width,True) + "'")
     
     return(html)
 
@@ -480,7 +500,7 @@ def get_button_div_style(margin) :
     
     html = ""
     html = (html + "style='" + addstyleattribute("margin",
-                                                 "0% 0% 0% "+str(margin)+"%") + "'>" + new_line)
+                                                 "0% 0% 0% "+str(margin)+"%",True) + "'>" + new_line)
     return(html)
 
 
@@ -601,9 +621,9 @@ class ButtonGroupForm :
             button_group_form_html = (button_group_form_html + button_group_form_div_start + new_line)
         
         if(self.get_gridwidth() == 0) :
-            button_group_form_html = (button_group_form_html + button_group_div_start + addattribute("style",addstyleattribute("width","100%")) + ">" + new_line)
+            button_group_form_html = (button_group_form_html + button_group_div_start + addattribute("style",addstyleattribute("width","100%",True)) + ">" + new_line)
         else :
-            button_group_form_html = (button_group_form_html + button_group_div_start + addattribute("style",addstyleattribute("width",str(self.get_gridwidth()) + "px")) + ">" + new_line)
+            button_group_form_html = (button_group_form_html + button_group_div_start + addattribute("style",addstyleattribute("width",str(self.get_gridwidth()) + "px",True)) + ">" + new_line)
     
         # for each button in the list
         for i in range(len(self.get_keyList())) :
@@ -671,7 +691,7 @@ input_group_custom_form_top1 =  """ padding:5px; border: 1px solid #428bca;'"""
 
 
 input_group_input_form_top = ("""
-  <div class='container' style='padding:5px; margin:auto; width:100%;' """)
+  <div class='container' style='padding:5px; margin:auto; width:100%' """)
 input_group_input_form_bottom = """
   </div>"""
 
@@ -691,13 +711,16 @@ input_group_form_small_label_start = (new_line + tabs(3) + """  <label """)
 
 input_group_form_label_end = """</label>"""
 input_group_form_small_label_end = """</label>"""
-#input_group_form_small_label_end = ("""</label>"""  + new_line + 
-#                                    tabs(3) + """</div>""")
+
+
+
+
+
    
 input_group_form_input_start = (new_line + tabs(3) + """  <input """)
 input_group_form_input_end = "></input>"
 
-input_group_form_textarea_start = (new_line + tabs(3) + """  <textarea """)
+input_group_form_textarea_start = (new_line + tabs(3) + """  <textarea spellcheck='false' """)
 input_group_form_textarea_end = "></textarea>"
 input_group_form_textarea1_end = "</textarea>"
 
@@ -766,7 +789,7 @@ def should_display(idList,reqList,selectDefault,i,parmsList) :
 def get_form_parms(formid,idList) :
     
     formParms = cfg.get_config_value(formid + "Parms")
-
+    
     if(formParms == None) :
         return(None)
     else :
@@ -791,7 +814,7 @@ def get_form_parms(formid,idList) :
             return(None)
     
 def display_full_parms(formid,idList,reqList) :
-
+    
     formParms = get_form_parms(formid,idList)
 
     # if no previous parms defined display all parms
@@ -816,6 +839,95 @@ def display_full_parms(formid,idList,reqList) :
         if(fcount == 0)         : return(True)
     
     return(False)
+    
+    
+"""
+* -----------------------------------------------------------------------*
+* Input Form label components
+* -----------------------------------------------------------------------*
+"""    
+
+input_group_form_label_micro =  """
+                    <table>
+                        <tr>
+                            <td>
+                                <label for="XXXMHlabelfor" id="XXXMHlabelId" style="text-align:left; font-size: 11px;">XXXMHlabelTitle&nbsp;&nbsp;</label>
+                            </td>
+                            <td>
+                                <div class="input-group-btn" style="padding-right:0px; padding-left:0px; padding-bottom:5px; text-align:center;">
+                                    <a onclick="displayhelp('XXXMHelpId')">
+                                        <img style='margin: 0px auto; text-align:center;' title="XXXMHelptext" src='https://rickkrasinski.github.io/dfcleanser/graphics/census_details.png' height="18px" width="18px" id="XXXMHelpImageId"></img>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+"""
+
+    
+    
+def get_input_label(input_form,i,display_flag,input_html) :
+    
+    input_group_form_html   =   input_html
+    
+    if(input_form.get_label_note_helpid(i) == None) :
+    
+        # add the label for each input line
+        if( not input_form.get_shortForm()) :
+            input_group_form_html = (input_group_form_html + input_group_form_label_start)
+        else :
+            input_group_form_html = (input_group_form_html + input_group_form_small_label_start)
+                    
+        inputelementId = input_form.get_idList()[i]
+        input_group_form_html = (input_group_form_html + addattribute("for",inputelementId))
+        input_group_form_html = (input_group_form_html + addattribute("id",inputelementId + "_label"))
+                    
+        # add the label for each input line
+        if( not input_form.get_shortForm()) :
+            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 11px;"))
+        else :
+            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 11px;"))
+
+        input_group_form_html = (input_group_form_html + ">")
+
+        if(display_flag == REQUIRED) :
+            input_group_form_html = (input_group_form_html + "* " + input_form.get_labelList()[i])    
+        else :    
+            input_group_form_html = (input_group_form_html + input_form.get_labelList()[i])
+                
+        if( not input_form.get_shortForm()) :
+            input_group_form_html = (input_group_form_html + input_group_form_label_end)
+        else :
+            input_group_form_html = (input_group_form_html + input_group_form_small_label_end)
+            
+    else :
+        
+        inputelementId  =   input_form.get_idList()[i]
+        labelfor        =   input_form.get_labelList()[i]
+        labelforid      =   inputelementId + "_label"
+        
+        if(display_flag == REQUIRED) :
+            labeltitletext  =   "* " + input_form.get_labelList()[i]    
+        else :    
+            labeltitletext  =   input_form.get_labelList()[i]
+            
+        input_micro_html    =   input_group_form_label_micro 
+        
+        input_micro_html    =   input_micro_html.replace("XXXMHlabelfor",labelfor)
+        input_micro_html    =   input_micro_html.replace("XXXMHlabelId",labelforid)        
+        input_micro_html    =   input_micro_html.replace("XXXMHlabelTitle",labeltitletext) 
+        
+        input_micro_html    =   input_micro_html.replace("XXXMHelpId",input_form.get_label_note_helpid(i))
+        input_micro_html    =   input_micro_html.replace("XXXMHelptext",str(input_form.get_label_note_title(i)))        
+        input_micro_html    =   input_micro_html.replace("XXXMHelpImageId",str(input_form.get_label_note_labelid(i))) 
+        
+        input_group_form_html   =   (input_group_form_html + input_micro_html)
+
+
+    return(input_group_form_html)
+
+    
+    
     
     
 shortForm_KEY           =   "shortForm"
@@ -870,9 +982,14 @@ class InputForm :
         self.jsList             =   jsList
         self.reqList            =   reqList
         
-        self.customDict         =   {}
-        self.selectDict         =   {}
-        self.fontsizeDict       =   {}
+        self.customDict             =   {}
+        self.selectDict             =   {}
+        self.fontsizeDict           =   {}
+        
+        self.labelnoteDict          =   {}
+        
+        self.textarea_resize_dict   =   {}
+        
 
     def get_formid(self) :
         return(self.formid)
@@ -906,6 +1023,45 @@ class InputForm :
         return(self.fontsizeDict.get(inputid,None))
     def set_custom_font_size(self,inputid,fontsize) :
         self.fontsizeDict.update({inputid:fontsize})
+    def get_textarea_resize_flag(self,inputid) :
+        return(self.textarea_resize_dict.get(inputid,True))
+    def set_textarea_resize_flag(self,inputid,flag=True) :
+        self.textarea_resize_dict.update({inputid:flag})
+        
+        
+        
+    def get_label_note_helpid(self,labelindex) :
+        label_note  =  self.labelnoteDict.get(labelindex,None) 
+        
+        if(label_note is None) :
+            return(None)
+        else :
+            return(label_note[0])
+
+    def get_label_note_title(self,labelindex) :
+        label_note  =  self.labelnoteDict.get(labelindex,None) 
+        
+        if(label_note is None) :
+            return(None)
+        else :
+            return(label_note[1])
+            
+    def get_label_note_labelid(self,labelindex) :
+        label_note  =  self.labelnoteDict.get(labelindex,None) 
+        
+        if(label_note is None) :
+            return(None)
+        else :
+            return(label_note[2])
+        
+    def set_label_note(self,notedict) :
+        self.labelnoteDict.update(notedict)
+        
+    def set_label_note_dict(self,notedict) :
+        self.labelnoteDict = notedict    
+    def get_label_note_dict(self) :
+        return(self.labelnoteDict)    
+        
 
         
     def get_shortForm(self) :
@@ -976,9 +1132,18 @@ class InputForm :
             return(seldict.get("list",None))
         else :
             return(None)
+
+    def get_select_values(self,idkey) :
+        seldict     =   self.selectDict.get(idkey,None) 
+        if(not (seldict == None)) :
+            return(seldict.get("values",None))
+        else :
+            return(None)
        
     def add_select_dict(self,formid,parmidsList,parmid,seldict) :
         
+        #print("add_select_dict",parmidsList,parmid,seldict)
+
         from dfcleanser.common.cfg import get_config_value
         parmslist   =   get_config_value(formid+"Parms")
         
@@ -1004,7 +1169,7 @@ class InputForm :
                         
                 except :
                     
-                    print("add_select_dict",i,parmidsList)
+                    print("add_select_dict error ",i,parmidsList)
             
             if(not found) :
                 seldict.update({"current" : seldict.get("default")})    
@@ -1022,6 +1187,7 @@ class InputForm :
         selhtml     =   ""
         
         options =   self.get_select_list(idkey)
+        values  =   self.get_select_values(idkey)
         
         for i in range(len(options)) :
             selhtml     =   (selhtml + tabs(3) + "        <option style='text-align:left; font-size:12px;'")
@@ -1032,8 +1198,12 @@ class InputForm :
             else :
                 if(options[i] == fparm) :
                     selhtml     =   (selhtml + " selected")
+            
+            if(values is None) :
+                selhtml     =   (selhtml + " value='" + options[i] + "'>" + options[i] + "</option>")
+            else :
+                selhtml     =   (selhtml + " value='" + str(values[i]) + "'>" + options[i] + "</option>")
                 
-            selhtml     =   (selhtml + ">" + options[i] + "</option>")
             if(i < len(options)) :
                 selhtml     =   (selhtml + new_line)    
         
@@ -1048,7 +1218,7 @@ class InputForm :
         
         input_group_form_html = ""
         if(self.get_gridwidth() > 0) :
-            input_group_form_html = (input_group_form_html + input_group_grid_form_start + "style='margin-left:auto; margin-right:auto; width:" + str(self.get_gridwidth()) + "px;'>")
+            input_group_form_html = (input_group_form_html + input_group_grid_form_start + "style='margin-left:auto; margin-right:auto; width:" + str(self.get_gridwidth()) + "px'>")
         else :
             if(self.get_shortForm()) :
                 input_group_form_html = (input_group_form_html + input_group_short_form_start)
@@ -1063,7 +1233,8 @@ class InputForm :
         add_Input(self.get_formid(),self.get_idList(),self.get_labelList(),
                   self.get_typeList(),self.get_placeholderList(),
                   self.get_jsList(),self.get_reqList(),self.get_form_select_dict(),
-                  self.get_form_custom_dict())
+                  self.get_form_custom_dict(),
+                  self.get_label_note_dict())
 
         customWidth = 0
         noKeys      = False
@@ -1073,28 +1244,28 @@ class InputForm :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_short_form_top)
                     if(self.get_borderwidth() == 0) :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px",True) + "'")
                     else :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;",True) + "'")
                 else :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_short_form_pop_up_top ) 
                     if(self.get_borderwidth() == 0) :
                         input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
                     else :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;",True) + "'")
             else :
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_form_top)
                     if(self.get_borderwidth() == 0) :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border","0px",True) + "'")
                     else :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;",True) + "'")
                 else :
                     input_group_form_html = (input_group_form_html + new_line + tabs(1) + input_group_form_pop_up_top)
                     if(self.get_borderwidth() == 0) :
                         input_group_form_html = (input_group_form_html + addstyleattribute("border","0px") + "'")
                     else :
-                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;") + "'")
+                        input_group_form_html = (input_group_form_html + addstyleattribute("border",str(self.get_borderwidth()) + "px solid #428bca;",True) + "'")
                     
         else :
             if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
@@ -1149,53 +1320,34 @@ class InputForm :
                 if( (self.get_typeList()[i] == "text") or 
                     (self.get_typeList()[i] == "textarea") or 
                     (self.get_typeList()[i] == "file") or 
+                    (isfilearea(self.get_typeList()[i]))  or
                     (isenlargedtextarea(self.get_typeList()[i]))) : 
 
                     # add the div for each input line>
                     input_group_form_html = (input_group_form_html + tabs(3) + 
                                              input_group_form_div_start)
-    
-                    # add the label for each input line
-                    if( not self.get_shortForm()) :
-                        input_group_form_html = (input_group_form_html + input_group_form_label_start)
-                    else :
-                        input_group_form_html = (input_group_form_html + input_group_form_small_label_start)
-                    
+
+
+                    input_group_form_html = get_input_label(self,i,display_flag,input_group_form_html)
                     inputelementId = self.get_idList()[i]
-                    input_group_form_html = (input_group_form_html + 
-                                             addattribute("for",inputelementId))
-                    input_group_form_html = (input_group_form_html + 
-                                             addattribute("id",inputelementId + "_label"))
-                    
-                    # add the label for each input line
-                    if( not self.get_shortForm()) :
-                        input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 11px;"))
-                    else :
-                        input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 11px;"))
-                    
 
-                    input_group_form_html = (input_group_form_html + ">")
-
-                    if(display_flag == REQUIRED) :
-                        input_group_form_html = (input_group_form_html + "* " + self.get_labelList()[i])    
-                    else :    
-                        input_group_form_html = (input_group_form_html + self.get_labelList()[i])
-                
-                    if( not self.get_shortForm()) :
-                        input_group_form_html = (input_group_form_html + input_group_form_label_end)
-                    else :
-                        input_group_form_html = (input_group_form_html + input_group_form_small_label_end)
- 
                     # add the input for each input line
                     if((self.get_typeList()[i] == "text") or (self.get_typeList()[i] == "file")) :
                         input_group_form_html = (input_group_form_html + input_group_form_input_start)
                     else : 
                         input_group_form_html = (input_group_form_html + input_group_form_textarea_start)
 
-                    if(self.get_typeList()[i] == "file") :
-                        input_group_form_html = (input_group_form_html + addattribute("type","text"))
-                        input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
-                        input_group_form_html = (input_group_form_html + addattribute("style","font-size: 11px;"))
+                    if( (self.get_typeList()[i] == "file") or (isfilearea(self.get_typeList()[i])) ) :
+                        if(self.get_typeList()[i] == "file") :
+                            input_group_form_html = (input_group_form_html + addattribute("type","text"))
+                            input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
+                            input_group_form_html = (input_group_form_html + addattribute("style","font-size: 11px;"))
+                            input_group_form_html = (input_group_form_html + addattribute("autocomplete","off")) 
+                        else :
+                            input_group_form_html = (input_group_form_html + addattribute("type","textarea"))
+                            input_group_form_html = (input_group_form_html + addattribute("rows",getfilearearows(self.get_typeList()[i])))
+                            input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
+                            
                     else :
                         if( (self.get_typeList()[i] == "textarea") or (isenlargedtextarea(self.get_typeList()[i])) ) :
                             if(self.get_typeList()[i] != "textarea") :
@@ -1204,17 +1356,34 @@ class InputForm :
                                 input_group_form_html = (input_group_form_html + addattribute("rows",3))
                         else :         
                             input_group_form_html = (input_group_form_html + addattribute("type",self.get_typeList()[i])) 
-                   
-                        input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
+                            if(self.get_typeList()[i] == "text") :
+                                input_group_form_html = (input_group_form_html + addattribute("autocomplete","off"))
+                                input_group_form_html = (input_group_form_html + addattribute("spellcheck","false")) 
+
+                        if(self.get_typeList()[i] != "textarea") :
+                            if(gettextareascroll(self.get_typeList()[i])) :
+                                input_group_form_html = (input_group_form_html + addattribute("class","form-control textarea-scroll"))    
+                            else :
+                                input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
+                        else :
+                            input_group_form_html = (input_group_form_html + addattribute("class","form-control"))
                         
                         if(self.get_custom_font_size(self.get_idList()[i]) is None)  :
-                            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 12px;"))
+
+                            if(not (self.get_textarea_resize_flag(i))) :
+                                input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 12px; overflow:hidden; resize:none;"))
+                            else :
+                                input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: 12px;"))
                         else :
-                            input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: " + str(self.get_custom_font_size(self.get_idList()[i])) + "px;"))
-                
+                            
+                            if(not (self.get_textarea_resize_flag(i))) :
+                                input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: " + str(self.get_custom_font_size(self.get_idList()[i])) + "px;" + " overflow:hidden; resize:none;"))
+                            else :
+                                input_group_form_html = (input_group_form_html + addattribute("style","text-align:left; font-size: " + str(self.get_custom_font_size(self.get_idList()[i])) + "px;"))
+                            
                     input_group_form_html = (input_group_form_html + addattribute("id",self.get_idList()[i]))#"input" + formid + idList[i]))
                     input_group_form_html = (input_group_form_html + addattribute("placeholder",self.get_placeholderList()[i]))
-            
+                    
                     # add the stored input values
                     if(formParms != None) :
                         if(type(formParms[i]) == list) :
@@ -1256,10 +1425,11 @@ class InputForm :
                     else : 
                         input_group_form_html = (input_group_form_html + input_group_form_input_end)
     
-                    if(self.get_typeList()[i] == "file") :
+                    if( (self.get_typeList()[i] == "file") or (isfilearea(self.get_typeList()[i])) ):
                 
                         input_group_form_html = (input_group_form_html + input_group_form_input_start)
-                        input_group_form_html = (input_group_form_html + addattribute("type",self.get_typeList()[i]))
+                        
+                        input_group_form_html = (input_group_form_html + addattribute("type","file"))
                 
                         if(customWidth > 0) :
                             input_group_form_html = (input_group_form_html + addattribute("style","width:" + str("100%") + ";"))
@@ -1335,11 +1505,6 @@ class InputForm :
                             #input_group_form_html = (input_group_form_html + addattribute("multiple","multiple"))
                             input_group_form_html = (input_group_form_html + addattribute("size",str(select_size)))#str(self.get_select_size(self.get_idList()[i]))) )
                         
-                    #else :
-                    #    if(not (self.get_select_size(self.get_idList()[i]) == 1)) :
-                    #        input_group_form_html = (input_group_form_html + addattribute("size","2"))
-    
-                    
                     input_group_form_html = (input_group_form_html + input_group_select_middle)
                     
                     if(not (formParms is None)) :
@@ -1393,7 +1558,24 @@ class InputForm :
         print("\nformid          [0] : ",self.get_formid())
         print("idList          [1] : ["+ str(len(self.get_idList())) + "] " + dump_form_list(self.get_idList(),27,5))
         print("labelList       [2] : ["+ str(len(self.get_labelList())) + "] " + dump_form_list(self.get_labelList(),27,5))
-        print("typeList        [3] : ["+ str(len(self.get_typeList())) + "] " + dump_form_list(self.get_typeList(),27,15))
+        
+        types   =   self.get_typeList()
+        for i in range(len(types)) :
+            if(type(types[i]) == list) :
+                if(types[i][0] == "'textarea'") :
+                    if(len(types[i][0]) == 3) :
+                        if(types[i][2]) :
+                            types[i][2]     =   'True'
+                        else :
+                            types[i][2]     =   'False'
+        
+        typestr = "typeList        [3] : ["
+        for i in range(len(types)) :
+            typestr     =   (typestr + str(types[i]) + " ,")
+        typestr     =   (typestr + "]")
+        print(typestr)
+        #print("typeList        [3] : ["+ str(len(self.get_typeList())) + "] " + dump_form_list(types,27,15))
+        
         print("placeholderList [4] : ["+ str(len(self.get_placeholderList())) + "] " + dump_form_list(self.get_placeholderList(),27,1))
         print("jsList          [5] : ["+ str(len(self.get_jsList())) + "] " + dump_form_list(self.get_jsList(),27,1))
         print("reqList         [6] : ",self.get_reqList())
@@ -1431,9 +1613,9 @@ class InputForm :
 * -----------------------------------------------------------------------*
 """
 checkbox_group_form_start   = new_line + ("""  <form class="container dc-container" style='""" + 
-                                          addstyleattribute("width","100%") + """'""")
+                                          addstyleattribute("width","100%",True) + """'""")
 checkbox_group_form_pop_up_start   = new_line + ("""  <form class="container dc-container" style='""" + 
-                                          addstyleattribute("background-color","#F8F5E1") + addstyleattribute("width","100%") + """'""")
+                                          addstyleattribute("background-color","#F8F5E1") + addstyleattribute("width","100%",True) + """'""")
 checkbox_group_form_end     = new_line + """  </form>"""
 
 checkbox_group_div_start    = new_line + """   <div class='container dc-container'>"""
@@ -1822,9 +2004,9 @@ def displayHeading(text,level) :
 def get_Input(formid) :
     return(DataframeCleanserInputLog.get_InputForm(formid))
     
-def add_Input(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict) :
+def add_Input(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict,labelNoteDict) :
     if(formid != "dceulaform") :
-        DataframeCleanserInputLog.add_InputForm(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict)
+        DataframeCleanserInputLog.add_InputForm(formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict,labelNoteDict)
 
 def delete_Input(formid) :
     DataframeCleanserInputLog.delete_InputForm(formid) 
@@ -1855,7 +2037,7 @@ class DCInputLog :
     def get_InputForm(self,formid) :
         return(self.inputlog.get(formid,None))
 
-    def add_InputForm(self,formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict) :
+    def add_InputForm(self,formid,idList,labelList,typeList,placeholderList,jsList,reqList,selectDict,customDict,labelnoteDict) :
 
         inputformList = []
         inputformList.append(idList)
@@ -1866,6 +2048,7 @@ class DCInputLog :
         inputformList.append(reqList)
         inputformList.append(selectDict)
         inputformList.append(customDict)
+        inputformList.append(labelnoteDict)
         
         self.inputlog.update({formid:inputformList})
         
@@ -1887,7 +2070,7 @@ class DCInputLog :
         return(self.ownerDict.get(ownerid))
         
     def get_inputlog_file_name(self) :
-        nbname  =   cfg.get_notebook_name()
+        nbname  =   cfg.get_notebookName()
         if(not (nbname == None)) :
             return(cfg.get_files_path() + nbname + "_inputlog.json")
         else :

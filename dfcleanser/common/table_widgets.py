@@ -11,6 +11,8 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
+import dfcleanser.common.common_utils as cu
+#import get_image_url, DOWN_ARROW_IMAGE, UP_ARROW_IMAGE, RIGHT_ARROW_IMAGE, LEFT_ARROW_IMAGE
 
 def addattribute(name,value) :
     """
@@ -199,6 +201,9 @@ table_form_end = """</div>
 table_container_start = """
 <div class='container dc-table-container'"""
 
+table_container_scrollbar_start = """
+<div class='container dc-table-container table-scrollbar-wrapper'"""
+
 table_container_middle = """
     <div class="panel panel-primary" """
         
@@ -266,7 +271,7 @@ table_more_div_end = """                    </div>
 table_next_start = """                        <button class="btn btn-primary" """
 search_table_next_start = """                        <button class="btn btn-primary" """
 table_next_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/rightarrow.png' """
+                            <img src='""" + cu.get_image_url(cu.LEFT_ARROW_IMAGE) + """'"""
 table_next_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
@@ -274,7 +279,7 @@ table_next_final_end   = """ height="20px" width="20px"></img>
 table_prev_start = """                        <button class="btn btn-primary" """
 search_table_prev_start = """                        <button class="btn btn-primary" id="morePrev" """
 table_prev_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/leftarrow.png' """
+                            <img src='""" + cu.get_image_url(cu.RIGHT_ARROW_IMAGE) + """'"""
 table_prev_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
@@ -282,7 +287,7 @@ table_prev_final_end   = """ height="20px" width="20px"></img>
 table_down_start = """                        <button class="btn btn-primary" """
 search_table_down_start = """                        <button class="btn btn-primary" """
 table_down_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/downarrow.png' """
+                            <img src='""" + cu.get_image_url(cu.DOWN_ARROW_IMAGE) + """'"""
 table_down_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
@@ -290,7 +295,7 @@ table_down_final_end   = """ height="20px" width="20px"></img>
 table_up_start = """                        <button class="btn btn-primary" """
 search_up_down_start = """                        <button class="btn btn-primary" """
 table_up_end   = """>
-                            <img src='https://rickkrasinski.github.io/dfcleanser/graphics/uparrow.png' """
+                            <img src='""" + cu.get_image_url(cu.UP_ARROW_IMAGE) + """'"""
 table_up_final_end   = """ height="20px" width="20px"></img>
                         </button>
 """
@@ -349,7 +354,9 @@ table_body_row_start = """                    <tr class="dc-describe-table-body-
 table_body_row_start12 = """                    <tr class="dc-describe-table-body-row12">
 """
 
-table_body_row_href_start = """                    <tr class="dc-describe-table-body-row ">
+table_body_row_href_start = """                    <tr class="dc-describe-table-body-row">
+"""
+table_body_row_href_start12 = """                    <tr class="dc-describe-table-body-row12">
 """
 
 table_body_row_end = """
@@ -397,7 +404,7 @@ plain_title_row = """
 
 
 scroll_button = """                                <button class="btn btn-primary" OnClick="XXXXScrollCallback">
-                                    <img src='https://rickkrasinski.github.io/dfcleanser/graphics/XXXXimage.png' id="XXXXimageId" height="XXXXArrowSize" width="XXXXArrowSize" style="float:right"></img>
+                                    <img src='XXXXimage' id="XXXXimageId" height="XXXXArrowSize" width="XXXXArrowSize" style="float:right"></img>
                                 </button>
 """
 
@@ -471,7 +478,7 @@ def get_row_major_table(table,direction,displayTable=True) :
     *  html table
     * --------------------------------------------------------
     """
-
+    
     if(not(displayTable)) :
         
         if(direction == SCROLL_UP) :
@@ -485,6 +492,7 @@ def get_row_major_table(table,direction,displayTable=True) :
                 rowstart = -1
             
             table.set_lastrowdisplayed(rowstart)
+            
         else :
             if( table.get_lastrowdisplayed() == len(table.get_rowList()) ) :
                 table.set_lastrowdisplayed(-1)    
@@ -631,11 +639,11 @@ def set_col_major_table_scroll(table,direction) :
                 df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
                 df_cols     =   df.columns.tolist()
 
-                print("set_col_major_table_scroll ",table.get_lastcoldisplayed())
+                #print("set_col_major_table_scroll ",table.get_lastcoldisplayed())
                 
                 for i in range(table.get_lastcoldisplayed(),-1,-1) :
                     
-                    print("set_col_major_table_scroll : ",i,nums_found)
+                    #print("set_col_major_table_scroll : ",i,nums_found)
                     
                     
                     if(nums_found < (2 * table.get_colsperrow())) :
@@ -830,6 +838,8 @@ class dcTable :
     *   checkLength         -   flag to check <th> and <tr> lengths and use popover
     *   firstcolpadding     -   list of left padding for first column in rows
     *
+    *   rowColorList        -   list of row colors 
+    *
     * --------------------------------------------------------
 
     """
@@ -857,6 +867,8 @@ class dcTable :
         self.rowList         =   rowList
         self.widthList       =   widthList
         self.alignList       =   alignList
+        
+        self.rowcolorList    =   None
         
         # reference attribures
         self.refList         =   None
@@ -914,6 +926,10 @@ class dcTable :
         self.table_title_parms      =   None  
         self.table_header_parms     =   None    
         self.table_column_parms     =   None 
+        
+        self.large_body_row_font_size   =   False
+        
+        self.wrap_in_scrollbars     =   False
         
         # add the table to internal dict for later retrieval    
         if(get_table_value(self.tableid)==None) :
@@ -1016,6 +1032,8 @@ class dcTable :
         self.smallmargin       =   smallmarginParm
     def set_smallheader(self,smallheaderParm) :
         self.smallheader       =   smallheaderParm
+    def set_smallfsize(self,smallParm) :
+        self.smallfsize       =   smallParm
     
     """
     * shorten elements with popover table attributes
@@ -1048,6 +1066,16 @@ class dcTable :
         self.table_header_parms     =   table_header_parms_in 
     def set_table_column_parms(self,table_column_parms_in) :  
         self.table_column_parms     =   table_column_parms_in
+        
+    def set_large_body_row_font_size(self) :
+        self.large_body_row_font_size = True 
+        
+    def set_row_color_list(self,rowcolors) :
+        self.rowcolorList = rowcolors
+    
+    def set_wrap_in_scrollbars(self) :
+        self.wrap_in_scrollbars = True
+        
         
     # class getters    
     def get_title(self) :
@@ -1129,6 +1157,8 @@ class dcTable :
         return(self.smallmargin)
     def get_smallheader(self) :
         return(self.smallheader)
+    def get_smallfsize(self) :
+        return(self.smallfsize)
     
     def get_shortrow(self) :
         return(self.shortrow) 
@@ -1154,6 +1184,22 @@ class dcTable :
         return(self.table_header_parms) 
     def get_table_column_parms(self) :        
         return(self.table_column_parms)
+        
+    def get_large_body_row_font_size(self) :
+        return(self.large_body_row_font_size) 
+        
+    def get_row_color_list(self) :
+        return(self.rowcolorList)
+    
+    def get_row_color(self,rowid) :
+        if(rowid >= len(self.rowcolorList)) :
+            return(None)
+        else :
+            return(self.rowcolorList[rowid])
+    
+    def get_wrap_in_scrollbars(self) :
+        return(self.wrap_in_scrollbars)
+
         
     def get_table_title_parm(self,title_parm_id) :
         try :
@@ -1265,7 +1311,7 @@ class dcTable :
         /* Table Body
         /*************************
         """
-            
+        
         tableHTML = (tableHTML + table_body_start)
 
         startrowIndex   =   0
@@ -1274,7 +1320,7 @@ class dcTable :
         startrowIndex, rowcount = self.get_row_indices()
         
         for i in range(startrowIndex, (startrowIndex + rowcount)) :
-        
+            
             if(self.get_refList() == None) :
                 tableHTML = (tableHTML + self.add_table_body_row(i,
                                                                  self.get_rowList()[i],
@@ -1291,7 +1337,7 @@ class dcTable :
 
         tableHTML = (tableHTML + table_body_end)
         tableHTML = (tableHTML + table_end)
-    
+        
         if(fulltable) :
             tableHTML = (tableHTML + table_container_end)
         
@@ -1345,7 +1391,7 @@ class dcTable :
         /* Table dump and display
         /*************************
         """
-        
+
         #debug 
         if(not(self.get_title() is None))  :  
             if( ("#Column Values" in self.get_title()) or 
@@ -1353,7 +1399,7 @@ class dcTable :
                ("#Column Names" in self.get_title()) ) :  
                 self.dump()
                 print(tableHTML)
-        
+
         from dfcleanser.common.common_utils import DUMP_HTML
         if(DUMP_HTML) :
             if(not(self.get_tableid() == "dfschema")) :
@@ -1362,11 +1408,13 @@ class dcTable :
                 Html_file= open("dfschema_file","w")
                 Html_file.write(tableHTML)
                 Html_file.close()
-            
+
         return(tableHTML)
 
     def display_table(self) :
+        
         tableHTML = self.get_html(True)
+        
         from dfcleanser.common.common_utils import (displayHTML)
         displayHTML(tableHTML)
         
@@ -1454,7 +1502,8 @@ class dcTable :
         if(self.get_small()) :
             print("\n smallwidth     : ",self.get_smallwidth())
             print(" smallmargin    : ",self.get_smallmargin())
-
+            print(" smallfsize     : ",self.get_smallfsize())
+            
         if(self.get_shortrow()) :
             print(" shortrow       : ",self.get_shortrow())
             
@@ -1492,10 +1541,17 @@ class dcTable :
         tableHTML = ""
 
         if(self.get_small()) :
-            tableHTML = (tableHTML + new_line + '<div class="container dc-table-container" ')
+            if(self.get_table_scrolls()) :
+                tableHTML = (tableHTML + new_line + '<div class="container dc-table-container table-scrollbar-wrapper " ')
+            else :
+                tableHTML = (tableHTML + new_line + '<div class="container dc-table-container" ')
             tableHTML = (tableHTML + addattribute("id",self.get_tableid() + "container"))
-            tableHTML = (tableHTML + ' style="width:' + str(self.get_smallwidth()) + '%;' + 
-                                 ' margin-left:' + str(self.get_smallmargin()) + 'px;">' + new_line)
+            
+            if(self.get_smallfsize() == 12) :
+                tableHTML = (tableHTML + ' style="width:' + str(self.get_smallwidth()) + '%;' + ' margin-left:' + str(self.get_smallmargin()) + 'px;">' + new_line)
+            else :
+                tableHTML = (tableHTML + ' style="width:' + str(self.get_smallwidth()) + '%;' + ' font-size:' + str(self.get_smallfsize()) + 'px;' + '  margin-left:' + str(self.get_smallmargin()) + 'px;">' + new_line)
+                
         #tableHTML = (tableHTML  + '    <div class="row">' + new_line)
             if(self.get_border()) :
                 tableHTML = (tableHTML  + '    <div class="panel panel-primary" style="border:0px;"' + ">")
@@ -1503,7 +1559,10 @@ class dcTable :
                 tableHTML = (tableHTML  + '    <div class="panel panel-primary" style="border:0px;"' + ">")
         else :
             if(tableDisplay) :
-                tableHTML = (tableHTML + table_container_start)
+                if(self.get_table_scrolls()) :
+                    tableHTML = (tableHTML + table_container_scrollbar_start)
+                else :
+                    tableHTML = (tableHTML + table_container_start)
                 tableHTML = (tableHTML + addattribute("id",self.get_tableid()+"container")  + " style='width:100%;'" + ">")
         
             tableHTML = (tableHTML + table_container_middle + " style=border:0px;>")
@@ -1533,7 +1592,10 @@ class dcTable :
         if(self.get_hiddensList() != None) :
             tableHTML = (tableHTML + self.get_hiddens(self.get_tableid(),self.get_hiddensList()))
         
-        tableHTML = (tableHTML + self.get_table_container_start())
+        if(self.get_table_scrolls()) :
+            tableHTML = (tableHTML + table_container_scrollbar_start)
+        else :
+            tableHTML = (tableHTML + self.get_table_container_start())
         
         scrolllist   =   [0,0,0,0]
     
@@ -1576,8 +1638,11 @@ class dcTable :
     
         if(self.get_hiddensList() != None) :
             tableHTML = (tableHTML + get_hiddens(self.get_tableid(),self.get_hiddensList()))
-        
-        tableHTML = (tableHTML + self.get_table_container_start())
+                
+        if(self.get_table_scrolls()) :
+            tableHTML = (tableHTML + table_container_scrollbar_start)
+        else :
+            tableHTML = (tableHTML + self.get_table_container_start())
 
         if(not(self.get_title() is None)) :
         
@@ -1646,7 +1711,7 @@ class dcTable :
  
         strvalue = str(rowvalue) 
 
-        if(len(strvalue) > maxRowElement) :
+        if(len(strvalue) > self.get_textLength()) :
         
             # check for length of element
             newstrvalue = strvalue.replace("<b>","")
@@ -1654,7 +1719,7 @@ class dcTable :
             if(self.get_checkLength() == True) :
                 newstrvalue = newstrvalue.replace("&nbsp;","")
         
-            if(len(newstrvalue) > maxRowElement) :
+            if(len(newstrvalue) > self.get_textLength()) :
             
                 if(valueIsstring):
                     if(headerrow) :
@@ -1730,7 +1795,7 @@ class dcTable :
             too_long        =   False
         
             for i in range(len(coltext_sep)) :
-                if(len(coltext_sep[i]) > maxRowElement) :
+                if(len(coltext_sep[i]) > self.get_textLength()) :
                     too_long    =   True
                     break
                 
@@ -1807,7 +1872,7 @@ class dcTable :
                     rowHtml = rowElement
                 else :
                     if(len(newrowElement) > self.get_textLength()) :
-                        if(newrowElement.find(",") > -1) :
+                        if(0):#newrowElement.find(",") > -1) :
                             rowHtml = rowElement 
                         else :
                             rowHtml = ('<a href="#" data-toggle="tooltip" data-placement="top" title="' +  
@@ -1849,9 +1914,26 @@ class dcTable :
                     break
         
         if(not_all_hrefs) :
-            rowHTML = (rowHTML + table_body_row_start)
+
+            if(self.get_large_body_row_font_size()) :
+                rowHTML = (rowHTML + table_body_row_start12)
+            else :
+                rowHTML = (rowHTML + table_body_row_start)
+                
         else :
-            rowHTML = (rowHTML + table_body_row_href_start)
+            
+            if(self.get_large_body_row_font_size()) :
+                rowHTML = (rowHTML + table_body_row_href_start12)
+            else :
+                rowHTML = (rowHTML + table_body_row_href_start)
+                
+        if(not (self.get_row_color_list() is None)) :
+            if(not (self.get_row_color(index) is None)) :
+                
+                rowHTML     =   rowHTML.replace(">","")
+                rowHTML     =   rowHTML.replace(new_line,"")
+                rowHTML     =   (rowHTML + addattribute("style",addstyleattribute("background-color",str(self.get_row_color(index)))))
+                rowHTML     =   (rowHTML + ">" + new_line)
 
         if(self.get_color()) :
             tablecolorlist = self.get_colorList()[index]
@@ -1868,8 +1950,14 @@ class dcTable :
                                addattribute("bgcolor",tablecolorlist[i]) + 
                                addattribute("style",addstyleattribute("width", str(self.get_widthList()[i])+"%")))
             else :
-                rowHTML = (rowHTML + "                        <td" + 
-                           addattribute("style",addstyleattribute("width", str(self.get_widthList()[i])+"%")))
+                
+                if(self.get_large_body_row_font_size()) :
+                    rowHTML = (rowHTML + "                        <td" + 
+                               addattribute("style",addstyleattribute("width", str(self.get_widthList()[i])+"%") + " " + addstyleattribute("font-size","12px")))
+                else :
+                    rowHTML = (rowHTML + "                        <td" + 
+                               addattribute("style",addstyleattribute("width", str(self.get_widthList()[i])+"%")))
+                    
         
             if( self.get_alignList()[i] == "left") : 
                 rowHTML = (rowHTML + addattribute("class","dccolleft dccolwrap"))
@@ -2110,36 +2198,40 @@ class dcTable :
         if(scrollFlag) : 
         
             header_html    =   (header_html + scroll_col_start)
-        
+            
             for i in range(len(scrolllist)) :
                 arrow_html     =   scroll_button[0:]
         
                 if(scrolllist[i] == 1) :
                     if(i==0)    :  
-                        image       =   "downarrow"
+                        image       =   cu.get_image_url(cu.DOWN_ARROW_IMAGE)
+                        imageid     =   "downarrow"
                         direction   =   "0"
                         if(addSearch) : callback    =   upcallback
                         else :          callback    =   "scrollTable('" + table_id + "'," + direction + ")"         
                     
                     elif(i==1)  :  
-                        image       =   "uparrow"
+                        image       =   cu.get_image_url(cu.UP_ARROW_IMAGE)
+                        imageid     =   "uparrow"
                         direction   =   "1"
                         if(addSearch) : callback    =   downcallback
                         else :          callback    =   "scrollTable('" + table_id + "'," + direction + ")"         
                     
                     elif(i==2)  :  
-                        image       =   "rightarrow"
+                        image       =   cu.get_image_url(cu.RIGHT_ARROW_IMAGE)
+                        imageid     =   "rightarrow"
                         direction   =   "2"
                         if(addSearch) : callback    =   rightcallback
                         else :          callback    =   "scrollTable('" + table_id + "'," + direction + ")"         
 
                     else        :  
-                        image       =   "leftarrow"
+                        image       =   cu.get_image_url(cu.LEFT_ARROW_IMAGE)
+                        imageid     =   "leftarrow"
                         direction   =   "3"
                         if(addSearch) : callback    =   leftcallback
                         else :          callback    =   "scrollTable('" + table_id + "'," + direction + ")"         
             
-                    arrow_html     =   arrow_html.replace("XXXXimageId",table_id + image + "Id")
+                    arrow_html     =   arrow_html.replace("XXXXimageId",table_id + imageid + "Id")
                     arrow_html     =   arrow_html.replace("XXXXimage",image)
                     arrow_html     =   arrow_html.replace("XXXXScrollCallback",callback)
                     arrow_html     =   arrow_html.replace("XXXXArrowSize",arrowsize)

@@ -10,9 +10,7 @@ Created on Tue Jun 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.common.cfg import (DataTransform_ID, get_dfc_dataframe_df)
-
-import dfcleanser.common.table_widgets as tblw 
+from dfcleanser.common.cfg import (get_dfc_dataframe_df)
 
 import pandas as pd
 import pandas.api.types as pat 
@@ -52,7 +50,7 @@ redcolor        =   "#F1C4B7"
 greencolor      =   "#ADECC4"
     
 
-DUMP_HTML       =   True
+DUMP_HTML       =   False
 
 """
 #--------------------------------------------------------------------------
@@ -194,28 +192,20 @@ class RunningClock:
     @staticmethod
     def spinning_clock():
         
+        clockfaces =    [get_image_url(HOUR_1_IMAGE),get_image_url(HOUR_2_IMAGE),get_image_url(HOUR_3_IMAGE),get_image_url(HOUR_4_IMAGE),
+                         get_image_url(HOUR_5_IMAGE),get_image_url(HOUR_6_IMAGE),get_image_url(HOUR_7_IMAGE),get_image_url(HOUR_8_IMAGE),
+                         get_image_url(HOUR_9_IMAGE),get_image_url(HOUR_10_IMAGE),get_image_url(HOUR_11_IMAGE),get_image_url(HOUR_12_IMAGE)]
+        
         while 1: 
-            #for cursor in '|/-\\': yield cursor
-            clockfaces =    ["https://rickkrasinski.github.io/dfcleanser/graphics/hour1.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour2.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour3.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour4.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour5.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour6.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour7.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour8.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour9.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour10.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour11.png",
-                             "https://rickkrasinski.github.io/dfcleanser/graphics/hour12.png"]
-            
+
             for clockface in clockfaces : yield clockface
+            
 
     def __init__(self, delay=None):
         self.clock_generator = self.spinning_clock()
         
         self.image_html = (self.image_html + '<div class="container" id="clockcontainer" style=" width:60px; height:60px; margin-left:20px; ">')
-        self.image_html = (self.image_html + '    <img id="clockrunner" src="https://rickkrasinski.github.io/dfcleanser/graphics/hour12.png" height="60" width="60"></img>' + "</div>")
+        self.image_html = (self.image_html + '    <img id="clockrunner" src="./PandasDataframeCleanser_files/graphics/hour12.png" height="60" width="60"></img>' + "</div>")
         
         displayHTML(self.image_html)
         
@@ -266,6 +256,14 @@ def is_numeric_col(df,colname) :
         return(pat.is_numeric_dtype(get_column_datatype(df,colname))) 
     except :
         return(False)
+        
+def is_numeric_datatype(dtype) :
+    
+    try :
+        return(pat.is_numeric_dtype(dtype)) 
+    except :
+        return(False)
+    
 
 def is_int_col(df,colname) :
 
@@ -517,6 +515,15 @@ def get_dtype_str_for_datatype(coldtype,fullname=True) :
         else            :   return("timedelta")
     
     return(None)
+
+def get_str_of_datatypes() :
+    
+    datatypes   =   ["uint8","uint16","uint32","uint64","int8","int16","int32","int64",
+                     "float16","float32","float64","int","float","str","object",
+                     "datetime64","timedelta64","Timestamp","Timedelta",
+                     "datetime","date","time","timedelta"]
+    
+    return(datatypes)
 
 
 def get_datatype_from_dtype_str(dtype_str) :
@@ -934,104 +941,6 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
             numselects  =   numselects + 1
 
  
-def displayParms(title,labels,values,tblid,width=None,leftMargin=0,display=True,font=None) :
-    """
-    #--------------------------------------------------------------------------
-    #   display a list of parms as a table
-    #
-    #       title  - parms title 
-    #       labels - parm labels
-    #       values - parm values
-    #       id     - table id
-    #       width  - fixed table width in pixels
-    #
-    #   return table of parms
-    #
-    #--------------------------------------------------------------------------
-    """ 
-
-    maxllabels      =   0
-    maxlvalues      =   0
-
-    if( not ( (len(labels)>0) and (len(labels) == len(values)) ) ) :
-        return("<p>Invalid Parameter List</p>")
-        
-    for i in range(len(labels)) :
-        if(len(labels[i])>maxllabels) :
-            maxllabels = len(labels[i])
-            
-    for i in range(len(values)) :
-        if(len(values[i])>maxlvalues) :
-            
-            # check for line breaks
-            if("<br/>" in values[i]) :
-                #print("line break in parm")
-                nextlinebreak   =   0
-                lastlinebreak   =   0
-                totcount = 0
-                while ( (nextlinebreak != -1) and (totcount < 10)) :
-                    
-                    totcount = totcount + 1
-                    nextlinebreak = values[i][lastlinebreak:].find("<br/>")  
-                    if(nextlinebreak != -1) :
-                         if( (nextlinebreak + len("<br/>") > maxlvalues) ) :
-                            maxlvalues = (nextlinebreak + len("<br/>"))
-                         lastlinebreak = lastlinebreak + nextlinebreak + len("<br/>")
-    
-            else :
-                maxlvalues = len(values[i])
-                
-    #print("displayParms",maxllabels,maxlvalues)
-    
-    if(display) :      
-        print("\n")        
-    
-    import math
-    labelwidth = int(math.ceil((maxllabels / (maxllabels + maxlvalues)) * 100)) 
-    if(labelwidth < 20) :
-        labelwidth  =   20
-    
-    valuewidth = (100 - 4) - labelwidth
-    
-    if( (len(labels) == 1) and (len(labels[0]) == 1) ) :
-        parmsWidths    =   [1,labelwidth,1,valuewidth+4]
-    else :
-        parmsWidths    =   [1,labelwidth,3,valuewidth]
-    parmsAligns    =   ["center","left","center","left"]
-    
-    colorList = []    
-    
-    parmsRows      =   []
-    
-    for i in range(len(labels)) : 
-        if( (len(labels[i]) > 0) and (len(values[i]) > 0) ) :
-            if( (len(labels) == 1) and (len(labels[0]) == 1) ) :
-                parmsRows.append([" ",labels[i]," ",values[i]]) 
-            else :
-                parmsRows.append([" ",labels[i],"<b>:</b>",values[i]])
-            colorList.append([whitecolor,whitecolor,whitecolor,whitecolor])
-    
-    parmsHeader    =   ["","","",""]
-    parms_table = tblw.dcTable(title,"parmsTable",tblid,
-                               parmsHeader,parmsRows,parmsWidths,parmsAligns)
-
-    parms_table.set_rowspertable(len(labels))
-    parms_table.set_small(True)
-    
-    if(not (width is None)) :
-        parms_table.set_smallwidth(width)
-
-    parms_table.set_smallmargin(leftMargin)
-    parms_table.set_border(False)
-    parms_table.set_checkLength(False)
-    if(not(font is None)) :
-        parms_table.set_table_column_parms({"font":font})
-
-    if(display) :
-        parms_table.display_table()
-    else :
-        return(parms_table.get_html())
-        
 
 def get_parms_list_from_dict(labels,parmsdict) :
     """
@@ -1144,6 +1053,7 @@ def get_full_parms_html(inputid) :
     
     input_form.set_form_select_dict(inputlist[6])
     input_form.set_form_custom_dict(inputlist[7])
+    input_form.set_label_note_dict(inputlist[8])
     
     input_form.set_fullparms(True)
     input_html = input_form.get_html()
@@ -1204,6 +1114,45 @@ def get_fullparms(parms) :
         #run_jscript(change_input_js,"fail to get full parms for : " + formid)
         
 
+
+def set_chapter_df(parms) :
+    """
+    * ---------------------------------------------------------
+    * function : set the default df for a chapter
+    * 
+    * Parms :
+    *  parms    - input id
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    chapterid   =   parms[0]
+    df_name     =   parms[1]
+    
+    from dfcleanser.common.cfg import set_config_value, CURRENT_CLEANSE_DF, CURRENT_TRANSFORM_DF, CURRENT_EXPORT_DF, CURRENT_GEOCODE_DF, CURRENT_SUBSET_DF, CURRENT_INSPECTION_DF
+    
+    if(chapterid == "dcdfdataframe") :
+        set_config_value(CURRENT_CLEANSE_DF,df_name)
+
+    elif(chapterid == "dtdfdataframe") :
+        set_config_value(CURRENT_TRANSFORM_DF,df_name)
+        
+    elif(chapterid == "dedfdataframe") :
+        set_config_value(CURRENT_EXPORT_DF,df_name)
+    
+    elif(chapterid == "dgdfdataframe") :
+        set_config_value(CURRENT_GEOCODE_DF,df_name)
+    
+    elif(chapterid == "dsdfdataframe") :
+        set_config_value(CURRENT_SUBSET_DF,df_name)
+        
+    else :
+        set_config_value(CURRENT_INSPECTION_DF,df_name)
+        
+
+
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1238,75 +1187,19 @@ def patch_html(htmlin,replaceNewline=True) :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-def get_scroll_table_html(tableid,direction) :
-    """
-    * ---------------------------------------------------------
-    * function : get a scrolled dc table html
-    * 
-    * Parms :
-    *  tableid    - table id
-    *  direction  - scroll direction
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    
-    #print("get_scroll_table_html",tableid,direction,tblw.get_table_value(tableid).get_tabletype())
-    
-    if(tblw.get_table_value(tableid).get_tabletype() == tblw.ROW_MAJOR) : 
-         table_html = tblw.get_row_major_table(tblw.get_table_value(tableid),direction,False)
-    
-    elif(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) : 
-        tblw.scroll_col_major_table(tblw.get_table_value(tableid),direction)
-        return(None)
-    
-    elif(tblw.get_table_value(tableid).get_tabletype() == tblw.ROW_COL_MAJOR) : 
-        #print("ROW_COL_MAJOR",tblw.get_table_value(tableid),direction)
-         #table_html = tblw.get_row_major_table(tblw.get_table_value(tableid),direction,False)
-        return(None)
-        
-    else :
-        return(None)
-
-    if(tblw.get_table_value(tableid).get_tabletype() == tblw.COLUMN_MAJOR) :
-        
-        #print("COLUMN_MAJOR")
-        tablehtmlloc    = table_html.find("<thead")
-        tableendhtmlloc = table_html.find("</tbody>")
-        table_html = table_html[tablehtmlloc:tableendhtmlloc+len("</tbody>")]
-        
-    else :
-        # check for no header tables
-        if(table_html.find("<thead") == -1) :
-            tablehtmlloc    = table_html.find("<tbody")
-            table_html      = table_html[tablehtmlloc + len("<tbody"):]
-            
-            tablehtmlloc    = table_html.find("<tbody>")
-            table_html      = table_html[tablehtmlloc:]
-            
-            tableendhtmlloc = table_html.find("</tbody>")
-        
-            table_html = table_html[tablehtmlloc:tableendhtmlloc+len("</tbody>")]
-        
-    new_table_html = patch_html(table_html)
-    
-    return(new_table_html)
 
 
 def refresh_scroll_buttons(tableid) :
     
-    buttons     =   ["downarrow","uparrow","leftarrow","rightarrow"]
-    
-    import datetime 
-    tstamp = datetime.datetime.now().time()
+    buttonids     =   ["downarrow", "uparrow", "leftarrow", "rightarrow"]
+    buttons       =   [DOWN_ARROW_IMAGE, UP_ARROW_IMAGE, LEFT_ARROW_IMAGE, RIGHT_ARROW_IMAGE]
+
     
     for i in range(len(buttons)) :
         
-        button_id       =   tableid + buttons[i] + "Id"
+        button_id       =   tableid + buttonids[i] + "Id"
         
-        change_html     =   ("'#" + button_id + "').attr('src'," + 
-                             "'https://rickkrasinski.github.io/dfcleanser/graphics/" + buttons[i] + ".png?timestamp=" + str(tstamp) + "'")
+        change_html     =   ("'#" + button_id + "').attr('src'," + "'" + get_image_url(buttons[i]) + "'")
         change_cols_js = ("$(" + change_html + ");")
 
         run_jscript(change_cols_js,"fail to refresh sroll table : ")
@@ -1331,7 +1224,7 @@ def scroll_table(parms) :
     direction   =   int(parms[1])
     
     #print("scroll_table",tableid,direction)
-    
+    from dfcleanser.common.display_utils import get_scroll_table_html
     new_table_html  = get_scroll_table_html(tableid,direction)
     
     if(new_table_html is None) :
@@ -1358,141 +1251,6 @@ def scroll_table(parms) :
 
     refresh_scroll_buttons(tableid)
 
-         
-def scroll_sample_rows(parms) :
-    """
-    * ---------------------------------------------------------
-    * function : scroll the sample table
-    * 
-    * Parms :
-    *  parms[0]    - table id
-    *  parms[1]    - scroll direction
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    
-    tableid     =   parms[0]
-    direction   =   int(parms[1])
-    
-    #print("scroll_sample_rows",tableid,direction)
-    
-    from dfcleanser.common.display_utils import display_more_sample_rows
-    df_delim    =   tableid.find("_search_")
-    if(df_delim > -1) :
-        df_title  =   tableid[:df_delim]
-    else :
-        from dfcleanser.common.cfg import get_config_value,CURRENT_INSPECTION_DF
-        if(tableid == "DIsamplerows") :
-            df_title    =   get_config_value(CURRENT_INSPECTION_DF)
-        else :
-            df_title  =   None
-    
-    #print("df_title",df_title)
-    
-    table_html = display_more_sample_rows(get_dfc_dataframe_df(df_title),tableid,direction)
-    
-    #print("table_html",table_html)    
-    
-    thead = table_html.find("<thead>")
-    table_html = table_html[thead:]
-    tend  = table_html.find("</table>")
-    table_html = table_html[0:(tend-1)]
-    
-    new_table_html = patch_html(table_html)
-
-    change_table_js = "$("
-    change_table_js = change_table_js + "'#" + tableid + "').html('"
-    change_table_js = change_table_js + new_table_html + "');"
-    
-    run_jscript(change_table_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
-
-    refresh_bg_js = "$('#" + tableid + "_thr').css({'background-color':'#6FA6DA'});"
-    #print("refresh_bg_js",refresh_bg_js)
-    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
-    
-    refresh_bg_js = "$('#" + tableid + "_thr').css({'color':'white'});"
-    #print("refresh_bg_js",refresh_bg_js)
-    run_jscript(refresh_bg_js,"fail scroll_sample_rows : "+tableid+" "+str(direction))
-    
-    return
-
-
-def get_sample_row(parms) :
-    """
-    * ---------------------------------------------------------
-    * function : get a sample row for df browser
-    * 
-    * Parms :
-    *  parms[0]    - table id
-    *  parms[1]    - row id
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    
-    opstat      =   opStatus()
-    
-    tableId     =   parms[0][0]
-    newrowId    =   int(parms[0][1])
-        
-    from dfcleanser.common.display_utils import display_more_sample_rows
-    
-    #TODO fic blank df
-    new_rows_html = display_more_sample_rows(get_dfc_dataframe_df(),
-                                             tableId,1,newrowId,opstat)
-
-    table_html = patch_html(new_rows_html)
-    
-    thead = table_html.find("<thead>")
-    tend  = table_html.find("</table>")
-    
-    table_html = table_html[thead:(tend-1)]
-    
-    new_table_html = patch_html(table_html)
-
-    change_table_js = "$("
-    change_table_js = change_table_js + "'#" + tableId + "').html('"
-    change_table_js = change_table_js + new_table_html + "');"
-
-    run_jscript(change_table_js,"fail get_sample_row parms : "+tableId)
-    
-
-def scroll_single_row(parms) :
-    """
-    * ---------------------------------------------------------
-    * function : get a simgle row for df browser
-    * 
-    * Parms :
-    *  parms[0]    - table id
-    *  parms[1]    - scroll direction
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    
-    tableid     =   parms[0]
-    direction   =   int(parms[1])
-    
-    #TODO fix blank dfc
-    from dfcleanser.common.display_utils import display_more_single_row
-    table_html = display_more_single_row(get_dfc_dataframe_df(),tableid,direction)
-    
-    thead = table_html.find("<tbody>")
-    tend  = table_html.find("</tbody>")
-    
-    table_html = table_html[thead:(tend-1)]
-    
-    new_table_html = patch_html(table_html)
-
-    change_table_js = "$("
-    change_table_js = change_table_js + "'#" + tableid + "').html('"
-    change_table_js = change_table_js + new_table_html + "');"
-    
-    run_jscript(change_table_js,"fail scroll_single_row : " + tableid + str(direction))
 
 
 """
@@ -1590,19 +1348,19 @@ def get_dfsubset_vals(parms) :
 
 
 col_names_table_start   =   """
-                    <div class="container" style="padding:5px; margin:auto; width:100%; border:0px;" id="subdatacolnamescontainer">
-                        <div class="container" style="padding:5px; margin:auto; width:100%;"  id="subdatacolnamesselectdiv">
+                    <div class="container" style="padding:5px; margin:auto; width:100%; border:0px" id="subdatacolnamescontainer">
+                        <div class="container" style="padding:5px; margin:auto; width:100%"  id="subdatacolnamesselectdiv">
                             <div class="container dc-container dc-default-input-inner-div">
                                 <div class="form-group-sm">
-                                    <label  for="subdatacolnames" style="text-align:left; font-size: 13px;">* XXXXDSSUBID</label>
-                                    <select id="subdatacolnames" multiple="multiple" size="30" style="margin-left:1px; font-size: 11px;" class="form-control">
+                                    <label  for="subdatacolnames" style="text-align:left; font-size: 13px">* XXXXDSSUBID</label>
+                                    <select id="subdatacolnames" multiple="multiple" size="30" style="margin-left:1px; font-size: 11px" class="form-control">
 """
 
 
 col_names_table_end1   =   """
                                     </select>
                                 </div>
-                                <div style="margin-top:10px;"  id="censusdfinsertcols">
+                                <div style="margin-top: 10px"  id="censusdfinsertcols">
 
 """
 
@@ -1615,10 +1373,10 @@ col_names_table_end2   =   """
 
 col_names_buttons   =   """
                                     <div class="container dc-container dc-default-input-button-container btn-grp-center">
-                                        <div class="btn-group btn-center"   style=" width: 100%; ">
-                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  margin-left: 50px;  height: 75px;  width: 110px; ' onclick="get_census_callback(33)">Insert</br>Columns</br>Into df(s)</button>
-                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px; ' onclick="get_census_callback(0)">Return</button>
-                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px; ' onclick="displayhelp(https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset)">Help</button>
+                                        <div class="btn-group btn-center"   style="width: 100%">
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  margin-left: 50px;  height: 75px;  width: 110px ' onclick="get_census_callback(33)">Insert</br>Columns</br>Into df(s)</button>
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px ' onclick="get_census_callback(0)">Return</button>
+                                            <button type="button" class="btn btn-primary" style = ' font-size: 13px;  height: 75px;  width: 110px ' onclick="displayhelp(https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset)">Help</button>
                                         </div>
                                     </div>
 """
@@ -1642,22 +1400,9 @@ col_names_table_end     =   col_names_table_end1 + col_names_buttons + col_names
 #--------------------------------------------------------------------------
 """
 
-def get_df_browser_search_html(colname) :
-    """
-    * ---------------------------------------------------------
-    * function : get column samples
-    * 
-    * Parms :
-    *  colname    - column name
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    print("get_df_browser_search_html")
-
+"""
 def get_df_browser_search(numeric) :
-    """
+    ""
     * ---------------------------------------------------------
     * function : get column samples
     * 
@@ -1667,7 +1412,7 @@ def get_df_browser_search(numeric) :
     * returns : 
     *  N/A 
     * --------------------------------------------------------
-    """
+    ""
     #print("get_df_browser_search",numeric,type(numeric))
     
     if(numeric == 1) :
@@ -1680,12 +1425,8 @@ def get_df_browser_search(numeric) :
     new_html    =   get_colsearch_form(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                        num_flag).get_html()
     
-    start_html  =   new_html.find("<div class='container' style='padding:5px; margin:auto; width:100%;'  id="+'"datainspectcolsearchinput">')
-    
-    #end_html    =   new_html.find('<div style="margin-top:10px;"  id="datainspectcolsearchtb">')
+    start_html  =   new_html.find("<div class='container' style='padding:5px; margin:auto; width:100%'  id="+'"datainspectcolsearchinput">')
     end_html    =   len(new_html) - 6
-    
-    #print("\n\nget_df_browser_search",len(new_html),start_html,end_html,"\n",new_html)
     
     new_html    =   new_html[start_html:end_html-7]
     new_html    =   new_html.replace("'",'"')
@@ -1697,12 +1438,12 @@ def get_df_browser_search(numeric) :
     change_table_js = change_table_js + final_html + "');"
             
     run_jscript(change_table_js,"fail to get search df html : ")
-
+"""
 
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   dfcleanser data transform html methods
+#   dfcleanser data transform dynamic html methods
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -1714,6 +1455,11 @@ def change_col_stats(parms)  :
     import dfcleanser.common.cfg as cfg
     
     df          =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    
+    colnames    =   list(df.columns)
+    if(not (colid in colnames)) :
+        return()
+    
     cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colid)
 
     from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
@@ -1766,90 +1512,6 @@ def change_col_stats(parms)  :
         
 
 
-def get_column_samples_html(colname) :
-    """
-    * ---------------------------------------------------------
-    * function : get column samples
-    * 
-    * Parms :
-    *  colname    - column name
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-
-    columnsamplesHeader      =   [""]
-
-    columnsamplesRows        =   []
-    columnsamplesWidths      =   [100]
-    columnsamplesAligns      =   ["left"]
-    columnsamplesHrefs       =   []
-    
-    uniques =   [] 
-     
-    #TODO blank df
-    #check if the object is string
-    if (isinstance(get_dfc_dataframe_df()[colname][0], str)) :
-        
-        uniques =   get_dfc_dataframe_df()[colname].unique().tolist()
-        for i in range(len(uniques)) :
-            uniques[i]  =   str(uniques[i])
-        uniques.sort()
-    else :
-        if(is_numeric_col(get_dfc_dataframe_df(),colname)) :           
-            uniques =   get_dfc_dataframe_df()[colname].unique().tolist()
-            uniques.sort()
-
-    if(len(uniques) > 0) :
-
-        if(len(uniques) > 3) :
-            count = 3
-        else :
-            count = len(uniques)
-            
-        for i in range(count) :
-            columnsamplesRows.append([str(uniques[i])])
-            columnsamplesHrefs.append([None])
-
-    else : 
-        columnsamplesRows.append([str(colname)])
-        columnsamplesHrefs.append([None])
-        columnsamplesRows.append([" Unique Values not listable: "])
-        columnsamplesHrefs.append([None])
-        
-    columnsamples_table = None
-
-    columnsamples_table = tblw.dcTable("Column Samples",
-                                       "datetimecolnamesTable",DataTransform_ID,
-                                       columnsamplesHeader,columnsamplesRows,
-                                       columnsamplesWidths,columnsamplesAligns)
-    
-    columnsamples_table.set_refList(columnsamplesHrefs)
-
-    columnsamples_table.set_small(True)
-    columnsamples_table.set_smallwidth(98)
-    columnsamples_table.set_smallmargin(10)
-
-    columnsamples_table.set_border(True)
-        
-    columnsamples_table.set_checkLength(True)
-            
-    columnsamples_table.set_textLength(30)
-    columnsamples_table.set_html_only(True) 
-    
-    columnsamples_table.set_tabletype(tblw.ROW_MAJOR)
-    columnsamples_table.set_rowspertable(14)
-
-    tablehtml = tblw.get_row_major_table(columnsamples_table,tblw.SCROLL_DOWN,False)
-
-
-    
-    startinner = tablehtml.find('<div class="row">')
-    endinner    =   len(tablehtml) - 7
-    
-    return(tablehtml[startinner:endinner])
-
 
 def get_column_samples(parms) :
     """
@@ -1865,9 +1527,10 @@ def get_column_samples(parms) :
     """
 
     colname     =   parms
-    print("get_column_samples",parms,colname)
+
+    from dfcleanser.common.display_utils import get_column_samples_html
     cols_html   =   get_column_samples_html(colname) 
-    #print("cols_html",cols_html)
+
     new_cols_html = patch_html(cols_html)
     
     change_table_js = "$('#datetimecolnamesTableContainer').html('"
@@ -1940,18 +1603,83 @@ def open_as_excel(dfid) :
     if(dfid == 0) :
         df          =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
         
-    dfc_temp_path       =   os.path.join(cfg.get_dfcleanser_location(),"files","temp")
-    dfc_temp_path       =   (dfc_temp_path + "\\exceldfs\\")
+        dfc_temp_path       =   os.path.join(cfg.get_dfcleanser_location(),"files","temp")
+        dfc_temp_path       =   (dfc_temp_path + "\\exceldfs\\")
         
-    try :
+        try :
             
-        tmp_name    =   dfc_temp_path + cfg.get_config_value(cfg.CURRENT_INSPECTION_DF) + "_temp.csv"
-        df.to_csv(tmp_name, index=False)
-        os.startfile(tmp_name)    
+            tmp_name    =   dfc_temp_path + cfg.get_config_value(cfg.CURRENT_INSPECTION_DF) + "_temp.csv"
+            
+            index_columns       =   df.index.names
+            
+            if(len(index_columns) == 0) :
+                df.to_csv(tmp_name, index=False)
+            else :
+                df.to_csv(tmp_name)
+            
+            os.startfile(tmp_name)    
     
-    except :
+        except :
             
-        alert_user("Unable to open df in excel")
+            alert_user("Unable to open df in excel")
+            
+    elif(dfid == 1) :
+        
+        try :
+            
+            tmp_name    =   cfg.get_config_value(cfg.BULK_GEOCODE_EXPORTED_CSV_ID)
+            os.startfile(tmp_name)    
+    
+        except :
+            
+            alert_user("Unable to open " + str(tmp_name) + " in excel")
+        
+    elif(dfid == 2) :
+        
+        try :
+            
+            tmp_name    =   cfg.get_config_value(cfg.BULK_GEOCODE_APPENDED_CSV_ID)
+            os.startfile(tmp_name)    
+    
+        except :
+            
+            alert_user("Unable to open df in excel")
+
+    elif(dfid == 3) :
+        
+        try :
+            
+            tmp_name    =   cfg.get_config_value(cfg.BULK_ERRORS_EXPORTED_CSV_ID)
+            os.startfile(tmp_name)    
+    
+        except :
+            
+            alert_user("Unable to open df in excel")
+
+    elif(dfid == 4) :
+        
+        try :
+            
+            import os
+            
+            tmp_csv_name    =   os.path.join(cfg.get_dfcleanser_location(),"files")
+            tmp_csv_name    =   os.path.join(tmp_csv_name,"dfc_subset_working.csv")
+            
+            from dfcleanser.sw_utilities.sw_utility_dfsubset_model import get_current_subset_df
+            df  =   get_current_subset_df()
+            
+            index_columns       =   df.index.names
+            
+            if(len(index_columns) == 0) :
+                df.to_csv(tmp_csv_name, index=False)
+            else :
+                df.to_csv(tmp_csv_name)
+            
+            os.startfile(tmp_csv_name)    
+    
+        except :
+            
+            alert_user("Unable to open df in excel")
 
 
 def change_df_select(visible_df_forms) :
@@ -1967,7 +1695,7 @@ def change_df_select(visible_df_forms) :
     * --------------------------------------------------------
     """
 
-    print("change_df_select",visible_df_forms) 
+    #print("change_df_select",visible_df_forms) 
     
     import dfcleanser.common.cfg as cfg
     
@@ -2181,6 +1909,284 @@ def change_add_col_df_source_col(parms)  :
     run_jscript(reset_source_index_list_js,"fail to change col stats html : ")
 
 
+def change_current_row_value(column)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the column value 
+    * 
+    * Parms :
+    *  parms - optionid
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    from dfcleanser.common import cfg as cfg
+    df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)    
+    row_id      =   cfg.get_config_value(cfg.CLEANSING_ROW_KEY)
+    
+    
+    index_columns   =   df.index.names
+    
+    index_names     =   []
+    index_offset    =   0
+                    
+    if(len(index_columns) > 0) :
+        for i in range(len(index_columns)) :
+            if( not (index_columns[i] is None) ) :
+                index_names.append(index_columns[i])
+            else :
+                index_offset    =   1
+
+    col_index   =   None
+    
+    if(len(index_names) > 0)  :
+        for i in range(len(index_names)) :
+            if(index_names[i] == column) :
+                col_index   =   (i + 1) * -1
+                break
+            
+    if(col_index is None) :
+        df_columns  =   list(df.columns)
+        for i in range(len(df_columns)) :
+            if(df_columns[i] == column) :
+                col_index   =   i 
+                break
+                
+    if(not (col_index is None)) :
+        
+        cfg.set_config_value(cfg.CLEANSING_COL_KEY,col_index)
+        
+        if(col_index < 0) :
+            
+            col_index       =   (col_index + 1) * -1
+            index_array     =   df.index.values
+            current_value   =   index_array[row_id][col_index + index_offset]
+            
+        else :
+        
+            current_value   =   df.iloc[row_id,col_index]
+        
+        set_current_value_js  =   "$('#changercval').val('" + str(current_value) + "');"
+        run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+
+def change_selected_dfc_census_col(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the dfc census column selected 
+    * 
+    * Parms :
+    *  parms - attributes
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    colname     =   parms[0]
+    colid       =   parms[1]
+    #dtype       =   parms[2]
+    #nanvalue    =   parms[3]
+        
+    if(1) :
+        print("change_selected_dfc_census_col : ",colname,colid)
+        
+    from dfcleanser.sw_utilities.sw_utility_census_model import current_dataset_inserting_from
+    #datasetid               =   current_dataset_inserting_from.get_datasetid()
+    
+    from dfcleanser.common.cfg import get_config_value,  CENSUS_SELECTED_SUBSET_ID   
+    subdataid               =   get_config_value(CENSUS_SELECTED_SUBSET_ID)
+    if(subdataid is None) :
+        subdataid   =   0
+            
+    subdata_col_attributes  =   current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+    cols_list               =   subdata_col_attributes.get_columns_list() 
+    
+    for i in range(len(cols_list)) :
+        if(cols_list[i] == int(colid)) :
+            col_index   =   i
+
+    col_dtype       =   current_dataset_inserting_from.get_col_dtype(col_index,subdataid)
+    
+    if(col_dtype is None) :
+        
+        from dfcleanser.sw_utilities.sw_utility_census_model import current_dataset_inserting_from
+        datasetid   =   current_dataset_inserting_from.get_datasetid()
+        
+        from dfcleanser.sw_utilities.sw_utility_census_widgets import get_census_dfs_for_dataset
+        from dfcleanser.sw_utilities.sw_utility_census_model import get_dfs_for_dataset
+        dataset_dfs =   get_census_dfs_for_dataset(datasetid)
+        df_ds       =   get_dfs_for_dataset(current_dataset_inserting_from.get_datasetid())
+        
+        ds_df_offset    =   0
+        
+        for i in range(len(dataset_dfs)) : 
+            for j in range(len(df_ds)) :
+                if(dataset_dfs[i] == df_ds[j]) :
+                    ds_df_offset    =   i
+        
+        if(len(dataset_dfs) > 0) :
+            
+            from dfcleanser.common.cfg import get_dfc_dataframe_df
+            
+            df          =   get_dfc_dataframe_df(dataset_dfs[ds_df_offset])
+            dfdtypes    =   df.dtypes.tolist()
+            col_dtype   =   str(dfdtypes[int(colid)])
+            
+        else :    
+            col_dtype   =   str("TBD")
+
+    if(is_numeric_col(df,colname)) :        
+        minval      =   str(df[colname].min())    
+        maxval      =   str(df[colname].max())
+    else :
+        minval      =   "NA"    
+        maxval      =   "NA"
+
+    nanvalue    =   current_dataset_inserting_from.get_col_nanvalue(col_index,subdataid)
+    if(nanvalue is None) :
+        nanvalue = "nan"
+        
+    set_current_value_js  =   "$('#coltoinsertminval').val('" + minval + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+    
+    set_current_value_js  =   "$('#coltoinsertmaxval').val('" + maxval + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+    set_current_value_js  =   "$('#coltoinsertdtype').val('" + str(col_dtype) + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+    set_current_value_js  =   "$('#newcoldtype').val('" + "uint8" + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+    set_current_value_js  =   "$('#currentcolnanval').val('" + str(nanvalue) + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+    
+    set_current_value_js  =   "$('#newcolnanval').val('" + "" + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+     
+    #set_current_value_js  =   "$('#colstoinsert option:selected.text('" + str(colname) + "');"
+    set_current_value_js  =   "$('#colstoinsert option[value=" + '"' + colname + '"]' + "').attr('selected', true);"
+    print(set_current_value_js)
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+
+def change_dfc_census_col_attrs(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the dfc census column attributes 
+    * 
+    * Parms :
+    *  parms - attributes
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    colname     =   parms[0]
+    colid       =   int(parms[1])
+    dtype       =   parms[2]
+    nanvalue    =   parms[3]
+        
+    if(1) :
+        print("change_dfc_census_col_attrs : ",colname,colid,dtype,nanvalue)
+        
+    from dfcleanser.sw_utilities.sw_utility_census_model import current_dataset_inserting_from
+    #datasetid               =   current_dataset_inserting_from.get_datasetid()
+    
+    subdataid               =   current_dataset_inserting_from.get_subdatasetid()
+    
+    if(subdataid is None) :
+        subdataid   =   0
+            
+    subdata_col_attributes  =   current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+    cols_list               =   subdata_col_attributes.get_columns_list() 
+    
+    print("subdataid",subdataid)
+    print("cols_list",cols_list)  
+    
+    #for i in range(len(cols_list)) :
+    #    if(cols_list[i] == int(colid)) :
+    #        col_index   =   i
+    #        break
+
+
+    current_dataset_inserting_from.set_col_dtype(colid, dtype, subdataid)
+    current_dataset_inserting_from.set_col_nanvalue(colid, nanvalue, subdataid)
+    
+    current_dataset_inserting_from.dump()    
+
+    set_current_value_js  =   "$('#coltoinsertdtype').val('" + str(dtype) + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+    set_current_value_js  =   "$('#currentcolnanval').val('" + str(nanvalue) + "');"
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+    
+    #set_current_value_js  =   "$('#colstoinsert option:selected.text('" + str(colname) + "');"
+    set_current_value_js  =   "$('#colstoinsert option[value=" + '"' + colname + '"]' + "').attr('selected', true);"
+    print(set_current_value_js)
+    run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+
+def change_census_df_to_insert_from(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the census df text  
+    * 
+    * Parms :
+    *  parms - attributes
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    print("change_census_df_to_insert_from",parms)
+    
+    
+    df_list         =   parms[0]
+    df_selected     =   parms[1]
+    #df_keys         =   parms[2]
+    
+    new_df_keys     =   []
+
+    from dfcleanser.sw_utilities.sw_utility_census_model import get_index_keys_for_census_df
+    selected_df_keys    =   get_index_keys_for_census_df(df_selected)
+    
+    if(not (df_selected == " ")) :
+    
+        df_list     =   df_selected
+        new_df_keys =   selected_df_keys        
+            
+        set_current_value_js  =   "$('#censusdfstoload').val('" + str(df_list) + "');"
+        run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+        set_current_value_js  =   "$('#userdfsindexkeys').val('" + str(new_df_keys) + "');"
+        run_jscript(set_current_value_js,"fail to change col stats html : ")
+
+
+def change_user_df_to_insert_into(parms)  :
+    """
+    * ---------------------------------------------------------
+    * function : change the user df text 
+    * 
+    * Parms :
+    *  parms - attributes
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    user_df_title   =   parms[0]
+    user_df         =   cfg.get_dfc_dataframe_df(user_df_title)
+
+    print("change_user_df_to_insert_into",parms)
+  
+  
 def dfc_document_loaded(idtag) :
     
     from dfcleanser.system.system_model import set_document_loaded
@@ -2529,20 +2535,20 @@ def display_msgs(notes,text,color=False,margin=30,helpmsg=False,display=True) :
         notes_html = (notes_html + '        <div class="panel panel-primary" style="border:0px;  ">' + new_line)
     
     if(not (text == None)) :   
-        notes_html = (notes_html + '            <div class="panel-heading dc-table-panel-heading" style="height:40px;">' + new_line)
+        notes_html = (notes_html + '            <div class="panel-heading dc-note-panel-heading" style="height:40px;">' + new_line)
         notes_html = (notes_html + '                <div class="input-group">' + new_line)
-        notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px; padding-bottom:5px;">' + text +'</p>' + new_line)
+        notes_html = (notes_html + '                    <p class="dc-table-title" style="margin-bottom:5px; padding-bottom:5px; ">' + text +'</p>' + new_line)
         notes_html = (notes_html + '                </div>' + new_line) 
         notes_html = (notes_html + '            </div>' + new_line)
     
     
     notes_html = (notes_html + "        <div class='note-line'>" + new_line)
-    notes_html = (notes_html + "            <p><span class='note-line'></span></p>" + new_line)
+    notes_html = (notes_html + "            <p><span class='note-line' style='word-wrap:break-word;'></span></p>" + new_line)
     notes_html = (notes_html + "        </div>" + new_line)
 
     for i in range(len(notes)) :
         notes_html = (notes_html + "        <div class='note-line'>" + new_line)
-        notes_html = (notes_html + "            <p><span class='note-line'>" + notes[i] + "</span></p>" + new_line)
+        notes_html = (notes_html + "            <p><span class='note-line' style='word-wrap:break-word;'>" + notes[i] + "</span></p>" + new_line)
         notes_html = (notes_html + "        </div>" + new_line)
     
     notes_html = (notes_html + '        </div>' + new_line) 
@@ -2596,6 +2602,15 @@ def display_notes(notes,display=True) :
 
 
 def display_status_note(msg,full=True) :
+    """
+    #------------------------------------------------------------------
+    #   display statys msg
+    #
+    #   notes    -   msg
+    #   full     -   full width
+    #
+    #------------------------------------------------------------------
+    """      
     
     notes_html   =   "<br><div style='text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
 
@@ -2768,17 +2783,17 @@ common_wrappers     =   ["data-import-stats-wrapper","data-import-wrapper","df-i
 """
 <div class='dfcleanser-common-grid-header'>
 
-  <div style="margin-top:10px;"  id="systemoptions">
+  <div style="margin-top: 10px"  id="systemoptions">
     <div class="container dc-container dc-default-input-button-container btn-grp-center">
-      <div class="btn-group btn-center"   style=" width: 100%; ">
-        <button type="button" class="btn btn-primary" style = ' margin-left: 2%;  height: 50px;  width: 12%; ' onclick="process_system_tb_callback(1)">Utilities</br>Manager</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(3)">dataframe</br>Manager</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(4)">System</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(6)">About</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(12)">EULA</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_system_tb_callback(0)">Clear</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="process_pop_up_cmd(6)">Reset</button>
-        <button type="button" class="btn btn-primary" style = ' height: 50px;  width: 12%; ' onclick="displayhelp(101)">Help</button>
+      <div class="btn-group btn-center"   style="width: 100%">
+        <button type="button" class="btn btn-primary" style = 'margin-left: 2% ;  height: 50px ;  width: 12% ' onclick="process_system_tb_callback(1)">Utilities</br>Manager</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_system_tb_callback(3)">dataframe</br>Manager</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_system_tb_callback(4)">System</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_system_tb_callback(6)">About</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_system_tb_callback(12)">EULA</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_system_tb_callback(0)">Clear</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="process_pop_up_cmd(6)">Reset</button>
+        <button type="button" class="btn btn-primary" style = 'height: 50px ;  width: 12% ' onclick="displayhelp(101)">Help</button>
       </div>
     </div>
   </div>
@@ -3007,8 +3022,8 @@ def remove_files_from_dir(path,opstat) :
         except Exception as e:
             opstat.store_exception("remove filename " + path + " " + file_name,e)
     
-    from dfcleanser.common.cfg import get_notebook_path
-    os.chdir(get_notebook_path())
+    from dfcleanser.common.cfg import get_notebookPath
+    os.chdir(get_notebookPath())
 
 def delete_a_file(path,opstat) :
 
@@ -3093,15 +3108,19 @@ def does_dir_exist(path) :
             return(True)
         else :
             return(False)
+    else :
+        return(False)
     
 def make_dir(path) :
     
     try :
         os.mkdir(path)
-        return()
+        return(True)
     
     except FileExistsError:
-        return()
+        return(True)
+    except :
+        return(False)
         
 """
 #------------------------------------------------------------------
@@ -3143,107 +3162,310 @@ def handle_confirm(parms) :
             alert_user("Reset the Kernel and after completion Reset the dfcleanser notebook.")
     
     
+
+
 """
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-#   generic error logger
-#------------------------------------------------------------------
-#------------------------------------------------------------------
-"""     
+#--------------------------------------------------------------------------
+#   static dfcleanser debug log
+#--------------------------------------------------------------------------
+"""
 
-class DataframeCleanserErrorLogger :
-    
-    # instance variables
-    
-    # error log
-    error_log               =   {}
-    
-    # full constructor
-    def __init__(self) :
- 
-        self.init_errorlog_file()        
-    
-    def init_errorlog_file(self) :
-        
-        if( (self.notebookName == "") or (self.notebookPath == "") ) :
-            self.cfgfilename = ""
-            return()
-        
-        if(self.cfgfilename == "")  :
-            # check if notebook specific dir exists
-            cfgdir = os.path.join(self.notebookPath,self.notebookName+"_files")
-            if(not (does_dir_exist(cfgdir))) :
-                make_dir(cfgdir)
-                
-            self.cfgfilename = os.path.join(cfgdir,self.notebookName+"_config.json")
-            if(not (does_file_exist(self.cfgfilename))) :
 
-                with open(self.cfgfilename, 'w') as cfg_file :
-                    json.dump(self.cfg_data,cfg_file)
-                    cfg_file.close()
-        else :
-            return()
-            
-        
-    def get_cfg_file_name(self) :
-        
-        if(self.cfgfilename == "") :
-            self.init_cfg_file()
-            return(self.cfgfilename)
-        else :
-            return(self.cfgfilename)    
-            
-    def load_cfg_file(self) :
-        
-        cfg_fname   =   self.get_cfg_file_name()
-        
-        if(cfg_fname == "") :
-            return()
-        
-        try :
-            if(len(self.cfgfilename) > 0) :
-                with open(cfg_fname, 'r') as cfg_file :
-                    self.cfg_data = json.load(cfg_file)
-                    cfg_file.close()
-                    
-            self.cfg_file_loaded    =   True
-                    
-        except json.JSONDecodeError :
-            
-            from dfcleanser.common.common_utils import confirm_user,CORRUPTED_CFG_FILE_ID 
-            confirm_user("Config File Corrupted : Use blank default file",CORRUPTED_CFG_FILE_ID)
-
-            self.cfg_data   =   {}
-            os.rename(self.cfgfilename,self.cfgfilename+"_corrupted")
-                        
-        except :
-            if(len(self.get_notebookname()) > 0) :
-                
-                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID 
-                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
-
-                print("[load_config_file Error] " + "[" + cfg_fname + "] " + str(sys.exc_info()[0].__name__))
-                
+def log_debug_dfc(rowid,text) :
+    dfc_debug_log.append([rowid,text])  
+    
+def clear_dfc_debug_log() :
+    if(len(dfc_debug_log) > 0) :
+        for i in range(len(dfc_debug_log)) :
+            dfc_debug_log.pop()    
+    
+def dump_dfc_debug_log(index=None,text=None) :
+    for i in range(len(dfc_debug_log)) :
+        if(index == None) :
+            if(text == None) :
+                print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])
             else :
-                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID
-                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
+                if(dfc_debug_log[i][1].find(text) > -1) :
+                    print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
+                
+        else :
+            if(dfc_debug_log[i][0] == index) :
+                if(text == None) :
+                    print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])
+                else :
+                    if(dfc_debug_log[i][1].find(text) > -1) :
+                        print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
+            else :
+                if(not (text == None) ) :
+                    if(dfc_debug_log[i][1].find(text) > -1) :
+                        print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
+                
+    
+    
+dfc_debug_log  =   []
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfc image functionality
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+dfc_image_files     =   ["pandas.png","dataCleansing.png","dataImport.png","dataInspection.png","dataCleansing1.jpg","dataTransform.jpg","dataTransform.jpg","dataExport.png",
+                         "Script.png","SWUtilities.png","ListBuild.png","dataframeSubset.png","GetLongLat.png","census.png","systemEnvironment.png","Restricted.jpg",
+                         "leftarrow.png","rightarrow.png","uparrow.png","downarrow.png",
+                         "Starting_State.png","Running_State.png","Stopped_State.png","Finished_State.png","Paused_State.png","Stopping_State.png",
+                         "Pausing_State.png","Error_Limit_Exceeded_State.png","Checkpoint_Started_State.png","Checkpoint_Completed_State.png"]
+
+
+def get_local_image_path(imagename) :
+    
+    #print("./PandasDataframeCleanser_files/graphics/" + imagename)
+    return("./PandasDataframeCleanser_files/graphics/" + imagename)
+    
+
+
+"""
+#--------------------------------------------------------------------------
+#   dfc section titles
+#--------------------------------------------------------------------------
+"""
+
+PANDAS_TITLE_IMAGE                  =   100
+PANDAS_TITLE1_IMAGE                 =   101
+IMPORT_TITLE_IMAGE                  =   102
+INSPECT_TITLE_IMAGE                 =   103
+CLEANSING_TITLE_IMAGE               =   104
+TRANSFORM_TITLE_IMAGE               =   105
+EXPORT_TITLE_IMAGE                  =   106
+SCRIPTING_TITLE_IMAGE               =   107
+SW_UTILS_TITLE_IMAGE                =   108
+SW_UTILS_DS_TITLE_IMAGE             =   109
+SW_UTILS_SUB_TITLE_IMAGE            =   110
+SW_UTILS_GEOCODE_TITLE_IMAGE        =   111
+SW_UTILS_ZIPCODE_TITLE_IMAGE        =   112
+SW_UTILS_CENSUS_TITLE_IMAGE         =   113
+SYSTEM_TITLE_IMAGE                  =   114
+WORKING_TITLE_IMAGE                 =   115
+
+
+PANDAS_TITLE_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png"
+PANDAS_TITLE1_SRC_URL               =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing.png"
+IMPORT_TITLE_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataImport.png"
+INSPECT_TITLE_SRC_URL               =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataInspection.png"
+CLEANSING_TITLE_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataCleansing1.jpg" 
+TRANSFORM_TITLE_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataTransform.jpg"
+EXPORT_TITLE_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataExport.png"
+SCRIPTING_TITLE_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/Script.png"
+SW_UTILS_TITLE_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/SWUtilities.png"
+SW_UTILS_DS_TITLE_SRC_URL           =   "https://rickkrasinski.github.io/dfcleanser/graphics/ListBuild.png"
+SW_UTILS_SUB_TITLE_SRC_URL          =   "https://rickkrasinski.github.io/dfcleanser/graphics/dataframeSubset.png"
+SW_UTILS_GEOCODE_TITLE_SRC_URL      =   "https://rickkrasinski.github.io/dfcleanser/graphics/GetLongLat.png"
+SW_UTILS_ZIPCODE_TITLE_SRC_URL      =   "https://rickkrasinski.github.io/dfcleanser/graphics/zipcode.png"
+SW_UTILS_CENSUS_TITLE_SRC_URL       =   "https://rickkrasinski.github.io/dfcleanser/graphics/census.png"
+SYSTEM_TITLE_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/systemEnvironment.png"
+WORKING_TITLE_SRC_URL               =   "https://rickkrasinski.github.io/dfcleanser/graphics/Restricted.jpg"
+
+"""
+#--------------------------------------------------------------------------
+#   scrolling images
+#--------------------------------------------------------------------------
+"""
+
+LEFT_ARROW_IMAGE            =   200
+RIGHT_ARROW_IMAGE           =   201
+UP_ARROW_IMAGE              =   202
+DOWN_ARROW_IMAGE            =   203
+
+
+LEFT_ARROW_SRC_URL          =   "https://rickkrasinski.github.io/dfcleanser/graphics/leftarrow.png"
+RIGHT_ARROW_SRC_URL         =   "https://rickkrasinski.github.io/dfcleanser/graphics/rightarrow.png"
+UP_ARROW_SRC_URL            =   "https://rickkrasinski.github.io/dfcleanser/graphics/uparrow.png"
+DOWN_ARROW_SRC_URL          =   "https://rickkrasinski.github.io/dfcleanser/graphics/downarrow.png"
+
+
+"""
+#--------------------------------------------------------------------------
+#   CLOCK images
+#--------------------------------------------------------------------------
+"""
+
+HOUR_1_IMAGE                =   300
+HOUR_2_IMAGE                =   301
+HOUR_3_IMAGE                =   302
+HOUR_4_IMAGE                =   303
+HOUR_5_IMAGE                =   304
+HOUR_6_IMAGE                =   305
+HOUR_7_IMAGE                =   306
+HOUR_8_IMAGE                =   307
+HOUR_9_IMAGE                =   308
+HOUR_10_IMAGE               =   309
+HOUR_11_IMAGE               =   310
+HOUR_12_IMAGE               =   311
+
+
+HOUR_1_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour1.png"
+HOUR_2_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour2.png"
+HOUR_3_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour3.png"
+HOUR_4_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour4.png"
+HOUR_5_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour5.png"
+HOUR_6_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour6.png"
+HOUR_7_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour7.png"
+HOUR_8_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour8.png"
+HOUR_9_SRC_URL              =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour9.png"
+HOUR_10_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour10.png"
+HOUR_11_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour11.png"
+HOUR_12_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/hour12.png"
+
+
+"""
+#--------------------------------------------------------------------------
+#   geocoding images
+#--------------------------------------------------------------------------
+"""
+
+GEOCODE_STARTING_IMAGE                 =   1000
+GEOCODE_RUNNING_IMAGE                  =   1001
+GEOCODE_STOPPED_IMAGE                  =   1002
+GEOCODE_FINISHED_IMAGE                 =   1003
+GEOCODE_PAUSED_IMAGE                   =   1004
+GEOCODE_STOPPING_IMAGE                 =   1005
+GEOCODE_PAUSING_IMAGE                  =   1006
+GEOCODE_ERROR_LIMIT_IMAGE              =   1007
+GEOCODE_CHECKPOINT_STARTED_IMAGE       =   1008
+GEOCODE_CHECKPOINT_COMPLETE_IMAGE      =   1009
+
+GEOCODE_STARTING_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/Starting_State.png"
+GEOCODE_RUNNING_SRC_URL                 =   "https://rickkrasinski.github.io/dfcleanser/graphics/Running_State.png"
+GEOCODE_STOPPED_SRC_URL                 =   "https://rickkrasinski.github.io/dfcleanser/graphics/Stopped_State.png"
+GEOCODE_FINISHED_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/Finished_State.png"
+GEOCODE_PAUSED_SRC_URL                  =   "https://rickkrasinski.github.io/dfcleanser/graphics/Paused_State.png"
+GEOCODE_STOPPING_SRC_URL                =   "https://rickkrasinski.github.io/dfcleanser/graphics/Stopping_State.png"
+GEOCODE_PAUSING_SRC_URL                 =   "https://rickkrasinski.github.io/dfcleanser/graphics/Pausing_State.png"
+GEOCODE_ERROR_LIMIT_SRC_URL             =   "https://rickkrasinski.github.io/dfcleanser/graphics/Error_Limit_Exceeded_State.png"
+GEOCODE_CHECKPOINT_STARTED_SRC_URL      =   "https://rickkrasinski.github.io/dfcleanser/graphics/Checkpoint_Started_State.png"
+GEOCODE_CHECKPOINT_COMPLETE_SRC_URL     =   "https://rickkrasinski.github.io/dfcleanser/graphics/Checkpoint_Completed_State.png"
+
+
+def copy_dfc_images_to_local() :
+    
+    import os
+    #from shutil import copyfile
+    
+    from dfcleanser.common.cfg import get_notebookPath, get_notebookName
         
-    
-    def save_cfg_file(self) :
+    notebook_path       =   get_notebookPath()
+    notebook_name       =   get_notebookName()
         
-        if(not(self.cfg_file_loaded)) :
-            self.load_cfg_file()
+    local_images_path   =   os.path.join(notebook_path + notebook_name + "_files","graphics")
+        
+    if(not (does_dir_exist(local_images_path))) : 
+        make_dir(local_images_path)
     
-        try :
-            if(len(self.cfgfilename) > 0) :
-                with open(self.get_cfg_file_name(), 'w') as cfg_file :
-                    json.dump(self.cfg_data,cfg_file)
-                    cfg_file.close()
-        except :
-            if(len(self.get_notebookname()) > 0) :
-                print("[save_config_file Error] " + "[" + self.get_cfg_file_name() + "] " + str(sys.exc_info()[0].__name__))
+    from sys import platform
     
+    if (platform == "win32") :
+        os.system('copy 1.txt.py 2.txt.py')
+    else :
+        os.system('cp 1.txt.py 2.txt.py')
     
+    from dfcleanser.common.cfg import get_dfcleanser_location
+        
+    dfcleanser_path     =   get_dfcleanser_location()
     
+    for i in range(len(dfc_image_files)) :
+
+        dfc_file        =   os.path.join(dfcleanser_path,dfc_image_files[i])
+        local_file      =   os.path.join(local_images_path,dfc_image_files[i])
+        
+        if (platform == "win32") :
+            os.system('copy ' + dfc_file + " " + local_file)
+        else :
+            os.system('cp '  + dfc_file + " " + local_file)
+
+def is_web_connected() :
     
+    import urllib.request
     
+    host='https://rickkrasinski.github.io/dfcleanser/graphics/pandas.png'
+    
+    try:
+        urllib.request.urlopen(host) #Python 3.x
+        return True
+    except:
+        #print("web not connected")
+        return False
+
+
+def get_image_url(imageid) :
+    
+    url     =   ""
+    
+    if(imageid == PANDAS_TITLE_IMAGE)                   : url     =   PANDAS_TITLE_SRC_URL
+    if(imageid == PANDAS_TITLE1_IMAGE)                  : url     =   PANDAS_TITLE1_SRC_URL
+    elif(imageid == IMPORT_TITLE_IMAGE)                 : url     =   IMPORT_TITLE_SRC_URL
+    elif(imageid == INSPECT_TITLE_IMAGE)                : url     =   INSPECT_TITLE_SRC_URL
+    elif(imageid == CLEANSING_TITLE_IMAGE)              : url     =   CLEANSING_TITLE_SRC_URL
+    elif(imageid == TRANSFORM_TITLE_IMAGE)              : url     =   TRANSFORM_TITLE_SRC_URL
+    elif(imageid == EXPORT_TITLE_IMAGE)                 : url     =   EXPORT_TITLE_SRC_URL
+    elif(imageid == SCRIPTING_TITLE_IMAGE)              : url     =   SCRIPTING_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_TITLE_IMAGE)               : url     =   SW_UTILS_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_DS_TITLE_IMAGE)            : url     =   SW_UTILS_DS_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_SUB_TITLE_IMAGE)           : url     =   SW_UTILS_SUB_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_GEOCODE_TITLE_IMAGE)       : url     =   SW_UTILS_GEOCODE_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_ZIPCODE_TITLE_IMAGE)       : url     =   SW_UTILS_ZIPCODE_TITLE_SRC_URL
+    elif(imageid == SW_UTILS_CENSUS_TITLE_IMAGE)        : url     =   SW_UTILS_CENSUS_TITLE_SRC_URL
+    elif(imageid == SYSTEM_TITLE_IMAGE)                 : url     =   SYSTEM_TITLE_SRC_URL
+    elif(imageid == WORKING_TITLE_IMAGE)                : url     =   WORKING_TITLE_SRC_URL
+    elif(imageid == LEFT_ARROW_IMAGE)                   : url     =   LEFT_ARROW_SRC_URL
+    elif(imageid == RIGHT_ARROW_IMAGE)                  : url     =   RIGHT_ARROW_SRC_URL
+    elif(imageid == UP_ARROW_IMAGE)                     : url     =   UP_ARROW_SRC_URL
+    elif(imageid == DOWN_ARROW_IMAGE)                   : url     =   DOWN_ARROW_SRC_URL
+    elif(imageid == GEOCODE_STARTING_IMAGE)             : url     =   GEOCODE_STARTING_SRC_URL
+    elif(imageid == GEOCODE_RUNNING_IMAGE)              : url     =   GEOCODE_RUNNING_SRC_URL
+    elif(imageid == GEOCODE_STOPPED_IMAGE)              : url     =   GEOCODE_STOPPED_SRC_URL
+    elif(imageid == GEOCODE_FINISHED_IMAGE)             : url     =   GEOCODE_FINISHED_SRC_URL
+    elif(imageid == GEOCODE_PAUSED_IMAGE)               : url     =   GEOCODE_PAUSED_SRC_URL
+    elif(imageid == GEOCODE_STOPPING_IMAGE)             : url     =   GEOCODE_STOPPING_SRC_URL
+    elif(imageid == GEOCODE_PAUSING_IMAGE)              : url     =   GEOCODE_PAUSING_SRC_URL
+    elif(imageid == GEOCODE_ERROR_LIMIT_IMAGE)          : url     =   GEOCODE_ERROR_LIMIT_SRC_URL
+    elif(imageid == GEOCODE_CHECKPOINT_STARTED_IMAGE)   : url     =   GEOCODE_CHECKPOINT_STARTED_SRC_URL
+    elif(imageid == GEOCODE_CHECKPOINT_COMPLETE_IMAGE)  : url     =   GEOCODE_CHECKPOINT_COMPLETE_SRC_URL
+    elif(imageid == HOUR_1_IMAGE)                       : url     =   HOUR_1_SRC_URL
+    elif(imageid == HOUR_2_IMAGE)                       : url     =   HOUR_2_SRC_URL
+    elif(imageid == HOUR_3_IMAGE)                       : url     =   HOUR_3_SRC_URL
+    elif(imageid == HOUR_4_IMAGE)                       : url     =   HOUR_4_SRC_URL
+    elif(imageid == HOUR_5_IMAGE)                       : url     =   HOUR_5_SRC_URL
+    elif(imageid == HOUR_6_IMAGE)                       : url     =   HOUR_6_SRC_URL
+    elif(imageid == HOUR_7_IMAGE)                       : url     =   HOUR_7_SRC_URL
+    elif(imageid == HOUR_8_IMAGE)                       : url     =   HOUR_8_SRC_URL
+    elif(imageid == HOUR_9_IMAGE)                       : url     =   HOUR_9_SRC_URL
+    elif(imageid == HOUR_10_IMAGE)                      : url     =   HOUR_10_SRC_URL
+    elif(imageid == HOUR_11_IMAGE)                      : url     =   HOUR_11_SRC_URL
+    elif(imageid == HOUR_12_IMAGE)                      : url     =   HOUR_12_SRC_URL
+ 
+    import datetime 
+    tstamp = datetime.datetime.now().time()
+    
+    image   =   url + "?timestamp=" + str(tstamp)
+    
+    return(image)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -14,6 +14,8 @@ this = sys.modules[__name__]
 import json 
 import os
 
+
+
 """
 #--------------------------------------------------------------------------
 #   local helper functions
@@ -58,11 +60,6 @@ def does_file_exist(path) :
 #   dfcleanser common notebook file and path functions
 #--------------------------------------------------------------------------
 """
-def get_notebook_name() :
-    return(DataframeCleanserCfgData.get_notebookname())
-       
-def get_notebook_path() :
-    return(DataframeCleanserCfgData.get_notebookpath())
     
 def get_common_files_path() :
     common_files_path = os.path.join(get_dfcleanser_location(),"files")
@@ -91,19 +88,19 @@ def get_dfcleanser_location()  :
 #--------------------------------------------------------------------------
 """
 def sync_with_js(parms) :
-    DataframeCleanserCfgData.sync_js(parms)    
+    DataframeCleansercfg.sync_js(parms)    
 
 def get_notebookname() :
     try :
         run_javascript("window.getNotebookName();","Unable to get notebook name")
     except :
-        print("get_get_notebookname error")
+        print("getNotebookName error")
         
 def get_notebookpath() :
     try :
         run_javascript("window.getNotebookPath();","Unable to get notebook path")
     except :
-        print("get_notebook_path error")
+        print("getNotebookPath error")
     
 
 
@@ -111,7 +108,7 @@ def get_notebookpath() :
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   dfcleanser chapter onjects
+#   dfcleanser dataframe objects
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
@@ -131,6 +128,7 @@ DataTransform_ID        =   "DataTransform"
 SWUtilities_ID          =   "SWUtilities"
 SWDFSubsetUtility_ID    =   "SWDFSubsetUtility"
 SWGeocodeUtility_ID     =   "SWGeocodeUtility"
+SWZipcodeUtility_ID     =   "SWZipcodeUtility"
 SWCensusUtility_ID      =   "SWCensusUtility"
 System_ID               =   "System"
 
@@ -189,8 +187,6 @@ def update_chapter_df_select(chapterselect) :
     *  N/A 
     * --------------------------------------------------------
     """
-    
-    print("update_chapter_df_select",chapterselect)
     
     if(chapterselect == "didfdataframe") :
         select_df_form  =   get_select_df_form(DataInspection_ID) 
@@ -302,7 +298,7 @@ def get_select_df_form(chapterid) :
     if(not (df_list is None)) :
         dataframes      =   df_list
     else :
-        dataframes      =   {'default': "", 'list': [""]}
+        dataframes      =   {'default': "no dfs defined", 'list': ["no dfs defined"], "callback" : "select_chapter_df"}
 
     selectDicts     =   []
     selectDicts.append(dataframes)
@@ -339,8 +335,6 @@ def display_data_select_df(chapterid) :
     select_df_form              =   get_select_df_form(chapterid)
     select_df_form_html         =   select_df_form.get_html()
     
-    #print(select_df_form_html)
-    
     gridclasses     =   ["dfc-footer"]
     gridhtmls       =   [select_df_form_html]
     
@@ -349,8 +343,6 @@ def display_data_select_df(chapterid) :
         display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
     else :
         display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
-        
-    
 
 
 def display_no_dfs(chapterid) :
@@ -423,11 +415,6 @@ def is_a_dfc_dataframe_loaded() :
     """
     return(dfc_dfs.is_a_dfc_dataframe_loaded()) 
 
-"""
-#--------------------------------------------------------------------------
-#   dfcleanser dataframe attributes
-#--------------------------------------------------------------------------
-"""  
 def get_dataframe(title) :
     """
     * ---------------------------------------------------------------------
@@ -438,8 +425,6 @@ def get_dataframe(title) :
     * --------------------------------------------------------------------
     """
     return(dfc_dfs.get_dataframe(title))
-    
-    
  
 def get_dfc_dataframe(title) :
     """
@@ -476,7 +461,11 @@ def set_dfc_dataframe_df(title,df) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    dfc_dfs.get_dfc_dataframe(title).set_df(df) 
+    
+    dfc_df  =  dfc_dfs.get_dfc_dataframe(title)
+    if(not(dfc_df) is None) :
+        dfc_df.set_df(df)
+    
 
 def get_dfc_dataframe_notes(title) :
     """
@@ -513,12 +502,15 @@ def append_dfc_dataframe_notes(title,notes) :
     dfc_notes   =   dfc_notes + "\n--------\n" + notes
     dfc_dfs.set_dataframe_notes(title,notes)
 
-
 """
 * --------------------------------------
 * dfcleanser dataframe object methods
 * --------------------------------------
-"""    
+"""  
+
+def get_total_dfc_dataframes() :
+    return(dfc_dfs.get_df_count())
+
      
 def rename_dfc_dataframe(oldtitle,newtitle) :
     """
@@ -530,6 +522,7 @@ def rename_dfc_dataframe(oldtitle,newtitle) :
     * --------------------------------------------------------------------
     """
     dfc_dfs.rename_dataframe(oldtitle,newtitle)
+
      
 def drop_dfc_dataframe(title) :
     """
@@ -542,9 +535,29 @@ def drop_dfc_dataframe(title) :
     """
     dfc_dfs.drop_dataframe(title)
     
-    change_select_js = "change_dataframes_to_select();"
-    run_javascript(change_select_js,"fail update select : ")
+    df_selects_list     =   ["didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dgdfdataframe","dsdfdataframe"]
+    df_selects_cfgs_id  =   [CURRENT_INSPECTION_DF,CURRENT_CLEANSE_DF,CURRENT_TRANSFORM_DF,CURRENT_EXPORT_DF,CURRENT_GEOCODE_DF,CURRENT_SUBSET_DF]  
+    
+    for i in range(len(df_selects_list)) : 
+        
+        drop_js     =   '$("#' + df_selects_list[i] + ' option[value=' + "'" + title + "'" + ']").remove();'
+        run_javascript(drop_js,"fail update select : ") 
+        
+        current_df  =   get_config_value(df_selects_cfgs_id[i])
+        
+        if(current_df == title) :
+            
+            drop_config_value(df_selects_cfgs_id[i])    
 
+            if(get_total_dfc_dataframes() > 0) :
+        
+                df_titles   =   get_dfc_dataframes_titles_list()
+                change_selected_js = "$('#" + df_titles[0] + "').prop('selectedIndex', 1);" 
+                run_javascript(change_selected_js,"fail update select : ")
+                
+                set_config_value(df_selects_cfgs_id[i],df_titles[0])
+                
+    
 
 def add_dfc_dataframe(dfcdf,update=True) :
     """
@@ -559,11 +572,25 @@ def add_dfc_dataframe(dfcdf,update=True) :
     * --------------------------------------------------------------------
     """
     
-    # add the dataframe to dfc 
     dfc_dfs.add_dataframe(dfcdf)
     
-    if(update) :
-        change_select_js = "change_dataframes_to_select();"
+    df_selects_list     =   ["didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dgdfdataframe","dsdfdataframe"]
+    df_selects_cfgs_id  =   [CURRENT_INSPECTION_DF,CURRENT_CLEANSE_DF,CURRENT_TRANSFORM_DF,CURRENT_EXPORT_DF,CURRENT_GEOCODE_DF,CURRENT_SUBSET_DF]  
+    
+    for i in range(len(df_selects_list)) :
+        
+        if(get_total_dfc_dataframes() == 1) :
+        
+            drop_js     =   '$("#' + df_selects_list[i] + ' option[value=' + "'" + 'no dfs defined' + "'" + ']").remove();'
+            run_javascript(drop_js,"fail update select : ") 
+            set_config_value(df_selects_cfgs_id[i],dfcdf.get_title()) 
+
+        if(get_total_dfc_dataframes() == 1) :
+            change_select_js = "$('#" + df_selects_list[i] + "').append('<option style=" + '"' + "text-align:left; font-size:12px;" + '"' + " value=" + '"' + dfcdf.get_title() + '"' + " selected>" + dfcdf.get_title() + "</option>');" 
+        
+        else :
+            change_select_js = "$('#" + df_selects_list[i] + "').append('<option style=" + '"' + "text-align:left; font-size:12px;" + '"' + " value=" + '"' + dfcdf.get_title() + '"' + ">" + dfcdf.get_title() + "</option>');" 
+            
         run_javascript(change_select_js,"fail update select : ")
 
 
@@ -591,7 +618,6 @@ def get_dfc_dataframes_select_list(chapterid) :
     
     df_select           =   {}
     df_select_titles    =   get_dfc_dataframes_titles_list()
-    
 
     if(chapterid == DataInspection_ID)      :   default_df  =   get_config_value(CURRENT_INSPECTION_DF)
     elif(chapterid == DataCleansing_ID)     :   default_df  =   get_config_value(CURRENT_CLEANSE_DF)
@@ -609,9 +635,11 @@ def get_dfc_dataframes_select_list(chapterid) :
             df_select.update({"default": default_df})
             
         df_select.update({"list":df_select_titles})
+        df_select.update({"callback":"select_chapter_df"})
         return(df_select)
     else :
         return(None)
+
 
 
 """
@@ -634,7 +662,7 @@ class dfc_dataframe :
     * --------------------------------------------------------
     """
     
-    dfc_df    =   []
+    dfc_df    =   [None,None,None]
     
     def __init__(self,titleparm,dfparm,notesparm=""):
         self.dfc_df     =   [titleparm,dfparm,notesparm]
@@ -646,8 +674,884 @@ class dfc_dataframe :
     def set_title(self,title)   : self.dfc_df[0] = title       
     def set_df(self,df)         : self.dfc_df[1] = df     
     def set_notes(self,notes)   : self.dfc_df[2] = notes  
+
+
+CURRENT_INSPECTION_DF                   =   "currentinspectiondf"
+CURRENT_CLEANSE_DF                      =   "currentcleansedf"
+CURRENT_TRANSFORM_DF                    =   "currenttransformdf"
+CURRENT_EXPORT_DF                       =   "currentexportdf"
+CURRENT_IMPORT_DF                       =   "currentimportdf"
+CURRENT_GEOCODE_DF                      =   "currentgeocodedf"
+CURRENT_SUBSET_DF                       =   "currentsubsetdf"
+CURRENT_CENSUS_DF                       =   "currentcensusdf"
     
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfcleanser config objects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#   dfc dataframe Chapters current dataframe config value
+#--------------------------------------------------------------------------
+"""
+
+def get_current_chapter_dfc_df_title(chapterId) :
     
+    if(is_a_dfc_dataframe_loaded()) : 
+        
+        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
+        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
+        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
+        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
+        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
+        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
+        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
+        else                                        :   dftitle     =   None
+        
+        if(dftitle is None) :
+            return(None)
+        else :
+            
+            current_df  =   get_config_value(dftitle)
+            return(current_df)
+    
+    else :
+        return(None)
+
+
+def get_current_chapter_df(chapterId) :
+    
+    if(is_a_dfc_dataframe_loaded()) : 
+        
+        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
+        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
+        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
+        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
+        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
+        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
+        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
+        else                                        :   dftitle     =   None
+        
+        if(dftitle is None) :
+            return(None)
+        else :
+        
+            saved_df    =   get_config_value(dftitle)
+            df          =   get_dfc_dataframe_df(saved_df)
+            
+            if(df is None) :
+                drop_config_value(saved_df)
+                return(None)
+            else :
+                return(df)
+    
+    else :
+        return(None)
+
+def set_current_chapter_df(chapterId,df,opstat) :
+    
+    if(is_a_dfc_dataframe_loaded()) : 
+        
+        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
+        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
+        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
+        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
+        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
+        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
+        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
+        else                                        :   dftitle     =   None
+        
+        saved_df    =   get_config_value(dftitle)
+        
+        if(dftitle is None) :
+            opstat.set_status(False)
+            opstat.set_errorMsg("invalid chapter id")
+        
+        else :
+            
+            if(df is None) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("invalid df")
+            
+            else :
+                saved_df    =   get_config_value(dftitle)
+                set_dfc_dataframe_df(saved_df,df)
+            
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   Dataframe Cleanser config data objects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""  
+
+def get_cfg_parm_from_input_list(formid,label,labellist) :
+    """
+    * ---------------------------------------------------------
+    * function : get a parm from cfg parms list
+    * 
+    * parms :
+    *  formid     - form id
+    *  label      - label of parm to get
+    *  labellist  - input form label list
+    *
+    * returns : 
+    *  geocoder engine 
+    * --------------------------------------------------------
+    """
+
+    parmslist   =   get_config_value(formid+"Parms")
+    
+    if(not (parmslist == None)) :
+        
+        for i in range(len(labellist)) :
+            if(label == labellist[i]) :
+                return(parmslist[i])
+                
+    return(None)
+
+     
+"""
+#--------------------------------------------------------------------------
+#   Generic System config value keys
+#--------------------------------------------------------------------------
+"""
+NOTEBOOK_TITLE          =   "NoteBookName"
+NOTEBOOK_PATH           =   "NoteBookPath"
+DFC_CELLS_LOADED        =   "dfCcellsLoaded"
+DFC_CELLS_CBS           =   "dfCcellcbs"
+
+"""
+#--------------------------------------------------------------------------
+#   DBUtils config value keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_DB_ID_KEY           =   "currentDBID"
+CURRENT_DBLIB_ID_KEY        =   "currentDBLIBID"
+
+"""
+#--------------------------------------------------------------------------
+#   Data Inspection config value keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_SCROLL_ROW_KEY      =   "currentdfScrollRow"
+
+"""
+#--------------------------------------------------------------------------
+#   Cleansing config value keys
+#--------------------------------------------------------------------------
+"""
+UNIQUES_FLAG_KEY                        =   "columnUniquesDisplay"
+UNIQUES_RANGE_KEY                       =   "columnUniquesRange"
+
+DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
+
+CLEANSING_COL_KEY                       =   "datacleansingcolumn"
+CLEANSING_ROW_KEY                       =   "datacleansingrow"
+CHKNUM_COL_KEY                          =   "ChknumColumn"
+
+"""
+#--------------------------------------------------------------------------
+#   Export config value keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
+CURRENT_EXPORT_START_TIME               =   "exportStartTime"
+
+"""
+#--------------------------------------------------------------------------
+#   Import config value keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
+CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
+CURRENT_IMPORT_START_TIME               =   "importStartTime"
+
+"""
+#--------------------------------------------------------------------------
+#   Transform config value keys
+#--------------------------------------------------------------------------
+"""
+DATA_TRANSFORM_COL_SELECTED_KEY         =   "DT_ColumnsSelected"
+MAP_TRANSFORM_COL_NAME_KEY              =   "DT_MapColumnName"
+MOVE_COL_ID_KEY                         =   "MoveColumnId"
+MOVE_AFTER_COL_ID_KEY                   =   "MoveAfterColumnId"
+ADD_COL_COL_NAME_KEY                    =   "AddColumnColName"
+ADD_COL_DATATYPE_ID_KEY                 =   "AddColumnDataType"
+ADD_COL_CODE_KEY                        =   "AddColumnCode"
+COPY_COL_TO_KEY                         =   "CopyColumnTo"
+COPY_COL_FROM_KEY                       =   "CopyColumnFrom"
+COMPAT_COL_KEY                          =   "CompatColumn"
+
+"""
+#--------------------------------------------------------------------------
+#   Scripting config value keys
+#--------------------------------------------------------------------------
+"""
+SCRIPT_LOG_KEY                          =   "ScriptLog"
+BACKUP_SCRIPT_LOG_KEY                   =   "BackupScriptLog"
+SCRIPTING_FLAG_KEY                      =   "ScriptingFlag"
+
+"""
+#--------------------------------------------------------------------------
+#   SW Utilities config value keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_GEOCODER_KEY                    =   "currentGeocoder"
+ARCGIS_BATCH_MAX_BATCH_SIZE_KEY         =   "arcgisMaxBatchSize"
+ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY   =   "arcgisSuggestedBatchSize"
+
+BULK_GEOCODE_MODE_KEY                   =   "bulkGeocodeMode"
+
+BULK_GEOCODE_APPENDED_CSV_ID            =   "bulkgeocodeappendcsvid"
+BULK_GEOCODE_EXPORTED_CSV_ID            =   "bulkgeocodeexportcsvid"
+BULK_ERRORS_EXPORTED_CSV_ID             =   "bulkerrorsexportcsvid"
+
+CURRENT_GENERIC_FUNCTION                =   "currentGenFunction"
+
+CENSUS_DOWNLOAD_LISTS                   =   "censusdownloadlists"
+CENSUS_CURRENT_MODE                     =   "censuscurrentmode"
+CENSUS_DROP_DATASET_LISTS               =   "censusdropdataset"
+CENSUS_DROP_SUBDATASET_LIST             =   "censusdropsubdataset"
+CENSUS_CURRENT_DATASET                  =   "censuscurrentdataset"
+CENSUS_CURRENT_GET_COLS_SUBDATA_ID      =   "censuscurrentgetcolssubdataid"
+CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID      =   "censuscurrentgetcolssubdataidlists"
+
+CENSUS_DATASET_TO_INSERT_FROM           =   "censusdatasettoinsertfrom"
+CENSUS_DATASET_TYPES_TO_INSERT_FROM     =   "censusdatasettypestoinsertfrom"
+
+CENSUS_ADD_DATASETS_LIST                =   "censusadddatasets"
+CENSUS_DROP_DATASETS_LIST               =   "censusdropdatasets"
+
+CENSUS_SELECTED_DATASET_ID              =   "censusdatasetid"
+CENSUS_SELECTED_SUBSET_ID               =   "censussubsetid"
+
+
+"""
+#--------------------------------------------------------------------------
+#   System config value keys
+#--------------------------------------------------------------------------
+"""
+EULA_FLAG_KEY                           =   "EULARead"
+SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
+DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
+DFC_CHAPTERS_LOADED_KEY                 =   "dfcCurrentlyLoadedChapters"
+CURRENT_DF_DISPLAYED_KEY                =   "dfcCurrentSelecteddf"
+
+"""
+#--------------------------------------------------------------------------
+#   working column name
+#--------------------------------------------------------------------------
+"""
+CURRENT_COL_NAME    =   "currentColumnName"
+
+def get_current_col_name() :
+    return(get_config_value(CURRENT_COL_NAME))
+
+
+DEBUG_CFG   =   False
+
+
+"""
+#--------------------------------------------------------------------------
+#   global keys that should be stored at the dfcleanser level
+#--------------------------------------------------------------------------
+"""
+GlobalKeys     =   ["EULARead","geocoder","GoogleV3_querykwargs",
+                    "arcgisgeocoderParms","binggeocoderParms","mapquestgeocoderParms",
+                    "nomingeocoderParms","googlegeocoderParms","baidu_geocoderParms",
+                    "googlebulkgeocoderParms","arcgisbatchgeocoderParms",
+                    "bingbulkgeocoderParms","baidubulkgeocoderParms",
+                    "PostgresqldbconnectorParms","MySQLdbconnectorParms","SQLitedbconnectorParms",
+                    "OracledbconnectorParms","MSSQLServerdbconnectorParms","customdbconnectorParms",
+                    "currentDBID","currentDBLIBID"]
+
+def is_global_parm(key) :
+    if(key in GlobalKeys) :
+        return(True)
+    else :
+        return(False)
+
+
+"""
+#--------------------------------------------------------------------------
+#   helper functions
+#--------------------------------------------------------------------------
+"""
+def get_config_value(key) :
+    return(DataframeCleansercfg.get_config_value(key))
+
+def set_config_value(key, value, write_through=False) :
+    DataframeCleansercfg.set_config_value(key,value,write_through)
+    
+def drop_config_value(key, write_through=False) :
+    DataframeCleansercfg.drop_config_value(key, write_through)
+
+def set_notebookName(nbname) :
+    DataframeCleansercfg.set_notebookname(nbname)
+    
+def get_notebookName() :
+    return(DataframeCleansercfg.get_notebookname())
+    
+def set_notebookPath(nbpath) :
+    DataframeCleansercfg.set_notebookpath(nbpath)
+
+    if(not (get_config_value(DFC_CURRENTLY_LOADED_KEY) is None)) :
+        get_loaded_cells() 
+        
+        from dfcleanser.common.common_utils import log_debug_dfc
+        log_debug_dfc(-1,"set_notebookPath - get_loaded_cells")
+
+    
+def get_notebookPath() :
+    return(DataframeCleansercfg.get_notebookpath())  
+
+
+
+"""
+#--------------------------------------------------------------------------
+#   Dataframe Cleanser config class
+#--------------------------------------------------------------------------
+"""
+
+class DataframeCleansercfg :
+    
+    # instance variables
+    
+    # notebook specific cfg file data
+    cfg_data                =   {}
+    dfc_cfg_data            =   {}
+    
+    default_cfg_data        =   {}
+    default_dfc_cfg_data    =   {"EULARead":"False"}
+    
+    notebookName            =   ""
+    notebookPath            =   ""
+    
+    # Jupyter synced flag
+    cfg_file_loaded         =   False
+    dfc_cfg_file_loaded     =   False
+    
+    cfg_trace_log           =   []
+
+    
+    @staticmethod
+    def add_to_cfg_error_log(msg,msg_type=0) :
+        add_error_to_log(msg)
+    
+    """
+    #--------------------------------------------------------------------------
+    #   Dataframe Cleanser config initialization methods
+    #--------------------------------------------------------------------------
+    """
+    
+    # full constructor
+    def __init__(self) :
+        
+        DataframeCleansercfg.init_cfg_file(0) 
+        DataframeCleansercfg.init_cfg_file(1)
+
+    @staticmethod
+    def init_cfg_file(cfgType) :
+        
+        if(cfgType == 0) :
+            DataframeCleansercfg.init_cfg_file_data(DataframeCleansercfg.get_cfg_dir_name(),
+                                                    DataframeCleansercfg.get_cfg_file_name(),
+                                                    0,
+                                                    DataframeCleansercfg.cfg_file_loaded)
+        else :
+            DataframeCleansercfg.init_cfg_file_data(DataframeCleansercfg.get_dfc_cfg_dir_name(),
+                                                    DataframeCleansercfg.get_dfc_cfg_file_name(),
+                                                    1,
+                                                    DataframeCleansercfg.dfc_cfg_file_loaded)
+    
+    @staticmethod
+    def init_cfg_file_data(cfg_dirname,cfg_filename,cfgType,storeFlag) :
+        
+        import time
+        
+        retry_limit     =   5
+        delay_seconds   =   1
+        current_retry   =   0
+        
+        if(not (cfg_dirname is None)) :
+            
+            if(not (does_dir_exist(cfg_dirname))) :
+                make_dir(cfg_dirname)
+        
+            if(not (does_file_exist(cfg_filename))) :
+                
+                # The very first cfg file load
+                while(current_retry < retry_limit) :
+
+                    try :
+                    
+                        with open(cfg_filename, 'w') as  cfg_file :
+                            if(cfgType == 0) :
+                                json.dump(DataframeCleansercfg.default_cfg_data,cfg_file)
+                            else :
+                                json.dump(DataframeCleansercfg.default_dfc_cfg_data,cfg_file)
+                        
+                            cfg_file.close()
+                            
+                        current_retry     =   retry_limit
+                        
+                        if(cfgType == 0) :
+                            
+                            DataframeCleansercfg.cfg_data   =   DataframeCleansercfg.default_cfg_data
+                            DataframeCleansercfg.cfg_file_loaded = True
+                            
+                        else :
+                            
+                            DataframeCleansercfg.dfc_cfg_data   =   DataframeCleansercfg.default_dfc_cfg_data
+                            DataframeCleansercfg.dfc_cfg_file_loaded = True
+                            
+                        break
+                    
+                    except :
+                        current_retry   =   current_retry + 1
+                        time.sleep(delay_seconds)
+            
+            # cfg file does exist
+            else :
+                
+                while(current_retry < retry_limit) :
+                    
+                    try :
+
+                        with open( cfg_filename, 'r') as  cfg_file :
+                            
+                            if(cfgType == 0) :
+                                DataframeCleansercfg.cfg_data = json.load(cfg_file)
+                            else :
+                                DataframeCleansercfg.dfc_cfg_data = json.load(cfg_file)
+                                
+                            cfg_file.close()
+                    
+                        if(cfgType == 0) :
+                            DataframeCleansercfg.cfg_file_loaded = True
+                        else :
+                            DataframeCleansercfg.dfc_cfg_file_loaded = True
+                        
+                        current_retry     =   retry_limit
+                        
+                        break
+                    
+                    except json.JSONDecodeError :
+                        
+                        try :
+                                
+                            with open( cfg_filename, 'w') as  cfg_file :
+                                if(cfgType == 0) :
+                                    json.dump(DataframeCleansercfg.default_cfg_data,cfg_file)
+                                    DataframeCleansercfg.cfg_data = DataframeCleansercfg.default_cfg_data
+                                else :
+                                    json.dump(DataframeCleansercfg.default_dfc_cfg_data,cfg_file)
+                                    DataframeCleansercfg.dfc_cfg_data = DataframeCleansercfg.default_dfc_cfg_data
+                                
+                            cfg_file.close()
+                                
+                        except :
+                            DataframeCleansercfg.add_to_cfg_error_log("[Load default cfg file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),1)
+
+
+    """
+    #--------------------------------------------------------------------------
+    #   Dataframe Cleanser config files dirs and names
+    #--------------------------------------------------------------------------
+    """
+    
+    @staticmethod 
+    def get_cfg_dir_name() :
+        
+        nbdir   =   DataframeCleansercfg.get_notebookpath()
+        nbname  =   DataframeCleansercfg.get_notebookname()
+        
+        if((nbdir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(nbdir,nbname + "_files"))
+    
+    @staticmethod
+    def get_cfg_file_name() :
+        
+        cfgdir  =   DataframeCleansercfg.get_cfg_dir_name()
+        nbname  =   DataframeCleansercfg.get_notebookname()
+        
+        if((cfgdir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(cfgdir,nbname + "_config.json"))    
+    
+    @staticmethod
+    def get_dfc_cfg_dir_name() :
+        
+        dfcdir  =   get_dfcleanser_location() 
+        return(os.path.join(dfcdir,"files"))
+    
+    @staticmethod
+    def get_dfc_cfg_file_name() :
+
+        dfcdir  =   DataframeCleansercfg.get_dfc_cfg_dir_name()   
+        
+        if(dfcdir is None) :
+            return(None)
+        else :
+            return(os.path.join(dfcdir,"dfcleanserCommon_config.json")) 
+    
+    @staticmethod
+    def save_cfg_file(cfgType) :
+        
+        if(cfgType == 0) :
+        
+            if(DataframeCleansercfg.cfg_file_loaded) :
+    
+                try :
+                    
+                    with open(DataframeCleansercfg.get_cfg_file_name(), 'w') as cfg_file :
+                        json.dump(DataframeCleansercfg.cfg_data,cfg_file)
+                        cfg_file.close()
+                    
+                except :
+                    
+                    DataframeCleansercfg.add_to_cfg_error_log("[Save cfg file Error] "  + str(sys.exc_info()[0].__name__),1)
+                     
+            else :
+                
+                DataframeCleansercfg.add_to_cfg_error_log("[Unable to Save cfg file Error : because cfg not loaded] ",1)
+       
+        else :
+            
+            if(DataframeCleansercfg.dfc_cfg_file_loaded) :
+
+                try :
+                    with open(DataframeCleansercfg.get_dfc_cfg_file_name(), 'w') as cfg_file :
+                        json.dump(DataframeCleansercfg.dfc_cfg_data,cfg_file)
+                        cfg_file.close()
+            
+                except :
+
+                    DataframeCleansercfg.add_to_cfg_error_log("[Save dfc cfg file Error] "  + str(sys.exc_info()[0].__name__),1)
+        
+    @staticmethod
+    def is_loaded(cfgtype) :
+
+        if(cfgtype == 0) :
+        
+            if(not (DataframeCleansercfg.cfg_file_loaded)) :
+                DataframeCleansercfg.wait_for_cfg_file_load(0)
+        
+            if(not (DataframeCleansercfg.cfg_file_loaded)) :
+                return(False)
+            else :
+                return(True)
+                
+        else :
+            
+            if(not (DataframeCleansercfg.dfc_cfg_file_loaded)) :
+                DataframeCleansercfg.wait_for_cfg_file_load(1)
+        
+            if(not (DataframeCleansercfg.dfc_cfg_file_loaded)) :
+                return(False)
+            else :
+                return(True)
+
+    @staticmethod
+    def wait_for_cfg_file_load(cfgtype) :
+        
+        import time
+        
+        if(cfgtype == 0) :
+            load_flag   =   DataframeCleansercfg.cfg_file_loaded
+        else :
+            load_flag   =   DataframeCleansercfg.dfc_cfg_file_loaded
+        
+        if(not (load_flag)) :
+            
+            wait_for_load   =   True
+            retry_limit     =   10
+            retry_count     =   0
+            retry_delay     =   0.1
+            
+            while(wait_for_load)  :
+                
+                time.sleep(retry_delay)  
+                retry_count     =   retry_count + 1
+                
+                if(retry_count == retry_limit) :
+                    wait_for_load = False
+                else :
+                    if(cfgtype == 0) :
+                        if(DataframeCleansercfg.cfg_file_loaded) :
+                            wait_for_load = False  
+                    else :
+                        if(DataframeCleansercfg.dfc_cfg_file_loaded) :
+                            wait_for_load = False  
+        
+        if(cfgtype == 0) :
+            
+            if(not (DataframeCleansercfg.cfg_file_loaded)) :
+                return(False)
+            else :
+                return(True)
+                
+        else :
+            
+            if(not (DataframeCleansercfg.dfc_cfg_file_loaded)) :
+                return(False)
+            else :
+                return(True)
+
+    @staticmethod        
+    def get_config_value(key) :
+        
+        if(not(is_global_parm(key))) :
+            
+            if(DataframeCleansercfg.is_loaded(0)) :
+                return(DataframeCleansercfg.cfg_data.get(key,None))
+            else :
+                DataframeCleansercfg.add_to_cfg_log("[get_config_value _ unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                return(None)
+                
+        else :
+            
+            if(DataframeCleansercfg.is_loaded(1)) :
+                return(DataframeCleansercfg.dfc_cfg_data.get(key,None))
+            else :
+                DataframeCleansercfg.add_to_cfg_error_log("[get_config_value _ unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                return(None)
+        
+    @staticmethod        
+    def set_config_value(key, value, write_through) :
+        
+        if(not(is_global_parm(key))) :
+            
+            if(DataframeCleansercfg.is_loaded(0)) :
+                DataframeCleansercfg.cfg_data.update({key : value})
+                if(write_through) :
+                    DataframeCleansercfg.save_cfg_file(0)
+            else :
+                DataframeCleansercfg.add_to_cfg_error_log("[set_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                
+        else :
+            
+            if(DataframeCleansercfg.is_loaded(1)) :
+                DataframeCleansercfg.dfc_cfg_data.update({key : value})
+                DataframeCleansercfg.save_cfg_file(1)
+            else :
+                DataframeCleansercfg.add_to_cfg_error_log("[set_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),1)
+        
+    @staticmethod       
+    def drop_config_value(key, write_through) :
+        
+        if(not(is_global_parm(key))) :
+            
+            if(DataframeCleansercfg.is_loaded(0)) :
+                popped  =   DataframeCleansercfg.cfg_data.pop(key,None)
+                if(not (popped is None)) :
+                    if(write_through) :
+                        DataframeCleansercfg.save_cfg_file(0)
+            else :
+                DataframeCleansercfg.add_to_cfg_error_log("[drop_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                
+        else :
+            
+            if(DataframeCleansercfg.is_loaded(1)) :
+                popped  =   DataframeCleansercfg.dfc_cfg_data.pop(key,None)
+                if(not (popped is None)) :
+                    DataframeCleansercfg.save_cfg_file(1)
+            else :
+                DataframeCleansercfg.add_to_cfg_error_log("[drop_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),1)
+
+
+    #---------------------------------------------------
+    #   dfcleanser common values
+    #--------------------------------------------------- 
+    @staticmethod
+    def set_notebookname(nbname) :
+        DataframeCleansercfg.notebookName = nbname
+
+    @staticmethod
+    def set_notebookpath(nbpath) :
+        DataframeCleansercfg.notebookPath = nbpath
+        DataframeCleansercfg.init_cfg_file(0)
+        DataframeCleansercfg.init_cfg_file(1)
+        
+    @staticmethod    
+    def get_notebookname() :
+        return(DataframeCleansercfg.notebookName) 
+    @staticmethod    
+    def get_notebookpath() :
+        return(DataframeCleansercfg.notebookPath) 
+
+    @staticmethod
+    def sync_js(parms) :
+
+        nbname  =   parms[0]
+        DataframeCleansercfg.set_notebookname(nbname)
+        get_notebookpath()
+        
+"""
+* ----------------------------------------------------
+# static instantiation of the config data object
+* ----------------------------------------------------
+"""    
+DataframeCleanserCfgData    =   DataframeCleansercfg()
+
+
+
+"""
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+#   generic dfcleanser error logger
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+"""  
+
+def add_error_to_log(msg) :
+    dfc_erorr_log.add_error_to_dfc_log(msg)
+
+def dump_error_log() :
+    elog    =   dfc_erorr_log.get_error_log() 
+    
+    if(len(elog) > 0) :
+        for i in range(len(elog)) :
+            print("[",str(i),"] : ",str(elog[i]))
+   
+def clear_error_log() :
+    dfc_erorr_log.clear_log() 
+
+
+class DataframeCleanserErrorLogger :
+    
+    # instance variables
+    
+    # error log
+    error_log               =   []
+    error_log_loaded        =   False
+    
+    # full constructor
+    def __init__(self) :
+        
+        self.error_log               =   []
+        self.error_log_loaded        =   False
+ 
+        self.init_errorlog_file() 
+        
+    def get_errorlog_dir_name(self) :
+        
+        from dfcleanser.common.cfg import get_notebookPath, get_notebookName
+        nbdir   =   get_notebookPath()
+        nbname  =   get_notebookName()
+        
+        if((nbdir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(nbdir,nbname + "_files"))
+   
+    def get_errorlog_file_name(self) :
+        
+        from dfcleanser.common.cfg import get_notebookName
+        eldir   =   self.get_errorlog_dir_name()
+        nbname  =   get_notebookName()
+        
+        if((eldir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(eldir,nbname + "_errorlog.json"))    
+    
+    def init_errorlog_file(self) :
+        
+        errorlog_dirname   =   self.get_errorlog_dir_name()
+        if(not (errorlog_dirname is None)) :
+            
+            if(not (does_dir_exist(errorlog_dirname))) :
+                make_dir(errorlog_dirname)
+        
+            errorlog_filename   =   self.get_errorlog_file_name()
+        
+            if(not (does_file_exist(errorlog_filename))) :
+
+                with open(errorlog_filename, 'w') as error_file :
+                    json.dump(self.error_log,error_file)
+                    error_file.close()
+            else :
+                
+                try :
+
+                    with open(errorlog_filename, 'r') as errorlog_file :
+                        self.errorlog = json.load(errorlog_file)
+                        errorlog_file.close()
+                        
+                    self.error_log_loaded = True
+                    
+                except json.JSONDecodeError :
+                    self.errorlog.append("Error Log File Corrupted")
+                except :
+                    self.errorlog.append("[Load Error Log Error] "  + str(sys.exc_info()[0].__name__))
+        
+    def save_errorlog_file(self) :
+        
+        if(1) :#self.error_log_loaded) :
+    
+            try :
+                with open(self.get_errorlog_file_name(), 'w') as errorlog_file :
+                    json.dump(self.error_log,errorlog_file)
+                    errorlog_file.close()
+            
+            except :
+                self.add_error_to_dfc_log("[Save Error Log Error] "  + str(sys.exc_info()[0].__name__))    
+   
+    def add_error_to_dfc_log(self,msg) :
+        
+        import datetime
+        date = datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
+        
+        self.error_log.append("[" + date + "]" + msg) 
+        self.save_errorlog_file()   
+  
+    def get_error_log(self) :
+        
+        return(self.error_log) 
+
+    def clear_log(self) :
+        self.error_log               =   []
+        
+
+    
+dfc_erorr_log   =   DataframeCleanserErrorLogger()  
+
+
+
+
+
+
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#  dfc dataframe storage class
+#
+#   a dfc dataframe is an object that contains a description, 
+#   a pandas dataframe and descriptive notes
+#
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
 
 """
 #--------------------------------------------------------------------------
@@ -660,7 +1564,14 @@ class dfc_dataframes :
 
     def __init__(self):
         self.dcdataframes   =   []
-    
+        
+        drop_config_value(CURRENT_INSPECTION_DF)
+        drop_config_value(CURRENT_CLEANSE_DF)
+        drop_config_value(CURRENT_TRANSFORM_DF)
+        drop_config_value(CURRENT_EXPORT_DF)
+        drop_config_value(CURRENT_IMPORT_DF)
+        drop_config_value(CURRENT_GEOCODE_DF)
+        drop_config_value(CURRENT_SUBSET_DF)
 
     def is_a_dfc_dataframe_loaded(self) :
         if(len(self.dcdataframes) > 0) :
@@ -771,6 +1682,8 @@ class dfc_dataframes :
                 
         return(-1)
         
+    def get_df_count(self) :
+        return(len(self.dcdataframes))
         
 """
 #--------------------------------------------------------------------------
@@ -781,567 +1694,6 @@ dfc_dfs     =   dfc_dataframes()
 
 
 
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   dfcleanser config objects
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-
-"""
-#--------------------------------------------------------------------------
-#   dfc dataframe Chapters current dataframe config value
-#--------------------------------------------------------------------------
-"""
-
-CURRENT_INSPECTION_DF                   =   "currentinspectiondf"
-CURRENT_CLEANSE_DF                      =   "currentcleansedf"
-CURRENT_TRANSFORM_DF                    =   "currenttransformdf"
-CURRENT_EXPORT_DF                       =   "currentexportdf"
-CURRENT_IMPORT_DF                       =   "currentimportdf"
-CURRENT_GEOCODE_DF                      =   "currentgeocodedf"
-CURRENT_SUBSET_DF                       =   "currentsubsetdf"
-CURRENT_CENSUS_DF                       =   "currentcensusdf"
-
-
-def get_current_chapter_df(chapterId) :
-    
-    if(is_a_dfc_dataframe_loaded()) : 
-        
-        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
-        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
-        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
-        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
-        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
-        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
-        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
-        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
-        else                                        :   dftitle     =   None
-        
-        if(dftitle is None) :
-            return(None)
-        else :
-        
-            saved_df    =   get_config_value(dftitle)
-            df          =   get_dfc_dataframe_df(saved_df)
-            
-            if(df is None) :
-                drop_config_value(saved_df)
-                return(None)
-            else :
-                return(df)
-    
-    else :
-        return(None)
-
-def set_current_chapter_df(chapterId,df,opstat) :
-    
-    if(is_a_dfc_dataframe_loaded()) : 
-        
-        if(chapterId == DataCleansing_ID)           :   dftitle     =   CURRENT_CLEANSE_DF
-        elif(chapterId == DataExport_ID)            :   dftitle     =   CURRENT_EXPORT_DF
-        elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
-        elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
-        elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
-        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
-        elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
-        elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
-        else                                        :   dftitle     =   None
-        
-        saved_df    =   get_config_value(dftitle)
-        
-        if(dftitle is None) :
-            opstat.set_status(False)
-            opstat.set_errorMsg("invalid chapter id")
-        
-        else :
-            
-            if(df is None) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("invalid df")
-            
-            else :
-                saved_df    =   get_config_value(dftitle)
-                set_dfc_dataframe_df(saved_df,df)
-            
-
-def get_cfg_parm_from_input_list(formid,label,labellist) :
-    """
-    * ---------------------------------------------------------
-    * function : get a parm from cfg parms list
-    * 
-    * parms :
-    *  formid     - form id
-    *  label      - label of parm to get
-    *  labellist  - input form label list
-    *
-    * returns : 
-    *  geocoder engine 
-    * --------------------------------------------------------
-    """
-
-    parmslist   =   get_config_value(formid+"Parms")
-    
-    if(not (parmslist == None)) :
-        
-        for i in range(len(labellist)) :
-            if(label == labellist[i]) :
-                return(parmslist[i])
-                
-    return(None)
-
-        
-"""
-#--------------------------------------------------------------------------
-#   Generic System config value keys
-#--------------------------------------------------------------------------
-"""
-NOTEBOOK_TITLE          =   "NoteBookName"
-NOTEBOOK_PATH           =   "NoteBookPath"
-DFC_CELLS_LOADED        =   "dfCcellsLoaded"
-DFC_CELLS_CBS           =   "dfCcellcbs"
-
-
-"""
-#--------------------------------------------------------------------------
-#   DBUtils config value keys
-#--------------------------------------------------------------------------
-"""
-CURRENT_DB_ID_KEY           =   "currentDBID"
-CURRENT_DBLIB_ID_KEY        =   "currentDBLIBID"
-
-"""
-#--------------------------------------------------------------------------
-#   Cleansing config value keys
-#--------------------------------------------------------------------------
-"""
-UNIQUES_FLAG_KEY                        =   "columnUniquesDisplay"
-UNIQUES_RANGE_KEY                       =   "columnUniquesRange"
-
-DATA_TYPES_FLAG_KEY                     =   "columnDataTypeChange"
-
-CLEANSING_COL_KEY                       =   "datacleansingcolumn"
-CLEANSING_ROW_KEY                       =   "datacleansingrow"
-CHKNUM_COL_KEY                          =   "ChknumColumn"
-
-"""
-#--------------------------------------------------------------------------
-#   Export config value keys
-#--------------------------------------------------------------------------
-"""
-CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
-CURRENT_EXPORT_START_TIME               =   "exportStartTime"
-
-"""
-#--------------------------------------------------------------------------
-#   Import config value keys
-#--------------------------------------------------------------------------
-"""
-CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
-CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
-CURRENT_IMPORT_START_TIME               =   "importStartTime"
-
-"""
-#--------------------------------------------------------------------------
-#   Transform config value keys
-#--------------------------------------------------------------------------
-"""
-DATA_TRANSFORM_COL_SELECTED_KEY         =   "DT_ColumnsSelected"
-MAP_TRANSFORM_COL_NAME_KEY              =   "DT_MapColumnName"
-MOVE_COL_ID_KEY                         =   "MoveColumnId"
-MOVE_AFTER_COL_ID_KEY                   =   "MoveAfterColumnId"
-ADD_COL_COL_NAME_KEY                    =   "AddColumnColName"
-ADD_COL_DATATYPE_ID_KEY                 =   "AddColumnDataType"
-ADD_COL_CODE_KEY                        =   "AddColumnCode"
-COPY_COL_TO_KEY                         =   "CopyColumnTo"
-COPY_COL_FROM_KEY                       =   "CopyColumnFrom"
-COMPAT_COL_KEY                          =   "CompatColumn"
-
-"""
-#--------------------------------------------------------------------------
-#   Scripting config value keys
-#--------------------------------------------------------------------------
-"""
-SCRIPT_LOG_KEY                          =   "ScriptLog"
-BACKUP_SCRIPT_LOG_KEY                   =   "BackupScriptLog"
-SCRIPTING_FLAG_KEY                      =   "ScriptingFlag"
-
-"""
-#--------------------------------------------------------------------------
-#   SW Utilities config value keys
-#--------------------------------------------------------------------------
-"""
-CURRENT_GEOCODER_KEY                    =   "currentGeocoder"
-ARCGIS_BATCH_MAX_BATCH_SIZE_KEY         =   "arcgisMaxBatchSize"
-ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY   =   "arcgisSuggestedBatchSize"
-BULK_GEOCODE_MODE_KEY                   =   "bulkGeocodeMode"
-CURRENT_GENERIC_FUNCTION                =   "currentGenFunction"
-CURRENT_SUBSET_FILTERS                  =   "currentSubsetFilters"
-CURRENT_SUBSET_FILTER                   =   "currentSubsetFilter"
-CENSUS_DOWNLOAD_LISTS                   =   "censusdownloadlists"
-CENSUS_CURRENT_MODE                     =   "censuscurrentmode"
-CENSUS_DROP_DATASET_LISTS               =   "censusdropdataset"
-CENSUS_DROP_SUBDATASET_LIST             =   "censusdropsubdataset"
-CENSUS_CURRENT_DATASET                  =   "censuscurrentdataset"
-CENSUS_CURRENT_GET_COLS_SUBDATA_ID      =   "censuscurrentgetcolssubdataid"
-CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID      =   "censuscurrentgetcolssubdataidlists"
-
-CENSUS_GET_COLS_COLUMNS_LIST_ID         =   "censusgetcolscolslist"
-CENSUS_ADD_DATASETS_LIST                =   "censusadddatasets"
-CENSUS_DROP_DATASETS_LIST               =   "censusdropdatasets"
-
-CENSUS_SELECTED_DATASET_ID              =   "censusdatasetid"
-CENSUS_SELECTED_SUBSET_ID               =   "censussubsetid"
-
-"""
-#--------------------------------------------------------------------------
-#   System config value keys
-#--------------------------------------------------------------------------
-"""
-UTILITIES_CBS_KEY                       =   "dfc_utilities_cbs"
-EULA_FLAG_KEY                           =   "EULARead"
-SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
-DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
-DFC_CHAPTERS_LOADED_KEY                 =   "dfcCurrentlyLoadedChapters"
-CURRENT_DF_DISPLAYED_KEY                =   "dfcCurrentSelecteddf"
-
-"""
-#--------------------------------------------------------------------------
-#   working column name
-#--------------------------------------------------------------------------
-"""
-CURRENT_COL_NAME    =   "currentColumnName"
-
-def get_current_col_name() :
-    return(get_config_value(CURRENT_COL_NAME))
-
-
-"""
-#--------------------------------------------------------------------------
-#   global keys that should be stored at the dfcleanser level
-#--------------------------------------------------------------------------
-"""
-GlobalKeys     =   ["EULARead","geocoder","GoogleV3_querykwargs",
-                    "arcgisgeocoderParms","binggeocoderParms","mapquestgeocoderParms",
-                    "nomingeocoderParms","googlegeocoderParms","baidu_geocoderParms",
-                    "googlebulkgeocoderParms","arcgisbatchgeocoderParms",
-                    "bingbulkgeocoderParms","baidubulkgeocoderParms",
-                    "PostgresqldbconnectorParms","MySQLdbconnectorParms","SQLitedbconnectorParms",
-                    "OracledbconnectorParms","MSSQLServerdbconnectorParms","customdbconnectorParms",
-                    "currentDBID","currentDBLIBID"]
-
-def is_global_parm(key) :
-    if(key in GlobalKeys) :
-        return(True)
-    else :
-        return(False)
-
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   Dataframe Cleanser config data helper functions
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-
-#--------------------------------------------------------------------------
-#   dfcleanser generic cfg values methods
-#--------------------------------------------------------------------------
-def get_config_value(key) :
-    return(DataframeCleanserCfgData.get_config_value(key))
-
-def set_config_value(key, value) :
-    DataframeCleanserCfgData.set_config_value(key,value)
-    
-def drop_config_value(key) :
-    DataframeCleanserCfgData.drop_config_value(key)
-
-#--------------------------------------------------------------------------
-#   dfcleanser generic cfg values methods for notebook copy 
-#--------------------------------------------------------------------------
-def get_config_data() :
-    return(DataframeCleanserCfgData.get_config_data())
-def get_dfc_config_data() :
-    return(DataframeCleanserCfgData.get_dfc_config_data())
-def get_current_notebook_name() :
-    return(DataframeCleanserCfgData.get_notebookname())
-def reset_cfg_data() :
-    print("reset_cfg_data")
-    DataframeCleanserCfgData.load_cfg_file()    
-
-
-"""
-#--------------------------------------------------------------------------
-#   Dataframe Cleanser config class
-#--------------------------------------------------------------------------
-"""
-
-class DataframeCleansercfg :
-    
-    # instance variables
-    
-    # notebook specific cfg file data
-    cfg_data                =   {}
-    # global dfcleanser cfg file data
-    dfc_cfg_data            =   {}
-    
-    # default starting cfg data
-    default_dfc_cfg_data    =   {"EULARead":"False"}
-    
-    notebookName            =   ""
-    notebookPath            =   ""
-    
-    # notebook specific cfg file name
-    cfgfilename             =   ""
-    # global dfcleanser cfg file name
-    dfccfgfilename          =   ""
-    
-    # Jupyter synced flag
-    cfg_file_loaded         =   False
-    
-    
-    # full constructor
-    def __init__(self) :
- 
-        
-        #print("fuck you")
-        self.cfg_data               =   {"EULARead":"true"}
-        self.dfc_cfg_data           =   {}
-        self.default_dfc_cfg_data   =   {"EULARead":"False"}
-
-        self.notebookName           =   ""
-        self.notebookPath           =   ""
-        self.cfgfilename            =   ""
-        self.dfccfgfilename         =   ""
-        self.cfg_file_loaded        =   False
-    
-    def init_cfg_file(self) :
-        
-        if( (self.notebookName == "") or (self.notebookPath == "") ) :
-            self.cfgfilename = ""
-            return()
-        
-        if(self.cfgfilename == "")  :
-            # check if notebook specific dir exists
-            cfgdir = os.path.join(self.notebookPath,self.notebookName+"_files")
-            if(not (does_dir_exist(cfgdir))) :
-                make_dir(cfgdir)
-                
-            self.cfgfilename = os.path.join(cfgdir,self.notebookName+"_config.json")
-            if(not (does_file_exist(self.cfgfilename))) :
-
-                with open(self.cfgfilename, 'w') as cfg_file :
-                    json.dump(self.cfg_data,cfg_file)
-                    cfg_file.close()
-        else :
-            return()
-            
-        
-    def get_cfg_file_name(self) :
-        
-        if(self.cfgfilename == "") :
-            self.init_cfg_file()
-            return(self.cfgfilename)
-        else :
-            return(self.cfgfilename)    
-            
-    def load_cfg_file(self) :
-        
-        cfg_fname   =   self.get_cfg_file_name()
-        
-        if(cfg_fname == "") :
-            return()
-        
-        try :
-            if(len(self.cfgfilename) > 0) :
-                with open(cfg_fname, 'r') as cfg_file :
-                    self.cfg_data = json.load(cfg_file)
-                    cfg_file.close()
-                    
-            self.cfg_file_loaded    =   True
-                    
-        except json.JSONDecodeError :
-            
-            from dfcleanser.common.common_utils import confirm_user,CORRUPTED_CFG_FILE_ID 
-            confirm_user("Config File Corrupted : Use blank default file",CORRUPTED_CFG_FILE_ID)
-
-            self.cfg_data   =   {}
-            os.rename(self.cfgfilename,self.cfgfilename+"_corrupted")
-                        
-        except :
-            if(len(self.get_notebookname()) > 0) :
-                
-                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID 
-                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
-
-                print("[load_config_file Error] " + "[" + cfg_fname + "] " + str(sys.exc_info()[0].__name__))
-                
-            else :
-                from dfcleanser.common.common_utils import confirm_user,NO_CFG_FILE_ID
-                confirm_user("Config File Not Found : Use blank default file",NO_CFG_FILE_ID)
-        
-    
-    def save_cfg_file(self) :
-        
-        if(not(self.cfg_file_loaded)) :
-            self.load_cfg_file()
-    
-        try :
-            if(len(self.cfgfilename) > 0) :
-                with open(self.get_cfg_file_name(), 'w') as cfg_file :
-                    json.dump(self.cfg_data,cfg_file)
-                    cfg_file.close()
-        except :
-            if(len(self.get_notebookname()) > 0) :
-                print("[save_config_file Error] " + "[" + self.get_cfg_file_name() + "] " + str(sys.exc_info()[0].__name__))
-            
-    def get_config_data(self) :
-        return(self.cfg_data)            
-    
-    def get_config_value(self,key) :
-        
-        if(not(is_global_parm(key))) :
-            if(self.cfg_data.get(key) == None) :
-                self.load_cfg_file()
-                return(self.cfg_data.get(key))
-            else :
-                return(self.cfg_data.get(key))
-        else :
-            return(self.get_dfc_config_value(key))
-
-    def set_config_value(self, key, value) :
-        
-        if(not(is_global_parm(key))) :
-            try :
-                self.cfg_data.update({key: value})
-            except :
-                print("[error set cfg value] ",key,self.cfg_data,str(sys.exc_info()[0].__name__))
-                self.load_cfg_file()
-        
-            self.save_cfg_file()
-            
-        else :
-            self.set_dfc_config_value(key, value)    
-            
-    def drop_config_value(self, key) :
-
-        if(not(is_global_parm(key))) :
-            try :
-                self.cfg_data.pop(key,None)
-            except :
-                print("[error drop cfg value] ",key,self.cfg_data,str(sys.exc_info()[0].__name__))
-                self.load_cfg_file()
-        
-            self.save_cfg_file() 
-        else :
-            self.drop_dfc_config_value(key)
-
-    #---------------------------------------------------
-    #   dfcleanser common values
-    #---------------------------------------------------    
-    def set_notebookname(self,nbname) :
-        self.notebookName = nbname
-
-    def set_notebookpath(self,nbpath) :
-        self.notebookPath = nbpath
-        self.init_cfg_file()
-        self.init_dfc_cfg_file()
-        
-        if( (len(self.get_cfg_file_name()) > 0) and 
-            (len(self.get_dfc_cfg_file_name()) > 0) and 
-            (len(self.get_notebookname()) > 0) ) :
-            log_text =  "log_jupyter_msg('dfcleanser synced : successfully');"
-        else :
-            log_text =  "log_jupyter_msg('dfcleanser not synced : successfully');"
-            
-        run_javascript(log_text,"errmsg")
-        
-        
-    def get_notebookname(self) :
-        return(self.notebookName) 
-    def get_notebookpath(self) :
-        return(self.notebookPath) 
-
-        
-    #---------------------------------------------------
-    #   dfcleanser global cfg values 
-    #---------------------------------------------------   
-    def init_dfc_cfg_file(self) :
-        if(self.dfccfgfilename == "")  :
-            self.dfccfgfilename = get_common_files_path() + "dfcleanserCommon" + "_config.json"
-            if(not (does_file_exist(self.dfccfgfilename))) :
-                with open(self.cfgfilename, 'w') as cfg_file :
-                    json.dump(self.default_dfc_cfg_data,cfg_file)
-                    cfg_file.close()
-            else :
-                return()
-        
-    def get_dfc_cfg_file_name(self) :
-        if(self.dfccfgfilename == "") :
-            self.init_dfc_cfg_file()
-            return(self.dfccfgfilename)
-        else :
-            return(self.dfccfgfilename)    
-    
-    def load_dfc_cfg_file(self) :
-        try :
-            with open(self.get_dfc_cfg_file_name(), 'r') as dfc_cfg_file :
-                self.dfc_cfg_data = json.load(dfc_cfg_file)
-                dfc_cfg_file.close()
-        except :
-            print("[load_notebook_cfg] " + "[" + self.get_dfc_cfg_file_name() + "]" + str(sys.exc_info()[0].__name__))
-    
-    def save_dfc_cfg_file(self) :
-        try :
-            with open(self.get_dfc_cfg_file_name(), 'w') as dfc_cfg_file :
-                json.dump(self.dfc_cfg_data,dfc_cfg_file)
-                dfc_cfg_file.close()
-        except :
-            if(not (self.get_nb_cfg_file_name() == None) ) :
-                print("[save_notebook_cfg] " + "[" + self.get_dfc_cfg_file_name() + "]" + str(sys.exc_info()[0].__name__))
-    
-    def get_dfc_config_data(self) :
-        return(self.dfc_cfg_data)            
-
-    def get_dfc_config_value(self ,key) :
-        if(self.dfc_cfg_data.get(key) == None) :
-            self.load_dfc_cfg_file()
-            return(self.dfc_cfg_data.get(key))
-        else :
-            return(self.dfc_cfg_data.get(key))
-        
-    def set_dfc_config_value(self, key, value) :
-        try :
-            self.dfc_cfg_data.update({key: value})
-        except :
-            print("[error set cfg value] ",key,self.cfg_data,str(sys.exc_info()[0].__name__))
-            self.load_dfc_cfg_file()
-        
-        self.save_dfc_cfg_file()
-    
-    def drop_dfc_config_value(self, key) :
-        try :
-            self.dfc_cfg_data.pop(key,None)
-        except :
-            self.load_dfc_cfg_file()
-        
-        self.save_dfc_cfg_file()
-        
-    def sync_js(self,parms) :
-
-        nbname  =   parms[0]
-        self.set_notebookname(nbname)
-        get_notebookpath()
-        
-"""
-* ----------------------------------------------------
-# static instantiation of the config data object
-* ----------------------------------------------------
-"""    
-DataframeCleanserCfgData    =   DataframeCleansercfg()
-
 
 """
 #--------------------------------------------------------------------------
@@ -1350,37 +1702,38 @@ DataframeCleanserCfgData    =   DataframeCleansercfg()
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-def get_chapters_loaded_cbs() :
+
+
+def get_util_chapters_loaded() :
     
     cellsList   =   get_config_value(DFC_CHAPTERS_LOADED_KEY)
-
-    utilcbs     =   [0,0,0,0,0]
+    utilcbs     =   [0,0,0,0,0,0]
 
     if(not (cellsList == None)) :
         
-        if(cellsList[20])    :   utilcbs[0] = 1
-        if(cellsList[21])    :   utilcbs[1] = 1
-        if(cellsList[22])    :   utilcbs[2] = 1
-        if(cellsList[23])    :   utilcbs[3] = 1
-        if(cellsList[24])    :   utilcbs[4] = 1
-
-    return([utilcbs])
-    
+        if(cellsList[21])    :   utilcbs[0] = 1
+        if(cellsList[22])    :   utilcbs[1] = 1
+        if(cellsList[23])    :   utilcbs[2] = 1
+        if(cellsList[24])    :   utilcbs[3] = 1
+        if(cellsList[25])    :   utilcbs[4] = 1
+        if(cellsList[26])    :   utilcbs[5] = 1
+        
+    return(utilcbs)
+   
 
 def set_chapters_loaded(cellsList) :
     
-    print("set_chapters_loaded",cellsList)
-    
-    set_config_value(DFC_CHAPTERS_LOADED_KEY, cellsList)
-    
-    cblist  =   get_chapters_loaded_cbs()
-    
-    set_config_value(UTILITIES_CBS_KEY,cblist[0])
+    set_config_value(DFC_CHAPTERS_LOADED_KEY, cellsList,True)
+   
 
 def get_loaded_cells() :
 
     run_javascript("window.getdfcChaptersLoaded();",
                    "Unable to get cells loaded")
+    
+    from dfcleanser.common.common_utils import log_debug_dfc
+    log_debug_dfc(-1,"get_loaded_cells")
+
 
 def check_if_dc_init() :
     
@@ -1390,6 +1743,16 @@ def check_if_dc_init() :
     else :
         return(False)
 
+        
+def save_current_notebook() :
+
+    run_javascript("window.saveCurrentNotebook();",
+                   "Unable to save notebook")
+    
+    from dfcleanser.common.common_utils import log_debug_dfc
+    log_debug_dfc(-1,"save current notebook")
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -1398,21 +1761,6 @@ def check_if_dc_init() :
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-    
-"""
-#--------------------------------------------------------------------------
-#   dfcleanser python config helper methods
-#--------------------------------------------------------------------------
-"""
-def set_notebookName(nbname) :
-    DataframeCleanserCfgData.set_notebookname(nbname)
-def get_notebookName() :
-    return(DataframeCleanserCfgData.get_notebookname())
-    
-def set_notebookPath(nbpath) :
-    DataframeCleanserCfgData.set_notebookpath(nbpath)
-def get_notebookPath() :
-    return(DataframeCleanserCfgData.get_notebookpath())  
 
 def create_notebook_dir_and_cfg_files(notebookname,nbpath) :
     
@@ -1439,7 +1787,7 @@ def create_notebook_dir_and_cfg_files(notebookname,nbpath) :
 
 def check_notebook_dir_and_cfg_files(notebookname) :
     
-    nbpath  =  get_notebook_path()
+    nbpath  =  DataframeCleanserCfgData.get_notebookpath()
     
     if(not(nbpath == None)) :
 
@@ -1479,7 +1827,6 @@ def check_notebook_dir_and_cfg_files(notebookname) :
                     print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
                 except Exception :
                     print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
-                
                 
         else :
             

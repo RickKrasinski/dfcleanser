@@ -299,8 +299,7 @@ GEOCODING_CALC_CENTER_ID                =   "https://rickkrasinski.github.io/dfc
 GEOCODING_CALC_DF_CENTER_ID             =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_df_center"
 GEOCODING_CALC_CENTER_DIST_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_utilities_distance_from_center"
 
-PROCESS_BULK_RESULTS_CONCAT_HELP            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results"
-PROCESS_BULK_REVERSE_RESULTS_CONCAT_HELP    =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results"
+PROCESS_BULK_RESULTS_APPEND_HELP            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results"
 PROCESS_BULK_RESULTS_CSV_HELP               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_geocoding_bulk_console_results"
 
 
@@ -341,6 +340,15 @@ DF_CENSUS_LOAD_COL_TO_DF_MORE_COLS_ID   =   "https://rickkrasinski.github.io/dfc
 DF_CENSUS_INSERT_COL_TO_DF_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html#dfc_swutilities_census_get_df_cols_insert_cols"
 
 
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   input form micro help ids
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
+JSON_DICT_FORMAT                        =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census-utility.html"
+SUBSET_CRITERIA                         =   "https://medium.com/dunder-data/selecting-subsets-of-data-in-pandas-39e811c81a0c"
 
 
