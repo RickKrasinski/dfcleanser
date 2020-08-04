@@ -60,6 +60,7 @@ def display_data_inspection(option, parms=None) :
         define_inputs(cfg.DataInspection_ID,diw.datainspection_inputs)
 
     if(option == dim.MAIN_OPTION) :
+        drop_working_df()
         diw.display_dfc_inspection_main()
         clear_data_inspection_data()
     else :
@@ -77,6 +78,9 @@ def display_data_inspection(option, parms=None) :
 
             if(len(fparms) > 0) :
                 cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,fparms[0])
+                
+            if(not (option == dim.DISPLAY_ROWS_OPTION)) :
+                drop_working_df()
         
         if( (option == dim.DISPLAY_DATATYPES_OPTION) or 
             (option == dim.DISPLAY_FULL_COLUMN_NAMES) ):
@@ -99,7 +103,7 @@ def display_data_inspection(option, parms=None) :
             display_inspect_categories()
 
         elif( (option == dim.DROP_ROW_NANS_OPTION) or 
-              (option == dim.DROP_ROW_NANS_OPTION) ):
+              (option == dim.DROP_COL_NANS_OPTION) ):
             
             thresholdType = parms[0]
             
@@ -156,18 +160,87 @@ def display_data_inspection(option, parms=None) :
                         display_status(" No Columns matching threshold were dropped")
                         
         elif(option == dim.DISPLAY_ROW_OPTION) : 
-            
-            rowid = parms
-            display_inspect_rows(rowid)   
+            display_inspect_rows()   
 
-        elif(option == dim.MATCH_VALS_OPTION) :
-            match_values_rows(parms) 
-        
         elif(option == dim.DISPLAY_COL_GRAPHS) :
             display_inspect_graphs(parms)
         
         elif(option == dim.DISPLAY_COL_OUTLIERS) :
             display_inspect_outliers(parms[0])
+            
+        elif(option == dim.DISPLAY_SCROLL_TO_DF_ROW) :
+            diw.display_scroll_to_row()
+            
+        elif(option == dim.PROCESS_SCROLL_TO_DF_ROW) :
+            
+            opstat      =   opStatus()
+            
+            df = cfg.get_current_chapter_df(cfg.DataInspection_ID)
+            
+            retparms    =   get_row_id_for_df(df,parms,diw.scroll_df_rows_input_idList,opstat)
+
+            if(opstat.get_status()) :
+                
+                if(retparms[1] == 0) :
+                    display_inspect_rows(retparms[0])  
+                else :
+                    display_inspect_rows(retparms[0])
+                    
+            else :
+                
+                diw.display_scroll_to_row()
+                display_exception(opstat)
+            
+        elif(option == dim.SCROLL_DF_ROWS_DOWN) :
+            
+            new_row_id  =   cfg.get_config_value(cfg.CURRENT_SCROLL_ROW_KEY)
+            
+            if(new_row_id is None) :
+                new_row_id  =   0
+            else :
+                new_row_id  =   new_row_id + 200
+                
+                df  =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
+                if(new_row_id > len(df)) :
+                    new_row_id  =   cfg.get_config_value(cfg.CURRENT_SCROLL_ROW_KEY)    
+            
+            display_inspect_rows(new_row_id)   
+            
+        elif(option == dim.SCROLL_DF_ROWS_UP) :
+            
+            new_row_id  =   cfg.get_config_value(cfg.CURRENT_SCROLL_ROW_KEY)
+            
+            if(new_row_id is None) :
+                new_row_id  =   0
+            else :
+                new_row_id  =   new_row_id - 200
+                if(new_row_id < 0) :
+                    new_row_id  =   0
+            
+            display_inspect_rows(new_row_id) 
+            
+        elif(option == dim.DISPLAY_DF_ROW) :
+            
+            print("dim.DISPLAY_DF_ROW")
+
+        elif(option == dim.DISPLAY_DF_ROW_REMOTE) :
+            
+            chapterid   =   parms[0]
+            #print("chapterId",chapterid)
+            
+            new_config_df   =   None
+            
+            if(chapterid == cfg.DataInspection_ID)      :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_INSPECTION_DF)
+            elif(chapterid == cfg.DataCleansing_ID)     :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_CLEANSE_DF)
+            elif(chapterid == cfg.DataTransform_ID)     :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+            elif(chapterid == cfg.DataExport_ID)        :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_EXPORT_DF)
+            elif(chapterid == cfg.DataImport_ID)        :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_IMPORT_DF)
+            elif(chapterid == cfg.SWGeocodeUtility_ID)  :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+            elif(chapterid == cfg.SWDFSubsetUtility_ID) :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_SUBSET_DF)
+            
+            cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,new_config_df)
+            
+            display_inspect_rows()
             
     else :
             
@@ -238,9 +311,6 @@ def display_inspect_datatypes(option,df_data_info) :
         for i in range(len(df_data_info[0])) :
             ttype = str(df_data_info[0][i]) 
             ttype = ttype.replace("datetime.","")
-            #ttype = ttype.replace("datetime64[ns]","datetime")
-            #ttype = ttype.replace("timedelta64[ns]","timedelta")
-            print(ttype)
             
             objects.append(ttype)    
             
@@ -297,35 +367,30 @@ def display_inspect_rows(rowid=0) :
     clock = RunningClock()
     clock.start()
 
-    try :                
+    try :    
+
+        print("\n")            
+        
+        from dfcleanser.data_transform.data_transform_dataframe_widgets import display_current_df_index
+        display_current_df_index(cfg.get_current_chapter_df(cfg.DataInspection_ID),
+                                 cfg.get_current_chapter_dfc_df_title(cfg.DataInspection_ID),0,True)
                 
         row_stats_html      =   diw.display_row_stats(cfg.get_current_chapter_df(cfg.DataInspection_ID),
                                                       cfg.get_config_value(cfg.CURRENT_INSPECTION_DF),
                                                       False)
-                    
+        
+        sample_row_html     =   dim.display_df_rows(cfg.get_current_chapter_df(cfg.DataInspection_ID),rowid,200)
+        
         rows_openexcel_tb   =   diw.get_inspection_openexcel_taskbar()
-        rows_openexcel_tb.set_gridwidth(280)
-        rows_openexcel_tb.set_customstyle({"font-size":13, "height":40, "width":280, "left-margin":10})
+        rows_openexcel_tb.set_gridwidth(620)
+        rows_openexcel_tb.set_customstyle({"font-size":13, "height":90, "width":120, "left-margin":10})
         rows_openexcel_html =   rows_openexcel_tb.get_html()
         rows_openexcel_html =   (rows_openexcel_html + "<br>")
-                    
-        rows_table          =   dcTable("Start Row","DIsamplerows",cfg.DataInspection_ID)
-        sample_row_html     =   diw.display_df_row_data(cfg.get_current_chapter_df(cfg.DataInspection_ID),
-                                                        rows_table,rowid,0,opstat,False)
-        searchcols_form     =   diw.get_colsearch_form(cfg.get_current_chapter_df(cfg.DataInspection_ID))
-        searchcols_form.set_fullparms(True)
-                    
-        cfg.set_config_value(diw.data_inspection_colsearch_id+"Parms",["temp_search_df","","","",""])
-        cfg.set_config_value(diw.data_inspection_colsearch_id+"ParmsProtect",[False,False,True,True,True])
-                    
-        searchcols_html     =   searchcols_form.get_html()
         
-        help_note           =   "To save the df subset retrieved chnage the default df_output_title of 'temp_search_df'. </br> The 'temp_search_df' is dropped on every chapter reset."
-        from dfcleanser.common.common_utils import get_help_note_html
-        get_rows_notes_html =   get_help_note_html(help_note,50,250)
-        
-        gridclasses     =   ["dfc-header","dfc-top","dfc-main","dfc-bottom","dfc-footer"]
-        gridhtmls       =   [row_stats_html,rows_openexcel_html,sample_row_html,searchcols_html,get_rows_notes_html]
+        cfg.set_config_value(cfg.CURRENT_SCROLL_ROW_KEY,rowid)
+
+        gridclasses     =   ["dfc-top","dfc-bottom","dfc-footer"]
+        gridhtmls       =   [row_stats_html,sample_row_html,rows_openexcel_html]
                     
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
             display_generic_grid("df-inspection-row-data-wrapper",gridclasses,gridhtmls)
@@ -595,15 +660,9 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
     * --------------------------------------------------------
     """
 
-    print("\nfind_matching_rows",column_type,"\n",cols_lists,"\n",vals_lists)
-    #return
-
     from dfcleanser.common.common_utils import is_int_col
     df  =   cfg.get_current_chapter_df(cfg.DataInspection_ID) 
 
-    print("find_matching_rows df",str(len(df)))       
-    # get the subset df
-    
     clock = RunningClock()
     clock.start()
         
@@ -616,12 +675,8 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
         vals_list   =   vals_list.replace("[","")
         vals_list   =   vals_list.replace("]","")
         
-        print("\n\nfind_matching_rows vals_list after replace",type(vals_list),vals_list,len(vals_list))
-            
         vals_list   =   vals_list.split(",")   
 
-        print("find_matching_rows vals_list after split ",i,type(vals_list),len(vals_list),vals_list,opstat.get_status())         
-                
         col_vals_list     =   []
                     
         if(column_type == 0) :
@@ -648,21 +703,15 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
             except :
                 opstat.set_status(False)
         
-        print("find_matching_rows criteria",col_vals_list,type(col_vals_list),opstat.get_status(),len(final_criteria))  
-        
         if(opstat.get_status()) :
             
             if(len(col_vals_list) > 0) :
             
                 if(column_type == 0) :
                     
-                    print("find_matching_rows cols_lists[i]",len(df),cols_lists[i],col_vals_list,opstat.get_status())
-                        
                     try :
                         current_criteria    =   df[cols_lists[i]].isin(col_vals_list)
                         num_ccs   =  [i for i in current_criteria.index if current_criteria[i]]
-                        print("num current_criteria trues",len(num_ccs))
-
                             
                     except :
                         opstat.set_status(False) 
@@ -677,8 +726,6 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
                                 final_criteria      =   current_criteria
                                 
                             num_fcs   =  [i for i in final_criteria.index if final_criteria[i]]
-                            print("num final_criteria trues",len(num_fcs))
-
                             
                         except :
                             opstat.set_status(False) 
@@ -707,27 +754,9 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
             opstat.set_status(False) 
             opstat.set_errorMsg("invalid column_values entered for " + cols_lists[i])
     
-    #ccrit = 0                    
-    #for q in range(len(final_criteria)) :
-    #    if(final_criteria[q]) :
-    #        ccrit = ccrit + 1
-    #print("final final_criteria",ccrit,len(final_criteria))
-    
-    #try :
-    #    total_trues = 0       
-    #    for w in range(len(final_criteria))  :
-    #        if(final_criteria[w]) : 
-    #            total_trues = total_trues + 1
-        
-    #    print("total_trues",total_trues)
-    #except :
-    #    print("fuck total trues")
-            
-    
     clock.stop() 
     
     num_trues   =  [i for i in final_criteria.index if final_criteria[i]]
-    print("num_trues",len(num_trues))
     
     if(len(num_trues) > 0) :
         
@@ -743,131 +772,6 @@ def find_matching_rows(df_title,column_type,cols_lists,vals_lists,opstat) :
         
     return(len(num_trues))
             
-
-def match_values_rows(inparm) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : find rows in df matching the col names and values
-    * 
-    * parms :
-    *   cols_list -   col names
-    *   vals_list -   column values
-    *   opstat    -   status object
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-
-    opstat  =   opStatus()
-        
-    print("match_values_rows",inparm)
-    column_type     =   inparm[0]
-        
-    fparms          =   get_parms_for_input(inparm[1],diw.data_inspection_colsearch_idList)
-        
-    print("match_values_rows",fparms)
-        
-    if(len(fparms) > 0) :
-            
-        df_title        =   fparms[0]
-            
-        if(len(df_title) > 0) :
-            
-            cols_string     =   fparms[1]
-            
-            try :
-                cols_list       =   cols_string.split(",")
-                
-                if(not (cols_list) is None) :
-                    if(len(cols_list[0]) == 0) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("No column names list is defined")
-                else :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("No column names list is defined")
-                    
-            except :
-                opstat.set_status(False)
-                opstat.set_errorMsg("Invalid column names list is defined")
-            
-            print("match_values_rows - colslist ",type(cols_list),len(cols_list),cols_list)
-            
-            if(opstat.get_status()) :
-                
-                vals_lists  =   []
-                
-                for i in range(len(cols_list)) :
-        
-                    vals_list     =   fparms[i+2]
-                    print("match_values_rows vals_list ",type(vals_list),len(vals_list),vals_list)
-                
-                    if(len(vals_list) > 0) :
-                        vals_lists.append(vals_list)
-                    else :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("Invalid column values list is defined")
-                        
-                if(opstat.get_status) :
-                    
-                    try :
-                        print("match_values_rows vals_lists cols_lists \n",cols_list,"\n",vals_lists)
-                        
-                        if(len(cols_list)  == (len(vals_lists))) :
-                            check_values_datatypes(cols_list,vals_lists,opstat)
-                            #print("match_values_rows - opstat",opstat.get_status())
-                            if(opstat.get_status) :
-                                num_trues   =   find_matching_rows(df_title,column_type,cols_list,vals_lists,opstat)
-                        else :
-                            opstat.set_status(False)
-                            opstat.set_errorMsg("Number Of Column Names does not match Number of Values")
-                            
-                    except :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("Invalid column values list is defined")
-                        
-                else :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("Invalid column values list is defined")
-                    
-            else :
-                opstat.set_status(False)
-                opstat.set_errorMsg("column values list is not defined")
-                    
-        else :
-            opstat.set_status(False)
-            opstat.set_errorMsg("no output dataframe title defined")
-                
-    else :
-        opstat.set_status(False)
-        opstat.set_errorMsg("column names list is not defined")
-            
-    from IPython.display import clear_output
-    clear_output()
-    
-    cboxes  =   [False,False,True,False,False]
-    diw.display_dfc_inspection_main(cboxes)
-    
-    if(opstat.get_status()) :
-        
-        cfg.set_config_value(cfg.CURRENT_INSPECTION_DF,df_title)
-    
-        print("\n")
-        if(num_trues > 0) :
-            display_status(str(num_trues) + " matches found in your df") 
-        else :
-            display_status("No matches found in your df")
-        
-    else :
-        
-        print("\n")
-        msg     =   "Unable to get Rows Data Subset : " + opstat.get_errorMsg()
-        opstat.set_errorMsg(msg)
-        display_exception(opstat)
-        
-    display_inspect_rows()
-
-
 
 def drop_nan_rows(df,threshold,ttype,opstat,display=True) :
     """
@@ -982,6 +886,153 @@ def drop_nan_cols(df,threshold,ttype,opstat,display=True) :
     return(len(droplist))
 
 
+def get_row_id_for_df(df,parms,idList,opstat) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get a specific df row
+    * 
+    * parms :
+    *   df        -   dataframe
+    *   parms     -   row id parms
+    *   idlist    -   threshold type
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    fparms  =   get_parms_for_input(parms,idList)
+            
+    row_id      =   fparms[0]
+            
+    index_cols  =   fparms[1]
+    index_cols  =   index_cols.lstrip("[")
+    index_cols  =   index_cols.rstrip("]")
+    index_cols  =   index_cols.split(",")
+            
+    index_vals  =   fparms[2]
+    index_vals  =   index_vals.lstrip("[")
+    index_vals  =   index_vals.rstrip("]")
+    index_vals  =   index_vals.split(",")
+            
+    if(len(row_id) > 0) :
+                
+        try :
+                    
+            row_id  =   int(row_id)
+                    
+            #df = cfg.get_current_chapter_df(cfg.DataInspection_ID)
+                    
+            if( (row_id > 0) and (row_id < len(df)) ) :
+                        
+                return([row_id,0])                         
+                        
+            else :
+                        
+                opstat.set_status(False)
+                opstat.set_errorMsg("Row Id is oiut of range of df len : 0 - " + str(len(df)))
+                    
+        except :
+                    
+            opstat.set_status(False)
+            opstat.set_errorMsg("Row Id is not valid numeric value : " + fparms[0])
+            
+    else :
+                
+        if(len(index_cols) > 0) :
+                    
+            index_names     =   []
+            index_types     =   []
+                    
+                    #df              =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
+            index_columns   =   df.index.names
+                    
+            if(len(index_columns) > 0) :
+                for i in range(len(index_columns)) :
+                    if( not (index_columns[i] is None) ) :
+                        index_names.append(index_columns[i])
+                        index_types.append(df.index.get_level_values(i).dtype)
+
+            if(len(index_names) == len(index_cols)) :
+                            
+                matched     =   True
+                            
+                for i in range(len(index_cols)) :
+                    if(not (index_cols[i] == index_names[i])) :
+                        matched = False
+                              
+                if(matched) :
+                                
+                    if(len(index_vals) > 0) :
+                        
+                        df_vals_converted   =   []
+                                    
+                        for i in range(len(index_vals)) :
+                                        
+                            from dfcleanser.common.common_utils import get_converted_value, get_dtype_str_for_datatype 
+                            dtype_str               =   get_dtype_str_for_datatype(index_types[i])
+                            df_vals_converted.append(get_converted_value(dtype_str,index_vals[i],opstat))
+                                        
+                            if(not opstat.get_status()) :
+                                break;
+                                        
+                        if(opstat.get_status()) :
+                         
+                            try :
+                                            
+                                boolean_index   =   None
+                                            
+                                for i in range(len(index_names)) :
+                                                
+                                    if(i == 0) :
+                                        boolean_index   =   df.index.get_level_values(index_names[i]) == df_vals_converted[i] 
+                                    else :
+                                        boolean_index   =   (boolean_index & (df.index.get_level_values(index_names[i]) == df_vals_converted[i]))
+                                                    
+                                result  = df.loc[boolean_index] 
+                                                
+                                row_id  =   df.index.get_loc(result.iloc[0].name) 
+                                                                                        
+                                return([row_id,1])
+                                            
+                            except :
+                                            
+                                opstat.set_status(False)
+                                opstat.set_errorMsg("Unable to get df row with index values specified ")
+                        
+                        else :
+                        
+                            opstat.set_status(False)
+                            opstat.set_errorMsg("No Index values specified ")
+                    
+                    else :
+                                
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("Index cols sequence does not match df Index")
+                            
+                else :
+                            
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("Number of Index cols specified incorrect")
+                        
+            else :
+                    
+                opstat.set_status(False)
+                opstat.set_errorMsg("No Index specified for df")
+                    
+        else :
+                    
+            opstat.set_status(False)
+            opstat.set_errorMsg("No Row Id or Index Columns specified ")
+            
+        if(not (opstat.get_status)) :
+
+            if(len(row_id) > 0) :   
+                return([None,0])
+            else :
+                return([None,1])
+
+
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -1002,8 +1053,16 @@ def clear_data_inspection_data() :
 def clear_data_inspection_cfg_values() :
     
     return
+
+def drop_working_df() :
     
-    #cfg.drop_config_value(cfg.CURRENT_INSPECTION_DF)
+    from dfcleanser.common.cfg import get_dfc_dataframe_df, drop_dfc_dataframe
+    
+    df = get_dfc_dataframe_df("dfc_subset_working_df")
+    
+    if(not (df is None)) :
+        drop_dfc_dataframe("dfc_subset_working_df")    
+        
     
 
 

@@ -19,13 +19,13 @@ import dfcleanser.data_inspection.data_inspection_model as dim
 from dfcleanser.common.common_utils import (get_col_num_uniques, RunningClock, get_datatype_id,
                                             get_col_uniques, display_status, display_grid_status, opStatus, 
                                             display_exception, display_generic_grid, is_numeric_col,
-                                            get_select_defaults, displayParms, is_categorical_col)
+                                            get_select_defaults, is_categorical_col)
 
 from dfcleanser.common.html_widgets import (InputForm, ButtonGroupForm)
 
 from dfcleanser.common.table_widgets import (dcTable, ROW_MAJOR, get_row_major_table,SCROLL_DOWN)
 
-from dfcleanser.common.display_utils import (display_sample_rows)
+from dfcleanser.common.display_utils import (displayParms)
 
 
 """
@@ -97,6 +97,7 @@ data_subset_df_input_id                   =   "datasubsetdf"
 #--------------------------------------------------------------------------
 #    column search data  
 #--------------------------------------------------------------------------
+"""
 """
 data_inspection_colsearch_title            =   "Column Values To Search For"
 data_inspection_colsearch_id               =   "datainspectcolsearch"
@@ -183,7 +184,8 @@ data_inspection_nn_colsearch_form          =   [data_inspection_nn_colsearch_id,
                                                data_inspection_nn_colsearch_typeList,
                                                data_inspection_nn_colsearch_placeholderList,
                                                data_inspection_nn_colsearch_jsList,
-                                               data_inspection_nn_colsearch_reqList]  
+                                               data_inspection_nn_colsearch_reqList] 
+""" 
 
 """
 #--------------------------------------------------------------------------
@@ -242,15 +244,20 @@ data_inspection_open_excel_tb_doc_title       =   "Inspection open_excel"
 data_inspection_open_excel_tb_title           =   "Inspection open_excel"
 data_inspection_open_excel_tb_id              =   "inspectiondfopen_exceltb"
 
-data_inspection_open_excel_tb_keyTitleList    =   ["Open Dataframe In Excel"]
+data_inspection_open_excel_tb_keyTitleList    =   ["Scroll</br>Rows</br>Down",
+                                                   "Scroll</br>Rows</br>Up",
+                                                   "Scroll To</br>Specific</br>Dataframe Row",
+                                                   "Open</br>Dataframe</br>In Excel",
+                                                   "Get Subset</br>For</br>Dataframe"]
 
-data_inspection_open_excel_tb_jsList          =   ["inspection_task_bar_callback("+str(dim.OPEN_EXCEL_OPTION)+")"]
+data_inspection_open_excel_tb_jsList          =   ["inspection_task_bar_callback("+str(dim.SCROLL_DF_ROWS_DOWN)+")",
+                                                   "inspection_task_bar_callback("+str(dim.SCROLL_DF_ROWS_UP)+")",
+                                                   "inspection_task_bar_callback("+str(dim.DISPLAY_SCROLL_TO_DF_ROW)+")",
+                                                   "inspection_task_bar_callback("+str(dim.OPEN_EXCEL_OPTION)+")",
+                                                   "inspection_task_bar_callback("+str(dim.GET_SUBSET_OPTION)+")"]
 
 data_inspection_open_excel_tb_centered        =   True
 
-
-datainspection_inputs       =   [data_inspection_df_input_id,data_inspection_colsearch_id,
-                                 data_inspection_nn_colsearch_id,drop_rows_input_id,drop_columns_input_id]
 
 """
 #--------------------------------------------------------------------------
@@ -333,8 +340,39 @@ inspect_nn_col_input_jsList               =   [None,
 inspect_nn_col_input_reqList              =   [0]
 
 
-datainspection_inputs       =   [data_inspection_df_input_id, data_inspection_colsearch_id, data_inspection_nn_colsearch_id,
-                                 drop_rows_input_id, full_col_names_input_id, inspect_col_input_id, inspect_nn_col_input_id]
+datainspection_inputs       =   [data_inspection_df_input_id,drop_rows_input_id, full_col_names_input_id, 
+                                 inspect_col_input_id, inspect_nn_col_input_id]
+
+"""
+#--------------------------------------------------------------------------
+#    scroll df rows input form
+#--------------------------------------------------------------------------
+"""
+scroll_df_rows_input_title            =   ""
+scroll_df_rows_input_id               =   "scrolldfrowsinput"
+scroll_df_rows_input_idList           =   ["scrolldfrowsrowid",
+                                           "scrolldfrowsindexcols",
+                                           "scrolldfrowsindexvals",
+                                           None,None,None]
+
+scroll_df_rows_input_labelList       =   ["df_row_id",
+                                          "df_index_cols",
+                                          "df_index_values",
+                                          "Scroll To</br>Selected</br>Row",
+                                          "Return","Help"]
+
+scroll_df_rows_input_typeList        =   ["text","text","text","button","button","button"]
+
+scroll_df_rows_input_placeholderList =   ["","","",None,None,None,None]
+
+scroll_df_rows_input_jsList          =   [None,None,None,
+                                          "inspection_task_bar_callback(" + str(dim.PROCESS_SCROLL_TO_DF_ROW) + ")",
+                                          "inspection_task_bar_callback(" + str(dim.DISPLAY_ROWS_OPTION) + ")",
+                                          "displayhelp('" + str(dfchelp.INSPECT_ROW_NANS_ID) + "')"]
+
+scroll_df_rows_input_reqList         =   [0,1,2]
+
+scroll_df_rows_input_short           =   True
 
 
 """
@@ -379,7 +417,7 @@ def display_dfc_inspection_main() :
 
 
 
-def get_colsearch_form(df,numeric=True) :
+#def get_colsearch_form(df,numeric=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : display column search form
@@ -389,7 +427,7 @@ def get_colsearch_form(df,numeric=True) :
     * returns : N/A
     * --------------------------------------------------------
     """
-
+"""
     if(numeric) :
         colsearch_form  =   InputForm(data_inspection_colsearch_id,
                                       data_inspection_colsearch_idList,
@@ -453,7 +491,7 @@ def get_colsearch_form(df,numeric=True) :
     colsearch_form.set_fullparms(True)
     
     return(colsearch_form)
-
+"""
 
 """            
 #------------------------------------------------------------------
@@ -1025,33 +1063,6 @@ def display_df_col_nans(df,table,display=True) :
         get_row_major_table(table,SCROLL_DOWN)
     else :
         return(get_row_major_table(table,SCROLL_DOWN,False))
- 
-
-def display_df_row_data(df,table,rowid,colId,opstat,display=True) : #,numworstRows) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display row data
-    * 
-    * Parms :
-    *  df           -   dataframe    
-    *  table        -   table to populate
-    *  rowid        -   row id    
-    *  colid        -   col id    
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-    
-    if(type(rowid) == str) :
-        if(display) :
-            display_sample_rows(df,table,int(rowid),int(colId),opstat)
-        else :
-            return(display_sample_rows(df,table,int(rowid),int(colId),opstat,False))
-    else :
-        if(display) :
-            display_sample_rows(df,table,rowid,colId,opstat)
-        else :
-            return(display_sample_rows(df,table,rowid,colId,opstat,False))
 
 
 def display_row_stats(df,dftitle,display=True) :
@@ -1073,7 +1084,7 @@ def display_row_stats(df,dftitle,display=True) :
     rowstatsWidths    =   [80,20]
     rowstatsAligns    =   ["left","left"]
     
-    rowstatsRows.append(["Number of Rows in "+ dftitle,str(len(df))])
+    rowstatsRows.append(["Number of Rows in dataframe '"+ dftitle + "' : " + str(len(df))])
     
     row_stats_table = dcTable("Row Stats","rowstatsTable",
                               cfg.DataInspection_ID,
@@ -1523,8 +1534,68 @@ def get_simple_outliers(df,colname,opstat,display=True) :
     clock.stop() 
            
 
-
-
+def display_scroll_to_row() :
+    """
+    * -------------------------------------------------------- 
+    * function : display scroll to input form
+    * 
+    * parms :
+    *   N/A          -   dataframe
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    scroll_form   = InputForm(scroll_df_rows_input_id,
+                              scroll_df_rows_input_idList,
+                              scroll_df_rows_input_labelList,
+                              scroll_df_rows_input_typeList,
+                              scroll_df_rows_input_placeholderList,
+                              scroll_df_rows_input_jsList,
+                              scroll_df_rows_input_reqList)
+    
+    scroll_form.set_buttonstyle({"font-size":12, "height":75, "width":110, "left-margin":55})
+    scroll_form.set_gridwidth(480)
+    
+    df = cfg.get_current_chapter_df(cfg.DataInspection_ID)
+    
+    index_names     =   []
+                    
+    index_columns   =   df.index.names
+    
+    if(len(index_columns) > 0) :
+        for i in range(len(index_columns)) :
+            if( not (index_columns[i] is None) ) :
+                index_names.append(index_columns[i])
+        
+    if(len(index_names) == 0) :
+        cfg.set_config_value(scroll_df_rows_input_id+"Parms",["","",""])
+        cfg.set_config_value(scroll_df_rows_input_id+"ParmsProtect",[False,True,True]) 
+    else :
+        
+        index_cols  =   "["
+        for i in range(len(index_names)) :
+            index_cols  =   index_cols + index_names[i]
+            if(not (i == (len(index_names) - 1))) :
+                index_cols  =   index_cols + ","
+                
+        index_cols      =   index_cols + "]"
+        
+        cfg.set_config_value(scroll_df_rows_input_id+"Parms",["",index_cols,""]) 
+        cfg.set_config_value(scroll_df_rows_input_id+"ParmsProtect",[False,True,False]) 
+    
+    scroll_form_html    =   scroll_form.get_html()
+    
+    scroll_header_html    =   "<div>Scroll To df Row</div><br>"
+            
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+    gridhtmls       =   [scroll_header_html,scroll_form_html]
+            
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
+        display_generic_grid("df-inspection-row-scroll-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("df-inspection-row-scroll-pop-up-wrapper",gridclasses,gridhtmls,True)
 
 
     
