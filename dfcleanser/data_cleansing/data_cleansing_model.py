@@ -95,6 +95,13 @@ DISPLAY_REORDER_CATEGORY            =   38
 
 
 
+DISPLAY_CLEANSE_NUMERIC_COLUMNS         =   0
+DISPLAY_CLEANSE_NON_NUMERIC_COLUMNS     =   1
+DISPLAY_CLEANSE_ROW                     =   2
+DISPLAY_CLEANSE_CLEAR                   =   3
+
+
+
 PROCESS_RENAME_CATEGORY             =   40
 PROCESS_ADD_CATEGORY                =   41
 PROCESS_REMOVE_CATEGORY             =   42
@@ -105,6 +112,18 @@ PROCESS_TOGGLE_CATEGORY_ORDER       =   46
 
 CLEANSE_CURRENT_CATEGORY_COLUMN     =   47
 
+
+PROCESS_GET_ROW_BY_ID               =   50
+PROCESS_GET_ROW_BY_INDEX            =   51
+
+DISPLAY_SELECT_ROW_ID               =   55
+PROCESS_SELECT_ROW_ID               =   56
+
+
+
+CHANGE_ROW_VALUES                   =   0
+CHANGE_ROW                          =   1
+DROP_ROW                            =   2
 
 
 

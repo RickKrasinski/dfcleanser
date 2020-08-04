@@ -11,7 +11,6 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-import pandas as pd
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
 
@@ -45,6 +44,7 @@ def display_data_cleansing(option,parms=None) :
     * --------------------------------------------------------
     """
     
+    
     clear_output()
     
     opstat  =   opStatus()
@@ -75,7 +75,7 @@ def display_data_cleansing(option,parms=None) :
     cfg.set_config_value(cfg.DATA_TYPES_FLAG_KEY,False)
 
     if(cfg.is_a_dfc_dataframe_loaded()) :
-            
+        
         if(option == dcm.DFS_CLEANSE_COL) :
 
             cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF))
@@ -107,7 +107,7 @@ def display_data_cleansing(option,parms=None) :
             
         elif(option == dcm.GENERIC_COLUMN_OPTION) :
                 
-            cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms)
+            cfg.set_config_value(cfg.CLEANSING_COL_KEY,parms[0])
             dcw.display_col_data()                
         
         elif(option == dcm.CLEANSE_CURRENT_CATEGORY_COLUMN) :
@@ -127,26 +127,26 @@ def display_data_cleansing(option,parms=None) :
             if(len(fparms) > 0) :
                 cfg.set_config_value(cfg.CURRENT_CLEANSE_DF,fparms[0])    
             
-            if(funcid == 0) :
+            if(funcid == dcm.DISPLAY_CLEANSE_NUMERIC_COLUMNS) :
                 
                 clock = RunningClock()
                 clock.start()
                 dcw.display_numeric_cols()
                 clock.stop()
 
-            elif(funcid == 1) :
+            elif(funcid == dcm.DISPLAY_CLEANSE_NON_NUMERIC_COLUMNS) :
                 
                 clock = RunningClock()
                 clock.start()
                 dcw.display_non_numeric_cols()
                 clock.stop()
                     
-            elif(funcid == 2) :
+            elif(funcid == dcm.DISPLAY_CLEANSE_ROW) :
                     
                 cfg.set_config_value(cfg.CLEANSING_ROW_KEY,0)
                 dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),0,0)
     
-            elif(funcid == 3) :
+            elif(funcid == dcm.DISPLAY_CLEANSE_CLEAR) :
                 return()
                 
         elif(option == dcm.DISPLAY_ROW_OPTION) :
@@ -291,30 +291,33 @@ def display_data_cleansing(option,parms=None) :
             rowid       =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
             df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID) 
             
-            column_names = list(df.columns.values)
+            column_names = list(df.columns)
             
             found = -1
             for i in range(len(column_names)) :
+                
                 if(column_names[i] == colname) :
                     found = i
             
-                if(found > -1) :
-                    colid = found
-                    cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
+            if(found > -1) :
+                colid = found
+            cfg.set_config_value(cfg.CLEANSING_COL_KEY,colid)
             
-                chval = df.iloc[rowid,colid]
+            chval = df.iloc[rowid,colid]
 
-                cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[str(chval),""])           
-                dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),rowid,0)
+            cfg.set_config_value(dcw.change_row_values_input_id + "Parms",[str(chval),""])           
+            dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),rowid,0)
 
         elif(option ==  dcm.PROCESS_ROW_COL) :
+            
+            opstat  =   opStatus()
             
             func_id     =   parms[0]
             row_id      =   int(cfg.get_config_value(cfg.CLEANSING_ROW_KEY))
             
             cfg.drop_config_value(dcw.change_row_values_input_id + "Parms")           
             
-            if(func_id == 0) :
+            if(func_id == dcm.CHANGE_ROW_VALUES) :
                 
                 fparms      =   dcw.get_change_row_values_inputs(parms)
                 new_value   =   fparms[1]
@@ -323,18 +326,65 @@ def display_data_cleansing(option,parms=None) :
                 
                 df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
                 
-                if(is_numeric_col(df,col_id)) :
-                    if(is_int_col(df,col_id)) :
-                        new_value       =   int(new_value)
-                    else :
-                        new_value       =   float(new_value)
+                if(col_id < 0) :
+                    
+                    index_columns   =   df.index.names
+    
+                    if(len(index_columns) > 0) :
+                        if( not (index_columns[0] is None) ) :
+                            col_id  =   (col_id - 1) * -1
+                        else :
+                            col_id  =   (col_id) * -1
+
+                    index_dtype     =   (df.index.get_level_values(col_id).dtype)
+                    
+                    from dfcleanser.common.common_utils import get_converted_value, get_dtype_str_for_datatype 
+                    dtype_str               =   get_dtype_str_for_datatype(index_dtype)
+                    converted_index_val     =   get_converted_value(dtype_str,new_value,opstat)
+                    
+                    if(opstat.get_status()) :
+                        
+                        try :
+                            
+                            index = df.index.tolist()
+                            df_col_names = df.index.names
+                            index_values                    =   df.index.values
+                            
+                            new_index_tuple     =   []
+                            for i in range(len(df_col_names)) :
+                                new_index_tuple.append(index_values[row_id][i])
+                                
+                            new_index_tuple[col_id]     =   converted_index_val
+                            index[row_id]   =   tuple(new_index_tuple)
+                            
+                            import pandas as pd
+                            df.index = pd.MultiIndex.from_tuples(index, names = df_col_names)
+                            
+                        except Exception as e :
+                            opstat.store_exception("Unable to convert and store value for " + str(col_id),e) 
+                    
+                else :
                 
-                if(len(new_value) > 0) :
-                    df.iloc[row_id,col_id] = new_value
+                    if(is_numeric_col(df,col_id)) :
+                        if(is_int_col(df,col_id)) :
+                            new_value       =   int(new_value)
+                        else :
+                            new_value       =   float(new_value)
+                
+                    if(len(new_value) > 0) :
+                        df.iloc[row_id,col_id] = new_value
 
                 dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),row_id,0)
                 
-            elif(func_id == 1) :
+                if(not opstat.get_status()) :
+                    display_exception(opstat)
+                
+            elif(func_id == dcm.CHANGE_ROW) :
+                
+                print("dcm.CHANGE_ROW")
+
+                
+            elif(func_id == dcm.DROP_ROW) :
                 drop_row(row_id)
                 dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),0,0)
 
@@ -449,7 +499,32 @@ def display_data_cleansing(option,parms=None) :
             
         elif(option ==  dcm.PROCESS_TOGGLE_CATEGORY_ORDER) :
             process_toggle_category_order(parms)
-            dcw.display_cat_cleansing_taskbar()                
+            dcw.display_cat_cleansing_taskbar()   
+
+        elif(option ==  dcm.DISPLAY_SELECT_ROW_ID) :
+            dcw.display_select_df_row(parms)
+                     
+        elif(option ==  dcm.PROCESS_SELECT_ROW_ID) :
+            
+            opstat      =   opStatus()
+            
+            df = cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+            
+            if(type(parms) == list) :
+                from dfcleanser.data_inspection.data_inspection_control import get_row_id_for_df
+                retparms    =   get_row_id_for_df(df,parms,dcw.select_df_rows_input_idList,opstat)
+            else :
+                retparms    =   [int(parms),0]
+
+            if(opstat.get_status()) :
+            
+                rowid = retparms[0]
+                cfg.set_config_value(cfg.CLEANSING_ROW_KEY,rowid)
+                dcw.display_row_data(cfg.get_current_chapter_df(cfg.DataCleansing_ID),rowid,0)
+                
+            else :
+                display_exception(opstat)
+
 
     else :
             
@@ -1017,7 +1092,6 @@ def process_chknum_compatability(option) :
         nn_df_describe_table = get_table_value("dcnngendfdesc")        
 
         #set_col_major_table_scroll(nn_df_describe_table,SCROLL_LEFT)
-
         #from dfcleanser.common.display_utils import display_df_nn_describe
         nn_cols_html    =   nn_df_describe_table.get_html() 
                     

@@ -28,7 +28,7 @@ from dfcleanser.common.common_utils import (is_int_col, get_select_defaults,is_c
                                             is_numeric_col, RunningClock,display_generic_grid,
                                             get_help_note_html, whitecolor, yellowcolor, redcolor, greencolor)
 
-from dfcleanser.common.display_utils import (display_df_unique_column, display_single_row, display_dfcleanser_taskbar,
+from dfcleanser.common.display_utils import (display_df_unique_column, get_single_row, display_dfcleanser_taskbar,
                                              display_df_describe, display_df_nn_describe) 
 
 """
@@ -79,10 +79,10 @@ data_cleansing_tb_keyTitleList          =   ["Cleanse</br>Numeric Column",
                                              "Cleanse Row",
                                              "Clear","Reset","Help"]
 
-data_cleansing_tb_jsList                =   ["cleansing_tb_callback(0)",
-                                             "cleansing_tb_callback(1)",
-                                             "cleansing_tb_callback(2)",
-                                             "cleansing_tb_callback(3)",
+data_cleansing_tb_jsList                =   ["cleansing_tb_callback(" + str(dcm.DISPLAY_CLEANSE_NUMERIC_COLUMNS) + ")",
+                                             "cleansing_tb_callback(" + str(dcm.DISPLAY_CLEANSE_NON_NUMERIC_COLUMNS) + ")",
+                                             "cleansing_tb_callback(" + str(dcm.DISPLAY_SELECT_ROW_ID) + ")",
+                                             "cleansing_tb_callback(" + str(dcm.DISPLAY_CLEANSE_CLEAR) + ")",
                                              "process_pop_up_cmd(6)",
                                              "displayhelp('" + str(dfchelp.CLEANSE_MAIN_TASKBAR_ID) + "')"]
 
@@ -236,22 +236,26 @@ nn_find_values_input_short              =   True
 """
 change_row_values_input_title            =   "Change Data Value"
 change_row_values_input_id               =   "changerowinput"
-change_row_values_input_idList           =   ["changercval","changernval",None,None,None,None]
+change_row_values_input_idList           =   ["changercval",
+                                              "changernval"
+                                              ,None,None,None,None,None]
 
 change_row_values_input_labelList        =   ["current_value",
                                              "new_value",
-                                             "Change</br>Value",
-                                             "Drop</br>Row",
+                                             "Change</br>Row</br>Values",
+                                             "Get</br>New</br>Row",
+                                             "Drop</br>Current</br>Row",
                                              "Return",
                                              "Help"]
 
-change_row_values_input_typeList         =   ["text","text","button","button","button","button"]
+change_row_values_input_typeList         =   ["text","text","button","button","button","button","button"]
 
-change_row_values_input_placeholderList  =   ["","",None,None,None,None]
+change_row_values_input_placeholderList  =   ["","",None,None,None,None,None]
 
 change_row_values_input_jsList           =   [None,None,
-                                             "change_rowvals_callback(0)",
-                                             "change_rowvals_callback(1)",
+                                             "change_rowvals_callback(" + str(dcm.CHANGE_ROW_VALUES) + ")",
+                                             "cleansing_tb_callback(" + str(dcm.DISPLAY_SELECT_ROW_ID) + ")",
+                                             "change_rowvals_callback(" + str(dcm.DROP_ROW) + ")",
                                              "cleansing_tb_callback(3)",
                                              "displayhelp('" + str(dfchelp.CLEANSE_ROW_ID) + "')"]
 
@@ -926,8 +930,70 @@ cat_cleansing_tb_jsList                 =   ["process_cols_callback(" + str(dcm.
 cat_cleansing_tb_centered               =   True
 
 
+"""
+#--------------------------------------------------------------------------
+#    change df row input form
+#--------------------------------------------------------------------------
+"""
+change_df_row_input_title            =   ""
+change_df_row_input_id               =   "scrolldfrowsinput"
+change_df_row_input_idList           =   ["scrolldfrowsrowid",
+                                           "scrolldfrowsindexcols",
+                                           "scrolldfrowsindexvals",
+                                           None,None,None,None]
+
+change_df_row_input_labelList       =   ["df_row_id",
+                                          "df_index_cols",
+                                          "df_index_values",
+                                          "Display</br>Row ID",
+                                          "Display</br>Index Row",
+                                          "Return","Help"]
+
+change_df_row_input_typeList        =   ["text","text","text","button","button","button","button"]
+
+change_df_row_input_placeholderList =   ["","","",None,None,None,None]
+
+change_df_row_input_jsList          =   [None,None,None,
+                                         "inspection_task_bar_callback(" + str(dcm.PROCESS_GET_ROW_BY_ID) + ")",
+                                         "inspection_task_bar_callback(" + str(dcm.PROCESS_GET_ROW_BY_INDEX) + ")",
+                                         "inspection_task_bar_callback(" + str(dcm.DISPLAY_CLEANSE_ROW) + ")",
+                                         "displayhelp('" + str(dfchelp.INSPECT_ROW_NANS_ID) + "')"]
+
+change_df_row_input_reqList         =   [0]
+
+change_df_row_input_short           =   True
 
 
+"""
+#--------------------------------------------------------------------------
+#    select df row input form
+#--------------------------------------------------------------------------
+"""
+select_df_rows_input_title            =   ""
+select_df_rows_input_id               =   "selectdfrowsinput"
+select_df_rows_input_idList           =   ["selectdfrowsrowid",
+                                           "selectdfrowsindexcols",
+                                           "selectdfrowsindexvals",
+                                           None,None,None]
+
+select_df_rows_input_labelList       =   ["df_row_id",
+                                          "df_index_cols",
+                                          "df_index_values",
+                                          "Get</br>Selected</br>Row",
+                                          "Return","Help"]
+
+select_df_rows_input_typeList        =   ["text","text","text","button","button","button"]
+
+select_df_rows_input_placeholderList =   ["","","",None,None,None,None]
+
+select_df_rows_input_jsList          =   [None,None,None,
+                                          "cleansing_tb_callback(" + str(dcm.PROCESS_SELECT_ROW_ID) + ")",
+                                          "cleansing_tb_callback(" + str(dcm.DISPLAY_CLEANSE_CLEAR) + ")",
+                                          "displayhelp('" + str(dfchelp.INSPECT_ROW_NANS_ID) + "')"]
+
+select_df_rows_input_reqList         =   [0,1,2]
+
+select_df_rows_input_short           =   True
 
 
 import dfcleanser.data_inspection.data_inspection_widgets as diw
@@ -1038,7 +1104,7 @@ def display_numeric_cols() :
     cols_heading_html  =   "<div>Numeric Columns</div>"
 
     try :
-                    
+        print("display_numeric_cols")            
         col_table_html  =   display_df_describe(False)
                     
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
@@ -1073,11 +1139,9 @@ def display_non_numeric_cols() :
     cols_heading_html  =   "<div>Non Numeric Columns</div>"
                 
     try :
-                    
+        
         nn_cols_html    =   display_df_nn_describe(False) 
         
-        #print(nn_cols_html)
-                    
         gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
         gridhtmls       =   [cols_heading_html,nn_cols_html]
     
@@ -1332,7 +1396,7 @@ def display_col_data(showUniques=False) :
     *  N/A
     * --------------------------------------------------------
     """
-    print("current_col",cfg.get_config_value(cfg.CLEANSING_COL_KEY))  
+
     df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
     display_unique_col_data(df,showUniques)
 
@@ -1793,8 +1857,7 @@ def display_unique_col_data(df,showUniques=False) :
         cleansing_text_tb_html          =   get_cleansing_tb_html(df,colname,cfg.DataCleansing_ID)
 
         col_stats_html  =   display_col_stats(df,colname,display=False,full_size=True)
-    
-
+        
         if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
 
             gridclasses     =   ["dfc-left","dfcleanser-common-grid-header","dfc-bottom","dfc-footer"]
@@ -1834,28 +1897,13 @@ def display_row_data(df,rowid,colid) :
     * --------------------------------------------------------
     """
     
-    rows_table = dcTable("Sample Row","dcdisrow",cfg.DataCleansing_ID)
+    df_title    =   cfg.get_config_value(cfg.CURRENT_CLEANSE_DF)
     
-    refList = []
-    
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        
-        for i in range(3) :
-            refList.append([None,None,None,None,None,None,None,None,None,None])
-            refList.append(["frval","frval","frval","frval","frval",
-                            "frval","frval","frval","frval","frval"])
-            
-    else :
-        
-        for i in range(6) :
-            refList.append([None,None,None,None,None])
-            refList.append(["frval","frval","frval","frval","frval"])
-        
-    rows_table.set_refList(refList)
+    rows_table = dcTable("df '" + df_title + "' : Row " + str(rowid),"dcdisrow",cfg.DataCleansing_ID)
     
     opstat = opStatus()
     
-    df_row_cleanser_table_html    =   display_single_row(df,rows_table,rowid,colid,opstat,False)
+    df_row_cleanser_table_html    =   get_single_row(df,rows_table,rowid,colid,opstat,False)
     
     if(not (opstat.get_status()) ) :
         display_exception(opstat)
@@ -1864,7 +1912,7 @@ def display_row_data(df,rowid,colid) :
         
         print("\n")
         
-        df_row_cleanser_heading_html    =   "<div>dataframe Row Cleanser : Row " + str(rowid) + "</div>"
+        df_row_cleanser_heading_html    =   "<div>dataframe Row Cleanser</div></br>"
         
         df_row_input_form               =   InputForm(change_row_values_input_id,
                                                       change_row_values_input_idList,
@@ -1876,7 +1924,7 @@ def display_row_data(df,rowid,colid) :
         
         df_row_input_form.set_shortForm(True)
         df_row_input_form.set_gridwidth(480)
-        df_row_input_form.set_buttonstyle({"font-size":13, "height":55, "width":110, "left-margin":10})
+        df_row_input_form.set_buttonstyle({"font-size":13, "height":75, "width":90, "left-margin":5})
         
         df_row_cleanser_input_html      =   df_row_input_form.get_html()
         
@@ -2233,6 +2281,7 @@ def display_check_alpha_num(option,colname) :
     * --------------------------------------------------------
     """
     
+    
     cfg.set_config_value(cfg.CHKNUM_COL_KEY,colname)
     
     cols_heading_html  =   "<div>Non Numeric Columns</div>"
@@ -2451,6 +2500,68 @@ def display_cat_option(option,parms) :
     display_pop_up_buffer()
 
 
+def display_select_df_row(parms) :
+    """
+    * -------------------------------------------------------- 
+    * function : display scroll to input form
+    * 
+    * parms :
+    *   N/A          -   dataframe
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+    
+    scroll_form   = InputForm(select_df_rows_input_id,
+                              select_df_rows_input_idList,
+                              select_df_rows_input_labelList,
+                              select_df_rows_input_typeList,
+                              select_df_rows_input_placeholderList,
+                              select_df_rows_input_jsList,
+                              select_df_rows_input_reqList)
+    
+    scroll_form.set_buttonstyle({"font-size":12, "height":75, "width":110, "left-margin":55})
+    scroll_form.set_gridwidth(480)
+    
+    df = cfg.get_current_chapter_df(cfg.DataCleansing_ID)
+    
+    index_names     =   []
+                    
+    index_columns   =   df.index.names
+    
+    if(len(index_columns) > 0) :
+        for i in range(len(index_columns)) :
+            if( not (index_columns[i] is None) ) :
+                index_names.append(index_columns[i])
+        
+    if(len(index_names) == 0) :
+        cfg.set_config_value(select_df_rows_input_id+"Parms",["","",""])
+        cfg.set_config_value(select_df_rows_input_id+"ParmsProtect",[False,True,True]) 
+    else :
+        
+        index_cols  =   "["
+        for i in range(len(index_names)) :
+            index_cols  =   index_cols + index_names[i]
+            if(not (i == (len(index_names) - 1))) :
+                index_cols  =   index_cols + ","
+                
+        index_cols      =   index_cols + "]"
+        
+        cfg.set_config_value(select_df_rows_input_id+"Parms",["",index_cols,""]) 
+        cfg.set_config_value(select_df_rows_input_id+"ParmsProtect",[False,True,False]) 
+    
+    scroll_form_html    =   scroll_form.get_html()
+    
+    scroll_header_html    =   "<div>Select df Row To Cleanse</div><br>"
+            
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+    gridhtmls       =   [scroll_header_html,scroll_form_html]
+            
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :       
+        display_generic_grid("df-inspection-row-scroll-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("df-inspection-row-scroll-pop-up-wrapper",gridclasses,gridhtmls,True)
 
 
 
