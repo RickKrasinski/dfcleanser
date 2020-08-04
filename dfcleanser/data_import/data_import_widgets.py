@@ -16,7 +16,7 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.data_import.data_import_model as dim
 
-from dfcleanser.common.html_widgets import (maketextarea, opStatus, ButtonGroupForm, InputForm)
+from dfcleanser.common.html_widgets import (maketextarea, makefilearea, opStatus, ButtonGroupForm, InputForm)
 
 from dfcleanser.common.table_widgets import (dcTable, SIMPLE)
 
@@ -121,6 +121,24 @@ pandas_import_task_barB_jsList       =   ["pandas_import_tb_select_callback("+st
 pandas_import_task_barB_centered     =   True
 
 
+"""
+#--------------------------------------------------------------------------
+#   display html dfs task bar
+#--------------------------------------------------------------------------
+"""
+import_display_dfs_task_bar_doc_title           =   "Import html dfs"
+import_display_dfs_task_bar_title               =   "Import html dfs"
+import_display_dfs_task_bar_id                  =   "importhtmldfs"
+
+import_display_dfs_task_bar_keyTitleList        =   ["Return","Help"]
+
+import_display_dfs_task_bar_jsList              =   ["import_taskbar_callback(0)",
+                                                     "displayhelp('" + str(dfchelp.IMPORT_MAIN_TASKBAR_ID) + "')"]
+
+import_display_dfs_task_bar_centered            =   True
+
+import_display_dfs_task_bar_pu_keyTitleList     =   ["Pandas</br>Dataframe","Custom","Clear","Reset","Help"]
+
 
 """
 #--------------------------------------------------------------------------
@@ -134,6 +152,7 @@ pandas_import_csv_idList        =   ["csvdftitle",
                                      "csvcolNamesRow",
                                      "csvcolNamesList",
                                      "csvcolRowIds",
+                                     "csvcoldtypes",
                                      "csvaddlParms",
                                      None,None,None,None]
 
@@ -142,12 +161,13 @@ pandas_import_csv_labelList     =   ["dataframe_title",
                                      "header",
                                      "names",
                                      "index_col",
+                                     "dtype",
                                      "Additional Parm(s)",
                                      "Import</br>CSV File","Clear",
                                      "Return","Help"]
 
-pandas_import_csv_typeList      =   ["text","file","text","file",
-                                     "text",maketextarea(6),
+pandas_import_csv_typeList      =   ["text","file","text",makefilearea(3),
+                                     "text",maketextarea(3),maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_csv_placeholderList = ["dataframe title (default 'filename'_df)",
@@ -155,12 +175,13 @@ pandas_import_csv_placeholderList = ["dataframe title (default 'filename'_df)",
                                      "enter row number containing column names (default infer)",
                                      "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
                                      "enter column number to use for row ids (default None)",
+                                     "enter column datatypes as json dict - {'col' : 'str', ...} (default None)",
                                      "enter additional parms { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
-pandas_import_csv_jsList       =    [None,None,None,None,None,None,
+pandas_import_csv_jsList       =    [None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.CSV_IMPORT)+")",
-                                     "pandas_details_clear_callback("+str(dim.CSV_IMPORT)+")",
+                                     "pandas_details_clear_callback("+str(dim.CLEAR_CSV_IMPORT)+")",
                                      "pandas_details_return_callback(0)",
                                      "display_help_url('"+str(dfchelp.CSV_IMPORT_URL)+"')"]
 
@@ -188,14 +209,15 @@ pandas_import_fwf_labelList     =   ["dataframe_title",
                                      "filepath_or_buffer ",
                                      "delimiter",
                                      "header",
-                                     "names","index_col",
+                                     "names",
+                                     "index_col",
                                      "dtype",
                                      "Additional Parm(s)",
                                      "Import</br>FWF File",
                                      "Clear","Return","Help"]
 
-pandas_import_fwf_typeList      =   ["text","file","text","text","file",
-                                     "text","file",maketextarea(6),
+pandas_import_fwf_typeList      =   ["text","file","text","text",makefilearea(3),
+                                     "text",makefilearea(3),maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_fwf_placeholderList = ["dataframe title (default 'filename'_df)",
@@ -204,13 +226,13 @@ pandas_import_fwf_placeholderList = ["dataframe title (default 'filename'_df)",
                                      "enter row number containing column names (default infer)",
                                      "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
                                      "enter column number to use for row ids (default None)",
-                                     "enter Data Types file name or browse to a json file or as a List (List format - [value, value ...] (default infer)",
+                                     "enter Data Types file name or browse to a json file or json dict - {'col' : 'str', ...} (default None)",
                                      "enter additional parms { Key :  Value} ... (default None)",
                                      None,None,None,None]
 
 pandas_import_fwf_jsList        =   [None,None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.FWF_IMPORT)+")",
-                                     "pandas_details_clear_callback("+str(dim.FWF_IMPORT)+")",
+                                     "pandas_details_clear_callback("+str(dim.CLEAR_FWF_IMPORT)+")",
                                      "pandas_details_return_callback(0)",
                                      "display_help_url('"+str(dfchelp.FWF_IMPORT_URL)+"')"]
 
@@ -230,6 +252,7 @@ pandas_import_excel_idList      =   ["exceldftitle",
                                      "excelcolNamesRow",
                                      "excelcolNamesList",
                                      "excelcolRowIds",
+                                     "excelcoldtype",
                                      "exceladdlParms",
                                      None,None,None,None]
 
@@ -239,12 +262,13 @@ pandas_import_excel_labelList   =   ["dataframe_title",
                                      "header",
                                      "names",
                                      "index_col",
+                                     "dtype",
                                      "Additional Parm(s)",
                                      "Import</br>Excel File",
                                      "Clear","Return","Help"]
 
-pandas_import_excel_typeList    =   ["text","file","text","text","file","text",
-                                     maketextarea(6),
+pandas_import_excel_typeList    =   ["text","file","text","text",
+                                     makefilearea(3),"text",makefilearea(3),maketextarea(6),
                                      "button","button","button","button"]
 
 pandas_import_excel_placeholderList = ["dataframe title (default 'filename'_df)",
@@ -253,12 +277,13 @@ pandas_import_excel_placeholderList = ["dataframe title (default 'filename'_df)"
                                        "enter row number containing column names (default infer)",
                                        "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
                                        "enter column number to use for row ids (default None)",
+                                       "enter Data Types file name or browse to a json file or json dict - {'col' : 'str', ...} (default None)",
                                        "enter additional parms { Key :  Value} ... (default None)",
                                        None,None,None,None]
 
-pandas_import_excel_jsList      =   [None,None,None,None,None,None,None,
+pandas_import_excel_jsList      =   [None,None,None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.EXCEL_IMPORT)+")",
-                                     "pandas_details_clear_callback("+str(dim.EXCEL_IMPORT)+")",
+                                     "pandas_details_clear_callback("+str(dim.CLEAR_EXCEL_IMPORT)+")",
                                      "pandas_details_return_callback(0)",
                                      "display_help_url('"+str(dfchelp.EXCEL_IMPORT_URL)+"')"]
 
@@ -288,7 +313,7 @@ pandas_import_json_labelList    =   ["dataframe_title",
                                      "Import</br>JSON File",
                                      "Clear","Return","Help"]
 
-pandas_import_json_typeList     =   ["text","file","text","text","file",
+pandas_import_json_typeList     =   ["text","file","text","text", makefilearea(3),
                                      maketextarea(6),
                                      "button","button","button","button"]
 
@@ -296,13 +321,13 @@ pandas_import_json_placeholderList = ["dataframe title (default 'filename'_df)",
                                       "enter JSON path or browse to file (can be url)",
                                       "enter JSON orientation",
                                       "series or dataframe (default dataframe)",
-                                      "enter data types file name or browse to a json file or as a List (List format - [value, value ...] (default infer)",
+                                      "enter data types file name or browse to a json file or json dict - {'col' : 'str', ...} (default None)",
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
 pandas_import_json_jsList       =   [None,None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.JSON_IMPORT)+")",
-                                     "pandas_details_clear_callback("+str(dim.JSON_IMPORT)+")",
+                                     "pandas_details_clear_callback("+str(dim.CLEAR_JSON_IMPORT)+")",
                                      "pandas_details_return_callback(0)",
                                      "display_help_url('"+str(dfchelp.JSON_IMPORT_URL)+"')"]
 
@@ -316,50 +341,80 @@ pandas_import_json_reqList      =   [0,1]
 pandas_import_html_title        =   "Pandas HTML Import"
 pandas_import_html_id           =   "importPandasHTML"
 
-pandas_import_html_idList       =   ["htmldftitle",
-                                     "htmlPath",
+pandas_import_html_idList       =   ["htmlPath",
                                      "htmlMatch",
                                      "htmlFlavor",
-                                     "htmlColNamesRow",
-                                     "htmnColNamesFile",
-                                     "htmlRowIndexColumn",
+                                     "htmlHeader",
                                      "htmladdlParms",
                                      None,None,None,None]
 
-pandas_import_html_labelList    =   ["dataframe_title",
-                                     "io",
+pandas_import_html_labelList    =   ["io",
                                      "match",
                                      "flavor",
                                      "header",
-                                     "names",
-                                     "index_col",
                                      "Additional Parm(s)",
                                      "Import</br>HTML File",
                                      "Clear","Return","Help"]
 
-pandas_import_html_typeList     =   ["text","file","text","text",
-                                     "text","file","text",
-                                     maketextarea(6),
+pandas_import_html_typeList     =   [makefilearea(3),"text","text","text",
+                                    maketextarea(6),
                                      "button","button","button","button"]
 
-pandas_import_html_placeholderList = ["dataframe title (default default 'filename'_df)",
-                                      "enter HTML path or browse to file (can be url)",
+pandas_import_html_placeholderList = ["enter an URL, or choose file, or a raw string containing HTML)",
                                       "enter match string (default None)",
                                       "parsing flavor (default None bs4-html5)",
                                       "enter row id containing column names or as List [value, value ...] (default None)",
-                                      "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
-                                      "enter column id containing row ids or as List [value, value ...] (default None)",
                                       "enter additional parms { Key :  Value} ... (default None)",
                                       None,None,None,None]
 
-pandas_import_html_jsList       =   [None,None,None,None,None,None,None,None,
+pandas_import_html_jsList       =   [None,None,None,None,None,
                                      "pandas_details_import_callback("+str(dim.HTML_IMPORT)+")",
-                                     "pandas_details_clear_callback("+str(dim.HTML_IMPORT)+")",
+                                     "pandas_details_clear_callback("+str(dim.CLEAR_HTML_IMPORT)+")",
                                      "pandas_details_return_callback(0)",
                                      "display_help_url('"+str(dfchelp.HTML_IMPORT_URL)+"')"]
 
 
-pandas_import_html_reqList      =   [0,1]
+pandas_import_html_reqList      =   [0]
+
+
+"""
+#--------------------------------------------------------------------------
+#   pandas import html df form components
+#--------------------------------------------------------------------------
+"""
+pandas_import_html_df_title             =   "Pandas HTML df Import"
+pandas_import_html_df_id                =   "importPandasHTMLdf"
+
+pandas_import_html_df_idList            =   ["dfdftitle",
+                                             "dfnames",
+                                             "dfindexcol",
+                                             "dfdtype",
+                                             None,None,None]
+
+pandas_import_html_df_labelList         =   ["dataframe_title",
+                                             "names",
+                                             "index_col",
+                                             "dtype",
+                                             "Import</br>JSON Table",
+                                             "Return","Help"]
+
+pandas_import_html_df_typeList          =   ["text",makefilearea(3),maketextarea(3),makefilearea(3),
+                                             "button","button","button"]
+
+pandas_import_html_df_placeholderList   =   ["dataframe title (default 'filename'_df)",
+                                             "enter Column Names file name or browse to a json file or as a List (List format - [value, value ...] (default None)",
+                                             "enter column number to use for row ids (default None)",
+                                             "enter Data Types file name or browse to a json file or json dict - {'col' : 'str', ...} (default None)",
+                                             None,None,None]
+
+pandas_import_html_df_jsList            =   [None,None,None,None,
+                                             "pandas_details_import_callback("+str(dim.SAVE_HTML_IMPORT_DF)+")",
+                                             "pandas_details_return_callback(" + str(dim.RETURN_HTML_IMPORT_DFS)+ ")",
+                                             "display_help_url('"+str(dfchelp.HTML_IMPORT_URL)+"')"]
+
+
+pandas_import_html_df_reqList      =   [0]
+
 
 """
 #--------------------------------------------------------------------------
@@ -417,7 +472,7 @@ pandas_import_sqltable_common_jsList       =   [None,None,None,None,None,None,No
                                                 "pandas_details_get_index_columns_callback('table')",
                                                 "pandas_details_get_columns_callback('table')",
                                                 "pandas_details_get_strftime_callback('table')",
-                                                "pandas_details_clear_callback("+str(dim.SQLTABLE_IMPORT)+")",
+                                                "pandas_details_clear_callback("+str(dim.CLEAR_SQLTABLE_IMPORT)+")",
                                                 "display_help_url('"+str(dfchelp.SQLTABLE_IMPORT_URL)+"')"]
 
 
@@ -469,7 +524,7 @@ pandas_import_sqltable_custom_placeholderList = ["dataframe title (default 'file
 pandas_import_sqltable_custom_jsList       =   [None,None,None,None,None,None,None,None,
                                                 "pandas_import_sql_callback(5)",
                                                 "pandas_details_get_strftime_callback()",
-                                                "pandas_details_clear_callback("+str(dim.SQLTABLE_IMPORT)+")",
+                                                "pandas_details_clear_callback("+str(dim.CLEAR_SQLTABLE_CUSTOM_IMPORT)+")",
                                                 "display_help_url('"+str(dfchelp.SQLTABLE_IMPORT_URL)+"')"]
 
 pandas_import_sqltable_custom_reqList      =   [0,1]
@@ -517,7 +572,7 @@ pandas_import_sqlquery_placeholderList = ["dataframe title (default 'filename'_d
 
 pandas_import_sqlquery_jsList       =   [None,None,None,None,None,None,None,
                                          "pandas_import_sql_callback(1)",
-                                         "pandas_details_clear_callback("+str(dim.SQLQUERY_IMPORT)+")",
+                                         "pandas_details_clear_callback("+str(dim.CLEAR_SQLQUERY_IMPORT)+")",
                                          "pandas_details_return_callback(0)",
                                          "display_help_url('"+str(dfchelp.SQLQUERY_IMPORT_URL)+"')"]
 
@@ -606,6 +661,12 @@ def display_import_pandas_taskbar() :
                                                    pandas_import_task_barB_keyTitleList,
                                                    pandas_import_task_barB_jsList,
                                                    pandas_import_task_barB_centered))
+def get_html_dfs_taskbar() :
+        
+    return(ButtonGroupForm(import_display_dfs_task_bar_id,
+                           import_display_dfs_task_bar_keyTitleList,
+                           import_display_dfs_task_bar_jsList,
+                           import_display_dfs_task_bar_centered))
         
         
 def get_csv_import_inputs(parms) :
@@ -693,13 +754,10 @@ def display_dc_import_forms(id, detid=0, notes=False) :
     # add the main import task bar
     if (id == dim.IMPORT_TB_ONLY) :
         
-        display_import_main_taskbar()        
-        if(cfg.is_a_dfc_dataframe_loaded()) :
-            if(not(cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) is None)) :
-                display_notes([cfg.get_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY) + " imported as dfcleanser df"])
-        else :
-            cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY)
-            
+        display_import_main_taskbar() 
+        
+        if(not(cfg.is_a_dfc_dataframe_loaded())) :
+            cfg.drop_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,True)
 
     # add the pandas import task bar or pandas details form 
     elif ( (id == dim.IMPORT_PANDAS_TB_ONLY) or 
@@ -716,7 +774,7 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 
                 dbid = cfg.get_config_value(cfg.CURRENT_DB_ID_KEY)
                 
-                cfg.set_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY,detid)
+                cfg.set_config_value(cfg.CURRENT_SQL_IMPORT_ID_KEY,detid,True)
                 
                 if(dbid == None)                        :   
                     cfg.set_config_value(cfg.CURRENT_DB_ID_KEY,dbutils.MySql)
@@ -763,8 +821,12 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 display_import_main_taskbar()
                 
                 pandas_input_form  =   get_pandas_import_input_form(detid)
-                pandas_input_form.set_gridwidth(480)
-                pandas_input_form.set_buttonstyle({"font-size":13, "height":50, "width":105, "left-margin":12})
+                if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+                    pandas_input_form.set_gridwidth(720)
+                    pandas_input_form.set_buttonstyle({"font-size":13, "height":50, "width":178, "left-margin":0})
+                else :
+                    pandas_input_form.set_gridwidth(480)
+                    pandas_input_form.set_buttonstyle({"font-size":13, "height":50, "width":105, "left-margin":12})
 
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     pandas_input_form.set_shortForm(True)
@@ -777,11 +839,13 @@ def display_dc_import_forms(id, detid=0, notes=False) :
                 gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
                 gridhtmls       =   [pandas_input_heading_html,pandas_input_html]
 
+                #pandas_input_form.dump()
+                #print(pandas_input_html)
 
                 if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
                     display_generic_grid("data-import-wrapper",gridclasses,gridhtmls)
                 else :
-                    display_generic_grid("data-import-wrapper",gridclasses,gridhtmls,True)
+                    display_generic_grid("data-import-pop-up-wrapper",gridclasses,gridhtmls,True)
                
         else :
  
@@ -981,6 +1045,8 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_csv_placeholderList,
                                           pandas_import_csv_jsList,
                                           pandas_import_csv_reqList)
+            
+            import_form.set_label_note({5:[dfchelp.JSON_DICT_FORMAT,"json dict format","csvimportmhimageid"]})
         
         if(impid == dim.FWF_IMPORT) :  
             import_form     =   InputForm(pandas_import_fwf_id,
@@ -990,6 +1056,8 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_fwf_placeholderList,
                                           pandas_import_fwf_jsList,
                                           pandas_import_fwf_reqList)
+            
+            import_form.set_label_note({6:[dfchelp.JSON_DICT_FORMAT,"json dict format","csvimportmhimageid"]})
         
         
         if(impid == dim.EXCEL_IMPORT) :  
@@ -1001,6 +1069,8 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_excel_jsList,
                                           pandas_import_excel_reqList)
             
+            import_form.set_label_note({6:[dfchelp.JSON_DICT_FORMAT,"json dict format","csvimportmhimageid"]})
+            
         if(impid == dim.JSON_IMPORT) :  
             import_form     =   InputForm(pandas_import_json_id,
                                           pandas_import_json_idList,
@@ -1009,6 +1079,8 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_json_placeholderList,
                                           pandas_import_json_jsList,
                                           pandas_import_json_reqList)
+            
+            import_form.set_label_note({4:[dfchelp.JSON_DICT_FORMAT,"json dict format","csvimportmhimageid"]})
             
         if(impid == dim.HTML_IMPORT) :  
             import_form     =   InputForm(pandas_import_html_id,
@@ -1019,8 +1091,6 @@ def get_pandas_import_input_form(impid) :
                                           pandas_import_html_jsList,
                                           pandas_import_html_reqList)
             
-            import_form.dump()
-        
     else :
 
         if(id == dim.SQLQUERY_IMPORT) : 
@@ -1826,7 +1896,7 @@ def get_datetime_formats() :
 
     formatsList = ["No Format"]
     
-    from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+    from dfcleanser.sw_utilities.sw_utility_model import get_Dict
     formats = get_Dict("strftime")
 
     keys = list(formats.keys())
@@ -1843,5 +1913,241 @@ def get_datetime_formats() :
     return(formatsList)  
 
 
+def display_html_dfs(dfs)  :
+    
+    dfsHeader      =   ["df","Num</br>Rows","Num</br>Cols","Col 1</br>Name","Col 2</br>Name","Col 3</br>Name","Col 1</br>Value","Col 2</br>Value","Col 3</br>Value"]
+    dfsRows        =   []
+    dfsWidths      =   [5,5,5,10,10,10,15,15,15]
+    dfsAligns      =   ["center","center","center","center","center","center","center","center","center"]
+    dfsHrefs       =   []
 
+    
+    for i in range(len(dfs)) :
+        
+        
+        dfshrefs    =   [None,None,None,None,None,None,None,None,None]
+        dfshrefs[0] = "display_selected_html_df(" + str(i) + ")"
+        dfsHrefs.append(dfshrefs)
+        
+        #print("len df ",str(i)," : ",str(len(dfs[i])))
+        
+        dfcols  =   list(dfs[i].columns)
+        #print("len df ",str(i)," : ",str(len(dfs[i]))," num_cols : ",str(len(dfcols)))
+        
+        if(len(dfcols) < 3) :
+            numcols = len(dfcols)
+        else :
+            numcols = 3
+            
+        df_cols_text    =   []
+        df_cols_vals    =   []
+        
+            
+        for j in range(numcols) :
+        
+            df_cols_text.append(str(dfcols[j]))
+            df_cols_vals.append(str(dfs[i].iloc[0,j]))
+            
+        if(numcols < 3) :
+            for k in range(3 - (numcols)) :
+                df_cols_text.append(" ")
+                df_cols_vals.append(" ")
+                
+
+        current_row     =   [str(i),str(len(dfs[i])),str(len(dfcols)),str(df_cols_text[0]),str(df_cols_text[1]),str(df_cols_text[2]),str(df_cols_vals[0]),str(df_cols_vals[1]),str(df_cols_vals[2])]
+        dfsRows.append(current_row)
+        
+    dfs_table     =   None
+    
+    from dfcleanser.common.table_widgets import dcTable, get_row_major_table, ROW_MAJOR, SCROLL_DOWN
+        
+    dfs_table     =   dcTable("Imported html dataframes",'geocodtestid',
+                                cfg.SWGeocodeUtility_ID,
+                                dfsHeader,dfsRows,
+                                dfsWidths,dfsAligns)
+            
+    dfs_table.set_refList(dfsHrefs)
+    dfs_table.set_checkLength(True)
+    dfs_table.set_textLength(20)
+
+    dfs_table.set_small(True)
+    dfs_table.set_border(True)
+    dfs_table.set_tabletype(ROW_MAJOR)
+    dfs_table.set_rowspertable(10)
+    
+    dfsHtml = "<br>" + get_row_major_table(dfs_table,SCROLL_DOWN,False)
+    
+    
+    dfs_tb   =   get_html_dfs_taskbar()
+    dfs_tb.set_gridwidth(360)
+    dfs_tb.set_customstyle({"font-size":13, "height":40, "width":130, "left-margin":60})
+    dfs_html =   dfs_tb.get_html()
+    dfs_html =   ("<br>" + dfs_html + "<br>")
+    
+    help_note           =   "To get details on a specific df click on the df id column."
+        
+    from dfcleanser.common.common_utils import get_help_note_html
+    dfs_notes_html   =   get_help_note_html(help_note,None,None,"dispdfsnote")
+
+    gridclasses     =   ["dfc-top","dfc-bottom","dfc-footer"]
+    gridhtmls       =   [dfsHtml,dfs_html,dfs_notes_html]
+    
+    display_generic_grid("display-html-dfs-wrapper",gridclasses,gridhtmls)
+    
+    dim.set_dfs_list(dfs)
+
+    
+def display_html_df_details(parms)  :
+    
+    display_import_pandas_taskbar() 
+    
+    df_id   =   int(parms[0])
+    dim.set_current_df_id(df_id)    
+    
+    dfs     =   dim.get_dfs_list()
+    df      =   dfs[df_id]
+    
+    dfstatsHeader      =   ["Number of Rows","Number Of Columns"]
+    dfstatsRows        =   []
+    dfstatsWidths      =   [50,50]
+    dfstatsAligns      =   ["left","left"]
+        
+    dfstatsRows.append([str(len(df)),str(len(list(df.columns)))])
+    
+    dfstats_table     =   None
+    
+    from dfcleanser.common.table_widgets import dcTable, get_row_major_table, ROW_MAJOR, SCROLL_DOWN
+        
+    dfstats_table     =   dcTable("Dataframe " + str(df_id) + " : Stats",'statstbl',
+                                        cfg.SWGeocodeUtility_ID,
+                                        dfstatsHeader,dfstatsRows,
+                                        dfstatsWidths,dfstatsAligns)
+            
+    #dfs_col_names_table.set_refList(dfsHrefs)
+    dfstats_table.set_checkLength(True)
+    dfstats_table.set_textLength(20)
+
+    dfstats_table.set_small(True)
+    dfstats_table.set_border(True)
+    dfstats_table.set_tabletype(ROW_MAJOR)
+    dfstats_table.set_rowspertable(10)
+    
+    dfstatsHtml = "<br>" + get_row_major_table(dfstats_table,SCROLL_DOWN,False)
+    
+    df_cols     =   list(df.columns)
+    
+    dfHeader      =   []
+    dfRows        =   []
+    dfWidths      =   [10,10,10,10,10,10,10,10,10,10]
+    dfAligns      =   ["center","center","center","center","center","center","center","center","center","center"]
+    
+    for i in range(len(df_cols)) :
+        
+        if((i%10) == 0) :
+            cdfrow      =   []
+            if(not (i==0)) :
+                dfRows.append(cdfrow)
+            
+        cdfrow.append(df_cols[i])
+        
+    dfRows.append(cdfrow)
+    
+    dfs_col_names_table     =   None
+    
+    from dfcleanser.common.table_widgets import dcTable, get_row_major_table, ROW_MAJOR, SCROLL_DOWN
+        
+    dfs_col_names_table     =   dcTable("Dataframe " + str(df_id) + ":  Column Names",'cnametbl',
+                                        cfg.SWGeocodeUtility_ID,
+                                        dfHeader,dfRows,
+                                        dfWidths,dfAligns)
+            
+    #dfs_col_names_table.set_refList(dfsHrefs)
+    dfs_col_names_table.set_checkLength(True)
+    dfs_col_names_table.set_textLength(20)
+
+    dfs_col_names_table.set_small(True)
+    dfs_col_names_table.set_border(True)
+    dfs_col_names_table.set_tabletype(ROW_MAJOR)
+    dfs_col_names_table.set_rowspertable(10)
+    
+    dfHtml = "<br>" + get_row_major_table(dfs_col_names_table,SCROLL_DOWN,False)
+    
+    dfvalHeader      =   []
+    dfvalRows        =   []
+    dfvalWidths      =   [10,10,10,10,10,10,10,10,10,10]
+    dfvalAligns      =   ["center","center","center","center","center","center","center","center","center","center"]
+    
+    for i in range(len(df_cols)) :
+        
+        if((i%10) == 0) :
+            cdfrow      =   []
+            if(not (i==0)) :
+                dfvalRows.append(cdfrow)
+            
+        cdfrow.append(df.iloc[0,i])
+        
+    dfvalRows.append(cdfrow)
+    
+    df_vals_table     =   None
+    
+    from dfcleanser.common.table_widgets import dcTable, get_row_major_table, ROW_MAJOR, SCROLL_DOWN
+        
+    df_vals_table     =   dcTable("Dataframe " + str(df_id) + " : Row 0 Values",'cvaluetbl',
+                                  cfg.SWGeocodeUtility_ID,
+                                  dfvalHeader,dfvalRows,
+                                  dfvalWidths,dfvalAligns)
+            
+    #dfs_col_names_table.set_refList(dfsHrefs)
+    df_vals_table.set_checkLength(True)
+    df_vals_table.set_textLength(20)
+
+    df_vals_table.set_small(True)
+    df_vals_table.set_border(True)
+    df_vals_table.set_tabletype(ROW_MAJOR)
+    df_vals_table.set_rowspertable(10)
+    
+    dfvalsHtml = "<br>" + get_row_major_table(df_vals_table,SCROLL_DOWN,False)
+    
+    json_df_import_form  =   InputForm(pandas_import_html_df_id,
+                                       pandas_import_html_df_idList,
+                                       pandas_import_html_df_labelList,
+                                       pandas_import_html_df_typeList,
+                                       pandas_import_html_df_placeholderList,
+                                       pandas_import_html_df_jsList,
+                                       pandas_import_html_df_reqList)
+   
+    json_df_import_form.set_shortForm(True)
+    json_df_import_form.set_buttonstyle({"font-size":12, "height":75, "width":140, "left-margin":140})
+    json_df_import_form.set_gridwidth(720)
+    json_df_import_form.set_fullparms(False)
+    
+    json_df_import_form.set_label_note({3:[dfchelp.JSON_DICT_FORMAT,"json dict format","csvimportmhimageid"]})
+    
+    
+
+    
+    json_df_import_form_html     =   json_df_import_form.get_html()
+    
+    gridclasses     =   ["dfc-top","dfc-main","dfc-bottom","dfc-footer"]
+    gridhtmls       =   [dfstatsHtml,dfHtml,dfvalsHtml,json_df_import_form_html]
+    
+    display_generic_grid("display-html-dfs-df-wrapper",gridclasses,gridhtmls)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 

@@ -18,13 +18,16 @@ import dfcleanser.common.db_utils as dbu
 
 from dfcleanser.common.table_widgets import drop_owner_tables
 
+from dfcleanser.common.display_utils import displayParms
+
+
 from dfcleanser.common.common_utils import (get_function_parms, INT_PARM, 
-                                            STRING_PARM, displayParms, display_exception,
+                                            STRING_PARM, display_exception,
                                             opStatus, RunningClock, get_string_value, display_status,
                                             display_notes, display_generic_grid, get_formatted_time)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict, parse_connector_parms, 
-                                        validate_connection_parms)
+                                        validate_connection_parms,get_parms_for_input)
 
 from IPython.display import clear_output
 
@@ -62,8 +65,36 @@ def display_import_forms(importid, detid=0, notes=False) :
             cfg.drop_config_value(cfg.CURRENT_IMPORT_DF)
     
     from dfcleanser.data_import.data_import_widgets import display_dc_import_forms
-    display_dc_import_forms(importid, detid, notes)
     
+    if(detid == dim.CLEAR_CSV_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_csv_id+"Parms")
+        det_id  =   dim.CSV_IMPORT
+    elif(detid == dim.CLEAR_FWF_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_fwf_id+"Parms")
+        det_id  =   dim.FWF_IMPORT
+    elif(detid == dim.CLEAR_EXCEL_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_excel_id+"Parms")
+        det_id  =   dim.EXCEL_IMPORT
+    elif(detid == dim.CLEAR_JSON_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_json_id+"Parms")
+        det_id  =   dim.EXCEL_IMPORT
+    elif(detid == dim.CLEAR_HTML_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_html_id+"Parms")
+        det_id  =   dim.HTML_IMPORT
+    elif(detid == dim.CLEAR_SQLTABLE_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_sqltable_common_id+"Parms")
+        det_id  =   dim.SQLTABLE_IMPORT
+    elif(detid == dim.CLEAR_SQLTABLE_CUSTOM_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_sqltable_custom_id+"Parms")
+        det_id  =   dim.SQLTABLE_IMPORT
+    elif(detid == dim.CLEAR_SQLQUERY_IMPORT) :
+        cfg.drop_config_value(diw.pandas_import_html_id+"Parms")
+        det_id  =   dim.SQLQUERY_IMPORT
+    else :
+        det_id  =   detid
+        
+    display_dc_import_forms(importid, det_id, notes)
+
 
 def display_sql_details_form(dblibid) :
     from dfcleanser.data_import.data_import_widgets import display_dc_sql_connector_forms
@@ -132,13 +163,13 @@ def process_import_form(formid, parms, display=True) :
     
     clock   =   None
     
+    opstat  =   opStatus()    
+    
     try :
         
         if( (formid == dim.CSV_IMPORT)  or (formid == dim.EXCEL_IMPORT) or 
             (formid == dim.JSON_IMPORT) or (formid == dim.HTML_IMPORT) or 
             (formid == dim.FWF_IMPORT)  or (formid == dim.CUSTOM_IMPORT) )  :
-        
-            opstat  =   opStatus()
     
             if(display) :
                 clear_output()
@@ -151,7 +182,7 @@ def process_import_form(formid, parms, display=True) :
                 opstat      =   import_pandas_csv(fparms)
             
                 parmstitle  =   "Pandas CSV Import Parms"
-                parmslist   =   diw.pandas_import_csv_labelList[:6]
+                parmslist   =   diw.pandas_import_csv_labelList[:7]
         
             elif (formid == dim.FWF_IMPORT) :
                 fparms      =   diw.get_fwf_import_inputs(parms)
@@ -176,7 +207,7 @@ def process_import_form(formid, parms, display=True) :
         
             elif (formid == dim.HTML_IMPORT) : 
                 fparms      =   diw.get_html_import_inputs(parms)
-                opstat      =   import_pandas_html(fparms)
+                dfs         =   import_pandas_html(fparms,opstat)
             
                 parmstitle  =   "Pandas HTML Import Parms"
                 parmslist   =   diw.pandas_import_html_labelList[:8]
@@ -194,6 +225,9 @@ def process_import_form(formid, parms, display=True) :
                         if(dispstats) : 
                             ciparms = parms[0].replace("\n","</br>")
                             display_data_import_parms(parmstitle,parmslist,[ciparms],cfg.DataImport_ID,parms[0])
+                            
+                    elif (formid == dim.HTML_IMPORT) :
+                        diw.display_html_dfs(dfs)    
 
                     else :
                         display_data_import_parms(parmstitle,parmslist,fparms,cfg.DataImport_ID,fparms[1])
@@ -209,6 +243,12 @@ def process_import_form(formid, parms, display=True) :
         
         elif (formid == dim.SQLQUERY_IMPORT) :
             import_sql_query(parms)
+            
+        elif (formid == dim.DISPLAY_HTML_IMPORT_DF) :
+            diw.display_html_df_details(parms)
+
+        elif (formid == dim.SAVE_HTML_IMPORT_DF) :
+            import_pandas_html_df(parms,opstat)
         
         else :
             print("Invalid import type "+ str(formid))
@@ -223,14 +263,15 @@ def process_import_form(formid, parms, display=True) :
 
 
 def save_data_import_start() :
-    cfg.set_config_value(cfg.CURRENT_IMPORT_START_TIME,time.time())    
+    cfg.set_config_value(cfg.CURRENT_IMPORT_START_TIME,time.time())  
+    
 def drop_data_import_start() :
     cfg.drop_config_value(cfg.CURRENT_IMPORT_START_TIME)    
 def get_data_import_start() :
     return(cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME))   
 
 
-def display_data_import_parms(title,plist,fparms,importID,fname) :
+def display_data_import_parms(title,plist,fparms,importID,fname,display_time=True) :
     """
     * -------------------------------------------------------------------------- 
     * function : display import parms
@@ -245,7 +286,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    
+ 
     ptitles     =   []
     
     for i in range(len(plist)) :
@@ -264,11 +305,21 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     pvalues.append(str(len(df)))
     pvalues.append(str(len(df.columns)))
     
-    parms_html  =   displayParms(title,ptitles,pvalues,importID,90,20,False,11)
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        parms_html  =   displayParms(title,ptitles,pvalues,importID,110,0,False,11)
+    else :
+        parms_html  =   displayParms(title,ptitles,pvalues,importID,90,20,False,11)
     
-    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe ",False,False)
-    importnotes     =   ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME)))+ " seconds"]
-    notes_html      =   display_notes(importnotes,False)
+    status_html     =   display_status("File " + fname + " Imported successfully as a pandas dataframe : " + str(cfg.get_current_chapter_dfc_df_title(cfg.DataImport_ID)),False,False)
+
+    start_time      =   cfg.get_config_value(cfg.CURRENT_IMPORT_START_TIME)
+ 
+    if(display_time) :
+        importnotes     =   ["[Total Import Time]&nbsp;&nbsp;:&nbsp;&nbsp;" + str(get_formatted_time(time.time()-start_time)) + " seconds"]
+        notes_html      =   display_notes(importnotes,False)
+    else :
+        notes_html      =   "<br>"
+    
     drop_data_import_start()
 
     gridclasses     =   ["dfc-top","dfc-left","dfc-right"]
@@ -277,7 +328,7 @@ def display_data_import_parms(title,plist,fparms,importID,fname) :
     if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
         display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls)
     else :
-        display_generic_grid("data-import-stats-wrapper",gridclasses,gridhtmls,True)
+        display_generic_grid("data-import-stats-pop-up-wrapper",gridclasses,gridhtmls,True)
     
 
 def import_sql_table(parms,display=True) :
@@ -464,6 +515,8 @@ def import_pandas_csv(fparms,display=True) :
     importId    =   diw.pandas_import_csv_id
     labellist   =   diw.pandas_import_csv_labelList
     
+    colNames    =   None
+    dtypes      =   None
     
     if(display) :
         save_data_import_start() 
@@ -482,9 +535,9 @@ def import_pandas_csv(fparms,display=True) :
         
             try :
 
-                csvkeys         =   [labellist[2],labellist[3],labellist[4]] 
-                csvvals         =   [fparms[2],fparms[3],fparms[4]]
-                csvtypes        =   [INT_PARM,STRING_PARM,INT_PARM]
+                csvkeys         =   [labellist[2],labellist[4]] 
+                csvvals         =   [fparms[2],fparms[4]]
+                csvtypes        =   [INT_PARM,INT_PARM]
     
                 csvparms        =   {}
                 csvaddlparms    =   {}
@@ -495,20 +548,41 @@ def import_pandas_csv(fparms,display=True) :
             if(opstat.get_status()) :
 
                 if(len(fparms[3]) > 0) :
-                    try :
-                        with open(fparms[3], 'r') as col_names_file :
-                            colNames = json.load(col_names_file)
-                            csvvals[1] = colNames
-                    except Exception as e: 
-                        opstat.store_exception("Unable to open csv column names file " + fparms[3],e)
+                    
+                    if(fparms[3].find("[") > -1) :
+                        
+                        try :
+                            colNames    =   json.loads(fparms[3])
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse column names list " + fparms[3],e)
+                        
+                    else :
+                        
+                        try :
+                            with open(fparms[3], 'r') as col_names_file :
+                                colNames = json.load(col_names_file)
+                        except Exception as e: 
+                            opstat.store_exception("Unable to open csv column names file " + fparms[3],e)
+                            
+                if(opstat.get_status()) : 
+
+                    if(len(fparms[5]) > 0) :
+            
+                        print("fparms[5]",type(fparms[5]),fparms[5])
+                        try :
+                            dtypes      =   json.loads(fparms[5])
+                            fparms[5]   =   fparms[5].replace("\n"," ")
+                            fparms[5]   =   fparms[5].replace("\t","")
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse dtypes dict " + fparms[5],e)
     
     if(opstat.get_status()) :
         
         try :
             
             csvparms        =   get_function_parms(csvkeys,csvvals,csvtypes)
-            if(not (fparms[5] == "")) :
-                csvaddlparms    =   json.loads(fparms[5])
+            if(not (fparms[6] == "")) :
+                csvaddlparms    =   json.loads(fparms[6])
             
             if (len(csvaddlparms) > 0) :
                 addlparmskeys = csvaddlparms.keys()
@@ -521,7 +595,7 @@ def import_pandas_csv(fparms,display=True) :
     if(opstat.get_status()) :
     
         try :
-            df = pd.read_csv(fparms[1], **csvparms)
+            df = pd.read_csv(fparms[1], names=colNames, dtype=dtypes, **csvparms)
         except Exception as e:
             opstat.store_exception("Unable to import csv file" + fparms[1],e)
 
@@ -548,7 +622,7 @@ def import_pandas_csv(fparms,display=True) :
         if(len(fparms) > 0) :
             fparms[0]   =   csv_title
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1],True)
     
     return(opstat)
 
@@ -567,6 +641,9 @@ def import_pandas_fwf(fparms,display=True) :
     """
     
     opstat      =   opStatus()
+    
+    colNames    =   None
+    dtypes      =   None
                                               
     importId    =   diw.pandas_import_fwf_id
     labellist   =   diw.pandas_import_fwf_labelList
@@ -590,9 +667,9 @@ def import_pandas_fwf(fparms,display=True) :
 
             try :
 
-                fwfkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5],labellist[6]] 
-                fwfvals         =   [fparms[2],fparms[3],fparms[4],fparms[5],fparms[6]]
-                fwftypes        =   [STRING_PARM,INT_PARM,STRING_PARM,INT_PARM,STRING_PARM]
+                fwfkeys         =   [labellist[2],labellist[3],labellist[5]] 
+                fwfvals         =   [fparms[2],fparms[3],fparms[5]]
+                fwftypes        =   [STRING_PARM,INT_PARM,INT_PARM]
     
                 fwfparms        =   {}
                 fwfaddlparms    =   {}
@@ -601,15 +678,35 @@ def import_pandas_fwf(fparms,display=True) :
                 opstat.store_exception("Error parsing import parms",e)
 
             if(opstat.get_status()) :
-    
+                
                 if(len(fparms[4]) > 0) :
-        
-                    try :
-                        with open(fparms[4], 'r') as col_names_file :
-                            colNames = json.load(col_names_file)
-                            fwfvals[3] = colNames
-                    except Exception as e: 
-                        opstat.store_exception("Unable to open fwf column names file" + fparms[4],e)
+                    
+                    if(fparms[4].find("[") > -1) :
+                        
+                        try :
+                            colNames    =   json.loads(fparms[3])
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse column names list " + fparms[4],e)
+                        
+                    else :
+                        
+                        try :
+                            with open(fparms[4], 'r') as col_names_file :
+                                colNames = json.load(col_names_file)
+                        except Exception as e: 
+                            opstat.store_exception("Unable to open csv column names file " + fparms[4],e)
+                            
+                if(opstat.get_status()) : 
+
+                    if(len(fparms[6]) > 0) :
+            
+                        print("fparms[5]",type(fparms[5]),fparms[6])
+                        try :
+                            dtypes      =   json.loads(fparms[6])
+                            fparms[6]   =   fparms[5].replace("\n"," ")
+                            fparms[6]   =   fparms[5].replace("\t","")
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse dtypes dict " + fparms[6],e)
 
     if(opstat.get_status()) :
         
@@ -632,7 +729,7 @@ def import_pandas_fwf(fparms,display=True) :
     if(opstat.get_status()) :
     
         try :
-            df = pd.read_fwf(fparms[1], **fwfparms)
+            df = pd.read_fwf(fparms[1],  names=colNames, dtype=dtypes, **fwfparms)
         except Exception as e:
             opstat.store_exception("Unable to import fwf file" + fparms[1],e)
     
@@ -659,7 +756,7 @@ def import_pandas_fwf(fparms,display=True) :
         if(len(fparms) > 0) :
             fparms[0]   =   fwf_title
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1],True)
     
     return(opstat)
     
@@ -678,6 +775,9 @@ def import_pandas_excel(fparms,display=True) :
     """
     
     opstat      =   opStatus()
+    
+    colNames    =   None
+    dtypes      =   None
     
     importId    =   diw.pandas_import_excel_id
     labellist   =   diw.pandas_import_excel_labelList  
@@ -701,40 +801,69 @@ def import_pandas_excel(fparms,display=True) :
 
 
             try :
-                excelkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
-                excelvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-                exceltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,INT_PARM]
+                excelkeys         =   [labellist[2],labellist[3],labellist[5]] 
+                excelvals         =   [fparms[2],fparms[3],fparms[5]]
+                exceltypes        =   [STRING_PARM,STRING_PARM,INT_PARM]
 
                 excelparms        =   {}
                 exceladdlparms    =   {}
             
             except Exception as e:
                 opstat.store_exception("Error parsing import parms",e)
-    
+                
+                
             if(opstat.get_status()) :
+                
+                if(len(fparms[4]) > 0) :
+                    
+                    if(fparms[4].find("[") > -1) :
+                        
+                        try :
+                            colNames    =   json.loads(fparms[4])
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse column names list " + fparms[4],e)
+                        
+                    else :
+                        
+                        try :
+                            with open(fparms[4], 'r') as col_names_file :
+                                colNames = json.load(col_names_file)
+                        except Exception as e: 
+                            opstat.store_exception("Unable to open csv column names file " + fparms[4],e)
+                            
+                if(opstat.get_status()) : 
+
+                    if(len(fparms[6]) > 0) :
+            
+                        print("fparms[5]",type(fparms[6]),fparms[6])
+                        try :
+                            dtypes      =   json.loads(fparms[6])
+                            fparms[6]   =   fparms[5].replace("\n"," ")
+                            fparms[6]   =   fparms[5].replace("\t","")
+                        except Exception as e:
+                            opstat.store_exception("Unable to parse dtypes dict " + fparms[6],e)
+    
+    if(opstat.get_status()) :
         
-                try :
+        try :
             
-                    excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
+            excelparms        =   get_function_parms(excelkeys,excelvals,exceltypes)
             
-                    if(not (fparms[6] == "")) :
-                        exceladdlparms    =   json.loads(fparms[6])
+            if(not (fparms[7] == "")) :
+                exceladdlparms    =   json.loads(fparms[6])
             
-                    if (len(exceladdlparms) > 0) :
-                        addlparmskeys = exceladdlparms.keys()
-                        for i in range(len(addlparmskeys)) : 
-                            excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
+            if (len(exceladdlparms) > 0) :
+                addlparmskeys = exceladdlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    excelparms.update({addlparmskeys[i]:exceladdlparms.get(addlparmskeys[i])})
             
-                except Exception as e:
-                    opstat.store_exception("Unable to get additional parms",e)
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :
     
         try :
-            if(len(excelparms) == 0) :
-                df = pd.read_excel(fparms[1])
-            else :
-                df = pd.read_excel(fparms[1], **excelparms)
+            df = pd.read_excel(fparms[1],  names=colNames, dtype=dtypes, **excelparms)
         except Exception as e: 
             opstat.store_exception("Unable to import excel file" + fparms[1],e)
     
@@ -761,7 +890,7 @@ def import_pandas_excel(fparms,display=True) :
         if(len(fparms) > 0) :
             fparms[0]   =   excel_title
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1],True)
     
     return(opstat)
 
@@ -780,6 +909,8 @@ def import_pandas_json(fparms,display=True) :
     """
     
     opstat      =   opStatus()
+
+    dtypes      =   None
     
     importId    =   diw.pandas_import_json_id
     labellist   =   diw.pandas_import_json_labelList 
@@ -812,32 +943,41 @@ def import_pandas_json(fparms,display=True) :
 
             except Exception as e:
                 opstat.store_exception("Error parsing import parms",e)
-    
-            if(opstat.get_status()) :
+                
+                
+            if(opstat.get_status()) : 
+
+                if(len(fparms[4]) > 0) :
+            
+                    print("fparms[4]",type(fparms[4]),fparms[4])
+                    try :
+                        dtypes      =   json.loads(fparms[4])
+                        fparms[4]   =   fparms[4].replace("\n"," ")
+                        fparms[4]   =   fparms[4].replace("\t","")
+                    except Exception as e:
+                        opstat.store_exception("Unable to parse dtypes dict " + fparms[4],e)
+                
+    if(opstat.get_status()) :
         
-                try :
+        try :
             
-                    jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
+            jsonparms        =   get_function_parms(jsonkeys,jsonvals,jsontypes)
             
-                    if(not (fparms[5] == "")) :
-                        jsonaddlparms    =   json.loads(fparms[5])
+            if(not (fparms[5] == "")) :
+                jsonaddlparms    =   json.loads(fparms[5])
             
-                    if (len(jsonaddlparms) > 0) :
-                        addlparmskeys = jsonaddlparms.keys()
-                        for i in range(len(addlparmskeys)) : 
-                            jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
+            if (len(jsonaddlparms) > 0) :
+                addlparmskeys = jsonaddlparms.keys()
+                for i in range(len(addlparmskeys)) : 
+                    jsonparms.update({addlparmskeys[i]:jsonaddlparms.get(addlparmskeys[i])})
             
-                except Exception as e:
-                    opstat.store_exception("Unable to get additional parms",e)
+        except Exception as e:
+            opstat.store_exception("Unable to get additional parms",e)
 
     if(opstat.get_status()) :
     
         try :
-            if(len(jsonparms) == 0) :
-                df = pd.read_json(fparms[1])
-            else :
-                df = pd.read_json(fparms[1], **jsonparms)
-            
+            df = pd.read_json(fparms[1], dtype=dtypes, **jsonparms)
         except Exception as e:
             opstat.store_exception("Unable to import json file" + fparms[1],e)
 
@@ -864,12 +1004,12 @@ def import_pandas_json(fparms,display=True) :
         if(len(fparms) > 0) :
             fparms[0]   =   json_title
             cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1],True)
     
     return(opstat)
 
    
-def import_pandas_html(fparms,display=True) : 
+def import_pandas_html(fparms,opstat,display=True) : 
     """
     * -------------------------------------------------------------------------- 
     * function : import html file into pandas dataframe 
@@ -882,9 +1022,6 @@ def import_pandas_html(fparms,display=True) :
     * --------------------------------------------------------
     """
     
-    opstat      =   opStatus()
-    
-    importId    =   diw.pandas_import_html_id
     labellist   =   diw.pandas_import_html_labelList
     
     if(display) :
@@ -897,7 +1034,7 @@ def import_pandas_html(fparms,display=True) :
         
     else :
         
-        if(len(fparms[1]) == 0):
+        if(len(fparms[0]) == 0):
             
             opstat.set_status(False)
             opstat.set_errorMsg("No file_path defined")
@@ -906,9 +1043,9 @@ def import_pandas_html(fparms,display=True) :
 
             try :
 
-                htmlkeys         =   [labellist[2],labellist[3],labellist[4],labellist[5]] 
-                htmlvals         =   [fparms[2],fparms[3],fparms[4],fparms[5]]
-                htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM,STRING_PARM]
+                htmlkeys         =   [labellist[1],labellist[2],labellist[3]] 
+                htmlvals         =   [fparms[1],fparms[2],fparms[3]]
+                htmltypes        =   [STRING_PARM,STRING_PARM,STRING_PARM]
     
                 htmlparms        =   {}
                 htmladdlparms    =   {}
@@ -922,8 +1059,8 @@ def import_pandas_html(fparms,display=True) :
             
                     htmlparms        =   get_function_parms(htmlkeys,htmlvals,htmltypes)
             
-                    if(not (fparms[6] == "")) :
-                        htmladdlparms    =   json.loads(fparms[6])
+                    if(not (fparms[4] == "")) :
+                        htmladdlparms    =   json.loads(fparms[4])
             
                     if (len(htmladdlparms) > 0) :
                         addlparmskeys = htmladdlparms.keys()
@@ -933,42 +1070,153 @@ def import_pandas_html(fparms,display=True) :
                 except Exception as e:
                     opstat.store_exception("Unable to get additional parms",e)
 
-    if(opstat.get_status()) :  
-    
+    if(opstat.get_status()) : 
+        
         try :
             if(len(htmlparms) == 0) :
-                df = pd.read_html(fparms[1])
+                dfs = pd.read_html(fparms[0])
             else :
-                df = pd.read_html(fparms[1], **htmlparms)
+                dfs = pd.read_html(fparms[0], **htmlparms)
         except Exception as e:
-            opstat.store_exception("Unable to import html file" + fparms[1],e)
+            opstat.store_exception("Unable to import html file" + fparms[0],e)
+
 
     if(opstat.get_status()) : 
         
-        if(len(fparms[0]) == 0) :
-            html_title     =   get_file_name(fparms[1])
-            fparms[0]      =   html_title
+        dim.set_current_df_url(fparms[0])
+        cfg.set_config_value(diw.pandas_import_html_id+"Parms",fparms,True)
+        
+        return(dfs)
+        
+    else :
+        
+        return(None)
+        
+    
+def import_pandas_html_df(parms,opstat) : 
+    """
+    * -------------------------------------------------------------------------- 
+    * function : import html df into pandas dataframe 
+    * 
+    * parms :
+    *  fparms    -   associated import parms                      
+    *  display   -   display flag                      
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+    
+    import json
+    
+    df_id       =   dim.get_current_df_id() 
+
+    dfs         =   dim.get_dfs_list()
+    df          =   dfs[df_id]
+    
+    num_cols    =   len(list(df.columns))
+    
+    fparms  =   get_parms_for_input(parms,diw.pandas_import_html_df_idList)
+    
+    if(len(fparms) == 0) :
+        
+        opstat.set_status(False)
+        opstat.set_errorMsg("No Import parameters defined")
+        
+    else :
+        
+        if(len(fparms[0]) == 0):
+            
+            opstat.set_status(False)
+            opstat.set_errorMsg("No dataframe title defined")
+            
         else :
-            html_title     =   fparms[0]
-        
-        html_df  =   cfg.dfc_dataframe(html_title,df,fparms[1])
-        cfg.add_dfc_dataframe(html_df)
-        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,html_title)
-        
-        if(display) :
-            #make scriptable
-            script      =   ["# Import HTML File ",
-                             "from dfcleanser.data_import.data_import_control import import_pandas_html",
-                             "import_pandas_html(" + json.dumps(fparms) + ",False)"]
+            
+            try :
+                
+                col_names   =   fparms[1]
+                index_cols  =   fparms[2]
+                dtypes      =   fparms[3]
+                
+                if(len(col_names) > 0) :
+                    
+                    try :
+                        
+                        col_name_list       =   json.loads(col_names)
+                        old_col_names_list  =   list(df.columns)
+                        
+                        if(len(col_name_list) == num_cols) :
+                            
+                            new_column_names_dict   =   {}
+                            for i in range(num_cols) :
+                                new_column_names_dict.update({old_col_names_list[i] : col_name_list[i]})    
+                            
+                            df.rename(columns=new_column_names_dict,inplace=True)
+                            
+                        else :
+                            opstat.set_status(False)
+                            opstat.set_errorMsg("Number of column names entered does not equal number of columns in df")
+                        
+                    except Exception as e:
+                        opstat.store_exception("Invalid col names list : not parsable" + col_names,e)
+                        
+                        
+                if(opstat.get_status()) :
+                    
+                    if(len(index_cols) > 0) :  
+                        
+                        try :
+                        
+                            index_col_name_list   =   json.loads(index_cols)
+                            df.set_index(index_col_name_list,inplace=True)
+                            
+                        except Exception as e:
+                            opstat.store_exception("Invalid index col names list" + index_cols,e)
+                        
+                if(opstat.get_status()) :
+                    
+                    if(len(dtypes) > 0) : 
+                    
+                        try :
+                        
+                            dtypes_dict     =   json.loads(dtypes)
+                            cnames          =  list(df.columns) 
 
-            add_to_script(script,opstat)
-
-        if(len(fparms) > 0) :
-            fparms[0]   =  html_title 
-            cfg.set_config_value(importId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,fparms[1])
+                            good_cols_dict  =   {}
+                            dtype_names     =   list(dtypes_dict.keys())
+                            
+                            for i in range(len(dtype_names)) :
+                                if(dtype_names[i] in cnames) :
+                                    good_cols_dict.update({dtype_names[i] : dtypes_dict.get(dtype_names[i])})
+                        
+                            df.astype(dtype=good_cols_dict)                     
+                        
+                            from dfcleanser.common.display_utils import flatten_json_dict
+                            fparms[3]   =   flatten_json_dict(dtypes)
+                        
+                        except Exception as e:
+                            opstat.store_exception("Invalid dtypes list" + dtypes,e)
+                        
+            except Exception as e:
+                opstat.store_exception("Unable to import html df" + fparms[0],e)
+                        
+    if(opstat.get_status()) : 
         
-    return(opstat)
+        html_dfc_df  =   cfg.dfc_dataframe(fparms[0],df)
+        cfg.add_dfc_dataframe(html_dfc_df)
+        cfg.set_config_value(cfg.CURRENT_IMPORT_DF,fparms[0],True)
+        
+        print("\n")
+        
+        parmslist   =   diw.pandas_import_html_df_labelList[:4]
+        display_data_import_parms("Pandas HTML Import Parms",parmslist,fparms,cfg.DataImport_ID,dim.get_current_df_url(),False)
+        
+        cfg.set_config_value(diw.pandas_import_html_df_id+"Parms",fparms)
+        
+    else :
+        
+        display_exception(opstat)
+        
+    diw.display_html_dfs(dim.get_dfs_list())
 
    
 def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
@@ -1074,7 +1322,7 @@ def import_pandas_sqltable(sqltableparms,dbcondict,importid,display=True) :
         if(len(sqltableparms) > 0) :
             sqltableparms[0]   =   sql_title
             cfg.set_config_value(importid + "Parms",sqltableparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqltableparms[1],True)
 
     return(import_notes, opstat)    
 
@@ -1177,7 +1425,7 @@ def import_pandas_sqlquery(sqlqueryparms,dbcondict,importid,display=True) :
         if(len(sqlqueryparms) > 0) :
             sqlqueryparms[0]    =   sql_title
             cfg.set_config_value(importid + "Parms",sqlqueryparms)
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[1])
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,sqlqueryparms[1],True)
 
     return(import_notes, opstat)    
 
@@ -1226,7 +1474,7 @@ def process_custom_import(fparms,import_id,display=True) :
             
         if(len(fparms) > 0) :
             cfg.set_config_value(import_id + "Parms","custom")
-            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,"custom")
+            cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,"custom",True)
 
     return(opstat)
     
