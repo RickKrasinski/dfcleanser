@@ -19,10 +19,12 @@ from dfcleanser.common.table_widgets import drop_owner_tables
 
 from dfcleanser.common.common_utils import (get_function_parms, opStatus, RunningClock, display_exception, 
                                             INT_PARM, STRING_PARM, BOOLEAN_PARM, DICT_PARM, 
-                                            displayParms, get_string_value, display_generic_grid, 
+                                            get_string_value, display_generic_grid, 
                                             display_status, display_notes, get_formatted_time)
 
 from dfcleanser.common.db_utils import (get_stored_con_Parms, set_dbcon_dict)
+
+from dfcleanser.common.display_utils import (displayParms)
 
 
 from dfcleanser.scripting.data_scripting_control import add_to_script
@@ -55,6 +57,9 @@ import time
 #--------------------------------------------------------------------------
 """
 def display_export_forms(exportid, detid=0, notes=False) :
+    
+    if(not (cfg.is_a_dfc_dataframe_loaded())) :
+        cfg.drop_config_value(cfg.CURRENT_EXPORT_DF)
     
     if(exportid == dem.EXPORT_TB_ONLY) :
         clear_data_export_data()    
@@ -433,7 +438,7 @@ def export_pandas_csv(fparms,exportId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(exportId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0],True)
 
     return(opstat)
         
@@ -517,7 +522,7 @@ def export_pandas_excel(fparms,exportId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(exportId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0],True)
     
     return(opstat)
 
@@ -601,7 +606,7 @@ def export_pandas_json(fparms,exportId,labellist,display=True) :
 
         if(len(fparms) > 0) :
             cfg.set_config_value(exportId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0],True)
 
     return(opstat)
 
@@ -685,7 +690,7 @@ def export_pandas_html(fparms,exportId,labellist,display=True) :
             
         if(len(fparms) > 0) :
             cfg.set_config_value(exportId + "Parms",fparms)
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0])
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,fparms[0],True)
 
     return(opstat)
 
@@ -726,7 +731,7 @@ def process_custom_export(fparms,exportId,display=True) :
             
         if(len(fparms) > 0) :
             cfg.set_config_value(exportId + "Parms","custom")
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,"custom")
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,"custom",True)
 
     return(opstat)
 
@@ -825,8 +830,6 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
                             try :
                             
                                 df.to_sql(sqltableparms[1], dbconnector, **sqlparms)
-                            #df.to_sql(sqltableparms[1],dbconnector,sqltableparms[2],sqltableparms[3],
-                                      #sqltableparms[4],sqltableparms[5],sqltableparms[6],sqltableparms[7])
                 
                             except Exception as e:
                                 opstat.store_exception("Unable to export to sql table",e)
@@ -846,7 +849,7 @@ def export_pandas_sqltable(sqltableparms,dbcondict,exportid,display=True) :
         
         if(len(sqltableparms) > 0) :
             cfg.set_config_value(exportid + "Parms",sqltableparms)
-            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,sqltableparms[0])
+            cfg.set_config_value(cfg.CURRENT_EXPORTED_FILE_NAME_KEY,sqltableparms[0],True)
 
     return(export_notes, opstat)    
 
