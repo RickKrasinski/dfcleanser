@@ -677,25 +677,25 @@ drop_column_input_reqList               =   [0,1,2,3,4]
 """
 save_column_input_title                 =   "Save Column"
 save_column_input_id                    =   "savecolInput"
-save_column_input_idList                =   ["savecolname",
+save_column_input_idList                =   ["savecolnames",
+                                             "savecolnameslist",
                                              "savefilename",
-                                             "savefiledir",
                                              "savefiletype",
                                              None,None,None]
 
 save_column_input_labelList             =   ["column(s)_to_save",
-                                             "column(s)_save_file(s)_name(s)",
-                                             "column(s)_save_file(s)_dir",
-                                             "column(s)_save_file(s)_type",
+                                             "column_names_list",
+                                             "save_column(s)_file_name",
+                                             "save_column(s)_file_type",
                                              "Save</br> Column(s)",
                                              "Return","Help"]
 
-save_column_input_typeList              =   ["selectmultiple","text","text","select",
+save_column_input_typeList              =   ["text","select","text","select",
                                              "button","button","button"]
 
-save_column_input_placeholderList       =   ["column to save",
-                                             "enter File name(s)",
-                                             "enter File dir to save dropped column (default Notebook path)",
+save_column_input_placeholderList       =   ["column(s) to save",
+                                             "column names)",
+                                             "File name to save columns to",
                                              "enter File save type (default : json)",
                                              None,None,None]
 
@@ -712,30 +712,30 @@ save_column_input_reqList               =   [0,1,2,3]
 
 save_colind_input_title                 =   "Save Column"
 save_colind_input_id                    =   "savecolindxInput"
-save_colind_input_idList                =   ["saveColumnindexname",
-                                             "saveColumnindexFname",
-                                             "saveColumnindexFdir",
-                                             "saveColumnindexFtype",
+save_colind_input_idList                =   ["savecolindxnames",
+                                             "savecolindxnameslist",
+                                             "saveindxfilename",
+                                             "saveindxfiletype",
                                              "saveColindxflag",
                                              None,None,None]
 
 save_colind_input_labelList             =   ["column(s)_to_save",
-                                             "column(s)_save_file(s)_name",
-                                             "column(s)_save_file(s)_dir",
-                                             "column(s)_save_file(s)_type",
+                                             "column_names_list",
+                                             "save_column(s)_file_name",
+                                             "save_column(s)_file_type",
                                              "save_index_flag",
                                              "Save</br> Column(s)",
                                              "Return","Help"]
 
-save_colind_input_typeList              =   ["selectmultiple","text","text","select","select",
+save_colind_input_typeList              =   ["text","select","text","select","select",
                                              "button","button","button"]
 
-save_colind_input_placeholderList       =   ["column to save",
-                                             "enter File names to save column(s)",
-                                             "enter File dir to save column (default Notebook path)",
+save_colind_input_placeholderList       =   ["column(s) to save",
+                                             "column names)",
+                                             "File name to save columns to",
                                              "enter File save type (default : json)",
                                              "save with index",
-                                             None,None,None,None]
+                                             None,None,None]
 
 save_colind_input_jsList                =    [None,None,None,None,None,
                                               "data_transform_process_cols_callback("+str(dtm.PROCESS_SAVE_COLUMN_WITH_INDEX)+")",
@@ -754,27 +754,33 @@ save_colind_input_reqList               =   [0,1,2,3,4]
 reorder_columns_input_title              =   "Reorder Column"
 reorder_columns_input_id                 =   "reordercolInput"
 reorder_columns_input_idList             =   ["moveColumnname",
+                                              "moveColumnnameslist",
                                               "moveafterColumnname",
+                                              "movetoColumnnameslist",
                                               None,None,None]
 
 reorder_columns_input_labelList          =   ["column_to_move",
+                                              "column_to_move_column_names_list",
                                               "column_to_move_after",
+                                              "column_to_move_after_column_names_list",
                                               "Move</br> Column",
                                               "Return","Help"]
 
-reorder_columns_input_typeList           =   ["text","text",
+reorder_columns_input_typeList           =   ["text","select","text","select",
                                               "button","button","button"]
 
 reorder_columns_input_placeholderList    =   ["column to move",
+                                              "column name list",
                                               "column to move after", 
+                                              "column name list",
                                               None,None,None]
 
-reorder_columns_input_jsList             =    [None,None,
+reorder_columns_input_jsList             =    [None,None,None,None,
                                                "data_transform_process_cols_callback("+str(dtm.PROCESS_REORDER_COLUMNS)+")",
                                                "data_transform_process_cols_callback("+str(dtm.RETURN_CLEAR_COLUMN)+")",
                                                "displayhelp('" + str(dfchelp.TRANSFORM_COLS_REORDER_ID) + "')"]
 
-reorder_columns_input_reqList            =   [0,1]
+reorder_columns_input_reqList            =   [0,1,2,3]
 
 """
 #--------------------------------------------------------------------------
@@ -1423,7 +1429,7 @@ def display_column_transform_forms(option,parms=None) :
         grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":100, "left-margin":0})
         grid_input_form.set_gridwidth(480)
         
-        cfg.set_config_value(drop_column_input_id+"Parms",[colname,"False","",cfg.get_notebook_path(),"json"])
+        cfg.set_config_value(drop_column_input_id+"Parms",[colname,"False","",cfg.get_notebookPath(),"json"])
         
         grid_input_html     =   grid_input_form.get_html()
 
@@ -1438,10 +1444,10 @@ def display_column_transform_forms(option,parms=None) :
         df,colslist,colname             =   get_df_colslist()
         
         col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
-        col_names_table.set_note("")
-        col_names_html  =   display_column_names(df,col_names_table,"select_reorder_cols",False)
+        col_names_table.set_note("None")
+        col_names_html  =   display_column_names(df,col_names_table,None,False)
         
-        common_column_heading_html      =   "<div>Reorder Column</div><br>"
+        common_column_heading_html      =   "<div>Reorder Columns</div><br>"
         
         grid_input_form     =   InputForm(reorder_columns_input_id,
                                           reorder_columns_input_idList,
@@ -1450,6 +1456,32 @@ def display_column_transform_forms(option,parms=None) :
                                           reorder_columns_input_placeholderList,
                                           reorder_columns_input_jsList,
                                           reorder_columns_input_reqList)
+        
+        selectDicts     =   []
+        
+        current_df      =   cfg.get_current_chapter_df(cfg.SWDFSubsetUtility_ID)
+        colnames        =   current_df.columns.tolist()
+        cols_name_list  =   [" "]
+        
+        for i in range(len(colnames)) :
+            cols_name_list.append(colnames[i])
+            
+        cnames          =   {"default":cols_name_list[0],"list": cols_name_list, "callback" : "change_reorder_cols"}
+        selectDicts.append(cnames)
+        
+        to_col_names_list   =   ["","Head Of List"]
+        for i in range(len(colnames)) :
+            to_col_names_list.append(colnames[i])
+        
+        tocnames        =   {"default":to_col_names_list[0],"list": to_col_names_list, "callback" : "change_reorder_to_cols"}
+        selectDicts.append(tocnames)
+        
+        get_select_defaults(grid_input_form,
+                            reorder_columns_input_id,
+                            reorder_columns_input_idList,
+                            reorder_columns_input_typeList,
+                            selectDicts)
+        
         
         grid_input_form.set_buttonstyle({"font-size":13, "height":50, "width":120, "left-margin":40})
         grid_input_form.set_gridwidth(480)
@@ -1509,9 +1541,19 @@ def display_column_transform_forms(option,parms=None) :
 
         selectDicts     =   []
         
-        cnames          =   {"default" : colname, "list" : colslist, "size" : 10, "callback" : "change_col_stats_callback"}
-        selectDicts.append(cnames)
+        current_df      =   cfg.get_current_chapter_df(cfg.SWDFSubsetUtility_ID)
+        colnames        =   current_df.columns.tolist()
+        cols_name_list  =   [" "]
+        for i in range(len(colnames)) :
+            cols_name_list.append(colnames[i])
         
+        if(not (index_present)) :    
+            cnames          =   {"default":cols_name_list[0],"list": cols_name_list, "callback" : "change_save_cols"}
+        else :
+            cnames          =   {"default":cols_name_list[0],"list": cols_name_list, "callback" : "change_saveindx_cols"}            
+        
+        selectDicts.append(cnames)
+
         ftypes          =   {"default" : "json", "list" : ["json","csv","excel"]}
         selectDicts.append(ftypes)
         
@@ -1529,11 +1571,11 @@ def display_column_transform_forms(option,parms=None) :
                                 save_column_input_typeList,
                                 selectDicts)
             
-            fname = colname.replace(" ", "_");
-            fname = fname.replace(".", "_");
-            fname = "'" + fname + "'"
+            #fname = colname.replace(" ", "_");
+            #fname = fname.replace(".", "_");
+            #fname = "'" + fname + "'"
 
-            cfg.set_config_value(save_column_input_id+"Parms",[colname,"["+ fname + "]",cfg.get_notebook_path(),"json"])
+            cfg.set_config_value(save_column_input_id+"Parms",["","","","json"])
             
         else :
             
@@ -1545,7 +1587,7 @@ def display_column_transform_forms(option,parms=None) :
                                 save_colind_input_typeList,
                                 selectDicts)
             
-            cfg.set_config_value(save_colind_input_id+"Parms",[colname,"[]",cfg.get_notebook_path(),"json","True"])
+            cfg.set_config_value(save_colind_input_id+"Parms",[colname,"[]",cfg.get_notebookPath(),"json","True"])
             
         from dfcleanser.data_transform.data_transform_widgets import display_transform_col_data    
         colstats_html       =   display_transform_col_data(df,colname,False)
@@ -1736,8 +1778,6 @@ def display_column_transform_forms(option,parms=None) :
                 ordered     =   fparms[1]
                 exclude     =   "[]"
             
-            print("DISPLAY_CAT_COLUMN_EXCLUDE",fparms)
-            
         else :
             ordered     =   "False"
             exclude     =   "[]"
@@ -1869,13 +1909,11 @@ def display_column_transform_forms(option,parms=None) :
         
         df,colslist,colname             =   get_df_colslist()
         if(not (parms is None)) :
-            print("dtm.DISPLAY_DATATYPE_COLUMN",parms)
             colname     =   parms[0]
         
         display_convert_datatype(df,colname,False,False,cfg.DataTransform_ID)
         
     elif(option == dtm.DISPLAY_DATATYPE_CHANGE_NA) :
-        print("dtm.DISPLAY_DATATYPE_CHANGE_NA",parms)
         
         df,colslist,colname             =   get_df_colslist()
 
@@ -1926,8 +1964,6 @@ def display_apply_fn_inputs(optionid,parms) :
     * --------------------------------------------------------
     """
  
-    #print("display_apply_fn_inputs",optionid,parms)
-
     from dfcleanser.sw_utilities.sw_utility_genfunc_model import applyfns
     
     opstat  =   opStatus()
@@ -1948,8 +1984,6 @@ def display_apply_fn_inputs(optionid,parms) :
                 
                 fparms          =   get_parms_for_input(parms,apply_column_gf_input_idList)
                 
-                print("214 fparms",fparms)
-            
                 dftitle         =   fparms[0]
                 colname         =   fparms[1]
                 dfc_fn          =   None
@@ -2222,8 +2256,6 @@ def display_add_cols_df_funcs_with_parms(option,parms) :
     * --------------------------------------------------------
     """
 
-    print("display_add_cols_df_funcs_with_parms",option,parms)
-    
     opstat  =   opStatus()
     
     if("addcolfuncs" in parms[0]) :
@@ -2482,8 +2514,6 @@ def display_add_cols_df_funcs_with_parms(option,parms) :
         gt_input_html   =   ""
         gt_input_html   =   gt_input_form.get_html()
         
-        #print(gt_input_html)
-    
         gt_heading_html     =   "<div>Add New Column From dfc Functions</div><br>"
         help_note           =   "After setting and reviewing parms in the above form click on 'Add New Column From dfc fns' to add a new column."
         from dfcleanser.common.common_utils import get_help_note_html
@@ -2584,8 +2614,6 @@ def display_add_cols_option(option,parms,displayBase=True) :
         elif(option == dtm.DISPLAY_ADD_FROM_FILE_OPTION) :
         
             fparms = get_parms_for_input(parms,add_column_input_idList)
-            
-            print("fparms",fparms)
             
             if(len(fparms[0]) == 0) :   newcolname      =   ""
             else :                      newcolname      =   fparms[0]
@@ -3020,8 +3048,6 @@ def display_add_cols_code(option,colname=None,dtype=None) :
         else :
             deffunc     =   funcs[0]
             
-        print("deffunc",deffunc,userfuncs)
-            
         funclist    =   {"default":deffunc,"list":funcs,"callback":"get_user_func_value"}
         selectDicts.append(funclist)
             
@@ -3178,8 +3204,6 @@ def display_column_uniques(df,colname,samplesize,uniquesperrow,display=True,call
                         uniqueHrefs.append(callback)
                 uniquerow   =   []
     
-    #print("display_column_uniques",i,uniquerow,uniquesperrow,samplesize,len(uniques),samplesize % uniquesperrow)
-    
     if((samplesize % uniquesperrow) != 0) :
 
         for k in range(uniquesperrow - (samplesize % uniquesperrow)) :
@@ -3196,8 +3220,6 @@ def display_column_uniques(df,colname,samplesize,uniquesperrow,display=True,call
             else :
                 uniqueHrefs.append(callback)
             
-    #print("dcTable",uniqueHeader,uniqueRows,uniqueWidths,uniqueAligns,uniqueHrefs)
-    
     uniques_table = dcTable("Unique Values for "+colname,"dtuniquesTable",
                             cfg.DataTransform_ID,
                             uniqueHeader,uniqueRows,
@@ -3355,8 +3377,6 @@ def get_datatype_display(df,colname,nansflag,nadropflag,dfc_id) :
     * --------------------------------------------------------
     """
     
-    #print("get_datatype_display",len(df),colname,nansflag,dfc_id)
-    
     if(nansflag) :
         
         if(nadropflag) :
@@ -3461,8 +3481,6 @@ def display_convert_datatype(df,colname,fillflag,dropflag,dfc_id) :
     * --------------------------------------------------------
     """
 
-    print("display_convert_datatype",len(df),colname,fillflag,dropflag,dfc_id)
-    
     cfg.set_config_value(cfg.DATA_TRANSFORM_COL_SELECTED_KEY,colname) 
     
     if(dfc_id == cfg.DataCleansing_ID) :
@@ -3602,7 +3620,6 @@ def get_check_dtypes(df,colname) :
 
 
     elif(col_dtype == object) :
-        print("getting object list")
         
         if(is_datetime_col(df,colname))     :   check_dtypes_list     =   ["np.datetime64"]    
         elif(is_date_col(df,colname))       :   check_dtypes_list     =   ["np.datetime64"] 
@@ -3631,8 +3648,6 @@ def display_check_compatability(parms,uniques=False) :
     *  N/A
     * --------------------------------------------------------
     """
-    
-    print("display_check_compatability",parms,uniques)
     
     df          =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
     
@@ -3668,21 +3683,6 @@ def display_check_compatability(parms,uniques=False) :
                 
             colname     =   fparms[0]
             
-            """
-            naoption    =   parms[0]
-            
-            if(naoption     ==  dtm.DROP_NA_OPTION) :
-                fparms  =   get_parms_for_input(parms[1],dt_drop_nans_data_type_input_idList)
-                
-            elif(naoption     ==  dtm.FILL_NA_OPTION) :
-                fparms  =   get_parms_for_input(parms[1],dt_nans_data_type_input_idList)
-                
-            else :
-                fparms  =   get_parms_for_input(parms[1],dt_data_type_input_idList)
-                
-            colname     =   fparms[0]
-            """
-            
         cfg.set_config_value(cfg.COMPAT_COL_KEY,colname)
         
     if(uniques) :
@@ -3692,8 +3692,6 @@ def display_check_compatability(parms,uniques=False) :
     
     from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
     col_stats_html  =   display_col_stats(df,colname,False,True)
-    
-    print("display_check_compatability colname is_numeric_col",is_numeric_col(df,colname))
     
     if(is_numeric_col(df,colname)) :
         
@@ -3717,8 +3715,6 @@ def display_check_compatability(parms,uniques=False) :
     
     selectDicts     =   []
     
-    print("display_check_compatability colname",colname)
-    
     colnames        =   df.columns.tolist()
     cnames          =   {"default":colname,"list": colnames, "callback":"change_col_for_check_callback"}
     selectDicts.append(cnames)
@@ -3739,8 +3735,6 @@ def display_check_compatability(parms,uniques=False) :
 
     compatable_dtypes   =   get_compatable_dtypes(df,colname)
     compatable_str      =   str(compatable_dtypes)
-    
-    print("display_check_compatability compatable_dtypes",compatable_dtypes,"\n",compatable_str)
     
     if(not (is_numeric_col(df,colname))) :
         compatable_parms    =   [colname,check_dtypes[0],compatable_str,"5"]

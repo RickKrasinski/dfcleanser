@@ -512,7 +512,6 @@ def display_datetime_convert(option,parms=None) :
     else :
             
         fparms  =   get_parms_for_input(parms,datetime_format_input_idList)
-        print("display_datetime_convert : fparms ",fparms)
             
         colname     =   fparms[0]
         natthresh   =   fparms[1]
@@ -521,7 +520,7 @@ def display_datetime_convert(option,parms=None) :
 
         cfg.set_config_value(datetime_format_input_id+"Parms",[colname,natthresh,errors,formatstr])
         
-        from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+        from dfcleanser.sw_utilities.sw_utility_model import get_Dict
         strftimedict = get_Dict("strftime")
             
         strftimekeys    =   list(strftimedict.keys())
@@ -608,12 +607,9 @@ def display_timedelta_convert(parms=None) :
     * --------------------------------------------------------
     """
 
-    print("display_timedelta_convert",parms)
-    
     if(not(parms is None)) :
     
         fparms  =   get_parms_for_input(parms,datetime_format_input_idList)
-        print("display_timedelta_convert : fparms ",fparms)
             
         colname     =   fparms[0]
         nanthresh   =   fparms[1]
@@ -689,6 +685,23 @@ def display_timedelta_convert(parms=None) :
         display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
 
+def get_datetime_column_names(df)  :
+
+    colnames        =   df.columns.tolist()
+    
+    datetimecols    =   []
+             
+    from dfcleanser.common.common_utils import is_datetime_type_col
+       
+    for i in range(len(colnames)) :
+            
+        if(is_datetime_type_col(df,colnames[i])) :   
+            datetimecols.append(colnames[i])
+    
+    return(datetimecols)    
+    
+    
+
 def display_datetime_timedelta(parms=None)  :
     """
     * ---------------------------------------------------------
@@ -709,41 +722,32 @@ def display_datetime_timedelta(parms=None)  :
                                         datetime_tdelta_input_placeholderList,
                                         datetime_tdelta_input_jsList,
                                         datetime_tdelta_input_reqList)
+    
     selectDicts     =   [] 
     
     current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
-    colnames        =   current_df.columns.tolist()
     
-    datetimecols    =   []
+    datetimecols    =   get_datetime_column_names(current_df)
+    
+    if(len(datetimecols) > 0) :
              
-    from dfcleanser.common.common_utils import is_datetime_type_col
-       
-    for i in range(len(colnames)) :
-            
-        if(is_datetime_type_col(current_df,colnames[i])) :   
-            datetimecols.append(colnames[i])
+        datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
     
-        if(len(datetimecols) > 0) :
-            datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
-        else :
-            datetimenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
+        selectDicts.append(datetimenames)
+        selectDicts.append(datetimenames)
     
-    selectDicts.append(datetimenames)
-    selectDicts.append(datetimenames)
-    
-    tdeltasel         =   {"default":"timedelta","list":["timedelta","float64"], "callback":"change_convert_dtype_callback"}
-    selectDicts.append(tdeltasel)
+        tdeltasel         =   {"default":"timedelta","list":["timedelta","float64"], "callback":"change_convert_dtype_callback"}
+        selectDicts.append(tdeltasel)
         
-    dtsel           =   {"default":"Seconds","list":["Days","Hours","Minutes","Seconds","MilliSeconds","MicroSeconds"], "callback":"change_convert_units_callback"}
-    selectDicts.append(dtsel)
+        dtsel           =   {"default":"Seconds","list":["Days","Hours","Minutes","Seconds","MilliSeconds","MicroSeconds"], "callback":"change_convert_units_callback"}
+        selectDicts.append(dtsel)
    
-    get_select_defaults(dt_datetime_custom_form,
-                        datetime_tdelta_input_id,
-                        datetime_tdelta_input_idList,
-                        datetime_tdelta_input_typeList,
-                        selectDicts)
+        get_select_defaults(dt_datetime_custom_form,
+                            datetime_tdelta_input_id,
+                            datetime_tdelta_input_idList,
+                            datetime_tdelta_input_typeList,
+                            selectDicts)
     
-    if(len(datetimecols) > 0) :    
         cfg.set_config_value(datetime_tdelta_input_id+"Parms",[datetimecols[0],datetimecols[0],"timedelta_column_timedelta","timedelta","Seconds"])
         
         cfg.set_config_value(datetime_tdelta_input_id+"ParmsProtect",[False,False,False,False,True])
@@ -767,7 +771,7 @@ def display_datetime_timedelta(parms=None)  :
             display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
 
     else :
-        #display_datetime_column_taskbar()
+
         print("\n")
 
         display_status_note("No datetime columns found in dataframe")
@@ -785,116 +789,118 @@ def display_datetime_split_merge(parms,action) :
     *  N?A
     * --------------------------------------------------------
     """
-    
-    if(action == dtm.SPLIT) :
-        
-        dt_datetime_custom_form = InputForm(datetime_split_input_id,
-                                            datetime_split_input_idList,
-                                            datetime_split_input_labelList,
-                                            datetime_split_input_typeList,
-                                            datetime_split_input_placeholderList,
-                                            datetime_split_input_jsList,
-                                            datetime_split_input_reqList)
-        
-        selectDicts     =   [] 
-    
-        current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
-        colnames        =   current_df.columns.tolist()
-        
-        from dfcleanser.common.common_utils import is_datetime_type_col
-       
-        datetimecols    =   []
-        for i in range(len(colnames)) :
-            
-            if(is_datetime_type_col(current_df,colnames[i])):   
-                datetimecols.append(colnames[i])
-            
-        if(len(datetimecols) > 0) :
-            datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
-        else :
-            datetimenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
-        
-        selectDicts.append(datetimenames)
-        
-        get_select_defaults(dt_datetime_custom_form,
-                            datetime_split_input_id,
-                            datetime_split_input_idList,
-                            datetime_split_input_typeList,
-                            selectDicts)
-        
-        dt_datetime_custom_form.set_shortForm(True)
-        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":25})
-        dt_datetime_custom_form.set_gridwidth(480)
-        dt_datetime_custom_form.set_fullparms(True)  
-        
-        dt_datetime_custom_html = dt_datetime_custom_form.get_html()
 
-        dt_datetime_title_html  =   "<div>Split Datetime Column</div><br>"
-        
-    else :
-        
-        dt_datetime_custom_form = InputForm(datetime_merge_input_id,
-                                            datetime_merge_input_idList,
-                                            datetime_merge_input_labelList,
-                                            datetime_merge_input_typeList,
-                                            datetime_merge_input_placeholderList,
-                                            datetime_merge_input_jsList,
-                                            datetime_merge_input_reqList)
-        
-        selectDicts     =   [] 
+    current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    datetimecols    =   get_datetime_column_names(current_df)
     
-        current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
-        colnames        =   current_df.columns.tolist()
-        
-        datecols        =   []
-        timecols        =   []
+    if(len(datetimecols) > 0) :
              
-        from dfcleanser.common.common_utils import is_date_col, is_time_col
-       
-        for i in range(len(colnames)) :
-            
-            if(is_date_col(current_df,colnames[i])) :   datecols.append(colnames[i])
-            if(is_time_col(current_df,colnames[i])) :   timecols.append(colnames[i])
-            
-        if(len(datecols) > 0) :
-            datenames          =   {"default":datecols[0],"list": datecols}
-        else :
-            datenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
-                
-        if(len(timecols) > 0) :
-            timenames          =   {"default":timecols[0],"list": timecols}
-        else :
-            timenames          =   {"default":"No datetime.time Columns to Select","list": ["No datetime.time Columns to Select"]}
-                
-        selectDicts.append(datenames)
-        selectDicts.append(timenames)
-        
-        ctypes          =   {"default":"datetime.datetime","list": ["datetime.datetime","np.datetime64","pd.Timestamp"]}
-        selectDicts.append(ctypes)
-        
-        get_select_defaults(dt_datetime_custom_form,
-                            datetime_merge_input_id,
-                            datetime_merge_input_idList,
-                            datetime_merge_input_typeList,
-                            selectDicts)
-        
-        dt_datetime_custom_form.set_shortForm(True)
-        dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":30})
-        dt_datetime_custom_form.set_gridwidth(480)
-        dt_datetime_custom_form.set_fullparms(True)  
-        
-        dt_datetime_custom_html = dt_datetime_custom_form.get_html()
-        
-        dt_datetime_title_html  =   "<div>Merge Datetime Columns</div><br>"
-        
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
-    gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
+        datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
     
-    print("\n")
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+        if(action == dtm.SPLIT) :
+        
+            dt_datetime_custom_form = InputForm(datetime_split_input_id,
+                                                datetime_split_input_idList,
+                                                datetime_split_input_labelList,
+                                                datetime_split_input_typeList,
+                                                datetime_split_input_placeholderList,
+                                                datetime_split_input_jsList,
+                                                datetime_split_input_reqList)
+        
+            selectDicts     =   [] 
+    
+            current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+            colnames        =   current_df.columns.tolist()
+        
+            datetimenames          =   {"default":datetimecols[0],"list": datetimecols}
+        
+            selectDicts.append(datetimenames)
+        
+            get_select_defaults(dt_datetime_custom_form,
+                                datetime_split_input_id,
+                                datetime_split_input_idList,
+                                datetime_split_input_typeList,
+                                selectDicts)
+        
+            dt_datetime_custom_form.set_shortForm(True)
+            dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":25})
+            dt_datetime_custom_form.set_gridwidth(480)
+            dt_datetime_custom_form.set_fullparms(True)  
+        
+            dt_datetime_custom_html = dt_datetime_custom_form.get_html()
+
+            dt_datetime_title_html  =   "<div>Split Datetime Column</div><br>"
+        
+        else :
+        
+            dt_datetime_custom_form = InputForm(datetime_merge_input_id,
+                                                datetime_merge_input_idList,
+                                                datetime_merge_input_labelList,
+                                                datetime_merge_input_typeList,
+                                                datetime_merge_input_placeholderList,
+                                                datetime_merge_input_jsList,
+                                                datetime_merge_input_reqList)
+        
+            selectDicts     =   [] 
+    
+            current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+            colnames        =   current_df.columns.tolist()
+        
+            datecols        =   []
+            timecols        =   []
+             
+            from dfcleanser.common.common_utils import is_date_col, is_time_col
+       
+            for i in range(len(colnames)) :
+            
+                if(is_date_col(current_df,colnames[i])) :   datecols.append(colnames[i])
+                if(is_time_col(current_df,colnames[i])) :   timecols.append(colnames[i])
+            
+            if(len(datecols) > 0) :
+                datenames          =   {"default":datecols[0],"list": datecols}
+            else :
+                datenames          =   {"default":"No datetime.date Columns to Select","list": ["No datetime.date Columns to Select"]}
+                
+            if(len(timecols) > 0) :
+                timenames          =   {"default":timecols[0],"list": timecols}
+            else :
+                timenames          =   {"default":"No datetime.time Columns to Select","list": ["No datetime.time Columns to Select"]}
+                
+            selectDicts.append(datenames)
+            selectDicts.append(timenames)
+        
+            ctypes          =   {"default":"datetime.datetime","list": ["datetime.datetime","np.datetime64","pd.Timestamp"]}
+            selectDicts.append(ctypes)
+        
+            get_select_defaults(dt_datetime_custom_form,
+                                datetime_merge_input_id,
+                                datetime_merge_input_idList,
+                                datetime_merge_input_typeList,
+                                selectDicts)
+        
+            dt_datetime_custom_form.set_shortForm(True)
+            dt_datetime_custom_form.set_buttonstyle({"font-size":12, "height":75, "width":100, "left-margin":30})
+            dt_datetime_custom_form.set_gridwidth(480)
+            dt_datetime_custom_form.set_fullparms(True)  
+        
+            dt_datetime_custom_html = dt_datetime_custom_form.get_html()
+        
+            dt_datetime_title_html  =   "<div>Merge Datetime Columns</div><br>"
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+        gridhtmls       =   [dt_datetime_title_html,dt_datetime_custom_html]
+    
+        print("\n")
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+            
     else :
-        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+
+        print("\n")
+
+        display_status_note("No datetime columns found in dataframe")
 
 
 
@@ -915,84 +921,96 @@ def display_datetime_components(parms,tddtype=False) :
     * --------------------------------------------------------
     """
     
-    dt_datetime_comps_form = InputForm(datetime_comp_input_id,
-                                       datetime_comp_input_idList,
-                                       datetime_comp_input_labelList,
-                                       datetime_comp_input_typeList,
-                                       datetime_comp_input_placeholderList,
-                                       datetime_comp_input_jsList,
-                                       datetime_comp_input_reqList)
+    current_df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    datetimecols    =   get_datetime_column_names(current_df)
     
-    selectDicts     =   [] 
+    if(len(datetimecols) > 0) :
     
-    df              =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
-    colnames        =   df.columns.tolist()
+        dt_datetime_comps_form = InputForm(datetime_comp_input_id,
+                                           datetime_comp_input_idList,
+                                           datetime_comp_input_labelList,
+                                           datetime_comp_input_typeList,
+                                           datetime_comp_input_placeholderList,
+                                           datetime_comp_input_jsList,
+                                           datetime_comp_input_reqList)
     
-    dt_colnames     =   []
+        selectDicts     =   [] 
+    
+        df              =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
+        colnames        =   df.columns.tolist()
+    
+        dt_colnames     =   []
     
     
-    for i in range(len(colnames)) :
+        for i in range(len(colnames)) :
         
-        if(not tddtype) :
+            if(not tddtype) :
         
-            from dfcleanser.common.common_utils import is_datetime_type_col
-            if(is_datetime_type_col(df,colnames[i])) :            
-                dt_colnames.append(colnames[i])
+                from dfcleanser.common.common_utils import is_datetime_type_col
+                if(is_datetime_type_col(df,colnames[i])) :            
+                    dt_colnames.append(colnames[i])
                 
-        else :
+            else :
             
-            from dfcleanser.common.common_utils import is_datetime_type_col, is_numeric_col
-            if( (is_datetime_type_col(df,colnames[i])) or (is_numeric_col(colnames[i])) ) :            
-                dt_colnames.append(colnames[i])
+                from dfcleanser.common.common_utils import is_datetime_type_col, is_numeric_col
+                if( (is_datetime_type_col(df,colnames[i])) or (is_numeric_col(colnames[i])) ) :            
+                    dt_colnames.append(colnames[i])
             
-    if(len(dt_colnames) > 0)   :
-        cnames          =   {"default": dt_colnames[0],"list": dt_colnames, "callback":"change_component_callback"}
-    else :
-        cnames          =   {"default": "No datetime columns found","list": ["No datetime columns found"]}
-    selectDicts.append(cnames)
-    
-    if(not tddtype) :    
-        comps           =   {"default":dtcomps[0],"list":dtcomps, "callback":"change_component_callback"}
-    else :
-        comps           =   {"default":tdcomps[0],"list":tdcomps, "callback":"change_component_callback"}
-    selectDicts.append(comps)
-    
-    get_select_defaults(dt_datetime_comps_form,
-                        datetime_comp_input_id,
-                        datetime_comp_input_idList,
-                        datetime_comp_input_typeList,
-                        selectDicts)
-    
-    if(not tddtype) :
-        if(len(dt_colnames) > 0) :
-            cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + dtcomps[0],dtcomps[0]])
+        if(len(dt_colnames) > 0)   :
+            cnames          =   {"default": dt_colnames[0],"list": dt_colnames, "callback":"change_component_callback"}
         else :
-            cfg.set_config_value(datetime_comp_input_id+"Parms",["","",dtcomps[0]])
-    else :
-        if(len(dt_colnames) > 0) :
-            cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + tdcomps[0],tdcomps[0]])
+            cnames          =   {"default": "No datetime columns found","list": ["No datetime columns found"]}
+            
+        selectDicts.append(cnames)
+    
+        if(not tddtype) :    
+            comps           =   {"default":dtcomps[0],"list":dtcomps, "callback":"change_component_callback"}
         else :
-            cfg.set_config_value(datetime_comp_input_id+"Parms",["","",tdcomps[0]])
+            comps           =   {"default":tdcomps[0],"list":tdcomps, "callback":"change_component_callback"}
         
-        
+        selectDicts.append(comps)
     
-    dt_datetime_comps_form.set_shortForm(True)
-    dt_datetime_comps_form.set_buttonstyle({"font-size":12, "height":50, "width":140, "left-margin":15})
-    dt_datetime_comps_form.set_gridwidth(480)
-    dt_datetime_comps_form.set_fullparms(True)  
-        
-    dt_datetime_comps_html = dt_datetime_comps_form.get_html()
-        
-    dt_datetime_title_html  =   "<div>Get Datetime Component Column</div><br>"
-        
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
-    gridhtmls       =   [dt_datetime_title_html,dt_datetime_comps_html]
+        get_select_defaults(dt_datetime_comps_form,
+                            datetime_comp_input_id,
+                            datetime_comp_input_idList,
+                            datetime_comp_input_typeList,
+                            selectDicts)
     
-    print("\n")
-    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
-        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+        if(not tddtype) :
+            if(len(dt_colnames) > 0) :
+                cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + dtcomps[0],dtcomps[0]])
+            else :
+                cfg.set_config_value(datetime_comp_input_id+"Parms",["","",dtcomps[0]])
+        else :
+            if(len(dt_colnames) > 0) :
+                cfg.set_config_value(datetime_comp_input_id+"Parms",[dt_colnames[0],dt_colnames[0] + "_" + tdcomps[0],tdcomps[0]])
+            else :
+                cfg.set_config_value(datetime_comp_input_id+"Parms",["","",tdcomps[0]])
+    
+        dt_datetime_comps_form.set_shortForm(True)
+        dt_datetime_comps_form.set_buttonstyle({"font-size":12, "height":50, "width":140, "left-margin":15})
+        dt_datetime_comps_form.set_gridwidth(480)
+        dt_datetime_comps_form.set_fullparms(True)  
+        
+        dt_datetime_comps_html = dt_datetime_comps_form.get_html()
+        
+        dt_datetime_title_html  =   "<div>Get Datetime Component Column</div><br>"
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+        gridhtmls       =   [dt_datetime_title_html,dt_datetime_comps_html]
+    
+        print("\n")
+        if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+        else :
+            display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+            
     else :
-        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+
+        print("\n")
+
+        display_status_note("No datetime columns found in dataframe")
+    
 
        
 """

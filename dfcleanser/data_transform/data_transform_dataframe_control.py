@@ -80,11 +80,9 @@ def process_df_transform(optionid,parms,display=True) :
         [opstat, filename]  =   save_column_names_row(parms)
         
         dftw.display_dataframe_col_names_taskbar()
-        #print("\n")
 
         if(opstat.get_status()) :
             display_status_note("Column Names Row Saved Successfully to : " + filename) 
-            #display_status("Column Names Row Saved Successfully to : " + filename)
             clear_dataframe_transform_cfg_values()
         else :
             display_exception(opstat)
@@ -102,7 +100,6 @@ def process_df_transform(optionid,parms,display=True) :
 
             clear_dataframe_transform_cfg_values()
             display_status_note("Column Names Row Added Successfully")
-            #display_status("Column Names Row Added Successfully")
             
             col_names_table = dcTable("Column Names ","cnamesTable",cfg.DataTransform_ID)
             col_names_table.set_table_column_parms({"font":12})
@@ -166,7 +163,7 @@ def process_df_transform(optionid,parms,display=True) :
     
     elif(optionid == dtm.PROCESS_SET_DF_INDEX) :
         
-        opstat = set_df_index(parms)      
+        opstat = set_df_index(parms) 
         
         dftw.display_dataframe_indices_taskbar()
         print("\n")
@@ -177,7 +174,11 @@ def process_df_transform(optionid,parms,display=True) :
         else :
             display_exception(opstat)
             
-        dftw.display_current_df_index()
+        dftw.display_current_df_index(cfg.get_current_chapter_df(cfg.DataTransform_ID),
+                                      cfg.get_current_chapter_dfc_df_title(cfg.DataTransform_ID))
+        
+        dftw.display_remote_df(cfg.DataTransform_ID)
+
                 
     elif(optionid == dtm.PROCESS_RESET_DF_INDEX) :
         
@@ -192,13 +193,13 @@ def process_df_transform(optionid,parms,display=True) :
         else :
             display_exception(opstat)
             
-        dftw.display_current_df_index()
+        dftw.display_current_df_index(cfg.get_current_chapter_df(cfg.DataTransform_ID),
+                                      cfg.get_current_chapter_dfc_df_title(cfg.DataTransform_ID))
+        
+        dftw.display_remote_df(cfg.DataTransform_ID) 
             
     elif(optionid == dtm.PROCESS_APPEND_TO_INDEX) :
         
-        # Remove Row Ids Column
-        #if(funcid == PROCESS_CMD) :
-            
         opstat = append_to_df_index(parms)
         
         dftw.display_dataframe_indices_taskbar()
@@ -211,9 +212,11 @@ def process_df_transform(optionid,parms,display=True) :
             dftw.display_dataframe_options([[4,0]])
             display_exception(opstat)
             
-        dftw.display_current_df_index()
+        dftw.display_current_df_index(cfg.get_current_chapter_df(cfg.DataTransform_ID),
+                                      cfg.get_current_chapter_dfc_df_title(cfg.DataTransform_ID))
  
-    
+        dftw.display_remote_df(cfg.DataTransform_ID) 
+            
     elif(optionid == dtm.PROCESS_SORT_DF_INDEX) :
         
         opstat = sort_df_index(parms)
@@ -227,7 +230,10 @@ def process_df_transform(optionid,parms,display=True) :
         else :
             display_exception(opstat)
         
-        dftw.display_current_df_index()
+        dftw.display_current_df_index(cfg.get_current_chapter_df(cfg.DataTransform_ID),
+                                      cfg.get_current_chapter_dfc_df_title(cfg.DataTransform_ID))
+        
+        dftw.display_remote_df(cfg.DataTransform_ID) 
 
     # drop duplicate rows
     elif(optionid == dtm.PROCESS_SORT_COLUMN) :
@@ -246,15 +252,21 @@ def process_df_transform(optionid,parms,display=True) :
             
     # drop duplicate rows
     elif(optionid == dtm.PROCESS_DROP_DUPLICATE_ROWS) :
+        
+        df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
+        
+        start_rows  =   len(df)
 
         opstat = drop_duplicate_rows(parms,display)
+        
+        end_rows    =   len(df)
         
         dftw.display_dataframe_transform_main()
         print("\n")
             
         if(opstat.get_status()) :
             clear_dataframe_transform_cfg_values()
-            display_status_note("Duplicate Rows Dropped Successfully")
+            display_status_note(str(start_rows-end_rows) + " Duplicate Rows Dropped Successfully")
         else :
             display_exception(opstat) 
     
@@ -266,6 +278,9 @@ def process_df_transform(optionid,parms,display=True) :
     # help
     elif(optionid == dtm.DF_TRANSFORM_HELP) :
         print("help")
+
+
+
 
 """
 #--------------------------------------------------------------------------
@@ -502,9 +517,7 @@ def remwhitespace_column_names_row(parms,display=True):
     """
 
     opstat = opStatus() 
-    
-    print("remwhitespace_column_names_row",parms)
-    
+    #TODO  what the fuck   
     return(opstat)
     
     try :
@@ -546,27 +559,50 @@ def reset_df_index(parms,display=True):
     
     opstat = opStatus() 
     
+    df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
+    
     fparms      =   get_parms_for_input(parms,dftw.df_reset_index_transform_input_idList)
     
-    if(fparms[0] == "True") :
-        drop = True
-    else :
-        drop = False
+    drop_levels     =   fparms[0]
+    
+    if(len(drop_levels) > 0) :
         
+        drop_levels     =   drop_levels.lstrip("[")
+        drop_levels     =   drop_levels.rstrip("]")
+        drop_levels     =   drop_levels.split(",")
+        
+        if(drop_levels[0] == "All") :
+            
+            drop_levels     =   []
+            
+            index_columns   =   df.index.names
+            if(len(index_columns) > 0) :
+                for i in range(len(index_columns)) :
+                    if( not (index_columns[i] is None) ) :
+                        drop_levels.append(index_columns[i])
+        
+    else :
+        
+        drop_levels     =   None
+        
+    
+    if(fparms[2] == "True") :
+        drop  =   False
+    else :
+        drop  =   True
+    
     if(opstat.get_status()) :
 
         try :
             
-            df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
-            df.reset_index(drop=drop,inplace=True)
+            df.reset_index(level=drop_levels,drop=drop,inplace=True)
                 
             if(display) :
                 #make scriptable
                 add_to_script(["# reset df index",
                                "from dfcleanser.data_transform.data_transform_dataframe_control reset_df_index",
                                "reset_df_index(" + json.dumps(parms[1]) + ",False)"],opstat)
-
-        
+    
         except Exception as e: 
             opstat.store_exception("Unable to reset df index : ",e)
 
@@ -586,7 +622,7 @@ def set_df_index(parms,display=True):
     *  N/A
     * --------------------------------------------------------
     """
-    
+
     opstat = opStatus()
     
     fparms      =   get_parms_for_input(parms,dftw.df_set_index_transform_input_idList)
@@ -599,26 +635,31 @@ def set_df_index(parms,display=True):
         
     else :
         
+        colnames    =   colnames.lstrip("[")
+        colnames    =   colnames.rstrip("]")
         colnames    =   colnames.split(",")
         
-        if(fparms[1] == "True") :
+        if(fparms[2] == "True") :
             drop = True
         else :
             drop = False
             
         if(opstat.get_status()) :
                 
-            if(fparms[2] == "True") :
+            if(fparms[3] == "True") :
                 verify = True
             else :
                 verify = False
- 
+                
     if(opstat.get_status()) :
 
         try : 
             
             df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
+            
             df.set_index(colnames,drop=drop,append=True,inplace=True,verify_integrity=verify)
+            
+            cfg.set_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),df)
             
             if(display) :
                 #make scriptable
@@ -628,7 +669,7 @@ def set_df_index(parms,display=True):
 
         
         except Exception as e: 
-            opstat.store_exception("Unable to set index of column(s) : " + colnames,e)
+            opstat.store_exception("Unable to set index of column(s) : " + str(colnames),e)
 
     return(opstat)
 
@@ -652,6 +693,8 @@ def append_to_df_index(parms,display=True):
     fparms      =   get_parms_for_input(parms,dftw.df_append_index_transform_input_idList)
 
     colnames    =   fparms[0]
+    colnames    =   colnames.lstrip("[")
+    colnames    =   colnames.rstrip("]")
     colnames    =   colnames.split(",")
     
     if(len(colnames) == 0) :
@@ -662,40 +705,33 @@ def append_to_df_index(parms,display=True):
         
         df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
         
-        index_col_names = df.index.names
-        print("index_col_names",index_col_names)
-        
-        if((len(index_col_names) == 1) and (index_col_names[0] is None)) :
-            opstat.set_status(False)
-            opstat.set_errorMsg("no current index to append to")
-            
+        if(fparms[2] == "True") :
+            drop = True
         else :
+            drop = False
             
-            new_colnames    =   []
-            
-            for i in range(len(index_col_names)) :
-                if(not (index_col_names[i] is None)) :
-                    new_colnames.append(index_col_names[i])
-                    
-            for i in range(len(new_colnames)) :
-                colnames.append(new_colnames[i])
-        
-            if(fparms[1] == "True") :
-                drop = True
-            else :
-                drop = False
-            
-            if(fparms[2] == "True") :
-                verify = True
-            else :
-                verify = False
+        if(fparms[3] == "True") :
+            verify = True
+        else :
+            verify = False
     
-    if(opstat.get_status()) :
-        
         try :
             
+            """
             df.reset_index(drop=False,inplace=True)
-            df.set_index(colnames,drop=drop,append=True,inplace=True,verify_integrity=verify)
+                
+            cnames        =   list(df.columns)
+            levels_to_drop  =   []
+            
+            for i in range(len(cnames)) :
+                if(cnames[i].find("level_") > -1) :
+                    levels_to_drop.append(cnames[i])
+            
+            if(len(levels_to_drop) > 0) :
+                df.drop(levels_to_drop,axis=1,inplace=True)
+            """
+            
+            df.set_index(keys=colnames,drop=drop,append=True,inplace=True,verify_integrity=verify)
                 
             if(display) :
                 #make scriptable
@@ -726,21 +762,33 @@ def sort_df_index(parms,display=True):
     opstat = opStatus()
     
     fparms      =   get_parms_for_input(parms,dftw.df_sort_index_transform_input_idList)
+    
+    levels      =   fparms[0]
+    
+    if(len(levels) > 0) :
+        
+        levels      =   levels.lstrip("[")
+        levels      =   levels.rstrip("]")
+        levels      =   levels.split(",")
+        
+    else :
+        
+        levels      =   None
 
-    if(fparms[0] == "True") :
+    if(fparms[2] == "True") :
         ascending = True
     else :
         ascending = False
         
-    kind        =   fparms[1]
-    na_position =   fparms[2]
+    kind        =   fparms[3]
+    na_position =   fparms[4]
                 
     if(opstat.get_status()) :
 
         try : 
             
             df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
-            df.sort_index(axis=0,level=None,ascending=ascending,inplace=True,kind=kind,na_position=na_position)
+            df.sort_index(axis=0,level=levels,ascending=ascending,inplace=True,kind=kind,na_position=na_position)
                 
             if(display) :
                 #make scriptable
@@ -845,15 +893,16 @@ def drop_duplicate_rows(parms,display=True):
     if(len(colnames) == 0) :
         colnames    =   None
         
-    if(fparms[1] == "drop") :
+    if(fparms[2] == "Drop") :
         drop = True
     else :
         drop = False
-        
-    keep        =   fparms[2]
+    
+    keep        =   fparms[3]
     if(keep == "False") :
         keep    =   False
-            
+       
+        
     df = cfg.get_current_chapter_df(cfg.DataTransform_ID)
             
     if(not (colnames is None)) :
@@ -880,7 +929,7 @@ def drop_duplicate_rows(parms,display=True):
                                "drop_duplicate_rows("+ json.dumps(parms) + ",False)"],opstat)
         
         except Exception as e: 
-            opstat.store_exception("Unable to sort df index : " + colnames,e)
+            opstat.store_exception("Unable to drop duplicate rows : " + colnames,e)
 
     return(opstat)
  

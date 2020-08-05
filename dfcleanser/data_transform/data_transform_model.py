@@ -327,10 +327,36 @@ MAX_NP_TIMEDELTA_NANOSECONDS            =   1000 * MAX_NP_TIMEDELTA_MICROSECONDS
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-#   working data
+#   utils
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 """
+
+
+def is_df_index_defined(df) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : check if df indices
+    * 
+    * parms :
+    *   df  - dataframe
+    *
+    * returns : 
+    *  N/A
+    * --------------------------------------------------------
+    """
+        
+    indices = df.index
+    index_names = indices.names
+    
+    if(index_names is None) :
+        return(False)
+    else :
+       if((len(index_names) == 1) and (index_names[0] is None)) :
+            return(False)
+            
+    return(True)
+
 
 """
 #------------------------------------------------------------------

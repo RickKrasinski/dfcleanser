@@ -70,20 +70,13 @@ def display_cnames() :
 
 def display_category_status(colname) :
     
-    #print("display_category_status",colname)
-    
     opstat  =   opStatus()
             
     df  =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
 
-    #cat_uniques_table = dcTable("Categories and Counts",
-    #                             "ucatssTbl",
-    #                             cfg.DataTransform_ID)
-
     #display_df_unique_column(df,cat_uniques_table,colname,sethrefs=False,display=True)
     from dfcleanser.data_cleansing.data_cleansing_widgets import get_unique_col_html
     get_unique_col_html(df,colname,opstat,False)
-    #print("\n")
 
     from dfcleanser.data_cleansing.data_cleansing_widgets import display_col_stats
     colstats_html       =   display_col_stats(df,colname,display=False,full_size=True)
@@ -161,7 +154,6 @@ def process_column_option(optionid,parms) :
         opstat  =   process_save_column(parms)
             
         dtcw.display_base_data_transform_columns_taskbar()
-        print("\n")
         
         if(opstat.get_status()) :
             display_status_note(opstat.get_errorMsg())
@@ -173,7 +165,6 @@ def process_column_option(optionid,parms) :
         opstat  =   process_save_column(parms,withIndex=True)
         
         dtcw.display_base_data_transform_columns_taskbar()
-        print("\n")
         
         if(opstat.get_status()) :
             display_status_note(opstat.get_errorMsg())
@@ -287,7 +278,6 @@ def process_column_option(optionid,parms) :
 
         opstat  =   process_add_column(optionid,parms)
         
-        #dtcw.display_base_data_transform_columns_taskbar()
         print("\n")
         
         if(opstat.get_status()) :
@@ -404,14 +394,10 @@ def save_deleted_column(colname,dftitle,fdir,ftype,fname=None) :
         save_file_path  =   os.path.join(fdir,dftitle + "_" + colname + "." + ftype)
     else :
         fname   =   fname.lstrip("'")
-        fname   =   fname,rstrip("'")
+        fname   =   fname.rstrip("'")
         save_file_path  =   os.path.join(fdir,fname + "." + ftype)
         
     save_file_path  =   save_file_path.replace(" ","_")
-    
-        
-    
-    print("save_deleted_column",save_file_path)
     
     try :
         
@@ -450,8 +436,6 @@ def process_drop_column(parms,display=True) :
     opstat = opStatus()
         
     df  =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
-    
-    print("drop column",parms,type(parms),len(parms))
     
     fparms = get_parms_for_input(parms,dtcw.drop_column_input_idList)
     
@@ -559,7 +543,7 @@ def process_reorder_columns(parms,display=True) :
         opstat.set_errorMsg("column_to_move is not in df")
     else :
         
-        moveaftercol    = fparms[1]
+        moveaftercol    = fparms[2]
         if(not (is_column_in_df(df,moveaftercol))) :
             opstat.set_status(False)
             opstat.set_errorMsg("column_to_move_after is not in df")
@@ -579,9 +563,14 @@ def process_reorder_columns(parms,display=True) :
             if(new_cols[i] == moveaftercol) :
                 final_cols.append(movecol) 
     
-        try :        
-            df[final_cols]       
-        
+        try : 
+            
+            df  =   df[final_cols]  
+
+            cfg.set_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),df) 
+            
+            df  =   cfg.get_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF))
+
             if(display) :
             
                 #make scriptable
@@ -611,8 +600,6 @@ def process_save_column(parms,withIndex=False,display=True) :
     * --------------------------------------------------------
     """
     
-    print("process_save_column",parms,withIndex)
-    
     opstat = opStatus()
     
     df  =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
@@ -625,6 +612,8 @@ def process_save_column(parms,withIndex=False,display=True) :
     if(len(fparms) > 0) :
 
         colnames    =   fparms[0]
+        colnames    =   colnames.lstrip("[")
+        colnames    =   colnames.rstrip("]")
         colnames    =   colnames.split(",")
     
         for i in range(len(colnames)) :
@@ -636,42 +625,15 @@ def process_save_column(parms,withIndex=False,display=True) :
             
         if(opstat.get_status()) :
             
-            fname   =   fparms[1]
+            fname   =   fparms[2]
             
             if(len(fname) == 0) :
                 opstat.set_status(False)
-                opstat.set_errorMsg("file name(s) are not defined")
+                opstat.set_errorMsg("file name is not defined")
             
             else :
                 
-                fnames  =   fname.lstrip("[")
-                fnames  =   fnames.rstrip("]")
-                if(fnames.find(",") > -1) :
-                    fnames  =   fnames.split(",")
-                else :
-                    fnames  =   [fnames]
-                    
-                print("fnames",fnames)
-                
-                for i in range(len(fnames)) :
-                    fnames[i]  =   fnames[i].replace(" ","_")
-                
-            if(opstat.get_status()) :
-            
-                fdir    =   fparms[2]
-    
-                if(len(fdir) == 0) :
-                    fdir   =   None
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("file dir is not defined")
-                
-                else :
-                    if(not (does_dir_exist(fdir))) :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("col(s)_to_drop_save_file(s)_dir '" + fdir + "' not a valid dir")
-                    
-                    else :
-                        ftype   =  fparms[3] 
+                ftype   =  fparms[3] 
                 
                 if(opstat.get_status()) :
                 
@@ -690,49 +652,57 @@ def process_save_column(parms,withIndex=False,display=True) :
     else :
         opstat.set_status(False)
         opstat.set_errorMsg("no parameters defined for save")
-        
-        
-    print("process_save_column\n",colnames,"\n",fnames,"\n",fdir,ftype,opstat)
-        
     
     if(opstat.get_status())  :
     
         try :
             
             if(not (withindexflag)) :
-                
-                for i in range(len(colnames)) :
-                    opstat = save_deleted_column(colnames[i],cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),fdir,ftype)
-                    if(not(opstat.get_status())) :
-                        break
-                
+                save_index  =   False
             else :
+                save_index  =   True
                 
-                filename    =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
-                
-                for i in range(len(colnames)) :
-                    filename    =   filename + "_" + colnames[i] 
+            try :
                     
-                import os
-                filename    =   os.path.join(fdir,filename+".csv")
+                if(ftype == "json") :
+                    
+                    cols            =   list(df.columns)
+                    cols_to_drop    =   []
+                    
+                    for i in range(len(cols)) :
+                        if(not (cols[i] in colnames) ) :
+                            cols_to_drop.append(cols[i])
+                            
+                    temp_df     =   df.drop(cols_to_drop,axis=1)
+                    
+                    temp_df.to_json(fname)
+                    
+                elif(ftype == "excel") :
+                    
+                    df.to_excel(fname,columns=colnames,header=True,index=save_index)
+                    
+                else :
+                    
+                    df.to_csv(fname,columns=colnames,header=True,index=save_index)
+                        
+            except Exception as e:
+                opstat.store_exception("Unable to save column(s) ",e)
                 
-                try :
-                
-                    df.to_csv(filename,columns=colnames,header=True,index=True)
-
-                except Exception as e:
-                    opstat.store_exception("Unable to save column(s) with index ",e)
-                 
-            if(display) :
-            
-                #make scriptable
-                add_to_script(["# save columns " + str(colnames),
-                               "from dfcleanser.data_transform.data_transform_columns_control import process_save_column",
-                               "process_save_column(" + json.dumps(parms) + ",False)"],opstat)
-            
             if(opstat.get_status()) :
-                opstat.set_errorMsg("Columns " + str(colnames) + " Saved Successfully to " + fdir + " as<br>" + cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF) + "_" +str(colnames))
-    
+                
+                if(display) :
+            
+                    #make scriptable
+                    add_to_script(["# save columns " + str(colnames),
+                                   "from dfcleanser.data_transform.data_transform_columns_control import process_save_column",
+                                   "process_save_column(" + json.dumps(parms) + ",False)"],opstat)
+                        
+            opstat.set_errorMsg("Columns " + str(colnames) + " saved Successfully")
+            
+            if(not (withindexflag)) :
+                cfg.set_config_value(dtw.save_column_input_id+"Parms",["","",fname,""])
+            else :
+                cfg.set_config_value(dtw.save_colind_input_id+"Parms",["","",fname,"",""])
                     
         except Exception as e:
             opstat.store_exception("Unable to save column ",e)
@@ -753,10 +723,10 @@ def process_copy_column(parms,display=True) :
     *  N/A
     * --------------------------------------------------------
     """
-    
+ 
     opstat  =   opStatus()
     
-    fparms  =   get_parms_for_input(parms[3],dtcw.copy_columns_input_idList)
+    fparms  =   get_parms_for_input(parms,dtcw.copy_columns_input_idList)
     
     copyfromcol     =   fparms[0]
     copytocol       =   fparms[1]
@@ -781,7 +751,9 @@ def process_copy_column(parms,display=True) :
             if(len(newcol) > 0) :
                 df[copytocol] = df[copyfromcol]
             else :
-                add_column_to_df(df,newcol,df[copyfromcol].tolist(),opstat,display)  
+                add_column_to_df(df,newcol,df[copyfromcol].tolist(),opstat,display) 
+                
+            cfg.set_dfc_dataframe_df(cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF),df) 
             
             if(display) :
             
@@ -886,9 +858,6 @@ def make_col_categorical_from_dummies(df, columnName, removeCol)  :
         except Exception as e: 
             opstat.store_exception("column drop error : " + columnName,e)
             
-    if(opstat.get_status()) :
-        print("new df")
-    
     return(opstat)
 
 
@@ -1317,8 +1286,6 @@ def process_datatype_column(parms,display=True)  :
         colname         =   fparms[0]
         datatype        =   fparms[1]
     
-    print("process_datatype_column",colname,parms,fparms)
-
     if(opstat.get_status()) :   
         
         if(naoption     ==  dtm.FILL_NA_OPTION) :
@@ -1389,28 +1356,19 @@ def process_apply_fn_to_column(parms,display=True) :
     apply_id_list   =   dtcw.get_current_apply_fn_idList()
     
     fparms = get_parms_for_input(parms,apply_id_list)
-    print("process_apply_fn_to_column",parms,fparms)
 
     dftoapply       =   fparms[0]
     coltoapply      =   fparms[1]
     fntoapply       =   fparms[2]
     fncode          =   fparms[3]
     
-    print("dftoapply",dftoapply)
-    print("fntoapply",fntoapply)
-    print("fncode",fncode)
-    
     from dfcleanser.sw_utilities.sw_utility_genfunc_model import get_apply_function_parms
     kwargs  =   get_apply_function_parms(fntoapply)
-    
-    print("kwargs",kwargs)
     
     kwargs_vals     =   []
     for i in range(len(kwargs)) :
         kwargs_vals.append(fparms[4+i]) 
         
-    print("kwargs_vals",kwargs_vals) 
-    
     if(len(dftoapply) == 0) :
         opstat.set_status(False)
         opstat.set_errorMsg("No dataframe to aply fn to defined")
@@ -1540,8 +1498,6 @@ def process_save_user_fn(parms,display=True) :
         newftitle           =   fparms[5]
         newfcode            =   fparms[6]
         
-    print("process_save_user_fn fparms : ",fparms,newfmodule,newftitle,newfcode)
-    
     if(len(newfmodule) == 0) :
         opstat.set_status(False)
         opstat.set_errorMsg("'function_module' is not defined")
@@ -1592,8 +1548,6 @@ def process_delete_user_fn(parms,display=True) :
     
     fparms          =   get_parms_for_input(parms,dtcw.maintain_user_fns_input_idList)
     
-    print("process_delete_user_fn : ",fparms)
-            
     ftitle          =   fparms[0]
     
     if(len(ftitle) == 0) :
@@ -1637,8 +1591,6 @@ def add_column_to_df(df,colname,colList,opstat,display=True) :
     * --------------------------------------------------------
     """
 
-    print("add_column_to_df",colname,len(colList))
-    
     if(is_existing_column(df,colname)) :
         opstat.set_status(False)
         opstat.set_errorMsg("Column to Add : '" + colname + "' already exists")
@@ -1653,7 +1605,7 @@ def add_column_to_df(df,colname,colList,opstat,display=True) :
         
     except Exception as e:
         opstat.store_exception("Add New Column Error",e)
-        
+    
     return(df)
 
 
@@ -1805,7 +1757,6 @@ def add_column_from_indexed_file(parms,display=True) :
     df      =   cfg.get_current_chapter_df(cfg.DataTransform_ID)
     
     fparms  =   get_parms_for_input(parms,dtcw.add_colind_file_input_idList)
-    print("fparms",fparms)
 
     newcolname      =   fparms[0]
     newcoldatatype  =   fparms[1]
@@ -1844,11 +1795,6 @@ def add_column_from_indexed_file(parms,display=True) :
                 
             fileindexmap            =   json.load(indexmap)
                 
-            print("filecolnameindexList",filecolnameindexList)
-            print("fileindexmap",fileindexmap)
-            print("fileindexList",len(fileindexList),fileindexList[0])
-            print("filecolvaluesList",len(filecolvaluesList),filecolvaluesList[0])
-                
             dfindex     =   []
                 
             for i in range(len(filecolnameindexList)) :
@@ -1857,8 +1803,6 @@ def add_column_from_indexed_file(parms,display=True) :
                 if(not (dfcolname is None)) :
                     dfindex.append(dfcolname)
                         
-            print("dfindex",dfindex)
-                
             if(len(dfindex) == 0) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("No matching map index")
@@ -1945,7 +1889,6 @@ def add_column_from_user_code(parms,display=True) :
     opstat  =   opStatus()
 
     fparms  =   get_parms_for_input(parms,dtcw.add_column_code_user_fns_input_idList)
-    print("fparms",fparms)
             
     newcolname      =   fparms[0]
     newdftitle      =   fparms[1]
@@ -2013,7 +1956,6 @@ def add_column_from_dfc_fn(parms,display=True) :
     opstat  =   opStatus()
             
     fparms  =   get_parms_for_input(parms,dtcw.get_current_dfc_funcs_idlist())
-    print("fparms",fparms)
 
     newcolname      =   fparms[0]
     newcoldatatype  =   fparms[1]
@@ -2021,27 +1963,17 @@ def add_column_from_dfc_fn(parms,display=True) :
     functioncall    =   fparms[3]
     functiondesc    =   fparms[4]
             
-    print("newcolname",newcolname)
-    print("newcoldatatype",newcoldatatype)
-    print("dfcfuncname",dfcfuncname)
-    print("functioncall\n",functioncall)
-    print("functiondesc\n",functiondesc)
-            
     from dfcleanser.sw_utilities.sw_utility_genfunc_model import reservedfunctionsmodule, get_reserved_function_parms, get_reserved_function_parms_datatypes
     gfmodule    =   reservedfunctionsmodule
     print("gfmodule",gfmodule)
             
     kwargs      =   get_reserved_function_parms(dfcfuncname)
     kwdtypes    =   get_reserved_function_parms_datatypes(dfcfuncname)
-    print("\nkwargs\n",kwargs)
-    print("\nkwdtypes\n",kwdtypes)
             
     kwvals  =   []
     for i in range(len(kwargs)) :
         kwvals.append(fparms[i+5])
                 
-    print("kwvals",kwvals)
-
     code            =   fparms[4]
     code            =   code.replace('\\n','\n')
             
@@ -2123,17 +2055,14 @@ def add_column_from_df(parms,display=True) :
     sourceparms     =   parms[0]
     sourceparms     =   json.loads(sourceparms)
     sourcefparms    =   get_parms_for_input(sourceparms,dtcw.add_column_source_df_input_idList)
-    print("sourcefparms",sourcefparms)
          
     outputparms     =   parms[1]
     outputparms     =   json.loads(outputparms)
     outputfparms    =   get_parms_for_input(outputparms,dtcw.add_column_output_df_input_idList)
-    print("outputfparms",outputfparms)
         
     addparms        =   parms[2]
     addparms        =   json.loads(addparms)
     addfparms       =   get_parms_for_input(addparms,dtcw.add_column_df_input_idList)
-    print("addfparms",addfparms)
         
     sourcedftitle       =   sourcefparms[0]
     sourcecolname       =   sourcefparms[1]
