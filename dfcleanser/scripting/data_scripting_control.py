@@ -228,7 +228,7 @@ class DCScriptLog :
     def get_ScriptLog_file_name(self) :
         
         import os        
-        path_name   =   os.path.join(cfg.get_notebook_path(),cfg.get_notebookName() + "_files")
+        path_name   =   os.path.join(cfg.get_notebookPath(),cfg.get_notebookName() + "_files")
         path_name   =   os.path.join(path_name,cfg.get_notebookName() + "_scriptlog.json")
         
         #print("get_ScriptLog_file_name",path_name)
@@ -269,9 +269,7 @@ class DCScriptLog :
 
     def get_ScriptLog(self) :
         
-        #print("get_ScriptLog_file_name",cfg.get_notebook_path() + cfg.get_notebookName() + "_scriptlog.json")
-
-        
+       
         if(len(self.scriptlog) == 0) :
             self.load_ScriptLog_file()    
         return(self.scriptlog.get(cfg.SCRIPT_LOG_KEY,None))
