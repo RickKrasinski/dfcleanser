@@ -13,15 +13,18 @@ import sys
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
-import dfcleanser.sw_utilities.sw_utility_dfsubset_model as dfsm
-import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as dfsw
+import dfcleanser.sw_utilities.sw_utility_dfsubset_model as swsm
+import dfcleanser.sw_utilities.sw_utility_dfsubset_widgets as swsw
 
 
 from dfcleanser.common.table_widgets import drop_owner_tables
-from dfcleanser.common.html_widgets import new_line
+#from dfcleanser.common.html_widgets import new_line
 
-from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, get_parms_for_input,  
-                                            is_numeric_col, is_int_col, RunningClock)
+from dfcleanser.common.common_utils import (display_exception, display_status, opStatus, get_parms_for_input, RunningClock)
+
+
+DEBUG_SUBSET     =   False
+    
 
    
 """
@@ -47,9 +50,63 @@ def get_current_subset_df(parms) :
             cfg.set_config_value(cfg.CURRENT_SUBSET_DF,selected_df)
 
 
-def display_dfsubset_utility(optionId,parms=None) :
+def drop_add_cols(col_names,col_action,df) :
+    """
+    * ---------------------------------------------------------
+    * function : main geocode process function
+    * 
+    * parms :
+    *  col_names    - column names list
+    *  col_action   - keep or drop flag
+    *  df           - df to drop columns from
+    *
+    * returns : 
+    *  df with new columns
+    * --------------------------------------------------------
+    """
     
+    if(len(col_names) > 0) :
+        
+        new_subset_df       =   df.copy()   
+        dfcolnames          =   list(new_subset_df.columns)
+        
+        action_colnames     =   col_names.lstrip("[")
+        action_colnames     =   action_colnames.rstrip("]")
+        action_colnames     =   action_colnames.split(",")
+        
+        drop_col_list   =   []
+        if(col_action == "Keep") :
+            
+            for i in range(len(dfcolnames)) :
+                if(not (dfcolnames[i] in action_colnames)) :
+                    drop_col_list.append(dfcolnames[i])
+                    
+        else :
+            drop_col_list   =   action_colnames
+           
+        new_subset_df.drop(drop_col_list, axis=1, inplace=True)   
+        
+    else :
+        
+        new_subset_df   =   df.copy()  
 
+    return(new_subset_df)        
+
+
+def display_dfsubset_utility(optionId,parms=None) :
+    """
+    * ---------------------------------------------------------
+    * function : main subset utility control
+    * 
+    * parms :
+    *  optionId     - function to run
+    *  parms        - parms to ryn function
+    *
+    * returns : 
+    *  NA
+    * --------------------------------------------------------
+    """
+    
     if(cfg.is_a_dfc_dataframe_loaded()) :
         
         from IPython.display import clear_output
@@ -57,791 +114,554 @@ def display_dfsubset_utility(optionId,parms=None) :
         
         from dfcleanser.common.html_widgets import define_inputs, are_owner_inputs_defined
         if(not (are_owner_inputs_defined(cfg.SWDFSubsetUtility_ID)) ) :
-            define_inputs(cfg.SWDFSubsetUtility_ID,dfsw.SWUtility_subset_inputs)
+            define_inputs(cfg.SWDFSubsetUtility_ID,swsw.SWUtility_subset_inputs)
     
-        if(optionId == dfsm.DISPLAY_MAIN) :
-            dfsw.get_dfsubset_main_taskbar()
+        if(optionId == swsm.DISPLAY_MAIN) :
+            
+            swsw.get_dfsubset_main_taskbar()
             clear_sw_utility_dfsubsetdata()
             
             cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
+            swsm.clear_current_subset_data() 
+            
+        elif(optionId == swsm.DISPLAY_GET_SUBSET) :
+            
+            swsm.clear_current_subset_data()
+            
+            if(DEBUG_SUBSET) :
+                swsm.set_current_subset_sequence(swsm.dfc_subset_sequence())
+                print("\ncurrent_subset_sequence\n")
+                print("input_df_title",swsm.get_current_subset_sequence().get_input_df_title()) 
+                print("get_sequence_title",swsm.get_current_subset_sequence().get_sequence_title()) 
+                print("get_sequence_steps",swsm.get_current_subset_sequence().get_sequence_steps()) 
+                if(not (swsm.get_current_subset_sequence().get_sequence_steps() is None)) :
+                    print("get_total_sequence_steps",swsm.get_current_subset_sequence().get_total_sequence_steps())
+                    print("get_output_csv",swsm.get_current_subset_sequence().get_output_csv()) 
+                    print("get_output_dfc_df_title",swsm.get_current_subset_sequence().get_output_dfc_df_title()) 
+            
+            
+            swsw.display_df_subset_setup()
+            
+            
+            if(DEBUG_SUBSET) :
+                print("DISPLAY_GET_SUBSET",parms)
+                print("DISPLAY_GET_SUBSET : clear data")
+                print(swsm.get_current_subset_sequence())
+                print(swsm.get_current_subset_df())
+                print(swsm.get_current_subset_step())
+                print("new_sequence")
+                swsm.dump_current_step()
+                swsm.dump_current_sequence()
+            
+        
+        elif(optionId == swsm.PROCESS_GET_SUBSET) :
+            
+            current_step        =   swsm.get_current_subset_step()
+            
+            if(not (current_step is None)) :
+                current_sequence    =   swsm.get_current_subset_sequence()
+                current_sequence.add_step_to_sequence_steps(current_step) 
+            
+            fparms              =   get_parms_for_input(parms,swsw.get_subset_input_idList)
+            
+            if(len(fparms) > 0) :
+        
+                df_title            =   fparms[0]
+                df                  =   cfg.get_dfc_dataframe_df(df_title)
+                col_names           =   fparms[1]
+                col_action          =   fparms[3]
+        
+            new_subset_df           =   drop_add_cols(col_names,col_action,df)
+            new_subset_df_title     =   df_title
     
-        if(optionId == dfsm.DISPLAY_GET_SUBSET) :
-            if(len(parms) > 0) :
+            new_subset_step     =   swsm.dfc_subset_step(new_subset_df_title,col_names,col_action)
+            swsm.set_current_subset_step(new_subset_step)
+            swsm.set_current_subset_df(new_subset_df)
+            
+            swsw.display_df_criteria(new_subset_df_title,new_subset_df) 
+            
+            if(DEBUG_SUBSET) :
+                print("\nPROCESS_GET_SUBSET\n  ",parms,"\n  ",fparms)
+                swsm.dump_current_step()
+                swsm.dump_current_sequence()
 
-                if(len(parms) == 1) :
-                    get_current_subset_df(parms)
-                else :
-                    parmslist = dfsw.get_dfsubset_input_parms(parms)
-                    cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-                    
-            dfsw.display_df_subset(get_subset_df(),False) 
-        
-        elif(optionId ==  dfsm.PROCESS_GET_SUBSET) :
-            parmslist = dfsw.get_dfsubset_input_parms(parms)
-            if(len(parmslist) > 0) :
-                cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            get_df_subset(parms)
             
-        elif(optionId ==  dfsm.DISPLAY_GET_SUBSET_FILTER) :
-            parmslist = dfsw.get_dfsubset_input_parms(parms)
-            if(len(parmslist) > 0) :
-                cfg.set_config_value(dfsw.get_subset_input_id+"Parms",parmslist)
-            dfsw.display_df_subset(get_subset_df(),True) 
+        elif(optionId == swsm.DISPLAY_SAVED_SUBSET) :
+            
+            swsw.display_saved_subset_sequences() 
 
-        elif(optionId ==  dfsm.DISPLAY_GET_COL_VALUES) :
-            dfsw.display_df_subset(get_subset_df(),True,parms) 
-
-        elif(optionId ==  dfsm.PROCESS_GET_SUBSET_FILTERED) :
-            get_df_subset(parms,True)
-        
-        elif(optionId ==  dfsm.ADD_FILTER) :
-
-            newfilter   =   parms[0]
+            if(DEBUG_SUBSET) :
+                print("\nDISPLAY_SAVED_SUBSET",parms)
             
-            filtersDict     =   cfg.get_config_value(cfg.CURRENT_SUBSET_FILTERS)
             
-            if(filtersDict == None) :
-                title   =   "filter 0"
-                filtersDict     =   {}
-                newfilterDict   =   {"title":title, "code": "( " + newfilter + " )"}
-                filtersDict.update({"0":newfilterDict})
-            else :
-                fid  =   len(filtersDict)
-                title   =   "filter " + str(len(filtersDict))
-                newfilterDict   =   {"title":title, "code": "( " + newfilter + " )"}
-                filtersDict.update({str(fid):newfilterDict})
+        elif(optionId == swsm.PROCESS_RUN_CRITERIA) :
             
-            cfg.set_config_value(cfg.CURRENT_SUBSET_FILTERS,filtersDict)
+            opstat  =   opStatus()
             
-            filter_keys =   list(filtersDict)
             
-            filter_keys.sort()
+            fparms  =   get_parms_for_input(parms,swsw.get_subset_criteria_input_idList)
             
-            newcriteria     =   ""
+            subset_title    =   fparms[0]
             
-            for i in range(len(filter_keys)) :
-                if(not(i==0)) :
-                    newcriteria     =   newcriteria + " & " + new_line
+            if(len(subset_title) == 0) :
                 
-                cfilter     =  filtersDict.get(filter_keys[i]) 
-                newcriteria     =   newcriteria + cfilter.get("code")
-
-            #newcriteria     =   newcriteria + "()"
-
-            cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",["","",newcriteria])
-            dfsw.display_df_subset(get_subset_df(),True)
+                current_sequence    =   swsm.get_current_subset_sequence()
+                total_steps         =   current_sequence.get_total_sequence_steps()
+                current_step        =   swsm.get_current_subset_step()
+                subset_title        =   current_step.get_input_subset_df_title() + "_subset_" + str(total_steps+1)
+                
+            criteria        =   fparms[2]
             
-        elif(optionId ==  dfsm.GET_COLUMN_NAMES) :
-            parmslist = get_parms_for_input(parms,dfsw.get_subset_filter_input_idList)
-            cfg.set_config_value(dfsw.get_subset_filter_input_id+"Parms",parmslist)
-            dfsw.display_df_subset(get_subset_df(),True) 
-         
+            if(len(criteria) > 0) :
+                
+                try :
+                    
+                    clock   =   RunningClock()
+                    clock.start()
+                    
+                    final_criteria  =   (swsm.starting_criteria_preamble + criteria + swsm.starting_criteria_postamble)
+        
+                    exec(final_criteria)
+                    
+                    current_step    =   swsm.get_current_subset_step()
+                    current_step.set_criteria(criteria)
+                    current_step.set_output_subset_df_title(subset_title)
+                    
+                    clock.stop()
+                    
+                except Exception as e:
+                    opstat.store_exception("Error running df_criteria " + criteria,e)
+                    
+                    clock.stop()
+            
+            
+            if(opstat.get_status()) :
+                swsw.display_process_subset() 
+            else :
+                display_exception(opstat)
+
+            if(DEBUG_SUBSET) :
+                print("PROCESS_RUN_CRITERIA : End")
+                swsm.dump_current_step()
+                swsm.dump_current_sequence()
+            
+        elif(optionId ==  swsm.DISPLAY_SAVE_SUBSET) :
+            
+            fparms              =   get_parms_for_input(parms,swsw.get_subset_run_input_idList)
+            
+            current_sequence    =   swsm.get_current_subset_sequence()
+            current_step        =   swsm.get_current_subset_step()
+            current_sequence.add_step_to_sequence_steps(current_step)
+    
+            if(len(fparms) > 0) :
+        
+                df_title            =   fparms[0]
+                df                  =   swsm.get_current_subset_df()
+                col_names           =   fparms[1]
+                col_action          =   fparms[3]
+ 
+            new_subset_df   =   drop_add_cols(col_names,col_action,df)
+            
+            swsw.display_save_subset(df_title,new_subset_df) 
+            
+            if(DEBUG_SUBSET) :
+                print("DISPLAY_SAVE_SUBSET",parms,fparms)
+                swsm.dump_current_step()
+                swsm.dump_current_sequence()
+            
+ 
+            
+        elif(optionId ==  swsm.DISPLAY_SAVE_AND_GET_SUBSET) :
+            
+            fparms              =   get_parms_for_input(parms,swsw.get_subset_run_input_idList)
+            
+            current_sequence    =   swsm.get_current_subset_sequence()
+            current_step        =   swsm.get_current_subset_step()
+            current_sequence.add_step_to_sequence_steps(current_step)
+    
+            if(len(fparms) > 0) :
+        
+                df_title            =   fparms[0]
+                col_names           =   fparms[1]
+                col_action          =   fparms[3]
+        
+            new_subset_step     =   swsm.dfc_subset_step(df_title,col_names,col_action)
+            df                  =   swsm.get_current_subset_df()
+
+            new_subset_df       =   drop_add_cols(col_names,col_action,df)
+            swsm.set_current_subset_df(new_subset_df)
+            swsm.set_current_subset_step(new_subset_step)
+            
+            swsw.display_df_criteria(df_title,new_subset_df)
+
+            if(DEBUG_SUBSET) :
+                print("PROCESS_SAVE_AND_GET_SUBSET",parms,fparms)
+                swsm.dump_current_step()
+                swsm.dump_current_sequence()
+
+            
+        elif(optionId ==  swsm.PROCESS_SAVE_SUBSET) :
+            
+            save_subset_run(parms,0)
+            
+        elif(optionId ==  swsm.PROCESS_SUBSET_SEQUENCE) :
+            
+            opstat  =   opStatus()
+                        
+            fparms      =   get_parms_for_input(parms,swsw.get_subset_sequences_input_idList)
+            
+            sequence    =   fparms[0]
+            run_option  =   fparms[1]
+            
+            saved_sequence  =   swsm.get_subset_sequence(sequence)
+            first_step      =   saved_sequence.get_sequence_step(0)
+            
+            df_title        =   first_step.get_input_subset_df_title()
+            df              =   cfg.get_dfc_dataframe_df(df_title)
+            
+            if(df is None) :
+                
+                swsw.get_dfsubset_main_taskbar()
+                cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
+                
+                opstat.set_status(False)
+                opstat.set_errorMsg("subset sequence starting df '" + df_title + "' is not currently loaded in dfc")
+                display_exception(opstat)
+            
+            else :
+                
+                if(run_option == "Auto Run") :
+                    
+                    total_steps     =   saved_sequence.get_total_sequence_steps()
+                    swsm.set_current_subset_df(df)
+                    
+                    for i in range(total_steps) :
+                        
+                        current_step        =   saved_sequence.get_sequence_step(i)
+                        current_columns     =   current_step.get_col_names_list()
+                        columns_action      =   current_step.get_keep_drop_flag()
+                        criteria            =   current_step.get_criteria()
+                        output_df_title     =   current_step.get_output_subset_df_title()
+                        
+                        current_df          =   swsm.get_current_subset_df()   
+                        
+                        if(len(current_columns) > 0) :
+                            
+                            colnames        =   list(current_df.columns)
+                            drop_columns    =   []
+                            
+                            for i in range(len(colnames)) :
+                                
+                                if(columns_action == "Keep") :
+                                    if(not (colnames[i] in current_columns)) :
+                                        drop_columns.append(colnames[i])
+                                else :
+                                    if(colnames[i] in current_columns) :
+                                        drop_columns.append(colnames[i])  
+                                        
+                            if(len(drop_columns) > 0 ) :
+                                
+                                try :
+                                    current_df.drop(drop_columns, axis=1, inplace=True)   
+                                except :
+                                    opstat.set_status(False)
+                                    opstat.set_errorMsg("Unable to drop columns from subset dataframe")
+                        
+                        swsm.set_current_subset_df(current_df)
+                        
+                        try :
+                            
+                            current_df         =     swsm.get_current_subset_df()
+                            exec(criteria + swsm.starting_criteria_postamble)
+                            current_df         =     swsm.get_current_subset_df()
+                            
+                        except Exception as e:
+                            opstat.store_exception("Error running subset sequence '" + sequence + "'",e)
+
+                    swsw.display_save_subset(output_df_title,swsm.get_current_subset_df(),True)    
+                    
+                else :
+                
+                    total_steps     =   saved_sequence.get_total_sequence_steps()
+                    swsm.set_current_subset_df(df)
+                    
+                    current_step        =   saved_sequence.get_sequence_step(0)
+                    current_df_title    =   current_step.get_input_subset_df_title()
+                    current_columns     =   current_step.get_col_names_list()
+                    columns_action      =   current_step.get_keep_drop_flag()
+                    
+                    swsw.display_manual_df_subset_setup(saved_sequence.get_sequence_title(),current_df_title,current_columns,columns_action,0)
+                    
+                    swsm.set_current_subset_step_id(0)
+                    
+                    swsm.set_current_subset_sequence(saved_sequence)
+
+                     
+        elif(optionId ==  swsm.PROCESS_GET_NEXT_SUBSET) :
+            
+            fparms      =   get_parms_for_input(parms,swsw.get_manual_input_idList) 
+            
+            collist     =   fparms[1]
+            collist     =   collist.lstrip("[")
+            collist     =   collist.rstrip("]")
+            collist     =   collist.split(",")
+            
+            keep_drop   =   fparms[3]
+            
+            saved_sequence      =   swsm.get_current_subset_sequence()
+            
+            total_steps     =   saved_sequence.get_total_sequence_steps()
+            current_step_id =   swsm.get_current_subset_step_id()
+            
+            if(current_step_id < total_steps) :
+                current_step        =   saved_sequence.get_sequence_step(swsm.get_current_subset_step_id())
+            else :
+                swsm.set_current_subset_step_col_names_list(collist)
+                swsm.set_current_subset_keep_drop_flag(keep_drop)
+                current_step        =   swsm.get_current_subset_step()
+                
+            swsm.dump_current_step() 
+            
+            swsm.set_current_subset_step(current_step)
+            
+            current_df_title    =   current_step.get_input_subset_df_title()
+
+            current_df          =   swsm.get_current_subset_df()
+            current_columns     =   current_step.get_col_names_list()
+            columns_action      =   current_step.get_keep_drop_flag()
+            criteria            =   current_step.get_criteria()
+            output_df_title     =   current_step.get_output_subset_df_title()
+            
+            if(len(current_columns) > 0) :
+                            
+                colnames        =   list(current_df.columns)
+                drop_columns    =   []
+                            
+                for i in range(len(colnames)) :
+                                
+                    if(columns_action == "Keep") :
+                        if(not (colnames[i] in current_columns)) :
+                            drop_columns.append(colnames[i])
+                    else :
+                        if(colnames[i] in current_columns) :
+                            drop_columns.append(colnames[i])  
+                                        
+                if(len(drop_columns) > 0 ) :
+                                
+                    try :
+                        current_df.drop(drop_columns, axis=1, inplace=True)   
+                    except :
+                        opstat.set_status(False)
+                        opstat.set_errorMsg("Unable to drop columns from subset dataframe")
+                        
+            
+            swsw.display_next_criteria(current_df_title,current_df,criteria,output_df_title)
+            
+            
+        elif(optionId ==  swsm.PROCESS_NEXT_CRITERIA) :
+            
+            opstat  =   opStatus()
+            
+            fparms      =   get_parms_for_input(parms,swsw.get_next_criteria_input_idList)  
+            
+            output_df_title     =   fparms[0]
+            criteria            =   fparms[2]
+            
+            current_sequence    =   swsm.get_subset_sequence(sequence)
+            sequence_title      =   current_sequence.get_sequence_title()
+            
+            try :
+                            
+                current_df         =     swsm.get_current_subset_df()
+                exec(criteria + swsm.starting_criteria_postamble)
+                current_df         =     swsm.get_current_subset_df()
+                            
+            except Exception as e:
+                
+                opstat.store_exception("Error running subset sequence '" + sequence_title + "'",e)
+                
+                current_df_title    =   current_step.get_input_subset_df_title()
+                current_df          =   swsm.get_current_subset_df()
+                criteria            =   current_step.get_criteria()
+                output_df_title     =   current_step.get_output_subset_df_title()
+                
+                swsw.display_next_criteria(current_df_title,current_df,criteria,output_df_title)                
+                
+                display_exception(opstat)
+                
+            if(opstat.get_status()) :
+                
+                
+                swsm.set_current_subset_df(current_df)
+                swsm.set_current_subset_step_id(swsm.get_current_subset_step_id() + 1)
+                
+                if(swsm.get_current_subset_step_id() >= swsm.get_current_subset_sequence().get_total_sequence_steps()) :
+                    
+                    swsw.display_sequence_save_subset(output_df_title,swsm.get_current_subset_df()) 
+
+                else :
+                    
+                    current_step        =   swsm.get_current_subset_sequence().get_sequence_step(swsm.get_current_subset_step_id())
+                    current_df_title    =   current_step.get_input_subset_df_title()
+                    current_columns     =   current_step.get_col_names_list()
+                    columns_action      =   current_step.get_keep_drop_flag()
+                    
+                    swsw.display_manual_df_subset_setup(swsm.get_current_subset_sequence().get_sequence_title(),current_df_title,current_columns,columns_action,swsm.get_current_subset_step_id())
+                    
+        elif(optionId ==  swsm.DISPLAY_NEW_STEP) :  
+                
+            current_sequence    =   swsm.get_current_subset_sequence()
+            sequence_title      =   current_sequence.get_sequence_title()
+            
+            current_step        =   swsm.get_current_subset_step()
+            df_title            =   current_step.get_output_subset_df_title()
+            current_df          =   swsm.get_current_subset_df()
+            current_columns     =   []
+            current_action      =   "Keep"
+            criteria            =   swsm.starting_criteria
+            output_df_title     =   ""
+            
+            current_step        =   swsm.dfc_subset_step(df_title,current_columns,current_action,criteria,output_df_title)
+            swsm.set_current_subset_step(current_step)
+            
+            swsw.display_manual_df_subset_setup(sequence_title,df_title,current_columns,current_action,swsm.get_current_subset_step_id())
+            #swsw.display_next_criteria(df_title,current_df,criteria,output_df_title)
+                
+        elif(optionId ==  swsm.PROCESS_SAVE_SAVED_SUBSET ) :   
+
+            save_subset_run(parms,1)
+        
+        elif(optionId ==  swsm.DISPLAY_GET_REMOTE_SUBSET) :  
+            
+            chapterid   =   parms[0]
+            
+            new_config_df   =   None
+            
+            if(chapterid == cfg.DataInspection_ID)      :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_INSPECTION_DF)
+            elif(chapterid == cfg.DataCleansing_ID)     :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_CLEANSE_DF)
+            elif(chapterid == cfg.DataTransform_ID)     :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_TRANSFORM_DF)
+            elif(chapterid == cfg.DataExport_ID)        :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_EXPORT_DF)
+            elif(chapterid == cfg.DataImport_ID)        :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_IMPORT_DF)
+            elif(chapterid == cfg.SWGeocodeUtility_ID)  :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+            elif(chapterid == cfg.SWDFSubsetUtility_ID) :   new_config_df  =   cfg.get_config_value(cfg.CURRENT_SUBSET_DF)
+            
+            cfg.set_config_value(cfg.CURRENT_SUBSET_DF,new_config_df)
+            
+            swsm.clear_current_subset_data()
+            swsw.display_df_subset_setup()
+            
     else :
         
-        dfsw.get_dfsubset_main_taskbar()
+        swsw.get_dfsubset_main_taskbar()
         
         cfg.drop_config_value(cfg.CURRENT_SUBSET_DF)
         clear_sw_utility_dfsubsetdata()
         
         cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
             
-        if(not(optionId == dfsm.DISPLAY_MAIN)) :
+        if(not(optionId == swsm.DISPLAY_MAIN)) :
             cfg.display_no_dfs(cfg.SWDFSubsetUtility_ID)
-        
-        
-
-
-"""            
-#------------------------------------------------------------------
-#   parse raw select string for filters
-#
-#   filters_text    -   select string 
-#   opstat          -   operation status 
-#
-#------------------------------------------------------------------
-"""
-def parse_subset_filters(filters_text,opstat) :
-
-    all_clauses_found   =   False
-    clauses             =   []
-    clauses_oper        =   []
-    
-    sclause             =   "(  ("
-    eclause             =   ") )"
-    orop                =   "or"
-    andop               =   "and"
-    clauseorop          =   "OR"
-    clauseandop         =   "AND"
-    
-    current_index       =   0
-    total_clauses       =   0
-    max_clauses         =   40
-
-    try :
-    
-        while( not all_clauses_found ) :
-        
-            total_clauses   =   total_clauses + 1
-            if(total_clauses > max_clauses) : all_clauses_found = True 
-        
-            start_clause    =   filters_text[current_index:].find(sclause)
-            end_clause      =   filters_text[current_index:].find(eclause)
-            new_clause      =   filters_text[current_index+start_clause:current_index+(end_clause+len(eclause))]
-            new_clause      =   new_clause.replace("\n"," ")
-            clauses.append(new_clause)
-        
-            next_start  =  filters_text[current_index+end_clause+len(eclause):].find(sclause) 
-            if(next_start == -1) :
-                all_clauses_found   =   True
-            else :
-                opertext = filters_text[current_index+end_clause+len(eclause):current_index+end_clause+len(eclause)+next_start]
-
-                if(opertext.find(clauseorop) > -1) :
-                    clauses_oper.append(clauseorop)
-                else :
-                    if(opertext.find(clauseandop) > -1) :
-                        clauses_oper.append(clauseandop)
-                
-                current_index   =   current_index + end_clause + len(eclause)
-
-            
-        inner_clauses   =   []
-        inner_oper      =   []
-        sinner          =   "( "
-        einner          =   " )"
-
-        for i in range(len(clauses)) :
-    
-            clauses[i]  =   clauses[i].lstrip("(")
-            clauses[i]  =   clauses[i].rstrip(")")
-        
-            all_inner_clauses_found =   False
-            total_clauses           =   0
-            current_index           =   0
-        
-            inner_clauses.append([])
-            inner_oper.append([])
-        
-            while( not all_inner_clauses_found ) :
-
-                total_clauses   =   total_clauses + 1
-                if(total_clauses > max_clauses) : all_inner_clauses_found = True 
-    
-                sinner_clause       =   clauses[i][current_index:].find(sinner)
-                einner_clause       =   clauses[i][current_index:].find(einner)
-                new_inner_clause    =   clauses[i][current_index+sinner_clause:current_index+(einner_clause+len(einner))]
-                
-                inner_clauses[i].append(new_inner_clause)
-
-                next_sinner  =  clauses[i][current_index+einner_clause+len(einner):].find(sinner) 
-
-                if(next_sinner == -1) :
-                    all_inner_clauses_found   =   True
-                else :
-                    opertext = clauses[i][current_index+einner_clause+len(einner):current_index+einner_clause+len(einner)+next_sinner]
- 
-                    if(opertext.find(orop) > -1) :
-                        inner_oper[i].append(orop)
-                    else :
-                        if(opertext.find(andop) > -1) :
-                            inner_oper[i].append(andop)
-                
-                    current_index   =   current_index + einner_clause + len(einner)
-
-        return([inner_clauses, inner_oper, clauses_oper])
-        
-    except Exception as e:
-        opstat.store_exception("Error parsing subset filters\n "  + filters_text,e)
-        return(None)
-        
-"""            
-#------------------------------------------------------------------
-#   check if column is being kept
-#
-#   df          -   dataframe 
-#   colname     -   column name 
-#   colList     -   column list 
-#   keepflag    -   keep or drop column list 
-#
-#------------------------------------------------------------------
-"""
-def is_valid_column(df,colname,colList,keepflag) :
-    
-    if(colList == None) :
-        
-        cols    =   df.columns.tolist()
-        found   =   False
-        
-        for i in range(len(cols)) :
-            if(cols[i] == colname) :
-                found = True
-                
-        return(found)
-        
-    else :
-        found   =   False
-        for i in range(len(colList)) :
-            if(colList[i] == colname) :
-                found   =   True
-                
-        if(keepflag) :
-            if(found)   :   return(True)
-            else        :   return(False)
-        else :
-            if(found)   :   return(False)
-            else        :   return(True)
-
-
-
-def build_and_validate_search_criteria(colslist,keepflag,filters,inneropers,outeropers,opstat) :
-    """            
-    #------------------------------------------------------------------
-    #   build_and_validate_search_criteria
-    #
-    #   df          -   dataframe
-    #   colslist    -   columns list
-    #   keepflag    -   keep or drop columns fllag 
-    #   filters     -   filters 
-    #   inneropers  -   inner operators 
-    #   inneropers  -   outer operators 
-    #   opstat      -   operation status 
-    #
-    #------------------------------------------------------------------
-    """
-    print("\nbuild_and_validate_search_criteria",colslist,keepflag,filters,inneropers,outeropers)
-    
-    filtersList     =   []
-
-    df = get_subset_df()
-    
-    try :
-        
-        for i in range(len(filters)) :
-        
-            subfiltersList  =   []
-        
-            for j in range(len(filters[i])) :
-                currentsubfilter    =   filters[i][j]    
-                currentsubfilter    =   currentsubfilter.replace("(","")
-                currentsubfilter    =   currentsubfilter.replace(")","")
-                currentsubfilter    =   currentsubfilter.lstrip(" ")
-                currentsubfilter    =   currentsubfilter.rstrip(" ")
-    
-                oper    =   ""
-                
-                if(currentsubfilter.find("==") == -1) :
-                    if(currentsubfilter.find(">=") == -1) :
-                        if(currentsubfilter.find("<=") == -1) :
-                            if(currentsubfilter.find("<") == -1) :
-                                if(currentsubfilter.find(">") == -1) :
-                                    if(currentsubfilter.find("!=") > 0) :
-                                        oper = "!="
-                                    else :
-                                        oper = "=="
-                                else :
-                                    oper = ">" 
-                            else :
-                                oper = "<" 
-                        else :
-                            oper = "<=" 
-                    else :
-                        oper = ">=" 
-                else :
-                    oper = "=="  
-                  
-                if(len(oper) == 0) : 
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("Invalid operator in filter " + filters[i][j])
-
-                else :
-                
-                    currentsubfilter    =   currentsubfilter.replace("'","")
-                    subfiltervals       =   currentsubfilter.split(oper)
-
-                    if( (type(subfiltervals) == list) and (len(subfiltervals) == 2))  :
-                    
-                        # check if valid column name 
-                        if(is_valid_column(df,subfiltervals[0],colslist,keepflag)) :
-                            filtersubclause = [subfiltervals,oper]
-                        else :
-                            opstat.set_status(False)
-                            opstat.set_errorMsg("Invalid column name in filter " + filters[i][j])
-
-                    else :
-                        opstat.set_status(False)
-                        opstat.set_errorMsg("Invalid values in filter " + filters[i][j])
-    
-                if(opstat.get_status()) :
-                    subfiltersList.append(filtersubclause) 
-                else :
-                    break;
-        
-            if(opstat.get_status()) :
-                filtersList.append(subfiltersList) 
-            else :
-                break
-    
-        # validate outeroperators
-        for i in range(len(outeropers)) :
-            if( not ((outeropers[i] == "OR") or 
-                     (outeropers[i] == "AND") or
-                     (outeropers[i] == "OR NOT") or
-                     (outeropers[i] == "AND NOT")) ) :
-                
-                opstat.set_status(False)
-                opstat.set_errorMsg("Invalid operator between filters " + str(i-1) + " and " + str(i))
-        
-        filters     =   []     
-        
-        if(opstat.get_status()) :
-
-            for i in range(len(filtersList)) :
-                colname     =   ""
-                colvals     =   []
-                colopers    =   []
-        
-                for j in range(len(filtersList[i])) :
-                    if(j==0) :
-                        colname     =   filtersList[i][j][0][0]
-                    colvals.append(filtersList[i][j][0][1])
-                    colopers.append(filtersList[i][j][1])
-        
-                filters.append([colname,colvals,colopers])
-        
-        return(filters)
-        
-    except Exception as e:
-        opstat.store_exception("build_and_validate_search_criteria ",e)
-        return(None)
-
-
-def convert_value_datatype(df,colname,value) :
-    
-    ctype = 0
-        
-    if(is_numeric_col(df,colname)) :
-        if(is_int_col(df,colname)) :
-            ctype = 1
-        else :
-            ctype = 2
-
-    if(ctype == 0) :
-        return(value) 
-    else :
-
-        try :
-            if(ctype == 1) :
-                return(int(value))
-            else :
-                return(float(value))
-        except :
-            return(value)
- 
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   dataframe subset criteria
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-def get_criteria() :
-    return(dfCriteria.get_dfcriteria()) 
-   
-def set_criteria(dfcriteria) :
-    dfCriteria.set_dfcriteria(dfcriteria)
-    
-class DataframeCriteria :
-    
-    criteria   =   None
-
-    def __init__(self):
-        self.criteria = None
-    def set_dfcriteria(self,criteriaParm) :
-        self.criteria = criteriaParm
-    def get_dfcriteria(self) :
-        return(self.criteria)
-
-dfCriteria = DataframeCriteria()
 
         
-def get_truth_table(df_title,criteria,opstat) :
-    """            
-    #------------------------------------------------------------------
-    #  get a dataframe criteria
-    #
-    #   criteria    -   criteria logic
-    #   opstat      -   operation status 
-    #
-    #   returns :
-    #     next criteria
-    #------------------------------------------------------------------
-    """       
-    ccode   =   "from dfcleanser.common.cfg import get_dfc_dataframe_df" + new_line
-    ccode   =   (ccode + "df = get_dfc_dataframe_df('" + df_title +"')" + new_line)
-    ccode   =   (ccode + "from dfcleanser.sw_utilities.sw_utility_dfsubset_control import set_criteria" + new_line)
-    ccode   =   (ccode + "new_criteria = " + criteria + new_line)
-    ccode   =   (ccode + "set_criteria(new_criteria)" + new_line)
+def save_subset_run(parms,saveid) :  
 
-    try :
-        
-        exec(ccode)
-        next_criteria = get_criteria()
-        return(next_criteria)
-        
-    except Exception as e:
-        opstat.store_exception("Error get_df_criteria ",e)
-
- 
-def dump_indexer(indexer,display_all=False) :
-    """
-    #------------------------------------------------------------------
-    #  dump the truth values of the indexer
-    #
-    #   indexer         -   indexer
-    #   display_all     -   display truths table and counts 
-    #
-    #------------------------------------------------------------------
-    """
-    outtext = ""
-    
-    totalTrues      =   0
-    totalFalses     =   0
-   
-    for i in range(len(indexer)) :
-        
-        if(indexer.iloc[i] == True) :
-            outtext     =   (outtext + "T ")
-            totalTrues  =   totalTrues + 1
-        elif(indexer.iloc[i] == False) :
-            outtext     =   (outtext + "F ")
-            totalFalses =   totalFalses + 1
-        
-        if(display_all) :
-            if((i%50) == 0) :
-                if(i == 0) :
-                    print("indexer len",len(indexer))
-                else :
-                    print(outtext)
-                    outtext = ""
-                    
-            if(len(outtext) > 0) :
-                print(outtext)
-
-    print("Total Trues       : ",totalTrues)
-    print("Total Falses      : ",totalFalses)
-
-
-def get_filter_connectors(criteria) :
-    """            
-    #------------------------------------------------------------------
-    #   get the criteria connectors
-    #
-    #   criteria        -   boolean criteria 
-    #
-    #------------------------------------------------------------------
-    """
-    
-    fconnectors         =   []
-    
-    if( (criteria.find("and") > -1) or (criteria.find("or") > -1) ) :
-        
-        for i in range(len(criteria)) :
-            if(criteria[i] == "&") :
-                fconnectors.append("&")
-            else :
-                if(criteria[i] == "|") :
-                    fconnectors.append("|")  
-                    
-    return(fconnectors)
-            
-
-
-def get_filters_criteria(criteria,opstat) :
-    """            
-    #------------------------------------------------------------------
-    #   get the criteria for a filter
-    #
-    #   criteria        -   boolean criteria 
-    #   opstat          -   status variable 
-    #
-    #------------------------------------------------------------------
-    """
-    
-    filter_connectors   =   get_filter_connectors(criteria)
-    
-    filters_list        =   []
-    final_filters_list  =   []
-    filters_sub_list    =   []
-    
-    if(criteria.find("&") > -1) :
-        
-        filters_list    =   criteria.split("&") 
-    
-        for i in range(len(filters_list)) :
-        
-            if(filters_list[i].find("|") > -1) :
-                next_sub_list    =   filters_list[i].split("|")     
-                filters_sub_list.append(next_sub_list)
-            else :
-                filters_sub_list.append(None)
-                
-    else :
-        
-       if(criteria.find("|") > -1) :   
-           filters_list    =   criteria.split("|")    
-    
-    if(len(filters_list) > 0) : 
-        
-        for i in range(len(filters_list)) :
-            if(not (filters_sub_list[i] is None)) :
-                for j in range(len(filters_sub_list[i])) :
-                    final_filters_list.append(filters_sub_list[i][j])
-            else :
-                final_filters_list.append(filters_list[i]) 
-    else :
-        final_filters_list.append(criteria)
-        
-    for i in range(len(final_filters_list)) :
-        final_filters_list[i]   =   final_filters_list[i].replace(" and "," & ")
-        final_filters_list[i]   =   final_filters_list[i].replace(" or "," | ")
-        
-    return([final_filters_list,filter_connectors])       
-       
-
-def get_subset_from_criteria(df_title,filters,filters_flag,newdf_title,csv_file_name,opstat) :
-    """            
-    #------------------------------------------------------------------
-    #   get the dataframe subset
-    #
-    #   df_title        -   source dataframe title
-    #   criteria        -   boolean criteria 
-    #   newdf           -   new df name 
-    #   csv_file_name   -   file name 
-    #   opstat          -   operation status 
-    #
-    #------------------------------------------------------------------
-    """
-
-    dfssubset_parms     =   get_filters_criteria(filters,opstat)
-
-    import pandas as pd
-    df                  =   cfg.get_dfc_dataframe_df(df_title)
-
-    truth_table         =   pd.Series()
-    truth_table_list    =   []
-    final_truth         =   pd.Series()
-    
-    try :
-        
-        if(not (filters_flag)) :
-            
-            if(newdf_title is None) :
-                df      =   df[filters]
-            else :
-                new_df  =   df[filters]    
-            
-        else : 
-            
-            criteria        =   dfssubset_parms[0]
-            criteria_ops    =   dfssubset_parms[1]
-            
-            for i in range(len(criteria)) :
-            
-                truth_table     =    get_truth_table(df_title,criteria[i],opstat)
-                truth_table_list.append(truth_table)
-                
-            for i in range(len(criteria)) :
-                if(i==0) :
-                    final_truth     =    truth_table_list[0] 
-                else :
-                    if(criteria_ops[(i-1)] == "&") :
-                        final_truth     =    final_truth & truth_table_list[i]
-                    else :
-                        final_truth     =    final_truth | truth_table_list[i]
-                        
-            if(newdf_title is None) :
-                #print("\n\nafter final truth before final apply to df")
-                #print("before final_truth",type(df),len(df),len(df.columns))
-                df[final_truth]
-                #print("after final_truth",type(df),len(df),len(df.columns))
-            else :
-                #print("before final truth apply : newdf ",type(df),len(df),len(df.columns))
-                new_df  =   df[final_truth].copy()
-                #print("after final truth apply : newdf ",type(new_df),len(new_df),len(new_df.columns))
-            
-                from dfcleanser.common.cfg import dfc_dataframe,add_dfc_dataframe
-                subsetparms     =   cfg.get_config_value(dfsw.get_subset_input_id + "Parms")
-            
-                new_dfcnotes    =   "Subset dataframe from " + subsetparms[0] + "\n criteria : \n" + filters
-                new_dfcdf       =   dfc_dataframe(newdf_title,new_df,new_dfcnotes)
-                add_dfc_dataframe(new_dfcdf)
-
-            
-        return(df)
-        
-    except Exception as e:
-        opstat.store_exception("Error getting subset from citeria\n ",e)
-
-    if(opstat.get_status()) :
-        
-        if(not (csv_file_name == None)) :
-            
-            try :
-                df.to_csv(csv_file_name)
-            except Exception as e:
-                opstat.store_exception("Error saving subset as csv file\n ",e)
-        
-
-def get_diff_secs(then) :
-    """            
-    #------------------------------------------------------------------
-    #   get datetime diff in secs
-    #
-    #   then       -   start time 
-    #
-    #------------------------------------------------------------------
-    """  
-
-    from datetime import datetime
-    now     =   datetime.now()
-    diff    =   now-then 
-    then    =   now
-    return(diff.total_seconds())
-
-
-def get_df_subset(parms,filtered=False,display=True) :
-    """            
-    #------------------------------------------------------------------
-    #   get dataframe subset
-    #
-    #   parms       -   associated col parms 
-    #   filtered    -   has filters flag 
-    #   display     -   display flag 
-    #
-    #------------------------------------------------------------------
-    """  
-
-    from datetime import datetime
-    starttime   =  datetime.now()
-    
     opstat  =   opStatus()
-
-    subsetparms         =   cfg.get_config_value(dfsw.get_subset_input_id+"Parms")
-    filterparms         =   dfsw.get_dfsubset_filter_input_parms(parms)
-    filterparms[2]      =   filterparms[2].replace("\n","")
-
-    if(len(subsetparms[0]) == 0) :
-        opstat.set_status(False)
-        opstat.set_errorMsg("input_dataframe is not set")
+       
+    if(saveid == 0) :     
+        fparms              =   get_parms_for_input(parms,swsw.get_subset_save_input_idList)
+    else :
+        fparms              =   get_parms_for_input(parms,swsw.get_saved_save_input_idList)
         
+            
+    dfc_df_title        =   fparms[0]
+    csv_file_name       =   fparms[1]
+    save_subset_name    =   fparms[2]
+    
+    if(saveid == 1) :
+        
+        drop_original   =   fparms[3]
+        
+        if(drop_original == "False") :
+            drop_original   =   False
+        else :
+            drop_original   =   True
+            
     else :
         
-        if(not filtered) :   
-            if(len(subsetparms[2]) == 0) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("no filters and columns_names_list is not set")
-        
-        else :
+        drop_original   =   False
             
-            if(len(filterparms[2]) == 0) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("subset_selection_criteria is not set")
-            
-    if(opstat.get_status()) :
-        
-        if(display) :
-            
-            clock = RunningClock()
-            clock.start()
+    if(len(dfc_df_title) > 0) :
 
         try :
+                    
+            new_dfc_df  =   cfg.dfc_dataframe(dfc_df_title,swsm.get_current_subset_df(),
+                                              "df from dataframe subset utility")
+            cfg.add_dfc_dataframe(new_dfc_df)
+    
+        except Exception as e:
+            opstat.store_exception("Error saving subset df as dfc df " + dfc_df_title,e)
             
-            if(filtered) :
-                subset_query    =   filterparms[2]
-                
-                if(len(subsetparms[1]) > 0) :
-                    get_subset_from_criteria(subsetparms[0],subset_query,filtered,subsetparms[1],subsetparms[4],opstat)
-                    out_df_title  =   subsetparms[1]
-                else :
-                    get_subset_from_criteria(subsetparms[0],subset_query,filtered,None,subsetparms[4],opstat)
-                    out_df_title  =   subsetparms[0]
-            
-        except Exception :
-            opstat.set_status(False)
-            opstat.set_errorMsg("unable to run df subset")
-
-        if(display) :
-            clock.stop()
-            
-            
-    if(opstat.get_status()) :
-        
-        col_names_list  =   subsetparms[2]  
-        keep_flag       =   subsetparms[3]
-        
-        if(len(col_names_list) > 0) :
-            col_names   =   col_names_list.split(",")
-            
-            if(keep_flag == "True") :
-                keep    =   True
-            else :
-                keep    =   False
-                
-            df              =   cfg.get_dfc_dataframe_df(subsetparms[0])
-            all_col_names   =   df.columns.tolist() 
-            
-            if(keep) :
-                drop_columns    =   []
-                for i in range(len(all_col_names)) :
-                    if(not (all_col_names[i] in col_names)) :
-                        
-                        drop_columns.append(all_col_names[i])
-            else :
-                drop_columns    =  col_names 
-                
+        if(len(csv_file_name) > 0) : 
+                   
             try :
+                    
+                swsm.get_current_subset_df().to_csv(csv_file_name,index=False)
+                    
+            except Exception as e:
+                opstat.store_exception("Error saving subset df as csv file " + csv_file_name,e)
+                    
+        if(len(save_subset_name) > 0) : 
+                   
+            try :
+                    
+                swsm.add_subset_sequence(save_subset_name)
+                    
+            except Exception as e:
+                opstat.store_exception("Error saving subset sequence " + save_subset_name,e)
                 
-                if(len(subsetparms[1]) > 0) :
-                    
-                    newdf   =   cfg.get_dfc_dataframe_df(subsetparms[1])
-                    newdf   =   df.drop(drop_columns,axis=1)
-                    cfg.set_dfc_dataframe(subsetparms[1],newdf)
-                else :
-                    df.drop(drop_columns,inplace=True,axis=1)
-                    
-            except Exception :
-                opstat.set_status(False)
-                opstat.set_errorMsg("unable to drop columns")
-       
-    if(opstat.get_status()) : 
-        
-        if(display) :
+        if(drop_original) :
             
-            cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
-            dfsw.get_dfsubset_main_taskbar()
-
-            print("\n")
-            display_status("Dataframe subset retrieved successfully ")
-
-            elapsed_time    =   get_diff_secs(starttime)
-            dfsw.display_df_subset_status(out_df_title,subsetparms[4],elapsed_time,subset_query)
-        
-    else :
-        
-        if(display) :
-            from IPython.display import clear_output
-            clear_output()
+            current_sequence    =   swsm.get_current_subset_sequence()
+            sequence_title      =   current_sequence.get_sequence_title()
+            swsm.drop_subset_sequence(sequence_title)
             
-            cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
-            dfsw.display_df_subset(get_subset_df(),False) 
+            
+        swsw.get_dfsubset_main_taskbar()
+        cfg.display_data_select_df(cfg.SWDFSubsetUtility_ID)
+            
+        print("\n")
+            
+        if(opstat.get_status()) :
+                
+            status_msg  =   ""
+                
+            if(len(dfc_df_title) > 0)       :   status_msg  =   status_msg + ("Final Subset df saved as dfc df : " + dfc_df_title + "<br><br>")
+            if(len(csv_file_name) > 0)      :   status_msg  =   status_msg + ("Final Subset df saved as excel file : " + csv_file_name + "<br><br>")
+            if(len(save_subset_name) > 0)   :   status_msg  =   status_msg + ("Subset sequence saved as : " + save_subset_name + "<br>")
+            if(drop_original)               :   status_msg  =   status_msg + ("Original Subset sequence dropped : " + sequence_title + "<br>")
+                
+            if(len(status_msg) > 0) :
+                display_status(status_msg)
+                
+        else :
             display_exception(opstat)
 
+        swsm.clear_current_subset_data()
+            
+        if(DEBUG_SUBSET) :
+            print("PROCESS_SAVE_SUBSET",parms,fparms)
+            print("dfc_df_title",dfc_df_title)
+            print("csv_file_name",csv_file_name)
+            print("save_subset_name",save_subset_name)
+            swsm.dump_current_step()
+            swsm.dump_current_sequence()
+
+     
 
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
-#   Geocoders utility functions
+#   subset housekeeping functions
 #------------------------------------------------------------------
 #------------------------------------------------------------------
 """ 
@@ -855,11 +675,14 @@ def clear_sw_utility_dfsubsetdata() :
 
 def clear_sw_utility_dfsubset_cfg_values() :
  
-    cfg.drop_config_value(cfg.CURRENT_SUBSET_FILTERS)
-    cfg.drop_config_value(cfg.CURRENT_SUBSET_FILTER)
+    cfg.drop_config_value(swsw.get_subset_input_id+"Parms")
+    cfg.drop_config_value(swsw.get_subset_criteria_input_id+"Parms")
     
-    cfg.drop_config_value(dfsw.get_subset_input_id+"Parms")
-    cfg.drop_config_value(dfsw.get_subset_filter_input_id+"Parms")
+    from dfcleanser.data_inspection.data_inspection_control import drop_working_df
+    drop_working_df() 
+    
+    swsm.Current_Manual_Step            =   0
+    swsm.Current_Manual_Sequence        =   ""
     
     return()
 

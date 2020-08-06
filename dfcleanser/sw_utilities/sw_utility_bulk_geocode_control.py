@@ -10,22 +10,28 @@ Created on Tue Sept 13 22:29:22 2017
 """
 
 import json
+import sys
+import geopy
+import googlemaps
+
 import dfcleanser.common.cfg as cfg
+
+import dfcleanser.sw_utilities.sw_utility_geocode_widgets as sugw
 
 import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_widgets as subgw
 import dfcleanser.sw_utilities.sw_utility_bulk_geocode_console as subgc
 import dfcleanser.sw_utilities.sw_utility_geocode_control as sugc
 
-from dfcleanser.common.common_utils import (display_exception, display_status, displayParms, 
+from dfcleanser.common.common_utils import (display_exception, display_status,  
                                             RunningClock, get_parms_list_from_dict, opStatus,
                                             delete_a_file, rename_a_file, does_file_exist,
-                                            get_parms_for_input, run_jscript,
-                                            does_dir_exist, make_dir)
+                                            get_parms_for_input, run_jscript, display_notes,
+                                            does_dir_exist, make_dir, log_debug_dfc, clear_dfc_debug_log)
 
+from dfcleanser.common.display_utils import (displayParms)
 
-import googlemaps
-
+from math import floor
 
 """
 #----------------------------------------------------------------------------
@@ -48,12 +54,13 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
     * --------------------------------------------------------
     """
 
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"process_bulk_geocoding_run_cmd " + str(cmd))
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"process_bulk_geocoding_run_cmd " + str(cmd))
+        if(not(parms is None)) :
+            log_debug_dfc(-1,"process_bulk_geocoding_run_cmd " + str(parms))    
     
     opstat  =   opStatus()
     
-    #sugw.display_geocode_main_taskbar() 
-        
     if(cmd == sugm.BULK_START_GEOCODER) :
         opstat  =   start_geocode_runner()
                 
@@ -72,51 +79,57 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
     elif(cmd == sugm.BULK_VIEW_ERRORS) :
         run_jscript("view_geocode_errors();","view_geocode_errors")
         
-    elif(cmd == sugm.BULK_CHECKPT_GEOCODER) :
-        checkpoint_geocode_runner()    
-           
     elif(cmd == sugm.BULK_RESULTS_GEOCODER) :
-        subgc.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_BASE,opstat)  
         
-    if(cmd == sugm.REPORT_GEOCODE_RUN_ERROR) :
+        error_log       =   get_geocode_runner_error_log()
+        total_errors    =   error_log.get_error_count()        
+        total_results   =   get_geocode_runner_results_count()  
+        
+        if((total_errors==0) and (total_results==0)) :
+            display_status("No Bulk Geocoding Results to Process") 
+        else :
+            subgc.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_BASE,opstat)
+        
+    elif(cmd == sugm.REPORT_GEOCODE_RUN_ERROR) :
         
         run_cmd     =   int(parms[0])
         err_msg     =   parms[1]
         geocid      =   get_geocode_runner_id() 
         geotype     =   get_geocode_runner_type() 
         
-        if(run_cmd == sugm.BULK_START_GEOCODER) :
-            
-            opstat  =   validate_bulk_geocode_connect_parms(geocid)
-            
-            if(not (opstat.get_status()) ) :
-                
-                sugc.display_geocode_utility(3, [geocid,geotype,[]])
-                print("\n")
-                display_exception(opstat)
-                
-            else :
-                
-                sugc.display_geocode_utility(5, [7,1,1,"[]"])
-                print("\n")
-                opstat.set_status(False)
-                opstat.set_errorMsg(err_msg)
-                display_exception(opstat)
-                
-        else :
-            
-            sugc.display_geocode_utility(5, [7,1,1,"[]"])
-            print("\n")
-            opstat.set_status(False)
-            opstat.set_errorMsg(err_msg)
-            display_exception(opstat)
+        if(run_cmd==sugm.BULK_LOAD_GEOCODER) : cmd_text         =   "Load Geocoder"
+        elif(run_cmd==sugm.BULK_START_GEOCODER) : cmd_text      =   "Start Geocoder"
+        elif(run_cmd==sugm.BULK_STOP_GEOCODER) : cmd_text       =   "Stop Geocoder"
+        elif(run_cmd==sugm.BULK_PAUSE_GEOCODER) : cmd_text      =   "Pause Geocoder"
+        elif(run_cmd==sugm.BULK_RESUME_GEOCODER) : cmd_text     =   "Resume Geocoder"
+        elif(run_cmd==sugm.BULK_VIEW_ERRORS) : cmd_text         =   "View Errors Geocoder"
+        elif(run_cmd==sugm.BULK_RESULTS_GEOCODER) : cmd_text    =   "Get Results Geocoder"
+        elif(run_cmd==sugm.PROCESS_BULK_RESULTS) : cmd_text     =   "Process Results Geocoder"
+        else :                                     cmd_text     =   "Unknown command"
+        
+        if(geocid is None)      :   geocid      =   "None"
+        if(geotype is None)     :   geotype     =   "None"
+        if(err_msg is None)     :   err_msg     =   "No  details"
+        
+        sugw.display_geocode_main_taskbar()        
+        sugc.clear_sw_utility_geocodedata()
 
+
+        print("\n")
+
+        display_status("Bulk Geocoding Runtime Error : " + cmd_text,False,True)
+
+        notes     =   ["geocid  : " + str(geocid),
+                       "geotype : " + str(geotype),
+                       "Details : " + err_msg]
+        
+        display_notes(notes,True)
 
 def send_run_report_error(cmd, err_msg) :
     
     report_error_js     =   "report_geocode_run_error(" + str(cmd) + ",'" + err_msg + "');"
-    
-    print(report_error_js)
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"send_run_report_error " + str(cmd) + " " + str(err_msg))
     
     from dfcleanser.common.common_utils import run_jscript
     run_jscript(report_error_js,"fail report run error : "+ str(cmd) + err_msg)
@@ -142,11 +155,18 @@ def validate_bulk_geocode_connect_parms(geocid) :
     * --------------------------------------------------------
     """
 
-    print("validate_bulk_geocode_connect_parms",geocid)
-
-    fparms    =   cfg.get_config_value(subgw.get_bulk_form_id(geocid,sugm.GEOCODER) + "Parms")
-    
     opstat  =   opStatus()
+    
+    fparms  =   None
+    
+    if(geocid is None) :
+        
+        opstat.set_status(False)
+        opstat.set_errorMsg("No geocoder connect parms defined for validation")
+        
+    else :
+
+        fparms    =   cfg.get_config_value(subgw.get_bulk_form_id(geocid,sugm.GEOCODER) + "Parms")
     
     if(not(fparms == None)) :
         
@@ -167,7 +187,7 @@ def validate_bulk_geocode_connect_parms(geocid) :
         
         if(not(geocid == sugm.ArcGISId)) :
             opstat.set_status(False)
-            opstat.set_errorMsg("No geocoder connect parms defined")
+            opstat.set_errorMsg("No geocoder connect parms defined for validation")
         
     return(opstat)
 
@@ -199,13 +219,27 @@ def test_bulk_geocoder(geocid,inputs) :
 
     return()
 
-
+    
 """
 #----------------------------------------------------------------------------
 #-  Common bulk geocoding control methods
 #----------------------------------------------------------------------------
 """
-def get_bulk_coords(geocid,inputs) :
+def refresh_bulk_geocode_console() :
+
+    geocid   =   get_geocode_runner_id() 
+    geotype  =   get_geocode_runner_type() 
+    
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"refresh_bulk_geocode_console " + str(geocid) + " " + str(geotype))
+    
+    if(geotype == sugm.QUERY) :
+        get_bulk_coords(geocid,None,True)
+    else :
+        get_bulk_addresses(geocid,None,True)
+
+
+def get_bulk_coords(geocid,inputs,refresh=False) :
     """
     * -------------------------------------------------------------------------- 
     * function : get the bulk coords - validate parms and load job runner
@@ -217,6 +251,12 @@ def get_bulk_coords(geocid,inputs) :
     * returns : N/A
     * --------------------------------------------------------
     """
+    
+    if(not refresh) :
+        clear_dfc_debug_log()
+    
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"get_bulk_coords " + str(geocid) + " " + str(refresh))
  
     opstat  =   opStatus()
     parms   =   None 
@@ -249,45 +289,55 @@ def get_bulk_coords(geocid,inputs) :
         
     else :
         if(geocid == sugm.ArcGISId) :
-            parms   =   cfg.get_config_value(subgw.batch_arcgis_query_id+"Parms")
+            parms   =   [subgw.batch_arcgis_query_idList,cfg.get_config_value(subgw.batch_arcgis_query_id+"Parms")]
         elif(geocid == sugm.GoogleId) :
-            parms   =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
+            parms   =   [subgw.bulk_google_query_input_idList,cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")]
         elif(geocid == sugm.BingId) :
-            parms   =   cfg.get_config_value(subgw.bulk_bing_query_input_id+"Parms")
+            parms   =   [subgw.bulk_bing_query_input_idList,cfg.get_config_value(subgw.bulk_bing_query_input_id+"Parms")]
         elif(geocid == sugm.BaiduId) :
-            parms   =   cfg.get_config_value(subgw.bulk_baidu_query_input_id+"Parms")
+            parms   =   [subgw.bulk_baidu_query_input_idList,cfg.get_config_value(subgw.bulk_baidu_query_input_id+"Parms")]
     
-    if(not(parms == None)) :    
+    if(not(parms == None)) : 
+        
         runParms    =   subgw.validate_bulk_parms(geocid,sugm.QUERY,parms,opstat) 
-
+        
         if(opstat.get_status()) :
         
             if(geocid == sugm.GoogleId) :
             
                 cfg.set_config_value(subgw.bulk_google_query_input_id+"Parms",
-                                     get_parms_list_from_dict(subgw.bulk_google_query_input_labelList[:10],runParms))
+                                     get_parms_list_from_dict(subgw.bulk_google_query_input_labelList[:11],runParms))
             
                 address_map     =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.GoogleId,sugm.QUERY,runParms,address_map)
+
                 subgc.display_geocoder_console(sugm.GoogleId,sugm.QUERY,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.GoogleId,sugm.QUERY,runParms,address_map)
             
-            if(geocid == sugm.BingId) :
+            elif(geocid == sugm.BingId) :
             
                 cfg.set_config_value(subgw.bulk_bing_query_input_id+"Parms",
-                                     get_parms_list_from_dict(subgw.bulk_bing_query_input_labelList[:10],runParms))
+                                     get_parms_list_from_dict(subgw.bulk_bing_query_input_labelList[:11],runParms))
             
                 address_map     =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
-                subgc.display_geocoder_console(sugm.BingId,sugm.QUERY,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.BingId,sugm.QUERY,runParms,address_map)
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.BingId,sugm.QUERY,runParms,address_map)
+
+                subgc.display_geocoder_console(sugm.BingId,sugm.QUERY,runParms,opstat,refresh,sugm.LOAD)
             
-            if(geocid == sugm.BaiduId) :
+            elif(geocid == sugm.BaiduId) :
             
                 cfg.set_config_value(subgw.bulk_baidu_query_input_id+"Parms",
-                                     get_parms_list_from_dict(subgw.bulk_baidu_query_input_labelList[:6],runParms))
+                                     get_parms_list_from_dict(subgw.bulk_baidu_query_input_labelList[:7],runParms))
             
                 address_map     =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
-                subgc.display_geocoder_console(sugm.BaiduId,sugm.QUERY,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.BaiduId,sugm.QUERY,runParms,address_map)
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.BaiduId,sugm.QUERY,runParms,address_map)
+                
+                subgc.display_geocoder_console(sugm.BaiduId,sugm.QUERY,runParms,opstat,refresh,sugm.LOAD)
             
             else :
                 
@@ -295,8 +345,9 @@ def get_bulk_coords(geocid,inputs) :
                                      get_parms_list_from_dict(subgw.batch_arcgis_query_labelList[:11],runParms))
             
                 address_map     =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
-                subgc.display_geocoder_console(sugm.ArcGISId,sugm.QUERY,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.ArcGISId,sugm.QUERY,runParms,address_map)
+                subgc.display_geocoder_console(sugm.ArcGISId,sugm.QUERY,runParms,opstat,refresh,sugm.LOAD)
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.ArcGISId,sugm.QUERY,runParms,address_map)
 
                 run_arcgis_bulk_geocode(runParms,sugm.BULK_LOAD_GEOCODER,opstat)
         
@@ -305,7 +356,7 @@ def get_bulk_coords(geocid,inputs) :
             display_exception(opstat)
        
     
-def get_bulk_addresses(geocid,inputs) :
+def get_bulk_addresses(geocid,inputs,refresh=False) :
     """
     * -------------------------------------------------------------------------- 
     * function : get the bulk coords - validate parms and load job runner
@@ -318,7 +369,11 @@ def get_bulk_addresses(geocid,inputs) :
     * --------------------------------------------------------
     """
     
-    print("get_bulk_addresses",geocid,"\n",inputs)
+    if(not refresh) :
+        clear_dfc_debug_log()
+    
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"get_bulk_addresses " + str(geocid) + " " + str(refresh))
     
     opstat  =   opStatus()
     parms   =   None
@@ -341,27 +396,37 @@ def get_bulk_addresses(geocid,inputs) :
     else :
         
         if(geocid == sugm.GoogleId) :
-            parms   =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
+            parms   =   [subgw.bulk_google_reverse_input_idList,cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")]
         elif(geocid == sugm.BingId) :
-            parms   =   cfg.get_config_value(subgw.bulk_bing_reverse_input_id+"Parms")
+            parms   =   [subgw.bulk_bing_reverse_input_idList,cfg.get_config_value(subgw.bulk_bing_reverse_input_id+"Parms")]
         elif(geocid == sugm.BaiduId) :
-            parms   =   cfg.get_config_value(subgw.bulk_baidu_reverse_input_id+"Parms")
+            parms   =   [subgw.bulk_baidu_reverse_input_idList,cfg.get_config_value(subgw.bulk_baidu_reverse_input_id+"Parms")]
             
-    print("get_bulk_addresses : parms",parms)
     if(not (parms == None)) :    
         runParms    =   subgw.validate_bulk_parms(geocid,sugm.REVERSE,parms,opstat) 
             
         if(opstat.get_status()) :
         
             if(geocid == sugm.GoogleId) :
-                subgc.display_geocoder_console(sugm.GoogleId,sugm.REVERSE,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.GoogleId,sugm.REVERSE,runParms,None)
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.GoogleId,sugm.REVERSE,runParms,None)
+
+                subgc.display_geocoder_console(sugm.GoogleId,sugm.REVERSE,runParms,opstat,refresh,sugm.LOAD)
+                
             elif(geocid == sugm.BingId) :
-                subgc.display_geocoder_console(sugm.BingId,sugm.REVERSE,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.BingId,sugm.REVERSE,runParms,None)
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.BingId,sugm.REVERSE,runParms,None)
+
+                subgc.display_geocoder_console(sugm.BingId,sugm.REVERSE,runParms,opstat,refresh,sugm.LOAD)
+                
             elif(geocid == sugm.BaiduId) :
-                subgc.display_geocoder_console(sugm.BaiduId,sugm.REVERSE,runParms,opstat,sugm.LOAD)
-                load_geocode_runner(sugm.BaiduId,sugm.REVERSE,runParms,None)
+                
+                if(not (refresh)) :
+                    load_geocode_runner(sugm.BaiduId,sugm.REVERSE,runParms,None)
+
+                subgc.display_geocoder_console(sugm.BaiduId,sugm.REVERSE,runParms,opstat,refresh,sugm.LOAD)
 
         else :
             subgw.display_bulk_geocoding(geocid,sugm.REVERSE)
@@ -457,8 +522,8 @@ def test_arcgis_batch_connection(user,pw,opstat) :
     cparms  =   get_arcgis_batch_geocode_connection(user,pw,opstat)
     
     if(opstat.get_status()) :
-        cfg.set_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,cparms[1][0])
-        cfg.set_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY,cparms[1][1])
+        cfg.set_config_value(cfg.ARCGIS_BATCH_MAX_BATCH_SIZE_KEY,cparms[1][0],True)
+        cfg.set_config_value(cfg.ARCGIS_BATCH_SUGGESTED_BATCH_SIZE_KEY,cparms[1][1],True)
         
     return(cparms[0])
 
@@ -562,8 +627,8 @@ def get_arcgis_batch_addresses(runParms,addressMap,opstat) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    if(sugm.GEOCODE_DETAIL_DEBUG)  :   
-        sugm.log_dfc(-1,"get_arcgis_batch_addresses")
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"get_arcgis_batch_addresses")
     
     start_row   =   get_geocode_runner_results_count()    
     
@@ -602,7 +667,8 @@ def run_arcgis_bulk_geocode(runParms,state,opstat) :
     """
     opstat  =   opStatus()
             
-    if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(-1,"run_arcgis_bulk_geocode")
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"run_arcgis_bulk_geocode")
     
     if(state == sugm.LOAD) :
         address_map     =   sugm.get_address_map(runParms.get("dataframe_address_columns"))
@@ -612,14 +678,14 @@ def run_arcgis_bulk_geocode(runParms,state,opstat) :
             load_geocode_runner(sugm.ArcGISId,runParms,address_map)
     
     elif(state == sugm.BULK_START_GEOCODER) :
-        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,sugm.RUNNING)
+        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,False,sugm.RUNNING)
         opstat  =   sugm.start_geocode_runner()
     
     elif(state == sugm.BULK_STOP_GEOCODER) :
-        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,sugm.STOPPING)
+        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,False,sugm.STOPPING)
 
     elif(state == sugm.BULK_PAUSE_GEOCODER) :
-        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,sugm.PAUSING)
+        subgc.display_geocoder_console(sugm.ArcGISId,None,opstat,False,sugm.PAUSING)
 
 
 def get_arcgis_geocode_batch(geocoder,addresslist,runParms,opstat) :
@@ -635,7 +701,8 @@ def get_arcgis_geocode_batch(geocoder,addresslist,runParms,opstat) :
     *   list of batch geocode results
     * --------------------------------------------------------
     """
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"get_arcgis_geocode_batch"+ str(len(addresslist)))
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"get_arcgis_geocode_batch"+ str(len(addresslist)))
     
     geocode_list        =   []
     
@@ -651,22 +718,22 @@ def get_arcgis_geocode_batch(geocoder,addresslist,runParms,opstat) :
     out_sr          =   runParms.get(subgw.batch_arcgis_query_labelList[6],None)
     if(out_sr == "None") : out_sr     =   None
     
-    if(sugm.GEOCODE_DETAIL_DEBUG)  : 
+    if(sugm.GEOCODE_DEBUG)  : 
         if(country == None) :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " country : None")
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " country : None")
         else :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " country : " + str(country))
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " country : " + str(country))
         if(category == None) :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " category : None")
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " category : None")
         else :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " category : " + str(category))
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " category : " + str(category))
         if(out_sr == None) :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " out_sr : None")
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " out_sr : None")
         else :
-            sugm.log_dfc(-1,"get_arcgis_geocode_batch  : " + " out_sr : " + str(out_sr))
+            log_debug_dfc(-1,"get_arcgis_geocode_batch  : " + " out_sr : " + str(out_sr))
             
         for i in range(len(addresslist)) :
-            sugm.log_dfc(-1,"[" + str(i) + "]" + str(addresslist[i]))            
+            log_debug_dfc(-1,"[" + str(i) + "]" + str(addresslist[i]))            
 
     try :
         from arcgis.geocoding import batch_geocode
@@ -700,7 +767,8 @@ def get_arcgis_geocode_batch(geocoder,addresslist,runParms,opstat) :
                 geocode_list.append([score,lat,long,Addr_type])
     
     else :
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"get_arcgis_geocode_batch"+ opstat.get_errorMsg())
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"get_arcgis_geocode_batch"+ opstat.get_errorMsg())
     
     return(geocode_list)
 
@@ -722,12 +790,14 @@ def process_arcgis_geocode_batch_results(batch_results,batch_addresses,runParms,
 
     results_df          =   get_geocode_runner_results_log()
 
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"process_arcgis_geocode_batch_results " + str(len(batch_results)))        
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"process_arcgis_geocode_batch_results " + str(len(batch_results)))        
 
     
     if(not(error_rowid is None)):
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"add_nan_result for None")        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"add_nan_result for None")        
 
         parmsDict   =   None
         
@@ -748,7 +818,8 @@ def process_arcgis_geocode_batch_results(batch_results,batch_addresses,runParms,
             address_col_name     =   runParms.get(subgw.batch_arcgis_query_labelList[3],None)
             if(address_col_name == "") : address_col_name     =   None
         
-            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"process_arcgis_geocode_batch_results : " + str(accept_score) + " " + address_col_name)        
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"process_arcgis_geocode_batch_results : " + str(accept_score) + " " + address_col_name)        
     
             for i in range(len(batch_results)) :
                 
@@ -806,7 +877,8 @@ def process_arcgis_geocode_batch_error(batch_results,runParms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc("process_arcgis_geocode_batch_error")
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc("process_arcgis_geocode_batch_error")
 
     errorLog    =   sugm.get_geocode_runner_error_log(opstat)
     
@@ -842,38 +914,60 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     * --------------------------------------------------------
     """
     
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowid,"process_bulk_geocoding_errors : " + str(geotype) + " " + str(rowid) + " " + str(inputParms) + " " + str(error_msg))
+    error_limit         =   get_geocode_runner_error_log().get_error_limit()
+    total_errors        =   get_geocode_runner_error_log().get_error_count()
+    max_rows            =   get_geocode_maxrows()
+    current_error_rate  =   (total_errors / max_rows) * 100   
+    total_results       =   get_geocode_runner_results_log().get_results_count()
+
+    
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(rowid,"process_bulk_geocoding_errors : " + str(geotype) + " row : " + str(rowid) + " state : " + str(get_geocode_runner_state()) + " error_count : " + str(get_geocode_runner_error_log().get_error_count()) + " error_limit : " + str(error_limit) + " current_error_rate : " + str(current_error_rate))
 
     opstat  =   opStatus()
     
+    if( (get_geocode_runner_state() == sugm.ERROR_LIMIT) ):
+        return
+    
     try :
         
-        error_log       =   get_geocode_runner_error_log()
-        error_log.log_error(rowid,inputParms,error_msg,note,opstat)
-        error_limit     =   error_log.get_error_limit()
-    
-        results_log         =   get_geocode_runner_results_log()
-        total_results       =   results_log.get_results_count()
-        total_errors        =   error_log.get_error_count()
-        max_rows            =   get_geocode_maxrows()
-        current_error_rate  =   (total_errors / max_rows) * 100   
+        get_geocode_runner_error_log().log_error(rowid,inputParms,error_msg,note,opstat)
      
         subgc.set_progress_bar_value(geocid,geotype,sugm.ERROR_BAR,total_errors,int(current_error_rate))
     
         if(current_error_rate > error_limit) :
-        
-            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowid,"error limit exceeded" + str(error_limit) + str(total_results) + str(total_errors))
-    
-            set_geocode_runner_halt_flag(True)
-            set_geocode_runner_state(sugm.STOPPING)
-            subgc.set_status_bar(sugm.ERROR_LIMIT)
+            
+            if(not(get_geocode_runner_state() == sugm.ERROR_LIMIT)) :
+                set_geocode_runner_halt_flag(True)  
+                
+                from threading import Thread 
+                state_change     =   Thread(target=set_error_limit_shutoff)
+                state_change.start()
+                
+                #set_geocode_runner_state(sugm.ERROR_LIMIT)
+                subgc.set_status_bar(sugm.ERROR_LIMIT)
+                get_geocode_runner_error_log().flush_errors_to_dataframe(opstat)
+                
+                if(total_errors > 0) :
+                    get_geocode_runner_results_log().flush_results_to_dataframe(opstat)
+                
+                subgc.control_bulk_keys([subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.ENABLE,subgc.ENABLE])
+            
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(rowid,"error limit exceeded : error_limit : " + str(error_limit) + " total_results : " + str(total_results) + " total_errors : " + str(total_errors))
             
     except :
         if(sugm.GEOCODE_DEBUG)  : 
-            import sys
-            sugm.log_dfc(rowid,"process_bulk_geocoding_errors Exception : " + str(geocid) + " " + str(geotype) + " " + str(rowid) + " " + str(sys.exc_info()[0].__name__))
+            log_debug_dfc(rowid,"process_bulk_geocoding_errors Exception : " + str(geocid) + " " + str(geotype) + " " + str(rowid) + " " + str(sys.exc_info()[0].__name__))
 
 
+def set_error_limit_shutoff() :
+    set_geocode_runner_state(sugm.ERROR_LIMIT) 
+    
+    if(sugm.GEOCODE_DEBUG)  : 
+        log_debug_dfc(-1,"set_error_limit_shutoff : geocoder state : " + str(get_geocode_runner_state()))
+
+    
 
 """
 #--------------------------------------------------------------------------
@@ -1063,7 +1157,8 @@ def get_google_geocode_results(rowid,address,queryParms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowid,"get_google_geocode_results : "+ address)
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(rowid,"get_google_geocode_results : "+ address)
         
     geocode_results =   None
     gmaps           =   get_geocode_connector() 
@@ -1085,7 +1180,7 @@ def get_google_geocode_results(rowid,address,queryParms,opstat) :
             fparms   =   get_parms_list_from_dict(subgw.bulk_google_query_input_labelList,queryParms) 
 
             regionParm      =   fparms[5]
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
             languagedict    =   get_Dict("Language_Codes")
             languageParm    =   languagedict.get(fparms[6])
         else :
@@ -1159,9 +1254,6 @@ def process_google_geocode_results(inputParms,runParms,geocode_results,opstat,er
     * --------------------------------------------------------
     """
     
-    #print("process_google_geocode_results\n",inputParms,"\n",runParms)
-    #if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(geocode_results.get_row_Id(),"process_google_geocode_results")
-
     results_df          =   get_geocode_runner_results_log()
     
     if(runParms.get(subgw.bulk_google_query_input_labelList[7]) == "True") : 
@@ -1171,7 +1263,8 @@ def process_google_geocode_results(inputParms,runParms,geocode_results,opstat,er
     
     if(not(error_rowid is None)):
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"add_nan_result for None")        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"add_nan_result for None")        
 
         parmsDict   =   None
         
@@ -1184,12 +1277,12 @@ def process_google_geocode_results(inputParms,runParms,geocode_results,opstat,er
     else :
         
         try :
+            
+            lat_long_merged     =   False
         
-            lat_long_col_name   =   runParms.get(subgw.bulk_google_query_input_labelList[2])
-            if(lat_long_col_name.find("]") > -1) :
-                lat_long_names  =  json.loads(lat_long_col_name)
-            else :
-                lat_long_names  =  [lat_long_col_name]
+            lat_long_col   =   runParms.get(subgw.bulk_google_query_input_labelList[2])
+            if(lat_long_col.find("]") > -1) :
+                lat_long_merged    =   True
     
             save_full_address   =   True
             full_addr_col_name  =   runParms.get(subgw.bulk_google_query_input_labelList[3])
@@ -1212,24 +1305,24 @@ def process_google_geocode_results(inputParms,runParms,geocode_results,opstat,er
                 if(save_full_address) :
             
                     if(save_location_type) :
-                        if(len(lat_long_names) == 1) :
+                        if(lat_long_merged) :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, [geocode_results.get_lat(),geocode_results.get_lng()], geocode_results.get_location_type(), geocode_results.get_formatted_address()],opstat)
                         else :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, geocode_results.get_lat(), geocode_results.get_lng(), geocode_results.get_location_type(), geocode_results.get_formatted_address()],opstat)
                     else :
-                        if(len(lat_long_names) == 1) :
+                        if(lat_long_merged) :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, [geocode_results.get_lat(),geocode_results.get_lng()], geocode_results.get_formatted_address()],opstat)
                         else :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, geocode_results.get_lat(), geocode_results.get_lng(), geocode_results.get_formatted_address()],opstat)
         
                 else :
                     if(save_location_type) :
-                        if(len(lat_long_names) == 1) :
+                        if(lat_long_merged) :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, [geocode_results.get_lat(),geocode_results.get_lng()], geocode_results.get_location_type()],opstat)
                         else :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, geocode_results.get_lat(), geocode_results.get_lng(), geocode_results.get_location_type()],opstat)
                     else :
-                        if(len(lat_long_names) == 1) :
+                        if(lat_long_merged) :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, [geocode_results.get_lat(),geocode_results.get_lng()]],opstat)
                         else :
                             results_df.add_result([geocode_results.get_row_Id(), inputParms, geocode_results.get_lat(), geocode_results.get_lng()],opstat)
@@ -1284,7 +1377,8 @@ def find_best_google_reverse_result(reverse_results,reverseParms) :
         if("ROOFTOP" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "ROOFTOP") :
-                    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"found best fit at " + str(i))# + json.dumps(reverseParms))
+                    if(sugm.GEOCODE_DEBUG)  :   
+                        log_debug_dfc(-1,"found best fit at " + str(i))# + json.dumps(reverseParms))
                     
                     return(reverse_results[i])
         elif("GEOMETRIC_CENTER" in location_types) :
@@ -1319,7 +1413,8 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
     *    google geocode results
     * --------------------------------------------------------
     """
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowid,"get_google_reverse_results rowid : " + str(rowid) + " lat_lng " + str(lat_long))# + json.dumps(reverseParms))
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(rowid,"get_google_reverse_results rowid : " + str(rowid) + " lat_lng " + str(lat_long))# + json.dumps(reverseParms))
     
     reverse_results =   None
     
@@ -1341,7 +1436,7 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
         if(not (reverseParms == None)) :
             location_typeParm   =   reverseParms.get(subgw.bulk_google_reverse_input_labelList[5],None)
             
-            from dfcleanser.sw_utilities.sw_utility_control import get_Dict
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
             languagedict    =   get_Dict("Language_Codes")
             languageParm    =   languagedict.get(reverseParms.get(subgw.bulk_google_reverse_input_labelList[6],None))
             
@@ -1399,9 +1494,9 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
     
     if(sugm.GEOCODE_DEBUG)  :
         if(current_reverse_results is None) :
-            sugm.log_dfc(rowid,"get_google_reverse_results None : ")
+            log_debug_dfc(rowid,"get_google_reverse_results None : ")
         else :
-            sugm.log_dfc(rowid,"get_google_reverse_results  : " + " lat " + str(current_reverse_results.get_lat()) + " lng " + str(current_reverse_results.get_lng()) + " addr " +  str(current_reverse_results.get_formatted_address()))
+            log_debug_dfc(rowid,"get_google_reverse_results  : " + " lat " + str(current_reverse_results.get_lat()) + " lng " + str(current_reverse_results.get_lng()) + " addr " +  str(current_reverse_results.get_formatted_address()))
     
     return(current_reverse_results)
 
@@ -1420,13 +1515,15 @@ def process_google_reverse_results(inputParms,runParms,reverse_results,opstat,er
     *    NA stored in results df
     * --------------------------------------------------------
     """
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"process_google_reverse_results inparms : " + str(inputParms))
+    if(sugm.GEOCODE_DEBUG)  :   
+        log_debug_dfc(-1,"process_google_reverse_results inparms : " + str(inputParms))
     
     results_df          =   get_geocode_runner_results_log()
     
     if(not(error_rowid is None)):
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"add_nan_result for None")        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"add_nan_result for None")        
 
         parmsDict   =   None
         results_df.add_nan_result(error_rowid,inputParms,parmsDict,opstat)
@@ -1497,7 +1594,8 @@ def process_google_reverse_results(inputParms,runParms,reverse_results,opstat,er
 
 def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParms) :
 
-    if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowid,"get_geopy_geocoder_results : " + str(geocid) + " " + str(geotype) + " " + geoparm)
+    if(sugm.GEOCODE_THREAD_DEBUG)  :   
+        log_debug_dfc(rowid,"get_geopy_geocoder_results : " + geoparm + " : " + str(geocid) + " : " + str(geotype) )
     
     if(geotype == sugm.QUERY) :
         
@@ -1533,7 +1631,8 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
 
         if(geocid == sugm.BingId) :
             
-            if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowid,"get_geopy_geocoder_results : bing reverse")
+            if(sugm.GEOCODE_THREAD_DEBUG)  :   
+                log_debug_dfc(rowid,"get_geopy_geocoder_results : bing reverse")
 
             address                     =   None
             
@@ -1559,7 +1658,8 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             
         if(geocid == sugm.BaiduId) :
             
-            if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowid,"get_geopy_geocoder_results : bing reverse")
+            if(sugm.GEOCODE_THREAD_DEBUG)  :   
+                log_debug_dfc(rowid,"get_geopy_geocoder_results : bing reverse")
 
             address                     =   None
             
@@ -1585,7 +1685,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
 def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
     """
     * -------------------------------------------------------------------------- 
-    * function : get a single bing goeocode result
+    * function : get a single goeocode result
     * 
     * parms :
     *  eowid            - dataframe row id
@@ -1596,17 +1696,12 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
     *    bing geocode results
     * --------------------------------------------------------
     """
-    import geopy
-    import sys
     
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowid,"get_geopy_geocode_results : " + address)
-        
     current_geocode_results =   None
 
-    try :
-        geolocator = sugc.get_geocoder_engine(geocid,opstat)
-    except :
-        opstat.set_status(False)
+    geolocator = sugc.get_geocoder_engine(geocid,opstat)
+    
+    if(not(opstat.get_status())) :
         opstat.set_errorMsg(sugm.GeopyGeocoderConnectionErrorMessage)
 
     if(opstat.get_status()) :   
@@ -1659,6 +1754,11 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
                     full_address    =   location.address
                     latitude        =   location.latitude
                     longitude       =   location.longitude
+                    
+                    if(sugm.GEOCODE_THREAD_DEBUG)  :   
+                        log_debug_dfc(-1,"get_geopy_geocode_results for : " + address)
+                        log_debug_dfc(-1,str(full_address) + " : " + str(latitude) + " : " + str(longitude))
+
             
                     try :
                         current_geocode_results    =  sugm.geopy_geocode_results(rowid,full_address,latitude,longitude,opstat)
@@ -1710,27 +1810,26 @@ def process_geopy_geocode_results(geocid,geotype,inputParms,runParms,geopy_resul
 
                 if(geotype == sugm.QUERY) :
             
-                    lat_long_col_name   =   runParms.get(subgw.bulk_google_query_input_labelList[2])
+                    lat_long_colname    =   runParms.get(subgw.bulk_google_query_input_labelList[2])
+                    lat_long_merged     =   False
             
                     if(geocid == sugm.BingId) :
-                        lat_long_col_name   =   runParms.get(subgw.bulk_bing_query_input_labelList[2])
+                        lat_long_colname   =   runParms.get(subgw.bulk_bing_query_input_labelList[2])
                         full_addr_col_name  =   runParms.get(subgw.bulk_bing_query_input_labelList[3]) 
                 
                     elif(geocid == sugm.BaiduId) :
-                        lat_long_col_name   =   runParms.get(subgw.bulk_bing_query_input_labelList[2])
+                        lat_long_colname   =   runParms.get(subgw.bulk_bing_query_input_labelList[2])
                         full_addr_col_name  =   runParms.get(subgw.bulk_bing_query_input_labelList[3])                
             
-                    if(lat_long_col_name.find("]") > -1) :
-                        lat_long_names  =  json.loads(lat_long_col_name)
-                    else :
-                        lat_long_names  =  [lat_long_col_name]
+                    if(lat_long_colname.find("]") > -1) :
+                        lat_long_merged     =   True
     
                     save_full_address   =   True
                     if(full_addr_col_name == "None") :
                         save_full_address   =   False
         
                     if(save_full_address) :
-                        if(len(lat_long_names) > 1) :
+                        if(not (lat_long_merged)) :
                             results_df.add_result([geopy_results.get_row_Id(),
                                                    inputParms, 
                                                    geopy_results.get_lat(), 
@@ -1743,7 +1842,7 @@ def process_geopy_geocode_results(geocid,geotype,inputParms,runParms,geopy_resul
                                                    geopy_results.get_full_address()],opstat)
                             
                     else :
-                        if(len(lat_long_names) > 1) :
+                        if(not (lat_long_merged)) :
                             results_df.add_result([geopy_results.get_row_Id(),
                                                    inputParms, 
                                                    geopy_results.get_lat(),
@@ -1771,7 +1870,8 @@ def process_geopy_geocode_results(geocid,geotype,inputParms,runParms,geopy_resul
     
     else : # error row
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"add_nan_result for None")        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"add_nan_result for None")        
 
         results_df.add_nan_result(error_rowid,inputParms,None,opstat)
 
@@ -1801,134 +1901,180 @@ def process_geocode_final_results(cmd,inparms) :
 
     opstat  =   opStatus()
     
-    results_df  =   get_geocode_runner_results_log().get_geocoding_results_df()
-        
-    geocid      =   int(cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY))
+    try :
     
-    if(cmd == sugm.PROCESS_BULK_RESULTS_CONCAT_PROCESS) :
+        results_df  =   get_geocode_runner_results_log().get_geocoding_results_df()
+        errors_df   =   get_geocode_runner_error_log().get_error_log_df()
         
-        if(geocid == sugm.GoogleId) :
-            gparms      =   cfg.get_config_value(subgw.bulk_google_query_input_id+"Parms")
-            source_df   =   cfg.get_dfc_dataframe_df(gparms[0])
+        if(cmd == sugm.PROCESS_BULK_RESULTS_APPEND_PROCESS) :
+        
+            proc_parms                  =   get_parms_for_input(inparms[1],subgc.bulk_geocode_append_input_idList)
+        
+            if(len(proc_parms) > 0) :
             
-            proc_parms  =   get_parms_for_input(inparms,subgc.bulk_geocode_proc_input_idList)
-
-            if(proc_parms[2] == "True") :
-                drop_addr_cols  =   True
-            else :
-                drop_addr_cols  =   False
-                
-            if(drop_addr_cols) :
+                append_to_csv_file_name     =   proc_parms[0]
+                cfg.set_config_value(subgc.bulk_geocode_append_input_id+"Parms",[append_to_csv_file_name])
         
-                address_map         =   sugm.get_address_map(gparms[1])
-                addr_cols_map       =   address_map.get_colindices()
-                addr_cols           =   []
-    
-                for i in range(len(addr_cols_map)) :
-                    if(not (addr_cols_map[i] == -1))  :
-                        addr_cols.append(addr_cols_map[i])
-                        
+                import pandas as pd
                 try :
-                    source_df.drop(addr_cols,axis=1,inplace=True)
+            
+                    append_to_csv_df        =   pd.read_csv(append_to_csv_file_name) 
+            
                 except Exception as e:
-                    opstat.store_exception("Unable append drop address cols ",e)
-                    
-            if(opstat.get_status()) :
-                
-                paxis   =   int(proc_parms[0])
-                pjoin   =   proc_parms[1]
-
-                import pandas as pd            
-                try :
-                    results_df.drop(["source df rowid","input value"],axis=1,inplace=True)
-                    source_df     =   pd.concat([source_df, results_df], axis=paxis, join=pjoin)
-
-                    #TODO check inplace
-                    
-                except Exception as e:
-                    opstat.store_exception("Unable append geocoding results ",e)
-                
+                    opstat.store_exception("Unable to open csv file to append to ",e)
+            
                 if(opstat.get_status()) :
-                    subgc.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_CONCAT_PROCESSED,opstat)
-                else :
-                    display_exception(opstat)
+            
+                    try :
+            
+                        append_to_csv_df        =   append_to_csv_df.append(results_df,sort=False)
+                        append_to_csv_df.to_csv(append_to_csv_file_name,index=False)
+            
+                    except Exception as e:
+                        opstat.store_exception("Unable to open csv file to append to ",e)
                     
             else :
-                display_exception(opstat)
-                    
-                        
-    elif(cmd == sugm.PROCESS_BULK_REVERSE_RESULTS_CONCAT_PROCESS) :
-        
-        if(geocid == sugm.GoogleId) :
-            gparms      =   cfg.get_config_value(subgw.bulk_google_reverse_input_id+"Parms")
-            source_df   =   cfg.get_dfc_dataframe_df(gparms[0])
-
-            proc_parms  =   get_parms_for_input(inparms,subgw.bulk_google_procr_input_idList)
+               opstat.set_errorMsg("Invalid csv file to append to")
+               opstat.set_status(False)
             
-            paxis   =   int(proc_parms[0])
-            pjoin   =   proc_parms[1]
-
-            import pandas as pd            
-            try :
-                results_df.drop(["source df rowid","input value"],axis=1,inplace=True)
-                source_df     =   pd.concat([source_df, results_df], axis=paxis, join=pjoin)
-                
-                #TODO check inplace
-                
-            except Exception as e:
-                opstat.store_exception("Unable to append geocoding results ",e)
-                
             if(opstat.get_status()) :
-                subgc.display_geocoder_process_results(sugm.DISPLAY_BULK_RESULTS_CONCAT_PROCESSED,opstat)
+            
+                print("\n")
+                display_status("Geocode Results appended successfully to csv file " + append_to_csv_file_name)
+            
+                cfg.set_config_value(cfg.BULK_GEOCODE_APPENDED_CSV_ID,append_to_csv_file_name,True)
+            
+                subgc.display_bulkgeocode_openexcel_taskbar(0) 
+                print("\n")
+                subgc.display_base_taskbar()
+                print("\n")
+            
             else :
                 display_exception(opstat)
+                print("\n")
+                subgc.display_base_taskbar()
                     
 
-    elif(cmd == sugm.PROCESS_BULK_RESULTS_CSV_PROCESS) :
+        elif(cmd == sugm.PROCESS_BULK_RESULTS_CSV_PROCESS) :
         
-        #nb_name =   get_notebookName() 
-        nbpath  =   cfg.get_notebookPath()
+            #nb_name =   get_notebookName() 
+            nbpath  =   cfg.get_notebookPath()
         
-        import os
+            import os
         
-        df_export_path = os.path.join(nbpath,"exports")
-        if (not (does_dir_exist(df_export_path)) ) :
-            make_dir(df_export_path)
+            df_export_path = os.path.join(nbpath,"exports")
+            if (not (does_dir_exist(df_export_path)) ) :
+                make_dir(df_export_path)
 
-        proc_parms  =   get_parms_for_input(inparms,subgc.bulk_geocode_export_input_idList)
-
-        if(len(proc_parms) > 0) :
-            csv_file_name   =   os.path.join(df_export_path, proc_parms[0] + ".csv")
-        else :
-            csv_file_name   =   None
+            proc_parms  =   get_parms_for_input(inparms[1],subgc.bulk_geocode_export_input_idList)
         
-        if(not (csv_file_name is None)) :
-            #write out csv file 
-            try :
+            if(len(proc_parms) >0) :
+            
+                if(len(proc_parms) > 0) :
+                    csv_file_name   =   os.path.join(df_export_path, proc_parms[0])
+                else :
+                    csv_file_name   =   None
+        
                 if(not (csv_file_name is None)) :
-                    results_df.to_csv(csv_file_name)
-            except Exception as e:
-                opstat.store_exception("Unable to export geocoding results file ",e)
+                    #write out csv file 
+                    try :
+                        if(not (csv_file_name is None)) :
+                            results_df.to_csv(csv_file_name,index=False)
+                    except Exception as e:
+                        opstat.store_exception("Unable to export geocoding results file ",e)
+        
+            else :
+                opstat.set_errorMsg("Invalid csv file to export to")
+                opstat.set_status(False)
+        
+            if(opstat.get_status()) :
+            
+                print("\n")
+                display_status("Geocode Results exported successfully to csv file " + csv_file_name)
+            
+                cfg.set_config_value(cfg.BULK_GEOCODE_EXPORTED_CSV_ID,csv_file_name,True)
+            
+                subgc.display_bulkgeocode_openexcel_taskbar(1) 
+                print("\n")
+                subgc.display_base_taskbar()
+                print("\n")
+            
+            else :
+                display_exception(opstat)
+                print("\n")
+                subgc.display_base_taskbar()
                 
-        if(opstat.get_status()) :
-            print("\n")
-            display_status("Geocode Results exported successfully to csv file ")
+        elif(cmd == sugm.PROCESS_BULK_ERRORS_CSV_PROCESS) :
+        
+            #nb_name =   get_notebookName() 
+            #nbpath  =   cfg.get_notebookPath()
+        
+            import os
+        
+            proc_parms  =   get_parms_for_input(inparms[1],subgc.bulk_geocode_export_error_input_idList)
             
-            notes   =   []
-            notes.append("Results exported to : ")
-            notes.append("&nbsp;&nbsp;&nbsp;&nbsp;" + csv_file_name)
-    
-            #display_notes(notes)
-            from dfcleanser.common.common_utils import display_msgs
-            display_msgs(notes,None)
+            if(len(proc_parms) >0) :
             
-            subgc.display_base_taskbar()
-            print("\n")
+                if(len(proc_parms) > 0) :
+                    csv_file_name   =   proc_parms[0]
+                else :
+                    csv_file_name   =   None
+        
+                if(not (csv_file_name is None)) :
+                    #write out csv file 
+                    try :
+                        if(not (csv_file_name is None)) :
+                            errors_df.to_csv(csv_file_name,index=False)
+                    except Exception as e:
+                        opstat.store_exception("Unable to export geocoding errors file ",e)
+                        
+                else :
+                    opstat.set_errorMsg("No file path define")
+                    opstat.set_status(False)
+        
+            else :
+                opstat.set_errorMsg("Invalid csv file to export to")
+                opstat.set_status(False)
+        
+            if(opstat.get_status()) :
             
+                print("\n")
+                display_status("Geocode Errors exported successfully to csv file " + csv_file_name)
             
-        else :
-            display_exception(opstat)
+                cfg.set_config_value(cfg.BULK_ERRORS_EXPORTED_CSV_ID ,csv_file_name,True)
+            
+                subgc.display_bulkgeocode_openexcel_taskbar(2) 
+                print("\n")
+                
+                subgc.display_geopy_exceptions_taskbar() 
+                print("\n")
+                
+                subgc.display_base_taskbar()
+                print("\n")
+            
+            else :
+                display_exception(opstat)
+                print("\n")
+                subgc.display_base_taskbar()
  
+
+    except Exception as e:
+        opstat.store_exception("Unable to export geocoding results file ",e)
+        
+        subgc.display_base_taskbar()
+        print("\n")
+        display_exception(opstat)
+
+
+
+
+
+
+
+
+
+
+
 
 """
 #----------------------------------------------------------------------------
@@ -1991,7 +2137,8 @@ class GeocodeThread :
         
         if(self.geocoderId == sugm.ArcGISId) :
             
-            if(sugm.GEOCODE_DEBUG)  :sugm.log_dfc(-1,"ArcGIS run_geocode_method " + str(len(self.inputParms)))
+            if(sugm.GEOCODE_DEBUG)  :
+                log_debug_dfc(-1,"ArcGIS run_geocode_method " + str(len(self.inputParms)))
 
             geocoder = None
             geocode_results     =   get_arcgis_geocode_batch(geocoder,self.inputParms,self.runParms,self.opstat)
@@ -2003,7 +2150,8 @@ class GeocodeThread :
                     
                 if(self.get_results_log_count() >= (self.maxrows-1)) :
                     self.set_halt_flag(True)   
-                    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(self.rowIndex,"halt arcgis"+str(self.maxrows-1))
+                    if(sugm.GEOCODE_DEBUG)  :   
+                        log_debug_dfc(self.rowIndex,"halt arcgis"+str(self.maxrows-1))
 
         elif(self.geocoderId == sugm.GoogleId) :
             
@@ -2056,8 +2204,7 @@ class GeocodeThread :
             if(self.geocoderId == sugm.BingId)      :   retry_limit    =   sugm.BING_RETRY_LIMIT
             elif(self.geocoderId == sugm.BaiduId)   :   retry_limit    =   sugm.BAIDU_RETRY_LIMIT
             else                                    :   retry_limit    =   0
-            
-            
+
             while(retry_count < retry_limit) :
 
                 self.geocode_results    =   get_geopy_geocode_results(self.geocoderId,self.geocoder_type,self.rowId,self.inputParms,self.runParms,opstat)
@@ -2083,7 +2230,11 @@ class GeocodeThread :
                         retry_count     =   sugm.retry_limit
                     
                     elif(opstat.get_errorMsg() == sugm.GeopyGeocoderGeocoderTimedOutMessage) :
-                        retry_count     =   retry_count + 1    
+                        retry_count     =   retry_count + 1  
+                        
+                    else :
+                        stop_geocode_runner(opstat.get_error_message())
+                        retry_count     =   sugm.retry_limit
                 
                     if(retry_count == sugm.retry_limit) :
                         process_bulk_geocoding_errors(self.geocoderId,self.geocoder_type,self.rowId,self.inputParms,opstat.get_error_message())
@@ -2121,7 +2272,8 @@ class GeocodeThreadsMonitor:
         self.maxthreads      =   maxthreadsparm
     
     def addthread(self, geocodetask, rowindex):
-        if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowindex,"addthread ["+ str(len(self.threaddict))+"]")
+        if(sugm.GEOCODE_THREAD_DEBUG)  :   
+            log_debug_dfc(-1,"addthread ["+ str(len(self.threaddict))+"]")
         self.threaddict.update({rowindex:geocodetask})
         threading.Thread(target=geocodetask.run_geocoder_thread).start()
         
@@ -2129,9 +2281,11 @@ class GeocodeThreadsMonitor:
 
         if(not(self.threaddict.get(rowindex,None) is None)) :
             self.threaddict.pop(rowindex,None)
-            if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowindex,"dropthread : thread popped : num active threads [" + str(len(self.threaddict))+"]")
+            if(sugm.GEOCODE_THREAD_DEBUG)  :   
+                log_debug_dfc(rowindex,"dropthread : thread popped : num active threads [" + str(len(self.threaddict))+"]")
         else :
-            if(sugm.GEOCODE_DETAIL_DEBUG)  :   sugm.log_dfc(rowindex,"dropthread : thread not found")
+            if(sugm.GEOCODE_THREAD_DEBUG)  :   
+                log_debug_dfc(rowindex,"dropthread : thread not found")
 
     def more_threads_available(self):
 
@@ -2213,9 +2367,14 @@ def set_geocode_connector(connector) :
     return(dfc_Geocode_Runner.set_geocode_connector(connector))
 def get_geocode_maxrows() :
     return(dfc_Geocode_Runner.get_geocode_maxrows())
+def get_geocode_checkpoint_interval() :
+    return(dfc_Geocode_Runner.get_geocode_checkpoint_interval())
 
 def get_geocode_run_total_time() :
     return(dfc_Geocode_Runner.get_total_run_time())
+
+def get_geocode_lat_long_map() :
+    return(dfc_Geocode_Runner.get_geocode_lat_long_map())
 
 """
 #----------------------------------------------------------------------------
@@ -2254,8 +2413,13 @@ class BulkGeocodeRunner:
     stop_error_msg          =   None
     
     checkpoint_on           =   False
+    checkpoint_interval     =   10000
+    last_checkpoint_rowid   =   0
+    
+    lat_long_map            =   []
        
     def __init__(self):
+        
         self.geocid                 =   None
         self.geotype                =   None
         self.runParms               =   None
@@ -2282,46 +2446,51 @@ class BulkGeocodeRunner:
         self.stop_error_msg         =   None
         
         self.checkpoint_on          =   False
+        self.checkpoint_interval    =   10000 
+        self.last_checkpoint_rowid  =   0
+
+        self.lat_long_map           =   []
+        
         
     def load_run(self,geocoderId,geoType,runParms,addressParms):
         
-        sugm.clear_dfc_log()
-        
-        if(geoType == sugm.QUERY) :
-            if(sugm.GEOCODE_DEBUG)  :   
-                if(self.geocid == sugm.GoogleId) :
-                    sugm.log_dfc(-1,"load_run " + str(int(runParms.get("max_addresses_to_geocode"))))
-                elif(self.geocid == sugm.BingId) :
-                    sugm.log_dfc(-1,"load_run " + str(int(runParms.get("max_addresses_to_geocode"))))
-        else :
-            if(sugm.GEOCODE_DEBUG)  :   
-                if(self.geocid == sugm.GoogleId) :
-                    sugm.log_dfc(-1,"load_run " + str(int(runParms.get("max_lat_longs"))))
-                elif(self.geocid == sugm.BingId) :
-                    sugm.log_dfc(-1,"load_run " + str(int(runParms.get("max_addresses_to_geocode"))))
-            
+        if(sugm.GEOCODE_DEBUG)  :  
+            log_debug_dfc(-1,"load_run  : geocid : " + str(geocoderId) + " geotype : " + str(geoType)) 
+            log_debug_dfc(-1,"load_run  : runParms : " + str(runParms))
+            log_debug_dfc(-1,"load_run  : addressParms : " + str(type(addressParms)))
+                    
         self.geocid             =   geocoderId
         self.geotype            =   geoType
         self.runParms           =   runParms
         self.addressParms       =   addressParms
         
+        if(self.geotype == sugm.REVERSE) :
+            self.lat_long_map   =   sugm.get_lat_longs_map(self.geocid,self.runParms)
+        
         if(self.geocid == sugm.GoogleId) :
             if(self.geotype == sugm.QUERY) :
-                self.maxrows            =   int(runParms.get("max_addresses_to_geocode"))
+                self.maxrows                =   int(runParms.get("max_addresses_to_geocode"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
             else :
-                self.maxrows            =   int(runParms.get("max_lat_longs"))
+                self.maxrows                =   int(runParms.get("max_lat_longs"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
                 
         elif(self.geocid == sugm.BingId) :
             if(self.geotype == sugm.QUERY) :
-                self.maxrows            =   int(runParms.get("max_addresses_to_geocode"))
+                self.maxrows                =   int(runParms.get("max_addresses_to_geocode"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
+
             else :
-                self.maxrows            =   int(runParms.get("max_lat_longs"))
+                self.maxrows                =   int(runParms.get("max_lat_longs"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
         
         elif(self.geocid == sugm.BaiduId) :
             if(self.geotype == sugm.QUERY) :
-                self.maxrows            =   int(runParms.get("max_addresses_to_geocode"))
+                self.maxrows                =   int(runParms.get("max_addresses_to_geocode"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
             else :
-                self.maxrows            =   int(runParms.get("max_lat_longs"))
+                self.maxrows                =   int(runParms.get("max_lat_longs"))
+                self.checkpoint_interval    =   int(runParms.get("checkpoint_interval"))
                 
         elif(self.geocid == sugm.ArcGISId) :
             self.maxrows            =   int(runParms.get("max_addresses_to_geocode"))
@@ -2338,7 +2507,12 @@ class BulkGeocodeRunner:
         self.geocodingResults   =   bulkstructures[0]
         self.geocodingErrorLog  =   bulkstructures[1]
         
-        self.geocodingErrorLog.set_error_limit(self.geocid,self.geotype)
+        if(sugm.GEOCODE_DEBUG)  :  
+            log_debug_dfc(-1,"load_run  : checkpoint_interval : " + str(self.checkpoint_interval)) 
+        
+        subgc.control_bulk_keys([subgc.ENABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE])
+        
+        
         
     def start_run(self):
         subgc.set_status_bar(sugm.STARTING)
@@ -2348,8 +2522,8 @@ class BulkGeocodeRunner:
         self.rowindex           =   0
         
         self.start_time         =   datetime.datetime.now()
-        self.syop_time          =   datetime.datetime.now()
-            
+        self.stop_time          =   datetime.datetime.now()
+        
         return(self.start_bulk_geocode_runner(0))
         
     def stop_run(self,error_msg=None) :
@@ -2363,19 +2537,20 @@ class BulkGeocodeRunner:
             self.set_run_state(sugm.STOPPING)
             
         self.set_halt_flag(True)
-        self.stop_error_msg     =   error_msg
+        self.stop_time          =   datetime.datetime.now()
         
         if(sugm.GEOCODE_DEBUG)  :   
             if(self.stop_error_msg == None) :
-                sugm.log_dfc(self.rowIndex,"stop_run")
+                log_debug_dfc(self.rowIndex,"stop_run")
             else :
-                sugm.log_dfc(self.rowIndex,"stop_run : " + self.stop_error_msg)
+                log_debug_dfc(self.rowIndex,"stop_run : " + self.stop_error_msg)
         
     def pause_run(self) :
         subgc.set_status_bar(sugm.PAUSING)
         self.set_run_state(sugm.PAUSING)
         self.set_halt_flag(True)
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(self.rowIndex,"halt PAUSE")
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(self.rowIndex,"pause_run : halt PAUSE")
 
     def resume_run(self):
         subgc.set_status_bar(sugm.RUNNING)
@@ -2392,12 +2567,16 @@ class BulkGeocodeRunner:
         return(self.state)
     
     def set_run_state(self,runstate):
+        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"set_run_state : " + str(runstate))
+        
         self.state  =   runstate
     
     def start_bulk_geocode_runner(self,rowIndex) :
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(rowIndex,"start_bulk_geocode_runner")
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"geocid : " + str(self.geocid) + " geotype " + str(self.geotype) + " maxrows " + str(self.maxrows) + " rowindex " + str(rowIndex))
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(rowIndex,"start_bulk_geocode_runner : " + "geocid : " + str(self.geocid) + " geotype " + str(self.geotype) + " maxrows " + str(self.maxrows) + " rowindex " + str(rowIndex))
 
         self.rowindex   =   rowIndex
         opstat          =   opStatus()
@@ -2410,7 +2589,7 @@ class BulkGeocodeRunner:
             elif(self.geocid == sugm.GoogleId) :   
                 geocoderparms   =   cfg.get_config_value(subgw.google_bulk_geocoder_id+"Parms")
                 self.geocoder   =   get_bulk_google_geocoder_connection(geocoderparms[0],geocoderparms[1],geocoderparms[2],opstat)
-            else :   
+            else :  
                 self.geocoder   =   sugc.get_geocoder_engine(self.geocid,opstat)
                 
         except Exception as e:
@@ -2418,11 +2597,14 @@ class BulkGeocodeRunner:
         
         if(opstat.get_status()) :
         
-            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"start_bulk_geocode_runner got connection")
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"start_bulk_geocode_runner got connection")
             
             self.set_halt_flag(False)
             threading.Thread(target=self.bulk_geocode_runner_task).start()
             subgc.set_status_bar(sugm.RUNNING)
+            
+            subgc.control_bulk_keys([subgc.DISABLE,subgc.ENABLE,subgc.ENABLE,subgc.DISABLE,subgc.ENABLE,subgc.DISABLE])
             
             return(opstat)
             
@@ -2431,11 +2613,6 @@ class BulkGeocodeRunner:
         
     def bulk_geocode_runner_task(self) :
         
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"bulk_geocode_runner_task start : rowindex " + str(self.rowindex) + " maxrows " + str(self.maxrows) + " run complete " + str(self.is_geocode_run_complete()))
-        if(sugm.GEOCODE_DEBUG)  :   
-            if(not (self.geocid == sugm.ArcGISId)) :
-                sugm.log_dfc(-1,"bulk_geocode_runner_task : geocid " + str(self.geocid) + " geotype " + str(self.geotype) + " threads available " + str(self.geocodeThreadsMonitor.more_threads_available()))
-                    
         opstat                  =   opStatus()
         arcgis_geocodethread    =   None   
         
@@ -2443,132 +2620,179 @@ class BulkGeocodeRunner:
             
             if(not (self.geocid == sugm.ArcGISId) ) :
                 self.geocodeThreadsMonitor.clear_completed_threads()
-            
-            if( not (self.get_halt_flag()) ) :
-            
-                if(self.geocid == sugm.ArcGISId) :
-                    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"bulk_geocode_runner_task start : arcgis ")
+                
+            if(self.is_checkpoint_needed())  :
+                
+                if(self.geocid == sugm.GoogleId) :
+                    delay   =   sugm.GOOGLE_DELAY
+                elif(self.geocid == sugm.BingId) :
+                    delay   =   sugm.BING_DELAY
+                elif(self.geocid == sugm.BaiduId) :
+                    delay   =   sugm.BAIDU_DELAY
                         
-                    if(arcgis_geocodethread is None) :
-                        next_batch_addrs        =   get_arcgis_batch_addresses(self.runParms,self.addressParms,opstat)
-                            
-                        if(opstat.get_status()) :
-                            arcgis_geocodethread    =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_batch_addrs,self.runParms)
-                            arcgis_geocodethread.run_geocoder_thread()
-                        
-                        else :
-                            self.geocoding_in_error     =   True
-                            self.set_halt_flag(True) 
-                            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(self.rowIndex,"halt arcgis : " + opstat.get_errorMsg())
-                                
+                import time
+                time.sleep(delay)
+                
+                if(self.geocodeThreadsMonitor.all_threads_completed()) :
+                    self.checkpoint_results(opstat)
+                    
+                    if(opstat.get_status()) :
+                        subgc.set_status_bar(sugm.RUNNING)
+                        subgc.control_bulk_keys([subgc.DISABLE,subgc.ENABLE,subgc.ENABLE,subgc.DISABLE,subgc.ENABLE,subgc.DISABLE])
                     else :
-                        
-                        if(arcgis_geocodethread.get_thread_run_state()) :
-                            import datetime
-                            current_date_time = datetime.datetime.now().timestamp()
-
-                            time_diff       =   current_date_time - arcgis_geocodethread.get_thread_start_time()
-                            import numpy as np
-                            diff_seconds    =   time_diff/np.timedelta64(1,'s')
-                                
-                            if(diff_seconds > sugm.ARCGIS_TIMEOUT) :
-                                
-                                self.geocoding_in_error     =   True    
-                                self.set_halt_flag(True)    
-                                if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"stop arcgis : " + opstat.get_errorMsg())
-                                
-                        else :
-                            arcgis_geocodethread    =   None                            
+                        self.geocodingErrorLog.log_error(self.last_checkpoint_rowid,"NA",opstat.get_errorMsg(),"",opstat)
+                        self.pause_run()                        
                 
-                elif( (self.geocid == sugm.GoogleId) or 
-                      (self.geocid == sugm.BingId) or 
-                      (self.geocid == sugm.BaiduId) ):
-                
-                    if(self.geocodeThreadsMonitor.more_threads_available()) :
-
-                        if(self.rowindex < self.maxrows) :
+            else :
+            
+                if( not (self.get_halt_flag()) ) :
+            
+                    if(self.geocid == sugm.ArcGISId) :
+                        if(sugm.GEOCODE_DEBUG)  :   
+                            log_debug_dfc(-1,"bulk_geocode_runner_task start : arcgis ")
                         
-                            if(self.geotype == sugm.QUERY) :
-                                next_addr       =   sugm.get_geocode_address_string(self.geocid,self.runParms,self.addressParms,self.rowindex)
-                                geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_addr,self.runParms)  
-                                self.geocodeThreadsMonitor.addthread(geocodethread,self.rowindex)
+                        if(arcgis_geocodethread is None) :
+                            next_batch_addrs        =   get_arcgis_batch_addresses(self.runParms,self.addressParms,opstat)
+                            
+                            if(opstat.get_status()) :
+                                arcgis_geocodethread    =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_batch_addrs,self.runParms)
+                                arcgis_geocodethread.run_geocoder_thread()
+                        
                             else :
-                                try :
-                                    next_lat_lng    =   sugm.get_geocode_reverse_lat_lng_string(self.geocid,self.runParms,self.rowindex)
-                                    geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_lat_lng,self.runParms)  
-                                    self.geocodeThreadsMonitor.addthread(geocodethread,self.rowindex)
-                                except  :
-                                    import sys
-                                    #str(sys.exc_info()[0].__name__)
-                                    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"add reverse thread exception " + str(sys.exc_info()[0].__name__))
-                                    
-                            self.rowindex   =   self.rowindex + 1
-                    
+                                self.geocoding_in_error     =   True
+                                self.set_halt_flag(True) 
+                                if(sugm.GEOCODE_DEBUG)  :   
+                                    log_debug_dfc(self.rowIndex,"bulk_geocode_runner_task : halt arcgis : " + opstat.get_errorMsg())
+                                
                         else :
-                            self.set_halt_flag(True)
+                        
+                            if(arcgis_geocodethread.get_thread_run_state()) :
+                                import datetime
+                                current_date_time = datetime.datetime.now().timestamp()
+
+                                time_diff       =   current_date_time - arcgis_geocodethread.get_thread_start_time()
+                                import numpy as np
+                                diff_seconds    =   time_diff/np.timedelta64(1,'s')
+                                
+                                if(diff_seconds > sugm.ARCGIS_TIMEOUT) :
+                                
+                                    self.geocoding_in_error     =   True  
+                                    self.set_halt_flag(True)    
+                                    if(sugm.GEOCODE_DEBUG)  :   
+                                        log_debug_dfc(-1,"bulk_geocode_runner_task halt : stop arcgis : " + opstat.get_errorMsg())
+                                
+                            else :
+                                arcgis_geocodethread    =   None                            
+                
+                    elif( (self.geocid == sugm.GoogleId) or 
+                          (self.geocid == sugm.BingId) or 
+                          (self.geocid == sugm.BaiduId) ):
+                    
+                        if(self.geocodeThreadsMonitor.more_threads_available()) :
+                        
+                            if(self.rowindex < self.maxrows) :
                             
-                    else :
+                                if(self.geotype == sugm.QUERY) :
+                                
+                                    next_addr       =   sugm.get_geocode_address_string(self.geocid,self.runParms,self.addressParms,self.rowindex)
+                                
+                                    if(sugm.GEOCODE_THREAD_DEBUG)  :
+                                        log_debug_dfc(-1,"next_addr to geocode : " + str(next_addr) + " : " + str(self.geocid))
+                                    
+                                    geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_addr,self.runParms)  
+                                    self.geocodeThreadsMonitor.addthread(geocodethread,self.rowindex)
+                                else :
+                                    try :
+                                        next_lat_lng    =   sugm.get_geocode_reverse_lat_lng_string(self.geocid,self.runParms,self.rowindex)
+                                        geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_lat_lng,self.runParms)  
+                                        self.geocodeThreadsMonitor.addthread(geocodethread,self.rowindex)
+                                    except  :
+                                        import sys
+                                        #str(sys.exc_info()[0].__name__)
+                                        if(sugm.GEOCODE_DEBUG)  :   
+                                            log_debug_dfc(-1,"add reverse thread exception " + str(sys.exc_info()[0].__name__))
+                                    
+                                self.rowindex   =   self.rowindex + 1
                     
-                        if(self.geocid == sugm.GoogleId) :
-                            delay   =   sugm.GOOGLE_DELAY
-                        elif(self.geocid == sugm.BingId) :
-                            delay   =   sugm.BING_DELAY
-                        elif(self.geocid == sugm.BaiduId) :
-                            delay   =   sugm.BAIDU_DELAY
-                        
-                        import time
-                        time.sleep(delay)
-                        
-                        #if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"task delay " + str(self.ResultsLength) + " " + str(self.geocodingResults.get_results_count()))
-                        
-                    self.update_status_bar()
+                            else :
+                                if(sugm.GEOCODE_DEBUG)  : 
+                                    log_debug_dfc(-1,"bulk_geocode_runner_task halt no threads available")
+                                self.set_halt_flag(True)
+                            
+                        else :
                     
-                    if( self.rowindex >= self.maxrows ) :
-                        self.set_halt_flag(True)
-                        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(self.rowindex,"halt - google " + str(self.rowindex) + " " + str(self.maxrows))
+                            if(self.geocid == sugm.GoogleId) :
+                                delay   =   sugm.GOOGLE_DELAY
+                            elif(self.geocid == sugm.BingId) :
+                                delay   =   sugm.BING_DELAY
+                            elif(self.geocid == sugm.BaiduId) :
+                                delay   =   sugm.BAIDU_DELAY
+                        
+                            import time
+                            time.sleep(delay)
+                        
+                        self.update_status_bar()
+                    
+                        if( self.rowindex >= self.maxrows ) :
+                            self.set_halt_flag(True)
+                            if(sugm.GEOCODE_DEBUG)  :   
+                                log_debug_dfc(self.rowindex,"bulk_geocode_runner_task halt max rows : halt - google " + str(self.rowindex) + " " + str(self.maxrows))
 
      
+                    else :
+                        print("geocoder not supported")
+                        set_geocode_runner_halt_flag(True)    
+                        self.geocoding_in_error     =   True
+
+                    self.update_status_bar() 
+                    self.update_state()
+
                 else :
-                    print("geocoder not supported")
-                    set_geocode_runner_halt_flag(True)    
-                    self.geocoding_in_error     =   True
-
-                self.update_status_bar() 
-                self.update_state()
-
-            else :
                 
-                self.update_status_bar() 
-                self.update_state()
+                    self.update_status_bar() 
+                    self.update_state()
                 
-                import time
-                time.sleep(0.2)
+                    import time
+                    time.sleep(0.2)
 
 
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"geocode run task complete : rowid "+ str(self.rowindex))        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"geocode run task complete : rowid " + str(self.rowindex) + " : " + str(self.is_geocode_run_complete())) 
+        
         if(self.is_geocode_run_complete()) :
             
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"geocode run is complete : self.geocoding_in_error " + str(self.geocoding_in_error)) 
+                
+            self.update_status_bar() 
+            self.update_state()            
+            
             self.geocodingResults.finish_results_log(opstat)
+            
             self.geocodingErrorLog.finish_error_log(opstat)
+
+            import datetime
             self.stop_time         =   datetime.datetime.now()
             
             if(self.geocoding_in_error) :
                 subgc.set_status_bar(sugm.STOPPED) 
             else :   
                 subgc.set_status_bar(sugm.FINISHED)
+                set_geocode_runner_state(sugm.FINISHED)
+                
+                subgc.control_bulk_keys([subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.ENABLE])
 
         
     def is_geocode_run_complete(self) :
-        if( ((self.get_halt_flag()) and 
-             (self.geocodeThreadsMonitor.all_threads_completed()) ) or # and 
-             #(self.geocodingResults.get_results_count() >= self.maxrows)) or
-             (self.geocoding_in_error) ) :
         
-            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"geocode run is complete : state "+ str(self.state) + " halt :  " + str(self.geocodeThreadsMonitor.all_threads_completed())+ " : results " + str(self.geocodingResults.get_results_count()))        
-
-            return(True)
-        else :
-            return(False)
+        if(sugm.GEOCODE_DETAIL_DEBUG)  :   
+            log_debug_dfc(-1,"is_geocode_run_complete : state "+ str(self.state) + " thread completed :  " + str(self.geocodeThreadsMonitor.all_threads_completed()) + " results : " + str(self.geocodingResults.get_results_count()) + " errors : " + str(self.geocodingErrorLog.get_error_count()))
+        
+        if(self.geocodeThreadsMonitor.all_threads_completed()) :
+            if((self.geocodingErrorLog.get_error_count() + self.geocodingResults.get_results_count()) >= self.maxrows) :
+                return(True)
+                
+        return(False)
 
     def update_status_bar(self) :
         
@@ -2576,11 +2800,20 @@ class BulkGeocodeRunner:
 
             current_count       =   self.geocodingResults.get_results_count()
             current_percent     =   int( ( current_count / self.maxrows ) * 100 )
-            if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"update status bar : current pct " + str(current_percent))
+            
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"update_status_bar current_percent " + str(current_percent)) 
+
             subgc.set_progress_bar_value(self.geocid,self.geotype,sugm.GEOCODE_BAR,current_count,current_percent)
+            
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"update_status_bar current_percent after " + str(current_percent)) 
+            
             self.ResultsLength  =   self.geocodingResults.get_results_count()
 
     def update_state(self) :
+        
+        opstat  =   opStatus()
         
         if(self.geocid == sugm.ArcGISId) :
             more_threads    =   False
@@ -2605,47 +2838,121 @@ class BulkGeocodeRunner:
             if(all_threads) : 
                 subgc.set_status_bar(sugm.PAUSED)
                 self.set_run_state(sugm.PAUSED)
+                get_geocode_runner_results_log().flush_results_to_dataframe(opstat)
+                
+                subgc.control_bulk_keys([subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.ENABLE,subgc.ENABLE,subgc.ENABLE])
                 
                 if(self.checkpoint_on) :
-                    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"checkpoint_on "+ str(self.state))        
+                    if(sugm.GEOCODE_DEBUG)  :   
+                        log_debug_dfc(-1,"checkpoint_on "+ str(self.state))        
 
                     self.checkpoint_results()
                     subgc.set_status_bar(sugm.CHECKPOINT_COMPLETE)
-                
-    def checkpoint_results(self) :
-        
-        opstat  =   opStatus()
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"checkpoint_results")
 
-        subgc.set_status_bar(sugm.CHECKPOINT_STARTED)
-        self.geocodingResults.finish_results_log(opstat)
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"checkpoint flush")
+
+    def is_checkpoint_needed(self) :
         
-        if(self.geocid == sugm.GoogleId) :
-            df_source   =   self.runParms.get(subgw.bulk_google_query_input_labelList[0]) 
-        elif(self.geocid == sugm.ArcGISId) :
-            df_source   =   self.runParms.get(subgw.batch_arcgis_query_labelList[0]) 
+        if((self.rowindex - self.last_checkpoint_rowid) >= self.checkpoint_interval) :
+            
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"is_checkpoint_needed : True  : rowindex : " + str(self.rowindex) + " interval : " + str(self.checkpoint_interval) + " last_checkpoint_rowid :  " + str(self.last_checkpoint_rowid))
+            return(True)
+            
+        else :
+            return(False)
+            
+    def checkpoint_results(self,opstat) :
+        
+        self.update_status_bar()
+        subgc.set_status_bar(sugm.CHECKPOINT_STARTED)
+        subgc.control_bulk_keys([subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.DISABLE,subgc.ENABLE,subgc.DISABLE])
+
+        
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"checkpoint_results : flush_results_to_dataframe")
+        
+        self.geocodingResults.flush_results_to_dataframe(opstat)
+        
+        if(self.geotype == sugm.QUERY) :
+        
+            if(self.geocid == sugm.GoogleId) :
+                df_source   =   self.runParms.get(subgw.bulk_google_query_input_labelList[0]) 
+            elif(self.geocid == sugm.BingId) :
+                df_source   =   self.runParms.get(subgw.bulk_bing_query_input_labelList[0]) 
+            elif(self.geocid == sugm.ArcGISId) :
+                df_source   =   self.runParms.get(subgw.batch_arcgis_query_labelList[0]) 
+                
+        else :
+            
+            if(self.geocid == sugm.GoogleId) :
+                df_source   =   self.runParms.get(subgw.bulk_google_reverse_input_labelList[0]) 
+            elif(self.geocid == sugm.BingId) :
+                df_source   =   self.runParms.get(subgw.bulk_bing_reverse_input_labelList[0]) 
         
         file_name       =   cfg.get_notebookName() + "_" + df_source + "_checkpoint"
         
         import os
-        backup_file_path_name  =   os.path.join(cfg.get_notebookPath(),file_name + "_backup.csv")
-        chckpt_file_path_name  =   os.path.join(cfg.get_notebookPath(),file_name + ".csv")
+
+        chckpt_file_path_name  =   os.path.join(cfg.get_notebookPath(),"PandasDataframeCleanser_files")
+        chckpt_file_path_name  =   os.path.join(chckpt_file_path_name,"geocode_checkpoints")
         
-        if(does_file_exist(backup_file_path_name)) :
-            delete_a_file(backup_file_path_name,opstat)
-            rename_a_file(chckpt_file_path_name,backup_file_path_name,opstat)
+        if(not (does_dir_exist(chckpt_file_path_name)) ) :   
             
-        elif(does_file_exist(chckpt_file_path_name)) :
-            rename_a_file(chckpt_file_path_name,backup_file_path_name,opstat)
+            if( not(make_dir(chckpt_file_path_name)) ) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("Checkpoint dir " + chckpt_file_path_name + " not created successfully ")
+                
+        if(opstat.get_status()) :
             
-        df = self.geocodingResults.get_geocoding_results_df()            
+            if(self.last_checkpoint_rowid == 0) :
+                start_row_id    =   0
+                file_number     =   0
+            else :
+                start_row_id    =   self.last_checkpoint_rowid
+                file_number     =   floor(start_row_id / self.checkpoint_interval)
+            
+            chckpt_file_name    =   file_name + str(file_number) + ".csv"
+            chckpt_file_name    =   os.path.join(chckpt_file_path_name,chckpt_file_name)
+            
+            if(sugm.GEOCODE_DEBUG)  :   
+                log_debug_dfc(-1,"checkpoint_results : chckpt_file_name " + str(chckpt_file_name)) 
         
-        try :
-            df.to_csv(chckpt_file_path_name)
+            if(does_file_exist(chckpt_file_name)) :
+                backup_checkpoint_file_name     =   chckpt_file_name.replace(".csv","_backup.csv")
+                delete_a_file(backup_checkpoint_file_name,opstat)
+                rename_a_file(chckpt_file_name,backup_checkpoint_file_name,opstat)
+        
+            if(opstat.get_status()) :
+        
+                if(sugm.GEOCODE_DEBUG)  :   
+                    log_debug_dfc(-1,"checkpoint_results : write to csv : " + str( self.last_checkpoint_rowid))
+                
+                try :
+                
+                    df = self.geocodingResults.get_geocoding_results_df() 
+                    checkpoint_df   =   df.iloc[start_row_id:(len(df))] 
+                    checkpoint_df   =   checkpoint_df.sort_values('source_df_rowid')
+                    checkpoint_df.to_csv(chckpt_file_name,index=False)
+                    self.last_checkpoint_rowid  =   len(df)
             
-        except Exception as e: 
-            opstat.store_exception("Unable to export to csv file " + chckpt_file_path_name,e)
+                except Exception as e: 
+                    opstat.store_exception("Unable to export to csv file " + chckpt_file_name,e)
+                    if(sugm.GEOCODE_DEBUG)  :
+                        log_debug_dfc(-1,"Unable to export to csv file " + str(sys.exc_info()[0].__name__))
+                    
+                    self.last_checkpoint_rowid  =   len(df)                        
+                        
+            else :
+                if(sugm.GEOCODE_DEBUG)  :   
+                    log_debug_dfc(-1,"checkpoint_results : incomplete : " + str(opstat.get_errorMsg()))
+                
+                self.last_checkpoint_rowid  =   len(df)
+            
+            
+                    
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"checkpoint_results : complete : " + str( self.last_checkpoint_rowid))
+        
     
         subgc.set_status_bar(sugm.CHECKPOINT_COMPLETE)
 
@@ -2653,13 +2960,20 @@ class BulkGeocodeRunner:
     def get_results_log(self):
         return(self.geocodingResults)
     def get_results_log_count(self):
-        return(self.geocodingResults.get_results_count())
+        if(not(self.geocodingResults is None)) :
+            return(self.geocodingResults.get_results_count())
+        else :
+            return(0)
     def get_error_log(self):
-        return(self.geocodingErrorLog)
+        if(not(self.geocodingErrorLog is None)) :
+            return(self.geocodingErrorLog)
+        else :
+            return(None)
     def get_halt_flag(self):
         return(self.halt_all_geocoding)
     def set_halt_flag(self,fstate):
-        if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"set_halt_flag : " + str(fstate) + " " + " " + str(self.maxrows) + " " + str(self.rowindex))
+        if(sugm.GEOCODE_DEBUG)  :   
+            log_debug_dfc(-1,"set_halt_flag : " + str(fstate) + " " + " " + str(self.maxrows) + " " + str(self.rowindex))
         self.halt_all_geocoding     =   fstate
     def get_geocode_id(self):
         return(self.geocid)
@@ -2674,12 +2988,18 @@ class BulkGeocodeRunner:
         self.geocoder = connector
     def get_geocode_maxrows(self):
         return(self.maxrows)
+    def get_geocode_checkpoint_interval(self):
+        return(self.checkpoint_interval)
 
     def get_total_run_time(self) :
         if(self.stop_time == 0) :
-            self.stop_time =  datetime.datetime.now()  
+            self.stop_time =  datetime.datetime.now()
         timedelta   =   self.stop_time  -   self.start_time
         return(timedelta.days * 24 * 3600 + timedelta.seconds)
+        
+    def get_geocode_lat_long_map(self):
+        return(self.lat_long_map )
+     
 
 """
 #--------------------------------------------------------------------------

@@ -22,7 +22,7 @@ import dfcleanser.sw_utilities.sw_utility_census_model as swcm
 import dfcleanser.sw_utilities.sw_utility_census_widgets as swcw
 
 from dfcleanser.common.common_utils import (opStatus, RunningClock, delete_a_file, 
-                                            display_generic_grid, does_file_exist,
+                                            does_file_exist,
                                             display_notes,display_status,
                                             get_parms_for_input, display_exception)
 
@@ -92,8 +92,9 @@ def display_census_utility(optionId,parms=None) :
         swcw.display_configure_census_data(None,True)
         
     elif(optionId == swcm.DISPLAY_DATASET_DETAILS) :
-        
-        print("swcm.DISPLAY_DATASET_DETAILS",parms)
+        if(swcm.DEBUG_CENSUS) :
+            print("swcm.DISPLAY_DATASET_DETAILS",parms)
+            
         swcw.get_census_main_taskbar()
         
         datasetid   =   parms[0]
@@ -114,7 +115,8 @@ def display_census_utility(optionId,parms=None) :
     elif(optionId == swcm.DISPLAY_DATASET_SUBDATA_DETAILS) :
         swcw.get_census_main_taskbar()
         
-        print("swcm.DISPLAY_DATASET_SUBDATA_DETAILS",parms)
+        if(swcm.DEBUG_CENSUS) :
+            print("swcm.DISPLAY_DATASET_SUBDATA_DETAILS",parms)
         
         datasetid   =   parms[0]
         subdataid   =   int(parms[1])
@@ -124,7 +126,7 @@ def display_census_utility(optionId,parms=None) :
         cmode       =   cfg.get_config_value(cfg.CENSUS_CURRENT_MODE)
         
         if(cmode == "LOAD") :
-            swcw.display_downloaded_census_data(datasetid,subdataid)
+            swcw.display_downloaded_census_data(datasetid,subdataid,460)
         else :
             swcw.display_configure_census_data(datasetid,True,subdataid)
 
@@ -149,7 +151,7 @@ def display_census_utility(optionId,parms=None) :
         droplists   =   parms
         cfg.set_config_value(cfg.CENSUS_DROP_DATASET_LISTS,droplists)
         
-        swcw.display_configure_verification_data(droplists)
+        swcw.display_add_drop_datasets(droplists)
 
     elif(optionId == swcm.DROP_CENSUS_DATA) :
         swcw.get_census_main_taskbar()
@@ -167,68 +169,12 @@ def display_census_utility(optionId,parms=None) :
         swcw.get_census_main_taskbar()
         swcw.display_load_datasets()
     
-        
-    elif(optionId == swcm.MORE_COLS_SUBDATA_DETAILS) :
-        swcw.get_census_main_taskbar()
-        
-        print("MORE_COLS_SUBDATA_DETAILS",parms)
-        datasetid   =   cfg.get_config_value(cfg.CENSUS_CURRENT_DATASET)
-        subdataid   =   int(cfg.get_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_ID))
-        
-        colslist    =   parms
-        
-        if(len(colslist) == 0) :
-            cfg.drop_config_value(cfg.CENSUS_SELECTED_DATASET_ID)
-            cfg.drop_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
-        else :
-            for i in range(len(colslist)) :
-                colslist[i]     =   int(colslist[i])
-        
-        #datasets_cols_dict    =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_XXXX_SUBDATA_LISTS_ID)
-        #if(datasets_cols_dict is None) :
-        #    datasets_cols_dict      =   {}
-            
-        #old version dataset_cols_dict    =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_XXXX_SUBDATA_LISTS_ID)
-        dataset_cols_dict    =   swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_to_load_in_df()
 
-        
-        print("MORE_COLS_SUBDATA_DETAILS - dataset_cols_dict : start",dataset_cols_dict)
-        
-        if(dataset_cols_dict is None) :
-            dataset_cols_dict     = {}
-        
-        subdata_cols_dict    =  dataset_cols_dict.get(datasetid)
-        if(subdata_cols_dict is None) :
-            subdata_cols_dict     = {}
-        
-        print("subdata_cols_dict",subdata_cols_dict)
-        
-        if(not (len(colslist) == 0)) :
-        
-            subdata_cols_dict.update({subdataid : colslist})
-            dataset_cols_dict.update({datasetid : subdata_cols_dict})
-            #datasets_cols_dict.update({datasetid : dataset_cols_dict})
-            
-            #old version cfg.set_config_value(cfg.CENSUS_CURRENT_GET_XXXX_SUBDATA_LISTS_ID,dataset_cols_dict)
-            swcm.dfc_census_columns_selected.set_dfc_census_columns_selected_to_load_in_df(dataset_cols_dict)            
-        
-        excludes    =   list(subdata_cols_dict.keys())
-        
-        print("excludes",excludes)
-        
-        print("subdata_cols_dict",subdata_cols_dict)
-        print("dataset_cols_dict",dataset_cols_dict)
-        #print("datasets_cols_dict",datasets_cols_dict)
-        
-        #old version print("dataset_cols_dict : end",cfg.get_config_value(cfg.CENSUS_CURRENT_GET_XXXX_SUBDATA_LISTS_ID))
-        print("dataset_cols_dict : end",swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_to_load_in_df())
-        
-        swcw.display_get_dataset_columns(datasetid,excludes,None)
-        
-        
     elif(optionId == swcm.VERIFY_LOAD_CENSUS_TO_DFC_DFS) :
         
-        print("VERIFY_LOAD_CENSUS_TO_DFC_DFS",parms)
+        #if(swcm.DEBUG_CENSUS) :
+        #    print("VERIFY_LOAD_CENSUS_TO_DFC_DFS : parms\n",parms)
+            
         swcw.get_census_main_taskbar()
 
         cfg.set_config_value(cfg.CENSUS_CURRENT_MODE,"ADD_TO_DFS")
@@ -241,17 +187,57 @@ def display_census_utility(optionId,parms=None) :
 
     elif(optionId == swcm.PROCESS_LOAD_TO_DFC_DFS) :
         
-        print("PROCESS_LOAD_TO_DFC_DFS",parms)
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_LOAD_TO_DFC_DFS : parms\n",parms)
+            
         swcw.get_census_main_taskbar()
         load_census_datasets_to_df(cfg.get_config_value(cfg.CENSUS_DROP_DATASET_LISTS))
         #print(cfg.get_config_value(cfg.CENSUS_DROP_DATASET_LISTS))
         
     elif(optionId == swcm.SHOW_SELECTED_COLUMNS) :
         swcw.get_census_main_taskbar()
-         
-        print("swcm.SHOW_SELECTED_COLUMNS",parms)
-        swcw.display_dataset_columns_selected(parms)        
+        
+        #if(swcm.DEBUG_CENSUS) : 
+        #    print("swcm.SHOW_SELECTED_COLUMNS : parms\n",parms)
+        
+        datasetid               =   None
+        datasetid_types         =   []
+        
+        if(len(parms) > 0) :
+            datasets_to_insert_from =   parms
+            
+            for i in range(len(datasets_to_insert_from)) :
+                for j in range(len(datasets_to_insert_from[0])) :
+                    if(datasets_to_insert_from[i][j] == "True") :
+                        datasetid   =   swcm.census_datasets[i]
+                        datasetid   =   datasetid.replace("_"," ")
+                        datasetid_types.append(j)
 
+        else :
+            datasetid               =   None
+        
+        if(datasetid is None) :
+            
+            cfg.drop_config_value(cfg.CENSUS_DATASET_TO_INSERT_FROM) 
+            swcm.current_dataset_inserting_from.clear_current_df_to_insert_from()
+            display_status("No dataset(s) selected to insert columns from.")
+            
+        else :
+            
+            cfg.set_config_value(cfg.CENSUS_DATASET_TO_INSERT_FROM,datasetid) 
+            cfg.set_config_value(cfg.CENSUS_DATASET_TYPES_TO_INSERT_FROM,datasetid_types)
+            
+            swcm.current_dataset_inserting_from.clear_current_df_to_insert_from()
+            swcm.current_dataset_inserting_from.set_datasetid(datasetid) 
+            swcm.current_dataset_inserting_from.set_index_types(datasetid_types)
+            
+            swcw.display_select_dataset_columns_to_insert(datasetid,None)        
+
+    elif(optionId == swcm.SHOW_DATASET_SUBSETS) :
+        datasetid   =   swcm.current_dataset_inserting_from.get_datasetid() 
+        
+        swcm.current_dataset_inserting_from.dump()
+        swcw.display_select_dataset_columns_to_insert(datasetid,None)  
         
     elif(optionId == swcm.DISPLAY_INSERT_CENSUS_COLS) :
         swcw.get_census_main_taskbar()
@@ -264,14 +250,17 @@ def display_census_utility(optionId,parms=None) :
 
     elif(optionId == swcm.DISPLAY_EXPORT_CENSUS_DFS) :
         swcw.get_census_main_taskbar()
-        print("DISPLAY_EXPORT_CENSUS_DFS")
+        
+        if(swcm.DEBUG_CENSUS) : 
+            print("DISPLAY_EXPORT_CENSUS_DFS")
+            
         swcw.display_datasets_to_export()
 
     elif(optionId == swcm.PROCESS_EXPORT_CENSUS_DFS) :
         swcw.get_census_main_taskbar()
-        print("PROCESS_EXPORT_CENSUS_DFS") 
-
-
+        
+        if(swcm.DEBUG_CENSUS) : 
+            print("PROCESS_EXPORT_CENSUS_DFS") 
 
     elif(optionId == swcm.DISPLAY_LOAD_CENSUS_DATA_TO_DB) :
         swcw.get_census_main_taskbar()
@@ -279,7 +268,9 @@ def display_census_utility(optionId,parms=None) :
 
     elif(optionId == swcm.PROCESS_LOAD_CENSUS_DATA_TO_DB) :
         swcw.get_census_main_taskbar()
-        print("PROCESS_LOAD_CENSUS_DATA_TO_DB") 
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_LOAD_CENSUS_DATA_TO_DB") 
         
         
 
@@ -290,9 +281,11 @@ def display_census_utility(optionId,parms=None) :
     #--------------------------------------------------------------------------
     #"""
         
-    elif(optionId == swcm.DISPLAY_GET_CENSUS_DATA) :
+    elif(optionId == swcm.DISPLAY_CENSUS_DATASETS_FOR_INSERT) :
         swcw.get_census_main_taskbar()
-        print("dm.DISPLAY_GET_CENSUS_DATA",parms)
+        
+        #if(swcm.DEBUG_CENSUS) :
+        #    print("DISPLAY_CENSUS_DATASETS_FOR_INSERT : parms\n",parms)
         
         if(parms is None) :
             dtid    =   None
@@ -307,44 +300,221 @@ def display_census_utility(optionId,parms=None) :
                 cfg.set_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_ID,dtid)
             
             cfg.set_config_value(cfg.CENSUS_CURRENT_DATASET,dsid)
-            
+
         
-        # old version dataset_cols_dict    =   cfg.get_config_value(cfg.CENSUS_CURRENT_GET_XXXX_SUBDATA_LISTS_ID)
-        dataset_cols_dict    =   swcm.dfc_census_columns_selected.get_dfc_census_columns_selected_to_load_in_df()
-        print("DISPLAY_GET_CENSUS_DATA - dataset_cols_dict : start",dataset_cols_dict)
-        
-        if(dataset_cols_dict is None) :
-            excludes    =   None
-        else :
-        
-            subdata_cols_dict    =  dataset_cols_dict.get(dsid)
-            if(subdata_cols_dict is None) :
-                excludes    =   None
-            else :
-                excludes    =   list(subdata_cols_dict.keys())
-        
-        print("excludes",excludes)
-        
-        swcw.display_get_dataset_columns(dsid,excludes,dtid)
+        swcw.display_get_datasets_in_memory()
 
 
     elif(optionId == swcm.DISPLAY_LOAD_CENSUS_TO_DFC_DFS) :
         swcw.get_census_main_taskbar()
-        print("dm.DISPLAY_LOAD_CENSUS_TO_DFC_DFS",parms)
+        
+        #if(swcm.DEBUG_CENSUS) :
+        #    print("DISPLAY_LOAD_CENSUS_TO_DFC_DFS : parms\n",parms)
 
         swcw.display_datasets_loaded_to_dfs()
 
 
-
-
-
-
-    
-
-
-
+    elif(optionId == swcm.PROCESS_GET_COLS_SUBSET) :
         
+        swcw.get_census_main_taskbar()
+            
+        datasetid   =   parms[0]
+        keyid       =   parms[1]
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_GET_COLS_SUBSET : parms\n",parms)
+            print("datasetid : ",datasetid," keyid : ",keyid)
+            
+        dsid                =   swcm.census_datasets[int(datasetid)]
+        dsid                =   dsid.replace("_"," ")
 
+        swcw.display_select_dataset_columns_to_insert(dsid,None) 
+    
+    
+    elif(optionId == swcm.PROCESS_GET_COLS_LISTS) :
+        
+        swcw.get_census_main_taskbar()
+                
+        datasetid       =   parms[0]
+        subdataid       =   int(parms[1])
+    
+        cfg.set_config_value(cfg.CENSUS_SELECTED_SUBSET_ID,subdataid)
+
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_GET_COLS_LISTS : parms\n",parms)
+
+        swcw.display_select_dataset_columns_to_insert(datasetid,subdataid)#,datasets_in_memory)
+        
+    elif( (optionId == swcm.PROCESS_INSERT_COLS_GET)  or (optionId == swcm.PROCESS_INSERT_COLS_DROP) ):
+        
+        swcw.get_census_main_taskbar()
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_INSERT_COLS_GET : parms\n",parms)
+            
+        cols_to_get_list    =   parms[0]
+        for i in range(len(cols_to_get_list)) :
+            cols_to_get_list[i]     =   int(cols_to_get_list[i])
+        
+        cols_to_get_list.sort()
+            
+        if(optionId == swcm.PROCESS_INSERT_COLS_DROP) :
+            
+            if(not ((cols_to_get_list[0] == "All") or (cols_to_get_list[0] == -1) or (cols_to_get_list[0] == -2) )) :
+            
+                datasetid               =   swcm.current_dataset_inserting_from.get_datasetid()
+                subdataid               =   swcm.current_dataset_inserting_from.get_subdatasetid()
+            
+                subdata_data            =   swcm.get_subset_data_lists(datasetid)
+                subdatacols             =   subdata_data[swcm.SUBSET_COLUMNS]
+            
+                with_drop_cols_list     =   []
+            
+                for i in range(len(subdatacols[subdataid])) :
+                
+                    if(not (i in cols_to_get_list)) :
+                        with_drop_cols_list.append(i) 
+                    
+                cols_to_get_list     =    with_drop_cols_list
+        
+        unique_cols_to_get_list    =   []
+        for i in range(len(cols_to_get_list)) :
+            if(not(cols_to_get_list[i] in unique_cols_to_get_list)) :
+                unique_cols_to_get_list.append(cols_to_get_list[i])
+                
+        cols_to_get_list    =   unique_cols_to_get_list
+        
+        print("cols_to_get_list",cols_to_get_list)
+        
+        if(len(cols_to_get_list) == 1) :
+            
+            #print("cols_to_get_list",type(cols_to_get_list),type(cols_to_get_list[0]))
+            
+            if( (cols_to_get_list[0] == "All") or (cols_to_get_list[0] == -1) or (cols_to_get_list[0] == -2) ) :
+                
+                datasetid       =   swcm.current_dataset_inserting_from.get_datasetid()
+                subdataid       =   swcm.current_dataset_inserting_from.get_subdatasetid()
+                
+                print("subdataid",subdataid)
+
+                subdata_attrs   =   swcm.current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+            
+                if(cols_to_get_list[0] == -2) :
+                    cols_to_get_list    =   "None"
+                elif( (cols_to_get_list[0] == -1) or (cols_to_get_list[0] == "All") ) :
+                    cols_to_get_list    =   "All"
+                    
+                subdata_attrs.set_column_insert_type(cols_to_get_list) 
+                
+                print("cols_to_get_list",cols_to_get_list,subdata_attrs.get_column_insert_type())
+                subdata_attrs.set_columns_list([]) 
+                subdata_attrs.set_column_attributes_dict([])
+                swcw.display_select_dataset_columns_to_insert(datasetid,None)            
+                #swcw.display_select_dataset_columns_to_insert(datasetid,None)            
+                
+        else :
+
+            for i in range(len(cols_to_get_list)) :
+                cols_to_get_list[i] =   int(cols_to_get_list[i]) 
+                
+            datasetid       =   swcm.current_dataset_inserting_from.get_datasetid()
+            subdataid       =   swcm.current_dataset_inserting_from.get_subdatasetid()            
+            
+            subdata_attrs   =   swcm.current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+            subdata_attrs.set_column_insert_type("List")
+            subdata_attrs.set_columns_list(cols_to_get_list) 
+            subdata_attrs.set_column_attributes_dict({})
+            
+            print("cols_to_get_list",subdataid,cols_to_get_list,subdata_attrs.get_column_insert_type())
+            
+            swcm.current_dataset_inserting_from.dump()
+            
+            swcw.display_columns_to_insert(datasetid, subdataid, cols_to_get_list)
+
+    elif(optionId == swcm.PROCESS_INSERT_COLS_DROP) :
+        
+        swcw.get_census_main_taskbar()
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_INSERT_COLS_DROP : parms\n",parms)
+                
+    elif(optionId == swcm.DISPLAY_CHANGE_COL_FOR_ATTRS) :
+        
+        colname     =   parms[0]
+        colid       =   parms[1]
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("DISPLAY_CHANGE_COL_FOR_ATTRS : ",colname,colid)
+        
+        datasetid               =   swcm.current_dataset_inserting_from.get_datasetid()
+        
+        subdataid               =   cfg.get_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
+        if(subdataid is None) :
+            subdataid   =   0
+            
+        subdata_col_attributes  =   swcm.current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+        cols_list               =   subdata_col_attributes.get_columns_list() 
+
+        swcw.display_columns_to_insert(datasetid, subdataid, cols_list, int(colid))
+        
+    elif(optionId == swcm.PROCESS_CHANGE_COL_FOR_ATTRS) :
+        
+        colname     =   parms[0]
+        colid       =   parms[1]
+        dtype       =   parms[2]
+        nanvalue    =   parms[3]
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("PROCESS_CHANGE_COL_FOR_ATTRS : ",colname,colid,dtype,nanvalue)
+            
+        datasetid               =   swcm.current_dataset_inserting_from.get_datasetid()
+        
+        subdataid               =   cfg.get_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
+        if(subdataid is None) :
+            subdataid   =   0
+            
+        subdata_col_attributes  =   swcm.current_dataset_inserting_from.get_subdata_col_attributes(subdataid)
+        cols_list               =   subdata_col_attributes.get_columns_list() 
+            
+        swcw.display_columns_to_insert(datasetid, subdataid, cols_list, int(colid))
+            
+    elif(optionId == swcm.DISPLAY_INSERT_COLS_TO_DF) :
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("DISPLAY_INSERT_COLS_TO_DF : \n",parms)
+        
+        datasetid   =   swcm.current_dataset_inserting_from.get_datasetid()    
+        user_dfs    =   swcw.get_user_dfs(datasetid)
+        
+        if(len(user_dfs) > 0) :
+            
+            swcw.get_census_main_taskbar()
+            
+            swcw.display_columns_to_insert_dfs()
+            
+        else :
+            
+            datasetid   =   swcm.current_dataset_inserting_from.get_datasetid() 
+        
+            swcm.current_dataset_inserting_from.dump()
+            swcw.display_select_dataset_columns_to_insert(datasetid,None)  
+            
+            display_status("No User df(s) visible to dfc")
+            
+    elif(optionId == swcm.DISPLAY_INSERT_COLS_TO_DF_CHANGE) :
+            
+        swcw.get_census_main_taskbar()
+        
+        if(swcm.DEBUG_CENSUS) :
+            print("DISPLAY_INSERT_COLS_TO_DF_CHANGE : \n",parms)
+    
+        census_df_title     =   parms[0]        
+        user_df_title       =   parms[1]
+        dfkeys              =   parms[2]
+        
+        swcw.display_columns_to_insert_dfs(census_df_title,user_df_title,dfkeys)
+        
+        
 """
 #------------------------------------------------------------------
 #------------------------------------------------------------------
@@ -440,10 +610,12 @@ def get_and_save_zipfile(zip_file_name,out_file_name,out_path) :
     *  offset 
     * --------------------------------------------------------
     """
-  
-    print("get_and_save_zipfile",zip_file_name)
-    print("get_and_save_zipfile",out_file_name)
-    print("get_and_save_zipfile",out_path)
+    
+    if(swcm.DEBUG_CENSUS) :
+
+        print("get_and_save_zipfile",zip_file_name)
+        print("get_and_save_zipfile",out_file_name)
+        print("get_and_save_zipfile",out_path)
     
     
     opstat  =   opStatus()
@@ -473,8 +645,9 @@ def unzip_dataset_files(zipslist) :
     *  N/A 
     * --------------------------------------------------------
     """
-    
-    print("unzip_dataset_files",zipslist)
+
+    if(swcm.DEBUG_CENSUS) :
+        print("unzip_dataset_files",zipslist)
     
     import os
     
@@ -601,7 +774,8 @@ def get_zips_not_processed() :
     
     downloadlists   =   cfg.get_config_value(cfg.CENSUS_DOWNLOAD_LISTS)
     
-    print("get_zips_not_processed",downloadlists)
+    if(swcm.DEBUG_CENSUS) :
+        print("get_zips_not_processed",downloadlists)
     
     dfc_census_path    =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
     dfc_census_path    =   (dfc_census_path + "\\datasets\\")
@@ -769,7 +943,8 @@ def verify_downloads(downloadlists) :
 
 def add_dataset(dsname) :
     
-    print("add_dataset",dsname)
+    if(swcm.DEBUG_CENSUS) :
+        print("add_dataset",dsname)
     
     dfc_census_path     =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
     dfc_census_path     =   (dfc_census_path + "\\working\\")
@@ -788,8 +963,9 @@ def add_dataset(dsname) :
     
     else :
         
-        print("add_dataset : zip file",dfc_census_path + dsid + ".zip")
-        print("add_dataset : out path",dfc_ds_census_path)
+        if(swcm.DEBUG_CENSUS) :
+            print("add_dataset : zip file",dfc_census_path + dsid + ".zip")
+            print("add_dataset : out path",dfc_ds_census_path)
         
         if(does_file_exist(dfc_census_path + dsid + ".zip") ) :
             
@@ -833,8 +1009,8 @@ def configure_census_data() :
     add_datasets        =   cfg.get_config_value(cfg.CENSUS_ADD_DATASETS_LIST)
     drop_datasets       =   cfg.get_config_value(cfg.CENSUS_DROP_DATASETS_LIST)
     
-    
-    print("configure_census_data",add_datasets,drop_datasets)
+    if(swcm.DEBUG_CENSUS) :
+        print("configure_census_data",add_datasets,drop_datasets)
 
     if(not (add_datasets) is None) :
     
@@ -871,7 +1047,8 @@ def configure_census_data() :
     
         for i in range(len(drop_datasets)) :
             
-            print("drop",dfc_census_path + drop_datasets[i],does_file_exist(dfc_census_path + drop_datasets[i] + ".csv"))
+            if(swcm.DEBUG_CENSUS) :
+                print("drop",dfc_census_path + drop_datasets[i],does_file_exist(dfc_census_path + drop_datasets[i] + ".csv"))
         
             if(does_file_exist(dfc_census_path + drop_datasets[i] + ".csv") ) :
                 #swcw.display_short_note("Dropping " + drop_datasets[i])         
@@ -915,7 +1092,8 @@ def load_census_datasets_to_df(datasets_to_load) :
     dfc_census_path     =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
     dfc_census_path     =   (dfc_census_path + "\\datasets\\")
     
-    print("load_census_datasets_to_df",datasets_to_load)
+    #if(swcm.DEBUG_CENSUS) :
+    #    print("load_census_datasets_to_df",datasets_to_load)
     
     
     load_datasets       =   []
@@ -923,7 +1101,8 @@ def load_census_datasets_to_df(datasets_to_load) :
     
     datasets_loaded_to_dfs  =   swcm.get_datasets_loaded_to_dfs()
     
-    print("datasets_loaded_to_dfs",datasets_loaded_to_dfs)
+    #if(swcm.DEBUG_CENSUS) :
+    #    print("datasets_loaded_to_dfs",datasets_loaded_to_dfs)
     
     for i in range(len(datasets_to_load)) :
         
@@ -939,7 +1118,7 @@ def load_census_datasets_to_df(datasets_to_load) :
     if(len(load_datasets) > 0) :
     
         print("\n")
-        addnotes = ["Loading Selected datasets to dfs"]
+        addnotes = ["Loading Selected datasets to memory as dfc df(s)"]
         display_notes(addnotes,display=True)
 
         clock = RunningClock()
@@ -966,10 +1145,14 @@ def load_census_datasets_to_df(datasets_to_load) :
     
         clock.stop() 
     
+        #print("\n")
         if(opstat.get_status()) :
-            display_status("Selected datasets loaded successfully.")
+            display_status("Selected census datasets loaded successfully as dfc df(s).")
         else :
             display_status("Not all selected datasets could be loaded successfully.")
+            
+        #print("\n")
+        swcw.display_get_cols_tb()
             
 
     
@@ -1052,8 +1235,9 @@ def get_na_fill_value(na_string) :
 """  
             
 def add_census_col_to_df(census_df_title, user_df_title, census_col_name, census_df_index_cols, user_df_index_cols, nan_value, opstat) :
-    
-    print("add_census_col_to_df\n",census_df_title, user_df_title, census_col_name, census_df_index_cols, user_df_index_cols)    
+
+    if(swcm.DEBUG_CENSUS) :
+        print("add_census_col_to_df\n",census_df_title, user_df_title, census_col_name, census_df_index_cols, user_df_index_cols)    
         
     try :
 
@@ -1096,96 +1280,177 @@ def add_census_col_to_df(census_df_title, user_df_title, census_col_name, census
     
 
 def process_insert_cols_to_df(parms) :
+    
+    opstat  =   opStatus()
 
-    print("swcm.PROCESS_INSERT_CENSUS_COLS",parms)
-    
-    import os
-    import pandas as pd
-    
-    opstat      =   opStatus()
-    
-    dfc_census_path    =   os.path.join(cfg.get_dfcleanser_location(),"files","census")
-    dfc_census_path    =   (dfc_census_path + "\\datasets\\")
-
-    
     fparms      =   get_parms_for_input(parms,swcw.insert_cols_in_df_input_idList)
     
-    index_type      =   fparms[0]
-    insert_df       =   fparms[1]
-    index_cols      =   fparms[3]
-    nan_value       =   fparms[4]
+    census_df_title     =   fparms[0]
+    user_df_title       =   fparms[2]
+    index_cols          =   fparms[5]
     
-    print("swcm.PROCESS_INSERT_CENSUS_COLS",index_type,insert_df,index_cols,nan_value)
+    if(swcm.DEBUG_CENSUS) :
+        print("swcm.PROCESS_INSERT_CENSUS_COLS",census_df_title,user_df_title,index_cols)
+        
+    census_df   =   cfg.get_dfc_dataframe_df(census_df_title)
+    user_df     =   cfg.get_dfc_dataframe_df(user_df_title)
     
-    datasetid       =   cfg.get_config_value(cfg.CENSUS_SELECTED_DATASET_ID)
-    subsetid        =   cfg.get_config_value(cfg.CENSUS_SELECTED_SUBSET_ID)
+    
+    if(census_df is None) :
+        
+        opstat.set_status(False)
+        opstat.set_errorMsg("Error : census df " + census_df_title + " is invalid ")   
 
-    print("swcm.PROCESS_INSERT_CENSUS_COLS : dataset - subset ",datasetid,subsetid)
-    
-    columns_list    =   swcm.dfc_census_columns_selected.get_columns_selected_to_load_in_df(datasetid,subsetid)
-    
-    print("swcm.PROCESS_INSERT_CENSUS_COLS : columns_list ",columns_list)
-    
-    df_titles           =   cfg.get_dfc_dataframes_titles_list()
-    
-    dataset_id_offset   =   swcm.get_datasetid_offset(datasetid)
-    
-    if(index_type == "[zipcode]") :
-        df_title    =   swcm.census_data_dirs[dataset_id_offset] + "_zipcode_df"
-        csv_title   =   swcm.census_data_dirs[dataset_id_offset] + "_zipcode.csv"
-        col_names   =   ["Zip Code"]
-    elif(index_type == "[city,state]") :
-        df_title    =   swcm.census_data_dirs[dataset_id_offset] + "_cities_df"
-        csv_title   =   swcm.census_data_dirs[dataset_id_offset] + "_cities.csv"
-        col_names   =   ["State","City"]
-    elif(index_type == "[county,state]") :
-        df_title    =   swcm.census_data_dirs[dataset_id_offset] + "_counties_df"
-        csv_title   =   swcm.census_data_dirs[dataset_id_offset] + "_counties.csv"
-        col_names   =   ["State","County"]
     else :
-        df_title    =   swcm.census_data_dirs[dataset_id_offset] + "_states_df"
-        csv_title   =   swcm.census_data_dirs[dataset_id_offset] + "_states.csv"
-        col_names   =   ["State"]
+
+        if(user_df is None) :
+            
+            opstat.set_status(False)
+            opstat.set_errorMsg("Error : user df " + user_df_title + " is invalid ")  
+            
+        else :
+            
+            if(len(index_cols) == 0) :
+                
+                opstat.set_status(False)
+                opstat.set_errorMsg("user df Index columns are not defined ") 
+                
+            else :
+                
+                index_cols  =   index_cols.replace("[","")
+                index_cols  =   index_cols.replace("]","")
+                index_cols  =   index_cols.split(",")
+            
+                census_index_cols   =   swcm.get_index_keys_for_census_df(census_df_title)
+                census_index_cols   =   census_index_cols.replace("[","")
+                census_index_cols   =   census_index_cols.replace("]","")
+                census_index_cols   =   census_index_cols.split(",")
+                
+                if(not (len(index_cols) == len(census_index_cols))) :
+                
+                    opstat.set_status(False)
+                    opstat.set_errorMsg("number user df Index columns does not match census df index columns ") 
+                    
+                else :
+                    
+                    user_index_names    =   []
+                    user_index_dtypes   =   []
+                    
+                    user_index_columns  =   user_df.index.names
+    
+                    if(len(user_index_columns) > 0) :
+                        for i in range(len(user_index_columns)) :
+                            if( not (user_index_columns[i] is None) ) :
+                                user_index_names.append(user_index_columns[i])
+                                user_index_dtypes.append(user_df.index.levels[i].dtype)
+                    
+                    index_cols_in_user_df_indices   =   True
+                    
+                    for i in range(len(index_cols)) :
+                        
+                        if(not (index_cols[i] in user_index_names)) :
+                            
+                            index_cols_in_user_df_indices   =   False
+                            break
+                        
+                        else :
+                            
+                            if(len(census_index_cols) == 1) :
+                                
+                                from dfcleanser.common.common_utils import is_int_col
+                                if(not (is_int_col(user_df,index_cols[i]))) :
+                                    
+                                    opstat.set_status(False)
+                                    opstat.set_errorMsg("user df index column " + index_cols[i] + " is not int datatype")
+                                    break;
+                                
+                            else :
+                            
+                                from dfcleanser.common.common_utils import is_string_col, is_object_col
+                                if(not ( (is_string_col(user_df,index_cols[i])) or (is_object_col(user_df,index_cols[i])) ) ) :
+                                    
+                                    opstat.set_status(False)
+                                    opstat.set_errorMsg("user df index column " + index_cols[i] + " is not string datatype")
+                                    break;
+                            
+    if(opstat.get_status()) :
         
-    if(not(df_title in df_titles )) :
-        
-        loadnotes =     ["Loading " + csv_title + " into " + df_title]
+        loadnotes =     ["Loading " + census_df_title + " cols into " + user_df_title]
         display_notes(loadnotes,display=True)
-        
+    
+        subdata_data        =   swcm.get_subset_data_lists(swcm.current_dataset_inserting_from.get_datasetid())
+        subdatacols         =   subdata_data[swcm.SUBSET_COLUMNS]    
+        subdatacolstext     =   subdata_data[swcm.SUBSET_COLUMN_NAMES]
+        subdatacolsnans     =   subdata_data[swcm.SUBSET_COLUMN_NANS]
+
+        print("subdatacolstext\n",subdatacolstext) 
+    
         clock = RunningClock()
         clock.start()
     
         try :
+        
+            # calculate the columns to drop
+            subdata_groups_attributes   =   swcm.current_dataset_inserting_from.get_subdata_group_cols_attributes()
+        
+            cols_to_drop  =   []
+        
+            for i in range(len(subdata_groups_attributes)) :
             
-            df1         =   pd.read_csv(dfc_census_path + csv_title)
-            dfc_df1     =   cfg.dfc_dataframe(df_title,df1,df_title + " Census Dataset")
-            cfg.add_dfc_dataframe(dfc_df1)
+                subdata_col_names   =   subdatacols[i]
+                subdata_column_attributes   =    swcm.current_dataset_inserting_from.get_subdata_col_attributes(i)
+                
+                if(subdata_column_attributes.get_column_insert_type() == "List") :
+                
+                    subata_get_cols_list    =   subdata_column_attributes.get_columns_list()
+                
+                    for j in range(len(subdata_col_names)) :
+                    
+                        if(not (subdata_col_names[j] in subata_get_cols_list)) :
+                            cols_to_drop.append(subdata_col_names[j])  
+                        
+                elif(subdata_column_attributes.get_column_insert_type() == "None") :
+                
+                    for j in range(len(subdata_col_names)) :
+                        cols_to_drop.append(subdata_col_names[j])    
+                
+            print("cols_to_drop",cols_to_drop)  
+            
+            # drop the columns from the census df
+            working_df  =   census_df.drop(cols_to_drop,axis=1)
+            
+            # get unique values for index cols 
+            unique_census_df_index_values   =   census_df.index.unique()
+            unique_user_df_index_values     =   user_df.index.unique() 
+            
+            rows_to_drop    =   []
+            
+            for i in range(len(unique_census_df_index_values)) :
+                
+                if(not (unique_census_df_index_values[i] in unique_user_df_index_values)) :
+                    rows_to_drop.append(unique_census_df_index_values[i])
+                
+            # drop rows from census df not in user_df
+            working_df  =   working_df.drop(rows_to_drop)
+            
+            result_df   =   user_df.join(working_df, how="inner")
+            
+            # apply any col attribute changes to result df
+            
+            
             
         except :
             opstat.set_status(False)
-            opstat.set_errorMsg("Error : Loading " + csv_title + " into " + df_title)            
+            opstat.set_errorMsg("Error : Loading " + census_df_title + " cols into " + user_df_title)            
             
         clock.stop()
         
     if(opstat.get_status()) :
         
-        loadnotes =     ["Loading " + csv_title + " into " + df_title]
-        display_notes(loadnotes,display=True)
+                
+        print("all good")                
         
-        clock = RunningClock()
-        clock.start()
-    
-        try :
-            
-            df1         =   pd.read_csv(dfc_census_path + csv_title)
-            dfc_df1     =   cfg.dfc_dataframe(df_title,df1,df_title + " Census Dataset")
-            cfg.add_dfc_dataframe(dfc_df1)
-            
-        except :
-            opstat.set_status(False)
-            opstat.set_errorMsg("Error : Loading " + csv_title + " into " + df_title)            
-            
-        clock.stop()
+        
         
         
     else :
@@ -1216,7 +1481,6 @@ def clear_sw_utility_census_cfg_values() :
     cfg.drop_config_value(cfg.CENSUS_DROP_SUBDATASET_LIST)
     cfg.drop_config_value(cfg.CENSUS_CURRENT_DATASET)
     cfg.drop_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_ID)
-    cfg.drop_config_value(cfg.CENSUS_GET_COLS_COLUMNS_LIST_ID)
     cfg.drop_config_value(cfg.CENSUS_ADD_DATASETS_LIST)
     cfg.drop_config_value(cfg.CENSUS_DROP_DATASETS_LIST)
     cfg.drop_config_value(cfg.CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID)

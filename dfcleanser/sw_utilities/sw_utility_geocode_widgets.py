@@ -33,8 +33,6 @@ from dfcleanser.common.common_utils import (get_parms_for_input, display_generic
 #--------------------------------------------------------------------------
 """
 
-from dfcleanser.common.help_utils import GEOCODING_MAIN_TASKBAR_ID
-
 """
 #--------------------------------------------------------------------------
 #    geocoding main task bar
@@ -56,7 +54,7 @@ geocode_main_tb_jsList                  =   ["display_geocoders(-1," + str(sugm.
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_GEOUTILS) + ")",
                                              "geocode_return()",
                                              "process_pop_up_cmd(6)",
-                                             "displayhelp('" + str(GEOCODING_MAIN_TASKBAR_ID) + "')"]
+                                             "displayhelp('" + str(dfchelp.GEOCODING_MAIN_TASKBAR_ID) + "')"]
 
 geocode_main_tb_centered                =   False
 
@@ -73,17 +71,15 @@ geocode_utilities_tb_id                 =   "geocodeutilstb"
 geocode_utilities_tb_keyTitleList       =   ["Calculate</br>Distance",
                                              "Calculate</br>df</br>Distance",
                                              "Calculate</br>Center",
-                                             "Calculate</br>df</br>Center",
                                              "Calculate</br>Distance</br>From</br>Center",
                                              "Return","Help"]
 
 geocode_utilities_tb_jsList             =   ["process_geoutils_callback(" + str(sugm.DISPLAY_DISTANCE) + ")",
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_DF_DISTANCE) + ")",
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_CENTER) + ")",
-                                             "process_geoutils_callback(" + str(sugm.DISPLAY_DF_CENTER) + ")",
                                              "process_geoutils_callback(" + str(sugm.DISPLAY_DIST_CENTER) + ")",
                                              "geocode_return()",
-                                             "displayhelp('" + str(GEOCODING_MAIN_TASKBAR_ID) + "')"]
+                                             "displayhelp('" + str(dfchelp.GEOCODING_MAIN_TASKBAR_ID) + "')"]
 
 geocode_utilities_tb_centered           =   False
 
@@ -208,8 +204,8 @@ google_geocoder_placeholderList     =   ["enter account api key.",
 
 google_geocoder_jsList              =   [None,None,None,None,None,None,None,None,None,None,
                                          "test_geocoder(" + str(sugm.GoogleId) + "," + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.QUERY) + ","  + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.GoogleId) + str(sugm.REVERSE) + ","  + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.GoogleId) + ","  + str(sugm.QUERY) + ","  + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.GoogleId) + ","  + str(sugm.REVERSE) + ","  + str(sugm.INTERACTIVE) + ")",
                                          "display_geocoders(" + str(sugm.GoogleId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.GoogleId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
@@ -338,8 +334,8 @@ mapquest_geocoder_placeholderList       =   ["enter MapQuest API Key",
 
 mapquest_geocoder_jsList                =   [None,None,None,None,None,None,None,None,
                                              "test_geocoder(" + str(sugm.OpenMapQuestId) + "," + str(sugm.INTERACTIVE) + ")",
-                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + ","   + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
-                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + ","   + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                             "display_geocoding_callback(" + str(sugm.OpenMapQuestId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                              "display_geocoders(" + str(sugm.OpenMapQuestId) + "," + str(sugm.BULK) + ")",
                                              "clear_geocode_form(" + str(sugm.OpenMapQuestId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                              "geocode_return()",
@@ -405,8 +401,8 @@ nomin_geocoder_placeholderList      =   ["enter custom User-Agent (required)",
 
 nomin_geocoder_jsList               =   [None,None,None,None,None,None,None,
                                          "test_geocoder(" + str(sugm.NominatimId) + "," + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.NominatimId) + ","  + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.NominatimId) + ","  + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.NominatimId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.NominatimId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                          "display_geocoders(" + str(sugm.NominatimId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.NominatimId) + "," + str(sugm.GEOCODER) + "," + str(sugm.INTERACTIVE) + ")",
                                          "geocode_return()",
@@ -474,8 +470,8 @@ baidu_geocoder_placeholderList      =   ["enter Baidu api key",
 
 baidu_geocoder_jsList               =   [None,None,None,None,None,None,None,None,
                                          "test_geocoder(" + str(sugm.BaiduId) + "," + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.BaiduId) + ","  + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
-                                         "display_geocoding_callback(" + str(sugm.BaiduId) + ","  + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.QUERY) + "," + str(sugm.INTERACTIVE) + ")",
+                                         "display_geocoding_callback(" + str(sugm.BaiduId) + "," + str(sugm.REVERSE) + "," + str(sugm.INTERACTIVE) + ")",
                                          "display_geocoders(" + str(sugm.BaiduId) + "," + str(sugm.BULK) + ")",
                                          "clear_geocode_form(" + str(sugm.BaiduId) + "," + str(sugm.GEOCODER) + "," + str(sugm.BULK) + ")",
                                          "geocode_return()",
@@ -587,11 +583,11 @@ google_query_labelList              =   ["address(s)",
                                          "Clear","Return","Help"]
 
 
-google_query_typeList               =   [maketextarea(6),"text","text","text","text","text","text","select",
+google_query_typeList               =   [maketextarea(6),"text","text",maketextarea(2),"select",maketextarea(3),"select","select",
                                          "button","button","button","button","button","button"]
 
 google_query_placeholderList        =   ["single address string or [] list of address strings",
-                                         "max number of results per address (default - 1) ",
+                                         "max number of results displayed per address (default - 1 : max 5) ",
                                          "enter timeout in seconds (default - 20)",
                                          "enter bounding box of the viewport (default - None)",
                                          "enter the ccTLD region code (default - None)",
@@ -639,7 +635,7 @@ bing_query_labelList                =   ["address(s)",
                                          "number_of_results",
                                          "timeout",
                                          "user_location",
-                                         "culture ",
+                                         "culture",
                                          "include_neighborhood",
                                          "include_country_code",
                                          "Get</br>Coords",
@@ -648,11 +644,11 @@ bing_query_labelList                =   ["address(s)",
                                          "Clear","Return","Help"]
 
 
-bing_query_typeList                 =   [maketextarea(6),"text","text","text","text","select","select",
+bing_query_typeList                 =   [maketextarea(6),"text","text","text","select","select","select",
                                          "button","button","button","button","button","button"]
 
-bing_query_placeholderList          =   ["single address string or [] list of address strings",
-                                         "max number of results per address (default - 1) ",
+bing_query_placeholderList          =   ["single quote enclosed address string or [] list of quote enclosed address strings",
+                                         "max number of results displayed per address (default - 1 : max 5) ",
                                          "enter timeout in seconds (default - 20)",
                                          "enter coords to prioritize to (default - None)",
                                          "enter two-letter country code (default - None) ",
@@ -706,8 +702,8 @@ mapquest_query_typeList                  =   [maketextarea(6),"text","text",
                                               "button","button","button","button","button","button"]
 
 mapquest_query_placeholderList           =   ["single address string or [] list of address strings",
-                                              "max number of results per address (default - 1) ",
-                                              "timeout in secs (default - 1)",
+                                              "max number of results displayed per address (default - 1 : max 5) ",
+                                              "enter timeout in seconds (default - 20)",
                                               None,None,None,None,None,None]
 
 mapquest_query_jsList                    =    [None,None,None,
@@ -761,8 +757,8 @@ nomin_query_typeList                     =   [maketextarea(6),"text","text","sel
                                               "button","button","button","button","button","button"]
 
 nomin_query_placeholderList              =   ["single address string or [] list of address strings",
-                                              "max number of results per address (default - 1) ",
-                                              "timeout in secs (default - 20)",
+                                              "max number of results displayed per address (default - 1 : max 5) ",
+                                              "enter timeout in seconds (default - 20)",
                                               "Location.raw to include address details  (default - False)",
                                               "language in which to return results  (default - English)",
                                               "return the result’s geometry in wkt, svg, kml, or geojson formats (default - None)",
@@ -813,7 +809,7 @@ baidu_query_typeList                =   [maketextarea(6),"text","text",
                                          "button","button","button","button","button","button"]
 
 baidu_query_placeholderList         =   ["single address string or [] list of address strings",
-                                         "max number of results per address (default - 1) ",
+                                         "max number of results displayed per address (default - 1 : max 5) ",
                                          "enter timeout in seconds (default - 20)",
                                          None,None,None,None,None,None]
 
@@ -868,12 +864,12 @@ google_reverse_labelList               =   ["latitude_longitude(s)",
                                             "Clear","Return","Help"]
 
 
-google_reverse_typeList                =   [maketextarea(6),"text","text","text","select",
+google_reverse_typeList                =   [maketextarea(6),"text","text","select","select",
                                             "button","button","button","button","button","button"]
 
 google_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - 5)",
+                                            "max number of results displayed per address (default - 1 : max 5) ",
+                                            "enter timeout in seconds (default - 20)",
                                             "enter the language (default - English)",
                                             "enter sensor flag (default - False)",
                                             None,None,None,None,None,None]
@@ -927,8 +923,8 @@ arcgis_reverse_typeList                =   [maketextarea(6),"text","text","text"
                                             "button","button","button","button","button","button"]
 
 arcgis_reverse_placeholderList         =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - 5)",
+                                            "max number of results displayed per address (default - 1 : max 5) ",
+                                            "enter timeout in seconds (default - 20)",
                                             "Distance from the query location (default - None)",
                                             "WKID to use for both input and output coordinates (default - 4236)",
                                             None,None,None,None,None,None]
@@ -978,12 +974,12 @@ bing_reverse_labelList                 =   ["latitude_longitude(s)",
                                             "Clear","Return","Help"]
 
 
-bing_reverse_typeList                  =   [maketextarea(6),"text","text","text","select",
+bing_reverse_typeList                  =   [maketextarea(6),"text","text","select","select",
                                             "button","button","button","button","button","button"]
 
 bing_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - 5)",
+                                            "max number of results displayed per address (default - 1 : max 5) ",
+                                            "enter timeout in seconds (default - 20)",
                                             "two-letter country code (default - None)",
                                             "whether to include the two-letter ISO code of the country (default - False)",
                                             None,None,None,None,None,None]
@@ -1037,8 +1033,8 @@ mapquest_reverse_typeList                  =   [maketextarea(6),"text","text","t
                                                 "button","button","button","button","button","button"]
 
 mapquest_reverse_placeholderList           =   ["list or tuple of (latitude, longitude)",
-                                                "max number of results (default - 1) ",
-                                                "enter timeout in seconds (default - 5)",
+                                                "max number of results displayed per address (default - 1 : max 5) ",
+                                                "enter timeout in seconds (default - 20)",
                                                 "Preferred language in which to return results (default - English)",
                                                 "include address details such as city, county ... (default - True)",
                                                 None,None,None,None,None,None]
@@ -1090,8 +1086,8 @@ nomin_reverse_typeList                     =   [maketextarea(6),"text","text","t
                                                 "button","button","button","button","button","button"]
 
 nomin_reverse_placeholderList              =   ["list or tuple of (latitude, longitude)",
-                                                "max number of results (default - 1) ",
-                                                "enter timeout in seconds (default - 5)",
+                                                "max number of results displayed per address (default - 1 : max 5) ",
+                                                "enter timeout in seconds (default - 20)",
                                                 "Preferred language in which to return results (default - English)",
                                                 None,None,None,None,None,None]
 
@@ -1140,8 +1136,8 @@ baidu_reverse_typeList                 =   [maketextarea(6),"text","text",
                                             "button","button","button","button","button"]
 
 baidu_reverse_placeholderList          =   ["list or tuple of (latitude, longitude)",
-                                            "max number of results (default - 1) ",
-                                            "enter timeout in seconds (default - 5)",
+                                            "max number of results displayed per address (default - 1 : max 5) ",
+                                            "enter timeout in seconds (default - 20)",
                                             None,None,None,None,None,None]
 
 baidu_reverse_jsList                   =   [None,None,None,
@@ -1187,29 +1183,60 @@ addr_dist_utility_input_idList            =   ["fromaddr",
                                                "disunits",
                                                "distalg",
                                                "elipsoid",
-                                               None,None,None,None,None]
+                                               None,None,None,None,None,None]
 
-addr_dist_utility_input_labelList         =   ["from_location(s) ",
-                                               "to_location(s)",
+addr_dist_utility_input_labelList         =   ["from_address(s) ",
+                                               "to_address(s)",
                                                "distance_units",
                                                "distance_algorithm",
                                                "elipsoid",
-                                               "Calculate</br>Distance",
+                                               "Calculate</br>Address</br>Distance",
+                                               "Display</br>Coord</br>Distance",
                                                "Display</br>Dataframe</br>Distance",
                                                "Clear","Return","Help"]
 
-addr_dist_utility_input_typeList          =   ["text","text","select","select","select",
-                                               "button","button","button","button","button"]
+addr_dist_utility_input_labelList1        =   ["from_lat_lng_coords(s) ",
+                                               "to_lat_lng_coords(s)",
+                                               "distance_units",
+                                               "distance_algorithm",
+                                               "elipsoid",
+                                               "Calculate</br>Address</br>Distance",
+                                               "Display</br>Coord</br>Distance",
+                                               "Display</br>Dataframe</br>Distance",
+                                               "Clear","Return","Help"]
 
-addr_dist_utility_input_placeholderList   =  ["enter From location(s) : as single or [list] or (tuple) of [lat,lng] for from coords",
-                                              "enter to location(s) : as single or [list] or (tuple) of [lat,lng] for to coords",
+addr_dist_utility_input_typeList          =   [maketextarea(6),maketextarea(6),"select","select","select",
+                                               "button","button","button","button","button","button"]
+
+addr_dist_utility_input_placeholderList   =  ["To calculate distance between single addresses just enter address as single string in quotes - 'address 1'\n" + 
+                                              "To calculate distance for multiple addresses enter a list of addresses in single quotes - ['address 1' , 'address 2']",
+                                              "use same format as from address(s) \n" +
+                                              "number and format of to addresses must match number and format of from addresses",
                                               "result in km - True : km, False : miles (default - True) ",
-                                              "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default - 0) ",
+                                              "geocode algorithm (default - geodesic) ",
                                               "select elipsoid (default - 'WGS-84') ",
-                                              None,None,None,None,None]
+                                              None,None,None,None,None,None]
+
+addr_dist_utility_input_placeholderList1  =  ["To calculate distance between single coords just enter coords as [lat,lng] single list \n" + 
+                                              "To calculate distance for multiple coords enter a list of coord pairs as list of pairs - [[lat,lng] , [lat1,lng1]]",
+                                              "use same format as from coords(s) \n" +
+                                              "number and format of to coords must match number and format of from coords",
+                                              "result in km - True : km, False : miles (default - True) ",
+                                              "geocode algorithm (default - geodesic) ",
+                                              "select elipsoid (default - 'WGS-84') ",
+                                              None,None,None,None,None,None]
 
 addr_dist_utility_input_jsList            =    [None,None,None,None,None,
                                                 "process_geoutils_callback("+str(sugm.PROCESS_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_COORD_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
+                                                "geocode_return()",
+                                                "displayhelp('" + str(dfchelp.GEOCODING_CALC_DISTANCE_ID) + "')"]
+
+addr_dist_utility_input_jsList1           =    [None,None,None,None,None,
+                                                "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
+                                                "process_geoutils_callback("+str(sugm.PROCESS_COORD_DISTANCE)+")",
                                                 "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
                                                 "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
                                                 "geocode_return()",
@@ -1224,46 +1251,95 @@ addr_dist_utility_input_reqList           =   [0,1]
 """
 addr_df_dist_utility_input_title             =   "Address Distance Columns"
 addr_df_dist_utility_input_id                =   "addrdfdist"
-addr_df_dist_utility_input_idList            =   ["addrdfdistdf",
-                                                  "fromcol",
-                                                  "tocol",
+addr_df_dist_utility_input_idList            =   ["addrdffromdistdf",
+                                                  "fromlatlngcolumns",
+                                                  "fromcolnames",
+                                                  "addrdftodistdf",
+                                                  "tolatlngcolumns",
+                                                  "tocolnames",
+                                                  "tocoords",
                                                   "newcol",
                                                   "dfdisunits",
                                                   "dfdistalg",
                                                   "dfelipsoid",
                                                   None,None,None,None,None]
 
-addr_df_dist_utility_input_labelList         =   ["dataframe_to_geocode",
-                                                  "from_column_name(s)",
-                                                  "to_column_name(s)",
-                                                  "new_distance_column",
+addr_df_dist_utility_input_labelList         =   ["from_dataframe",
+                                                  "from_dataframe_lat_lng_columns",
+                                                  "from_dataframe_column_name(s)",
+                                                  "to_coord_source",
+                                                  "to_dataframe_lat_lng_columns",
+                                                  "to_dataframe_column_name(s)",
+                                                  "to_coord(s)_list",
+                                                  "new_distance_column_name(s)_list",
                                                   "distance_units",
                                                   "distance_algorithm",
                                                   "elipsoid",
-                                                  "Display</br>Distance",
                                                   "Calculate</br>Dataframe</br>Distance",
+                                                  "Display</br>Distance",
                                                   "Clear","Return","Help"]
 
-addr_df_dist_utility_input_typeList          =   ["select","text","text","text","select","select","select",
+addr_df_dist_utility_input_labelList1         =   ["from_dataframe",
+                                                  "from_dataframe_lat_lng_columns",
+                                                  "from_dataframe_column_name(s)",
+                                                  "to_coord_source",
+                                                  "to_dataframe_lat_lng_columns",
+                                                  "to_dataframe_column_name(s)",
+                                                  "to_address(s)_list",
+                                                  "new_distance_column_name(s)_list",
+                                                  "distance_units",
+                                                  "distance_algorithm",
+                                                  "elipsoid",
+                                                  "Calculate</br>Dataframe</br>Distance",
+                                                  "Dispay</br>Distance",
+                                                  "Clear","Return","Help"]
+
+addr_df_dist_utility_input_typeList          =   ["select","text","select",
+                                                  "select","text","select",
+                                                  "text","text",
+                                                  "select","select","select",
                                                   "button","button","button","button","button"]
 
-addr_df_dist_utility_input_placeholderList   =  ["enter dataframe",
-                                                 "enter From column name(s) - from_column_name or [from_column_lat, from_column_lng]",
-                                                 "enter to column name(s) - to_column_name or [to_column_lat, to_column_lng]",
-                                                 "enter column name to store distance in",
+addr_df_dist_utility_input_typeList1         =   ["select","text","select",
+                                                  "select","text","select",
+                                                  maketextarea(3),maketextarea(3),
+                                                  "select","select","select",
+                                                  "button","button","button","button","button"]
+
+addr_df_dist_utility_input_placeholderList   =  ["enter from dataframe",
+                                                 "from df {lat,lng] column names - select from from_dataframe_column_name(s)",
+                                                 "from dataframe column names",
+                                                 "enter to dataframe",
+                                                 "select to_column_names",
+                                                 "to column names",
+                                                 "enter to coord(s) list",
+                                                 "enter column name(s) to store distance(s) in",
                                                  "result in km - True : km, False : miles (default = True) ",
-                                                 "select algorithm - 0 : Geodisc 1 : Vincenty 2 : Great_Circle (default = 0) ",
+                                                 "select algorithm - geodesic : great_circle (default = geodesic) ",
                                                  "select elipsoid (default = 'WGS-84') ",
                                                  None,None,None,None,None]
 
-addr_df_dist_utility_input_jsList            =    [None,None,None,None,None,None,None,
-                                                   "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
+addr_df_dist_utility_input_placeholderList1  =  ["enter from dataframe",
+                                                 "from df {lat,lng] column names - select from from_dataframe_column_name(s)",
+                                                 "from dataframe column names",
+                                                 "enter to dataframe",
+                                                 "select to_column_names",
+                                                 "to column names",
+                                                 "enter to address(s) as single quote enclosed values.\n  For multiple addresses define them as a list",
+                                                 "enter column name(s) to store distance(s) in",
+                                                 "result in km - True : km, False : miles (default = True) ",
+                                                 "select algorithm - geodesic : great_circle (default = geodesic) ",
+                                                 "select elipsoid (default = 'WGS-84') ",
+                                                 None,None,None,None,None]
+
+addr_df_dist_utility_input_jsList            =    [None,None,None,None,None,None,None,None,None,None,None,
                                                    "process_geoutils_callback("+str(sugm.PROCESS_DF_DISTANCE)+")",
+                                                   "process_geoutils_callback("+str(sugm.DISPLAY_DISTANCE)+")",
                                                    "process_geoutils_callback("+str(sugm.DISPLAY_DF_DISTANCE)+")",
                                                    "geocode_return()",
                                                    "displayhelp('" + str(dfchelp.GEOCODING_CALC_DF_DISTANCE_ID) + "')"]
 
-addr_df_dist_utility_input_reqList           =   [0,1,2]
+addr_df_dist_utility_input_reqList           =   [0,1,2,3,4,5,6,7,8]
 
            
 """
@@ -1273,62 +1349,51 @@ addr_df_dist_utility_input_reqList           =   [0,1,2]
 """
 addr_center_utility_input_title             =   "Address Center Columns"
 addr_center_utility_input_id                =   "addrcenter"
-addr_center_utility_input_idList            =   ["fromaddr",
-                                                 None,None,None,None,None]
+addr_center_utility_input_idList            =   ["centerdf",
+                                                 "centerdflatlng",
+                                                 "centerdfcols",
+                                                 "centercoords",
+                                                 None,None,None,None]
 
-addr_center_utility_input_labelList         =   ["locations",
+addr_center_utility_input_labelList         =   ["dataframe",
+                                                 "dataframe_lat_lng_columns",
+                                                 "dataframe_column_name(s)",
+                                                 "coord(s) list",
                                                  "Calculate</br>Center</br>Point",
-                                                 "Display</br>Dataframe</br>Center</br>Point",
                                                  "Clear","Return","Help"]
 
-addr_center_utility_input_typeList          =   ["text",
-                                                 "button","button","button","button","button"]
+addr_center_utility_input_labelList1        =   ["dataframe",
+                                                 "dataframe_lat_lng_columns",
+                                                 "dataframe_column_name(s)",
+                                                 "address(s) list",
+                                                 "Calculate</br>Center</br>Point",
+                                                 "Clear","Return","Help"]
 
-addr_center_utility_input_placeholderList   =   ["enter [list] or (tuple) of [lat,lng] for locations",
-                                                 None,None,None,None,None]
+addr_center_utility_input_typeList          =   ["select","text","select",maketextarea(6),
+                                                 "button","button","button","button"]
 
-addr_center_utility_input_jsList            =    [None,
+addr_center_utility_input_placeholderList   =   ["select df to get coords from",
+                                                 "df [lat,lng] columns names - select from dataframe_column_name(s)",
+                                                 "select df column name",
+                                                 "To calculate the center between coords just enter coords as a list of [lat,lng] coords.\n" + 
+                                                 "  Example - [[lat1,lng1], [lat2,lng2]....]",
+                                                 None,None,None,None]
+
+addr_center_utility_input_placeholderList1  =   ["select df to get coords from",
+                                                 "df [lat,lng] columns names - select from dataframe_column_name(s)",
+                                                 "select df column name",
+                                                 "To calculate the center between addresses just enter addresses as a list of single quote enclosed addresses.\n" + 
+                                                 "  Example - ['address 1' , 'address 2'....]",
+                                                 None,None,None,None]
+
+addr_center_utility_input_jsList            =    [None,None,None,None,
                                                   "process_geoutils_callback("+str(sugm.PROCESS_CENTER)+")",
-                                                  "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
                                                   "process_geoutils_callback("+str(sugm.DISPLAY_CENTER)+")",
                                                   "geocode_return()",
                                                   "displayhelp('" + str(dfchelp.GEOCODING_CALC_CENTER_ID) + "')"]
 
-addr_center_utility_input_reqList           =   [0,1]
+addr_center_utility_input_reqList           =   [0,1,2,3]
 
-
-"""
-#--------------------------------------------------------------------------
-#    address dataframe center input form
-#--------------------------------------------------------------------------
-"""
-addr_df_center_utility_input_title             =   "Address Distance Columns"
-addr_df_center_utility_input_id                =   "addrdfcenter"
-addr_df_center_utility_input_idList            =   ["addrdfcenterdf",
-                                                    "addrcol",
-                                                    None,None,None,None,None]
-
-addr_df_center_utility_input_labelList         =   ["dataframe_to_geocode",
-                                                    "locations_column_name(s)",
-                                                    "Display</br>Center",
-                                                    "Calculate</br>Dataframe</br>Center",
-                                                    "Clear","Return","Help"]
-
-addr_df_center_utility_input_typeList          =   ["select","text",
-                                                    "button","button","button","button","button"]
-
-addr_df_center_utility_input_placeholderList   =   ["select dataframe",
-                                                    "select location column name(s) [lat_lng_col_name] or [lat_col_name, lng_col_name]",
-                                                    None,None,None,None,None]
-
-addr_df_center_utility_input_jsList            =    [None,None,
-                                                     "process_geoutils_callback("+str(sugm.DISPLAY_CENTER)+")",
-                                                     "process_geoutils_callback("+str(sugm.PROCESS_DF_CENTER)+")",
-                                                     "process_geoutils_callback("+str(sugm.DISPLAY_DF_CENTER)+")",
-                                                     "geocode_return()",
-                                                     "displayhelp('" + str(dfchelp.GEOCODING_CALC_DF_CENTER_ID) + "')"]
-
-addr_df_center_utility_input_reqList           =   [0,1]
 
 
 """
@@ -1338,38 +1403,93 @@ addr_df_center_utility_input_reqList           =   [0,1]
 """
 addr_df_center_dist_utility_input_title             =   "Address Distance Tp Center"
 addr_df_center_dist_utility_input_id                =   "addrdfcenterdist"
-addr_df_center_dist_utility_input_idList            =   ["addrdfcenterdistdf",
-                                                         "centerptflag",
-                                                         "addrcol",
-                                                         "collist",
+addr_df_center_dist_utility_input_idList            =   ["addrdfcenterptdf",
+                                                         "addrdfcenterptlatlngs",
+                                                         "addrdfcenterptcols",
                                                          "centerpt",
+                                                         "dfdisunits",
+                                                         "dfdistalg",
+                                                         "dfelipsoid",
+                                                         "addrdfdistdf",
+                                                         "addrdfdistlatlngs",
+                                                         "addrdfdistcols",
+                                                         "coordslist",
+                                                         "distcollist",
+                                                         
                                                          None,None,None,None]
 
-addr_df_center_dist_utility_input_labelList         =   ["dataframe_to_geocode",
-                                                         "get_center_pt_from_df",
-                                                         "column_name(s)",
-                                                         "geocode_column_names_list",
-                                                         "center_point",
+addr_df_center_dist_utility_input_labelList         =   ["source_for_center_point",
+                                                         "dataframe_for_center_point_lat_lng_columns",
+                                                         "dataframe_for_center_point_column_name(s)",
+                                                         "coords_for_center_point",
+                                                         "distance_units",
+                                                         "distance_algorithm",
+                                                         "elipsoid",
+                                                         "source_for_distance_from_coord(s)",
+                                                         "dataframe_for_distance_from_lat_lng_columns",
+                                                         "dataframe_for_distance_from_column_name(s)",
+                                                         "distance_from_coord(s)_list",
+                                                         "distance_from_center_point_column_name(s)",
                                                          "Calculate</br>Distance</br>From</br>Center",
                                                          "Clear","Return","Help"]
 
-addr_df_center_dist_utility_input_typeList          =   ["select","select","select","text","text",
-                                                         "button","button","button","button"]
+addr_df_center_dist_utility_input_labelList1        =   ["source_for_center_point",
+                                                         "dataframe_for_center_point_lat_lng_columns",
+                                                         "dataframe_for_center_point_column_name(s)",
+                                                         "coords_for_center_point",
+                                                         "distance_units",
+                                                         "distance_algorithm",
+                                                         "elipsoid",
+                                                         "source_for_distance_from_coord(s)",
+                                                         "dataframe_for_distance_from_lat_lng_columns",
+                                                         "dataframe_for_distance_from_column_name(s)",
+                                                         "distance_from_address(s)_list",
+                                                         "distance_from_center_point_column_name(s)",
+                                                         "Calculate</br>Distance</br>From</br>Center",
+                                                         "Clear","Return","Help"]
 
-addr_df_center_dist_utility_input_placeholderList   =   ["select dataframe",
-                                                         "get center point from df",
-                                                         "select column name(s)",
-                                                         "location column name(s) [lat_lng] or [lat,lng]",
-                                                         "enter center point",
+addr_df_center_dist_utility_input_typeList          =   ["select","text","select",maketextarea(3),
+                                                         "select","select","select",
+                                                         "select","text","select",maketextarea(3),
+                                                          maketextarea(3),
+                                                          "button","button","button","button"]
+
+addr_df_center_dist_utility_input_placeholderList   =   ["select centerpoint source",
+                                                         "[Latitude,Longitude] column names for center point calc",
+                                                         "select centerpoint dataframe column",
+                                                         "enter coord(s) list to calculate center point from",
+                                                         "result in km - True : km, False : miles (default = True) ",
+                                                         "select algorithm - geodesic : great_circle (default = geodesic) ",
+                                                         "select elipsoid (default = 'WGS-84') ",
+                                                         "select distance from coords source",
+                                                         "[Latitude,Longitude] column names for distance from points",
+                                                         "select distance from dataframe columns",
+                                                         "enter coord(s) list to calc distance(s) from center point",
+                                                         "enter column names to store distance(s) from center points",
                                                          None,None,None,None]
 
-addr_df_center_dist_utility_input_jsList            =    [None,None,None,None,None,
+addr_df_center_dist_utility_input_placeholderList1  =   ["select centerpoint source",
+                                                         "[Latitude,Longitude] column names for center point calc",
+                                                         "select centerpoint dataframe column",
+                                                         "enter coord(s) list to calculate center point from",
+                                                         "result in km - True : km, False : miles (default = True) ",
+                                                         "select algorithm - geodesic : great_circle (default = geodesic) ",
+                                                         "select elipsoid (default = 'WGS-84') ",
+                                                         "select distance from coords source",
+                                                         "[Latitude,Longitude] column names for distance from points",
+                                                         "select distance from dataframe columns",
+                                                         "enter address(s) list to calc distance(s) from center point",
+                                                         "enter column names to store distance(s) from center points",
+                                                         None,None,None,None]
+
+
+addr_df_center_dist_utility_input_jsList            =    [None,None,None,None,None,None,None,None,None,None,None,None,
                                                           "process_geoutils_callback("+str(sugm.PROCESS_DIST_CENTER)+")",
                                                           "process_geoutils_callback("+str(sugm.DISPLAY_DIST_CENTER)+")",
                                                           "geocode_return()",
                                                           "displayhelp('" + str(dfchelp.GEOCODING_CALC_CENTER_DIST_ID) + "')"]
 
-addr_df_center_dist_utility_input_reqList           =    [0,1]
+addr_df_center_dist_utility_input_reqList           =    [0,1,2,3,7,8,9,10,11]
 
 
 """
@@ -1408,7 +1528,7 @@ SWUtility_geocode_inputs            =   [arcgis_geocoder_id, google_geocoder_id,
                                          baidu_geocoder_id, arcgis_query_id, google_query_id, bing_query_id, mapquest_query_id, nomin_query_id,
                                          baidu_query_id, google_reverse_id, arcgis_reverse_id, bing_reverse_id, mapquest_reverse_id,
                                          nomin_reverse_id, baidu_reverse_id, addr_dist_utility_input_id, addr_df_dist_utility_input_id, addr_center_utility_input_id,
-                                         addr_df_center_utility_input_id, bulk_tune_utility_input_id]
+                                         bulk_tune_utility_input_id]
 
 
  
@@ -1437,21 +1557,46 @@ def display_geocode_utils_taskbar() :
                                                geocode_utilities_tb_centered),False)
     
     
-def display_calc_distance_input_form() :
+def display_calc_distance_input_form(ptype=sugm.GEOCODE_ADDRESS) :
+    """
+    * ---------------------------------------------------------
+    * function : display the calculate distance form 
+    * 
+    * parms :
+    *  pytype  - address or coords
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    
+    if(ptype == sugm.GEOCODE_ADDRESS) :
 
-    dist_addr_form  =   InputForm(addr_dist_utility_input_id,
-                                  addr_dist_utility_input_idList,
-                                  addr_dist_utility_input_labelList,
-                                  addr_dist_utility_input_typeList,
-                                  addr_dist_utility_input_placeholderList,
-                                  addr_dist_utility_input_jsList,
-                                  addr_dist_utility_input_reqList)       
+        dist_addr_form  =   InputForm(addr_dist_utility_input_id,
+                                      addr_dist_utility_input_idList,
+                                      addr_dist_utility_input_labelList,
+                                      addr_dist_utility_input_typeList,
+                                      addr_dist_utility_input_placeholderList,
+                                      addr_dist_utility_input_jsList,
+                                      addr_dist_utility_input_reqList)   
+        
+    else :
+        
+        dist_addr_form  =   InputForm(addr_dist_utility_input_id,
+                                      addr_dist_utility_input_idList,
+                                      addr_dist_utility_input_labelList1,
+                                      addr_dist_utility_input_typeList,
+                                      addr_dist_utility_input_placeholderList1,
+                                      addr_dist_utility_input_jsList1,
+                                      addr_dist_utility_input_reqList)   
+        
     
     selectDicts     =   []
             
     distsel         =   {"default":"km","list":["km","miles"]}
     selectDicts.append(distsel)
-    geocsel         =   {"default":"Geodisc","list":["Geodisc","Vincenty","Great_Circle"]}
+    geocsel         =   {"default":"geodesic","list":["geodesic","great_circle"]}
     selectDicts.append(geocsel)
     elipsel         =   {"default":"WGS-84","list":['WGS-84','GRS-80','Airy (1830)','Intl 1924','Clarke (1880)','GRS-67']}
     selectDicts.append(elipsel)
@@ -1467,11 +1612,13 @@ def display_calc_distance_input_form() :
     
     dist_addr_form.set_fullparms(True)
     
+    
+   
     geocode_input_html = ""
     geocode_input_html = dist_addr_form.get_html() 
     
     geocode_heading_html =   "<div>Interactive Get Distance</div>"
-
+    
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [geocode_heading_html,geocode_input_html]
     
@@ -1480,26 +1627,188 @@ def display_calc_distance_input_form() :
 
 
 def display_calc_df_distance_input_form() :
-
-    dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
-                                  addr_df_dist_utility_input_idList,
-                                  addr_df_dist_utility_input_labelList,
-                                  addr_df_dist_utility_input_typeList,
-                                  addr_df_dist_utility_input_placeholderList,
-                                  addr_df_dist_utility_input_jsList,
-                                  addr_df_dist_utility_input_reqList)       
+    """
+    * ---------------------------------------------------------
+    * function : display the calculate dataframe distance form 
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+    
+    # clear out col names drop dows
+    cparms  =   cfg.get_config_value(addr_df_dist_utility_input_id+"Parms")
+    
+    print("display_calc_df_distance_input_form",cparms)
+    
+    if(cparms is None) :
         
+        dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
+                                      addr_df_dist_utility_input_idList,
+                                      addr_df_dist_utility_input_labelList,
+                                      addr_df_dist_utility_input_typeList1,
+                                      addr_df_dist_utility_input_placeholderList,
+                                      addr_df_dist_utility_input_jsList,
+                                      addr_df_dist_utility_input_reqList)  
+    else :
+        
+        if(cparms[3] == "get to coords from to_coords(s)_list") :
+            
+            dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
+                                          addr_df_dist_utility_input_idList,
+                                          addr_df_dist_utility_input_labelList,
+                                          addr_df_dist_utility_input_typeList1,
+                                          addr_df_dist_utility_input_placeholderList,
+                                          addr_df_dist_utility_input_jsList,
+                                          addr_df_dist_utility_input_reqList)
+            
+        elif(cparms[3] == "get to address(s) from to_address(s)_list") :
+            
+            dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
+                                          addr_df_dist_utility_input_idList,
+                                          addr_df_dist_utility_input_labelList1,
+                                          addr_df_dist_utility_input_typeList1,
+                                          addr_df_dist_utility_input_placeholderList1,
+                                          addr_df_dist_utility_input_jsList,
+                                          addr_df_dist_utility_input_reqList)
+            
+            
+        else :
+            
+             dist_addr_form  =   InputForm(addr_df_dist_utility_input_id,
+                                          addr_df_dist_utility_input_idList,
+                                          addr_df_dist_utility_input_labelList,
+                                          addr_df_dist_utility_input_typeList,
+                                          addr_df_dist_utility_input_placeholderList,
+                                          addr_df_dist_utility_input_jsList,
+                                          addr_df_dist_utility_input_reqList)
+ 
     selectDicts     =   []
     
-    dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
-    selectDicts.append(dataframes)
+    
+    #dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
+    dfs             =   cfg.get_dfc_dataframes_titles_list()
+    
+    if(not (cparms is None)) :
+        
+        geocode_df          =   cfg.get_dfc_dataframe_df(cparms[0])
+        
+        if(not(geocode_df is None)) :
+            
+            default_df  =   cparms[0]
+        else :
+            
+            default_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+            geocode_df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+            cparms[0]   =   default_df
+            cparms[1]   =   ""
+            cparms[2]   =   ""
+            
+    else :
+        
+        cparms  =   ["","","","","","","","","km","geodesic","WGS-84"]
+
+        default_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+        geocode_df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+        cparms[0]   =   default_df
+        cparms[1]   =   ""
+        cparms[2]   =   ""
+        
+    dffrom_sel    =   {"default":default_df,"list":dfs, "callback" : "get_df_dist_to_cols"}
+    selectDicts.append(dffrom_sel)
+     
+    geocode_df_cols     =   [" "]
+    
+    geocode_cols        =  list(geocode_df.columns)
+    for i in range(len(geocode_cols)) :
+        geocode_df_cols.append(geocode_cols[i])    
+    
+    print("geocode_df_cols : from ",geocode_df_cols)
+    cols_list           =   {"default":" ","list":geocode_df_cols, "callback" : "select_from_df_dist_col"}
+    selectDicts.append(cols_list)
+
+
+    # do to df columns data
+
+    
+    if(not (cparms is None)) :
+        to_df = cparms[3]
+    else :
+        to_df  =   "get to coords from to_coords(s)_list"
+        
+    dfs         =   cfg.get_dfc_dataframes_titles_list()
+    df_list     =   ["get to coords from to_coords(s)_list","get to address(s) from to_address(s)_list"]
+    for i in range(len(dfs)) :
+        df_list.append(dfs[i])
+        
+    if(not( (to_df  ==   "get to coords from to_coords(s)_list") or 
+            (to_df  ==   "get to address(s) from to_address(s)_list") ) ) :
+        
+        geocode_df    =   cfg.get_dfc_dataframe_df(to_df)
+        
+        if(geocode_df is None) :
+            to_df  =   "get to coords from to_coords(s)_list"
+            cparms[3]   =   to_df
+            cparms[4]   =   ""
+            cparms[5]   =   ""
+            
+    else :
+        geocode_df    =   None 
+
+    df_to_sel    =   {"default":default_df,"list":df_list, "callback" : "get_df_dist_to_cols"}
+    selectDicts.append(df_to_sel)
+    
+    geocode_df_cols     =   [" "]
+    
+    if(not(geocode_df is None)) :
+        
+        geocode_cols        =  list(geocode_df.columns)
+        for i in range(len(geocode_cols)) :
+            geocode_df_cols.append(geocode_cols[i])
+            
+    else :
+        
+        if(not (cparms[3] == "get to address(s) from to_address(s)_list") ) :
+            cparms[3]   =   "get to coords from to_coords(s)_list"
+            
+        cparms[4]   =   ""
+        cparms[5]   =   ""
+
+    cols_list           =   {"default":geocode_df_cols[0],"list":geocode_df_cols, "callback" : "select_to_df_dist_col"}
+    selectDicts.append(cols_list)
             
     distsel         =   {"default":"km","list":["km","miles"]}
     selectDicts.append(distsel)
-    geocsel         =   {"default":"Geodisc","list":["Geodisc","Vincenty","Great_Circle"]}
+    geocsel         =   {"default":"geodesic","list":["geodesic","great_circle"]}
     selectDicts.append(geocsel)
     elipsel         =   {"default":"WGS-84","list":['WGS-84','GRS-80','Airy (1830)','Intl 1924','Clarke (1880)','GRS-67']}
     selectDicts.append(elipsel)
+    
+    print("cparms",cparms)
+    
+    if(cparms is None) :
+        
+        cfg.set_config_value(addr_df_dist_utility_input_id+"Parms",["","","","","","","","","km","geodesic","WGS-84"])
+        cfg.set_config_value(addr_df_dist_utility_input_id+"ParmsProtect",[False,False,False,False,True,True,False,False,False,False,False]) 
+    
+    else :
+        
+        if( (cparms[3] == "get to coords from to_coords(s)_list") or 
+            (cparms[3] == "get to address(s) from to_address(s)_list") ) :
+            
+            cparms[4]   =   " "
+            cparms[5]   =   " "
+            cfg.set_config_value(addr_df_dist_utility_input_id+"Parms",cparms)
+            cfg.set_config_value(addr_df_dist_utility_input_id+"ParmsProtect",[False,False,False,False,True,True,False,False,False,False,False])
+            
+        else :
+            
+            cfg.set_config_value(addr_df_dist_utility_input_id+"Parms",cparms)
+            cfg.set_config_value(addr_df_dist_utility_input_id+"ParmsProtect",[False,False,False,False,False,False,True,False,False,False,False])
+
     
     get_select_defaults(dist_addr_form,
                         addr_df_dist_utility_input_id,
@@ -1513,7 +1822,9 @@ def display_calc_df_distance_input_form() :
     dist_addr_form.set_fullparms(True)
     
     geocode_input_html = ""
-    geocode_input_html = dist_addr_form.get_html() 
+    geocode_input_html = dist_addr_form.get_html()
+    
+    
     
     geocode_heading_html =   "<div>Get Distance(s) from dataframe</div>"
 
@@ -1524,53 +1835,154 @@ def display_calc_df_distance_input_form() :
     display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
 
 
+
+
 def display_calc_center_input_form() :
-
-    center_addr_form  =   InputForm(addr_center_utility_input_id,
-                                    addr_center_utility_input_idList,
-                                    addr_center_utility_input_labelList,
-                                    addr_center_utility_input_typeList,
-                                    addr_center_utility_input_placeholderList,
-                                    addr_center_utility_input_jsList,
-                                    addr_center_utility_input_reqList)       
+    """
+    * ---------------------------------------------------------
+    * function : display the calculate center form 
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
     
-    center_addr_form.set_gridwidth(720)
-    center_addr_form.set_custombwidth(120)
-    center_addr_form.set_fullparms(True)
+    DEBUG_DISPLAY_CALC_CENTER   =   False
     
-    geocode_input_html = ""
-    geocode_input_html = center_addr_form.get_html() 
+    cparms  =   cfg.get_config_value(addr_center_utility_input_id+"Parms")
     
-    geocode_heading_html =   "<div>Interactive Get Center Point</div>"
-
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
-    gridhtmls       =   [geocode_heading_html,geocode_input_html]
-
-    print("\n")
-    display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
-
-
-def display_calc_df_center_input_form() :
-
-    center_addr_form  =   InputForm(addr_df_center_utility_input_id,
-                                    addr_df_center_utility_input_idList,
-                                    addr_df_center_utility_input_labelList,
-                                    addr_df_center_utility_input_typeList,
-                                    addr_df_center_utility_input_placeholderList,
-                                    addr_df_center_utility_input_jsList,
-                                    addr_df_center_utility_input_reqList)       
+    if(DEBUG_DISPLAY_CALC_CENTER) :
+        print("display_calc_df_distance_input_form",cparms)
     
-    selectDicts     =   []
-    
-    dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
-    selectDicts.append(dataframes)
-            
-    get_select_defaults(center_addr_form,
-                        addr_df_center_utility_input_id,
-                        addr_df_center_utility_input_idList,
-                        addr_df_center_utility_input_typeList,
-                        selectDicts)
+    if(not(cparms is None)) :
+        cparms[1]   =   " "
+        cparms[2]   =   " "
+        cfg.set_config_value(addr_center_utility_input_id+"Parms",cparms)
         
+    else :
+        cparms      =   ["","","",""]
+        cparms[0]   =   "get coords from coord(s)_list"
+        
+    if(cparms[0] == "get coords from address(s)_list") :
+        
+        center_addr_form  =   InputForm(addr_center_utility_input_id,
+                                        addr_center_utility_input_idList,
+                                        addr_center_utility_input_labelList1,
+                                        addr_center_utility_input_typeList,
+                                        addr_center_utility_input_placeholderList1,
+                                        addr_center_utility_input_jsList,
+                                        addr_center_utility_input_reqList)
+        
+        
+    else :
+        
+        center_addr_form  =   InputForm(addr_center_utility_input_id,
+                                        addr_center_utility_input_idList,
+                                        addr_center_utility_input_labelList,
+                                        addr_center_utility_input_typeList,
+                                        addr_center_utility_input_placeholderList,
+                                        addr_center_utility_input_jsList,
+                                        addr_center_utility_input_reqList)
+
+    selectDicts     =   []
+    
+    dfs             =   ["get coords from coord(s)_list","get coords from address(s)_list"]
+    
+    if(DEBUG_DISPLAY_CALC_CENTER) :
+        print("cfg.is_a_dfc_dataframe_loaded()",cfg.is_a_dfc_dataframe_loaded())
+        
+    if(cfg.is_a_dfc_dataframe_loaded()) :
+        
+        dfslist         =   cfg.get_dfc_dataframes_titles_list()
+        for i in range(len(dfslist)) :
+            dfs.append(dfslist[i])
+    
+        if(not (cparms is None)) :
+            
+            if(cparms[0] == "get coords from coord(s)_list") :
+        
+                default_df  =   "get coords from coord(s)_list"
+                geocode_df  =   None
+                
+            elif(cparms[0] == "get coords from address(s)_list") :
+        
+                default_df  =   "get coords from address(s)_list"
+                geocode_df  =   None
+        
+            else :
+        
+                geocode_df          =   cfg.get_dfc_dataframe_df(cparms[0])
+        
+                if(not(geocode_df is None)) :
+                    
+                    default_df  =   cparms[0]
+                    
+                else :
+                    
+                    default_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+                    geocode_df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+                
+        else :
+            
+            default_df  =   "get coords from coord(s)_list"
+            geocode_df  =   None
+            
+    else :
+        
+        if(cparms[0] == "get coords from coord(s)_list") :
+        
+            default_df  =   "get coords from coord(s)_list"
+            geocode_df  =   None
+                
+        elif(cparms[0] == "get coords from address(s)_list") :
+        
+            default_df  =   "get coords from address(s)_list"
+            geocode_df  =   None
+
+       
+    dffrom_sel    =   {"default":default_df,"list":dfs, "callback" : "get_df_center_cols"}
+    selectDicts.append(dffrom_sel)
+     
+    geocode_df_cols     =   [" "]
+    
+    if(not(geocode_df is None)) :
+        
+        geocode_cols        =  list(geocode_df.columns)
+        for i in range(len(geocode_cols)) :
+            geocode_df_cols.append(geocode_cols[i])
+            
+    if(DEBUG_DISPLAY_CALC_CENTER) :
+        print("geocode_df_cols : from ",geocode_df_cols)
+        
+    cols_list           =   {"default":" ","list":geocode_df_cols, "callback" : "select_df_center_col"}
+    selectDicts.append(cols_list)
+            
+    if(cparms is None) :
+        
+        cfg.set_config_value(addr_center_utility_input_id+"Parms",[default_df,"","",""])
+        cfg.set_config_value(addr_center_utility_input_id+"ParmsProtect",[False,True,True,False]) 
+    
+    else :
+        cfg.set_config_value(addr_center_utility_input_id+"Parms",[default_df,"","",""])
+        
+        if( (default_df == "get coords from coord(s)_list") or 
+            (default_df == "get coords from address(s)_list") ):
+            
+            cfg.set_config_value(addr_center_utility_input_id+"ParmsProtect",[False,True,True,False])
+            
+        else :
+            
+            cfg.set_config_value(addr_center_utility_input_id+"ParmsProtect",[False,False,False,True])
+    
+    get_select_defaults(center_addr_form,
+                        addr_center_utility_input_id,
+                        addr_center_utility_input_idList,
+                        addr_center_utility_input_typeList,
+                        selectDicts)
+    
     center_addr_form.set_gridwidth(720)
     center_addr_form.set_custombwidth(120)
     center_addr_form.set_fullparms(True)
@@ -1578,57 +1990,292 @@ def display_calc_df_center_input_form() :
     geocode_input_html = ""
     geocode_input_html = center_addr_form.get_html() 
     
-    geocode_heading_html =   "<div>Get Center Point from dataframe</div>"
+    geocode_heading_html =   "<div>Get Center Point</div>"
 
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [geocode_heading_html,geocode_input_html]
 
     print("\n")
     display_generic_grid("geocode-utility-wrapper",gridclasses,gridhtmls)
-    
-    
-def display_calc_df_center_dist_input_form() :
 
-    center_addr_form  =   InputForm(addr_df_center_dist_utility_input_id,
-                                    addr_df_center_dist_utility_input_idList,
-                                    addr_df_center_dist_utility_input_labelList,
-                                    addr_df_center_dist_utility_input_typeList,
-                                    addr_df_center_dist_utility_input_placeholderList,
-                                    addr_df_center_dist_utility_input_jsList,
-                                    addr_df_center_dist_utility_input_reqList)       
+
     
+def display_calc_df_center_dist_input_form(parms=None) :
+    """
+    * ---------------------------------------------------------
+    * function : display the calculate distance from center form 
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : 
+    *  N/A 
+    * --------------------------------------------------------
+    """
+
+    DEBUG_DISPLAY_DF_CENTER_DIST    =   False
+    
+    if(parms is None) :
+        fparms  =   None
+    else :
+        fparms  =   get_parms_for_input(parms,addr_df_center_dist_utility_input_idList)
+    
+    cparms  =   cfg.get_config_value(addr_df_center_dist_utility_input_id+"Parms")
+    
+    
+    if(DEBUG_DISPLAY_DF_CENTER_DIST) :
+        print("display_calc_df_center_dist_input_form : fparms\n",fparms)
+    
+    if(not (fparms is None)) :
+        
+        cparms  =   fparms    
+        cfg.set_config_value(addr_center_utility_input_id+"Parms",cparms)
+        
+    if(DEBUG_DISPLAY_DF_CENTER_DIST) :    
+        print("display_calc_df_center_dist_input_form : cparms\n",cparms) 
+    
+    if(cparms is None) :
+        
+        cparms  =   ["get center point from coords_for_center_point","","","","","","","get distance from coord(s) from distance_from_coord(s)_list","","","",""]
+        
+        center_addr_form  =   InputForm(addr_df_center_dist_utility_input_id,
+                                        addr_df_center_dist_utility_input_idList,
+                                        addr_df_center_dist_utility_input_labelList,
+                                        addr_df_center_dist_utility_input_typeList,
+                                        addr_df_center_dist_utility_input_placeholderList,
+                                        addr_df_center_dist_utility_input_jsList,
+                                        addr_df_center_dist_utility_input_reqList)  
+        
+    else :
+        
+        if(cparms[7] == "get distance from address(s) from distance_from_address(s)_list") :
+        
+            center_addr_form  =   InputForm(addr_df_center_dist_utility_input_id,
+                                            addr_df_center_dist_utility_input_idList,
+                                            addr_df_center_dist_utility_input_labelList1,
+                                            addr_df_center_dist_utility_input_typeList,
+                                            addr_df_center_dist_utility_input_placeholderList1,
+                                            addr_df_center_dist_utility_input_jsList,
+                                            addr_df_center_dist_utility_input_reqList)  
+        
+        else :
+        
+            center_addr_form  =   InputForm(addr_df_center_dist_utility_input_id,
+                                            addr_df_center_dist_utility_input_idList,
+                                            addr_df_center_dist_utility_input_labelList,
+                                            addr_df_center_dist_utility_input_typeList,
+                                            addr_df_center_dist_utility_input_placeholderList,
+                                            addr_df_center_dist_utility_input_jsList,
+                                            addr_df_center_dist_utility_input_reqList)  
+
     selectDicts     =   []
     
-    dataframes      =   cfg.get_dfc_dataframes_select_list(cfg.SWGeocodeUtility_ID)
-    selectDicts.append(dataframes)
+    dfs             =   ["get center point from coords_for_center_point"]
     
-    df              =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
-    colnames        =   df.columns.values.tolist()
+    if(cfg.is_a_dfc_dataframe_loaded()) :
+        
+        dfslist         =   cfg.get_dfc_dataframes_titles_list()
+        for i in range(len(dfslist)) :
+            dfs.append(dfslist[i])
     
-    distsel         =   {"default":"True","list":["True","False"],"callback":"change_get_center_pt"}
-    selectDicts.append(distsel)
-    
-    colssel         =   {"default":colnames[0],"list":colnames,"callback":"change_get_center_pt_col"}
-    selectDicts.append(colssel)
-    
+        if(not (cparms is None)) :
+        
+            if(not((cparms[0] == "get center point from coords_for_center_point") or (cparms[0] == ""))) :
+        
+                geocode_df          =   cfg.get_dfc_dataframe_df(cparms[0])
+        
+                if(not(geocode_df is None)) :
+                    
+                    default_df  =   cparms[0]
+                    
+                else :
+                    
+                    default_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+                    geocode_df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+                
+            else :
             
+                default_df  =   "get center point from coords_for_center_point"
+                geocode_df  =   None
+            
+        else :
+            
+            default_df  =   "get center point from coords_for_center_point"
+            geocode_df  =   None
+            
+    else :
+        
+        default_df  =   "get center point from coords_for_center_point"
+        geocode_df  =   None
+       
+    dffrom_sel    =   {"default":default_df,"list":dfs, "callback" : "get_df_center_dist_cols"}
+    selectDicts.append(dffrom_sel)
+
+    geocode_df_cols     =   [" "]
+    
+    if(not(geocode_df is None)) :
+        
+        geocode_cols        =  list(geocode_df.columns)
+        for i in range(len(geocode_cols)) :
+            geocode_df_cols.append(geocode_cols[i])
+    
+    #print("geocode_df_cols : from ",geocode_df_cols)
+    cols_list           =   {"default":" ","list":geocode_df_cols, "callback" : "select_df_center_dist_col"}
+    selectDicts.append(cols_list)
+    
+    cparms[0]   =   default_df
+    
+    if(DEBUG_DISPLAY_DF_CENTER_DIST) :
+        print("cparms[0]",cparms[0])
+        print("cparms[7]",cparms[7])
+    
+    distsel         =   {"default":"km","list":["km","miles"]}
+    selectDicts.append(distsel)
+    geocsel         =   {"default":"geodesic","list":["geodesic","great_circle"]}
+    selectDicts.append(geocsel)
+    elipsel         =   {"default":"WGS-84","list":['WGS-84','GRS-80','Airy (1830)','Intl 1924','Clarke (1880)','GRS-67']}
+    selectDicts.append(elipsel)
+
+    # set up from distance coords    
+    dfs             =   ["get distance from coord(s) from distance_from_coord(s)_list",
+                         "get distance from address(s) from distance_from_address(s)_list"]
+    
+    if(cfg.is_a_dfc_dataframe_loaded()) :
+        
+        dfslist         =   cfg.get_dfc_dataframes_titles_list()
+        for i in range(len(dfslist)) :
+            dfs.append(dfslist[i])
+    
+        if(not (cparms is None)) :
+            
+            if(cparms[7] == "get distance from coord(s) from distance_from_coord(s)_list") :
+                
+                default_df  =   "get distance from coord(s) from distance_from_coord(s)_list"
+                geocode_df  =   None 
+                
+            elif(cparms[7] == "get distance from address(s) from distance_from_address(s)_list") :
+                
+                default_df  =   "get distance from address(s) from distance_from_address(s)_list"
+                geocode_df  =   None 
+        
+            else :
+        
+                geocode_df          =   cfg.get_dfc_dataframe_df(cparms[5])
+        
+                if(not(geocode_df is None)) :
+                    
+                    default_df  =   cparms[5]
+                    
+                else :
+                    
+                    default_df  =   cfg.get_config_value(cfg.CURRENT_GEOCODE_DF)
+                    geocode_df  =   cfg.get_current_chapter_df(cfg.SWGeocodeUtility_ID)
+                
+            
+        else :
+            
+            default_df  =   "get distance from coord(s) from distance_from_coord(s)_list"
+            geocode_df  =   None
+            
+    else :
+        
+        if(cparms[7] == "get distance from address(s) from distance_from_address(s)_list") :
+                
+            default_df  =   "get distance from address(s) from distance_from_address(s)_list"
+            geocode_df  =   None 
+            
+        else :
+            
+            default_df  =   "get distance from coord(s) from distance_from_coord(s)_list"
+            geocode_df  =   None 
+       
+    dffrom_sel    =   {"default":default_df,"list":dfs, "callback" : "get_df_center_dist_coords_cols"}
+    selectDicts.append(dffrom_sel)
+
+    geocode_df_cols     =   [" "]
+    
+    if(not(geocode_df is None)) :
+        
+        geocode_cols        =  list(geocode_df.columns)
+        for i in range(len(geocode_cols)) :
+            geocode_df_cols.append(geocode_cols[i])
+    
+    #print("geocode_df_cols : from ",geocode_df_cols)
+    cols_list           =   {"default":" ","list":geocode_df_cols, "callback" : "select_df_center_dist_coords_col"}
+    selectDicts.append(cols_list)
+    
+    cparms[7]   =   default_df
+    
+    
+    parmsprotect    =   [False,False,False,False,False,False,False,False,False,False,False,False]
+    
+    if(DEBUG_DISPLAY_DF_CENTER_DIST) :
+        print("cparms[0]",cparms[0])
+        print("cparms[7]",cparms[7])
+    
+    if(cparms[0] == "get center point from coords_for_center_point") :
+        
+        parmsprotect[0] = False
+        parmsprotect[1] = True
+        parmsprotect[2] = True
+        parmsprotect[3] = False
+        
+        if( (cparms[7] == "get distance from coord(s) from distance_from_coord(s)_list") or 
+            (cparms[7] == "get distance from address(s) from distance_from_address(s)_list") ) :
+            
+            parmsprotect[8] =   True 
+            parmsprotect[9] =   True
+            cparms[8]       =   ""
+            cparms[9]       =   ""
+            
+        else :
+            
+            parmsprotect[10] =   True 
+        
+    else :
+        
+        parmsprotect[0]     =   False
+        parmsprotect[1]     =   False
+        parmsprotect[2]     =   False
+        parmsprotect[3]     =   True
+        
+    if( (cparms[7] == "get distance from coord(s) from distance_from_coord(s)_list") or 
+        (cparms[7] == "get distance from address(s) from distance_from_address(s)_list") ) :
+        
+        parmsprotect[8]     =   True
+        parmsprotect[9]     =   True
+        parmsprotect[10]    =   False
+        
+        parmsprotect[11]    =   True 
+        cparms[8]           =   ""
+        cparms[9]           =   "" 
+        
+    else :
+        
+        parmsprotect[8]     =   False
+        parmsprotect[9]     =   False
+        parmsprotect[10]    =   True
+        cparms[10]          =   ""
+        
+        parmsprotect[11]    =   False
+        
     get_select_defaults(center_addr_form,
                         addr_df_center_dist_utility_input_id,
                         addr_df_center_dist_utility_input_idList,
                         addr_df_center_dist_utility_input_typeList,
                         selectDicts)
+    
+    cfg.set_config_value(addr_df_center_dist_utility_input_id+"Parms",cparms)
+    cfg.set_config_value(addr_df_center_dist_utility_input_id+"ParmsProtect",parmsprotect)
         
     center_addr_form.set_gridwidth(720)
     center_addr_form.set_custombwidth(120)
     center_addr_form.set_fullparms(True)
     
-    cfg.set_config_value(addr_df_center_dist_utility_input_id+"Parms",[dataframes.get("default"),"True","","",""])
-    cfg.set_config_value(addr_df_center_dist_utility_input_id+"ParmsProtect",[False,False,False,False,True])
-    
     geocode_input_html = ""
     geocode_input_html = center_addr_form.get_html() 
     
-    geocode_heading_html =   "<div>Calculate Distance From Center</div>"
+    geocode_heading_html =   "<div>Calculate Distance From Center Point</div>"
 
     gridclasses     =   ["dfcleanser-common-grid-header","dfc-footer"]
     gridhtmls       =   [geocode_heading_html,geocode_input_html]
@@ -1730,6 +2377,7 @@ def get_form_id(geocid,gtype) :
          if(geocid == sugm.ArcGISId)            : return(arcgis_reverse_id)   
          elif(geocid == sugm.GoogleId)          : return(google_reverse_id)
          elif(geocid == sugm.BingId)            : return(bing_reverse_id)
+         elif(geocid == sugm.OpenMapQuestId)    : return(mapquest_reverse_id)
          elif(geocid == sugm.NominatimId)       : return(nomin_reverse_id)
          elif(geocid == sugm.BaiduId)           : return(baidu_reverse_id)
    
@@ -1779,7 +2427,7 @@ def get_geocoder_parms_table(geocid) :
     row_added = 2
 
 
-    print("get_geocoder_parms_table",geocparms)
+    #print("get_geocoder_parms_table",geocparms)
     
     if(geocparms != None) :
         
@@ -2159,17 +2807,21 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
             idList          =   arcgis_reverse_idList 
             reqList         =   arcgis_reverse_reqList 
         
+        elif(geocid == sugm.OpenMapQuestId) :
+            idList          =   mapquest_reverse_idList 
+            reqList         =   mapquest_reverse_reqList 
+                
         elif(geocid == sugm.NominatimId) :
             idList          =   nomin_reverse_idList 
             reqList         =   nomin_reverse_reqList 
-        
+
         elif(geocid == sugm.BaiduId) :
             idList          =   baidu_reverse_idList 
             reqList         =   baidu_reverse_reqList 
             
         else :
             opstat.set_status(False)
-            opstat.set_errorMsg("Reverse not supportd")
+            opstat.set_errorMsg("Reverse not supported for current geocoder")
         
     if(not opstat.get_status()) :
         return(opstat)
@@ -2265,7 +2917,8 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
         
     elif(ptype == sugm.REVERSE) :
         if(geocid == sugm.GoogleId)              : labelList       =   google_reverse_labelList 
-        elif(geocid == sugm.BingId)              : labelList       =   bing_reverse_labelList 
+        elif(geocid == sugm.BingId)              : labelList       =   bing_reverse_labelList
+        elif(geocid == sugm.OpenMapQuestId)      : labelList       =   mapquest_reverse_labelList
         elif(geocid == sugm.NominatimId)         : labelList       =   nomin_reverse_labelList 
         elif(geocid == sugm.ArcGISId)            : labelList       =   arcgis_reverse_labelList 
         elif(geocid == sugm.BaiduId)             : labelList       =   baidu_reverse_labelList 
@@ -2277,14 +2930,19 @@ def get_geocoder_cmd_kwargs(ptype,geocid) :
     if(geoparms != None) :
         for i in range(len(geoparms)) : 
             if(len(geoparms[i]) > 0) :
-                geokwargs.update({labelList[i]:geoparms[i]})
+                if(geoparms[i] == 'False') :
+                    geokwargs.update({labelList[i]:False}) 
+                elif(geoparms[i] == 'True') :
+                    geokwargs.update({labelList[i]:True}) 
+                else :    
+                    geokwargs.update({labelList[i]:geoparms[i]})
 
     #print("get_geocoder_cmd_kwargs : geokwargs\n",geokwargs)
     if(len(geokwargs) == 0) :
         return(None)
     else :
         
-        if(ptype == sugm.QUERY) :
+        if( (ptype == sugm.QUERY) or (ptype == sugm.REVERSE) ):
             return(customize_query_kwargs(geocid,geokwargs)) 
         else :
             return(geokwargs)
@@ -2309,6 +2967,7 @@ def customize_query_kwargs(geocid,geokwargs) :
     """
 
     cfg.drop_config_value(sugm.get_geocoder_title(geocid)+"max_geocode_results")
+    
     if(not(geokwargs.get("number_of_results") == None)) :
         max_geocode_results     =   int(geokwargs.get("number_of_results"))
         geokwargs.pop("number_of_results")
@@ -2332,7 +2991,7 @@ def customize_query_kwargs(geocid,geokwargs) :
 
 
 
-def display_geocode_inputs(geocid,gtype,showfull=False) :
+def display_geocode_inputs(geocid,gtype,showfull=False,statusHtml=None) :
     """
     * ---------------------------------------------------------
     * function : display geocode input form
@@ -2347,11 +3006,11 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
     * --------------------------------------------------------
     """
  
-    print("display_geocode_inputs",geocid,gtype)
+    #print("display_geocode_inputs",geocid,gtype)
     
     if(geocid == None) :
         geocid = sugm.GoogleId
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocid,True)
         
     opstat  =   validate_geocode_connect_parms(geocid)
     
@@ -2388,13 +3047,21 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
                                    form[5],
                                    form[6])
     
-    geofunc_input_form.dump()
+    #geofunc_input_form.dump()
     
     if(gtype == sugm.QUERY) :
         
         selectDicts     =   [] 
         
         if(geocid == sugm.BingId) :
+            
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
+            
+            country_codes   =   get_Dict("Country_Codes")
+            cc_keys         =   list(country_codes.keys())
+            cc_keys.sort()
+            ccsel           =   {"default":"United States","list":cc_keys}
+            selectDicts.append(ccsel)
 
             bingsel           =   {"default":"False","list":["True","False"]}
             selectDicts.append(bingsel)
@@ -2402,6 +3069,28 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
             selectDicts.append(bingsel1)
             
         elif(geocid == sugm.GoogleId)              : 
+            
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
+            
+            cctlds          =   get_Dict("ccTLDs")
+            cctlds_keys     =   ["None"]
+            ccs             =   list(cctlds.keys())
+            ccs.sort()
+            for i in range(len(ccs)) :
+                cctlds_keys.append(ccs[i])    
+            #cctlds_keys.sort()
+            cctldssel       =   {"default":cctlds_keys[0],"list":cctlds_keys}
+            selectDicts.append(cctldssel)
+            
+            langs           =   get_Dict("Google_Language_Codes")
+            langs_keys      =   []
+            lngs            =   list(langs.keys())
+            lngs.sort()
+            for i in range(len(lngs)) :
+                langs_keys.append(lngs[i])    
+            #langs_keys.sort()
+            cctldssel       =   {"default":"English","list":langs_keys}
+            selectDicts.append(cctldssel)
             
             googsel           =   {"default":"False","list":["True","False"]}
             selectDicts.append(googsel)
@@ -2417,19 +3106,45 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
 
     elif(gtype == sugm.REVERSE) :
         
+        selectDicts     =   []
+        
         if(geocid == sugm.GoogleId)              : 
             
-            googsel           =   {"default":"False","list":["True","False"]}
-            get_select_defaults(geofunc_input_form,
-                                form[0],form[1],form[3],
-                                [googsel])
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
             
-        elif(geocid == sugm.BingId) :
-
-            bingsel           =   {"default":"False","list":["True","False"]}
+            langs           =   get_Dict("Google_Language_Codes")
+            langs_keys      =   []
+            lngs            =   list(langs.keys())
+            lngs.sort()
+            for i in range(len(lngs)) :
+                langs_keys.append(lngs[i])    
+            #langs_keys.sort()
+            cctldssel       =   {"default":"English","list":langs_keys}
+            selectDicts.append(cctldssel)
+            
+            googsel           =   {"default":"False","list":["True","False"]}
+            selectDicts.append(googsel)
+            
             get_select_defaults(geofunc_input_form,
                                 form[0],form[1],form[3],
-                                [bingsel])
+                                selectDicts)
+
+        elif(geocid == sugm.BingId) :
+            
+            from dfcleanser.sw_utilities.sw_utility_model import get_Dict
+            
+            country_codes   =   get_Dict("Country_Codes")
+            cc_keys         =   list(country_codes.keys())
+            cc_keys.sort()
+            ccsel           =   {"default":"United States","list":cc_keys}
+            selectDicts.append(ccsel)
+            
+            bingsel           =   {"default":"False","list":["True","False"]}
+            selectDicts.append(bingsel) 
+            
+            get_select_defaults(geofunc_input_form,
+                                form[0],form[1],form[3],
+                                selectDicts)
             
         elif(geocid == sugm.OpenMapQuestId) :
 
@@ -2440,7 +3155,7 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
             
             
     geofunc_input_form.set_gridwidth(620)
-    geofunc_input_form.set_custombwidth(100) 
+    geofunc_input_form.set_custombwidth(99) 
     
     if(showfull) :
         geofunc_input_form.set_fullparms(True)    
@@ -2452,26 +3167,22 @@ def display_geocode_inputs(geocid,gtype,showfull=False) :
         geofunc_heading_html =   "<div>Interactive Geocoding Parameters</div>"
     else :
         geofunc_heading_html =   "<div>Interactive Reverse Geocoding Parameters</div>"
+        
+    if(statusHtml is None) :
  
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
-    gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html]
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html]
     
-    display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
-       
-    notes = [] 
-    
-    if(gtype == sugm.QUERY) :
-        notes.append("To retrieve coords for a single address just enter address as single string.  Example : 1600 Pennsylvania Ave Washington, DC")
-        notes.append("To retrieve coords for multiple addresses enter each address enclosed in [ ] separated by a comma.  Example : [addr],[addr1], ...[addrn]")
+        display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
+        
     else :
-        notes.append("To retrieve an address for a single set of coords just enter coords as single list of coords. Example : [lat,long] ")
-        notes.append("To retrieve multiple addresses enter each coords enclosed in [] separated by a comma.  Example : [lat,long],[lat1,long1], ...[latn,longn]")
-
-    #display_notes(notes)
-    from dfcleanser.common.common_utils import display_msgs
-    display_msgs(notes,None)
-
-
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","dfc-bottom"]
+        gridhtmls       =   [geofunc_heading_html,geo_parms_html,geofunc_input_html,statusHtml]
+    
+        display_generic_grid("geocode-connector-wrapper-with-notes",gridclasses,gridhtmls)
+        
+ 
 def get_geocoder_table(for_bulk_geocoding=False) :
     """
     * ---------------------------------------------------------
@@ -2529,7 +3240,7 @@ def get_geocoder_table(for_bulk_geocoding=False) :
     return(listHtml)
 
 
-def display_geocoders(geocodeid,showfull=False,showNotes=True) :
+def display_geocoders(geocodeid,showfull=False,showNotes=True,with_status=None) :
     """
     * ---------------------------------------------------------
     * function : display geocoder init screens
@@ -2544,14 +3255,14 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     *  N?A
     * --------------------------------------------------------
     """
-
+    
     listHtml = get_geocoder_table()
     
     if(geocodeid == None) :
         geocodeid       =   cfg.get_config_value(cfg.CURRENT_GEOCODER_KEY)
         if(geocodeid == None) : 
             geocodeid = sugm.GoogleId
-            cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocodeid)
+            cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,geocodeid,True)
 
     geocoder_input_form = None
     
@@ -2568,7 +3279,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
         
     elif(geocodeid == sugm.BingId) :
         
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BingId)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BingId,True)
         geocoder_input_form   =   [bing_geocoder_id,
                                    bing_geocoder_idList,
                                    bing_geocoder_labelList,
@@ -2579,7 +3290,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
 
     elif(geocodeid == sugm.OpenMapQuestId) :
         
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.OpenMapQuestId)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.OpenMapQuestId,True)
         geocoder_input_form   =   [mapquest_geocoder_id,
                                    mapquest_geocoder_idList,
                                    mapquest_geocoder_labelList,
@@ -2590,7 +3301,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
 
     elif(geocodeid == sugm.NominatimId) :
         
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.NominatimId)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.NominatimId,True)
         geocoder_input_form   =   [nomin_geocoder_id,
                                    nomin_geocoder_idList,
                                    nomin_geocoder_labelList,
@@ -2601,7 +3312,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
 
     elif(geocodeid == sugm.ArcGISId) :
         
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.ArcGISId)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.ArcGISId,True)
         geocoder_input_form   =   [arcgis_geocoder_id,
                                    arcgis_geocoder_idList,
                                    arcgis_geocoder_labelList,
@@ -2612,7 +3323,7 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
     
     elif(geocodeid == sugm.BaiduId) :
         
-        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BaiduId)
+        cfg.set_config_value(cfg.CURRENT_GEOCODER_KEY,sugm.BaiduId,True)
         geocoder_input_form   =   [baidu_geocoder_id,
                                    baidu_geocoder_idList,
                                    baidu_geocoder_labelList,
@@ -2641,10 +3352,20 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
         
     geocode_heading_html =   "<br><div>Geocoder Parms - " + sugm.get_geocoder_title(geocodeid) + "</div>"
  
-    gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
-    gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
+    if(with_status is None) :
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right"]
+        gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html]
     
-    display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
+        display_generic_grid("geocode-connector-wrapper",gridclasses,gridhtmls)
+        
+    else :
+        
+        gridclasses     =   ["dfcleanser-common-grid-header","dfc-left","dfc-right","dfc-bottom"]
+        gridhtmls       =   [geocode_heading_html,listHtml,geocode_input_html,with_status]
+    
+        display_generic_grid("geocode-connector-wrapper-with-status",gridclasses,gridhtmls)
+        
     
     if(showNotes) :
         notes = [] 
@@ -2653,13 +3374,16 @@ def display_geocoders(geocodeid,showfull=False,showNotes=True) :
             return()
         elif(geocodeid == sugm.GoogleId) :
             return()
-        elif(geocodeid == sugm.BingId) :        
+        elif(geocodeid == sugm.BingId) : 
+            return()
             notes.append("Bing geoocoding requires an api_key for all Bing geocoding including bulk geocoding.")
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
         elif(geocodeid == sugm.OpenMapQuestId) :
+            return()
             notes.append("OpenMapQuest geoocoding requires an api_key for all OpenMapQuest geocoding including bulk geocoding.")
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
-        elif(geocodeid == sugm.NominatimId) :        
+        elif(geocodeid == sugm.NominatimId) : 
+            return()
             notes.append("Nominatim geoocoding requires a user-agent for all Nominatim geocoding including bulk geocoding.")
             notes.append("The rest of the parameters are used as default values for any subsequent geocoding calls of this connector.")
         elif(geocodeid == sugm.BaiduId) :        

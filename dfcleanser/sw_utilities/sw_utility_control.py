@@ -18,10 +18,9 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.sw_utilities.sw_utility_widgets as swuw
 import dfcleanser.sw_utilities.sw_utility_model as swum
 
-from dfcleanser.common.html_widgets import (new_line)
 from dfcleanser.common.table_widgets import (drop_owner_tables)
 
-from dfcleanser.common.common_utils import (display_exception, opStatus)
+from dfcleanser.common.common_utils import (display_exception, opStatus, get_parms_for_input)
 
 
 """
@@ -96,169 +95,263 @@ def process_sw_utilities(optionId,parms=None) :
         return
     
     elif (optionId == swum.UPDATE_LIST_OPTION) :
-        print("swum.UPDATE_LIST_OPTION",parms)
-        return()
+        swuw.get_sw_utilities_main_taskbar()
+
+        #print("swum.UPDATE_LIST_OPTION",parms)
+        
+        fparms = swuw.get_sw_utilities_list_inputs(parms)
+        
+        #print("fparms",fparms)
+        
+        #filename = fparms[2]
+        listname        =   fparms[0]
+        newlistname     =   None
+        listvalues      =   fparms[2]
+        newlistfname    =   None
+        
+        try :
+                        
+            newlist     =   json.loads(listvalues)
+            swum.update_List(listname,newlist,swum.USER_CREATED)
+                        
+        except Exception as e :
+            opstat.store_exception("user list is invalid ",e)
+        
+        if(opstat.get_status()) :
+            swuw.display_list_dict(swum.LIST_ID)
+             
+        else :
+            display_exception(opstat)
+        
+        return
         
     elif (optionId == swum.CLEAR_LIST_OPTION) :
-        print("swum.CLEAR_LIST_OPTION",parms)
-        return()
+        swuw.get_sw_utilities_main_taskbar()
+
+        #print("swum.CLEAR_LIST_OPTION",parms)
+        swuw.display_list_maint()
+        return
         
         
     if (optionId == swum.ADD_LIST_OPTION) :
-        print("swum.ADD_LIST_OPTION",parms)
-        return()
+        swuw.get_sw_utilities_main_taskbar()
 
+        #print("swum.ADD_LIST_OPTION",parms)
+        
         fparms = swuw.get_sw_utilities_list_inputs(parms)
+        
+        #print("fparms",fparms)
+        
+        #filename = fparms[2]
+        newlistname     =   fparms[1]
+        newlistvalues   =   fparms[2]
+        newlistfname    =   fparms[3]
+        
 
-        filename = fparms[2]
-        listname = fparms[0]
-        
-        if(len(listname) > 0) :
+        if(len(newlistname) > 0) :
             
-            newlist = []
-        
-            if(filename != "") :
-                try :
-                    with open(filename, 'r') as list_file :
-                        newlist = json.load(list_file)
-                    list_file.close()
+            if(len(newlistvalues) > 0) :
                 
-                except Exception as e:
-                    opstat.store_exception("Unable to open list file" + str(id),e)
+                if(len(newlistfname) > 0) :
+                    
+                    swum.add_List(newlistname,None,swum.USER_CREATED,newlistfname)
+                    
+                else :
+                    
+                    try :
+                        
+                        newlist     =   json.loads(newlistvalues)
+                        swum.add_Dict(newlistname,newlist,swum.USER_CREATED,None)
+                        
+                    except Exception as e :
+                        opstat.store_exception("user list is invalid ",e)
+                
             else :
-                inlist  =   fparms[1].lstrip("[")
-                inlist  =   inlist.rstrip("]")
-                newlist =   inlist.split(",") 
+                
+                opstat.set_status(False)
+                opstat.set_errorMsg("No list values defined")
             
-            if(opstat.get_status()) :
-            
-                try :
-                    add_List(listname,newlist) 
-                except Exception as e:
-                    opstat.store_exception("Unable to save list " + str(id),e)
-            
-            swuw.get_sw_utilities_main_taskbar()
-            swuw.display_list_dict(swum.LIST_ID)
             
         else :
             opstat.set_status(False) 
-            opstat.set_errorMsg("Invalid List Name")
+            opstat.set_errorMsg("No list Name Specified")
 
-        if(not (opstat.get_status())) :
+        
+        if(opstat.get_status()) :
+            swuw.display_list_dict(swum.LIST_ID)
+             
+        else :
             display_exception(opstat)
-            
+        
         return
 
-    elif (optionId == swum.UPDATE_DICT_OPTION) :
-        print("swum.UPDATE_DICT_OPTION",parms)
-        return()
-        
-    elif (optionId == swum.CLEAR_DICT_OPTION) :
-        print("swum.CLEAR_DICT_OPTION",parms)
-        return()
-        
-    if (optionId == swum.ADD_DICT_OPTION) :
-        print("swum.ADD_DICT_OPTION",parms)
-        return()
 
+    elif (optionId == swum.UPDATE_DICT_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+        
+        #print("swum.UPDATE_DICT_OPTION",parms)
         
         fparms = swuw.get_sw_utilities_dict_inputs(parms)
         
-        filename = fparms[2]
-        dictname = fparms[0]
-
-        if(len(dictname) > 0) :
-            
-            newdict = {}
+        #print("fparms",fparms)
         
-            if(filename != "") :
-                try :
-                    with open(filename, 'r') as dict_file :
-                        newdict = json.load(dict_file)
-                    dict_file.close()
-                
-                except Exception as e:
-                    opstat.store_exception("Unable to open dict file" + str(id),e)
-            else :
-                newdict =  fparms[1]
-                
-                if(len(fparms[1]) > 0) :
-                    try :
-                        newdict = newdict.replace("'", "\"")
-                        sdict = json.loads(newdict)
-                        newdict = sdict
-                    except Exception as e:
-                        opstat.store_exception("Unable to convert dict via json " + str(id),e)
+        dictname        =   fparms[0]
+        newdictname     =   None
+        dictvalues      =   fparms[2]
+        newdictfname    =   None
+        
+        try :
                         
-                else :
-                    opstat.set_status(False)
-                    opstat.set_errorMsg("No dict dat defined")
+            newdict     =   json.loads(dictvalues)
+            swum.update_Dict(dictname,newdict,swum.USER_CREATED)
+                        
+        except Exception as e :
+            opstat.store_exception("user dict is invalid ",e)
+        
+        if(opstat.get_status()) :
+            swuw.display_dict_maint(dictname,None)
+             
+        else :
+            display_exception(opstat)
+        
+        return
+        
+    elif (optionId == swum.CLEAR_DICT_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+
+        #print("swum.CLEAR_DICT_OPTION",parms)
+        swuw.display_dict_maint()
+        return
+        
+    if (optionId == swum.ADD_DICT_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+
+        #print("swum.ADD_DICT_OPTION",parms)
+        
+        fparms = swuw.get_sw_utilities_dict_inputs(parms)
+        
+        #print("fparms",fparms)
+        
+        newdictname     =   fparms[1]
+        newdictvalues   =   fparms[2]
+        newdictfname    =   fparms[3]
+
+        if(len(newdictname) > 0) :
+            
+            if(len(newdictvalues) > 0) :
                 
-            if(opstat.get_status()) :
+                if(len(newdictfname) > 0) :
+                    
+                    swum.add_Dict(newdictname,None,swum.USER_CREATED,newdictfname)
+                    
+                else :
+                    
+                    try :
+                        
+                        newdict     =   json.loads(newdictvalues)
+                        swum.add_Dict(newdictname,newdict,swum.USER_CREATED,None)
+                        
+                    except Exception as e :
+                        opstat.store_exception("user dict is invalid ",e)
+                
+            else :
+                
+                opstat.set_status(False)
+                opstat.set_errorMsg("No dict values defined")
             
-                try :
-                    add_Dict(dictname,newdict) 
-                except Exception as e:
-                    opstat.store_exception("Unable to save dict " + str(id),e)
-            
-            swuw.get_sw_utilities_main_taskbar()
-            swuw.display_list_dict(swum.DICT_ID)
             
         else :
             opstat.set_status(False) 
-            opstat.set_errorMsg("Invalid Dict Name")
-            
-        if(not (opstat.get_status())) :
+            opstat.set_errorMsg("No Dict Name Specified")
+        
+        if(opstat.get_status()) :
+            swuw.display_list_dict(swum.DICT_ID)
+             
+        else :
             display_exception(opstat)
         
         return
     
-    if (optionId == swum.DELETE_LIST_OPTION) :
-        print("swum.DELETE_LIST_OPTION",parms)
-        return()
-        
-        opstat  = opStatus()
-        
-        for i in range(len(swum.ReservedLists)) :
-            if(parms == swum.ReservedLists[i]) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("List to delete is a system reserved list")
-
-        if(opstat.get_status()) :
-            if((parms=="")) :
-                opstat.set_status(False)
-                opstat.set_errorMsg("Invalid list name to delete")
-            else :
-                delete_List(parms)
-
+    if (optionId == swum.LOAD_LIST_OPTION) :
         swuw.get_sw_utilities_main_taskbar()
-        swuw.display_list_dict(swum.LIST_ID)
         
-        if(not (opstat.get_status())) :
-            display_exception(opstat)
-       
+        #print("swum.LOAD_LIST_OPTION\n",parms)
+        
+        fparms  =   get_parms_for_input(parms,swuw.maint_list_utility_input_idList)
+        #print("fparms",fparms)
+        
+        swuw.display_list_maint(None,fparms[3])
+        
         return
+    
+    if (optionId == swum.DELETE_LIST_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
 
-    if (optionId == swum.DELETE_DICT_OPTION) :
-        print("swum.DELETE_DICT_OPTION",parms)
-        return()
+        #print("swum.DELETE_LIST_OPTION",parms)
+        
+        fparms  =   get_parms_for_input(parms,swuw.maint_list_utility_input_idList)
+        #print("fparms",fparms)
 
+        listname    =   fparms[0]
+        
         opstat  = opStatus()
         
         for i in range(len(swum.ReservedDicts)) :
-            if(parms == swum.ReservedDicts[i]) :
+            if(listname == swum.ReservedDicts[i]) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("List to delete is a system reserved dict")
+                
+        if(opstat.get_status()) :
+            if(len(listname) == 0) :
+                opstat.set_status(False)
+                opstat.set_errorMsg("Invalid list name to delete")
+            else :
+                swum.delete_List(listname)
+            
+        swuw.display_list_maint()
+        
+        if(not (opstat.get_status())) :
+            display_exception(opstat)
+            
+        return
+
+    if (optionId == swum.LOAD_DICT_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+        
+        #print("swum.LOAD_DICT_OPTION\n",parms)
+        
+        fparms  =   get_parms_for_input(parms,swuw.maint_dict_utility_input_idList)
+        #@print("fparms",fparms)
+        
+        swuw.display_dict_maint(None,fparms[3])
+
+        return
+
+    if (optionId == swum.DELETE_DICT_OPTION) :
+        swuw.get_sw_utilities_main_taskbar()
+
+        #print("swum.DELETE_DICT_OPTION",parms)
+        
+        fparms  =   get_parms_for_input(parms,swuw.maint_dict_utility_input_idList)
+        #print("fparms",fparms)
+
+        dictname    =   fparms[0]
+        
+        opstat  = opStatus()
+        
+        for i in range(len(swum.ReservedDicts)) :
+            if(dictname == swum.ReservedDicts[i]) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("Dict to delete is a system reserved dict")
                 
         if(opstat.get_status()) :
-            if(len(parms) == 0) :
+            if(len(dictname) == 0) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("Invalid dict name to delete")
             else :
-                delete_Dict(parms)
-                
-        swuw.get_sw_utilities_main_taskbar()
-        swuw.display_list_dict(swum.DICT_ID)
+                swum.delete_Dict(dictname)
+            
+        swuw.display_dict_maint()
         
         if(not (opstat.get_status())) :
             display_exception(opstat)
@@ -326,350 +419,6 @@ def process_generic_function(parms) :
         
         swuw.display_generic_function_inputs(None)
 """
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   DictList class static helper functions
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-DFC_CREATED         =   0
-USER_CREATED        =   1
-
-def get_Dict(dictname,creator=DFC_CREATED) :
-    return(DataframeCleanserDataStructures.get_Item(swum.DICT_ID,dictname,creator))
-    
-def add_Dict(dictname,newdict,creator) :
-   DataframeCleanserDataStructures.add_Item(swum.DICT_ID,dictname,creator,newdict)
-
-def delete_Dict(dictname,creator) :
-    DataframeCleanserDataStructures.delete_Item(swum.DICT_ID,dictname,creator) 
-
-def get_dicts_names(creator) :
-    return(DataframeCleanserDataStructures.get_dict_names(creator))
-    
-def get_pretty_dict(indict,inkeys) :
-    
-    dicttext = "{" 
-    for i in range(len(inkeys)) :
-        dicttext = (dicttext + '"' + str(inkeys[i]) + '" : ' + '"' + str(indict.get(inkeys[i])) + '"')   
-        if(i != (len(inkeys) -1)) :
-            dicttext = (dicttext + "," + new_line)
-        else :
-            dicttext = (dicttext + "}")
-        
-    return(dicttext)
-
-
-def get_List(listname,creator=DFC_CREATED) :
-    return(DataframeCleanserDataStructures.get_Item(swum.LIST_ID,listname,creator))
-    
-def add_List(listname,newlist,creator) :
-    DataframeCleanserDataStructures.add_Item(swum.LIST_ID,listname,creator,newlist)
-
-def delete_List(listname,creator) :
-    DataframeCleanserDataStructures.delete_Item(swum.LIST_ID,listname,creator) 
-
-def get_lists_names(creator) :
-    return(DataframeCleanserDataStructures.get_list_names(creator))
-    
-
-def get_Listlog() :
-    return(DataframeCleanserDataStructures.get_log(swum.LIST_ID)) 
-
-COMMON_DICTS_FILE_NAME      =   "\dfcleanserCommon_dictlog.json"
-COMMON_LISTS_FILE_NAME      =   "\dfcleanserCommon_listlog.json"
-
-USER_DICTS_FILE_NAME        =   "\dfcleanserUser_dictlog.json"
-USER_LISTS_FILE_NAME        =   "\dfcleanserUser_listlog.json"
-
-
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   dfcleanser data strucrures storage class
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-class dfcDataStructureStore :
-
-    # full constructor
-    def __init__(self) :
-        
-        # instance variables
-        self.dictStore          =   {}
-        self.listStore          =   {}
-        
-        self.userdictStore      =   {}
-        self.userlistStore      =   {}
-
-        self.load_datastructures_file(swum.DICT_ID,DFC_CREATED)
-        self.load_datastructures_file(swum.LIST_ID,DFC_CREATED)
-        
-        self.load_datastructures_file(swum.DICT_ID,USER_CREATED)
-        self.load_datastructures_file(swum.LIST_ID,USER_CREATED)
-        
-
-    def get_datastructures_file_name(self,dstype,creator) :
-        
-        if(dstype == swum.DICT_ID) :
-            if(creator == DFC_CREATED) :
-                path = cfg.get_common_files_path() + COMMON_DICTS_FILE_NAME
-            else :
-                path = cfg.get_common_files_path() + USER_DICTS_FILE_NAME
-                
-            return(path)
-            
-        else :
-            
-            if(creator == DFC_CREATED) :
-                path = cfg.get_common_files_path() + COMMON_LISTS_FILE_NAME
-            else :
-                path = cfg.get_common_files_path() + USER_LISTS_FILE_NAME
-                
-            return(path)
-
-    def load_datastructures_file(self,dstype,creator) :
-
-        try :
-            with open(self.get_datastructures_file_name(dstype,creator), 'r') as datastructures_file :
-                if(dstype == swum.DICT_ID) :
-                    if(creator == DFC_CREATED) :
-                        self.dictStore = json.load(datastructures_file)
-                    else :
-                        self.userdictStore = json.load(datastructures_file) 
-                else :
-                    if(creator == DFC_CREATED) :
-                        self.listStore = json.load(datastructures_file)
-                    else :
-                        self.userlistStore = json.load(datastructures_file)
-                   
-                datastructures_file.close()
-                
-        except Exception as e:
-            
-            if(dstype == swum.DICT_ID) :
-                
-                if(creator == DFC_CREATED) :
-                    self.dictStore          =   {}
-                else :
-                    self.userdictStore      =   {}
-                    
-            else :
-                
-                if(creator == DFC_CREATED) :
-                    self.listStore          =   {}
-                else :
-                    self.userlistStore      =   {}
-
-            opstat = opStatus()
-            opstat.store_exception("Unable to load common file :  " + self.get_datastructures_file_name(dstype,creator),e)
-            display_exception(opstat)
-    
-    def save_datastructures_file(self,dstype,creator) :
-        
-        try :
-            with open(self.get_datastructures_file_name(dstype,creator), 'w') as datastructures_file :
-                if(dstype == swum.DICT_ID) :
-                    if(creator == DFC_CREATED) :
-                        json.dump(self.dictStore,datastructures_file)
-                    else :
-                        json.dump(self.userdictStore,datastructures_file)
-                else :
-                    if(creator == DFC_CREATED) :                    
-                        json.dump(self.listStore,datastructures_file)
-                    else :
-                        json.dump(self.userlistStore,datastructures_file)
-                    
-                datastructures_file.close()
-                
-        except Exception as e:
-            opstat = opStatus()
-            opstat.store_exception("Unable to save file " + self.get_datastructures_file_name(dstype,creator),e)
-            display_exception(opstat)
-
-
-    def get_dict_from_file(dictObject) :
-                        
-        fname    =   dictObject.get("filename",None)#"suck my dick"
-        if(not (fname is None)) :
-            
-            try :                
-                with open(fname, 'r') as dict_file :
-                    dictitem = json.load(dict_file)
-                    dict_file.close()
-                    
-                return(dictitem)
-            except :
-                return(None)    
-                
-        else :
-            return(None)
-        
-    def get_list_from_file(listObject) :
-                        
-        fname    =   listObject.get("filename",None)
-
-        if(not (fname is None)) :
-            
-            try :                
-                with open(fname, 'r') as list_file :
-                    listitem = json.load(list_file)
-                    list_file.close()
-                    
-                return(listitem)
-            except :
-                return(None)    
-                
-        else :
-            return(None)
-        
-
-    def get_Item(self,dstype,itemname,creator) :
-
-        if(dstype == swum.DICT_ID) :
-            
-            if(creator == DFC_CREATED) : 
-                
-                if(self.dictStore == {}) :    self.load_datastructures_file(dstype,creator)  
-                dictitem    =  self.dictStore.get(itemname,None)
-                
-                if(not (dictitem is None)) :
-                    
-                    if(len(dictitem) == 1) :
-                        return(self.get_dict_from_file(dictitem))
-                    else :
-                        return(dictitem)
-                else :    
-                    return(None)
-            else :
-                if(self.userdictStore == {}) :    self.load_datastructures_file(dstype,creator) 
-                dictitem    =  self.userdictStore.get(itemname,None)
-                
-                if(not (dictitem is None)) :
-                    
-                    if(len(dictitem) == 1) :
-                        return(self.get_dict_from_file(dictitem))
-                    else :
-                        return(dictitem)
-                else :    
-                    return(None)
-                
-        else :
-            
-            if(creator == DFC_CREATED) :    
-                if(self.listStore == {}) :    self.load_datastructures_file(dstype,creator) 
-                listitem    =  self.listStore.get(itemname,None)
-                
-                if(not (listitem is None)) :
-                    
-                    if(len(listitem) == 1) :
-                        return(self.get_list_from_file(listitem))
-                    else :
-                        return(listitem)
-                else :    
-                    return(None)
-                
-            else :
-                
-                if(self.userlistStore == {}) :    self.load_datastructures_file(dstype,creator) 
-                listitem    =  self.userlistStore.get(itemname,None)
-                
-                if(not (listitem is None)) :
-                    
-                    if(len(listitem) == 1) :
-                        return(self.get_list_from_file(listitem))
-                    else :
-                        return(listitem)
-                else :    
-                    return(None)
-            
-    def add_Item(self,dstype,name,creator,newitem,filename=None) :
-        
-        if(dstype == swum.DICT_ID) : 
-            if(creator == DFC_CREATED) :  
-                if(filename is None) :
-                    self.dictStore.update({name:newitem})
-                else :
-                    self.dictStore.update({name:filename})
-            else :
-                if(filename is None) :
-                    self.userdictStore.update({name:newitem})
-                else :
-                    self.userdictStore.update({name:filename})
-        else :
-            if(creator == DFC_CREATED) : 
-                if(filename is None) :
-                    self.listStore.update({name:newitem})
-                else :
-                    self.listStore.update({name:filename})                    
-            else :
-                if(filename is None) :
-                    self.userlistStore.update({name:newitem})
-                else :
-                    self.userlistStore.update({name:filename})
-            
-        self.save_datastructures_file(dstype,creator)
-
-    def delete_Item(self,dstype,creator,name) :
-        if(dstype == swum.DICT_ID) :  
-            if(creator == DFC_CREATED) :
-                self.dictStore.pop(name,None)
-            else :
-                self.userdictStore.pop(name,None)
-        else :
-            if(creator == DFC_CREATED) :
-                self.listStore.pop(name,None) 
-            else :
-                self. userlistStore.pop(name,None) 
-            
-        self.save_datastructures_file(dstype,creator)
-
-    def get_dict_names(self,creator) :
-        if(creator == DFC_CREATED) :
-            return(swum.ReservedDicts)
-        else :
-            names   =   self.userdictStore.keys()
-            if(not (names is None)) :
-                names   =   list(names)
-                names.sort()
-            
-            if(len(names) > 0) :
-                return(names)
-            else :
-                return(None)
-
-    def get_list_names(self,creator) :
-        if(creator == DFC_CREATED) :
-            return(swum.ReservedLists)
-        else :
-            names   =   self.userlistStore.keys()
-            if(not (names is None)) :
-                names   =   list(names)
-                names.sort()
-                
-            if(len(names) > 0) :
-                return(names)
-            else :
-                return(None)
-
-    def get_log(self,id) :
-        if(id == swum.DICT_ID) : 
-            if(self.dictlog == {}) :    self.load_Log_file(id)    
-            return(self.dictlog) 
-        else :
-            if(self.listlog == {}) :    self.load_Log_file(id)    
-            return(self.listlog) 
-            
-
-"""
-* ----------------------------------------------------
-# instantiation of the dict data object
-* ----------------------------------------------------
-"""    
-DataframeCleanserDataStructures    =   dfcDataStructureStore()
 
 
 
