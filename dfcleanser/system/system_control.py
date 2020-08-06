@@ -30,10 +30,6 @@ def display_main_tb() :
 
     sysw.display_system_main_taskbar()
     
-    print("sysm.is_document_loaded()",sysm.is_document_loaded())
-    
-    if(sysm.is_document_loaded()) :
-        cfg.get_loaded_cells()
         
 def load_dfcleanser_from_toolbar(parms) :
     """
@@ -50,7 +46,6 @@ def load_dfcleanser_from_toolbar(parms) :
     nbname      =   parms[0]
     dfcmode     =   parms[1]
     
-    print("load_dfcleanser_from_toolbar",parms)
     from dfcleanser.system.load import load_dfcleanser_from_toolbar
     load_dfcleanser_from_toolbar(nbname,dfcmode)
 
@@ -69,6 +64,7 @@ def load_dfCleanser() :
 
     from dfcleanser.system.load import load_dfcleanser
     load_dfcleanser()
+    
 
 def unload_dfCleanser() :
     
@@ -131,7 +127,7 @@ def display_system_environment(funcId,parms=None) :
             parms[0]    =   parms[0].replace("]","")
             
             utils_cbs   =   parms[0].split(",")
-
+            
             utilscbs    =   []
             
             for i in range(len(utils_cbs)) :
@@ -144,6 +140,8 @@ def display_system_environment(funcId,parms=None) :
             reload_dfcleanser([utilscbs])
             
             clear_cell()
+            
+            sysw.display_system_main_taskbar()
         
         elif(funcId == sysm.DISPLAY_DATAFRAMES) :
             
@@ -197,8 +195,6 @@ def display_system_environment(funcId,parms=None) :
             dfobject    =   fparms[1]
             dfnotes     =   fparms[2]
             
-            print("\nPROCESS_ADD_DATAFRAME",dftitle,dfobject,dfnotes)
-            
             if(not (len(dftitle)) > 0) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("Invalid df title parm")
@@ -229,6 +225,10 @@ def display_system_environment(funcId,parms=None) :
         elif(funcId == sysm.DISPLAY_SYSTEM) :
             display_main_tb()
             sysw.show_sys_info()
+            
+        elif(funcId == sysm.DISPLAY_OFFLINE) :
+            display_main_tb()
+            sysw.display_offline()
             
         elif(funcId == sysm.DISPLAY_ABOUT) :
             sysw.display_system_main_taskbar()
@@ -315,7 +315,7 @@ def clear_data() :
     
     set_script_logging()
     drop_current_script()
-    #print("dropped scripting")
+
     initialize_notebook()
     
     reset_js = "window.initialize_dc();"

@@ -23,6 +23,7 @@ from dfcleanser.common.table_widgets import (dcTable, SIMPLE)
 from dfcleanser.common.common_utils import (display_notes, RunningClock, alert_user, displayHTML,  
                                             display_generic_grid, get_select_defaults)
 
+from dfcleanser.common.display_utils import (displayParms)
 
 """
 #--------------------------------------------------------------------------
@@ -161,7 +162,8 @@ system_environment_keyTitleList         =   ["Utilities</br>Manager",
                                              "dataframe</br>Manager",
                                              "System",
                                              "About",
-                                             "EULA","Clear","Reset","Help"]
+                                             "EULA",
+                                             "Clear","Reset","Help"]
 
 system_environment_jsList               =   ["process_system_tb_callback("+str(sysm.DISPLAY_CHAPTERS)+")",
                                              "process_system_tb_callback("+str(sysm.DISPLAY_DATAFRAMES)+")",
@@ -227,10 +229,10 @@ dfc_core_modules_checkbox_jsList     =   [None,None,None,None,None]
 dfc_utils_modules_checkbox_title      =   "dfcleanser Utilities"
 dfc_utils_modules_checkbox_id         =   "dfc_utils_cb"
 
-dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgeocode","dfcutildfsubset","dfcutildfcensus","dfcscripting"]
-dfc_utils_modules_checkbox_labelList  =   ["Common","Geocoding","df Subset","Census","Scripting"]
+dfc_utils_modules_checkbox_idList     =   ["dfcutildatastruct","dfcutilgeocode","dfcutilzipcode","dfcutildfsubset","dfcutildfcensus","dfcscripting"]
+dfc_utils_modules_checkbox_labelList  =   ["Common","Geocoding","Zipcodes","df Subset","Census","Scripting"]
 
-dfc_utils_modules_checkbox_jsList     =   [None,None,None,None,None]
+dfc_utils_modules_checkbox_jsList     =   [None,None,None,None,None,None]
 
 system_chapters_tb_doc_title           =   "Chapters"
 system_chapters_tb_doc_id              =   "chaptersoptions"
@@ -244,7 +246,8 @@ system_chapters_tb_jsList              =   ["process_system_tb_callback("+str(sy
 
 system_chapters_tb_centered            =   True
 
-system_inputs                           =   [dfmgr_input_id,dfmgr_add_input_id,readme_input_id]
+system_inputs                          =   [dfmgr_input_id,dfmgr_add_input_id,readme_input_id]
+
 
 """
 #--------------------------------------------------------------------------
@@ -286,6 +289,15 @@ def display_system_main_taskbar() :
  
       
 def display_add_df_input() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : add a dataframe to the dfc list 
+    * 
+    * parms :
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
     
     from dfcleanser.common.html_widgets import InputForm
     dfmanager_input_form = InputForm(dfmgr_add_input_id,
@@ -332,14 +344,8 @@ def get_current_checkboxes(cbtype) :
 
     if(cbtype == sysm.CORE) :
         return([1,1,1,1,1])
-            
     else :
-        if(cfg.get_config_value(cfg.UTILITIES_CBS_KEY) == None) :
-            return([0,0,0,0,0])
-        else :
-            return(cfg.get_config_value(cfg.UTILITIES_CBS_KEY))
-    
-    return(None)
+        return(cfg.get_util_chapters_loaded())
 
 
 def display_system_chapters_taskbar() :
@@ -394,6 +400,16 @@ def display_system_chapters_taskbar() :
 
 
 def get_df_list_html(title) :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : get the html for list of dfc dataframes
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
 
     fparms  =   []
 
@@ -412,7 +428,6 @@ def get_df_list_html(title) :
         if(cfg.is_a_dfc_dataframe_loaded()) :
             dfc_df  =   cfg.get_dfc_dataframe(title)
         
-            print("display_df_dataframes",dfc_df)
             if(dfc_df is None) :
                 fparms  =   ["","","",""] 
             else :
@@ -461,9 +476,6 @@ def get_df_list_html(title) :
     return(dfmgr_input_html)
 
 
-
-
-
 def display_df_dataframes(title) :  
     """
     * -------------------------------------------------------------------------- 
@@ -491,6 +503,67 @@ def display_df_dataframes(title) :
 
     from dfcleanser.common.display_utils import display_pop_up_buffer            
     display_pop_up_buffer()    
+
+
+def display_offline() :
+    """
+    * -------------------------------------------------------------------------- 
+    * function : display offline toggle mode
+    * 
+    * parms :
+    *  N/A
+    *
+    * returns : N/A
+    * --------------------------------------------------------
+    """
+
+    from dfcleanser.common.html_widgets import InputForm
+    dfmanager_input_form = InputForm(dfmgr_offline_input_id,
+                                     dfmgr_offline_input_idList,
+                                     dfmgr_offline_input_labelList,
+                                     dfmgr_offline_input_typeList,
+                                     dfmgr_offline_input_placeholderList,
+                                     dfmgr_offline_input_jsList,
+                                     dfmgr_offline_input_reqList)
+    
+    selectDicts      =   []
+    
+    if(sysm.get_dfc_run_offline_status()) :
+        stat    =   "True"
+    else :
+        stat    =   "False"
+    offline_mode     =   {"default": stat,"list":["False","True"]}
+    selectDicts.append(offline_mode)
+        
+    get_select_defaults(dfmanager_input_form,
+                        dfmgr_offline_input_id,
+                        dfmgr_offline_input_idList,
+                        dfmgr_offline_input_typeList,
+                        selectDicts)
+
+                    
+    dfmanager_input_form.set_shortForm(True)
+    dfmanager_input_form.set_gridwidth(480)
+    dfmanager_input_form.set_custombwidth(100)
+    dfmanager_input_form.set_fullparms(True)
+        
+    dfmgr_input_html = dfmanager_input_form.get_html()
+    
+    dfmgr_heading_html       =   "<div>Run dfc Offline Manager</div>"
+        
+    gridclasses     =   ["dfcleanser-common-grid-header","dfc-main"]
+    gridhtmls       =   [dfmgr_heading_html,dfmgr_input_html]
+    
+    print("\n")
+    if(cfg.get_dfc_mode() == cfg.INLINE_MODE) :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls)
+    else :
+        display_generic_grid("dfc-common-480px-2-vert-wrapper",gridclasses,gridhtmls,True)
+
+    from dfcleanser.common.display_utils import display_pop_up_buffer            
+    display_pop_up_buffer()    
+    
+
 
 
 def display_EULA():
@@ -534,7 +607,7 @@ def display_README():
     * --------------------------------------------------------
     """
     
-    readme_file_name  =   cfg.get_notebook_path()+"\dfcleanser\html\README.md"
+    readme_file_name  =   cfg.get_notebookPath()+"\dfcleanser\html\README.md"
     
     try :    
         readme_file = open(readme_file_name, 'r', encoding="utf-8")# as eula_file :
@@ -564,7 +637,6 @@ def show_sys_info():
     ptitles     =   ["Version","API","Info"]
     pvalues     =   [str(get_python_version()),str(sys.api_version),str(sys.version_info)]
     
-    from dfcleanser.common.common_utils import displayParms
     parms_html      =   displayParms(title,ptitles,pvalues,cfg.System_ID,None,0,False,11)
     notes_html      =   show_setup_notes()
     libs_html       =   show_libs_info()    
@@ -785,7 +857,6 @@ def show_libs_info():
     for i in range(len(testedModules)) :
         colorRow = []
         if(installedmoduleVersions[i] == "not installed") :
-            print("not installed",i,installedmoduleVersions[i])
             colorRow = [sysm.Yellow,sysm.Yellow,sysm.Red]
         elif(installedmoduleVersions[i] == "unknown") :
             colorRow = [sysm.Green,sysm.Green,sysm.Yellow]
@@ -838,18 +909,17 @@ def show_setup_notes():
     
     title       =   "Setup Notes"
     ptitles     =   ["Notebook Name","Notebook Path","dfcleanser path"]
-    pvalues     =   [cfg.get_notebook_name(),cfg.get_notebook_path(),cfg.get_dfcleanser_location()]
+    pvalues     =   [cfg.get_notebookName(),cfg.get_notebookPath(),cfg.get_dfcleanser_location()]
     
-    from dfcleanser.common.common_utils import displayParms
     parms_html      =   displayParms(title,ptitles,pvalues,cfg.System_ID,None,0,False,11)
     
     return(parms_html)
    
     setupNotes = []
-    nbname = cfg.get_notebook_name()
+    nbname = cfg.get_notebookName()
     if(not (nbname == None)) :
         setupNotes.append("Notebook Name" + get_html_spaces(22) + ":&nbsp;&nbsp;" + str(nbname))
-    nbpath = cfg.get_notebook_path()    
+    nbpath = cfg.get_notebookPath()    
     if(not (nbpath == None)) :
         setupNotes.append("Notebook Path" + get_html_spaces(23) + ":&nbsp;&nbsp;" + str(nbpath))
     #import jupyter_core
@@ -883,7 +953,6 @@ def get_python_version() :
     vermaj.strip()
     
     return(vermaj)
-
 
 
 

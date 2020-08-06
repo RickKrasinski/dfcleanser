@@ -15,7 +15,11 @@ this = sys.modules[__name__]
 import dfcleanser.common.cfg as cfg
 import dfcleanser.common.cell_utils as cells
 
-from dfcleanser.common.common_utils import run_jscript 
+import dfcleanser.system.system_model as sysm
+
+from dfcleanser.common.common_utils import run_jscript
+from dfcleanser.common.cfg import add_error_to_log
+
 
 DO_NOT_LOAD_CHAPTER             =   0
 LOAD_CHAPTER                    =   1
@@ -71,15 +75,16 @@ def load_dfcleanser_from_toolbar(nbname, dfcmode) :
     jscript     =   ("select_before_cell(" +  "'" + celltext + "'" + ")")
     run_jscript(jscript,"Error setting dfc Cell " + "load_dfcleanser_from_toolbar") 
     
-    import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm       
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"load_dfcleanser_from_toolbar " + nbname + " " + str(dfcmode))        
+    if(sysm.DEBUG_SYSTEM)  : 
+        from dfcleanser.common.common_utils import log_debug_dfc
+        log_debug_dfc(-1,"load_dfcleanser_from_toolbar " + str(nbname) + " " + str(dfcmode))
     
     cfg.set_notebookName(nbname)
     
     try :
         run_jscript("preloaddfcleanser();","Unable to preload dfcleanser")
     except :
-        print("get_notebook_path error")
+        print("get_notebookPath error")
 
 
 
@@ -184,20 +189,28 @@ def load_dfcleanser() :
     *  N?A
     * --------------------------------------------------------
     """
+    
+    if(sysm.DEBUG_SYSTEM)  : 
+        from dfcleanser.common.common_utils import log_debug_dfc
+        log_debug_dfc(-1,"load_dfcleanser")
 
     celltext    =  "load_dfcleanser" 
     jscript     =   ("select_cell_from_text(" +  "'" + celltext + "'" + ")")
     run_jscript(jscript,"Error setting dfc Cell " + "load_dfcleanser") 
     
-    load_dfcleanser_cells() 
+    load_dfcleanser_cells()
     
     # insert working cell 
     add_dfc_cell(cells.MARKDOWN,cells.DC_WORKING_TITLE)
     add_dfc_cell(cells.CODE,cells.DC_WORKING)
     add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
     
-    print("* dfcleanser successfully loaded below")
-    print("\n")
+    cfg.get_loaded_cells()
+    cfg.save_current_notebook()
+
+    if(sysm.DEBUG_SYSTEM)  : 
+        from dfcleanser.common.common_utils import log_debug_dfc
+        log_debug_dfc(-1,"dfcleanser cells successfully loaded")
     
     
 def load_dfcleanser_cells() : 
@@ -211,12 +224,10 @@ def load_dfcleanser_cells() :
     *  N?A
     * --------------------------------------------------------
     """
-    import dfcleanser.sw_utilities.sw_utility_geocode_model as sugm       
-    if(sugm.GEOCODE_DEBUG)  :   sugm.log_dfc(-1,"load_dfcleanser_cells "  + str(cfg.get_dfc_mode()))        
     
     showutilities   =   False
     
-    utilcbs     =   cfg.get_config_value(cfg.UTILITIES_CBS_KEY)
+    utilcbs     =   cfg.get_util_chapters_loaded()
     
     corecbs     =   [1,1,1,1,1]
     
@@ -238,7 +249,6 @@ def load_dfcleanser_cells() :
         add_dfc_cell(cells.MARKDOWN,cells.DC_SYSTEM_TITLE)
         add_dfc_cell(cells.CODE,cells.DC_SYSTEM)
         add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-        #print("DC_SYSTEM")
 
         # insert import cells
         if(corecbs[0]) :
@@ -296,29 +306,36 @@ def load_dfcleanser_cells() :
         
         # insert dfsubset utility cells 
         if(utilcbs[2]) :
+            add_dfc_cell(cells.MARKDOWN,cells.DC_ZIPCODE_UTILITY_TITLE)
+            add_dfc_cell(cells.CODE,cells.DC_ZIPCODE_UTILITY)
+            add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
+        
+        # insert dfsubset utility cells 
+        if(utilcbs[3]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DFSUBSET_UTILITY_TITLE)
             add_dfc_cell(cells.CODE,cells.DC_DFSUBSET_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
         
         # insert dfsubset utility cells 
-        if(utilcbs[3]) :
+        if(utilcbs[4]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_CENSUS_UTILITY_TITLE)
             add_dfc_cell(cells.CODE,cells.DC_CENSUS_UTILITY)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
             
-            
-        if(utilcbs[4]) :
+        # insert scripting utility cells    
+        if(utilcbs[5]) :
             add_dfc_cell(cells.MARKDOWN,cells.DC_DATA_SCRIPTING_TITLE)
             add_dfc_cell(cells.CODE,cells.DC_DATA_SCRIPTING)
             add_dfc_cell(cells.MARKDOWN,cells.DC_BLANK_LINE)
-            
-    #cfg.sync_with_js()
+     
+    from dfcleanser.common.common_utils import log_debug_dfc
+    log_debug_dfc(-1,"load_dfcleanser_cells")
     
     jscript     =   ("sync_notebook()")
     run_jscript(jscript,"Error Loading dfcleanser " + "Error Loading dfcleanser")
 
-    cfg.set_config_value(cfg.DFC_CURRENTLY_LOADED_KEY,"True")
-    cfg.get_loaded_cells()  
+    cfg.set_config_value(cfg.DFC_CURRENTLY_LOADED_KEY,"True",True)
+    #cfg.get_loaded_cells()  
     
 
 def unload_dfcleanser() :
@@ -333,9 +350,8 @@ def unload_dfcleanser() :
     * --------------------------------------------------------
     """
     
-    cfg.drop_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
-    cfg.drop_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
-    cfg.drop_config_value(cfg.UTILITIES_CBS_KEY)
+    cfg.drop_config_value(cfg.DFC_CURRENTLY_LOADED_KEY,True)
+    cfg.drop_config_value(cfg.DFC_CHAPTERS_LOADED_KEY,True)
 
     return()
 
@@ -425,21 +441,18 @@ def reload_dfcleanser(chaptersToLoad) :
     * --------------------------------------------------------
     """
     
-    print("reload_dfcleanser",chaptersToLoad)
-    
     dfc_loaded = cfg.get_config_value(cfg.DFC_CURRENTLY_LOADED_KEY)
     
     if(dfc_loaded is None) :
         load_dfcleanser()
     else :
         
-        utilscbs        =   chaptersToLoad[0]
-        #scriptcbs       =   chaptersToLoad[1]
+        utilscbs            =   chaptersToLoad[0]
+        chapters_loaded     =   cfg.get_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
         
-        chapters_loaded         =   cfg.get_config_value(cfg.DFC_CHAPTERS_LOADED_KEY)
-        
-        
-        print("reload_dfcleanser",chaptersToLoad,utilscbs,chapters_loaded)
+        if(chapters_loaded is None) :
+            chapters_loaded         =   [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0] 
+            cfg.set_config_value(cfg.DFC_CHAPTERS_LOADED_KEY,chapters_loaded)
         
         load_utils  =   False
         for i in range(len(utilscbs)) :
@@ -456,6 +469,7 @@ def reload_dfcleanser(chaptersToLoad) :
                 delete_title_cell(cells.DC_SW_UTILITIES)
                 if(chapters_loaded[cells.DC_DATASTRUCT_UTILITY_ID] == CHAPTER_LOADED)   :    delete_chapter(cells.DC_LIST_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_GEOCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_GEOCODE_UTILITY_TITLE)
+                if(chapters_loaded[cells.DC_ZIPCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_ZIPCODE_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DFSUBSET_UTILITY_ID] == CHAPTER_LOADED)     :    delete_chapter(cells.DC_DFSUBSET_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_CENSUS_UTILITY_ID] == CHAPTER_LOADED)       :    delete_chapter(cells.DC_CENSUS_UTILITY_TITLE)
                 if(chapters_loaded[cells.DC_DATA_SCRIPT_ID] == CHAPTER_LOADED)          :    delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)
@@ -465,10 +479,11 @@ def reload_dfcleanser(chaptersToLoad) :
             
             # add the new utilities
             if(utilscbs[0] == LOAD_CHAPTER) :   add_chapter(cells.DC_LIST_UTILITY_TITLE,cells.DC_LIST_UTILITY)   
-            if(utilscbs[1] == LOAD_CHAPTER) :   add_chapter(cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_GEOCODE_UTILITY)   
-            if(utilscbs[2] == LOAD_CHAPTER) :   add_chapter(cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_DFSUBSET_UTILITY)   
-            if(utilscbs[3] == LOAD_CHAPTER) :   add_chapter(cells.DC_CENSUS_UTILITY_TITLE,cells.DC_CENSUS_UTILITY)   
-            if(utilscbs[4] == LOAD_CHAPTER) :   add_chapter(cells.DC_DATA_SCRIPTING_TITLE,cells.DC_DATA_SCRIPTING)   
+            if(utilscbs[1] == LOAD_CHAPTER) :   add_chapter(cells.DC_GEOCODE_UTILITY_TITLE,cells.DC_GEOCODE_UTILITY)
+            if(utilscbs[2] == LOAD_CHAPTER) :   add_chapter(cells.DC_ZIPCODE_UTILITY_TITLE,cells.DC_ZIPCODE_UTILITY)
+            if(utilscbs[3] == LOAD_CHAPTER) :   add_chapter(cells.DC_DFSUBSET_UTILITY_TITLE,cells.DC_DFSUBSET_UTILITY)   
+            if(utilscbs[4] == LOAD_CHAPTER) :   add_chapter(cells.DC_CENSUS_UTILITY_TITLE,cells.DC_CENSUS_UTILITY)   
+            if(utilscbs[5] == LOAD_CHAPTER) :   add_chapter(cells.DC_DATA_SCRIPTING_TITLE,cells.DC_DATA_SCRIPTING)   
                     
         # no utils cbs to display
         else :
@@ -478,14 +493,19 @@ def reload_dfcleanser(chaptersToLoad) :
             
                 #delete currrent utilities chapters
                 delete_title_cell(cells.DC_SW_UTILITIES)
-                if(chapters_loaded[cells.DC_DATASTRUCT_UTILITY_ID] == CHAPTER_LOADED)   :    delete_chapter(cells.DC_LIST_UTILITY_TITLE)
-                if(chapters_loaded[cells.DC_GEOCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_GEOCODE_UTILITY_TITLE)
-                if(chapters_loaded[cells.DC_DFSUBSET_UTILITY_ID] == CHAPTER_LOADED)     :    delete_chapter(cells.DC_DFSUBSET_UTILITY_TITLE)
-                if(chapters_loaded[cells.DC_CENSUS_UTILITY_ID] == CHAPTER_LOADED)       :    delete_chapter(cells.DC_CENSUS_UTILITY_TITLE)
-                if(chapters_loaded[cells.DC_DATA_SCRIPT_ID] == CHAPTER_LOADED)          :    delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)
+                
+            if(chapters_loaded[cells.DC_DATASTRUCT_UTILITY_ID] == CHAPTER_LOADED)   :    delete_chapter(cells.DC_LIST_UTILITY_TITLE)
+            if(chapters_loaded[cells.DC_GEOCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_GEOCODE_UTILITY_TITLE)
+            if(chapters_loaded[cells.DC_ZIPCODE_UTILITY_ID] == CHAPTER_LOADED)      :    delete_chapter(cells.DC_ZIPCODE_UTILITY_TITLE)
+            if(chapters_loaded[cells.DC_DFSUBSET_UTILITY_ID] == CHAPTER_LOADED)     :    delete_chapter(cells.DC_DFSUBSET_UTILITY_TITLE)
+            if(chapters_loaded[cells.DC_CENSUS_UTILITY_ID] == CHAPTER_LOADED)       :    delete_chapter(cells.DC_CENSUS_UTILITY_TITLE)
+            if(chapters_loaded[cells.DC_DATA_SCRIPT_ID] == CHAPTER_LOADED)          :    delete_chapter(cells.DC_DATA_SCRIPTING_TITLE)
             
         cfg.get_loaded_cells()
+        cfg.save_current_notebook()
 
-        cfg.set_config_value(cfg.UTILITIES_CBS_KEY,utilscbs)
+        if(sysm.DEBUG_SYSTEM)  : 
+            from dfcleanser.common.common_utils import log_debug_dfc
+            log_debug_dfc(-1,"cells loaded - reload")
 
     

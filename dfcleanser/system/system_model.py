@@ -27,6 +27,7 @@ DISPLAY_SYSTEM              =   4
 DISPLAY_DFC_FILES           =   5
 DISPLAY_ABOUT               =   6
 DISPLAY_ADD_DATAFRAME       =   7
+DISPLAY_OFFLINE             =   8
 
 DISPLAY_EULA                =   12
 PROCESS_EULA                =   13
@@ -40,7 +41,6 @@ EXIT_SETUP                  =   17
 
 PROCESS_DATAFRAME           =   18
 PROCESS_ADD_DATAFRAME       =   19
-
 
 CORE                        =   0
 UTILITIES                   =   1
@@ -57,6 +57,7 @@ RENAME_DATAFRAME            =   3
 ADD_DATAFRAME               =   4
 RETURN_DATAFRAME            =   5
 
+DEBUG_SYSTEM                =   True
 
 """
 * ----------------------------------------------------
@@ -89,5 +90,26 @@ class dfc_document_status :
         return(self.document_loaded)
    
 
-dfc_document_loaded_status     =   dfc_document_status()    
+dfc_document_loaded_status     =   dfc_document_status()   
+
+def set_dfc_run_offline_status(status) :
+    
+    global Run_DFC_Offline
+    
+    if(not status) :
+        Run_DFC_Offline     =   False
+    else :
+        Run_DFC_Offline     =   True
+        from dfcleanser.common.common_utils import copy_dfc_images_to_local
+        copy_dfc_images_to_local()
+    
+def get_dfc_run_offline_status() :
+    
+    global Run_DFC_Offline
+    
+    return(Run_DFC_Offline)
+    
+    
+Run_DFC_Offline     =   False
+ 
 
