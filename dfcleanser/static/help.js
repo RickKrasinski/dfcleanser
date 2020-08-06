@@ -58,7 +58,7 @@ window.gethelpinputid = function(helpid) {
     } else { return (null); }
 };
 
-window.displayhelp = function(helpid) {
+window.displaydfchelp = function(helpid) {
 
     var help_id = parseInt(helpid, 10);
 

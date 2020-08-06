@@ -11,18 +11,24 @@ function get_dfs() {
     var inputParms1 = window.get_input_form_parms("datainspectdfinput");
     var inputs1 = new Array();
     inputs1.push(inputParms1);
-    console.log("get_dfs", inputs1, inputParms1, inputParms1.length);
+
+    if (window.debug_flag)
+        console.log("get_dfs", inputs1, inputParms1, inputParms1.length);
 
     var inputParms = window.get_input_form_parms("datacleansedfinput");
     var inputs = new Array();
     inputs.push(inputParms);
-    console.log("get_dfs", inputs, inputParms, inputParms.length);
+
+    if (window.debug_flag)
+        console.log("get_dfs", inputs, inputParms, inputParms.length);
 
     var selected_value = $("#dcdfdataframe :selected").text();
-    console.log("dfcleanser select ", selected_value);
+    if (window.debug_flag)
+        console.log("dfcleanser select ", selected_value);
 
     var selected_value = $("didfdataframe :selected").text();
-    console.log("dfinspection select ", selected_value);
+    if (window.debug_flag)
+        console.log("dfinspection select ", selected_value);
 
 
 }
@@ -37,27 +43,30 @@ function cleansing_tb_callback(fid) {
     var inputs = new Array();
     inputs.push(String(fid));
 
-    get_dfs();
-
-    var inputParms1 = window.get_input_form_parms("datainspectdf");
-    var inputs1 = new Array();
-    inputs1.push(inputParms1);
-    console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
-
-
     switch (fid) {
         case 0:
         case 1:
         case 2:
-            var inputParms = window.get_input_form_parms("datacleansedf");
-            inputs.push(inputParms);
-            console.log("cleansing_tb_callback", inputs, inputParms, inputParms.length);
 
             var inputParms1 = window.get_input_form_parms("datainspectdf");
             var inputs1 = new Array();
             inputs1.push(inputParms1);
-            console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
 
+            if (window.debug_flag)
+                console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
+
+            var inputParms = window.get_input_form_parms("datacleansedf");
+            inputs.push(inputParms);
+
+            if (window.debug_flag)
+                console.log("cleansing_tb_callback", inputs, inputParms, inputParms.length);
+
+            var inputParms1 = window.get_input_form_parms("datainspectdf");
+            var inputs1 = new Array();
+            inputs1.push(inputParms1);
+
+            if (window.debug_flag)
+                console.log("cleansing_tb_callback", inputs1, inputParms1, inputParms1.length);
 
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "2" + "," + JSON.stringify(inputs)));
             window.scroll_to('DCDataCleansing');
@@ -67,6 +76,18 @@ function cleansing_tb_callback(fid) {
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "0"));
             window.scroll_to('DCDataCleansing');
             break;
+        case 55:
+            window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "55"));
+            window.scroll_to('DCDataCleansing');
+            break;
+        case 56:
+            var inputs = window.get_input_form_parms("selectdfrowsinput");
+            window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
+            window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "56" + "," + inputs));
+            window.scroll_to('DCDataCleansing');
+            break;
+
     }
 }
 
@@ -166,10 +187,6 @@ function process_category_column(colid) {
     window.scroll_to('DCDataCleansing');
 
 }
-
-
-
-
 
 function change_uvals_callback(optionid) {
     /**
@@ -286,7 +303,6 @@ function process_cols_callback(fid) {
             window.scroll_to('DCDataCleansing');
             reset_inspection = false;
             break;
-
         case 7:
             var inputs = new Array();
 
@@ -298,7 +314,6 @@ function process_cols_callback(fid) {
             window.scroll_to('DCDataCleansing');
             reset_inspection = false;
             break;
-
         case 13:
         case 15:
         case 16:
@@ -310,53 +325,17 @@ function process_cols_callback(fid) {
             window.scroll_to('DCDataCleansing');
             reset_inspection = false;
             break;
-
         case 40:
             var fparms = window.get_input_form_parms("dccatchangevalsinput");
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
             window.scroll_to('DCDataCleansing');
             break;
-
-            //case 41:
-            //    var fparms = window.get_input_form_parms("addcatinput");
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
-
-            //case 42:
-            //    var fparms = window.get_input_form_parms("removecatinput");
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
-
         case 43:
         case 46:
         case 47:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
             window.scroll_to('DCDataCleansing');
             break;
-
-            //case 44:
-            //    var fparms = window.get_input_form_parms("removewscatinput");
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
-
-            //case 45:
-            //    var fparms = window.get_input_form_parms("reordercatinputt");
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid + "," + fparms));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
-
-            //case 46:
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", fid));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
-
-            //case 47:
-            //    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "47"));
-            //    window.scroll_to('DCDataCleansing');
-            //    break;
     }
 
     if (reset_inspection) window.reset_dependents([false, true, false, false, false, false]);
@@ -474,19 +453,6 @@ function process_cat_function_callback(fid) {
 
 }
 
-
-
-//function nncol(col) {
-/**
- * Data Cleansing display selected non numeric column.
- *
- * Parameters:
- *   col - column name
- */
-//    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "4" + "," + JSON.stringify(col)));
-//    window.scroll_to('DCDataCleansing');
-//}
-
 //
 // ----------------------------------------------------
 // Row Cleansing Methods 
@@ -518,8 +484,7 @@ function chrowval(colid) {
      * Parameters:
      *  colid - column id in current row
      */
-
-    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "24" + ", " + JSON.stringify(colid)));
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_current_row_value", JSON.stringify(colid)));
 }
 
 function change_rowvals_callback(fid) {
@@ -537,6 +502,7 @@ function change_rowvals_callback(fid) {
     switch (fid) {
         case 0:
         case 1:
+        case 2:
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "25" + ", " + JSON.stringify(parms)));
             break;
     }
@@ -566,7 +532,8 @@ function process_cleanse_datatype_callback(naoption, fid, numflag, dfcid) {
      *  dfcid     - component id
      */
 
-    console.log("process_cleanse_datatype_callback", naoption, fid, numflag);
+    if (window.debug_flag)
+        console.log("process_cleanse_datatype_callback", naoption, fid, numflag);
 
     var inputs = new Array();
     var element = document.getElementById("ucolscolumnname");
@@ -619,7 +586,8 @@ function nn_check_compatability(fid, colname) {
      *  colname   - column name
      */
 
-    console.log("nn_check_compatability", fid, colname);
+    if (window.debug_flag)
+        console.log("nn_check_compatability", fid, colname);
 
     var inputs = new Array();
     inputs.push(colname);
@@ -645,7 +613,8 @@ function process_nn_check_compatability(fid) {
      *  colname   - column name
      */
 
-    console.log("nn_check_compatability", fid);
+    if (window.debug_flag)
+        console.log("nn_check_compatability", fid);
 
     window.clear_cell_output(window.CLEANSING_TASK_BAR_ID);
 
@@ -681,4 +650,8 @@ function change_cleanse_na_opt(selectid) {
     window.scroll_to('DCDataCleansing');
 
 
+}
+
+function change_drop_cols(selectid) {
+    add_select_val(selectid, "dropduplicatecolids");
 }

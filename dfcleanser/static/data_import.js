@@ -55,7 +55,8 @@ function pandas_details_import_callback(id) {
      *  id - import type
      */
 
-    window.dfc_log("pandas_details_import_callback : " + id.toString());
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_details_import_callback : " + id.toString());
 
     var formid = "";
     switch (id) {
@@ -73,6 +74,9 @@ function pandas_details_import_callback(id) {
             break;
         case 4:
             formid = "importPandasHTML";
+            break;
+        case 31:
+            formid = "importPandasHTMLdf";
             break;
     }
 
@@ -119,7 +123,8 @@ function pandas_sql_import_callback(itype, dbid) {
      *  dbid  - database id
      */
 
-    window.dfc_log("pandas_sql_import_callback : " + itype.toString() + " : " + dbid.toString());
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_sql_import_callback : " + itype.toString() + " : " + dbid.toString());
 
     var formid = "";
     switch (dbid) {
@@ -185,7 +190,8 @@ function pandas_details_test_con_callback(sqlid, dbid, driverid) {
      *  driverid - database driver id
      */
 
-    window.dfc_log("pandas_details_test_con_callback : " + sqlid.toString() + " : " + dbid.toString() + driverid.toString());
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_details_test_con_callback : " + sqlid.toString() + " : " + dbid.toString() + driverid.toString());
 
     var sqlinputparms = null;
     var sqlform = 0
@@ -227,7 +233,8 @@ function pandas_details_get_index_columns_callback(sqltype) {
      * get db columns callback.
      */
 
-    window.dfc_log("pandas_details_get_index_columns_callback : " + sqltype);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_details_get_index_columns_callback : " + sqltype);
 
     var sqlinputparms = [];
 
@@ -246,7 +253,8 @@ function pandas_details_get_columns_callback(sqltype) {
      * get db columns callback.
      */
 
-    window.dfc_log("pandas_details_get_columns_callback : " + sqltype);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_details_get_columns_callback : " + sqltype);
 
     var sqlinputparms = [];
 
@@ -265,7 +273,8 @@ function pandas_details_get_strftime_callback(sqltype) {
      * get format time list callback.
      */
 
-    window.dfc_log("pandas_details_get_strftime_callback : " + sqltype);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     pandas_details_get_strftime_callback : " + sqltype);
 
     var sqlinputparms = [];
 
@@ -329,7 +338,8 @@ function select_column(columnname) {
      *  columnname - column name
      */
 
-    window.dfc_log("select_column : " + columnname);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     select_column : " + columnname);
 
     var column = $("#sqltablecommoncolumns");
     if (column.val() == "") {
@@ -349,7 +359,8 @@ function select_index_column(columnname) {
      *  columnname - column name
      */
 
-    window.dfc_log("select_index_column : " + columnname);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     select_index_column : " + columnname);
 
     var column = $("#sqltableindexcol");
     if (column.val() == "") {
@@ -363,7 +374,8 @@ function select_index_column(columnname) {
 
 function select_date_column(columnname) {
 
-    window.dfc_log("select_date_column : " + columnname);
+    if (window.debug_detail_flag)
+        console.log(log_prefix + "\n" + "     select_index_column : " + columnname);
 
     var column = $("#sqltableparsedates");
     if (column.val() == "") {
@@ -374,9 +386,7 @@ function select_date_column(columnname) {
         column.val(newstring);
     }
 
-
     var selected_format = $("#sqltablecommondateformats :selected").text();
-    console.log("selected_format", selected_format);
 
     var formats = $("#sqltablecommonparsedateformats");
     if (formats.val() == "") {
@@ -388,50 +398,12 @@ function select_date_column(columnname) {
     }
 
 
-
-
-    //if (selected_format != "No Format") {
-    //    var parse_dates = $("#sqltableparsedates").val();
-    //    console.log("parse_dates", parse_dates);
-    //    if ((parse_dates == "") || (parse_dates == null)) {
-    //        $("#sqltableparsedates").val("[" + columnname + "]");
-    //    } else {
-    //        var slen = parse_dates.length;
-    //        var newstring = parse_dates.substr(0, slen - 1) + ", " + columnname + "]";
-    //        $("#sqltableparsedates").val(newstring);
-    //    }
-    //} else {
-    //    var parse_dates = $("#sqltableparsedates").val();
-    //    console.log("parse_dates1", parse_dates);
-    //    if ((parse_dates == "") || (parse_dates == null)) {
-    //        $("#sqltableparsedates").val("{" + columnname + ":" + selected_format + "}");
-    //    } else {
-    //        var slen = parse_dates.length;
-    //        var newstring = parse_dates.substr(0, slen - 1) + ", " + columnname + ":" + selected_format + "}";
-    //        $("#sqltableparsedates").val(newstring);
-    //    }
-    //}
-
 }
 
 function select_dtformat(dtformat) {
 
-    window.dfc_log("select_dtformat : " + dtformat);
-
-    //var formats = $("#sqltableparsedates");
-    //formats.val("");
-
-    ///if (column == null)
-    //    column = $("#sqlquerycommonparsedates");
-
-    //if (column.val() == "") {
-    //    column.val("[" + columnname + "]");
-    //} else {
-    //    var slen = column.val().length;
-    //    var newstring = column.val().substr(0, slen - 1) + ", " + columnname + "]";
-    //    column.val(newstring);
-    //}
-
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_dtformat", dtformat);
 }
 
 function pandas_import_sql_callback(fid) {
@@ -457,4 +429,24 @@ function pandas_import_sql_callback(fid) {
     }
     window.reset_dependents([false, true, true, true, true, false]);
     window.scroll_to('DCDataImport');
+}
+
+function display_selected_html_df(dfid) {
+    /**
+     * select a df to display callback.
+     *
+     * Parameters:
+     *  dfid - dataframe id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "display_selected_html_df", dfid);
+
+    var inputs = new Array();
+    inputs.push(dfid)
+
+    window.run_code_in_cell(window.IMPORT_TASK_BAR_ID, window.getJSPCode(window.IMPORT_LIB, "process_import_form", "30," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataImport');
+
+    return;
 }

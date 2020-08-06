@@ -44,14 +44,67 @@ function inspection_task_bar_callback(fid) {
             break;
         case 14:
             var inputs = new Array();
-            var inputParms = window.get_input_form_parms("datainspectdf");
-            inputs.push(inputParms);
             var selected_value = $("#inspectcolname :selected").text();
             inputs.push(selected_value);
             window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.CLEANSING_LIB, "display_data_cleansing", "12" + ", " + JSON.stringify(inputs)));
             window.scroll_to('DCDataCleansing');
             break;
+        case 15:
+            var inputs = new Array();
+            inputs.push("DataInspection");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "21" + ", " + JSON.stringify(inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 16:
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", fid));
+            window.scroll_to('DCDataInspection');
+            break;
+        case 17:
+            var inputParms = window.get_input_form_parms("scrolldfrowsinput");
+            inputs.push(inputParms);
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", fid + "," + inputs));
+            window.scroll_to('DCDataInspection');
+            break;
+        case 18:
+        case 19:
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", fid));
+            window.scroll_to('DCDataInspection');
+            break;
     }
+}
+
+function display_remote_df_rows(chapterid) {
+    /**
+     * Data inspection taskbar callback.
+     *
+     * Parameters:
+     *  fid - function id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "display_remote_df_rows", chapterid);
+
+    var inputs = new Array();
+    inputs.push(chapterid)
+
+    window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", 21 + "," + JSON.stringify(inputs)));
+    window.scroll_to('DCDataInspection');
+
+}
+
+
+function get_df_row(rowid) {
+    /**
+     * Data Inspection dsiplay specific row.
+     *
+     * Parameters:
+     *  rowid
+     */
+
+    var inputs = new Array();
+    inputs.push(rowid);
+    window.run_code_in_cell(window.CLEANSING_TASK_BAR_ID, window.getJSPCode(window.window.CLEANSING_LIB, "display_data_cleansing", 56 + "," + rowid.toString()));
+    window.scroll_to('DCDataCleansing');
 }
 
 
@@ -297,34 +350,4 @@ function change_dataframes_to_select() {
 
     window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_df_select", JSON.stringify(displayed_forms)));
 
-}
-
-
-function get_col_rows_callback(option) {
-    /**
-     * get the df search rows.
-     *
-     * Parameters:
-     *  options - command options 
-     *   
-     * */
-
-    if (window.debug_flag)
-        console.log(log_prefix + "\n" + "get_col_rows_callback", option);
-
-    switch (option) {
-        case 0:
-        case 2:
-            var inputParms = window.get_input_form_parms("datainspectcolsearch");
-            var inputs = new Array();
-            inputs.push(option);
-            inputs.push(inputParms);
-            window.clear_cell_output(window.INSPECTION_TASK_BAR_ID);
-            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", "11" + ", " + JSON.stringify(inputs)));
-            break;
-        case 1:
-        case 3:
-            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_df_browser_search", JSON.stringify(option)));
-            break;
-    }
 }

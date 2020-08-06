@@ -15,7 +15,10 @@ define([
     './data_transform',
     './sw_utilities',
     './system',
-    './pop_up_cell'
+    './pop_up_cell',
+    './jquery.event.drag-2.2',
+    './slick.core',
+    './slick.grid'
 ], function(requirejs, $, Jupyter, utils, dialog, events, codecell) {
 
     "use strict";
@@ -75,6 +78,8 @@ define([
                 if (window.confirm("Load dfcleanser as PopUp?")) {
                     console.log(log_prefix + "\n" + "     toggle_dfcleanser : load as popup");
                     dfcmode = 1;
+                } else {
+                    return;
                 }
             }
 
@@ -99,12 +104,39 @@ define([
     }
 
     function load_ipython_extension() {
+
+
         // add css
         var link = document.createElement("link");
         link.type = "text/css";
         link.rel = "stylesheet";
         link.href = requirejs.toUrl("./dfcleanser.css");
         document.getElementsByTagName("head")[0].appendChild(link);
+
+
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = requirejs.toUrl("./jquery-ui-1.8.16.custom.css");
+        document.getElementsByTagName("head")[0].appendChild(link);
+
+
+        /*
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = requirejs.toUrl("./examples.css");
+        document.getElementsByTagName("head")[0].appendChild(link);
+        */
+
+
+        var link = document.createElement("link");
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = requirejs.toUrl("./slick.grid.css");
+        document.getElementsByTagName("head")[0].appendChild(link);
+
+
 
         load_buttons();
 

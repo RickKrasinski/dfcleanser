@@ -99,7 +99,8 @@ function df_process_cmd_callback(optionId) {
      *  fId          - function id
      */
 
-    dfc_log("df_process_cmd_callback" + optionId.toString())
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     df_process_cmd_callback", optionId);
 
     var formid = null;
 
@@ -1841,4 +1842,50 @@ function dfsch_chkcompat(colid) {
     window.clear_cell_output(window.TRANSFORM_TASK_BAR_ID);
     window.run_code_in_cell(window.TRANSFORM_TASK_BAR_ID, window.getJSPCode(window.TRANSFORM_LIB, "display_data_transform", "222" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCDataTransform');
+}
+
+function change_reorder_cols(selectid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_reorder_cols", selectid);
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#moveColumnname');
+
+    currentColumns.val(colname);
+}
+
+function change_reorder_to_cols(selectid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_reorder_to_cols", selectid);
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#moveafterColumnname');
+
+    currentColumns.val(colname);
+}
+
+function change_save_cols(selectid) {
+    add_select_val(selectid, "savecolnames");
+}
+
+function change_saveindx_cols(selectid) {
+    add_select_val(selectid, "savecolindxnames");
+}
+
+function change_set_index_callback(selectid) {
+    add_select_val(selectid, "setnewindexcolid");
+}
+
+function change_append_index_callback(selectid) {
+    add_select_val(selectid, "appendindexcolid");
+}
+
+function change_reset_index_callback(selectid) {
+    add_select_val(selectid, "resetindexdroplevels");
+}
+
+function change_sort_index_callback(selectid) {
+    add_select_val(selectid, "sortindexlevels");
 }

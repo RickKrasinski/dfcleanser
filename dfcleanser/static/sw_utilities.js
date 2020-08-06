@@ -20,6 +20,10 @@ function build_utility_callback(id) {
      *  id - function id - list or dict
      */
 
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     build_utility_callback", id);
+
+
     switch (id) {
 
         case 1:
@@ -36,6 +40,7 @@ function build_utility_callback(id) {
         case 4: // delete list
         case 7: // clear list
         case 13: // update list
+        case 19: // load list
 
             var fparms = get_input_form_parms("maintlistparms");
             window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
@@ -46,6 +51,7 @@ function build_utility_callback(id) {
         case 6: // delete dict
         case 8: // clear dict
         case 16: // update dict
+        case 18: // load dict
 
             var fparms = get_input_form_parms("maintdictparms");
             window.clear_cell_output(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID);
@@ -112,7 +118,7 @@ function select_dict(formid) {
      */
 
     var inputs = new Array();
-    var dictname = $("#dictname :selected").text();
+    var dictname = $("#" + formid + " :selected").text();
     inputs.push(dictname);
 
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "10, " + JSON.stringify(inputs)));
@@ -128,7 +134,7 @@ function select_list(formid) {
      */
 
     var inputs = new Array();
-    var listname = $("#listname :selected").text();
+    var listname = $("#" + formid + " :selected").text();
     inputs.push(listname);
 
     window.run_code_in_cell(window.SW_UTILS_DATASTRUCT_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_LIB, "process_sw_utilities", "9, " + JSON.stringify(inputs)));
@@ -179,6 +185,15 @@ function process_geoutils_callback(fid) {
             break;
         case 52:
             inputId = "addrdfcenterdist";
+            break;
+        case 53:
+            inputId = "addrdfcenterdist";
+            break;
+        case 54:
+            inputId = "addrdist";
+            break;
+        case 55:
+            inputId = "addrdist";
             break;
 
     }
@@ -369,6 +384,9 @@ function get_geocode_form_id(gcid, gtype, gmode) {
                     case 7:
                         id = "googlereverse";
                         break;
+                    case 9:
+                        id = "mapquestreverse";
+                        break;
                     case 11:
                         id = "nominreverse";
                         break;
@@ -438,8 +456,8 @@ function get_geocode_form_id(gcid, gtype, gmode) {
         }
     }
 
-    if (window.debug_flag) get_geocode_form_id
-    console.log(log_prefix + "\n" + "     getdfcChaptersLoaded", id);
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     get_geocode_form_id", gcid, gtype, gmode, id);
 
     return (id);
 }
@@ -454,9 +472,13 @@ function process_geocoding_callback(gcid, gtype, gmode) {
      *  gmode - geocoding mode
      */
 
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     process_geocoding_callback", gcid, gtype, gmode);
+
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, gtype, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
 
+    window.scroll_to('DCGeocodeUtility');
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "7" + ", " + JSON.stringify(inputs)));
     window.scroll_to('DCGeocodeUtility');
 }
@@ -470,6 +492,10 @@ function display_geocoding_callback(gcid, gtype, gmode) {
      *  gtype - geocoding type
      *  gmode - geocoding mode
      */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     display_geocoding_callback", gcid, gtype, gmode);
+
 
     var fparms = get_input_form_parms(get_geocode_form_id(gcid, 0, gmode));
     var inputs = [gcid, gtype, gmode, fparms];
@@ -599,13 +625,18 @@ function process_bulk_geocoding_results(fid) {
      *  fid- function id
      */
 
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     process_bulk_geocoding_results", fid);
+
     var formid = "";
     switch (fid) {
         case 5:
         case 6:
-        case 7:
         case 8:
             formid = "geocodebulkproc";
+            break;
+        case 7:
+            formid = "bulkcsvappend";
             break;
         case 10:
         case 11:
@@ -619,6 +650,24 @@ function process_bulk_geocoding_results(fid) {
         case 18:
             formid = "bulkcsvexport";
             break;
+        case 24:
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "open_as_excel", "1"));
+            return;
+            break;
+        case 25:
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "open_as_excel", "2"));
+            return;
+            break;
+        case 26:
+        case 27:
+        case 28:
+            formid = "bulkerrorscsvexport";
+            break;
+        case 30:
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "open_as_excel", "3"));
+            return;
+            break;
+
     }
 
     if (formid != "") {
@@ -639,6 +688,9 @@ function controlbulkrun(fid) {
      * Parameters:
      *  fid- function id
      */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     controlbulkrun", fid);
 
     if (fid == 26) {
         window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", fid));
@@ -663,6 +715,7 @@ function set_bulk_progress_bar(barid, barvalue) {
     var progressbar = $("#" + barid);
     progressbar.text(barvalue.toString() + "%");
     progressbar.attr('aria-valuenow', barvalue).css('width', barvalue + "%");
+
 }
 
 function view_geocode_errors() {
@@ -705,6 +758,44 @@ function report_geocode_run_error(cmd, msg) {
     parms.push(msg);
 
     window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "process_bulk_geocoding_run_cmd", "31, " + JSON.stringify(parms)));
+    window.scroll_to('DCGeocodeUtility');
+}
+
+function change_bulk_df(selectid) {
+    /**
+     * view_geocode_errors
+     *
+     * Parameters:
+     */
+
+    var dfname = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     change_bulk_df", dfname);
+
+    var parms = new Array();
+    parms.push(dfname);
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "32, " + JSON.stringify(parms)));
+    window.scroll_to('DCGeocodeUtility');
+}
+
+function change_bulk_reverse_df(selectid) {
+    /**
+     * view_geocode_errors
+     *
+     * Parameters:
+     */
+
+    var dfname = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     change_bulk_reverse_df", dfname);
+
+    var parms = new Array();
+    parms.push(dfname);
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "33, " + JSON.stringify(parms)));
     window.scroll_to('DCGeocodeUtility');
 }
 
@@ -857,66 +948,76 @@ function get_subset_callback(fid) {
             var inputs = new Array();
             var inputParms = window.get_input_form_parms("datasubsetdf");
             inputs.push(inputParms);
-
-            if (window.debug_flag)
-                console.log(log_prefix + "\n" + "     get_subset_callback", inputs);
-
-            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", "1" + "," + JSON.stringify(inputs)));
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
             break;
         case 2:
-        case 3:
-        case 4:
-            if (fid == 3) { var inputs = window.get_input_form_parms("dcdfsubset"); } else {
-                if (fid == 2) { var inputs = window.get_input_form_parms("dcdfsubset"); } else {
-                    if (fid == 4) { var inputs = window.get_input_form_parms("dcdfsubsetsearch"); } else { var inputs = new Array(); }
-                }
-            }
+            var inputs = window.get_input_form_parms("dcdfsubset");
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
             window.scroll_to('DCDFSubsetUtility');
             break;
         case 5:
-            $('#gsrowrange').val("");
-            $('#gscolnames').val("");
-            $('#gsadddrop').val("");
-            $('#subsetfname').val("");
-            break;
-        case 6:
-            $('#gscolname').val("");
-            $('#gsfilterselectstring').val("");
-            //$('#gsselectstring').val("");
-            var parms = new Array();
-            parms.push(1);
-            parms.push("");
-            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "get_dfsubset_vals", JSON.stringify(parms)));
-            break;
-
-        case 7:
-
-            var newcselectstring = $('#gsfilterselectstring').val();
-
-            var parms = new Array();
-            parms.push(newcselectstring);
-            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid + ", " + JSON.stringify(parms)));
-            window.scroll_to('DCDFSubsetUtility');
-            break;
-
-        case 9:
             var inputs = window.get_input_form_parms("dcdfsubsetsearch");
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
             window.scroll_to('DCDFSubsetUtility');
             break;
-
-        case 10:
-        case 12:
+        case 6:
+            $('#gsfilterselectstring').val("");
+            break;
+        case 8:
             window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid));
             window.scroll_to('DCDFSubsetUtility');
             break;
+        case 10:
         case 11:
-        case 13:
-            var inputs = window.get_input_form_parms("dcdfsubsetfilters")
-            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", fid + ", " + JSON.stringify(inputs)));
+            var inputs = window.get_input_form_parms("dcrundfsubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
             window.scroll_to('DCDFSubsetUtility');
             break;
+        case 12:
+            var inputs = window.get_input_form_parms("dcsavedfsubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 13:
+            var inputs = window.get_input_form_parms("sequencesubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 14:
+            var inputs = new Array();
+            inputs.push("SWDFSubsetUtility");
+            window.run_code_in_cell(window.INSPECTION_TASK_BAR_ID, window.getJSPCode(window.INSPECTION_LIB, "display_data_inspection", 21 + "," + JSON.stringify(inputs)));
+            window.scroll_to('DCDataInspection');
+            break;
+        case 15:
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "open_as_excel", 4));
+            break;
+        case 16:
+            var inputs = window.get_input_form_parms("dcdfmanualsubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 17:
+            var inputs = window.get_input_form_parms("dcdfnextsearch");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 18:
+            $('#gsnextselectstring').val("");
+            break;
+        case 19:
+            var inputs = window.get_input_form_parms("dcsavesavedfsubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+        case 20:
+            var inputs = window.get_input_form_parms("dcsavesavedfsubset");
+            window.run_code_in_cell(window.SW_UTILS_DFSUBSET_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_DFSUBSET_LIB, "display_dfsubset_utility", (fid + ", " + inputs)));
+            window.scroll_to('DCDFSubsetUtility');
+            break;
+
+
     }
 }
 
@@ -1387,8 +1488,6 @@ function get_census_callback(fid) {
         case 20:
         case 21:
         case 23:
-        case 30:
-        case 31:
         case 32:
         case 33:
         case 35:
@@ -1475,10 +1574,67 @@ function get_census_callback(fid) {
             window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + JSON.stringify(selected_values))));
             break;
 
+        case 30:
+
+            var inputs = new Array();
+            var datasetids = new Array("Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation");
+            var keytypes = new Array("ZipCode", "City", "County", "State");
+            var i, j;
+
+            var datasetradios = new Array();
+
+            for (i = 0; i < datasetids.length; i++) {
+                for (j = 0; j < keytypes.length; j++) {
+
+                    var currentradio = $("#radio" + datasetids[i] + keytypes[j]).prop("checked");
+                    if (currentradio == true)
+                        datasetradios.push("True");
+                    else
+                        datasetradios.push("False");
+                }
+
+                inputs.push(datasetradios);
+                datasetradios = new Array();
+
+            }
+
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", 30 + ", " + JSON.stringify(inputs)));
+
+            break;
+
         case 34:
             var fparms = get_input_form_parms("insertcoldf");
             window.clear_cell_output(window.SW_UTILS_CENSUS_TASK_BAR_ID);
             window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", (fid.toString() + " ," + fparms)));
+            break;
+
+        case 44:
+            var inputs = new Array();
+            inputs.push($("#colstoinsert option:selected").text());
+            inputs.push($("#colstoinsert").val());
+
+            window.clear_cell_output(window.SW_UTILS_CENSUS_TASK_BAR_ID);
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", 30 + ", " + JSON.stringify(inputs)));
+            break;
+
+        case 46:
+            var inputs = new Array();
+            inputs.push($("#colstoinsert option:selected").text());
+            inputs.push($("#colstoinsert").val());
+            inputs.push($('#newcoldtype').val());
+            inputs.push($('#newcolnanval').val());
+
+            window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_dfc_census_col_attrs", JSON.stringify(inputs)));
+            break;
+
+        case 47:
+            var inputs = new Array();
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", 47 + ", " + JSON.stringify(inputs)));
+            break;
+
+        case 48:
+            var inputs = new Array();
+            window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", 48 + ", " + JSON.stringify(inputs)));
             break;
 
     }
@@ -1903,6 +2059,515 @@ function export_to_db_from_census(datasetid) {
     window.run_code_in_cell(window.EXPORT_TASK_BAR_ID, window.getJSPCode(window.EXPORT_LIB, "process_export_form", ("5" + ", " + JSON.stringify(datasetid))));
     window.scroll_to('DCDataExport');
 
+}
+
+function get_df_dist_from_cols(selectid) {
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_df_dist_from_cols", selectid, dftitle);
+
+    var fparms = get_input_form_parms("addrdfdist");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "56" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function get_df_dist_to_cols(selectid) {
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_df_dist_to_cols", selectid, dftitle);
+
+    var fparms = get_input_form_parms("addrdfdist");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "56" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function change_coords_columns(currentColumns, colname) {
+
+    if (window.debug_flag)
+        console.log("currentColumns", currentColumns.val(), colname);
+
+    if (currentColumns.val().indexOf('[') < 0) {
+        newColumns = "[" + colname + "]";
+        currentColumns.val(newColumns);
+    } else {
+        if (window.debug_flag)
+            console.log("currentColumns yes [", currentColumns.val());
+
+        if (currentColumns.val().indexOf(',') < 0) {
+            if (window.debug_flag)
+                console.log("currentColumns no ,", currentColumns.val());
+            newColumns = currentColumns.val();
+            newColumns = newColumns.replace("]", "," + colname + "]")
+            if (window.debug_flag)
+                console.log("newColumns ", newColumns);
+            currentColumns.val(newColumns);
+        } else {
+            newColumns = "[" + colname + "]";
+            currentColumns.val(newColumns);
+        }
+    }
+}
+
+function select_from_df_dist_col(selectid) {
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#fromlatlngcolumns');
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_from_df_dist_col", selectid, colname);
+
+    change_coords_columns(currentColumns, colname);
+}
+
+function select_to_df_dist_col(selectid) {
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#tolatlngcolumns');
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_to_df_dist_col", selectid, colname);
+
+    change_coords_columns(currentColumns, colname);
+}
+
+function select_to_coord_type(selectid) {
+
+    var colname = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_to_coord_type", selectid, colname);
+
+    var fparms = get_input_form_parms("addrdfdist");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "56" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function get_df_center_cols(selectid) {
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_df_center_cols", selectid, dftitle);
+
+    var fparms = get_input_form_parms("addrcenter");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "57" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function change_df_lat_lng_columns(colname, currentColumns) {
+
+    if (currentColumns.val().indexOf('[') < 0) {
+        newColumns = "[" + colname + "]";
+        currentColumns.val(newColumns);
+    } else {
+        if (currentColumns.val().indexOf(',') < 0) {
+            newColumns = currentColumns.val();
+            newColumns = newColumns.replace("]", "," + colname + "]")
+            currentColumns.val(newColumns);
+        } else {
+            newColumns = "[" + colname + "]";
+            currentColumns.val(newColumns);
+        }
+    }
+}
+
+
+function select_df_center_col(selectid) {
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#centerdflatlng');
+
+    change_df_lat_lng_columns(colname, currentColumns);
+
+}
+
+function get_df_center_dist_cols(selectid) {
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_df_center_dist_cols", selectid, dftitle);
+
+    var fparms = get_input_form_parms("addrdfcenterdist");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "58" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function select_df_center_dist_col(selectid) {
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#addrdfcenterptlatlngs');
+
+    change_df_lat_lng_columns(colname, currentColumns);
+}
+
+function get_df_center_dist_coords_cols(selectid) {
+
+    var dftitle = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_df_center_dist_coords_cols", selectid, dftitle);
+
+    var fparms = get_input_form_parms("addrdfcenterdist");
+
+    window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", "58" + ", " + fparms));
+    window.scroll_to('DCGeocodeUtility');
+
+}
+
+function select_df_center_dist_coords_col(selectid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_df_center_dist_coords_col", selectid);
+
+    var colname = $("#" + selectid).val();
+    var currentColumns = $('#addrdfdistlatlngs');
+
+    change_df_lat_lng_columns(colname, currentColumns);
+}
+
+function exit_bulk_geocoding() {
+
+    if (window.confirm("Exitting Bulk Geocoder results in loss of all current data. Exit?")) {
+        window.run_code_in_cell(window.SW_UTILS_GEOCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_GEOCODE_LIB, "display_geocode_utility", 25));
+        window.reset_dependents([false, true, false, false, false, false]);
+        window.scroll_to('DCGeocodeUtility');
+    }
+}
+
+function show_geopy_exceptions() {
+
+    geopy_url = "https://geopy.readthedocs.io/en/stable/#exceptions";
+
+    window.open(geopy_url);
+
+}
+
+function display_zipcode(fid) {
+    /**
+     * display zipcodes.
+     *
+     * Parameters:
+     *  fid  - function id
+     */
+
+    var inputs = [fid];
+    window.run_code_in_cell(window.SW_UTILS_ZIPCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_ZIPCODE_LIB, "display_zipcode_utility", fid));
+    window.scroll_to('DCZipcodeUtility');
+}
+
+
+function process_zipcode(fid) {
+    /**
+     * display zipcodes.
+     *
+     * Parameters:
+     *  fid  - function id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "process_zipcode", fid);
+
+    formid = null;
+
+    switch (fid) {
+
+        case 7:
+            formid = "zipcodeattrs";
+            break;
+        case 8:
+            formid = "zipcodecities";
+            break;
+        case 9:
+            formid = "statecounties";
+            break;
+        case 10:
+            formid = "countycities";
+            break;
+        case 11:
+            formid = "statecities";
+            break;
+
+    }
+
+    var fparms = get_input_form_parms(formid);
+
+    window.run_code_in_cell(window.SW_UTILS_ZIPCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_ZIPCODE_LIB, "display_zipcode_utility", fid + ", " + fparms));
+    window.scroll_to('DCZipcodeUtility');
+}
+
+
+function change_state_for_counties(selectid) {
+    /**
+     * display zipcodes.
+     *
+     * Parameters:
+     *  fid  - function id
+     */
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_state_for_counties", selectid);
+
+    var state = $("#" + selectid).val();
+    var fparms = get_input_form_parms("countycities");
+
+    window.run_code_in_cell(window.SW_UTILS_ZIPCODE_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_ZIPCODE_LIB, "display_zipcode_utility", 5 + ", " + fparms));
+    window.scroll_to('DCZipcodeUtility');
+
+}
+
+
+function change_subset_cols(selectid) {
+    add_select_val(selectid, "gscolnames");
+}
+
+
+function change_run_subset_cols(selectid) {
+    add_select_val(selectid, "runcolnames");
+}
+
+
+function change_insert_col_dtype(selectid) {
+    add_select_val(selectid, "coltoinsertdtype");
+}
+
+var select_subdata_cols = new Array();
+
+function set_select_subdata_cols(col_vals) {
+    select_subdata_cols = col_vals;
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "set_select_subdata_cols", select_subdata_cols);
+
+}
+
+function change_subset_col_names_lists(selectid) {
+
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : selectid", selectid);
+
+    var colname = $("#" + selectid + " option:selected").text();
+    var colval = $("#" + selectid).val();
+    var currentColumns = $("#censuscolssellist");
+    var currentnames = currentColumns.val();
+
+    if (window.debug_flag) {
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : colname ", colname);
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : colval ", colval);
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : currentColumns ", currentColumns);
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : currentnames ", currentnames);
+    }
+
+    if (colval == -2) {
+        var newColumns = "None";
+        currentColumns.val(newColumns);
+        select_subdata_cols = new Array();
+        select_subdata_cols.push(-2);
+    } else {
+        if (colval == -1) {
+            var newColumns = "All";
+            currentColumns.val(newColumns);
+            select_subdata_cols = new Array();
+            select_subdata_cols.push(-1);
+        } else {
+            if ((currentnames == "All") || (currentnames == "None")) {
+                currentColumns.val(colname);
+                select_subdata_cols = new Array();
+            } else {
+                currentColumns.val(currentnames + "\n" + colname);
+            }
+            select_subdata_cols.push(colval);
+        }
+    }
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_names_lists : select_subdata_cols", select_subdata_cols);
+
+}
+
+function get_subset_col_names_callback(fid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_subset_col_names_callback", fid, select_subdata_cols);
+
+    var inputs = new Array();
+
+    var colname = $("#censuscolssellist").val();
+
+    if (select_subdata_cols.length > 0) {
+        inputs.push(select_subdata_cols);
+        select_subdata_cols = new Array();
+    } else {
+        var cols = $("#censuscolssellist").val();
+        inputs.push(cols);
+    }
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", fid + ", " + JSON.stringify(inputs)));
+    window.scroll_to('DCCensusUtility');
+
+}
+
+
+
+function get_census_dataset_columns(datasetid, keyid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_census_dataset_columns", datasetid, keyid);
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(keyid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", "38, " + JSON.stringify(inputs)));
+    window.scroll_to('DCCensusUtility');
+
+}
+
+function get_census_cols_details(datasetid, subsetid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "get_census_cols_details", datasetid, subsetid);
+
+    var inputs = new Array();
+    inputs.push(datasetid);
+    inputs.push(subsetid);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", "40, " + JSON.stringify(inputs)));
+    window.scroll_to('DCCensusUtility');
+
+}
+
+function select_dataset_radio(datasetid) {
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "select_dataset_radio", datasetid);
+
+
+    var datasetids = new Array("Economic", "Education", "Employment", "Health_Insurance", "Housing", "Immigration", "Internet", "Population", "Social", "Transportation");
+    var keytypes = new Array("ZipCode", "City", "County", "State");
+
+    var i, j;
+
+    for (i = 0; i < datasetids.length; i++) {
+        if (!(datasetids[i] == datasetid)) {
+            for (j = 0; j < keytypes.length; j++) {
+                $("#radio" + datasetids[i] + keytypes[j]).prop("checked", false);
+            }
+        }
+    }
+}
+
+function change_subset_col_selected_attrs(selectid) {
+
+    var colname = $("#" + selectid + " option:selected").text();
+    var colval = $("#" + selectid).val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_subset_col_selected_attrs", selectid, colname, colval);
+
+    var inputs = new Array();
+    inputs.push(colname);
+    inputs.push(colval);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_selected_dfc_census_col", JSON.stringify(inputs)));
+
+}
+
+function change_census_df(selectid) {
+
+    var dfname = $("#" + selectid + " option:selected").text();
+    var df_list = $("#censusdfstoload").val();
+    var df_keys = $("#userdfsindexkeys").val();
+    userdfsindexkeys
+
+    var inputs = new Array();
+    inputs.push(df_list);
+    inputs.push(dfname);
+    inputs.push(df_keys);
+    //inputs.push(colval);
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_census_df", selectid, inputs);
+
+    window.run_code_in_cell(window.WORKING_CELL_ID, window.getJSPCode(window.COMMON_LIB, "change_census_df_to_insert_from", JSON.stringify(inputs)));
+
+}
+
+function change_user_df(selectid) {
+
+    var census_df_name = $("#censusdfstoload").val();
+    var dfname = $("#" + selectid + " option:selected").text();
+    var dfkeys = $("#userdfsindexkeys").val();
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_user_df", selectid, census_df_name, dfname);
+
+    var inputs = new Array();
+    inputs.push(census_df_name);
+    inputs.push(dfname);
+    inputs.push(dfkeys);
+
+    window.run_code_in_cell(window.SW_UTILS_CENSUS_TASK_BAR_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "display_census_utility", "49, " + JSON.stringify(inputs)));
+    window.scroll_to('DCCensusUtility');
+
+
+}
+
+function change_user_df_col(selectid) {
+
+    var colname = $("#" + selectid + " option:selected").text();
+    var current_keys = $("#userdfsindexkeys").val();
+    current_keys = current_keys.replace("[", "");
+    current_keys = current_keys.replace("]", "");
+
+    if (window.debug_flag)
+        console.log(log_prefix + "\n" + "     " + "change_user_df_col", selectid, colname, current_keys);
+
+    var firstkey = "";
+    var secondkey = "";
+
+    var commaloc = current_keys.indexOf(",");
+    if (commaloc > -1) {
+        firstkey = current_keys.substr(0, commaloc);
+        secondkey = current_keys.substr(commaloc + 1, current_keys.length);
+    } else {
+        firstkey = current_keys
+        secondkey = ""
+    }
+
+    if (firstkey.indexOf("key col") > -1) {
+        firstkey = colname;
+    } else {
+
+        if (secondkey.indexOf("key col") > -1) {
+            secondkey = colname;
+        } else {
+            firstkey = colname;
+        }
+    }
+
+    var new_keys = "[" + firstkey;
+    if (secondkey.length > 0) {
+        new_keys = new_keys + "," + secondkey;
+    }
+    new_keys = new_keys + "]"
+
+    $("#userdfsindexkeys").val(new_keys);
 
 
 }
