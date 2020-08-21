@@ -23,6 +23,8 @@
     <div class="content-wrapper">
         <div class="content">
             <div class="document">
+
+
                 <div class="sphinxsidebar">
                     <h3>Table Of Contents</h3>
                     <ul class="current">
@@ -196,6 +198,7 @@
                     </ul>
                 </div>
 
+
                 <div class="documentwrapper ">
                     <div class="bodywrapper ">
                         <div class="body ">
@@ -207,401 +210,6 @@
                                     <dd>
                                         <div class="DCChaptersHelpText ">
                                             <p>Sw Utilities is defined to provide a set of stand alone utilities for dataframe processing.</p>
-                                        </div>
-                                    </dd>
-                                    <h2 id='dfc_swutilities_data_structures'>Common Data Structures</h2>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>The common data structures represent the common list, dicts and functions used within dfc.</p>
-                                        </div>
-                                    </dd>
-                                    <br>
-                                    <dd>
-                                        <div style="margin-top:10px; " id="buildutilityoptionstb ">
-                                            <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                <div class="btn-group btn-center " style=" width: 100%; ">
-                                                    <button type="button " class="btn btn-primary " style=' margin-left: 2%;  height: 40px;  width: 16%; ' onclick="build_utility_callback(1) ">Lists</button>
-                                                    <button type="button " class="btn btn-primary " style=' height: 40px;  width: 16%; ' onclick="build_utility_callback(2) ">Dicts</button>
-                                                    <button type="button " class="btn btn-primary " style=' height: 40px;  width: 16%; ' onclick="build_utility_callback(11) ">dfc Funcs</button>
-                                                    <button type="button " class="btn btn-primary " style=' height: 40px;  width: 16%; ' onclick="build_utility_clear_callback() ">Clear</button>
-                                                    <button type="button " class="btn btn-primary " style=' height: 40px;  width: 16%; ' onclick="process_pop_up_cmd(6) ">Reset</button>
-                                                    <button type="button " class="btn btn-primary " style=' height: 40px;  width: 16%; ' onclick="displayhelp(801) ">Help</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                    <h3 id='dfc_swutilities_data_structures_lists'>Lists</h3>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>To get a list use the following.</p>
-                                            <p>DFC_CREATED &nbsp;&nbsp;&nbsp;= 0<br>USER_CREATED = 1</p>
-                                            <p>from dfcleanser.sw_utilities.sw_utility_control import get_List<br>get_List(listtname,creator=DFC_CREATED)</p>
-                                        </div>
-                                    </dd>
-                                    <br>
-                                    <h4 id='dfc_swutilities_data_structures_lists_dfc'>dfc Lists</h4>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>dfc Lists are those lists used and provided by dataframe cleanser.</p>
-                                        </div>
-                                    </dd>
-                                    <dd>
-                                        <ul class="current ">
-                                            <li class="dfchelplist ">Google_Address_Components</li>
-                                            <li class="dfchelplist ">Google_Location_Types</li>
-                                            <li class="dfchelplist ">Zip_Codes</li>
-                                        </ul>
-                                    </dd>
-                                    <dd>
-                                        <br>
-                                        <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                            <p>dfc Lists</p>
-                                        </div>
-                                        <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="buildlistparms ">
-                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="buildlistparmsinput ">
-                                                    <div class='dc-container dc-default-input-inner-div'>
-                                                        <div>
-                                                            <label for="buildlistname " style='text-align:left; font-size: 10px;'>* list_name</label>
-                                                            <select onChange="select_list( 'buildlistname') " id="buildlistname " style="margin-left:1px; font-size: 10px; " class="form-control "> 
-                                                            <option style='text-align:left; font-size:10px;' selected>Google_Address_Components</option>
-                                                            <option style='text-align:left; font-size:10px;'>Google_Location_Types</option>
-                                                        </select>
-                                                        </div>
-                                                        <div>
-                                                            <label for="buildlistitems " id="buildlistitems_label " style="text-align:left; font-size: 10px; ">* list_value(s)</label>
-                                                            <textarea rows="20 " class="form-control " style="text-align:left; font-size: 11px; " id="buildlistitems " placeholder="enter new list value(s) example (&#39;1&#39;, 2, a, &#39;b&#39;, [3,4]
-                                                ...) " readonly>['street_number', 'route', 'neighborhood', 'locality', 'sublocality', 'administrative_area_level_1', 'administrative_area_level_2', 'administrative_area_level_3', 'administrative_area_level_4', 'country', 'postal_code']</textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top:10px; " id="buildlistparmstb ">
-                                                    <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                        <div class="btn-group btn-center " style=" width: 700px; ">
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; margin-left: 60px;  height: 50px;  width: 120px; '>Review</br>User Lists</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 50px;  width: 120px; '>Return</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 50px;  width: 120px; '>Help</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                    <dd>
-                                        <table class="field-list " frame="void " rules="none ">
-                                            <colgroup>
-                                                <col class="field-name ">
-                                                <col class="field-body " style="background-color:#ffffff; ">
-                                            </colgroup>
-                                            <tbody valign="top ">
-                                                <tr class="field ">
-                                                    <th class="field-name ">Parameters:</th>
-                                                    <td class="field-body " style="background-color:#ffffff; ">
-                                                        <br>
-                                                        <dl class="input_body ">
-                                                            <dt><strong>*list_name</strong> </dt>
-                                                            <dd>
-                                                                <div class="results_text ">
-                                                                    <p>The dfc list to review.</p>
-                                                                </div>
-                                                            </dd>
-                                                        </dl>
-                                                        <dl class="input_body ">
-                                                            <dt><strong>*list_values</strong> </dt>
-                                                            <dd>
-                                                                <div class="results_text ">
-                                                                    <p>The dfc list values.</p>
-                                                                </div>
-                                                            </dd>
-                                                        </dl>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </dd>
-                                    <br>
-                                    <dd>
-                                        <table class="field-list " frame="void " rules="none ">
-                                            <colgroup>
-                                                <col class="field-name ">
-                                                <col class="field-body " style="background-color:#ffffff; ">
-                                            </colgroup>
-                                            <tbody valign="top ">
-                                                <tr class="field ">
-                                                    <th class="field-name results_title ">Commands:&nbsp;</th>
-                                                    <td class="field-body " style='background-color:#ffffff;'>
-                                                        <br>
-                                                        <dl class="input_body ">
-                                                            <dt><strong>Review User Lists</strong> </dt>
-                                                            <dd>
-                                                                <div class="results_text ">
-                                                                    <p>Review the User Lists.</p>
-                                                                </div>
-                                                            </dd>
-                                                        </dl>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </dd>
-                                    <h4 id='dfc_swutilities_data_structures_lists_user'>User Lists</h4>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>User Lists are those lists provided by the user for general use in dfc.</p>
-                                        </div>
-                                    </dd>
-                                    <dd>
-                                        <br>
-                                        <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                            <p>User Lists</p>
-                                        </div>
-                                        <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="maintlistparms ">
-                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="maintlistparmsinput ">
-                                                    <div class='dc-container dc-default-input-inner-div'>
-                                                        <div>
-                                                            <label for="maintlistname " style='text-align:left; font-size: 10px;'>* user_list_name</label>
-                                                            <select onChange="select_gen_func( 'maintlistname') " id="maintlistname " style="margin-left:1px; font-size: 10px; " class="form-control "> 
-                                                            <option style='text-align:left; font-size:10px;' selected>absolute_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>convert_df_column_to_degrees_or_radians</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_dist_from_center_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_dist_from_point_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_trig_values_for_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>normalize_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>random_float_range</option>
-                                                            <option style='text-align:left; font-size:10px;'>random_int_range</option>
-                                                            <option style='text-align:left; font-size:10px;'>round_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>upperCase_df_column</option>
-                                                        </select>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintnewlistname " id="maintnewlistname_label " style="text-align:left; font-size: 10px; ">* new_user_list_name</label>
-                                                            <input type="text " class="form-control " style="text-align:left; font-size: 10px; " id="maintnewlistname " placeholder="enter new user list name " value=" "></input>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintlistitems " id="maintlistitems_label " style="text-align:left; font-size: 10px; ">* user_list_value(s)</label>
-                                                            <textarea rows="20 " class="form-control " style="text-align:left; font-size: 10px; " id="maintlistitems " placeholder="enter new user list value(s) example (&#39;1&#39;, 2, a, &#39;b&#39;,
-                                                [3,4] ...) ">some list</textarea>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintstartlistfile " id="maintstartlistfile_label " style="text-align:left; font-size: 10px; ">user_list_file_to_start_with</label>
-                                                            <input type="text " class="form-control " style="font-size: 10px; " id="maintstartlistfile " placeholder="select file to start with (default None) " value="dfc path "></input>
-                                                            <input type="file " id="filemaintstartlistfile " onchange="javascript:onChangefileselect( 'maintstartlistfile', 'filemaintstartlistfile') " class="btn btn-primary " style=" width: 100%; font-size:
-                                                10px; color: #cfdbee; "></input>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top:10px; " id="maintlistparmstb ">
-                                                    <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                        <div class="btn-group btn-center " style=" width: 480px; ">
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; margin-left: 1px;  height: 75px;  width: 80px; '>Delete</br>User</br>List</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 80px; '>Update</br>User</br>List</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 80px; '>Add</br>User</br>List</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 80px; '>Clear</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 80px; '>Return</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 80px; '>Help</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                    <h3 id='dfc_swutilities_data_structures_dicts'>Dicts</h3>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>To get a dict use the following.</p>
-                                            <p>DFC_CREATED&nbsp;&nbsp;&nbsp; = 0<br>USER_CREATED = 1</p>
-                                            <p>from dfcleanser.sw_utilities.sw_utility_control import get_Dict<br>get_Dict(dictname,creator=DFC_CREATED)</p>
-                                        </div>
-                                    </dd>
-                                    <h4 id='dfc_swutilities_data_structures_dicts_dfc'>dfc Dicts</h4>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>dfc Dicts are those dicts used and provided by dataframe cleanser.</p>
-                                        </div>
-                                    </dd>
-                                    <dd>
-                                        <ul class="current ">
-                                            <li class="dfchelplist ">strftime</li>
-                                            <li class="dfchelplist ">Elipsoids</li>
-                                            <li class="dfchelplist ">Country_Codes</li>
-                                            <li class="dfchelplist ">Language_Codes</li>
-                                            <li class="dfchelplist ">ArcGIS_Categories</li>
-                                            <li class="dfchelplist ">US_States_and_Territories</li>
-                                            <li class="dfchelplist ">Canadian_Provinces_and_Territories</li>
-                                            <li class="dfchelplist ">US_Cities</li>
-                                            <li class="dfchelplist ">US_Counties</li>
-                                        </ul>
-                                    </dd>
-                                    <dd>
-                                        <br>
-                                        <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                            <p>dfc Dicts</p>
-                                        </div>
-                                        <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="builddictparms ">
-                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="builddictparmsinput ">
-                                                    <div class='dc-container dc-default-input-inner-div'>
-                                                        <div>
-                                                            <label for="builddictname " style='text-align:left; font-size: 10px;'>* dict_name</label>
-                                                            <select onChange="select_dict( 'builddictname') " id="builddictname " style="margin-left:1px; font-size: 10px; " class="form-control "> 
-                                                            <option style='text-align:left; font-size:10px;' selected>strftime</option>
-                                                            <option style='text-align:left; font-size:10px;'>Elipsoids</option>
-                                                            <option style='text-align:left; font-size:10px;'>Country_Codes</option>
-                                                            <option style='text-align:left; font-size:10px;'>Language_Codes</option>
-                                                            <option style='text-align:left; font-size:10px;'>ArcGIS_Categories</option>
-                                                            <option style='text-align:left; font-size:10px;'>US_States_and_Territories</option>
-                                                            <option style='text-align:left; font-size:10px;'>Canadian_Provinces_and_Territories</option>
-                                                        </select>
-                                                        </div>
-                                                        <div>
-                                                            <label for="builddictpairs " id="builddictpairs_label " style="text-align:left; font-size: 10px; ">* dict_values</label>
-                                                            <textarea rows="20 " class="form-control " style="text-align:left; font-size: 11px; " id="builddictpairs " placeholder="enter new dict pairs(s) (&#39;&#39;{key:value}&#39;&#39;,&#39;&#39;.....{key:value})
-                                                " readonly>{"19:23:36 " : "%H:%M:%S ",
-"Saturday, 31 Mar 2018 7:23 PM " : "%A, %d %b %Y %l:%M %p ",
-"03/31/2018 " : "%m/%d/%Y ",
-"31 Mar 2018 19:23:36PM " : "%e %b %Y %H:%M:%S%p ",
-"Saturday, Mar 31 " : "%A, %b %d ",
-"2000-01-01 " : "%Y-%m-%d ",
-"Mar 31, 2018 " : "%b %d, %Y ",
-"07:23:36 PM " : "%I:%M:%S %p ",
-"Mar 31, 7:23 PM " : "%b %e, %l:%M %p "}</textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top:10px; " id="builddictparmstb ">
-                                                    <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                        <div class="btn-group btn-center " style=" width: 480px; ">
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; margin-left: 60px;  height: 75px;  width: 120px;'>Review</br>User</br>Dicts</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 120px; '>Return</button>
-                                                            <button type="button " class="btn btn-primary " style=' font-size: 11px; height: 75px;  width: 120px; '>Help</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                    <h4 id='dfc_swutilities_data_structures_dicts_user'>User Dicts</h4>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>User Dicts are those dicts provided by the user for general use in dfc.</p>
-                                        </div>
-                                    </dd>
-                                    <dd>
-                                        <br>
-                                        <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                            <p>User Dicts</p>
-                                        </div>
-                                        <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="maintdictparms ">
-                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="maintdictparmsinput ">
-                                                    <div class='dc-container dc-default-input-inner-div'>
-                                                        <div>
-                                                            <label for="maintdictname " style='text-align:left; font-size: 10px;'>* user_dict_name</label>
-                                                            <select onChange="select_dict( 'maintdictname') " id="maintdictname " style="margin-left:1px; font-size: 10px; " class="form-control "> 
-                                                            <option style='text-align:left; font-size:10px;' selected>No User dicts defined</option>
-                                                        </select>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintnewdictname " id="maintnewdictname_label " style="text-align:left; font-size: 10px; ">* new_user_dict_name</label>
-                                                            <input type="text " class="form-control " style="text-align:left; font-size: 10px; " id="maintnewdictname " placeholder="enter new user dict name " value=" "></input>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintdictitems " id="maintdictitems_label " style="text-align:left; font-size: 10px; ">* user_dict_value(s)</label>
-                                                            <textarea rows="20 " class="form-control " style="text-align:left; font-size: 10px; " id="maintdictitems " placeholder="enter new dict pairs(s) (&#39;&#39;{key:value}&#39;&#39;,&#39;&#39;.....{key:value}) ">User defined dict</textarea>
-                                                        </div>
-                                                        <div>
-                                                            <label for="maintstartdictfile " id="maintstartdictfile_label " style="text-align:left; font-size: 10px; ">user_dict_file_to_start_with</label>
-                                                            <input type="text " class="form-control " style="font-size: 10px; " id="maintstartdictfile " placeholder="select file to start with (default None) " value="dfc path "></input>
-                                                            <input type="file " id="filemaintstartdictfile " onchange="javascript:onChangefileselect( 'maintstartdictfile', 'filemaintstartdictfile') " class="btn btn-primary " style=" width: 100%; font-size:
-                                                10px; color: #cfdbee; "></input>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top:10px; " id="maintdictparmstb ">
-                                                    <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                        <div class="btn-group btn-center " style=" width: 480px; ">
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; margin-left: 1px;  height: 75px;  width: 80px; '>Delete</br>User</br>Dict</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 75px;  width: 80px; '>Update</br>User</br>Dict</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 75px;  width: 80px; '>Add</br>User</br>Dict</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 75px;  width: 80px; '>Clear</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 75px;  width: 80px; '>Return</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size: 11px; height: 75px;  width: 80px; '>Help</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </dd>
-                                    <h3 id='dfc_swutilities_data_structures_dfc_funcs'>dfc funcs</h3>
-                                    <br>
-                                    <dd>
-                                        <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                            <p>Generic dfc Funstions</p>
-                                        </div>
-                                        <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                            <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="showduncsparms ">
-                                                <div class='' style='padding:5px; margin:auto; width:100%;' id="showduncsparmsinput ">
-                                                    <div class='dc-container dc-default-input-inner-div'>
-                                                        <div>
-                                                            <label for="funcname " style='text-align:left; font-size: 10px;'>* function_name</label>
-                                                            <select onChange="select_gen_func( 'funcname') " id="funcname " style="margin-left:1px; font-size: 10px; " class="form-control "> 
-                                                            <option style='text-align:left; font-size:10px;' selected>absolute_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>convert_df_column_to_degrees_or_radians</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_dist_from_center_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_dist_from_point_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>get_trig_values_for_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>normalize_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>random_float_range</option>
-                                                            <option style='text-align:left; font-size:10px;'>random_int_range</option>
-                                                            <option style='text-align:left; font-size:10px;'>round_df_column</option>
-                                                            <option style='text-align:left; font-size:10px;'>upperCase_df_column</option>
-                                                        </select>
-                                                        </div>
-                                                        <div>
-                                                            <label for="funcmodule " id="funcmodule_label " style="text-align:left; font-size: 10px; ">* function_module</label>
-                                                            <input type="text " class="form-control " style="text-align:left; font-size: 10px; " id="funcmodule " placeholder="function module " value="dfcleanser.sw_utilities.sw_utility_genfunc_functions " readonly></input>
-                                                        </div>
-                                                        <div>
-                                                            <label for="funccode " id="funccode_label " style="text-align:left; font-size: 10px; ">* function_code</label>
-                                                            <textarea rows="20 " class="form-control " style="text-align:left; font-size: 11px; " id="funccode " placeholder="function code " readonly>def absolute_df_column(dftitle, dfcolname) :
-" "" * ------------------------------------------------------------------------ * function : convert dataframe column to absolute value * * parms : * dftitle - dataframe title * dfcolname - dataframe column to apply trig function to * * returns : *
-                                                Successful : col list of abs values * Error : opstat * * Notes : * dfcleanser generic function * ------------------------------------------------------------------------- "" "
-                                            
-opstat              =   opStatus()
-df = cfg.get_dfc_dataframe_df(dftitle)
-                                            
-import numpy as np
-colabsolutes = np.array()
-                                            
-try :
-                                                    
-    colabsolutes   =   np.absolute(df[dfcolname])
-    return(colabsolutes)
-                                                    
-except Exception as e:
-    opstat.store_exception(" 'absolute_df_column' error : " + dftitle + " " + dfcolname,e)
-    return(opstat)
-                                            </textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div style="margin-top:10px; " id="showduncsparmstb ">
-                                                    <div class="dc-container dc-default-input-button-container btn-grp-center ">
-                                                        <div class="btn-group btn-center " style=" width: 480px; ">
-                                                            <button type="button " class="btn btn-primary " style='font-size:11px; margin-left: 120px;  height: 40px;  width: 120px; '>Return</button>
-                                                            <button type="button " class="btn btn-primary " style='font-size:11px; height: 40px;  width: 120px; '>Help</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </dd>
                                     <br>
@@ -2157,6 +1765,31 @@ except Exception as e:
                                             <p>The <a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-census.html" target="_blank">Census</a> utility is defined in the census document.</p>
                                         </div>
                                     </dd>
+                                    <br>
+                                    <h2 id='dfc_swutiliities_zip_codes'>Zip Codes</h2>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>The Zip Code utility allows you look up zipcodes for an addresses and to get zip code attributes.</p>
+                                        </div>
+                                    </dd>
+                                    <h3 id='dfc_swutiliities_zip_codes_attributes'>Get Zipcode Attributes</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Turning on scripting starts the logging of all commands.</p>
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <h3 id='dfc_swutiliities_zip_codes_location'>Get Zipcode By Location</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>Turning on scripting starts the logging of all commands.</p>
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <br>
                                     <h2 id='dfc_swutilities_scripting'>Scripting</h2>
                                     <br>
 
