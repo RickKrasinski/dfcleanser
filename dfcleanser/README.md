@@ -15,5 +15,5 @@ Dataframe Cleanser has the following Chapters supporting specific functionality.
 6) Data Utilities
 
 ## Users Manual
-Refer to the dataframe cleanser <a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html" target="_blank">Users Manual</a> to get detailed info on all aspects of the package.
+Refer to the dataframe cleanser <a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html"  target="_blank">Users Manual</a> to get detailed info on all aspects of the package.
 
