@@ -6,7 +6,7 @@ Pandas Dataframe Cleanser is a Jupyter Notebook extension that lets you perform 
 
 
 ## Chapters
-Dataframe Cleanser has the following Chapters supporting specific funstionality.
+Dataframe Cleanser has the following Chapters supporting specific functionality.
 1) Data Import 
 2) Data Inspection
 3) Data Cleansing
@@ -15,5 +15,5 @@ Dataframe Cleanser has the following Chapters supporting specific funstionality.
 6) Data Utilities
 
 ## Users Manual
-Refer to the dataframe cleanser <a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html">Users Manual</a> to get detailed info on all aspects of the package.
+Refer to the dataframe cleanser <a href="https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html" target="_blank">Users Manual</a> to get detailed info on all aspects of the package.
 
