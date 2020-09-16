@@ -9,7 +9,7 @@ setup(
     name="dfcleanser",
     version="1.0.0",
     author="Rick Krasinski",
-    author_email="rickkrasinski@stny.rr.com",
+    author_email="rickmkrasinski@gmail.com",
     description="A Jupyter notebook extension for dataframe cleansing",
     long_description=long_desc,
     url="https://github.com/RickKrasinski/dfcleanser",
