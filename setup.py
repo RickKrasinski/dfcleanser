@@ -12,7 +12,7 @@ setup(
     author_email="rickmkrasinski@gmail.com",
     description="A Jupyter notebook extension for dataframe cleansing",
     long_description=long_desc,
-    url="https://github.com/RickKrasinski/dfcleanser.git",
+    url="https://github.com/RickKrasinski/dfcleanser",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
