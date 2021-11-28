@@ -113,7 +113,7 @@ div.sphinxsidebar h3 a {
 
 div.sphinxsidebar p {
     color: #888;
-    /* padding: 5px 10px;*/
+    /* padding: 5px 20px;*/
 }
 
 
@@ -128,7 +128,7 @@ div.sphinxsidebar p.topless {
 */
 
 div.sphinxsidebar ul {
-    margin: 10px 10px;
+    margin: 10px 20px;
     padding: 0;
     color: #000;
 }
