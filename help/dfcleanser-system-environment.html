@@ -328,12 +328,6 @@
                                                                         <p>Number of columns in the dataframe.</p>
                                                                     </div>
                                                                 </dd>
-                                                                <dt><strong>Total Ops</strong></dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>total dfc ops perfromed on the dataframe.</p>
-                                                                    </div>
-                                                                </dd>
                                                                 <dt><strong>Notes</strong></dt>
                                                                 <dd>
                                                                     <div class="first last versionadded ">
@@ -364,128 +358,19 @@
                                                 </ul>
                                             </div>
                                         </dd>
-                                        <h3 id='dfc_inactive-dataframes'>Inactive dfc dataframes</h3>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>Inactive dfc dataframes are dataframes that were previously imported as dfc dataframes and are no longer available for all chappters in dataframs Cleanser.</p>
-                                            </div>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/inactive-dfc-dataframes.png ">
-                                                </div>
-                                            </dd>
-                                        </dd>
-                                        <br>
-                                        <dd>
-                                            <table class="docutils field-list " frame="void " rules="none ">
-                                                <colgroup>
-                                                    <col class="field-name ">
-                                                    <col class="field-body ">
-                                                </colgroup>
-                                                <tbody valign="top ">
-                                                    <tr class="field-odd field ">
-                                                        <th class="field-name ">Table Cols:</th>
-                                                        <td class="field-body ">
-                                                            <dl class="first docutils ">
-                                                                <dt><strong>*DRP</strong> </dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>Drop flag to identify whether dataframe is to be dropped.</p>
-                                                                    </div>
-                                                                </dd>
-                                                                <dt><strong>df title</strong></dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>title given when dfc dataframe is defined.</p>
-                                                                    </div>
-                                                                </dd>
-                                                                <dt><strong>Num Rows</strong></dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>Number of rows in the dataframe.</p>
-                                                                    </div>
-                                                                </dd>
-                                                                <dt><strong>Num Cols</strong></dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>Number of columns in the dataframe.</p>
-                                                                    </div>
-                                                                </dd>
-                                                                <dt><strong>Total Ops</strong></dt>
-                                                                <dd>
-                                                                    <div class="first last versionadded ">
-                                                                        <p>total dfc ops perfromed on the dataframe.</p>
-                                                                    </div>
-                                                                </dd>
-                                                            </dl>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </dd>
-                                        <br>
-                                        <dd>
-                                            <div class="field-name " style="font-weight: bold; font-size: 14px;">
-                                                <p>Commands</p>
-                                            </div>
-                                            <br>
-                                            <div>
-                                                <ul class="current">
-                                                    <li>Drop Inactive dfc df(s)</li>
-                                                    <p>&nbsp;&nbsp;&nbsp;Drop the selected dfs so they are no longer visible.</p>
-                                                    <li>Active dfc df(s)</li>
-                                                    <p>&nbsp;&nbsp;&nbsp;Display the active dfc df(s).</p>
-                                                    <li>Return</li>
-                                                    <li>Help</li>
-                                                </ul>
-                                            </div>
-                                        </dd>
                                         <dd>
                                             <h3 id='dfc_dataframe_manager_add'>Add User df to dfc mgr</h3>
-                                            <br>
-                                            <div style='font-size:14px; font-weight:bold; text-align:center;'>
-                                                <p>Add User df to dfc dataframe Manager</p>
-                                            </div>
-                                            <div style='margin-left:auto; margin-right:auto; width:480px;'>
-                                                <div class='' style=' padding:5px; margin:auto; width:100%;  border: 0px; ' id="dfmgraddform ">
-                                                    <div class='' style='padding:5px; margin:auto; width:100%;' id="dfmgraddforminput ">
-                                                        <div class=' dc-default-input-inner-div'>
-                                                            <div>
-                                                                <label for="dftitleadd " id="dftitleadd_label " style="text-align:left; font-size: 11px; ">* add_df_code_preamble</label>
-                                                                <textarea readonly rows="3" class="form-control " style="text-align:left; font-size: 12px; " id="dftitleadd " placeholder="preamble code"></textarea>
-                                                            </div>
-
-                                                            <div>
-                                                                <label for="dftitleadd " id="dftitleadd_label " style="text-align:left; font-size: 11px; ">* df_title</label>
-                                                                <input type="text " class="form-control " style="text-align:left; font-size: 12px; " id="dftitleadd " placeholder="dfc mgr dataframe title "></input>
-                                                            </div>
-                                                            <div>
-                                                                <label for="dfaddcode " id="dfaddcode_label " style="text-align:left; font-size: 11px; ">* df_source</label>
-                                                                <textarea rows="5" class="form-control " style="text-align:left; font-size: 12px; " id="dfaddcode " placeholder="source of df to import dfc - cab be python code"></textarea>
-                                                            </div>
-                                                            <div>
-                                                                <label for="dfnotesadd " id="dfnotesadd_label " style="text-align:left; font-size: 11px; ">df_notes</label>
-                                                                <textarea rows="5 " class="form-control " style="text-align:left; font-size: 12px; " id="dfnotesadd " placeholder="dfc mgr dataframe descriptive df notes "></textarea>
-                                                            </div>
-                                                            <div>
-                                                                <label for="dftitleadd " id="dftitleadd_label " style="text-align:left; font-size: 11px; ">* add_df_code_postamble</label>
-                                                                <textarea readonly rows="3" class="form-control " style="text-align:left; font-size: 12px; " id="dftitleadd " placeholder="postramble code"></textarea>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-top:10px; " id="dfmgraddformtb ">
-                                                        <div class="dc-default-input-button-container btn-grp-center ">
-                                                            <div class="btn-group btn-center " style=" width: 480px; ">
-                                                                <button type="button " class="btn btn-primary " style=' font-size:12px; margin-left: 80px;  height: 70px;  width: 110px; '>Add</br>User df</br>to dfc</button>
-                                                                <button type="button " class="btn btn-primary " style=' font-size:12px; height: 70px;  width: 110px; '>Return</button>
-                                                                <button type="button " class="btn btn-primary " style=' font-size:12px; height: 70px;  width: 110px; '>Help</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>The user can manually add dfc dataframes to dfcleanser making them visible to dfcleanser.</p>
                                                 </div>
-                                            </div>
+                                                <dd>
+                                                    <div style="text-align:center; ">
+                                                        <img src="./images/add_dfc_dataframes.png ">
+                                                    </div>
+                                                </dd>
+                                            </dd>
+                                            <br>
                                         </dd>
                                         <br>
                                         <dd>
@@ -550,6 +435,20 @@
                                             </div>
                                         </dd>
                                         <dd>
+                                            <h3 id='dfc_dataframe_histories'>dfc Dataframes Histories</h3>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>You can browse the dataframes previously imported into dfc.</p>
+                                                </div>
+                                                <dd>
+                                                    <div style="text-align:center; ">
+                                                        <img src="./images/dfc_dataframes_histories.png ">
+                                                    </div>
+                                                </dd>
+                                            </dd>
+                                            <br>
+                                        </dd>
+                                        <dd>
                                             <h2 id='dfc_system_system'>System Info</h2>
                                             <br>
                                             <div class="DCChaptersHelpText ">
@@ -559,12 +458,6 @@
                                             <dd>
                                                 <div style="text-align:center; ">
                                                     <img src="./images/System_Stats.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/System_Stats-1.png ">
                                                 </div>
                                             </dd>
                                         </dd>
@@ -580,6 +473,26 @@
                                                     <img src="./images/System_About.png ">
                                                 </div>
                                             </dd>
+                                        </dd>
+                                        <dd>
+                                            <h2 id='dfc_system_files'>System Files</h2>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>System Files displays dfc config data the user can backup and restore.</p>
+                                            </div>
+                                            <br>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/System_Files.png ">
+                                                </div>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/System_Files1.png ">
+                                                </div>
+                                            </dd>
+
                                         </dd>
                                         <dd>
                                             <h2 id='dfc_system_eula'>EULA</h2>
