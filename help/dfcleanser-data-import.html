@@ -320,6 +320,11 @@
                                             </div>
                                         </dd>
                                     </dd>
+                                    <div style="margin-top:10px; ">
+                                        <div class="dccontainer " style="width:95%; margin-left:50px;">
+                                            <button type="button " class="help-taskbar-button btn btn-primary " style=" font-size:10px; width:90px; height:30px; " onclick="window.open( 'https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.read_csv.html') ">CSV Import</button>
+                                        </div>
+                                    </div>
                                     <dd>
                                         <h4 id='dfc_data_import_pandas_show_parms'>Import Status</h4>
                                         <br>
@@ -346,7 +351,6 @@
                                             <img src="./images/dfc-import-pandas-fwf.png ">
                                         </div>
                                     </dd>
-
                                     <dd>
                                         <h3 id='dfc_data_import_pandas_excel'>Excel File</h3>
                                         <br>
@@ -441,7 +445,7 @@
                                             <h4 id='dfc_data_import_pandas_sql_connect'>SQL Connections</h4>
                                             <br>
                                             <div class="DCChaptersHelpText ">
-                                                <p>You can select the database and driver to use via selecting the driver from the db_connector table.</p>
+                                                <p>You can select the database and driver to use via selecting the driver from the db_connector table. You must defihne a SQL Connection to import SQL Table or SQL Query.</p>
                                             </div>
                                             <dd>
                                                 <div style="text-align:center; ">
@@ -455,28 +459,31 @@
                                             </div>
                                             <dd>
                                                 <div style="text-align:center; ">
-                                                    <img src="./images/dfc-import-pandas-sql-connect_test.png ">
+                                                    <img src="./images/dfc-import-pandas-sql-connect-status.png ">
                                                 </div>
                                             </dd>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-import-pandas-sql-connect-test-status.png ">
-                                                </div>
-                                            </dd>
+                                            <h5 id='dfc_data_import_pandas_sql_connect_test'>Create SQL Connections</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>You can define new sql connectors.</p>
+                                            </div>
                                             <dd>
                                                 <div style="text-align:center; ">
                                                     <img src="./images/dfc-import-pandas-sql-connect-create-connector.png ">
                                                 </div>
                                             </dd>
+                                            <br>
+                                            <h5 id='dfc_data_import_pandas_sql_connect_test'>Edit SQL Connections</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>You can edit existing sql connectors.</p>
+                                            </div>
                                             <dd>
                                                 <div style="text-align:center; ">
                                                     <img src="./images/dfc-import-pandas-sql-connect-edit-connector.png ">
                                                 </div>
                                             </dd>
-
-
-
-
+                                            <br>
                                             <h4 id='dfc_data_import_pandas_sql_import'>SQL Table</h4>
                                             <br>
                                             <div class="DCChaptersHelpText ">
@@ -488,11 +495,41 @@
                                                     <img src="./images/dfc-import-pandas-sql-import.png ">
                                                 </div>
                                             </dd>
+                                            <br>
+                                            <h5 id='dfc_data_import_pandas_sql_import_history'>SQL Import - Import History</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>When the import form is displayed you can select from the sql_table_import_history field to select a starting point.</p>
+                                            </div>
                                             <dd>
                                                 <div style="text-align:center; ">
-                                                    <img src="./images/dfc-import-pandas-sql-import-1.png ">
+                                                    <img src="./images/dfc-import-pandas-sql-import-history.png ">
                                                 </div>
                                             </dd>
+                                            <br>
+                                            <h5 id='dfc_data_import_pandas_sql_import_history'>SQL Import - Table Name</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>When the import form is displayed you can select from the table_name field to select a table for import.</p>
+                                            </div>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/dfc-import-pandas-sql-table-select.png ">
+                                                </div>
+                                            </dd>
+
+                                            <h5 id='dfc_data_import_pandas_sql_import_index'>SQL Import - Index Columns List</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>When the import form is displayed you can click on the 'Set index_col' key to get a list of column names. At this time the form 'index_col' is enabled so clicking on any column in the column names table
+                                                    will be inserted into the 'index_col' form field. The 'columns' and 'parse_dates' fields are disabled.</p>
+                                            </div>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/dfc-import-pandas-sql-index-col.png ">
+                                                </div>
+                                            </dd>
+
                                             <h5 id='dfc_data_import_pandas_sql_import_columns'>SQL Import - Columns List</h5>
                                             <br>
                                             <div class="DCChaptersHelpText ">
@@ -504,20 +541,9 @@
                                                     <img src="./images/dfc-import-pandas-sql-import-columns.png ">
                                                 </div>
                                             </dd>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-import-pandas-sql-import-columns-1.png ">
-                                                </div>
-                                            </dd>
                                             <br>
                                             <div class="DCChaptersHelpText ">
                                                 <p>Any columns in the 'columns' field define only those columns to retrieve. If 'columns' is empty all coulmns are retrieved.</p>
-                                            </div>
-                                            <h5 id='dfc_data_import_pandas_sql_import_index'>SQL Import - Index Columns List</h5>
-                                            <br>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>When the import form is displayed you can click on the 'List index_col list' key to get a list of column names. At this time the form 'index_col' is enabled so clicking on any column in the column names
-                                                    table will be inserted into the 'index_col' form field. The 'columns' and 'parse_dates' fields are disabled.</p>
                                             </div>
                                             <h5 id='dfc_data_import_pandas_sql_import_index'>SQL Import - parse_dates Columns List</h5>
                                             <br>
@@ -525,6 +551,12 @@
                                                 <p>When the import form is displayed you can click on the 'List parse_dates list' key to get a list of column names. At this time the form 'parse_dates' is enabled so clicking on any column in the column names
                                                     table will be inserted into the 'parse_dates' form field. The 'columns' and 'index_col' fields are disabled.</p>
                                             </div>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/dfc-import-pandas-sql-import-parse-dates.png ">
+                                                </div>
+                                            </dd>
+
                                             <h4 id='dfc_data_import_pandas_sql_query'>SQL Query</h4>
                                             <br>
                                             <div style="width:680px; ">
