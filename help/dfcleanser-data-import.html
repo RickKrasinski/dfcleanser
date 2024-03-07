@@ -272,30 +272,74 @@
                                         <h2 id='dfc_data_import_pandas'>Import From Histories</h2>
                                         <br>
                                         <dd>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>dfcleanser maintains histories of previous imports to assist the user in reimporting files or using previous imports as a template. The user can also delete previous import histories if desired.</p>
+                                            </div>
+                                        </dd>
+
+                                        <br>
+                                        <dd>
                                             <div style="text-align:center; ">
                                                 <img src="./images/dfc-import-histories.png ">
                                             </div>
                                         </dd>
-                                        <br>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/dfc-import-histories-1.png ">
-                                            </div>
-                                        </dd>
-                                        <br>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/dfc-import-histories-2.png ">
-                                            </div>
-                                        </dd>
-                                        <br>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/dfc-import-histories-3.png ">
-                                            </div>
-                                        </dd>
-
+                                        <h3 id='dfc_data_import_pandas'>Import From Histories Parameters</h2>
+                                            <br>
+                                            <dd>
+                                                <div class="DCChaptersHelpText ">
+                                                    <p>dfcleanser will display the import parms for the history import so the user can decide to use the import.</p>
+                                                </div>
+                                            </dd>
+                                            <br>
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/dfc-import-histories-1.png ">
+                                                </div>
+                                            </dd>
+                                            <h3 id='dfc_data_import_pandas'>Import Form</h2>
+                                                <br>
+                                                <dd>
+                                                    <div class="DCChaptersHelpText ">
+                                                        <p>The import form is displayed for the user to modiify parms or import as is.</p>
+                                                    </div>
+                                                </dd>
+                                                <br>
+                                                <dd>
+                                                    <div style="text-align:center; ">
+                                                        <img src="./images/dfc-import-histories-2.png ">
+                                                    </div>
+                                                </dd>
+                                                <h3 id='dfc_data_import_pandas'>Import Status</h2>
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText ">
+                                                            <p>The status of the import is displayed for the user to view results.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <br>
+                                                    <dd>
+                                                        <div style="text-align:center; ">
+                                                            <img src="./images/dfc-import-histories-3.png ">
+                                                        </div>
+                                                    </dd>
                                     </dd>
+                                    <br>
+                                    <dd>
+                                        <h2 id='dfc_data_import_addl_parms'>Import Additional Parms</h2>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>Each import form contains an Additional Parms section to define import parms not listed in the import templates.</p>
+                                                <p>Additional Parms are defined via dicts that are parsed by dfcleanser before importing.</p>
+                                            </div>
+                                        </dd>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-import-pandas-additional-parms.png ">
+                                            </div>
+                                        </dd>
+                                    </dd>
+
                                     <br>
                                     <dd>
                                         <h2 id='dfc_data_import_pandas'>Pandas Dataframe</h2>
@@ -351,12 +395,17 @@
                                             <img src="./images/dfc-import-pandas-fwf.png ">
                                         </div>
                                     </dd>
+                                    <div style="margin-top:10px; ">
+                                        <div class="dccontainer " style="width:95%; margin-left:50px;">
+                                            <button type="button " class="help-taskbar-button btn btn-primary " style=" font-size:10px; width:90px; height:30px; " onclick="window.open( 'https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_fwf.html') ">FWF Import</button>
+                                        </div>
+                                    </div>
+
                                     <dd>
                                         <h3 id='dfc_data_import_pandas_excel'>Excel File</h3>
                                         <br>
                                         <div class="DCChaptersHelpText ">
-                                            <p>Pandas supports importing excel files via the pandas.read_excel() method.&nbsp;Click for details on the <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html
-                                                " target="_blank ">read_excel</a> call.</p>
+                                            <p>Pandas supports importing excel files via the pandas.read_excel() method.&nbsp;Click for details on the <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html" target="_blank ">read_excel</a>                                                call.</p>
                                         </div>
                                     </dd>
                                     <dd>
@@ -364,6 +413,12 @@
                                             <img src="./images/dfc-import-pandas-excel.png ">
                                         </div>
                                     </dd>
+                                    <div style="margin-top:10px; ">
+                                        <div class="dccontainer " style="width:95%; margin-left:50px;">
+                                            <button type="button " class="help-taskbar-button btn btn-primary " style=" font-size:10px; width:90px; height:30px; " onclick="window.open('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html') ">Excel Import</button>
+                                        </div>
+                                    </div>
+
                                     <dd>
                                         <h3 id='dfc_data_import_pandas_json'>JSON File</h3>
                                         <br>
@@ -376,6 +431,11 @@
                                             <img src="./images/dfc-import-pandas-json.png ">
                                         </div>
                                     </dd>
+                                    <div style="margin-top:10px; ">
+                                        <div class="dccontainer " style="width:95%; margin-left:50px;">
+                                            <button type="button " class="help-taskbar-button btn btn-primary " style=" font-size:10px; width:90px; height:30px; " onclick="window.open('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_json.html') ">JSON Import</button>
+                                        </div>
+                                    </div>
 
                                     <dd>
                                         <h3 id='dfc_data_import_pandas_html'>HTML File</h3>
@@ -389,6 +449,11 @@
                                             <img src="./images/dfc-import-pandas-html.png ">
                                         </div>
                                     </dd>
+                                    <div style="margin-top:10px; ">
+                                        <div class="dccontainer " style="width:95%; margin-left:50px;">
+                                            <button type="button " class="help-taskbar-button btn btn-primary " style=" font-size:10px; width:90px; height:30px; " onclick="window.open('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_html.html') ">HTML Import</button>
+                                        </div>
+                                    </div>
 
                                     <br>
                                     <dt id="pandas_dfc "></dt>
@@ -487,7 +552,7 @@
                                             <h4 id='dfc_data_import_pandas_sql_import'>SQL Table</h4>
                                             <br>
                                             <div class="DCChaptersHelpText ">
-                                                <p>Once you verify connection to the database you can import the desired table.</p>
+                                                <p>Once you verify the database connector you can import the desired table.</p>
                                                 <p>Pandas supports importing from sql via the <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_sql_table.html#pandas.read_sql_table" target='_blank '>read_sql_table</a> call.</p>
                                             </div>
                                             <dd>
@@ -500,8 +565,11 @@
                                                     <img src="./images/dfc-import-pandas-sql-import-verify.png ">
                                                 </div>
                                             </dd>
-
-                                            dfc-import-pandas-sql-import-parse-dates
+                                            <dd>
+                                                <div style="text-align:center; ">
+                                                    <img src="./images/dfc-import-pandas-sql-import-warning.png ">
+                                                </div>
+                                            </dd>
                                             <br>
                                             <h5 id='dfc_data_import_pandas_sql_import_history'>SQL Import - Import History</h5>
                                             <br>
@@ -563,11 +631,20 @@
                                                     <img src="./images/dfc-import-pandas-sql-import-parse-dates.png ">
                                                 </div>
                                             </dd>
+                                            <h5 id='dfc_data_import_pandas_sql_import_index'>SQL Import Table Status - Results</h5>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>When the import is completed a status message is diplayed asking if you want to save in history.</p>
+                                            </div>
                                             <dd>
                                                 <div style="text-align:center; ">
                                                     <img src="./images/dfc-import-pandas-sql-import-save-history.png ">
                                                 </div>
                                             </dd>
+                                            <br>
+                                            <div class="DCChaptersHelpText ">
+                                                <p>When the import is completed you can check the histories list to verify the import was saved.</p>
+                                            </div>
                                             <dd>
                                                 <div style="text-align:center; ">
                                                     <img src="./images/dfc-import-pandas-sql-import-history-update.png ">
