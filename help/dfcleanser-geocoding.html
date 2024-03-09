@@ -390,929 +390,943 @@
                                         <img src="./images/dfc-geocoding-bulk-no-dfs.png">
                                     </div>
                                 </dd>
-                                <h3 id='dfc_swutilities_geocoding_bulk_connection'>Bulk Geocoding Geocoder Connection</h3>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocoding-bulk-connector.png">
-                                    </div>
-                                </dd>
-                                <dd>
-                                    <div class="DCChaptersHelpText ">
-                                        <p>Bulk Geocoding is supported for Bing and Google only.</p>
-                                    </div>
-                                </dd>
 
+                                <h3 id='dfc_swutilities_geocoding_bulk_connection_test'>Bulk Geocoding Geocoder Connection Test</h4>
 
-                                <h4 id='dfc_swutilities_geocoding_bulk_connection_test'>Bulk Geocoding Geocoder Connection Test</h4>
-
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText ">
-                                        <p>Fill in the connecion parms and test the conncetion before continuing.</p>
-                                    </div>
-                                </dd>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocoding-bulk-connector-test.png">
-                                    </div>
-                                </dd>
-
-                                <h3 id='dfc_swutilities_geocoding_bulk_geocoding'>Bulk Geocoding</h3>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocoding-bulk-setup.png">
-                                    </div>
-                                </dd>
-                                <h3 id='dfc_swutilities_geocoding_bulk_geocoding_geocoding'>Bulk Reverse Geocoding</h3>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocoding-bulk-reverse-setup.png">
-                                    </div>
-                                </dd>
-
-
-                                <h3 id='dfc_swutilities_geocoding_bulk_console'>Bulk Geocoding Console</h3>
-                                <br>
-                                <div class="DCChaptersHelpText">
-                                    <p>The Bulk Geocoder Console is the console that is displayed to control a bulk geocoding session while it is running.</p>
-                                    <p>A Bulk Geocoding session is running as long as it is started and in running or paused mode.</p>
-                                    <p>You can use pause and resume to control a session and keep the session intact.</p>
-                                    <p>Once a running session is stopped via the user or excessive errors the session is ended and you must start a new session from the beginning again.</p>
-                                </div>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocoding-bulk-console.png">
-                                    </div>
-                                </dd>
-
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_states'>Bulk Geocoding Console States</h4>
-                                <br>
-                                <dd>
-                                    <ul class="current">
-                                        <li>
-                                            <dd>
-                                                <div style="margin-left:2px;">
-                                                    <table style="margin-left:2px;">
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td style="margin-left:2px;">
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Running_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
-                                                ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Running state indicates that dfc geocoding is currently generating geocode results.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <br>
-                                        <li>
-                                            <dd>
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td>
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Stopping_State.png ' style='display: block; margin-left: auto; margin-right: auto;
-                                                ' width='110 ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Stopping state indicates that dfc geocoding is no longer submitting new geocode requests and will shut down as soon as possible.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <br>
-                                        <li>
-                                            <dd>
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td>
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Stopped_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
-                                                ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Stopped state indicates that dfc geocoding is no longer processing any geocode requests and requires new run setup.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <br>
-                                        <li>
-                                            <dd>
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td>
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Pausing_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
-                                                ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Pausing state indicates that dfc geocoding is no longer processing any geocode requests and will pause when all current geocodes are complete.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <br>
-                                        <li>
-                                            <dd>
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td>
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Paused_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
-                                                ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Paused state indicates that dfc geocoding is no longer processing any geocode requests and can be started back where it left via a resume.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <br>
-                                        <li>
-                                            <dd>
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td>
-                                                                <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Finished_State.png ' style='display: block; margin-left: auto; margin-right: auto;
-                                                ' width='110 ' height='30 '></img>
-                                                            </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>Finished state indicates that current geocoding session is complete and you can process the results.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                    </ul>
-                                </dd>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_progress_bars'>Bulk Geocoding Progress Bars</h4>
-                                <br>
-                                <dd>
-                                    <ul class="current">
-                                        <li style="margin-bottom:10px;">
-                                            <dd>
-                                                <div>
-                                                    <table style="margin-left:2px;">
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td style="font-size:14px;">Total Addresses Geocoded</td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>The number of geocode operations completed.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                        <li style="margin-bottom:10px;">
-                                            <dd>
-                                                <div>
-                                                    <table style="margin-left:2px;">
-                                                        <tr>
-                                                            <td style="width:10px;"></td>
-                                                            <td style="font-size:14px;">Total Geocode Errors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-                                                            <td style="width:30px;"></td>
-                                                            <td>
-                                                                <div class="DCChaptersHelpText" style="margin-top:5px;">
-                                                                    <p>The number of geocode errors.</p>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </dd>
-                                        </li>
-                                    </ul>
-                                </dd>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_checkpoint'>Bulk Geocoding Checkpointing</h4>
-                                <br>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_errors'>Error Processing</h4>
-                                <br>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_limits'>Run Limits</h4>
-                                <br>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_results'>Results Processing</h4>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>You can start the bulk run via hitting the Start button.</p>
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-bulk-console-run-end.png ">
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>When the run is over you can process results by hitting the Process Results button.</p>
-                                        <p>You can finish the run and lose all data by hitting the Exit Bulk Run button.</p>
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>You can now process the bulk run results by hitting the Process Results button.</p>
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-bulk-console-process-results.png ">
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>You can view the geocode points retrieved by hitting View Results button.</p>
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-bulk-run-view-results.png ">
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>You can view the geocode errors by hitting View Errors button.</p>
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-bulk-run-view-results.png ">
-                                    </div>
-                                </dd>
-
-
-
-
-                                <br>
-                                <h4 id='dfc_swutilities_geocoding_bulk_console_pricing'>Bulk Geocoding Pricing</h4>
-                                <br>
-
-
-                                <br>
-                                <h2 id='dfc_swutilities_geocoding_utilities'>Geocode Utilities</h2>
-                                <br>
-                                <dd>
-                                    <div style="text-align:center; ">
-                                        <img src="./images/dfc-geocode-utilities.png ">
-                                    </div>
-                                </dd>
-                                <br>
-                                <dd>
-                                    <div class="DCChaptersHelpText">
-                                        <p>Geocode utilities provides both df column based and interactive functions.</p>
-                                    </div>
-                                </dd>
-                                <h3 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Distance</h3>
-                                <br>
-                                <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Address Distance</h3>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Fill in the connecion parms and test the conncetion before continuing.</p>
+                                        </div>
+                                    </dd>
                                     <dd>
                                         <div style="text-align:center; ">
-                                            <img src="./images/dfc-geocode-distance.png ">
+                                            <img src="./images/dfc-geocoding-bulk-connector-test.png">
+                                        </div>
+                                    </dd>
+
+                                    <h3 id='dfc_swutilities_geocoding_bulk_geocoding'>Bulk Geocoding</h3>
+                                    <br>
+                                    <dd>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-geocoding-bulk-setup.png">
+                                        </div>
+                                    </dd>
+                                    <h3 id='dfc_swutilities_geocoding_bulk_geocoding_geocoding'>Bulk Reverse Geocoding</h3>
+                                    <br>
+                                    <dd>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-geocoding-bulk-reverse-setup.png">
+                                        </div>
+                                    </dd>
+
+
+                                    <h3 id='dfc_swutilities_geocoding_bulk_console'>Bulk Geocoding Console</h3>
+                                    <br>
+                                    <div class="DCChaptersHelpText">
+                                        <p>The Bulk Geocoder Console is the console that is displayed to control a bulk geocoding session while it is running.</p>
+                                        <p>A Bulk Geocoding session is running as long as it is started and in running or paused mode.</p>
+                                        <p>You can use pause and resume to control a session and keep the session intact.</p>
+                                        <p>Once a running session is stopped via the user or excessive errors the session is ended and you must start a new session from the beginning again.</p>
+                                    </div>
+                                    <br>
+                                    <dd>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-geocoding-bulk-console.png">
+                                        </div>
+                                    </dd>
+
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_states'>Bulk Geocoding Console States</h4>
+                                    <br>
+                                    <dd>
+                                        <ul class="current">
+                                            <li>
+                                                <dd>
+                                                    <div style="margin-left:2px;">
+                                                        <table style="margin-left:2px;">
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td style="margin-left:2px;">
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Running_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
+                                                ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Running state indicates that dfc geocoding is currently generating geocode results.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <dd>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td>
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Stopping_State.png ' style='display: block; margin-left: auto; margin-right: auto;
+                                                ' width='110 ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Stopping state indicates that dfc geocoding is no longer submitting new geocode requests and will shut down as soon as possible.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <dd>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td>
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Stopped_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
+                                                ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Stopped state indicates that dfc geocoding is no longer processing any geocode requests and requires new run setup.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <dd>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td>
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Pausing_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
+                                                ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Pausing state indicates that dfc geocoding is no longer processing any geocode requests and will pause when all current geocodes are complete.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <dd>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td>
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Paused_State.png ' style='display: block; margin-left: auto; margin-right: auto; ' width='110
+                                                ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Paused state indicates that dfc geocoding is no longer processing any geocode requests and can be started back where it left via a resume.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                <dd>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td>
+                                                                    <img id='geocodeconsolestateId ' src='https://rickkrasinski.github.io/dfcleanser/graphics/Finished_State.png ' style='display: block; margin-left: auto; margin-right: auto;
+                                                ' width='110 ' height='30 '></img>
+                                                                </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>Finished state indicates that current geocoding session is complete and you can process the results.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                        </ul>
+                                    </dd>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_progress_bars'>Bulk Geocoding Progress Bars</h4>
+                                    <br>
+                                    <dd>
+                                        <ul class="current">
+                                            <li style="margin-bottom:10px;">
+                                                <dd>
+                                                    <div>
+                                                        <table style="margin-left:2px;">
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td style="font-size:14px;">Total Addresses Geocoded</td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>The number of geocode operations completed.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                            <li style="margin-bottom:10px;">
+                                                <dd>
+                                                    <div>
+                                                        <table style="margin-left:2px;">
+                                                            <tr>
+                                                                <td style="width:10px;"></td>
+                                                                <td style="font-size:14px;">Total Geocode Errors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
+                                                                <td style="width:30px;"></td>
+                                                                <td>
+                                                                    <div class="DCChaptersHelpText" style="margin-top:5px;">
+                                                                        <p>The number of geocode errors.</p>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </dd>
+                                            </li>
+                                        </ul>
+                                    </dd>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_checkpoint'>Bulk Geocoding Checkpointing</h4>
+                                    <br>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_errors'>Error Processing</h4>
+                                    <br>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_limits'>Run Limits</h4>
+                                    <br>
+                                    <h4 id='dfc_swutilities_geocoding_bulk_console_results'>Results Processing</h4>
+                                    <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText">
+                                            <p>You can start the bulk run via hitting the Start button.</p>
                                         </div>
                                     </dd>
                                     <br>
-                                    <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Lat,Lng Distance</h3>
+                                    <h5 id='dfc_swutilities_geocoding_bulk_console_end'>Run Complete</h4>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Once the run is comnplete you can process results.</p>
+                                            </div>
+                                        </dd>
+
+                                        <br>
                                         <dd>
                                             <div style="text-align:center; ">
-                                                <img src="./images/dfc-geocode-lat-lng-distance.png ">
+                                                <img src="./images/dfc-bulk-console-run-end.png ">
                                             </div>
                                         </dd>
                                         <br>
-                                        <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode df Distance</h3>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-df-distance.png ">
-                                                </div>
-                                            </dd>
-
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Calculate Distance allows you to calculate the distance(s) interactively or between df columns.</p>
-                                                    <p>Calculate Distance allows you to calculate distances between geolocation coordinates or addresses.</p>
-                                                    <p>Calculasting distances between addresses will require the retrieval of geocode coordinates to get distances between.</p>
-                                                </div>
-                                            </dd>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_distance_parrms'>Calculate Distance Common Parms</h4>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Each Distance Calculation requires the user to define the distance algorithm to use.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <div>
-                                                <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>distance_units</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Units of distance to calculate for.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>distance_algorithm</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Algorithm to calculate distance with.</p>
-                                                                            </div>
-                                                                            <div class="DCChaptersHelpText">
-                                                                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please refer to the <button class="btn btn-primary" style="font-size:11px;"><a href="https://geopy.readthedocs.io/en/stable/#module-geopy.distance" target="_blank"><span style="color:#ffffff;">Geopy</span></a></button>                                                                                    manual for algorithm definition:</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>elipsoid</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Elipsoid to use to calculate distance with.</p>
-                                                                            </div>
-                                                                            <div class="DCChaptersHelpText">
-                                                                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please refer to the <button class="btn btn-primary" style="font-size:11px;"><a href="https://geopy.readthedocs.io/en/stable/#module-geopy.distance" target="_blank"><span style="color:#ffffff;">Geopy</span></a></button>                                                                                    manual for elipsoid definition:</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </dd>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>When the run is over you can process results by hitting the Process Results button.</p>
+                                                <p>You can finish the run and lose all data by hitting the Exit Bulk Run button.</p>
                                             </div>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_interactive_geocode_distance'>Interactive Geocode Distance</h4>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_interactive_location_distance'>Interactive Distance Between Locations</h5>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_bulk_console_end'>Process Results</h4>
+                                            <br>
                                             <dd>
                                                 <div class="DCChaptersHelpText">
-                                                    <p>You can enter sets of geolocation coordinates of Lat,Lng to calculate distances between.</p>
+                                                    <p>You can now process the bulk run results by hitting the Process Results button.</p>
                                                 </div>
                                             </dd>
                                             <br>
                                             <dd>
                                                 <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-interactive-distance.png ">
+                                                    <img src="./images/dfc-bulk-console-process-results.png ">
                                                 </div>
                                             </dd>
-                                            <br>
-                                            <div>
+                                            <h5 id='dfc_swutilities_geocoding_bulk_console_end'>View Geocode Points</h4>
+
+                                                <br>
                                                 <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*from_location_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of tuples for from locations to get dist between.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*to_location_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of tuples for to locations to get dist between.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div class="DCChaptersHelpText">
+                                                        <p>You can view the geocode points retrieved by hitting View Results button.</p>
+                                                    </div>
                                                 </dd>
-                                            </div>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_interactive_distance_response'>Interactive Distance Between Locations Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-interactive-distance-response.png ">
-                                                </div>
-                                            </dd>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_interactive_address_distance'>Interactive Distance Between Addresses</h5>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>You can enter sets of addresses to calculate distances between.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-interactive-address-distance.png ">
-                                                </div>
-                                            </dd>
-                                            <div>
+                                                <br>
                                                 <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*from_addresses_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of addresses for from locations to get dist between.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*to_addresses_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of addresses for to locations to get dist between.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <div style="text-align:center; ">
+                                                        <img src="./images/dfc-bulk-run-view-results.png ">
+                                                    </div>
                                                 </dd>
+                                                <h5 id='dfc_swutilities_geocoding_bulk_console_end'>View Geocode Errors</h4>
+
+                                                    <br>
+                                                    <dd>
+                                                        <div class="DCChaptersHelpText">
+                                                            <p>You can view the geocode errors by hitting View Errors button.</p>
+                                                        </div>
+                                                    </dd>
+                                                    <br>
+                                                    <dd>
+                                                        <div style="text-align:center; ">
+                                                            <img src="./images/dfc-bulk-run-view-results.png ">
+                                                        </div>
+                                                    </dd>
+                                                    <h5 id='dfc_swutilities_geocoding_bulk_console_end'>Merge Results</h4>
+
+                                                        <br>
+                                                        <dd>
+                                                            <div class="DCChaptersHelpText">
+                                                                <p>You can then merge the retrieved geocode points into the source df by hitting Merge Results button.</p>
+                                                            </div>
+                                                        </dd>
+                                                        <br>
+                                                        <dd>
+                                                            <div style="text-align:center; ">
+                                                                <img src="./images/dfc-bulk-run-view-results.png ">
+                                                            </div>
+                                                        </dd>
+
+
+
+
+                                                        <br>
+                                                        <h4 id='dfc_swutilities_geocoding_bulk_console_pricing'>Bulk Geocoding Pricing</h4>
+                                                        <br>
+
+
+                                                        <br>
+                                                        <h2 id='dfc_swutilities_geocoding_utilities'>Geocode Utilities</h2>
+                                                        <br>
+                                                        <dd>
+                                                            <div style="text-align:center; ">
+                                                                <img src="./images/dfc-geocode-utilities.png ">
+                                                            </div>
+                                                        </dd>
+                                                        <br>
+                                                        <dd>
+                                                            <div class="DCChaptersHelpText">
+                                                                <p>Geocode utilities provides both df column based and interactive functions.</p>
+                                                            </div>
+                                                        </dd>
+                                                        <h3 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Distance</h3>
+                                                        <br>
+                                                        <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Address Distance</h3>
+                                <dd>
+                                    <div style="text-align:center; ">
+                                        <img src="./images/dfc-geocode-distance.png ">
+                                    </div>
+                                </dd>
+                                <br>
+                                <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode Lat,Lng Distance</h3>
+                                    <dd>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/dfc-geocode-lat-lng-distance.png ">
+                                        </div>
+                                    </dd>
+                                    <br>
+                                    <h4 id='dfc_swutilities_geocoding_utilities_distance'>Geocode df Distance</h3>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-df-distance.png ">
                                             </div>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_interactive_address_distance_response'>Interactive Distance Between Addresses Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-interactive-address-distance-response.png ">
-                                                </div>
-                                            </dd>
+                                        </dd>
 
-                                            <h4 id='dfc_swutilities_geocoding_df_distance'>df Column Distance Calculation</h4>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>df Column Distance allows you to calculate distances with df columns.</p>
-                                                </div>
-                                            </dd>
-
-                                            <h5 id='dfc_swutilities_geocoding_df_columns_distance'>Distance Calculation Between dataframe Columns</h5>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>You can calculate distance between 2 different df columns. This is only for location columns and not address columns.</p>
-                                                    <p>if you need to calculate distance address df columns then bulk reverse the address columns.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-columns-distance.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <div>
-                                                <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*from_dataframe</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Dataframe for the from geocode location points.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* from_dataframe_location_columns</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of geocode location columns for the from pts.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* from_dataframe_column_name(s)</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of column names to select for the from pts. Can select single or two columns</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*to_dataframe</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Dataframe for the to geocode location points.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*to_dataframe_location_columns</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of geocode location columns for the to pts.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*to_dataframe_column_name(s)</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of column names to select for the to pts. Can select single or two columns</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*new_distance_column_name</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Column name to store the distance results in. Column added to from dataframe.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </dd>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Calculate Distance allows you to calculate the distance(s) interactively or between df columns.</p>
+                                                <p>Calculate Distance allows you to calculate distances between geolocation coordinates or addresses.</p>
+                                                <p>Calculasting distances between addresses will require the retrieval of geocode coordinates to get distances between.</p>
                                             </div>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_columns_distance_response'>Distance Calculation Between dataframe Columns Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-columns-distance-response.png ">
-                                                </div>
-                                            </dd>
-
-                                            <h5 id='dfc_swutilities_geocoding_df_nearest_distance'>Distance Calculation Between dataframe Column and Nearest Location</h5>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>You can calculate the nearest distance between df column and user set of locations.</p>
-                                                    <p>The distance is calculated between the df column and each of the user locations and store the nearest location.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-nearest-distance.png ">
-                                                </div>
-                                            </dd>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-nearest-distance-1.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <div>
-                                                <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* dataframe_for_locations</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Dataframe for the geocode location points.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*location_columns</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of geocode location columns for the pts.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*location_column(s)_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of column names to select for the pts. Can select single or two columns</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*user_defined_locations_to_find_nearest_to</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>User defined lisr of locations to find nearest to.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*nearest_distance_column_name</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Column name to store nearest distance in.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*nearest_location_column_name</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Column name to store the nearest location in.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </dd>
+                                        </dd>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_distance_parrms'>Calculate Distance Common Parms</h4>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Each Distance Calculation requires the user to define the distance algorithm to use.</p>
                                             </div>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_columns_distance_response'>Distance Calculation Between dataframe Column and Nearest Location Response</h5>
-                                            <br>
+                                        </dd>
+                                        <br>
+                                        <div>
                                             <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-nearest-distance-response.png ">
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>distance_units</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Units of distance to calculate for.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>distance_algorithm</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Algorithm to calculate distance with.</p>
+                                                                        </div>
+                                                                        <div class="DCChaptersHelpText">
+                                                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please refer to the <button class="btn btn-primary" style="font-size:11px;"><a href="https://geopy.readthedocs.io/en/stable/#module-geopy.distance" target="_blank"><span style="color:#ffffff;">Geopy</span></a></button>                                                                                manual for algorithm definition:</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>elipsoid</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Elipsoid to use to calculate distance with.</p>
+                                                                        </div>
+                                                                        <div class="DCChaptersHelpText">
+                                                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please refer to the <button class="btn btn-primary" style="font-size:11px;"><a href="https://geopy.readthedocs.io/en/stable/#module-geopy.distance" target="_blank"><span style="color:#ffffff;">Geopy</span></a></button>                                                                                manual for elipsoid definition:</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <h5 id='dfc_swutilities_geocoding_df_center_distance'>Distance Calculation Between dataframe Column and Center Location</h5>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>You can calculate thedistance between df column and a center point locations.</p>
-                                                    <p>The center point location can be calculated as the center point of the df location column or as a user defined center point.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-center-distance.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <div>
-                                                <dd>
-                                                    <table class="field-list " frame="void " rules="none">
-                                                        <colgroup>
-                                                            <col class="field-name ">
-                                                            <col class="field-body " style="background-color:#ffffff;">
-                                                        </colgroup>
-                                                        <tbody valign="top ">
-                                                            <tr class="field ">
-                                                                <th class="field-name ">Parameters:</th>
-                                                                <td class="field-body " style="background-color:#ffffff;">
-                                                                    <br>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*location_dataframe</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Dataframe for the geocode location points.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*location_dataframe_column(s)</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of geocode location columns for the pts.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>*location_dataframe_column(s)_list</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>List of column names to select for the pts. Can select single or two columns</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* center_point_opton</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>User selected center point type.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* user_defined_center_point</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Center point defined by the user.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                    <dl class="input_body">
-                                                                        <dt><strong>* dist_to_center_column_name</strong> </dt>
-                                                                        <dd>
-                                                                            <div class="results_text">
-                                                                                <p>Column name to store the distance in.</p>
-                                                                            </div>
-                                                                        </dd>
-                                                                    </dl>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </dd>
+                                        </div>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_interactive_geocode_distance'>Interactive Geocode Distance</h4>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_interactive_location_distance'>Interactive Distance Between Locations</h5>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>You can enter sets of geolocation coordinates of Lat,Lng to calculate distances between.</p>
                                             </div>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_distance_response'>Distance Calculation Between dataframe Column and Center Point Response</h5>
-                                            <br>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-interactive-distance.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <div>
                                             <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-utilities-df-center-distance-response.png ">
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*from_location_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of tuples for from locations to get dist between.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*to_location_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of tuples for to locations to get dist between.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <h3 id='dfc_swutilities_geocoding_center'>Calculate Center</h3>
-                                            <br>
+                                        </div>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_interactive_distance_response'>Interactive Distance Between Locations Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-interactive-distance-response.png ">
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_interactive_address_distance'>Interactive Distance Between Addresses</h5>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>You can enter sets of addresses to calculate distances between.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-interactive-address-distance.png ">
+                                            </div>
+                                        </dd>
+                                        <div>
                                             <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Calculate Center allows you to calculate the center from a set of user defined coords or addresses.</p>
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*from_addresses_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of addresses for from locations to get dist between.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*to_addresses_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of addresses for to locations to get dist between.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <h4 id='dfc_swutilities_geocoding_location_center'>Calculate Center From Locations</h4>
+                                        </div>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_interactive_address_distance_response'>Interactive Distance Between Addresses Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-interactive-address-distance-response.png ">
+                                            </div>
+                                        </dd>
 
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Locations Input</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-locations-center-pt.png ">
-                                                </div>
-                                            </dd>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Locations Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-locations-center-pt-response.png ">
-                                                </div>
-                                            </dd>
-                                            <h4 id='dfc_swutilities_geocoding_address_center'>Calculate Center From Addresses</h4>
+                                        <h4 id='dfc_swutilities_geocoding_df_distance'>df Column Distance Calculation</h4>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>df Column Distance allows you to calculate distances with df columns.</p>
+                                            </div>
+                                        </dd>
 
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Addresses Input</h5>
-                                            <br>
+                                        <h5 id='dfc_swutilities_geocoding_df_columns_distance'>Distance Calculation Between dataframe Columns</h5>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>You can calculate distance between 2 different df columns. This is only for location columns and not address columns.</p>
+                                                <p>if you need to calculate distance address df columns then bulk reverse the address columns.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-columns-distance.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <div>
                                             <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-addresses-center-pt.png ">
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*from_dataframe</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Dataframe for the from geocode location points.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* from_dataframe_location_columns</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of geocode location columns for the from pts.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* from_dataframe_column_name(s)</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of column names to select for the from pts. Can select single or two columns</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*to_dataframe</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Dataframe for the to geocode location points.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*to_dataframe_location_columns</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of geocode location columns for the to pts.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*to_dataframe_column_name(s)</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of column names to select for the to pts. Can select single or two columns</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*new_distance_column_name</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Column name to store the distance results in. Column added to from dataframe.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Addresses Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-addresses-center-pt-response.png ">
-                                                </div>
-                                            </dd>
-                                            <h4 id='dfc_swutilities_geocoding_df_center'>Calculate df Column Center</h4>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Calculate df Center allows you to calculate the center from a df column.</p>
-                                                </div>
-                                            </dd>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate df Column Center Input</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-df-center-pt.png ">
-                                                </div>
-                                            </dd>
-                                            <h5 id='dfc_swutilities_geocoding_utilities_df_center_response'>Calculate df Center Response</h5>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-df-center-pt-response.png ">
-                                                </div>
-                                            </dd>
+                                        </div>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_columns_distance_response'>Distance Calculation Between dataframe Columns Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-columns-distance-response.png ">
+                                            </div>
+                                        </dd>
 
-                                            <h3 id='dfc_swutilities_geocoding_split'>Split LatLng Column</h3>
-                                            <br>
+                                        <h5 id='dfc_swutilities_geocoding_df_nearest_distance'>Distance Calculation Between dataframe Column and Nearest Location</h5>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>You can calculate the nearest distance between df column and user set of locations.</p>
+                                                <p>The distance is calculated between the df column and each of the user locations and store the nearest location.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-nearest-distance.png ">
+                                            </div>
+                                        </dd>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-nearest-distance-1.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <div>
                                             <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Split LatLng Column allows you to split string representation of a lat,lng pair into separate Lat and Lng columns.</p>
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* dataframe_for_locations</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Dataframe for the geocode location points.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*location_columns</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of geocode location columns for the pts.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*location_column(s)_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of column names to select for the pts. Can select single or two columns</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*user_defined_locations_to_find_nearest_to</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>User defined lisr of locations to find nearest to.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*nearest_distance_column_name</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Column name to store nearest distance in.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*nearest_location_column_name</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Column name to store the nearest location in.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <br>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_split_inputs'>Split LatLng Column Inputs</h4>
+                                        </div>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_columns_distance_response'>Distance Calculation Between dataframe Column and Nearest Location Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-nearest-distance-response.png ">
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_df_center_distance'>Distance Calculation Between dataframe Column and Center Location</h5>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>You can calculate thedistance between df column and a center point locations.</p>
+                                                <p>The center point location can be calculated as the center point of the df location column or as a user defined center point.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-center-distance.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <div>
                                             <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-split.png ">
-                                                </div>
+                                                <table class="field-list " frame="void " rules="none">
+                                                    <colgroup>
+                                                        <col class="field-name ">
+                                                        <col class="field-body " style="background-color:#ffffff;">
+                                                    </colgroup>
+                                                    <tbody valign="top ">
+                                                        <tr class="field ">
+                                                            <th class="field-name ">Parameters:</th>
+                                                            <td class="field-body " style="background-color:#ffffff;">
+                                                                <br>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*location_dataframe</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Dataframe for the geocode location points.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*location_dataframe_column(s)</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of geocode location columns for the pts.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>*location_dataframe_column(s)_list</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>List of column names to select for the pts. Can select single or two columns</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* center_point_opton</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>User selected center point type.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* user_defined_center_point</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Center point defined by the user.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                                <dl class="input_body">
+                                                                    <dt><strong>* dist_to_center_column_name</strong> </dt>
+                                                                    <dd>
+                                                                        <div class="results_text">
+                                                                            <p>Column name to store the distance in.</p>
+                                                                        </div>
+                                                                    </dd>
+                                                                </dl>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </dd>
-                                            <br>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_split_response'>Split LatLng Column Response</h4>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-split-response.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-split-response_columns.png ">
-                                                </div>
-                                            </dd>
-                                            <h3 id='dfc_swutilities_geocoding_join'>Join Lat Lng Columns</h3>
-                                            <br>
-                                            <dd>
-                                                <div class="DCChaptersHelpText">
-                                                    <p>Join Lat Lng Columns allows you to join lat and long float columns to a single string representation.</p>
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_join_inputs'>Join Lat Lng Columns Inputs</h4>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-join.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <h4 id='dfc_swutilities_geocoding_utilities_join_response'>Join Lat Lng Columns Response</h4>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-join-response.png ">
-                                                </div>
-                                            </dd>
-                                            <br>
-                                            <dd>
-                                                <div style="text-align:center; ">
-                                                    <img src="./images/dfc-geocode-join-response_columns.png ">
-                                                </div>
-                                            </dd>
+                                        </div>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_distance_response'>Distance Calculation Between dataframe Column and Center Point Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-utilities-df-center-distance-response.png ">
+                                            </div>
+                                        </dd>
+                                        <h3 id='dfc_swutilities_geocoding_center'>Calculate Center</h3>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Calculate Center allows you to calculate the center from a set of user defined coords or addresses.</p>
+                                            </div>
+                                        </dd>
+                                        <h4 id='dfc_swutilities_geocoding_location_center'>Calculate Center From Locations</h4>
+
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Locations Input</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-locations-center-pt.png ">
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Locations Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-locations-center-pt-response.png ">
+                                            </div>
+                                        </dd>
+                                        <h4 id='dfc_swutilities_geocoding_address_center'>Calculate Center From Addresses</h4>
+
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Addresses Input</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-addresses-center-pt.png ">
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate Center From Addresses Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-addresses-center-pt-response.png ">
+                                            </div>
+                                        </dd>
+                                        <h4 id='dfc_swutilities_geocoding_df_center'>Calculate df Column Center</h4>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Calculate df Center allows you to calculate the center from a df column.</p>
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_input'>Calculate df Column Center Input</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-df-center-pt.png ">
+                                            </div>
+                                        </dd>
+                                        <h5 id='dfc_swutilities_geocoding_utilities_df_center_response'>Calculate df Center Response</h5>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-df-center-pt-response.png ">
+                                            </div>
+                                        </dd>
+
+                                        <h3 id='dfc_swutilities_geocoding_split'>Split LatLng Column</h3>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Split LatLng Column allows you to split string representation of a lat,lng pair into separate Lat and Lng columns.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_split_inputs'>Split LatLng Column Inputs</h4>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-split.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_split_response'>Split LatLng Column Response</h4>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-split-response.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-split-response_columns.png ">
+                                            </div>
+                                        </dd>
+                                        <h3 id='dfc_swutilities_geocoding_join'>Join Lat Lng Columns</h3>
+                                        <br>
+                                        <dd>
+                                            <div class="DCChaptersHelpText">
+                                                <p>Join Lat Lng Columns allows you to join lat and long float columns to a single string representation.</p>
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_join_inputs'>Join Lat Lng Columns Inputs</h4>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-join.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <h4 id='dfc_swutilities_geocoding_utilities_join_response'>Join Lat Lng Columns Response</h4>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-join-response.png ">
+                                            </div>
+                                        </dd>
+                                        <br>
+                                        <dd>
+                                            <div style="text-align:center; ">
+                                                <img src="./images/dfc-geocode-join-response_columns.png ">
+                                            </div>
+                                        </dd>
                             </div>
                         </div>
                     </div>
