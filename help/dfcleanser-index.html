@@ -455,25 +455,6 @@
                                             <img src="./images/dfc-main-console.png ">
                                         </div>
                                         <br>
-                                        <div id="pandas_dfc_pop_up">
-                                            <h2>Pandas Dataframe Cleanser Pop Ups</h2>
-                                        </div>
-                                        <br>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>Pop Ups are used to display certain data that allows users to browse relevant data while working on a dataframes operation.</p>
-                                        </div>
-                                        <br>
-                                        <div style="text-align:center ">
-                                            <img src="./images/dfcleanser-sample-popup.png ">
-                                        </div>
-                                        <br>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>To close the pop up window hit the close icon in the bottom right of the pop up window.</p>
-                                        </div>
-                                        <br>
-                                        <div style="text-align:center ">
-                                            <img src="./images/dfcleanser-popup-close-button.png ">
-                                        </div>
                                     </dd>
                                     <br>
                                     <div id="pandas_dfc_working_cell">
@@ -810,111 +791,10 @@
                                     <dt id="pandas_dfc_config"></dt>
                                     <dd>
                                         <div class="DCChaptersHelpText ">
-                                            <p>The Pandas Dataframe Cleanser uses multiple json configuration files while running. The files are defined can be broken into Notebook files and dfc files.</p>
+                                            <p>The Pandas Dataframe Cleanser uses multiple json configuration files while running. The files are defined can be broken into Notebook files and dfc files can be broken into Notebook files and dfc files.</p>
+                                            <p>Refer to the System Environmment section of the manual for details on configuration data.</p>
                                         </div>
                                     </dd>
-                                    <h3>Notebook Files</h3>
-                                    <br>
-                                    <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>Notebook files are unique per notebook that dfc is loaded and run in.&nbsp;The Notebook files path is 'NotebookPath'\'NotebookName'_files.</p>
-                                        </div>
-                                        <br>
-                                        <ul>
-                                            <li class="toctree-l2 ">Notebook Files</li>
-                                            <br>
-                                            <ul>
-                                                <li class="toctree-l3 ">'NotebookName'_config.json</li>
-                                                <li class="toctree-l3 ">'NotebookName'.json</li>
-                                                <li class="toctree-l3 ">'NotebookName'_errorlog.json</li>
-                                                <li class="toctree-l3 ">'NotebookName'_export_history.json</li>
-                                                <li class="toctree-l3 ">'NotebookName'_import_history.json</li>
-                                            </ul>
-                                        </ul>
-                                        <h4>_config.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The notenook _config.json file is used to record the running environment and input form parms.&nbsp;Input forms parms are stroed and recalled each time the form is displayed.</p>
-                                            </div>
-                                        </dd>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/notebook_config_json.png ">
-                                            </div>
-                                        </dd>
-                                        <h4>_dfc_df_mgr_operations_history.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The _operations_history.json file is used to store the notebook commands against a dataframe to replay.</p>
-                                            </div>
-                                        </dd>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/notebook_operation_history_json.png ">
-                                            </div>
-                                        </dd>
-                                        <h4>_errorlog.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The _errorlog.json file is used to store the notebook errors occuring while running operations.</p>
-                                            </div>
-                                        </dd>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/notebook_errorlog_json.png ">
-                                            </div>
-                                        </dd>
-                                        <h4>_export_history.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The _export_history.json file is used to store of exports from the notebook.</p>
-                                            </div>
-                                        </dd>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/notebook_export_history.png ">
-                                            </div>
-                                        </dd>
-                                        <h4>_import_history.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The _import_history.json file is used to store all imports to the notebook.</p>
-                                            </div>
-                                        </dd>
-                                        <dd>
-                                            <div style="text-align:center; ">
-                                                <img src="./images/notebook_import_history.png ">
-                                            </div>
-                                        </dd>
-                                        <h3>Pandas Dataframe Cleanser Files</h3>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>Pandas Dataframe Cleanser files are across dfc and used by all notebooks that dfc is loaded and run in.&nbsp;The Notebook files path &nbsp;&nbsp;&nbsp;&nbsp;is 'dfcleanserPath'\files.</p>
-                                            </div>
-                                        </dd>
-                                        <br>
-                                        <ul>
-                                            <li class="toctree-l2 ">Pandas Dataframe Cleanser Files</li>
-                                            <br>
-                                            <ul class="current ">
-                                                <li class="toctree-l3 ">dfcleanserCommon_config.json</li>
-                                                <li class="toctree-l3 ">dfcleanserCommon_dictlog.json</li>
-                                                <li class="toctree-l3 ">dfcleanserCommon_listlog.json</li>
-                                            </ul>
-                                        </ul>
-                                        <h4>dfcleanserCommon_config.json</h4>
-                                        <br>
-                                        <dd>
-                                            <div class="DCChaptersHelpText ">
-                                                <p>The file is used to record the running environment for all notebooks. This includes database and geocoder parms.</p>
-                                            </div>
-                                        </dd>
                                 </dl>
                             </div>
                         </div>
