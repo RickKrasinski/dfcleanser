@@ -489,14 +489,15 @@
                                     </dd>
                                     <br>
                                     <dd>
-                                        <div style="text-align:center; ">
-                                            <img src="./images/sample_chapter.png ">
+                                        <div class="DCChaptersHelpText ">
+                                            <p>Each dfc chapter is loaded a a separate QT GUI app independent of the nothebook. You can load multiple copies of the same chapter.</p>
                                         </div>
                                     </dd>
                                     <br>
+
                                     <dd>
-                                        <div class="DCChaptersHelpText ">
-                                            <p>Each chapter is displayed with its own console for the user to select the desired functioanilty.</p>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/sample_chapter.png ">
                                         </div>
                                     </dd>
                                     <br>
@@ -505,12 +506,25 @@
                                             <p>Each chapter has the following set of control buttons.</p>
                                         </div>
                                         <ul class="current ">
-                                            <li class="toctree-l1 ">Reset Chapter</li>
-                                            <li class="toctree-l1 ">Close Chapter</li>
-                                            <li class="toctree-l1 ">Help</li>
+                                            <li class="toctree-l1 ">Reset Chapter(s)</li>
+                                            <li class="toctree-l1 ">Load New Chapter Instance</li>
+                                            <li class="toctree-l1 ">Close Chapter(s)</li>
                                         </ul>
                                     </dd>
                                     <br>
+                                    <dd>
+                                        <div class="DCChaptersHelpText ">
+                                            <p>If a new chapter instance is loaded a new gui app is displayed.</p>
+                                        </div>
+                                    </dd>
+                                    <br>
+
+                                    <dd>
+                                        <div style="text-align:center; ">
+                                            <img src="./images/sample_chapter-1.png ">
+                                        </div>
+                                    </dd>
+
                                 </dl>
                                 <div id="pandas_dfc_reset">
                                     <h2>Pandas Dataframe Cleanser Reset</h2>
@@ -562,7 +576,7 @@
                                 </dl>
                             </div>
                             <div class="section " id="pandas_dfc_configuration">
-                                <h1>Pandas Dataframe Cleanser Configuration</h1>
+                                <h1>Pandas Dataframe Cleanser Conventions</h1>
                                 <div id="pandas_dfc_dfs">
                                     <h2>dfcleanser dataframes</h2>
                                 </div>
@@ -570,7 +584,7 @@
                                 <dl class="function ">
                                     <dd>
                                         <div class="DCChaptersHelpText ">
-                                            <p>The Pandas Dataframe Cleanser(dfc) maintain a set of dfc dataframe objects that are visible to any function in dfc.</p>
+                                            <p>The Pandas Dataframe Cleanser(dfc) maintain a set of 'dfc dataframe' objects that are visible to any function in dfc.</p>
                                             <p>A dfc dataframe object is created that consists of a dataframe title, a pandas dataframe object and descriptive notes.</p>
                                             <p>Every Chapter has a dropdown selector to define the current default dataframe for that chapter. The default can be overridden in certain functions otherwise the chapter selected dataframe is used.</p>
                                         </div>
