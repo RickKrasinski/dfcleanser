@@ -14,6 +14,8 @@ this = sys.modules[__name__]
 import json 
 import os
 
+DEBUG_DISPLAY_PARMS     =   False
+DEBUG_DFC_MGR           =   False
 
 
 """
@@ -74,11 +76,14 @@ def get_dfcleanser_location()  :
     import os
     import dfcleanser
     ppath = os.path.abspath(dfcleanser.__file__)
-    #print("dfc path",dcfpath)   
+    #print("dfc path",len(ppath),ppath)   
 
     initpyloc = ppath.find("__init__.py")
+    
+   # print("initpyloc",initpyloc)
     if(initpyloc > 0) :
         ppath = ppath[:initpyloc]
+        #print("ppath",ppath)
 
     return(ppath)
 
@@ -113,6 +118,29 @@ def get_notebookpath() :
 #--------------------------------------------------------------------------
 """
 
+"""
+#--------------------------------------------------------------------------
+#   javascript chapter ids
+#--------------------------------------------------------------------------
+"""
+
+DC_CONSOLE_ID               =   0
+DC_SYSTEM_ID                =   1
+DC_DATA_IMPORT_ID           =   2
+DC_DATA_IMPORT_MORE_ID      =   14
+DC_DATA_INSPECTION_ID       =   3  
+DC_DATA_CLEANSING_ID        =   4
+DC_DATA_TRANSFORM_ID        =   5
+DC_DATA_EXPORT_ID           =   6
+
+DC_GEOCODE_UTILITY_ID       =   7
+DC_DF_BROWSER_ID            =   8
+DC_CENSUS_ID                =   9
+DC_ZIPCODE_UTILITY_ID       =   10
+DC_GEOCODE_BULK_ID          =   11
+DC_WORKING_TITLE_ID         =   12
+DC_WORKING_CELL_ID          =   13
+
 
 """
 #--------------------------------------------------------------------------
@@ -126,12 +154,12 @@ DataInspection_ID       =   "DataInspection"
 DataScripting_ID        =   "DataScripting"
 DataTransform_ID        =   "DataTransform"
 SWUtilities_ID          =   "SWUtilities"
-SWDFSubsetUtility_ID    =   "SWDFSubsetUtility"
 SWGeocodeUtility_ID     =   "SWGeocodeUtility"
+SWBulkGeocodeUtility_ID     =   "SWBulkGeocodeUtility"
 SWZipcodeUtility_ID     =   "SWZipcodeUtility"
 SWCensusUtility_ID      =   "SWCensusUtility"
 System_ID               =   "System"
-
+dfBrowserUtility_ID     =   "SWdfBrowserUtility"
 
 DBUtils_ID              =   "DBUtils"
 DumpUtils_ID            =   "DumpUtils"
@@ -175,179 +203,9 @@ data_subset_df_input_id                   =   "datasubsetdf"
 
 
 
-def update_chapter_df_select(chapterselect) :
-    """
-    * ---------------------------------------------------------
-    * function : change the df list in select forms
-    * 
-    * Parms :
-    *  chapterform - chapter fomr to update
-    *
-    * returns : 
-    *  N/A 
-    * --------------------------------------------------------
-    """
-    
-    if(chapterselect == "didfdataframe") :
-        select_df_form  =   get_select_df_form(DataInspection_ID) 
-        cfg_key         =   CURRENT_INSPECTION_DF
-    elif(chapterselect == "dcdfdataframe") :
-        select_df_form  =   get_select_df_form(DataCleansing_ID) 
-        cfg_key         =   CURRENT_CLEANSE_DF
-    elif(chapterselect == "dtdfdataframe") :
-        select_df_form  =   get_select_df_form(DataTransform_ID) 
-        cfg_key         =   CURRENT_TRANSFORM_DF
-    elif(chapterselect == "dedfdataframe") :
-        select_df_form  =   get_select_df_form(DataExport_ID) 
-        cfg_key         =   CURRENT_EXPORT_DF
-    elif(chapterselect == "dgdfdataframe") :
-        select_df_form  =   get_select_df_form(SWGeocodeUtility_ID) 
-        cfg_key         =   CURRENT_GEOCODE_DF
-    elif(chapterselect == "dsdfdataframe") :
-        select_df_form  =   get_select_df_form(SWDFSubsetUtility_ID) 
-        cfg_key         =   CURRENT_SUBSET_DF
-    else :
-        return()
-    
-    if(is_a_dfc_dataframe_loaded()) :
-        df_titles       =   get_dfc_dataframes_titles_list()
-        selected_df     =   df_titles[0]
-    
-        if(get_config_value(cfg_key) is None)     :   
-            set_config_value(cfg_key,selected_df)
-        else :
-            selected_df    =   get_config_value(cfg_key)
-    
-    else :
-        selected_df     =   ""
-        drop_config_value(cfg_key)            
-    
-    from dfcleanser.common.common_utils import patch_html, run_jscript
-        
-    new_df_html         =   select_df_form.get_html()
-    new_df_html         =   patch_html(new_df_html)
-
-    change_select_js = "$("
-    change_select_js = change_select_js + "'#" + chapterselect + "').html('"
-    change_select_js = change_select_js + new_df_html + "');"
-    run_jscript(change_select_js,"fail update select : ")
-    
-    set_select_js = "$("
-    set_select_js = set_select_js + "'#" + chapterselect + " :selected').text('" + selected_df + "');"
-    run_jscript(set_select_js,"fail update select : ")
-
-    
-    set_select_js = "$("
-    set_select_js = set_select_js + "'#" + chapterselect + "').trigger('change');"
-    run_jscript(set_select_js,"fail update select : ")
-    
-
-def get_select_df_form(chapterid) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : get select dataframe form
-    * 
-    * parms :
-    *  chapterid    -   chapter id
-    *
-    * returns : form
-    * --------------------------------------------------------
-    """
-
-    if(chapterid == DataCleansing_ID) :
-        idlist      =   ["dcdfdataframe"]
-        labellist   =   ["dataframe_to_cleanse"]
-        formid      =   "datacleansedf"
-
-    elif(chapterid == DataTransform_ID) :
-        idlist      =   ["dtdfdataframe"]
-        labellist   =   ["dataframe_to_transform"]
-        formid      =   "datatransformdf"
-
-    elif(chapterid == DataExport_ID) :
-        idlist      =   ["dedfdataframe"]
-        labellist   =   ["dataframe_to_export"]
-        formid      =   "dataexportdf"
-    
-    elif(chapterid == SWGeocodeUtility_ID) :
-        idlist      =   ["dgdfdataframe"]
-        labellist   =   ["dataframe_to_geocode"]
-        formid      =   "datageocodedf"
-    
-    elif(chapterid == SWDFSubsetUtility_ID) :
-        idlist      =   ["dsdfdataframe"]
-        labellist   =   ["dataframe_to_subset"]
-        formid      =   "datasubsetdf"
-
-    else :
-        idlist      =   chapter_select_df_input_idList
-        labellist   =   chapter_select_df_input_labelList
-        formid      =   chapter_select_df_input_id
-    
-    from dfcleanser.common.html_widgets import InputForm
-    select_df_form  =   InputForm(formid,
-                                  idlist,
-                                  labellist,
-                                  chapter_select_df_input_typeList,
-                                  chapter_select_df_input_placeholderList,
-                                  chapter_select_df_input_jsList,
-                                  chapter_select_df_input_reqList)
-    
-    df_list     =   get_dfc_dataframes_select_list(chapterid)
-
-    if(not (df_list is None)) :
-        dataframes      =   df_list
-    else :
-        dataframes      =   {'default': "no dfs defined", 'list': ["no dfs defined"], "callback" : "select_chapter_df"}
-
-    selectDicts     =   []
-    selectDicts.append(dataframes)
-
-    from dfcleanser.common.common_utils import get_select_defaults
-    get_select_defaults(select_df_form,
-                        formid,
-                        idlist,
-                        chapter_select_df_input_typeList,
-                        selectDicts)
-    
-    select_df_form.set_shortForm(True)
-    
-    if(get_dfc_mode() == INLINE_MODE) :
-        select_df_form.set_gridwidth(780)
-    else :
-        select_df_form.set_gridwidth(480)
-        
-    return(select_df_form)
-
-
-def display_data_select_df(chapterid) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : display select dataframe form
-    * 
-    * parms :
-    *  chapterid    -   chapter id
-    *
-    * returns : N/A
-    * --------------------------------------------------------
-    """
-    
-    select_df_form              =   get_select_df_form(chapterid)
-    select_df_form_html         =   select_df_form.get_html()
-    
-    gridclasses     =   ["dfc-footer"]
-    gridhtmls       =   [select_df_form_html]
-    
-    from dfcleanser.common.common_utils import display_generic_grid   
-    if(get_dfc_mode() == INLINE_MODE) :
-        display_generic_grid("df-select-df-wrapper",gridclasses,gridhtmls)
-    else :
-        display_generic_grid("df-select-df-pop-up-wrapper",gridclasses,gridhtmls)
-
-
 def display_no_dfs(chapterid) :
     """
-    * -------------------------------------------------------------------------- 
+    * --------------------------------------------------------
     * function : display status fro no dfs
     * 
     * parms :
@@ -361,13 +219,11 @@ def display_no_dfs(chapterid) :
     elif(chapterid == DataInspection_ID) :      msg    =   "No dataframe imported to select for data inspection"
     elif(chapterid == DataExport_ID) :          msg    =   "No dataframe imported to select for data export"
     elif(chapterid == DataTransform_ID) :       msg    =   "No dataframe imported to select for data transform"
-    elif(chapterid == SWDFSubsetUtility_ID) :   msg    =   "No dataframe imported to select for subsets"
     elif(chapterid == DataImport_ID)        :   msg    =   "No dataframe imported to select for data import"
     elif(chapterid == SWGeocodeUtility_ID)  :   msg    =   "No dataframe imported to select for geocoding"
     
-    from dfcleanser.common.common_utils import display_grid_status
-    display_grid_status(msg)
-    
+    from dfcleanser.sw_utilities.DisplayUtils import get_status_note_msg_html
+    get_status_note_msg_html(msg,width=50,left=180,display=True)
 
 def delete_df(df) :
     """
@@ -400,6 +256,64 @@ def delete_df(df) :
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#  dfc signals and slots
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
+
+"""
+#--------------------------------------------------------------------------
+#  dfc add and drop dataframe signals and slots
+#--------------------------------------------------------------------------
+"""
+
+from PyQt5.QtCore import (pyqtSignal,QObject)
+class add_df_signal(QObject) :
+
+    new_add_df_signal   =   pyqtSignal(str)
+
+    def issue_notice(self,dftitle) :
+        self.new_add_df_signal.emit(dftitle)
+
+    def connectSignal(self,callback) :
+        self.new_add_df_signal.connect(callback)
+
+#from dfcleanser.Qt.data_transform.DataTransform import DataTransformGui
+DataTransform_add_df_signal     =   add_df_signal()
+DataInspection_add_df_signal    =   add_df_signal()
+DataCleansing_add_df_signal     =   add_df_signal()
+DataExport_add_df_signal        =   add_df_signal()
+
+
+"""
+#--------------------------------------------------------------------------
+#  df column changes
+#--------------------------------------------------------------------------
+"""
+
+from PyQt5.QtCore import (pyqtSignal,QObject)
+class df_column_change_signal(QObject) :
+
+    new_column_change_signal   =   pyqtSignal(str)
+
+    def issue_notice(self,dftitle) :
+        self.new_column_change_signal.emit(dftitle)
+
+    def connectSignal(self,callback) :
+        self.new_column_change_signal.connect(callback)
+
+#from dfcleanser.Qt.data_transform.DataTransform import DataTransformGui
+df_Column_Changed_signal        =   df_column_change_signal()
+
+#DataInspection_add_df_signal    =   add_df_signal()
+#DataCleansing_add_df_signal     =   add_df_signal()
+#DataExport_add_df_signal        =   add_df_signal()
+
+
+
+"""
+#--------------------------------------------------------------------------
 #   dfcleanser Dataframe helper methods
 #--------------------------------------------------------------------------
 """
@@ -413,31 +327,18 @@ def is_a_dfc_dataframe_loaded() :
     *  True if a dfc dataframe loaded else False
     * --------------------------------------------------------------------
     """
-    return(dfc_dfs.is_a_dfc_dataframe_loaded()) 
-
-def get_dataframe(title) :
-    """
-    * ---------------------------------------------------------------------
-    * function : get a datframe object
-    *
-    * Parms : 
-    *  title    :   dfc dataframe title
-    * --------------------------------------------------------------------
-    """
-    return(dfc_dfs.get_dataframe(title))
- 
-def get_dfc_dataframe(title) :
-    """
-    * ---------------------------------------------------------------------
-    * function : get a dfc datframe object
-    *
-    * Parms : 
-    *  title    :   dfc dataframe title
-    * --------------------------------------------------------------------
-    """
-    return(dfc_dfs.get_dfc_dataframe(title))
     
-def get_dfc_dataframe_df(title) :
+    total_dfs   =   dfc_df_history.get_df_titles()
+    
+    if(total_dfs is None) :
+        return(False)
+    else :
+        return(True)
+    
+    #return(dfc_dfs.is_a_dfc_dataframe_loaded()) 
+
+   
+def get_dfc_dataframe_df(df_title) :
     """
     * ---------------------------------------------------------------------
     * function : get a dfc datframe object dataframe attribute
@@ -446,13 +347,16 @@ def get_dfc_dataframe_df(title) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    dfc_df  =  dfc_dfs.get_dfc_dataframe(title)
-    if(dfc_df is None) :
+    
+    df_info     =   dfc_df_history.get_df_info(df_title)
+    
+    if(df_info is None) :
         return(None)
     else :
-        return(dfc_df.get_df())
+        return(df_info.get_df())
+
     
-def set_dfc_dataframe_df(title,df) :
+def set_dfc_dataframe_df(df_title,df) :
     """
     * ---------------------------------------------------------------------
     * function : set a dfc datframe pandas dataframe attribute
@@ -462,12 +366,13 @@ def set_dfc_dataframe_df(title,df) :
     * --------------------------------------------------------------------
     """
     
-    dfc_df  =  dfc_dfs.get_dfc_dataframe(title)
-    if(not(dfc_df) is None) :
-        dfc_df.set_df(df)
+    dfc_df_history.set_df_info_dataframe(df_title,df)
+
+    df_Column_Changed_signal.issue_notice(df_title)
+
     
 
-def get_dfc_dataframe_notes(title) :
+def get_dfc_dataframe_notes(df_title) :
     """
     * ---------------------------------------------------------------------
     * function : get a dfc datframe note attribute
@@ -476,9 +381,12 @@ def get_dfc_dataframe_notes(title) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    return(dfc_dfs.get_dataframe_notes(title))
     
-def set_dfc_dataframe_notes(title,notes) :
+    df_info     =   dfc_df_history.get_df_info(df_title)
+    return(df_info.get_df_notes())
+
+    
+def set_dfc_dataframe_notes(df_title,notes) :
     """
     * ---------------------------------------------------------------------
     * function : set a dfc datframe note attribute
@@ -487,7 +395,10 @@ def set_dfc_dataframe_notes(title,notes) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    dfc_dfs.set_dataframe_notes(title,notes)
+    
+    dfc_df_history.set_df_info_notes(df_title,notes)
+
+
 
 def append_dfc_dataframe_notes(title,notes) :
     """
@@ -502,6 +413,7 @@ def append_dfc_dataframe_notes(title,notes) :
     dfc_notes   =   dfc_notes + "\n--------\n" + notes
     dfc_dfs.set_dataframe_notes(title,notes)
 
+
 """
 * --------------------------------------
 * dfcleanser dataframe object methods
@@ -509,7 +421,12 @@ def append_dfc_dataframe_notes(title,notes) :
 """  
 
 def get_total_dfc_dataframes() :
-    return(dfc_dfs.get_df_count())
+    
+    total_dfs   =   dfc_df_history.get_df_titles()
+    if(not(total_dfs is None)) :
+        return(len(total_dfs))
+    else :
+        return(0)
 
      
 def rename_dfc_dataframe(oldtitle,newtitle) :
@@ -521,31 +438,33 @@ def rename_dfc_dataframe(oldtitle,newtitle) :
     *  title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
+    
     dfc_dfs.rename_dataframe(oldtitle,newtitle)
 
      
-def drop_dfc_dataframe(title) :
+def drop_dfc_dataframe(df_title) :
     """
     * ---------------------------------------------------------------------
     * function : drop a dfc datframe 
     *
     * Parms : 
-    *  title    :   dfc dataframe title
+    *  df_title    :   dfc dataframe title
     * --------------------------------------------------------------------
     """
-    dfc_dfs.drop_dataframe(title)
     
-    df_selects_list     =   ["didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dgdfdataframe","dsdfdataframe"]
-    df_selects_cfgs_id  =   [CURRENT_INSPECTION_DF,CURRENT_CLEANSE_DF,CURRENT_TRANSFORM_DF,CURRENT_EXPORT_DF,CURRENT_GEOCODE_DF,CURRENT_SUBSET_DF]  
+    dfc_df_history.drop_dfc_dataframe(df_title)
+    
+    df_selects_list     =   ["didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dgdfdataframe"]
+    df_selects_cfgs_id  =   [CURRENT_INSPECTION_DF,CURRENT_CLEANSE_DF,CURRENT_TRANSFORM_DF,CURRENT_EXPORT_DF,CURRENT_GEOCODE_DF]  
     
     for i in range(len(df_selects_list)) : 
         
-        drop_js     =   '$("#' + df_selects_list[i] + ' option[value=' + "'" + title + "'" + ']").remove();'
+        drop_js     =   '$("#' + df_selects_list[i] + ' option[value=' + "'" + df_title + "'" + ']").remove();'
         run_javascript(drop_js,"fail update select : ") 
         
         current_df  =   get_config_value(df_selects_cfgs_id[i])
         
-        if(current_df == title) :
+        if(current_df == df_title) :
             
             drop_config_value(df_selects_cfgs_id[i])    
 
@@ -556,42 +475,56 @@ def drop_dfc_dataframe(title) :
                 run_javascript(change_selected_js,"fail update select : ")
                 
                 set_config_value(df_selects_cfgs_id[i],df_titles[0])
-                
-    
 
-def add_dfc_dataframe(dfcdf,update=True) :
+
+def add_df_to_dfc(df_title,df,df_source="",df_notes="")  :
     """
     * ---------------------------------------------------------------------
     * function : add a dfc dataframe object to available list
     * 
     * parms :
-    *  dfcdf     - dfc_dataframe object
+    *  df_title     - df title
     *
     * returns : 
     *  N/A 
     * --------------------------------------------------------------------
     """
-    
-    dfc_dfs.add_dataframe(dfcdf)
-    
-    df_selects_list     =   ["didfdataframe","dcdfdataframe","dtdfdataframe","dedfdataframe","dgdfdataframe","dsdfdataframe"]
-    df_selects_cfgs_id  =   [CURRENT_INSPECTION_DF,CURRENT_CLEANSE_DF,CURRENT_TRANSFORM_DF,CURRENT_EXPORT_DF,CURRENT_GEOCODE_DF,CURRENT_SUBSET_DF]  
-    
-    for i in range(len(df_selects_list)) :
-        
-        if(get_total_dfc_dataframes() == 1) :
-        
-            drop_js     =   '$("#' + df_selects_list[i] + ' option[value=' + "'" + 'no dfs defined' + "'" + ']").remove();'
-            run_javascript(drop_js,"fail update select : ") 
-            set_config_value(df_selects_cfgs_id[i],dfcdf.get_title()) 
 
-        if(get_total_dfc_dataframes() == 1) :
-            change_select_js = "$('#" + df_selects_list[i] + "').append('<option style=" + '"' + "text-align:left; font-size:12px;" + '"' + " value=" + '"' + dfcdf.get_title() + '"' + " selected>" + dfcdf.get_title() + "</option>');" 
-        
-        else :
-            change_select_js = "$('#" + df_selects_list[i] + "').append('<option style=" + '"' + "text-align:left; font-size:12px;" + '"' + " value=" + '"' + dfcdf.get_title() + '"' + ">" + dfcdf.get_title() + "</option>');" 
-            
-        run_javascript(change_select_js,"fail update select : ")
+    if(DEBUG_DFC_MGR) :
+        print("[add_df_to_dfc] df_title : ",df_title)#,df)
+    
+    #add_df_signal
+    dfc_df_history.add_dfc_df(df_title,df,df_source,df_notes)
+
+    DataTransform_add_df_signal.issue_notice(df_title)
+    DataInspection_add_df_signal.issue_notice(df_title)
+    DataCleansing_add_df_signal.issue_notice(df_title)
+    DataExport_add_df_signal.issue_notice(df_title)
+
+    if(DEBUG_DFC_MGR) :
+        print("[add_df_to_dfc] added : ",df_title,dfc_df_history.get_df_titles())
+
+
+def rename_dfc_dataframe(oldName,newName) :
+
+    print("[rename_dfc_dataframe] oldName,newName",oldName,newName)
+    print("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list())
+
+    dfc_df_history.rename_dataframe(oldName,newName)
+
+    print("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list())
+
+
+    DataTransform_add_df_signal.issue_notice(oldName)
+    DataInspection_add_df_signal.issue_notice(oldName)
+    DataCleansing_add_df_signal.issue_notice(oldName)
+    DataExport_add_df_signal.issue_notice(oldName)
+
+    DataTransform_add_df_signal.issue_notice(newName)
+    DataInspection_add_df_signal.issue_notice(newName)
+    DataCleansing_add_df_signal.issue_notice(newName)
+    DataExport_add_df_signal.issue_notice(newName)
+
 
 
 def get_dfc_dataframes_titles_list() :
@@ -603,7 +536,8 @@ def get_dfc_dataframes_titles_list() :
     *  list of dfc dataframe titles 
     * --------------------------------------------------------
     """
-    return(dfc_dfs.get_dataframe_titles())
+    
+    return(dfc_df_history.get_df_titles())
 
 
 def get_dfc_dataframes_select_list(chapterid) :
@@ -625,7 +559,6 @@ def get_dfc_dataframes_select_list(chapterid) :
     elif(chapterid == DataExport_ID)        :   default_df  =   get_config_value(CURRENT_EXPORT_DF)
     elif(chapterid == DataImport_ID)        :   default_df  =   get_config_value(CURRENT_IMPORT_DF)
     elif(chapterid == SWGeocodeUtility_ID)  :   default_df  =   get_config_value(CURRENT_GEOCODE_DF)
-    elif(chapterid == SWDFSubsetUtility_ID) :   default_df  =   get_config_value(CURRENT_SUBSET_DF)
     else                                    :   default_df  =   None
    
     if(not (df_select_titles is None) ) :
@@ -641,6 +574,52 @@ def get_dfc_dataframes_select_list(chapterid) :
         return(None)
 
 
+"""
+#--------------------------------------------------------------------------
+#   user defined dataframe objects
+#--------------------------------------------------------------------------
+"""
+
+def get_user_defined_df() :
+    return(user_defined_df.get_user_df())   
+def set_user_defined_df(user_df) :
+    user_defined_df.set_user_df(user_df)  
+
+class user_dataframe :
+    """
+    * ---------------------------------------------------------
+    * class : dfc dataframe object
+    * 
+    * attributes :
+    *  title     - dataframe title 
+    *  df        - pandas dataframe object 
+    *  notes     - dataframe descriptive notes 
+    *
+    * returns : 
+    *  dataframe cleanser dataframe object 
+    * --------------------------------------------------------
+    """
+    
+    user_df    =   None
+    
+    def __init__(self):
+        self.user_df     =   None
+        
+    def get_user_df(self)           : return(self.user_df)       
+    def set_user_df(self,user_df)   : self.user_df = user_df       
+ 
+user_defined_df     =   user_dataframe()
+
+
+
+
+"""
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+#   dfc dataframe objects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 """
 #--------------------------------------------------------------------------
@@ -682,21 +661,40 @@ CURRENT_TRANSFORM_DF                    =   "currenttransformdf"
 CURRENT_EXPORT_DF                       =   "currentexportdf"
 CURRENT_IMPORT_DF                       =   "currentimportdf"
 CURRENT_GEOCODE_DF                      =   "currentgeocodedf"
-CURRENT_SUBSET_DF                       =   "currentsubsetdf"
+CURRENT_BULKGEOCODE_DF                  =   "currentbulkgeocodedf"
 CURRENT_CENSUS_DF                       =   "currentcensusdf"
     
 
 """
 #--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-#   dfcleanser config objects
-#--------------------------------------------------------------------------
+#   Dataframe Cleanser new dfc df 
 #--------------------------------------------------------------------------
 """
 
+def set_df_to_add_to_dfc(df) :
+    df_to_add_to_dfc.set_df_to_add(df)    
+def get_df_to_add_to_dfc() :
+    return(df_to_add_to_dfc.get_df_to_add())    
+
+class new_dfc_df_to_add :
+    
+    # instance variables
+    df_to_add                 =   None
+    
+    # full constructor
+    def __init__(self) :
+        self.df_to_add                  =   None
+    def set_df_to_add(self,df) :
+        self.df_to_add                  =   df
+    def get_df_to_add(self) :
+        return(self.df_to_add)
+
+df_to_add_to_dfc    =   new_dfc_df_to_add()
+
+
 """
 #--------------------------------------------------------------------------
-#   dfc dataframe Chapters current dataframe config value
+#   dfc dataframe dfs
 #--------------------------------------------------------------------------
 """
 
@@ -709,8 +707,8 @@ def get_current_chapter_dfc_df_title(chapterId) :
         elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
         elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
         elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
-        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
         elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWBulkGeocodeUtility_ID)  :   dftitle     =   CURRENT_BULKGEOCODE_DF
         elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
         else                                        :   dftitle     =   None
         
@@ -734,8 +732,8 @@ def get_current_chapter_df(chapterId) :
         elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
         elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
         elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
-        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
         elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWBulkGeocodeUtility_ID)  :   dftitle     =   CURRENT_BULKGEOCODE_DF 
         elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
         else                                        :   dftitle     =   None
         
@@ -764,13 +762,13 @@ def set_current_chapter_df(chapterId,df,opstat) :
         elif(chapterId == DataImport_ID)            :   dftitle     =   CURRENT_IMPORT_DF
         elif(chapterId == DataInspection_ID)        :   dftitle     =   CURRENT_INSPECTION_DF
         elif(chapterId == DataTransform_ID)         :   dftitle     =   CURRENT_TRANSFORM_DF
-        elif(chapterId == SWDFSubsetUtility_ID)     :   dftitle     =   CURRENT_SUBSET_DF
         elif(chapterId == SWGeocodeUtility_ID)      :   dftitle     =   CURRENT_GEOCODE_DF
+        elif(chapterId == SWBulkGeocodeUtility_ID)  :   dftitle     =   CURRENT_BULKGEOCODE_DF
         elif(chapterId == SWCensusUtility_ID)       :   dftitle     =   CURRENT_CENSUS_DF
         else                                        :   dftitle     =   None
         
-        saved_df    =   get_config_value(dftitle)
-        
+        set_config_value(dftitle,chapterId)
+     
         if(dftitle is None) :
             opstat.set_status(False)
             opstat.set_errorMsg("invalid chapter id")
@@ -789,11 +787,239 @@ def set_current_chapter_df(chapterId,df,opstat) :
 
 """
 #--------------------------------------------------------------------------
+#   dfc qt chapter objects
 #--------------------------------------------------------------------------
-#   Dataframe Cleanser config data objects
+"""
+
+INSPECTION_QT_CHAPTER_ID        =   0
+CLEANSE_QT_CHAPTER_ID           =   1
+TRANSFORM_QT_CHAPTER_ID         =   2
+EXPORT_QT_CHAPTER_ID            =   3
+IMPORT_QT_CHAPTER_ID            =   4
+SYSTEM_QT_CHAPTER_ID            =   5
+GEOCODE_QT_CHAPTER_ID           =   6
+ZIPCODE_QT_CHAPTER_ID           =   7
+UNIQUES_QT_CHAPTER_ID           =   8
+OUTLIERS_QT_CHAPTER_ID          =   9
+DF_BROWSER_QT_CHAPTER_ID        =   10
+CENSUS_QT_CHAPTER_ID            =   11
+
+
+cell_title_template    =   """
+    <div>
+        <div style="text-align:center; background-color: #ffffff;">
+            <table width="400" style="margin-left:0px; background-color: #ffffff;">
+                <tr>
+                    <td width="35%"><span style="vertical-align:top; "><img src="https://rickkrasinski.github.io/dfcleanser/graphics/CELLIMAGE" title="Click on to Control Chapter" width="100" height="100" onclick="control_qt_chapter(CALLBACKID)"; ></span></td>
+                    <td width="65%"><span style="background-color: #ffffff; align:left; nowrap;  border:0; font-size:20px; font-weight:bold; margin-top:4px; vertical-align:top;">CELLTITLE</span></td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+    </div>
+    <br>
+"""
+
+def build_qt_cell_title(chapterid) :
+
+    new_title   =   str(cell_title_template)
+
+    if(chapterid    ==  ZIPCODE_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Zipcode Utility&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","ZipCodeChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(ZIPCODE_QT_CHAPTER_ID))
+        return(new_title)
+
+    elif(chapterid    ==  GEOCODE_QT_CHAPTER_ID) :
+        new_title   =    new_title.replace("CELLTITLE","Geocode Utility&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =    new_title.replace("CELLIMAGE","GeocodeChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(GEOCODE_QT_CHAPTER_ID))
+        return(new_title)
+    
+    elif(chapterid    ==  CENSUS_QT_CHAPTER_ID) :
+        new_title   =    new_title.replace("CELLTITLE","Census Utility&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =    new_title.replace("CELLIMAGE","CensusChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(CENSUS_QT_CHAPTER_ID))
+        return(new_title)
+     
+    elif(chapterid    ==  DF_BROWSER_QT_CHAPTER_ID) :
+        new_title   =    new_title.replace("CELLTITLE","dataframe Browser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =    new_title.replace("CELLIMAGE","DfBrowserChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(DF_BROWSER_QT_CHAPTER_ID))
+        return(new_title)
+   
+    elif(chapterid    ==  SYSTEM_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","System Utilities&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","SystemChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(SYSTEM_QT_CHAPTER_ID))
+        return(new_title)
+    
+    elif(chapterid    ==  IMPORT_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Data Import&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","DataImportChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(IMPORT_QT_CHAPTER_ID))
+        return(new_title)
+
+    elif(chapterid    ==  INSPECTION_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Data Inspection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","DataInspectionChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(INSPECTION_QT_CHAPTER_ID))
+        return(new_title)
+
+    elif(chapterid    ==  CLEANSE_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Data Cleansing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","DataCleansingChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(CLEANSE_QT_CHAPTER_ID))
+        return(new_title)
+
+    elif(chapterid    ==  TRANSFORM_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Data Transform&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","DataTransformChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(TRANSFORM_QT_CHAPTER_ID))
+        return(new_title)
+    
+    elif(chapterid    ==  EXPORT_QT_CHAPTER_ID) :
+        new_title   =   new_title.replace("CELLTITLE","Data Export&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+        new_title   =   new_title.replace("CELLIMAGE","DataExportChapter.png")
+        new_title   =   new_title.replace("CALLBACKID",str(EXPORT_QT_CHAPTER_ID))
+        return(new_title)
+CENSUS_QT_CHAPTER_ID
+
+ZIPCODE_TITLE = build_qt_cell_title(ZIPCODE_QT_CHAPTER_ID)
+GEOCODE_TITLE = build_qt_cell_title(GEOCODE_QT_CHAPTER_ID)
+CENSUS_TITLE = build_qt_cell_title(CENSUS_QT_CHAPTER_ID)
+DF_BROWSER_TITLE = build_qt_cell_title(DF_BROWSER_QT_CHAPTER_ID)
+SYSTEM_TITLE = build_qt_cell_title(SYSTEM_QT_CHAPTER_ID)
+DATA_IMPORT_TITLE = build_qt_cell_title(IMPORT_QT_CHAPTER_ID)
+DATA_INSPECTION_TITLE = build_qt_cell_title(INSPECTION_QT_CHAPTER_ID)
+DATA_CLEANSING_TITLE = build_qt_cell_title(CLEANSE_QT_CHAPTER_ID)
+DATA_TRANSFORM_TITLE = build_qt_cell_title(TRANSFORM_QT_CHAPTER_ID)
+DATA_EXPORT_TITLE = build_qt_cell_title(EXPORT_QT_CHAPTER_ID)
+
+
+class dfc_qt_chapter :
+    """
+    * ---------------------------------------------------------
+    * class : dfc qt chapter object
+    * 
+    * attributes :
+    *  title        - qt chapter id 
+    *  mainwindow   - pandas dataframe object 
+    *
+    * returns : 
+    * --------------------------------------------------------
+    """
+    
+    qt_chapter_id   =   None
+    qt_main_window  =   None
+    
+    def __init__(self,chapter_id,main_window):
+        self.qt_chapter_id     =      chapter_id
+        self.qt_main_window    =      main_window
+       
+    def get_chapter_id(self)     : return(self.qt_chapter_id)       
+    def get_main_window(self)    : return(self.qt_main_window)  
+
+
+class dfc_qt_chapter_store :
+    """
+    * ---------------------------------------------------------
+    * class : dfc qt chapter store
+    * 
+    * attributes :
+    *  chapters       - qt chapter id 
+    *
+    * returns : 
+    * --------------------------------------------------------
+    """
+    
+    qt_chapters         =   {}
+    
+    def __init__(self):
+        self.qt_chapters     =      {}
+
+    def get_qt_chapters(self,chapter_key)     : 
+
+        print(self.qt_chapters.get(chapter_key))
+        return(self.qt_chapters.get(chapter_key))
+    
+    def get_qt_chapters_count(self,chapter_key)     : 
+        chapter_list    =   self.get_qt_chapters(chapter_key)
+        if(chapter_list is None) :
+            return(0)
+        else :
+            return(len(chapter_list))
+
+
+    def add_qt_chapter(self,chapter_key,gui,chapter_id)   : 
+
+        #print("chapter_id",chapter_id)
+        #print("chapter_key",chapter_key)
+
+        new_chapter         =   dfc_qt_chapter(chapter_id,gui)
+
+        current_chapters    =  self.qt_chapters.get(chapter_key)
+
+        if(current_chapters is None) :
+            current_chapters    =   []
+            current_chapters.append(new_chapter)
+            self.qt_chapters.update({chapter_key : current_chapters})
+        else :
+            current_chapters.append(new_chapter)
+            self.qt_chapters.update({chapter_key : current_chapters})
+
+        #self.dump_dfc_qt_chapters()    
+ 
+    def close_qt_chapter(self,chapter_key) :
+        chapters     =   self.qt_chapters.get(chapter_key)
+
+        if(not (chapters is None)) :
+            for i in range(len(chapters)) :
+                chapters[i].get_main_window().close()
+                self.qt_chapters.pop(chapter_key)
+        
+        self.qt_chapters.pop(chapter_key)
+
+    def close_all_qt_chapters(self) :
+        qt_chapters_keys    =   list(self.qt_chapters.keys())
+        for i in range(len(qt_chapters_keys)) :
+            self.close_qt_chapter(qt_chapters_keys[i])
+
+    def close_qt_chapter_type(self,chapter_type) :
+        qt_chapters_keys    =   list(self.qt_chapters.keys())
+        for i in range(len(qt_chapters_keys)) :
+            current_chapter     =   self.qt_chapters.get(qt_chapters_keys[i])
+            if(current_chapter.get_chapter_id == chapter_type) :
+                current_chapter.get_main_window.close()
+                self.qt_chapters.pop(qt_chapters_keys[i])
+
+    def dump_dfc_qt_chapters(self) :
+
+        print("\ndfc_qt_chapters : DUMP")
+
+        dfc_qt_chpts_keys   =   list(self.qt_chapters.keys())
+        print("  dfc_qt_chapters keys : ",dfc_qt_chpts_keys)
+        for i in range(len(dfc_qt_chpts_keys)) :
+            print(    self.qt_chapters.get(dfc_qt_chpts_keys[i]))
+
+"""
+* ---------------------------------------------------------
+*             global qt chapter store
+* --------------------------------------------------------
+"""
+dfc_qt_chapters     =   dfc_qt_chapter_store()
+
+
+
+
+
+"""
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-"""  
+#   dfcleanser config objects
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
+"""
 
 def get_cfg_parm_from_input_list(formid,label,labellist) :
     """
@@ -860,6 +1086,8 @@ CLEANSING_COL_KEY                       =   "datacleansingcolumn"
 CLEANSING_ROW_KEY                       =   "datacleansingrow"
 CHKNUM_COL_KEY                          =   "ChknumColumn"
 
+ROW_CLEANSE_LAST_ROW                    =   "datacleansingLastRow"
+
 """
 #--------------------------------------------------------------------------
 #   Export config value keys
@@ -867,6 +1095,7 @@ CHKNUM_COL_KEY                          =   "ChknumColumn"
 """
 CURRENT_EXPORTED_FILE_NAME_KEY          =   "currentExportedFileName"
 CURRENT_EXPORT_START_TIME               =   "exportStartTime"
+CURRENT_EXPORT_HISTORY_TYPE             =   "currentExportHistoryType"
 
 """
 #--------------------------------------------------------------------------
@@ -876,6 +1105,7 @@ CURRENT_EXPORT_START_TIME               =   "exportStartTime"
 CURRENT_IMPORTED_DATA_SOURCE_KEY        =   "currentImportedDataSource"
 CURRENT_SQL_IMPORT_ID_KEY               =   "currentSQLImportID"
 CURRENT_IMPORT_START_TIME               =   "importStartTime"
+CURRENT_IMPORT_HISTORY_TYPE             =   "currentImportHistoryType"
 
 """
 #--------------------------------------------------------------------------
@@ -883,15 +1113,36 @@ CURRENT_IMPORT_START_TIME               =   "importStartTime"
 #--------------------------------------------------------------------------
 """
 DATA_TRANSFORM_COL_SELECTED_KEY         =   "DT_ColumnsSelected"
-MAP_TRANSFORM_COL_NAME_KEY              =   "DT_MapColumnName"
-MOVE_COL_ID_KEY                         =   "MoveColumnId"
-MOVE_AFTER_COL_ID_KEY                   =   "MoveAfterColumnId"
 ADD_COL_COL_NAME_KEY                    =   "AddColumnColName"
-ADD_COL_DATATYPE_ID_KEY                 =   "AddColumnDataType"
 ADD_COL_CODE_KEY                        =   "AddColumnCode"
-COPY_COL_TO_KEY                         =   "CopyColumnTo"
-COPY_COL_FROM_KEY                       =   "CopyColumnFrom"
 COMPAT_COL_KEY                          =   "CompatColumn"
+
+CURRENT_FN_TO_APPLY_KEY                 =   "CurrentApplyFN"
+CURRENT_COL_TO_APPLY_FN_TO_KEY          =   "CurrentApplyCol"
+
+
+"""
+#--------------------------------------------------------------------------
+#   Transform convert to category
+#--------------------------------------------------------------------------
+"""
+CONVERT_TO_CAT_CURRENT_COLNAME          =   "DT_ConvCatColName"
+CONVERT_TO_CAT_CURRENT_COLNAMES_LIST    =   "DT_ConvCatColNamesList"
+
+
+"""
+#--------------------------------------------------------------------------
+#   Uniques List keys
+#--------------------------------------------------------------------------
+"""
+CURRENT_UNIQUES_COLUMN_NAME             =   "CurrentUniqueColumnName"
+CURRENT_UNIQUES_LAST_ROW_DISPLAYED      =   "CurrentUniqueLastRowDisplayed"
+CURRENT_UNIQUES_ORDER_FLAG              =   "CurrentUniqueOrder"
+
+NO_UNIQUES_RANKING                      =   0
+LOW_TO_HIGH_UNIQUES_RANKING             =   1
+HIGH_TO_LOW_UNIQUES_RANKING             =   2
+
 
 """
 #--------------------------------------------------------------------------
@@ -927,11 +1178,14 @@ CENSUS_CURRENT_DATASET                  =   "censuscurrentdataset"
 CENSUS_CURRENT_GET_COLS_SUBDATA_ID      =   "censuscurrentgetcolssubdataid"
 CENSUS_CURRENT_GET_COLS_SUBDATA_LISTS_ID      =   "censuscurrentgetcolssubdataidlists"
 
-CENSUS_DATASET_TO_INSERT_FROM           =   "censusdatasettoinsertfrom"
-CENSUS_DATASET_TYPES_TO_INSERT_FROM     =   "censusdatasettypestoinsertfrom"
+
+CENSUS_DATASET_TO_JOIN_FROM             =   "censusdatasettojoinfrom"
 
 CENSUS_ADD_DATASETS_LIST                =   "censusadddatasets"
 CENSUS_DROP_DATASETS_LIST               =   "censusdropdatasets"
+
+CENSUS_CONFIGURE_DATASETS_LIST          =   "censusconfiguredatasets"
+CENSUS_LOAD_TO_DFS_DATASETS_LIST        =   "censusloadtodfdatasets"
 
 CENSUS_SELECTED_DATASET_ID              =   "censusdatasetid"
 CENSUS_SELECTED_SUBSET_ID               =   "censussubsetid"
@@ -947,6 +1201,10 @@ SAVED_FILE_NAME_KEY                     =   "DCS_savedfilenname"
 DFC_CURRENTLY_LOADED_KEY                =   "dfcleanserCurrentlyLoaded"
 DFC_CHAPTERS_LOADED_KEY                 =   "dfcCurrentlyLoadedChapters"
 CURRENT_DF_DISPLAYED_KEY                =   "dfcCurrentSelecteddf"
+
+CURRENT_DFC_DF_DFTITLE                  =   "dfcdfdftitle"
+CURRENT_DFC_DF_RUN_STEP                 =   "dfcdfCurrentStep"
+CURRENT_DFC_DF_RUN_TSTAMPS              =   "dfcdfCurrentStepTstamp"
 
 """
 #--------------------------------------------------------------------------
@@ -991,12 +1249,12 @@ def is_global_parm(key) :
 def get_config_value(key) :
     return(DataframeCleansercfg.get_config_value(key))
 
-def set_config_value(key, value, write_through=False) :
+def set_config_value(key, value, write_through=True) :
     DataframeCleansercfg.set_config_value(key,value,write_through)
     
-def drop_config_value(key, write_through=False) :
+def drop_config_value(key, write_through=True) :
     DataframeCleansercfg.drop_config_value(key, write_through)
-
+    
 def set_notebookName(nbname) :
     DataframeCleansercfg.set_notebookname(nbname)
     
@@ -1006,13 +1264,6 @@ def get_notebookName() :
 def set_notebookPath(nbpath) :
     DataframeCleansercfg.set_notebookpath(nbpath)
 
-    if(not (get_config_value(DFC_CURRENTLY_LOADED_KEY) is None)) :
-        get_loaded_cells() 
-        
-        from dfcleanser.common.common_utils import log_debug_dfc
-        log_debug_dfc(-1,"set_notebookPath - get_loaded_cells")
-
-    
 def get_notebookPath() :
     return(DataframeCleansercfg.get_notebookpath())  
 
@@ -1020,7 +1271,9 @@ def get_notebookPath() :
 
 """
 #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 #   Dataframe Cleanser config class
+#--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
 
@@ -1162,7 +1415,7 @@ class DataframeCleansercfg :
                             cfg_file.close()
                                 
                         except :
-                            DataframeCleansercfg.add_to_cfg_error_log("[Load default cfg file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),1)
+                            add_error_to_log("[Load default cfg file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
 
 
     """
@@ -1170,7 +1423,13 @@ class DataframeCleansercfg :
     #   Dataframe Cleanser config files dirs and names
     #--------------------------------------------------------------------------
     """
-    
+
+    @staticmethod
+    def get_dfc_qt_dir_name() :
+        
+        dfcdir  =   get_dfcleanser_location() 
+        return(os.path.join(dfcdir,"Qt"))
+   
     @staticmethod 
     def get_cfg_dir_name() :
         
@@ -1223,12 +1482,10 @@ class DataframeCleansercfg :
                         cfg_file.close()
                     
                 except :
-                    
-                    DataframeCleansercfg.add_to_cfg_error_log("[Save cfg file Error] "  + str(sys.exc_info()[0].__name__),1)
+                    add_error_to_log("[Save cfg file Error][cfg file] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
                      
             else :
-                
-                DataframeCleansercfg.add_to_cfg_error_log("[Unable to Save cfg file Error : because cfg not loaded] ",1)
+                add_error_to_log("[Unable to Save cfg file Error : because cfg not loaded] ",SEVERE_ERROR)
        
         else :
             
@@ -1240,8 +1497,7 @@ class DataframeCleansercfg :
                         cfg_file.close()
             
                 except :
-
-                    DataframeCleansercfg.add_to_cfg_error_log("[Save dfc cfg file Error] "  + str(sys.exc_info()[0].__name__),1)
+                    add_error_to_log("[Save dfc cfg file Error][dfc cfg file] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
         
     @staticmethod
     def is_loaded(cfgtype) :
@@ -1328,12 +1584,12 @@ class DataframeCleansercfg :
             if(DataframeCleansercfg.is_loaded(1)) :
                 return(DataframeCleansercfg.dfc_cfg_data.get(key,None))
             else :
-                DataframeCleansercfg.add_to_cfg_error_log("[get_config_value _ unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                add_error_to_log("[get_config_value _ unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),SEVERE_ERROR)
                 return(None)
         
     @staticmethod        
-    def set_config_value(key, value, write_through) :
-        
+    def set_config_value(key, value, write_through=True) :
+
         if(not(is_global_parm(key))) :
             
             if(DataframeCleansercfg.is_loaded(0)) :
@@ -1341,7 +1597,7 @@ class DataframeCleansercfg :
                 if(write_through) :
                     DataframeCleansercfg.save_cfg_file(0)
             else :
-                DataframeCleansercfg.add_to_cfg_error_log("[set_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                add_error_to_log("[set_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),SEVERE_ERROR)
                 
         else :
             
@@ -1349,7 +1605,7 @@ class DataframeCleansercfg :
                 DataframeCleansercfg.dfc_cfg_data.update({key : value})
                 DataframeCleansercfg.save_cfg_file(1)
             else :
-                DataframeCleansercfg.add_to_cfg_error_log("[set_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),1)
+                add_error_to_log("[set_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),SEVERE_ERROR)
         
     @staticmethod       
     def drop_config_value(key, write_through) :
@@ -1362,7 +1618,7 @@ class DataframeCleansercfg :
                     if(write_through) :
                         DataframeCleansercfg.save_cfg_file(0)
             else :
-                DataframeCleansercfg.add_to_cfg_error_log("[drop_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),1)
+                add_error_to_log("[drop_config_value - unable to load cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.cfg_data)),SEVERE_ERROR)
                 
         else :
             
@@ -1371,7 +1627,7 @@ class DataframeCleansercfg :
                 if(not (popped is None)) :
                     DataframeCleansercfg.save_cfg_file(1)
             else :
-                DataframeCleansercfg.add_to_cfg_error_log("[drop_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),1)
+                add_error_to_log("[drop_config_value - unable to load dfc_cfg_data] : "  + str(key) + " " + str(len(DataframeCleansercfg.dfc_cfg_data)),SEVERE_ERROR)
 
 
     #---------------------------------------------------
@@ -1401,12 +1657,28 @@ class DataframeCleansercfg :
         DataframeCleansercfg.set_notebookname(nbname)
         get_notebookpath()
         
+        print("sync_js : reset_dfcleanser_chapter")
+        init_dfc_console_js  =   "reset_dfcleanser_chapter(0);"
+        #print(set_current_value_js)
+        from dfcleanser.common.common_utils import run_jscript
+        run_jscript(init_dfc_console_js,"fail to change col stats html : ")
+
+        
 """
 * ----------------------------------------------------
 # static instantiation of the config data object
 * ----------------------------------------------------
 """    
 DataframeCleanserCfgData    =   DataframeCleansercfg()
+
+def get_df_notebookpath() :
+    return(DataframeCleanserCfgData.get_notebookpath())
+
+def get_df_notebookname() :
+    return(DataframeCleanserCfgData.get_notebookname())
+
+def get_df_cfg_dir_name() :
+    return(DataframeCleanserCfgData.get_cfg_dir_name())
 
 
 
@@ -1418,7 +1690,11 @@ DataframeCleanserCfgData    =   DataframeCleansercfg()
 #------------------------------------------------------------------
 """  
 
-def add_error_to_log(msg) :
+SEVERE_ERROR    =   1
+MINOR_ERROR     =   2
+
+
+def add_error_to_log(msg,errType) :
     dfc_erorr_log.add_error_to_dfc_log(msg)
 
 def dump_error_log() :
@@ -1533,13 +1809,6 @@ dfc_erorr_log   =   DataframeCleanserErrorLogger()
 
 
 
-
-
-
-
-
-
-
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1558,6 +1827,8 @@ dfc_erorr_log   =   DataframeCleanserErrorLogger()
 #   dfc dataframes store
 #--------------------------------------------------------------------------
 """
+
+
 class dfc_dataframes :
     
     dcdataframes    =   []
@@ -1571,7 +1842,6 @@ class dfc_dataframes :
         drop_config_value(CURRENT_EXPORT_DF)
         drop_config_value(CURRENT_IMPORT_DF)
         drop_config_value(CURRENT_GEOCODE_DF)
-        drop_config_value(CURRENT_SUBSET_DF)
 
     def is_a_dfc_dataframe_loaded(self) :
         if(len(self.dcdataframes) > 0) :
@@ -1656,12 +1926,22 @@ class dfc_dataframes :
                 self.dcdataframes[dfindex].set_notes(notes)
 
     def rename_dataframe(self,oldName,newName) :
+
+        print("\n[rename_dataframe] oldName,newName",oldName,newName)
+        print("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles(),self.dcdataframes)
         dfindex     =   self.get_df_index(oldName)
-        if(dfindex > -1) :            
+
+        print("[rename_dataframe] dfindex",dfindex)
+        if(dfindex > -1) :  
+
+            df_info     =   self.dcdataframes[dfindex].get_df()
+            print("\n[rename_dataframe] oldName,newName",oldName,newName)          
             self.dcdataframes[dfindex].set_title(newName)
+
+            print("\n[rename_dataframe] self.dcdataframes",self.get_dataframe_titles())
             
-            if(oldName == self.current_df) :
-                self.current_df     =   newName
+        #    if(oldName == self.current_df) :
+        #        self.current_df     =   newName
                 
     def get_dataframe_titles(self) :
         
@@ -1677,6 +1957,8 @@ class dfc_dataframes :
     def get_df_index(self,title) :
         
         for i in range(len(self.dcdataframes)) :
+
+            print("get_title",self.dcdataframes[i].get_title(),title)
             if(self.dcdataframes[i].get_title() == title) :
                 return(i)
                 
@@ -1726,13 +2008,13 @@ def set_chapters_loaded(cellsList) :
     set_config_value(DFC_CHAPTERS_LOADED_KEY, cellsList,True)
    
 
-def get_loaded_cells() :
+#def get_loaded_cells() :
 
-    run_javascript("window.getdfcChaptersLoaded();",
-                   "Unable to get cells loaded")
+#    run_javascript("window.getdfcChaptersLoaded();",
+#                   "Unable to get cells loaded")
     
-    from dfcleanser.common.common_utils import log_debug_dfc
-    log_debug_dfc(-1,"get_loaded_cells")
+#    from dfcleanser.common.common_utils import log_debug_dfc
+#    log_debug_dfc(-1,"get_loaded_cells")
 
 
 def check_if_dc_init() :
@@ -1839,36 +2121,152 @@ def check_notebook_dir_and_cfg_files(notebookname) :
                 print("[create_notebook_dir_and_cfg_files : remove dir ] ",nbpath + "_files" + "\\" + notebookname,str(sys.exc_info()[0].__name__))
 
 
+
 """
-* ----------------------------------------------------
-# dfcleanser mode - inline or popup
-* ----------------------------------------------------
-""" 
-
-INLINE_MODE     =   0
-POP_UP_MODE     =   1
-     
-def set_dfc_mode(mode) :
-    dfcMode.set_mode(mode)
-
-def get_dfc_mode() :   
-    return(dfcMode.get_mode())
-
-class dfc_mode :
+#------------------------------------------------------------------
+#   dfc dataframe object
+#------------------------------------------------------------------
+"""
+class dfc_df_mgr_dataframe :
     
-    # instance variables
-    mode                    =   INLINE_MODE
+    df_dataframe                =   None
+    df_title                    =   None
+    
+    df_source                   =   ""
+    df_notes                    =   ""
+    
+    # full constructor
+    def __init__(self,df,title,source="",notes="") :
+
+        self.df_dataframe       =   df
+        self.df_title           =   title
+        self.df_source          =   source
+        self.df_notes           =   notes
+    
+    def get_df(self) :
+        return(self.df_dataframe)
+        
+    def get_df_title(self) :
+        return(self.df_title)
+        
+    def get_df_source(self) :
+        return(self.df_source)
+       
+    def get_df_notes(self) :
+        return(self.df_notes)
+    
+    def set_df(self,df) :
+        self.df_dataframe = df
+    
+    def set_df_title(self,df_title) :
+        self.df_title = df_title
+        
+    def set_df_notes(self,df_notes) :
+        self.df_notes = df_notes
+       
+    def set_df_source(self,df_source) :
+        self.df_source = df_source
+        
+    def dump(self) :
+        print("\ndf",len(self.df_dataframe))        
+        print("df_title",self.df_title)
+        print("df_source",self.df_source)
+        print("df_notes",self.df_notes)
+
+
+
+"""
+#------------------------------------------------------------------
+#   dfc dataframe history object
+#------------------------------------------------------------------
+"""
+class dfc_df_mgr_dataframe_store :
+    
+    dfc_df_mgr_history          =   {}
+    new_df                      =   None
     
     # full constructor
     def __init__(self) :
-        self.mode               =   INLINE_MODE
         
-    def set_mode(self,inmode) :
-        self.mode  =   inmode
-        run_javascript("set_dfcmode(" + str(inmode) + ");","Unable to set mode")
+        self.dfc_df_mgr_history          =   {}
+        #self.load_history_file()
 
-    def get_mode(self) :
-        return(self.mode)
-   
+        self.new_df     =   add_df_signal()
+    
+    def get_new_df_signal(self) :
 
-dfcMode     =   dfc_mode()    
+        return(self.new_df)
+
+    def send_new_df_signal(self,dftitle) :
+
+        self.new_df.issue_notice(dftitle)
+    
+    def get_df_titles(self) :
+    
+        if(len(self.dfc_df_mgr_history) > 0) :
+        
+            df_titles   =   list(self.dfc_df_mgr_history.keys())
+            df_titles.sort()
+            return(df_titles)
+        
+        else :
+            return(None)
+    
+    def get_df_info(self,df_title) :
+    
+        if(len(self.dfc_df_mgr_history)) :
+            return(self.dfc_df_mgr_history.get(df_title))
+        else :
+            return(None)
+ 
+    def add_dfc_df(self,df_title,df,df_source,df_notes) :
+        
+        try :
+            df_info     =   dfc_df_mgr_dataframe(df,df_title,df_source,df_notes)
+            self.dfc_df_mgr_history.update({df_title : df_info})
+            self.new_df.emit()
+        except :
+            from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
+            add_error_to_log("[add_dfc_df Error] " + df_title + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
+            
+    def set_df_info_dataframe(self,df_title,df) :
+        
+        df_info     =   self.get_df_info(df_title)
+        
+        if(not (df_info is None)) :
+            
+            df_info.set_df(df)
+            self.dfc_df_mgr_history.update({df_title : df_info})  
+            
+    def set_df_info_notes(self,df_title,notes) :
+        
+        df_info     =   self.get_df_info(df_title)
+        
+        if(not (df_info is None)) :
+            
+            df_info.set_df_notes(notes)
+            self.dfc_df_mgr_history.update({df_title : df_info})  
+            
+    def rename_dataframe(self,oldtitle,newtitle) :
+
+        df_info     =   self.get_df_info(oldtitle) 
+
+        if(not (df_info is None)) :
+
+            self.dfc_df_mgr_history.pop(oldtitle)
+            df_info.set_df_title(newtitle)
+            self.dfc_df_mgr_history.update({newtitle : df_info})             
+    
+    def drop_dfc_dataframe(self,df_title) :
+        
+        try :
+            self.dfc_df_mgr_history.pop(df_title)
+        except :
+            from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
+            add_error_to_log("[drop_dfc_df Error] " + df_title + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
+          
+    def dump(self) :
+        print("\ndf_titles",self.get_df_titles())
+
+dfc_df_history  =   dfc_df_mgr_dataframe_store()
+

@@ -28,29 +28,36 @@ NO_HELP_ID                  =   -1
 #--------------------------------------------------------------------------
 """
 CLEANSE_MAIN_TASKBAR_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html"
+
 CLEANSE_CHANGE_ID                       =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_inspection_numeric_nans"
-CLEANSE_NO_NANS_CHANGE_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_inspection_numeric_no_nans"
-
-CLEANSE_UNIQUE_VALS_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_unique_vals"
-
-CLEANSE_CHECK_ALPHA_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_check_alphanumeric"
-CLEANSE_CHECK_NUMERIC_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_check_numeric"
-
-CLEANSE_REMOVE_WHITESPACE_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_remove_whitespace"
-CLEANSE_ROUND_COLUMN_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleannsing_round_column"
-
 CLEANSE_FILLNA_COLUMN_ID                =   "https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.DataFrame.fillna.html"
-CLEANSE_DROPNA_COLUMN_ID                =   "https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.DataFrame.dropna.html"
-
-CLEANSE_ROW_ID                          =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row"
 
 CLEANSE_CAT_COL_ID                      =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row"
-
 CLEANSE_CAT_COL_RENAME_ID               =   "https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.cat.rename_categories.html"
 CLEANSE_CAT_COL_ADD_ID                  =   "https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.cat.add_categories.html"
 CLEANSE_CAT_COL_REMOVE_ID               =   "https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.cat.remove_categories.html"
-CLEANSE_CAT_COL_WHITESPACE_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_category_column_remove_whitespace"
 CLEANSE_CAT_COL_REORDER_ID              =   "https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.Series.cat.reorder_categories.html"
+CLEANSE_CAT_COL_ORDERED_ID              =   "https://pandas.pydata.org/docs/reference/api/pandas.Series.cat.as_ordered.html"
+CLEANSE_ROW_ID                          =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row"
+
+CLEANSE_DROP_DUPS_ID                    =   "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.drop_duplicates.html"
+
+#CLEANSE_NO_NANS_CHANGE_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_inspection_numeric_no_nans"
+
+#CLEANSE_UNIQUE_VALS_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_unique_vals"
+
+#CLEANSE_CHECK_ALPHA_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_check_alphanumeric"
+#CLEANSE_CHECK_NUMERIC_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_check_numeric"
+
+#CLEANSE_REMOVE_WHITESPACE_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_remove_whitespace"
+#CLEANSE_ROUND_COLUMN_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleannsing_round_column"
+
+#CLEANSE_DROPNA_COLUMN_ID                =   "https://pandas.pydata.org/pandas-docs/version/0.23.4/generated/pandas.DataFrame.dropna.html"
+
+#CLEANSE_ROW_ID                          =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_row"
+
+
+#CLEANSE_CAT_COL_WHITESPACE_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-cleansing.html#dfc_data_cleansing_category_column_remove_whitespace"
 
 
 
@@ -104,8 +111,9 @@ IMPORT_CUSTOM_ID                        =   'https://rickkrasinski.github.io/dfc
 INSPECT_MAIN_TASKBAR_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html"
 INSPECT_ROW_NANS_ID                     =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans_rows"
 INSPECT_COL_NANS_ID                     =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_nans_cols"
-INSPECT_ROW_SEARCH_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows_search"
-INSPECT_ROW_NN_SEARCH_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_row_nn_search"
+
+#INSPECT_ROW_SEARCH_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_rows_search"
+#INSPECT_ROW_NN_SEARCH_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html#dfc_data_inspection_row_nn_search"
 
 
 """
@@ -119,33 +127,28 @@ INSPECT_ROW_NN_SEARCH_ID                =   "https://rickkrasinski.github.io/dfc
 
 TRANSFORM_MAIN_TASKBAR_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html"
 
-TRANSFORM_COLS_ID                       =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html"
-TRANSFORM_COLS_MDC_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html"
+TRANSFORM_COLS_REORDER_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder"
+TRANSFORM_COLS_SAVE_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save"
+TRANSFORM_COLS_COPY_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy"
+TRANSFORM_COLS_APPLY_FN_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn"
+TRANSFORM_COLS_APPLY_USER_FN_ID         =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_user_fn"
+
 TRANSFORM_COLS_ADD_FILE_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_file"
 TRANSFORM_COLS_ADD_DFC_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_code_dfc"
 TRANSFORM_COLS_ADD_USER_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_code_user"
 TRANSFORM_COLS_ADD_DF_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_df"
-
-TRANSFORM_COLS_RENAME_COL_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename" 
-TRANSFORM_COLS_DROP_COL_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop" 
-TRANSFORM_COLS_SAVE_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_save"
-TRANSFORM_COLS_REORDER_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder"
-TRANSFORM_COLS_COPY_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_copy"
-TRANSFORM_COLS_APPLY_FN_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_fn"
-TRANSFORM_COLS_APPLY_USER_FN_ID         =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_apply_user_fn"
 
 TRANSFORM_COLS_MAP_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_map"
 TRANSFORM_COLS_DUMMY_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_dummies"
 TRANSFORM_COLS_CAT_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_categorical"
 TRANSFORM_COLS_DTYPE_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_change_datatype"
 
-TRANSFORM_DF_TASKBAR_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform"
 
-TRANSFORM_DF_COL_NAMES_TASKBAR_ID       =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row"
+
 TRANSFORM_DF_SAVE_COL_NAME_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_save_column_names"
 TRANSFORM_DF_SET_COL_NAME_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_add_column_names"
-TRANSFORM_DF_CHANGE_COL_NAMES_ID        =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_change_column_names"
-TRANSFORM_DF_WHITESPACE_COL_NAMES_ID    =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_whitespace"
+
+
 
 TRANSFORM_DF_INDEX_TASKBAR_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_index"
 TRANSFORM_DF_SET_INDEX                  =    "https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.set_index.html"
@@ -155,16 +158,42 @@ TRANSFORM_DF_SORT_INDEX                 =    "https://pandas.pydata.org/pandas-d
 
 TRANSFORM_DF_SORT_BY_COL_ID             =    "https://pandas.pydata.org/pandas-docs/version/0.23/generated/pandas.DataFrame.sort_values.html"
 
-TRANSFORM_DF_DROP_DUPS                  =    "http://pandas.pydata.org/pandas-docs/version/0.17/generated/pandas.DataFrame.drop_duplicates.html"
-
 TRANSFORM_DATETIME_TASKBAR_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime"
 TRANSFORM_DATETIME_FORMAT_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert"
 TRANSFORM_DATETIME_DELTA_ID             =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta"
 TRANSFORM_DATETIME_DELTA_COL_ID         =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_convert_timedelta_col"
-
-TRANSFORM_DATETIME_MERGE_ID             =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge"
 TRANSFORM_DATETIME_SPLIT_ID             =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_split"
+TRANSFORM_DATETIME_MERGE_ID             =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_merge"
 TRANSFORM_DATETIME_COMP_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_columns_transform_datetime_components"
+
+
+
+
+
+TRANSFORM_COLS_ID                       =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html"
+TRANSFORM_COLS_MDC_ID                   =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html"
+
+TRANSFORM_COLS_ADD_FILE_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_file"
+TRANSFORM_COLS_ADD_DFC_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_code_dfc"
+TRANSFORM_COLS_ADD_USER_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_code_user"
+TRANSFORM_COLS_ADD_DF_ID                =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_add_df"
+
+TRANSFORM_COLS_RENAME_COL_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_rename" 
+TRANSFORM_COLS_DROP_COL_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_drop" 
+TRANSFORM_COLS_REORDER_ID               =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform-columns.html#dfc_data_transform_columns_transform_reorder"
+
+
+TRANSFORM_DF_TASKBAR_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform"
+
+TRANSFORM_DF_COL_NAMES_TASKBAR_ID       =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_row"
+TRANSFORM_DF_CHANGE_COL_NAMES_ID        =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_change_column_names"
+TRANSFORM_DF_WHITESPACE_COL_NAMES_ID    =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-transform.html#dfc_data_transform_dataframe_transform_column_names_whitespace"
+
+
+
+TRANSFORM_DF_DROP_DUPS                  =    "http://pandas.pydata.org/pandas-docs/version/0.17/generated/pandas.DataFrame.drop_duplicates.html"
+
+
 
     
 """
@@ -221,30 +250,18 @@ PANDAS_FILLNA                       =    'https://pandas.pydata.org/pandas-docs/
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-#   common scripting help parms
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
-"""
-
-SCRIPTING_MAIN_TASKBAR_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting"
-SCRIPTING_SHOW_CURRENT_ID           =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_scripting_show"
-
-
-"""
-#--------------------------------------------------------------------------
-#--------------------------------------------------------------------------
 #   common data structure utility help parms
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 """
-DS_UTILITY_MAIN_TASKBAR_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures"
+#DS_UTILITY_MAIN_TASKBAR_ID              =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures"
 
 
-DS_LIST_UTILITY_ID                      =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists_dfc"
-DS_LIST_UTILITY_USER_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists_user"
-DS_DICT_UTILITY_ID                      =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts_dfc"
-DS_DICT_UTILITY_USER_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts_user"
-DS_FN_UTILITY_ID                        =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs"
+#DS_LIST_UTILITY_ID                      =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists_dfc"
+#DS_LIST_UTILITY_USER_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_lists_user"
+#DS_DICT_UTILITY_ID                      =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts_dfc"
+#DS_DICT_UTILITY_USER_ID                 =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dicts_user"
+#DS_FN_UTILITY_ID                        =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_data_structures_dfc_funcs"
 
 
 """
@@ -311,9 +328,9 @@ PROCESS_BULK_RESULTS_CSV_HELP               =   "https://rickkrasinski.github.io
 #--------------------------------------------------------------------------
 """
 
-DFSUBSET_MAIN_TASKBAR_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset"
-DFSUBSET_MAIN_ID                    =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define"
-DFSUBSET_FILTER_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters"
+#DFSUBSET_MAIN_TASKBAR_ID            =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset"
+#DFSUBSET_MAIN_ID                    =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_define"
+#DFSUBSET_FILTER_ID                  =   "https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-swutilities.html#dfc_swutilities_subset_filters"
 
 
 """
