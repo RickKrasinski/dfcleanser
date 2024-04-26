@@ -18,3 +18,13 @@ def _jupyter_nbextension_paths():
 
 def load_jupyter_server_extension(nbapp):
     nbapp.log.info("dfcleanser enabled!")
+
+
+# Logger config
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+sh = logging.StreamHandler()
+sh.setFormatter(logging.Formatter('dfcleanser %(levelname)s — %(name)s — %(message)s'))
+logger.addHandler(sh)    
