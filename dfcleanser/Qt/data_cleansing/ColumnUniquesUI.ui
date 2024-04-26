@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1326</width>
+    <height>876</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+    <pointsize>10</pointsize>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="UniquesTablelabel">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>30</y>
+     <width>1278</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>  df 'Crime Scenes' : Column 'Area ID' Unique Values</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="min_value_input">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>660</y>
+     <width>420</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="max_value_input">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>740</y>
+     <width>420</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
+   </property>
+  </widget>
+  <widget class="QLabel" name="min_value_label">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>630</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>*min_value</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="max_value_label">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>710</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>*max_value</string>
+   </property>
+  </widget>
+  <widget class="QTableView" name="columnUniquestableView">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>60</y>
+     <width>1278</width>
+     <height>426</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="FindUniquesbutton">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>790</y>
+     <width>150</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Find Uniques</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="MoreUniquesbutton">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>560</y>
+     <width>150</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>More Uniques</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RankCountsbutton">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>790</y>
+     <width>150</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>11</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Rank By Counts</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="UniqueStatslabel">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>500</y>
+     <width>420</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Total Uniques : Uniques Displayed</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
