@@ -27,9 +27,9 @@ import dfcleanser.common.cfg as cfg
 import dfcleanser.Qt.data_transform.DataTransformDataframeModel as DTDM
 
 
-DEBUG_TRANSFORM_DATAFRAME         =   True
+DEBUG_TRANSFORM_DATAFRAME         =   False
 DEBUG_TRANSFORM_COLUMN_DETAILS    =   False
-DEBUG_TRANSFORM_DATETIME          =   True
+DEBUG_TRANSFORM_DATETIME          =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#

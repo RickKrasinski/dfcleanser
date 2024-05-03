@@ -23,9 +23,9 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_TRANSFORM                 =   True
-DEBUG_TRANSFORM_DATAFRAMES      =   True
-DEBUG_TRANSFORM_DATETIME        =   True
+DEBUG_TRANSFORM                 =   False
+DEBUG_TRANSFORM_DATAFRAMES      =   False
+DEBUG_TRANSFORM_DATETIME        =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#

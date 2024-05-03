@@ -26,7 +26,7 @@ from PyQt5.QtGui import QFont
 import dfcleanser.common.cfg as cfg 
 
 
-DEBUG_TRANSFORM_COLUMN            =   True
+DEBUG_TRANSFORM_COLUMN            =   False
 DEBUG_TRANSFORM_COLUMN_DETAILS    =   False
 
 

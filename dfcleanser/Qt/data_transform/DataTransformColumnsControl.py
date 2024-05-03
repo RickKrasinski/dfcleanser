@@ -23,22 +23,8 @@ from PyQt5 import uic
 
 #import dfcleanser.common.cfg as cfg 
 
-DEBUG_TRABSFORM_COLUMN           =   True
+DEBUG_TRABSFORM_COLUMN           =   False
 
-
-DEBUG_DATA_IMPORT_HISTORIES     =   False
-DEBUG_DATA_IMPORT_FILE_TYPE     =   False
-DEBUG_DATA_IMPORT_DETAILS       =   False
-DEBUG_DATA_IMPORT_FORMS         =   True
-
-DEBUG_DATA_IMPORT_CSV           =   False
-DEBUG_DATA_IMPORT_FWF           =   False
-DEBUG_DATA_IMPORT_EXCEL         =   True
-DEBUG_DATA_IMPORT_JSON          =   True
-DEBUG_DATA_IMPORT_HTML          =   True
-DEBUG_DATA_IMPORT_SQLTABLE      =   True
-DEBUG_DATA_IMPORT_SQLQUERY      =   True
-DEBUG_DATA_IMPORT_CUSTOM        =   True
 
 
 # -----------------------------------------------------------------#
