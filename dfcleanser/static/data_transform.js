@@ -6,7 +6,7 @@
 //
 // 
 
-const DEBUG_TRANSFORM = true
+const DEBUG_TRANSFORM = false
 
 
 const PROCESS = 0

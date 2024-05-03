@@ -8,7 +8,7 @@
 //
 //  
 
-const DEBUG_INSPECT = true
+const DEBUG_INSPECT = false
 
 const HEAT_MAP_GRAPH = 2;
 const BOXPLOT_GRAPH = 3;

@@ -252,9 +252,6 @@
              case DC_DF_BROWSER_ID:
                  window.run_code_in_cell(window.DC_DF_BROWSER_ID, window.getJSPCode(window.DF_BROWSER_LIB, "showDfBrowser", ""));
                  break;
-             case DC_CENSUS_ID:
-                 window.run_code_in_cell(window.DC_CENSUS_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "showCensus", ""));
-                 break;
              case DC_WORKING_CELL_ID:
                  window.run_code_in_cell(window.WORKING_CODE_CELL, window.getJSPCode(window.CFG_LIB, "sync_notebook", "0"));
                  break;
@@ -293,6 +290,10 @@
              case DC_ZIPCODE_UTILITY_ID:
                  window.run_code_in_cell(window.DC_WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_ZIPCODE_LIB, "showZipCode", ""));
                  break;
+             case DC_CENSUS_ID:
+                 window.run_code_in_cell(window.DC_WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_CENSUS_LIB, "showCensus", ""));
+                 break;
+
 
 
          }
@@ -362,6 +363,7 @@
              case DC_ZIPCODE_UTILITY_ID:
                  window.run_code_in_cell(window.DC_WORKING_CELL_ID, window.getJSPCode(window.SW_UTILS_ZIPCODE_LIB, "closeZipCodeChapter", ""));
                  break;
+
          }
      }
 
