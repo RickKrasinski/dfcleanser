@@ -20,8 +20,8 @@ import pandas as pd
 import numpy as np
 
 
-DEBUG_GEOCODE           =   True
-DEBUG_GEOCODE_UTILITY   =   True
+DEBUG_GEOCODE           =   False
+DEBUG_GEOCODE_UTILITY   =   False
 
 
 """

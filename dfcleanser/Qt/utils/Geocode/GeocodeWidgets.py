@@ -27,7 +27,7 @@ from PyQt5.QtGui import QFont
 import dfcleanser.common.cfg as cfg 
 from dfcleanser.sw_utilities.dfc_qt_model import maketextarea
 
-DEBUG_GEOCODE               =   True
+DEBUG_GEOCODE               =   False
 DEBUG_GEOCODE_DETAILS       =   False
 
 # -----------------------------------------------------------------#

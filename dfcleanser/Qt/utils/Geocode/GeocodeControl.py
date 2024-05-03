@@ -18,7 +18,6 @@ import sys
 this = sys.modules[__name__]
 
 from dfcleanser.Qt.utils.Geocode.GeocodeModel import DEBUG_GEOCODE, DEBUG_GEOCODE_UTILITY
-#DEBUG_GEOCODE               =   True
 DEBUG_GEOCODE_DETAILS       =   False
 
 """
