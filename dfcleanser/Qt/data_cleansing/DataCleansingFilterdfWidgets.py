@@ -26,9 +26,9 @@ from PyQt5.QtGui import QFont
 import dfcleanser.common.cfg as cfg 
 
 
-DEBUG_CLEANSE_ROWS                  =   True
-DEBUG_CLEANSE_ROWS_FILTER           =   True
-DEBUG_CLEANSE_ROWS_FILTER_DETAILS       =   False
+DEBUG_CLEANSE_ROWS                  =   False
+DEBUG_CLEANSE_ROWS_FILTER           =   False
+DEBUG_CLEANSE_ROWS_FILTER_DETAILS   =   False
 DEBUG_CLEANSE_COLUMN_DETAILS        =   False
 DEBUG_CLEANSE_COLUMN_SINGLE         =   False
 

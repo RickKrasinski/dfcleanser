@@ -23,8 +23,8 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_CLEANSING                 =   True
-DEBUG_CLEANSING_ROWS            =   True
+DEBUG_CLEANSING                 =   False
+DEBUG_CLEANSING_ROWS            =   False
 DEBUG_CLEANSING_DETAILS         =   False
 
 

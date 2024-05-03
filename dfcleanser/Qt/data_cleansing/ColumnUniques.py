@@ -28,7 +28,7 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_CUNIQUES      =   True
+DEBUG_CUNIQUES      =   False
 DEBUG_RANK_COUNTS   =   False
 DEBUG_FIND_UNIQUES  =   False
 DEBUG_MORE_UNIQUES  =   False
