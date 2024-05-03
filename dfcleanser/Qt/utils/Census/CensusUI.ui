@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1072</width>
-    <height>1005</height>
+    <height>915</height>
    </rect>
   </property>
   <property name="font">
@@ -22,170 +22,32 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="CensusDownloadDatasetsbutton">
+   <widget class="QPushButton" name="CensusDatasetsbutton">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>50</x>
       <y>10</y>
-      <width>140</width>
-      <height>81</height>
+      <width>491</width>
+      <height>50</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>12</pointsize>
+      <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Download
-Census
-Datasets</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusSetupDatasetsbutton">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="contextMenuPolicy">
-     <enum>Qt::CustomContextMenu</enum>
-    </property>
-    <property name="text">
-     <string>Setup
-Census
-Datasets</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusLoadToMemorybutton">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::WheelFocus</enum>
-    </property>
-    <property name="text">
-     <string>Load Census
-Datasets
-To Memory</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusJoinToDfsbutton">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Join Census
-Columns To
-User dfs</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusExportbutton">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Export
-Census
-Datasets</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusLoadToDBbutton">
-    <property name="geometry">
-     <rect>
-      <x>740</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Load Census
-Datasets
-To db(s)</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="CensusHelpbutton">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>10</y>
-      <width>140</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Help</string>
+     <string>Get Datasets</string>
     </property>
    </widget>
    <widget class="QLabel" name="Censussplash">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>110</y>
+      <y>60</y>
       <width>121</width>
       <height>51</height>
      </rect>
@@ -194,20 +56,35 @@ To db(s)</string>
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="CensusHelpbutton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>491</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Help</string>
+    </property>
+   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>180</y>
-      <width>1001</width>
+      <y>160</y>
+      <width>991</width>
       <height>711</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="dfcCensusMainLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
-     </property>
-    </layout>
+    <layout class="QVBoxLayout" name="CensusLayout"/>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

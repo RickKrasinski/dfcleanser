@@ -24,7 +24,7 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_CENSUS                  =   True
+DEBUG_CENSUS                  =   False
 
 
 # -----------------------------------------------------------------#
@@ -57,6 +57,11 @@ fix_ipython()
 
 
 DISPLAY_CENSUS                          =   "Census"
+DISPLAY_CENSUS_DATASETS                 =   "Census Datasets"
+DISPLAY_CENSUS_DATASET_COLUMNS          =   "Census Dataset Columns"
+
+
+
 
 DISPLAY_SELECT_BING_GEOCODER            =   "Geocode select bing geocoder"
 DISPLAY_SELECT_GOOGLE_GEOCODER          =   "Geocode select google geocoder"
@@ -139,8 +144,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.init_gui()
 
-        self.form.dfcCensusMainLayout.addLayout(self.stackedLayout)
-        self.form.dfcCensusMainLayout.addStretch()
+        self.form.CensusLayout.addLayout(self.stackedLayout)
+        self.form.CensusLayout.addStretch()
 
 
     def update(self):   
@@ -158,6 +163,7 @@ class CensusGui(QtWidgets.QMainWindow):
         
         # set up the ui form from a qtdesigner ui
         cfgdir  = cfg.DataframeCleanserCfgData.get_dfc_qt_dir_name()
+
         ui_name = cfgdir +"\\utils\Census\CensusUI.ui"
         Form, Window = uic.loadUiType(ui_name)
         self.form = Form()
@@ -222,17 +228,14 @@ class CensusGui(QtWidgets.QMainWindow):
         if(DEBUG_CENSUS) :
             print("[CensusGui][init_census_buttons]  ")
 
-        from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
-        buttons     =   [self.form.CensusDownloadDatasetsbutton, self.form.CensusSetupDatasetsbutton, self.form.CensusLoadToMemorybutton, 
-                         self.form.CensusJoinToDfsbutton, self.form.CensusExportbutton,self.form.CensusLoadToDBbutton,self.form.CensusHelpbutton] 
-        
-        callbacks   =   [self.census_download_datasets,self.census_setup_datasets,self.census_load_to_memory,self.census_join_to_df,
-                        self.census_export,self.census_load_to_db,self.census_help]
+        from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
+        buttons     =   [self.form.CensusDatasetsbutton, self.form.CensusHelpbutton] 
+        callbacks   =   [self.get_census_datasets, self.get_help_census]
     
         # init buttons for usage
-        System_Button_Style    =   "background-color:#0c4ca7; color:white; font : Arial; font-weight : bold; font-size : 13px;"
-        init_dfc_buttons(buttons,System_Button_Style)
+        ZipCode_Button_Style    =   "background-color:#0c4ca7; color:white; font : Arial; font-weight : bold; font-size : 13px;"
+        init_dfc_buttons(buttons,ZipCode_Button_Style)
 
         # set button styles
         #set_dfc_buttons_style(buttons,Import_Button_Style)
@@ -242,54 +245,13 @@ class CensusGui(QtWidgets.QMainWindow):
             buttons[i].clicked.connect(callbacks[i])
 
 
-
-
-        """
-
-        from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QLabel
-
-        self.CensusDownloadDatasetsbutton            =   QPushButton()   
-        self.CensusSetupDatasetsbutton               =   QPushButton()    
-        self.CensusLoadToMemorybutton               =   QPushButton()   
-        self.CensusJoinToDfsbutton                  =   QPushButton()   
-        self.CensusExportbutton                     =   QPushButton()   
-        self.CensusLoadToDBbutton                   =   QPushButton() 
-        self.CensusHelpbutton                       =   QPushButton()  
-
-        button_bar_button_list     =   [self.CensusDownloadDatasetsbutton, self.CensusSetupDatasetsbutton, self.CensusLoadToMemorybutton, self.CensusJoinToDfsbutton, 
-                                        self.CensusExportbutton,self.CensusLoadToDBbutton,self.CensusHelpbutton]
-        button_bar_text_list       =   ["Download\nCensus\nDatasets","Setup\nCensus\nDatasets","Load Census\nDatasets\nTo Memory","Census\nColumns To\nUser dfs",
-                                        "Export\nCensus\nDatasetses","Load Census\nDatasets\nTo db(s)","Help"]
-        button_bar_size_list       =   [149,80]
-        button_bar_tool_tip_list   =   ["download datasets","setup datasets","load datasets","columns to df","export datasets","Load To DB","help"]
-        button_bar_stylesheet      =   "background-color:#0c4ca7; color:white; font-size: 12px; font-weight: bold; font-family: Tahoma; "
-        button_bar_connect_list    =   [self.census_download_datasets,self.census_setup_datasets,self.census_load_to_memory,self.census_join_to_df,
-                                        self.census_export,self.census_load_to_db,self.census_help]
-
-
-        from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
-        self.census_button_bar           =   QHBoxLayout()
-        build_button_bar(self.census_button_bar,button_bar_button_list,button_bar_text_list,
-                         button_bar_size_list,button_bar_tool_tip_list,button_bar_stylesheet,button_bar_connect_list)
-        
-        print(self.census_button_bar)
-
-        cmdbarLayout    =   QVBoxLayout()
-        cmdbarLayout.addLayout(self.census_button_bar)
-        cmdbarLayout.addStretch()
-        
-        #from dfcleanser.sw_utilities.dfc_qt_model import clearLayout
-        #clearLayout(self.form.GeocodeCmdbarLayout)
-        #self.form.GeocodeCmdbarLayout.addLayout(cmdbarLayout)
-        """
-
     # -----------------------------------------------------------------#
     # -            Initialize the chapter splah image                 -#
     # -----------------------------------------------------------------#
     def init_census_splash_screen(self):
 
         if(DEBUG_CENSUS) :
-            print("[GCensusGui][init_census_splash_screen]  ")
+            print("[CensusGui][init_census_splash_screen]  ")
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import SWCensusUtility_ID
@@ -308,33 +270,55 @@ class CensusGui(QtWidgets.QMainWindow):
 
         from PyQt5.QtWidgets import QLabel
         self.blank_label   =   QLabel()
-        self.blank_label.setText("")
+        self.blank_label.setText("\n\n\n")
         self.blank_label.setAlignment(Qt.AlignLeft)
         self.blank_label.resize(600,50)
         self.blank_label.setStyleSheet("font-size: 12px; font-weight: bold; font-family: Arial; ")
 
+        note1   =   ("The Census Utility initially was define to datasets with numerous coulmns that were keyed via zip codes.  " + 
+                    "This gave the user the ability to pull data form the datasets and then \nuse as columns to insert into dataframes." +
+                    "The datasets were based on the 1999 ACS (American Community Survey) data produced by the US Census Bureau.\n\n")
+        
+        note2   =   ("We were in the process of updating the datasets to reflect newer data than 1999. Unfortunately the Census Bureau " + 
+                    "has moved away from providing datsets with zipcodes and now \nuses a ZCTA (Zip Code Tract Area) as an index in their " +
+                    "datasets.  ZCTAs are incomplete (30% zipcode areas),  poorly defined (ie .. 'Northern Region in Virginia') and very confusing.\n" + 
+                    "There is no mappping between zip codes and ZCTAs so any data indexed by zipcodes can not be converted to ZCTAs.\n\n")
+        
+        note3   =   ("I will go ahead and display the datasets we have from ACS 1999 for the users to download and work with if desired. " + 
+                     "This is far from an optimal solution and may not even be a \n useful one. " +
+                    "At a minimum the data may give you some trends to evaluate but exact values are not available.\n\n")
+
+
+        from PyQt5.QtWidgets import QLabel
+        self.census_notes   =   QLabel()
+        self.census_notes.setText(note1 + note2 + note3)
+        self.census_notes.setAlignment(Qt.AlignLeft)
+        self.census_notes.resize(600,50)
+        self.census_notes.setStyleSheet("font-size: 12px; font-weight: normal; font-family: Arial; ")
+
         from PyQt5.QtWidgets import QVBoxLayout
-        self.geocodeLayout     =   QVBoxLayout()
-        self.geocodeLayout.addWidget(self.blank_label)
-        self.geocodeLayout.addStretch()
-        self.geocodeLayout.setAlignment(QtCore.Qt.AlignCenter) 
+        self.censusLayout     =   QVBoxLayout()
+        self.censusLayout.addWidget(self.blank_label)
+        self.censusLayout.addWidget(self.census_notes)
+        self.censusLayout.addStretch()
+        self.censusLayout.setAlignment(QtCore.Qt.AlignCenter) 
 
         from PyQt5.QtWidgets import QWidget  
-        self.geocodemain    =   QWidget()
-        self.geocodemain.setLayout(self.geocodeLayout)
+        self.censusmain    =   QWidget()
+        self.censusmain.setLayout(self.censusLayout)
 
-        geocode_index  =   self.CensusWidgets_stack_dict.get(DISPLAY_CENSUS)
+        census_index  =   self.CensusWidgets_stack_dict.get(DISPLAY_CENSUS)
 
-        if(geocode_index is None) :
+        if(census_index is None) :
             current_index   =  len(self.CensusWidgets_stack_dict)
             self.CensusWidgets_stack_dict.update({DISPLAY_CENSUS: current_index})
-            self.stackedLayout.addWidget(self.geocodemain)
+            self.stackedLayout.addWidget(self.censusmain)
         else :
-            current_index   =   geocode_index
+            current_index   =   census_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        self.resize(1070,350)
+        self.resize(1070,450)
 
     # -----------------------------------------------------------------#
     # -                 Initialize the gui form                       -#
@@ -348,46 +332,160 @@ class CensusGui(QtWidgets.QMainWindow):
         self.init_census_splash_screen()
         self.init_census()
 
-        self.resize(1070,350)
+        self.resize(1070,450)
 
     # -----------------------------------------------------------------#
     # -                 Main Gui Census Methods                       -#
     # -----------------------------------------------------------------#
 
-    def census_download_datasets(self) :
+    def get_census_datasets(self):
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][census_download_datasets]  ")
+        if(DEBUG_CENSUS) :
+            print("[CensusGui][get_census_datasets]  ")
+
+        self.form.CensusDatasetsbutton.toggle()
+
+        self.display_census_datasets()
        
-    def census_setup_datasets(self) :
+    def get_help_census(self) :
 
          if(DEBUG_CENSUS) :
-            print("[CensusGui][census_download_datasets]  ")
+            print("[CensusGui][get_help_census]  ")
 
-    def census_load_to_memory(self) :
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][census_load_to_memory]  ")
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+    # -                    display census datasets                    -#
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
 
-    def census_join_to_df(self) :
+    def display_census_datasets(self):
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][census_join_to_df]  ")
+        if(DEBUG_CENSUS) :
+            print("\n[CensusGui][display_census_datasets]  ")
 
-    def census_export(self) :
+        from dfcleanser.common.common_utils import opStatus
+        opstat      =   opStatus()
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][census_export]  ")
+        census_datasets_index  =   self.CensusWidgets_stack_dict.get(DISPLAY_CENSUS_DATASETS)
 
-    def census_load_to_db(self) :
+        if(DEBUG_CENSUS) :
+            print("\n[CensusGui][display_census_datasets]  census_datasets_index ",census_datasets_index)
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][load_to_db]  ")
+        
+        if(census_datasets_index is None) :
 
-    def census_help(self) :
+            try :
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][help]  ")
+                from dfcleanser.Qt.utils.Census.CensusWidgets import Census_datasets_Widget
+                self.Census_datasets   =   Census_datasets_Widget([self])
+
+            except Exception as e:
+
+                opstat.set_status(False)
+            
+                title       =   "dfcleanser exception"       
+                status_msg  =   "[display_census_datasets] error "
+                from dfcleanser.sw_utilities.dfc_qt_model import display_exception
+                display_exception(title,status_msg,e)
+
+            if(opstat.get_status()) :
+
+                current_index   =  len(self.CensusWidgets_stack_dict)
+                self.CensusWidgets_stack_dict.update({DISPLAY_CENSUS_DATASETS  : current_index})
+                self.stackedLayout.addWidget(self.Census_datasets)
+
+        else :
+
+            self.Census_datasets.reload_data(self)
+            current_index   =   census_datasets_index
+
+        self.stackedLayout.setCurrentIndex(current_index)
+
+        if(DEBUG_CENSUS) :
+            print("[CensusGui][display_census_datasets] end : stack \n  ",self.CensusWidgets_stack_dict)
+
+        self.resize(1070,850)
+
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+    # -                    display census datasets                    -#
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+
+    def display_census_dataset_columns(self,dataset):
+
+        if(DEBUG_CENSUS) :
+            print("\n[CensusGui][display_census_dataset_columns]  ",dataset)
+
+        self.dataset    =   dataset
+
+        from dfcleanser.common.common_utils import opStatus
+        opstat      =   opStatus()
+
+        census_dataset_columns_index  =   self.CensusWidgets_stack_dict.get(DISPLAY_CENSUS_DATASET_COLUMNS)
+        
+        if(census_dataset_columns_index is None) :
+
+            try :
+
+                from dfcleanser.Qt.utils.Census.CensusWidgets import Census_dataset_columns_Widget
+                self.Census_dataset_columns   =   Census_dataset_columns_Widget([self,self.dataset])
+
+            except Exception as e:
+
+                opstat.set_status(False)
+            
+                title       =   "dfcleanser exception"       
+                status_msg  =   "[display_census_dataset_columns] error "
+                from dfcleanser.sw_utilities.dfc_qt_model import display_exception
+                display_exception(title,status_msg,e)
+
+            if(opstat.get_status()) :
+
+                current_index   =  len(self.CensusWidgets_stack_dict)
+                self.CensusWidgets_stack_dict.update({DISPLAY_CENSUS_DATASET_COLUMNS  : current_index})
+                self.stackedLayout.addWidget(self.Census_dataset_columns)
+
+        else :
+
+            self.Census_dataset_columns.reload_data(self)
+            current_index   =   census_dataset_columns_index
+
+        self.stackedLayout.setCurrentIndex(current_index)
+
+        if(DEBUG_CENSUS) :
+            print("[CensusGui][display_census_dataset_columns] end : stack \n  ",self.CensusWidgets_stack_dict)
+
+        self.resize(1070,900)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1143,23 +1241,25 @@ def closeCensusInstances()  :
 
 def showCensus()  :
 
+    print("showCensus")
+
     from dfcleanser.common.common_utils import displayHTML,clear_screen
     from dfcleanser.common.cfg import dfc_qt_chapters, CENSUS_QT_CHAPTER_ID, CENSUS_TITLE
     
     clear_screen()
-    displayHTML(CENSUS_TITLE)
+    #displayHTML(CENSUS_TITLE)
 
-    logger.info("Opening Geocode GUI")
+    #logger.info("Opening Geocode GUI")
 
-    gecode_gui = CensusGui()
-    gecode_gui.show()
+    census_gui = CensusGui()
+    census_gui.show()
 
     dfc_qt_chapters.add_qt_chapter(CENSUS_QT_CHAPTER_ID,CensusGui,"showCensus")
 
     total_instances     =   dfc_qt_chapters.get_qt_chapters_count(CENSUS_QT_CHAPTER_ID)
     logger.info(str(total_instances) + " Census                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          Utility Instances Loaded")
 
-    return gecode_gui  
+    return census_gui  
 
 def closeGCensusChapter()  :
 
