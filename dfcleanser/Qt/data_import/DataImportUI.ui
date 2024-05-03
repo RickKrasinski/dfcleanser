@@ -247,19 +247,6 @@ Query</string>
 File</string>
     </property>
    </widget>
-   <widget class="QLabel" name="ClockLabel">
-    <property name="geometry">
-     <rect>
-      <x>990</x>
-      <y>110</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>clock</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

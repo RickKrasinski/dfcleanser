@@ -24,7 +24,7 @@ DEBUG_SQL_IMPORT                =   False
 DEBUG_SQL_IMPORT_HTML           =   False
 DEBUG_IMPORT_VALUES             =   False
 
-DEBUG_EXPORT                    =   True
+DEBUG_EXPORT                    =   False
 
 """
 #--------------------------------------------------------------------------

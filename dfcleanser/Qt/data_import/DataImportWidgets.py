@@ -25,14 +25,14 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_IMPORT_FILE_TYPES        =   True
+DEBUG_DATA_IMPORT_FILE_TYPES        =   False
 DEBUG_DATA_IMPORT_HISTORY           =   False
 DEBUG_DATA_EXPORT_HISTORY           =   False
 DEBUG_DATA_IMPORT_PARMS             =   False
 
 
 DEBUG_DATA_IMPORT_DFS_HISTORY       =   False
-DEBUG_DATA_IMPORT                   =   True
+DEBUG_DATA_IMPORT                   =   False
 DEBUG_DATA_IMPORT_DETAILS           =   False
 
 # -----------------------------------------------------------------#

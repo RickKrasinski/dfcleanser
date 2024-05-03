@@ -23,7 +23,7 @@ from PyQt5.QtCore import Qt
 
 #import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_IMPORT               =   True
+DEBUG_DATA_IMPORT               =   False
 DEBUG_DATA_IMPORT_HISTORIES     =   False
 DEBUG_DATA_IMPORT_FILE_TYPE     =   False
 DEBUG_DATA_IMPORT_DETAILS       =   False
@@ -35,9 +35,9 @@ DEBUG_DATA_IMPORT_FWF           =   False
 DEBUG_DATA_IMPORT_EXCEL         =   False
 DEBUG_DATA_IMPORT_JSON          =   False
 DEBUG_DATA_IMPORT_HTML          =   False
-DEBUG_DATA_IMPORT_SQLTABLE      =   True
-DEBUG_DATA_IMPORT_SQLQUERY      =   True
-DEBUG_DATA_IMPORT_CUSTOM        =   True
+DEBUG_DATA_IMPORT_SQLTABLE      =   False
+DEBUG_DATA_IMPORT_SQLQUERY      =   False
+DEBUG_DATA_IMPORT_CUSTOM        =   False
 
 
 # -----------------------------------------------------------------#

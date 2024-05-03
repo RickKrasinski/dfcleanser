@@ -23,7 +23,7 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_IMPORT               =   True
+DEBUG_DATA_IMPORT               =   False
 DEBUG_DATA_IMPORT_HISTORIES     =   False
 DEBUG_DATA_IMPORT_FILE_TYPE     =   False
 DEBUG_DATA_IMPORT_DETAILS       =   False
@@ -298,7 +298,7 @@ class DataImportGui(QtWidgets.QMainWindow):
     def init_data_import_splash_screen(self):
 
         if(DEBUG_DATA_IMPORT) :
-            print("[init_data_inspect_splash_screen]  ")
+            print("[init_data_import_splash_screen]  ")
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataImport_ID
@@ -336,7 +336,7 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.init_data_import_buttons()
         self.init_data_import_splash_screen()
-        self.init_data_import_clock()
+        #self.init_data_import_clock()
         self.display_import_histories()
 
         self.resize(1070,600)
