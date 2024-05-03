@@ -27,7 +27,7 @@ import dfcleanser.common.cfg as cfg
 
 DEBUG_SYSTEM_DFS            =   False
 DEBUG_SYSTEM_INFO           =   False
-DEBUG_SYSTEM_FILES          =   True
+DEBUG_SYSTEM_FILES          =   False
 
 
 # -----------------------------------------------------------------#
@@ -570,20 +570,6 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
         if(DEBUG_SYSTEM_DFS) :
             print("[System_dfc_dfs_histories_Widget][init_form] end")
 
-    """
-    def dfc_dfs_histories_return_callback(self) :
-
-         if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][dfc_dfs_return_callback]")
-
-            self.parent.display_dfcleanser_dfs()
-
-    def dfc_dfs_histories_help_callback(self) :
-
-         if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][dfc_dfs_help_callback]")
-    """
-
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -             System dfc dfs histories Widget                   -#
@@ -691,26 +677,6 @@ class System_add_user_df_to_dfc_Widget(QtWidgets.QWidget):
         note2_label.setStyleSheet("font-size: 14px; font-weight: normal; font-family: Arial; ")
         self.SystemuserfdtodfcLayout.addWidget(note2_label)
         
-        """
-        # buttons for inspect rows
-        from PyQt5.QtWidgets import QPushButton
-
-        return_button        =   QPushButton()     
-        return_button.setText("Return")
-        return_button.setFixedSize(200,70)
-        return_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
-        return_button.clicked.connect(self.dfc_dfs_add_user_df_return_callback) 
-
-        help_button        =   QPushButton()     
-        help_button.setText("Help")
-        help_button.setFixedSize(200,70)
-        help_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
-        help_button.clicked.connect(self.dfc_dfs_add_user_df_help_callback) 
-        
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][init_form] : buttons built")
-        """
-
         from PyQt5.QtWidgets import QHBoxLayout
         dfcdfsbutonsLayout  =   QHBoxLayout()
         #dfcdfsbutonsLayout.addWidget(return_button)

@@ -68,7 +68,7 @@ def load_dfcleanser_from_toolbar(parms) :
 def display_dfc_console() :
     
     from dfcleanser.sw_utilities.DisplayUtils import get_chapter_console_html
-    console_htmls   =  get_chapter_console_html(cfg.DC_CONSOLE_ID)
+    console_htmls   =   get_chapter_console_html(cfg.DC_CONSOLE_ID)
 
     gridclasses     =   ["dfc-top","dfc-left","dfc-right"]
     gridhtmls       =   [console_htmls[0],console_htmls[1],console_htmls[2]]

@@ -23,10 +23,10 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_SYSTEM                    =   True
+DEBUG_SYSTEM                    =   False
 DEBUG_SYSTEM_DFS                =   False
 DEBUG_SYSTEM_INFO               =   False
-DEBUG_SYSTEM_FILES              =   True
+DEBUG_SYSTEM_FILES              =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
