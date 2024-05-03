@@ -887,7 +887,7 @@ dfc_splash_banner_keys = dfcConsoleKeyList(20, dfc_splash_banner_list)
 dfc_splash_sidebar_1 = dfcConsoleButton(
     30, 140, 0, "control_qt_chapter(6)", "Geocoding")
 dfc_splash_sidebar_2 = dfcConsoleButton(
-    30, 140, 0, "add_dfcleanser_chapter(" + str(cfg.DC_CENSUS_ID) + ")", "Census Data")
+    30, 140, 0, "control_qt_chapter(11)", "Census Data")
 dfc_splash_sidebar_3 = dfcConsoleButton(
     30, 140, 0, "control_qt_chapter(7)", "Zip Codes")
 dfc_splash_sidebar_5 = dfcConsoleButton(

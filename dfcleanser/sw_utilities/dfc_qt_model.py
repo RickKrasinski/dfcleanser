@@ -12,8 +12,8 @@ Created on Tue Sept 13 22:29:22 2017
 from PyQt5 import QtWidgets, sip
 from PyQt5.QtCore import Qt
 
-DEBUG_COMMON                    =   True
-DEBUG_INPUT_FORMS               =   True
+DEBUG_COMMON                    =   False
+DEBUG_INPUT_FORMS               =   False
 DEBUG_INPUT_FORMS_DETAILS       =   False
 DEBUG_COMMON_EXCEPT             =   False
 
@@ -130,7 +130,6 @@ def build_chapter_splash_screen(chapterid, splashid):
         
     splashid.setPixmap(pixmap)
     splashid.resize(pixmap.width(), pixmap.height())
-
     splashid.show()
 
 """

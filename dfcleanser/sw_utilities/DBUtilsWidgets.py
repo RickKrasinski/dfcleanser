@@ -25,10 +25,10 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DBUTILS                           =   True
+DEBUG_DBUTILS                           =   False
 DEBUG_DBUTILS_DBCONNECTORS              =   False
-DEBUG_DBUTILS_TEST_CONNECTOR            =   True
-DEBUG_DBUTILS_DBCONNECTOR_FORM          =   True
+DEBUG_DBUTILS_TEST_CONNECTOR            =   False
+DEBUG_DBUTILS_DBCONNECTOR_FORM          =   False
 DEBUG_DBUTILS_DBCON_FORM_DETAILS        =   False
 
 DEBUG_DBUTILS_SQL_FORM                  =   False

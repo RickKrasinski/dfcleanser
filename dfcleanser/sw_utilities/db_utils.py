@@ -12,7 +12,7 @@ Created on Tue Jun 13 22:29:22 2017
 import dfcleanser.common.cfg as cfg
 from dfcleanser.common.common_utils import (opStatus)
 
-DEBUG_DBUTILS                   =   True
+DEBUG_DBUTILS                   =   False
 DEBUG_DBUTILS_HTML              =   False
 DEBUG_DBUTILS_CONNECTOR         =   False
 DEBUG_DBUTILS_TEST_CONNECTOR    =   False
