@@ -11,17 +11,6 @@ Created on Sept 13 22:29:22 2018
 import sys
 this = sys.modules[__name__]
 
-"""
-DEBUG_IMPORT_HISTORY            =   False
-DEBUG_IMPORT_HISTORY_DETAILS    =   False
-DEBUG_IMPORT_FILE               =   False
-DEBUG_IMPORT_PARMS              =   False
-
-DEBUG_IMPORT                    =   True
-DEBUG_SQL_IMPORT                =   False
-DEBUG_SQL_IMPORT_HTML           =   False
-DEBUG_IMPORT_VALUES             =   False
-"""
 
 """
 #--------------------------------------------------------------------------

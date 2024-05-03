@@ -23,20 +23,20 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_EXPORT               =   True
-DEBUG_DATA_EXPORT_HISTORIES     =   True
+DEBUG_DATA_EXPORT               =   False
+DEBUG_DATA_EXPORT_HISTORIES     =   False
 DEBUG_DATA_EXPORT_FILE_TYPE     =   False
 DEBUG_DATA_EXPORT_DETAILS       =   False
 DEBUG_DATA_EXPORT_FORMS         =   False
-DEBUG_DATA_EXPORT_CONNECTORS    =   True
+DEBUG_DATA_EXPORT_CONNECTORS    =   False
 
 DEBUG_DATA_EXPORT_CSV           =   False
-DEBUG_DATA_EXPORT_EXCEL         =   True
-DEBUG_DATA_EXPORT_JSON          =   True
-DEBUG_DATA_EXPORT_XML           =   True
-DEBUG_DATA_EXPORT_HTML          =   True
-DEBUG_DATA_EXPORT_SQLTABLE      =   True
-DEBUG_DATA_EXPORT_CUSTOM        =   True
+DEBUG_DATA_EXPORT_EXCEL         =   False
+DEBUG_DATA_EXPORT_JSON          =   False
+DEBUG_DATA_EXPORT_XML           =   False
+DEBUG_DATA_EXPORT_HTML          =   False
+DEBUG_DATA_EXPORT_SQLTABLE      =   False
+DEBUG_DATA_EXPORT_CUSTOM        =   False
 
 
 
