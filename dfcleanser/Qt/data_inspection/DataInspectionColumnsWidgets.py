@@ -25,7 +25,7 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_INSPECT_COLUMNS              =   True
+DEBUG_DATA_INSPECT_COLUMNS              =   False
 DEBUG_DATA_INSPECT_COLUMNS_DETAILS      =   False
 
 # -----------------------------------------------------------------#
