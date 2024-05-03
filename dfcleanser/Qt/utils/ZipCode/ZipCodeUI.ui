@@ -84,7 +84,7 @@
       <height>661</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="ZipCodeLayout">
+    <layout class="QVBoxLayout" name="CensusLayout">
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>

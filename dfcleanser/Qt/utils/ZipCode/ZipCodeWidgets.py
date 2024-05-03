@@ -25,7 +25,7 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_ZIPCODE               =   True
+DEBUG_ZIPCODE               =   False
 DEBUG_ZIPCODE_DETAILS       =   False
 
 # -----------------------------------------------------------------#
@@ -1267,27 +1267,6 @@ class ZipCode_Cities_with_data_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.cityzipcodesLayout)
 
-        """
-        cityzipcodes_container = QWidget(self)
-        cityzipcodes_container.setFixedWidth(600)       
-
-        self.cityzipcodesLayout     =   QVBoxLayout(cityzipcodes_container)
-        self.cityzipcodesLayout.addWidget(self.zipcode_cities_data_form)
-        self.cityzipcodesLayout.addStretch()
-        self.cityzipcodesLayout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.finaldata_widget   =   QWidget()
-        self.finaldata_widget.setLayout(self.cityzipcodesLayout)
-        self.finaldata_widget.setFixedWidth(600)
-
-        self.finaldata_layout   =   QVBoxLayout()
-        self.finaldata_layout.addWidget(self.finaldata_widget)
-        self.finaldata_layout.addWidget(self.zipcode_cities_datanote_label)
-        self.finaldata_layout.addWidget(self.zipcode_cities_data_table)
-        self.finaldata_layout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.setLayout(self.finaldata_layout)
-        """
         if(DEBUG_ZIPCODE) :
             print("  [ZipCode_Cities_with_data_Widget][init_form] end")
 
@@ -1808,25 +1787,6 @@ class State_Counties_with_data_Widget(QtWidgets.QWidget):
         self.statecountiesLayout.setAlignment(QtCore.Qt.AlignCenter)
 
         self.setLayout(self.statecountiesLayout)
-
-        """"
-        self.statecountiesLayout.addWidget(self.state_counties_data_form)
-        self.statecountiesLayout.addStretch()
-        self.statecountiesLayout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.finaldata_widget   =   QWidget()
-        self.finaldata_widget.setLayout(self.statecountiesLayout)
-        self.finaldata_widget.setFixedWidth(600)
-
-        self.finaldata_layout   =   QVBoxLayout()
-        self.finaldata_layout.addWidget(self.finaldata_widget)
-        self.finaldata_layout.addWidget(self.counties_note_label)
-        self.finaldata_layout.addWidget(self.state_counties_data_table)
-        self.finaldata_layout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.setLayout(self.finaldata_layout)
-
-        """
 
         if(DEBUG_ZIPCODE) :
             print("  [State_Counties_with_data_Widget][init_form] end")

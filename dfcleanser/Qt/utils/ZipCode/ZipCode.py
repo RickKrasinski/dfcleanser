@@ -23,7 +23,7 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_ZIPCODE                   =   True
+DEBUG_ZIPCODE                   =   False
 
 
 # -----------------------------------------------------------------#
@@ -261,7 +261,7 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import SWZipcodeUtility_ID
-        build_chapter_splash_screen(SWZipcodeUtility_ID, self.form.ZipCodesplash)
+        build_chapter_splash_screen(SWZipcodeUtility_ID, self.form.Censussplash)
 
         if(DEBUG_ZIPCODE) :
             print("[end init_zipcode_splash_screen]  ")
@@ -320,7 +320,7 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
-    # -               Main Gui Data Import Methods                    -#
+    # -                 Main Gui Zipcode Methods                      -#
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
 
