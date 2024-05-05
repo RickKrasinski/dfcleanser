@@ -7,7 +7,7 @@ except:
 
 setup(
     name="dfcleanser",
-    version="0.0.59",
+    version="1.0.0",
     author="Rick Krasinski",
     author_email="rickmkrasinski@gmail.com",
     description="A Jupyter notebook extension for dataframe cleansing",
