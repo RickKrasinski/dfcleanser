@@ -38,7 +38,7 @@ publish-to-testpypi:
       url: https://test.pypi.org/p/pandas_dataframe_cleanser
 
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      id-token: pypi-AgENdGVzdC5weXBpLm9yZwIkMzc5MDY0MjAtMDU4My00OTk2LWI1YmMtMTc0OGE1MWIwYzFhAAIhWzEsWyJwYW5kYXMtZGF0YWZyYW1lLWNsZWFuc2VyIl1dAAIsWzIsWyI1MDBkOGYyZC01MTI0LTRlYzctYjRkYy0wYTI4N2E4NDc3YTUiXV0AAAYgP11_Egzb1M7HwYGGFpzWmFMvLxwGn8pZwMmWfrjbCgs
 
     steps:
     - name: Download all the dists
