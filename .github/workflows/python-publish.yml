@@ -22,14 +22,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-          node-version: '20'
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+        
+    - name: Use Node.js
+      uses: actions/setup-node@v20
+      with:
+        node-version: '20'
+       
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
