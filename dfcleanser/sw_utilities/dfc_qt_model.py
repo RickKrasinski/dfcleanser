@@ -1023,6 +1023,9 @@ def display_exception(title,status_msg,e) :
     if(DEBUG_COMMON_EXCEPT) :    
         print("    [dfc_qt_model][display_exception] : end \n")
  
+    # auto log any exception
+    from dfcleanser.common.cfg import dfc_erorr_log, SEVERE_ERROR
+    dfc_erorr_log.add_error_to_dfc_log(SEVERE_ERROR,"["+ title + "] : " + text_msg)
 
 def display_error_msg(title,status_msg) :
 
@@ -1044,6 +1047,11 @@ def display_error_msg(title,status_msg) :
 
     if(DEBUG_COMMON_EXCEPT) :    
         print("    [dfc_qt_model][display_error_msg] : end \n")
+
+    # auto log any error
+    from dfcleanser.common.cfg import dfc_erorr_log, SEVERE_ERROR
+    dfc_erorr_log.add_error_to_dfc_log(SEVERE_ERROR,"["+ title + "] : " + status_msg)
+
  
 def display_status_msg(title,status_msg) :
 
