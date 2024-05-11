@@ -523,7 +523,7 @@ class DataExportGui(QtWidgets.QMainWindow):
             print("HelpDataExport")
 
         from dfcleanser.common.common_utils import display_url
-        display_url("https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-export.html")
+        display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-data-export.html")
 
 
 
