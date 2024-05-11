@@ -1353,7 +1353,7 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         display_url(INSPECT_MAIN_TASKBAR_ID)
 
         #from dfcleanser.common.common_utils import display_url
-        #display_url("https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-data-inspection.html")
+        #display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-data-inspection.html")
 
 
 
