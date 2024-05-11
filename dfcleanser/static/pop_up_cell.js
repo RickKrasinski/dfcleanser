@@ -43,14 +43,8 @@ define([
         this.element = $("<div id='dfcleanser-PopUpCodeCell'>");
 
         this.close_button = $("<i>").addClass("fa fa-window-close PopUpCodeCell-btn PopUpCodeCell-close");
-        //this.reset_button = $("<i>").addClass("fa fa-refresh PopUpCodeCellReset-btn PopUpCodeCell-reset");
-        //this.run_button = $("<i>").addClass("fa fa-arrow-circle-right PopUpCodeCellRun-btn PopUpCodeCell-run");
-        //this.clear_button = $("<i>").addClass("fa fa-minus-circle PopUpCodeCellClear-btn PopUpCodeCell-clear");
 
         this.element.append(this.close_button);
-        //this.element.append(this.reset_button);
-        //this.element.append(this.run_button);
-        //this.element.append(this.clear_button);
 
         this.close_button.click(function() {
 
@@ -63,15 +57,6 @@ define([
             popupcodecell.collapse();
 
         });
-        //this.reset_button.click(function() {
-        //    reset_pop_up();
-        //});
-        //this.run_button.click(function() {
-        //    popupcodecell.run_popup();
-        //});
-        //this.clear_button.click(function() {
-        //    popupcodecell.clear_popup();
-        //});
 
         // create the pop up working cell
         var cell = this.cell = new CodeCell(nb.kernel, {
@@ -95,30 +80,6 @@ define([
         cell.refresh();
         this.collapse();
 
-
-        // override ctrl/shift-enter to execute me if I'm focused instead of the notebook's cell
-        /*
-        var execute_and_select_action = this.km.actions.register({
-            handler: $.proxy(this.execute_and_select_event, this),
-        }, 'popupcodecell-execute-and-select');
-        var execute_action = this.km.actions.register({
-            handler: $.proxy(this.execute_event, this),
-        }, 'popupcodecell-execute');
-        
-        var toggle_action = this.km.actions.register({
-            handler: $.proxy(this.toggle, this),
-        }, 'popupcodecell-toggle');
-        
-        //var shortcuts = {
-        //'shift-enter': execute_and_select_action,
-        //'ctrl-enter': execute_action,
-        var shortcuts = {
-            'ctrl-b': toggle_action,
-        }
-        this.km.edit_shortcuts.add_shortcuts(shortcuts);
-        this.km.command_shortcuts.add_shortcuts(shortcuts);
-        */
-
         // add me to the notebook
         $("body").append(this.element);
     };
@@ -133,7 +94,6 @@ define([
 
         if (DEBUG_POP_UP)
             console.log("run_code_in_popup end");
-
     }
 
     PopUpCodeCell.prototype.clear_popup = function() {
@@ -144,7 +104,6 @@ define([
     PopUpCodeCell.prototype.run_popup = function() {
         this.cell.execute();
     }
-
 
     PopUpCodeCell.prototype.toggle = function() {
         if (this.collapsed) {
@@ -166,10 +125,7 @@ define([
             height: popup_height,
             width: 840,
         }, 200);
-        //this.reset_button.show();
         this.close_button.show();
-        //this.clear_button.show();
-        //this.run_button.show();
         this.cell.element.show();
         this.cell.focus_editor();
         $("#notebook-container").css('margin-left', 0);
@@ -184,30 +140,9 @@ define([
             top: 20,
         }, 100);
         this.close_button.hide();
-        //this.reset_button.hide();
-        //this.clear_button.hide();
-        //this.run_button.hide();
 
         this.cell.element.hide();
     };
-
-    /*
-    PopUpCodeCell.prototype.execute_and_select_event = function(evt) {
-        if (utils.is_focused(this.element)) {
-            this.cell.execute();
-        } else {
-            this.notebook.execute_cell_and_select_below();
-        }
-    };
-
-    PopUpCodeCell.prototype.execute_event = function(evt) {
-        if (utils.is_focused(this.element)) {
-            this.cell.execute();
-        } else {
-            this.notebook.execute_selected_cells();
-        }
-    };
-    */
 
     //
     // ---------------------------------------------------
