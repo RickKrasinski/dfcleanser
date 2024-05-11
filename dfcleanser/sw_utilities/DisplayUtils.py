@@ -897,7 +897,7 @@ dfc_splash_sidebar_6 = dfcConsoleButton(
 dfc_splash_sidebar_7 = dfcConsoleButton(
     30, 140, 0, "unload_dfcleanser()", "Unload dfcleanser")
 dfc_splash_sidebar_8 = dfcConsoleButton(
-    30, 140, 0, "display_help_url(" + '"https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-index.html"' + ")", "Help")
+    30, 140, 0, "display_help_url(" + '"https://rickkrasinski.github.io/dfcleanser-help/index.html"' + ")", "Help")
 
 dfc_splash_sidebar_list = [dfc_splash_sidebar_1, dfc_splash_sidebar_2, dfc_splash_sidebar_3, dfc_splash_sidebar_5,
                            dfc_splash_sidebar_6, dfc_splash_sidebar_7, dfc_splash_sidebar_8]
