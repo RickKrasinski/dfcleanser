@@ -86,7 +86,7 @@ from dfcleanser.common.common_utils import opStatus, get_parms_for_input
 # -                   Data Import format parms                    -#
 # -----------------------------------------------------------------#
 
-def process_import_form(formid, parms,parent) :
+def process_import_form(formid, parms, parent) :
     """
     * -------------------------------------------------------
     * 
@@ -101,7 +101,6 @@ def process_import_form(formid, parms,parent) :
     if(1):#DEBUG_DATA_IMPORT) :
         print("[process_import_form] formid : ",formid,"\n  ",parms)
 
-    print("[parent ",type(parent),type(parent.statusBar))
     opstat  =   opStatus()   
     
     try :
@@ -112,6 +111,7 @@ def process_import_form(formid, parms,parent) :
             (formid == DIM.XML_IMPORT)  or (formid == DIM.PDF_IMPORT))  :
     
             if (formid == DIM.CSV_IMPORT) :
+
                 opstat      =   import_pandas_csv(parms,parent)
                 
                 parmstitle  =   "Pandas CSV Import Parms"
@@ -158,7 +158,7 @@ def process_import_form(formid, parms,parent) :
             elif (formid == DIM.CUSTOM_IMPORT) : 
                 (dispstats, opstat)     =   import_custom(parms)
                 
-                print("dispstats",dispstats)
+                #print("dispstats",dispstats)
             
                 if(dispstats) :
                     
@@ -185,7 +185,7 @@ def process_import_form(formid, parms,parent) :
             
                 # check if import was successful        
                 if(opstat.get_status()) : 
-                    parent.display_import_status(formid, parms[0])
+                    parent.display_import_status(parent, formid, parms[0])
                 else :
                     from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                     display_exception("dfcleanser Import","Import failed",opstat.get_exception())
@@ -200,7 +200,7 @@ def process_import_form(formid, parms,parent) :
                 
             # check if import was successful        
             if(opstat.get_status()) : 
-                parent.display_import_status(formid, parms[0])
+                parent.display_import_status(parent, formid, parms[0])
             else :
                 from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                 display_exception("dfcleanser Import","Import failed",opstat.get_exception())
@@ -211,7 +211,7 @@ def process_import_form(formid, parms,parent) :
         
             # check if import was successful        
             if(opstat.get_status()) : 
-                parent.display_import_status(formid, parms[0])
+                parent.display_import_status(parent, formid, parms[0])
             else :
                 from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                 display_exception("dfcleanser Import","Import failed",opstat.get_exception())
@@ -423,7 +423,6 @@ def import_pandas_csv(fparms,parent) :
     opstat      =   opStatus()
     importId    =   DIM.pandas_import_csv_id
 
-
     if(len(fparms) == 0) :
         
         opstat.set_status(False)
@@ -528,10 +527,6 @@ def import_pandas_csv(fparms,parent) :
 
         save_import_data(DIM.CSV_IMPORT,df_title,df,fparms,csv_full_parms,csv_addl_parms,"import_pandas_csv",file_path,importId,opstat) 
 
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type, CSV_IMPORT
-    file_text   =   get_text_for_import_type(CSV_IMPORT)
-
-    parent.statusbar.showMessage(file_text + " : Complete")
 
     return(opstat)
 
@@ -649,10 +644,6 @@ def import_pandas_fwf(fparms,parent) :
 
         save_import_data(DIM.FWF_IMPORT,df_title,df,fparms,fwf_full_parms,fwf_addl_parms,"import_pandas_fwf",file_path,importId,opstat) 
     
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type, FWF_IMPORT
-    file_text   =   get_text_for_import_type(FWF_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
-
     return(opstat)
 
 # -----------------------------------------------------------------#
@@ -795,10 +786,6 @@ def import_pandas_excel(fparms,parent) :
 
         save_import_data(DIM.EXCEL_IMPORT,df_title,df,fparms,excel_full_parms,excel_addl_parms,"import_pandas_excel",file_path,importId,opstat) 
 
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type, EXCEL_IMPORT
-    file_text   =   get_text_for_import_type(EXCEL_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
-    
     return(opstat)
 
 # -----------------------------------------------------------------#
@@ -895,10 +882,6 @@ def import_pandas_json(fparms,parent) :
         json_full_parms.append(dtypes)
 
         save_import_data(DIM.JSON_IMPORT,df_title,df,fparms,json_full_parms,json_addl_parms,"import_pandas_json",file_path,importId,opstat) 
-
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type, JSON_IMPORT
-    file_text   =   get_text_for_import_type(JSON_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
 
     return(opstat)
 
@@ -1034,10 +1017,6 @@ def import_pandas_xml(fparms,parent) :
         xml_full_parms.append(attrs_only)
 
         save_import_data(DIM.XML_IMPORT,df_title,df,fparms,xml_full_parms,xml_addl_parms,"import_pandas_xml",file_path,importId,opstat) 
-
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type, XML_IMPORT
-    file_text   =   get_text_for_import_type(XML_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
 
     return(opstat)
 
@@ -1476,10 +1455,6 @@ def import_sql_table(fparms, parent) :
             if(DEBUG_DATA_IMPORT) :
                 print("  [import_sql_table] : new_cfg_parms : ",get_config_value(pandas_import_sqltable_common_id + "Parms"),"\n")
 
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type,SQLTABLE_IMPORT
-    file_text   =   get_text_for_import_type(SQLTABLE_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
-
     return(opstat)    
  
     
@@ -1733,15 +1708,8 @@ def import_sql_query(fparms,parent,display=True) :
         
         
             if(len(fparms) > 0) :
-                #sqlqueryparms[0]   =   df_title
-                #sqlqueryparms[1]   =   df_title
                 cfg.set_config_value(DIM.pandas_import_sqlquery_id + "Parms",fparms)
                 cfg.set_config_value(cfg.CURRENT_IMPORTED_DATA_SOURCE_KEY,df_title,True)
-
-
-    from dfcleanser.Qt.data_import.DataImportModel import get_text_for_import_type,SQLQUERY_IMPORT
-    file_text   =   get_text_for_import_type(SQLQUERY_IMPORT)
-    parent.statusbar.showMessage(file_text + " : Complete")
 
     return(opstat)    
  

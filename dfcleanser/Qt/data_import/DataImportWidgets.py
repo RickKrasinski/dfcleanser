@@ -1467,7 +1467,7 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
 
         from PyQt5.QtWidgets import QLabel
         imports_title_label   =   QLabel()
-        imports_title_label.setText("\nPandas Import History\n")
+        imports_title_label.setText("Pandas Import History\n")
         imports_title_label.setAlignment(Qt.AlignCenter)
         imports_title_label.resize(480,50)
         imports_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
@@ -1494,7 +1494,7 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
 
         from PyQt5.QtWidgets import QLabel
         exports_title_label   =   QLabel()
-        exports_title_label.setText("\nPandas Export History\n")
+        exports_title_label.setText("Pandas Export History\n")
         exports_title_label.setAlignment(Qt.AlignCenter)
         exports_title_label.resize(480,50)
         exports_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
@@ -1531,9 +1531,8 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
         if( not(self.select_import_callback is None)) :
             from PyQt5.QtWidgets import QLabel
             history_notes_label   =   QLabel()
-            history_notes_label.setText("Double Click on the Import Type or Export Type to get a list of previous imports or exports to use as input for an import. To Create a new import select the import from the taskbar above.")
+            history_notes_label.setText("Double Click on the Import or Export Type to get a list of previous imports or exports to use as input for an import. To Create a new import select the import from the taskbar above.")
             history_notes_label.setAlignment(Qt.AlignCenter)
-            #history_notes_label.resize(9600,100)
             history_notes_label.setStyleSheet("font-size: 12px; font-weight: normal; font-family: Arial; ")
 
         self.finalhistories     =   QWidget()
@@ -1565,10 +1564,11 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        self.filetype                   =   histparms[0]
-        self.select_import_callback     =   histparms[1]
-        self.delete_import_callback     =   histparms[2]
-        self.return_import_callback     =   histparms[3]
+        self.parent                     =   histparms[0]
+        self.filetype                   =   histparms[1]
+        self.select_import_callback     =   histparms[2]
+        self.delete_import_callback     =   histparms[3]
+        self.return_import_callback     =   histparms[4]
         
         if(DEBUG_DATA_IMPORT_FILE_TYPES) :
             print("\n[Data_Import_File_Type_Histories_Widget]\n",self.filetype)
@@ -1605,12 +1605,14 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
         import_file_type_label.resize(960,90)
         import_file_type_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
 
-        #from dfcleanser.Qt.data_import.DataImportHistoryTableViews import DataImportTypesHistorysTable
         ftparms     =   [self.filetype]
         self.importfiletypehistory        =   DataImportTypesHistorysTable(ftparms)
         self.importfiletypehistory.doubleClicked.connect(self.select_import_callback)
         
         new_height  =   45 + (self.importfiletypehistory.num_rows * DEFAULT_ROW_HEIGHT)
+
+        if(new_height > 200) :
+            new_height  =   200
 
         self.importfiletypehistory.setMinimumHeight(new_height)
         self.importfiletypehistory.setMaximumHeight(new_height)
@@ -1672,10 +1674,11 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        self.filetype                   =   histparms[0]
-        self.select_export_callback     =   histparms[1]
-        self.delete_export_callback     =   histparms[2]
-        self.return_export_callback     =   histparms[3]
+        self.parent                     =   histparms[0]
+        self.filetype                   =   histparms[1]
+        self.select_export_callback     =   histparms[2]
+        self.delete_export_callback     =   histparms[3]
+        self.return_export_callback     =   histparms[4]
         
         if(DEBUG_DATA_IMPORT_FILE_TYPES) :
             print("\n[Data_Export_File_Type_Histories_Widget]",self.filetype)
@@ -1704,7 +1707,7 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         from PyQt5.QtWidgets import QLabel
         export_file_type_label   =   QLabel()
-        export_file_type_label.setText("\nPandas " + str(filetitle) + " Export History\n")
+        export_file_type_label.setText("Pandas " + str(filetitle) + " Export History\n")
         export_file_type_label.setAlignment(Qt.AlignCenter)
         export_file_type_label.resize(960,90)
         export_file_type_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
@@ -1713,6 +1716,9 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.exportfiletypehistory.doubleClicked.connect(self.select_export_callback)
         
         new_height  =   45 + (self.exportfiletypehistory.num_rows * DEFAULT_ROW_HEIGHT)
+        
+        if(new_height > 200) :
+            new_height  =   200
 
         self.exportfiletypehistory.setMinimumHeight(new_height)
         self.exportfiletypehistory.setMaximumHeight(new_height)

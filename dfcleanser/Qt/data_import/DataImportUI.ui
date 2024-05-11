@@ -181,9 +181,9 @@ File</string>
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>170</y>
+      <y>190</y>
       <width>1001</width>
-      <height>791</height>
+      <height>781</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="dfcDataImportMainLayout">
