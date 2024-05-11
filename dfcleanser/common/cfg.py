@@ -1695,7 +1695,10 @@ MINOR_ERROR     =   2
 
 
 def add_error_to_log(msg,errType) :
-    dfc_erorr_log.add_error_to_dfc_log(msg)
+    if(errType == MINOR_ERROR) :
+        dfc_erorr_log.add_error_to_dfc_log("[MINOR]  " + msg)
+    else : 
+        dfc_erorr_log.add_error_to_dfc_log("[SEVERE] " + msg)
 
 def dump_error_log() :
     elog    =   dfc_erorr_log.get_error_log() 

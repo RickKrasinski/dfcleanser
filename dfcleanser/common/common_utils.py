@@ -270,6 +270,8 @@ class RunningClock:
         self.clockface_widget   =   clockwidget
         
         if delay and float(delay): self.delay = delay
+        if(delay is None) :
+            self.delay  =   0.5
 
     def clock_task(self):
 
@@ -277,33 +279,21 @@ class RunningClock:
 
             from PyQt5.QtGui import QImage, QPixmap
             image_file_name     =   next(self.clock_generator)
-            #print("mage_file_name",image_file_name)
+
             image   =   QImage(image_file_name)
             pixmap  =   QPixmap.fromImage(image)
         
-            #self.clockface_widget.setPixmap(pixmap)
-            #from PyQt5.QtGui import QImage, QPixmap
-            #image   =   QImage(get_clock_image_file_name(3))
-            #pixmap  =   QPixmap.fromImage(image)
-        
             self.clockface_widget.setPixmap(pixmap)
+            self.clockface_widget.resize(70, 70)
+            self.clockface_widget.show()
 
-            #self.clockface_widget.set_image(next(self.clock_generator))
             time.sleep(self.delay)
 
     def start(self):
         
-        #from PyQt5.QtGui import QImage, QPixmap
-        #image   =   QImage(get_clock_image_file_name(3))
-        #pixmap  =   QPixmap.fromImage(image)
-        
-        #self.clockface_widget.setPixmap(pixmap)
-
         self.busy = True
         threading.Thread(target=self.clock_task).start()
         self.starttime = time.time()
-
-
 
     def stop(self):
 
@@ -315,12 +305,8 @@ class RunningClock:
         
         self.clockface_widget.setPixmap(pixmap)
 
-
-        #self.clockface_widget.set_image(get_clock_image_file_name(0))
-        #delete_clock = "$('#clockcontainer').remove();"
         time.sleep(self.delay)
         self.stoptime = time.time()
-        #run_javaScript(delete_clock)
         return(str(get_formatted_time(self.stoptime-self.starttime)) + " seconds")
 
     def get_elapsed_time(self) :
@@ -328,10 +314,6 @@ class RunningClock:
  
     def get_clockface_widget(self) :
         return(self.clockface_widget)
-
-
-
-
 
 
 
@@ -2212,6 +2194,11 @@ class opStatus :
         self.status = statusParm
     def set_errorMsg(self,errorMsgParm) :
         self.errorMsg = errorMsgParm
+
+        # auto log any error
+        from dfcleanser.common.cfg import dfc_erorr_log, SEVERE_ERROR
+        dfc_erorr_log.add_error_to_dfc_log(SEVERE_ERROR,errorMsgParm)
+
     def set_systemRC0(self,systemRCParm) :
         self.systemRC0 = systemRCParm
     def set_systemRC1(self,systemRCParm) :
