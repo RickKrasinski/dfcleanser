@@ -401,7 +401,7 @@ class GeocodeGui(QtWidgets.QMainWindow):
             print("\n[GeocodeGui][geocode_help]  ")
 
         from dfcleanser.common.common_utils import display_url
-        display_url("https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-geocoding.html")
+        display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-geocoding.html")
 
 
 
