@@ -1,6 +1,5 @@
-```git
 ![dfcleanser](https://rickkrasinski.github.io/dfcleanser/graphics/dfcleanserConsoleSplash.png "dfcleanser logo") 
-```
+
 # dfcleanser
 Pandas Dataframe Cleanser is a Jupyter Notebook extension that lets you perform operations on a pandas dataframe.
 
