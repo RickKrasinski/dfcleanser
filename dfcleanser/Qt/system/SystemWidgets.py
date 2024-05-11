@@ -27,6 +27,7 @@ import dfcleanser.common.cfg as cfg
 
 DEBUG_SYSTEM_DFS            =   False
 DEBUG_SYSTEM_INFO           =   False
+DEBUG_SYSTEM_INFO_DETAILS   =   False
 DEBUG_SYSTEM_FILES          =   False
 
 
@@ -537,30 +538,8 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
         note_label.setStyleSheet("font-size: 14px; font-weight: normal; font-family: Arial; ")
         self.SystemdfcdfshistoryLayout.addWidget(note_label)
         
-        """
-        # buttons for inspect rows
-        from PyQt5.QtWidgets import QPushButton
-
-        return_button        =   QPushButton()     
-        return_button.setText("Return")
-        return_button.setFixedSize(200,70)
-        return_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
-        return_button.clicked.connect(self.dfc_dfs_histories_return_callback) 
-
-        help_button        =   QPushButton()     
-        help_button.setText("Help")
-        help_button.setFixedSize(200,70)
-        help_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
-        help_button.clicked.connect(self.dfc_dfs_histories_help_callback) 
-        
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][init_form] : buttons built")
-        """
-
         from PyQt5.QtWidgets import QHBoxLayout
         dfcdfsbutonsLayout  =   QHBoxLayout()
-        #dfcdfsbutonsLayout.addWidget(return_button)
-        #dfcdfsbutonsLayout.addWidget(help_button)
         dfcdfsbutonsLayout.setAlignment(Qt.AlignHCenter)
         self.SystemdfcdfshistoryLayout.addLayout(dfcdfsbutonsLayout)
 
@@ -679,8 +658,6 @@ class System_add_user_df_to_dfc_Widget(QtWidgets.QWidget):
         
         from PyQt5.QtWidgets import QHBoxLayout
         dfcdfsbutonsLayout  =   QHBoxLayout()
-        #dfcdfsbutonsLayout.addWidget(return_button)
-        #dfcdfsbutonsLayout.addWidget(help_button)
         dfcdfsbutonsLayout.setAlignment(Qt.AlignHCenter)
         self.SystemuserfdtodfcLayout.addLayout(dfcdfsbutonsLayout)
 
@@ -799,12 +776,12 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
         self.model              =   None
 
         if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemPythonInfoTable] : init")
+            print("  [SystemPythonInfoTable] : init")
 
         self.init_tableview()
 
         if(DEBUG_SYSTEM_INFO) :
-            print("[SystemPythonInfoTable] : end")
+            print("  [SystemPythonInfoTable] : end")
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
@@ -822,7 +799,7 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPythonInfoTable][init_tableview]")
 
         #-----------------------------------------#
@@ -830,14 +807,14 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
         #-----------------------------------------#
         pythondata     =   self.load_python_info_data()
         
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemPythonInfoTable][init_tableview] :headers",self.column_headers)
 
         if(self.model is None) :
             self.model = SystemPythonInfoModel(pythondata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemPythonInfoTable][init_tableview] : model loaded")
 
         self.num_rows   =   len(pythondata)
@@ -882,7 +859,7 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_python_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPythonInfoTable][load_python_info_data]")
 
         data    =   []
@@ -899,7 +876,7 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPythonInfoTable] : data")
             for j in range(len(data)) :
                 print("  [",j,"] : ",data[j])
@@ -932,8 +909,6 @@ def get_python_version() :
     vermaj.strip()
     
     return(vermaj)
-
-
 
 
 # -----------------------------------------------------------------#
@@ -1022,12 +997,12 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
         self.model              =   None
 
         if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemNotebookInfoTable] : init")
+            print("  [SystemNotebookInfoTable] : init")
 
         self.init_tableview()
 
         if(DEBUG_SYSTEM_INFO) :
-            print("[SystemNotebookInfoTable] : end")
+            print("  [SystemNotebookInfoTable] : end")
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
@@ -1045,7 +1020,7 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemNotebookInfoTable][init_tableview]")
 
         #-----------------------------------------#
@@ -1053,14 +1028,14 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
         #-----------------------------------------#
         dfcleanserInfoTabledata     =   self.load_dfcleanser_info_data()
         
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [dfcleanserInfoTable][init_tableview] :headers",self.column_headers)
 
         if(self.model is None) :
             self.model = dfcleanserInfoModel(dfcleanserInfoTabledata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [dfcleanserInfoTable][init_tableview] : model loaded")
 
         self.num_rows   =   len(dfcleanserInfoTabledata)
@@ -1105,7 +1080,7 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dfcleanser_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [dfcleanserInfoTable][load_dfcleanser_info_data]")
 
         data    =   []
@@ -1122,7 +1097,7 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [dfcleanserInfoTable] : data")
             for j in range(len(data)) :
                 print("  [",j,"] : ",data[j])
@@ -1224,12 +1199,12 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
         self.model              =   None
 
         if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemNotebookInfoTable] : init")
+            print("  [SystemNotebookInfoTable] : init")
 
         self.init_tableview()
 
         if(DEBUG_SYSTEM_INFO) :
-            print("[SystemNotebookInfoTable] : end")
+            print("  [SystemNotebookInfoTable] : end")
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
@@ -1247,7 +1222,7 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemNotebookInfoTable][init_tableview]")
 
         #-----------------------------------------#
@@ -1255,14 +1230,14 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
         #-----------------------------------------#
         notebookdata     =   self.load_notebook_info_data()
         
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemNotebookInfoTable][init_tableview] :headers",self.column_headers)
 
         if(self.model is None) :
             self.model = SystemNotebookInfoModel(notebookdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemNotebookInfoTable][init_tableview] : model loaded")
 
         self.num_rows   =   len(notebookdata)
@@ -1307,7 +1282,7 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_notebook_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemNotebookInfoTable][load_notebook_info_data]")
 
         data    =   []
@@ -1324,7 +1299,7 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemNotebookInfoTable] : data")
             for j in range(len(data)) :
                 print("  [",j,"] : ",data[j])
@@ -1433,12 +1408,12 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
         self.model              =   None
 
         if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemPackageInfoTable] : init")
+            print("  [SystemPackageInfoTable] : init")
 
         self.init_tableview()
 
         if(DEBUG_SYSTEM_INFO) :
-            print("[SystemPackageInfoTable] : end")
+            print("  [SystemPackageInfoTable] : end")
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
@@ -1456,7 +1431,7 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPackageInfoTable][init_tableview]")
 
         #-----------------------------------------#
@@ -1464,14 +1439,14 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
         #-----------------------------------------#
         packagedata     =   self.load_package_info_data()
         
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemPackageInfoTable][init_tableview] :headers",self.column_headers)
 
         if(self.model is None) :
             self.model = SystemPackageInfoModel(packagedata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
            print("  [SystemPackageInfoTable][init_tableview] : model loaded")
 
         self.num_rows   =   len(packagedata)
@@ -1516,7 +1491,7 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_package_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPackageInfoTable][load_package_info_data]")
 
         data    =   []
@@ -1794,7 +1769,7 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("  [SystemPackageInfoTable] : data")
             for j in range(len(data)) :
                 print("  [",j,"] : ",data[j])
@@ -1861,13 +1836,9 @@ class System_Info_Widget(QtWidgets.QWidget):
     def __init__(self):  
 
         if(DEBUG_SYSTEM_INFO) :
-            print("[System_Info_Widget]")
-
+            print("\n[System_Info_Widget]")
 
         super().__init__()
-
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_Info_Widget]")
 
         self.init_form()
 
@@ -1876,7 +1847,7 @@ class System_Info_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("[System_Info_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -1931,7 +1902,7 @@ class System_Info_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.SystemInfoLayout)
 
-        if(DEBUG_SYSTEM_INFO) :
+        if(DEBUG_SYSTEM_INFO_DETAILS) :
             print("[System_Info_Widget][init_form] end")
 
 

@@ -216,7 +216,7 @@ class SystemGui(QtWidgets.QMainWindow):
     def init_system_buttons(self):
 
         if(DEBUG_SYSTEM) :
-            print("[SystemGui][init_data_inspect_buttons]  ")
+            print("[SystemGui][init_system_buttons]  ")
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -354,7 +354,7 @@ class SystemGui(QtWidgets.QMainWindow):
             print("[SystemGui][dfc_help]")
 
         from dfcleanser.common.common_utils import display_url
-        display_url("https://rickkrasinski.github.io/dfcleanser/help/dfcleanser-system-environment.html")
+        display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-system-environment.html")
 
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
@@ -548,43 +548,36 @@ class SystemGui(QtWidgets.QMainWindow):
         if(DEBUG_SYSTEM_INFO) :
             print("\n[SystemGui][display_dfcleanser_info]  ")
 
-        system_dfs_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_INFO)
+        system_info_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_INFO)
         
-        if(system_dfs_index is None) :
+        if(system_info_index is None) :
             current_index   =  len(self.SystemWidgets_stack_dict)
         else :
-            current_index   =   system_dfs_index
+            current_index   =   system_info_index
         
         if(DEBUG_SYSTEM_INFO) :
             print("[display_dfcleanser_info] : current_index ",current_index)
 
-        from dfcleanser.common.common_utils import RunningClock
-        from IPython.display import clear_output
-        clear_output()
-        #clock = RunningClock()
-        #clock.start()
- 
-        try :
+        if(system_info_index is None) :
 
-            from dfcleanser.Qt.system.SystemWidgets import System_Info_Widget
-            self.info   =   System_Info_Widget()
+            try :
 
-        except Exception as e:
+                from dfcleanser.Qt.system.SystemWidgets import System_Info_Widget
+                self.system_info                =   System_Info_Widget()
 
-            title       =   "dfcleanser exception"       
-            status_msg  =   "[display_dfcleanser_info] error "
-            from dfcleanser.sw_utilities.dfc_qt_model import display_exception
-            display_exception(title,status_msg,e)
+                self.SystemWidgets_stack_dict.update({DISPLAY_INFO : current_index})
+                self.stackedLayout.addWidget(self.system_info)
 
+            except Exception as e:
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[SystemGui][display_dfcleanser_info] : self.info ",self.info)
+                title       =   "dfcleanser exception"       
+                status_msg  =   "[display_dfcleanser_info] error "
+                from dfcleanser.sw_utilities.dfc_qt_model import display_exception
+                display_exception(title,status_msg,e)
 
+        else :
 
-        if(system_dfs_index is None) :
-
-            self.SystemWidgets_stack_dict.update({DISPLAY_INFO : current_index})
-            self.stackedLayout.addWidget(self.info)
+            current_index   =   system_info_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
@@ -592,11 +585,6 @@ class SystemGui(QtWidgets.QMainWindow):
             print("[SystemGui][display_dfcleanser_info] end : stack \n  ",self.SystemWidgets_stack_dict)
 
         self.resize(1070,900)
-
-        #if(not (clock is None)) :
-        #    clock.stop()
-        #    logger.info("Running dfcleanser System chapter")
-
 
 
     # -----------------------------------------------------------------#
@@ -636,7 +624,7 @@ class SystemGui(QtWidgets.QMainWindow):
         if(DEBUG_SYSTEM_INFO) :
             print("[SystemGui][display_dfcleanser_about] end : stack \n  ",self.SystemWidgets_stack_dict)
 
-        self.resize(1070,600)
+        self.resize(1070,400)
 
 
     # -----------------------------------------------------------------#
@@ -799,7 +787,7 @@ class SystemGui(QtWidgets.QMainWindow):
         if(DEBUG_SYSTEM) :
             print("\n[display_dfcleanser_readme]  ")
 
-        DFCLEANSER_README    =   "https://rickkrasinski.github.io/dfcleanser/README.md"    
+        DFCLEANSER_README    =   "https://rickkrasinski.github.io/dfcleanser/"    
 
         from dfcleanser.common.common_utils import display_url
         display_url(DFCLEANSER_README)
