@@ -21,7 +21,7 @@ import dfcleanser.Qt.utils.Geocode.GeocodeModel as GM
 import dfcleanser.Qt.utils.Geocode.GeocodeControl as GC
 import dfcleanser.Qt.utils.Geocode.BulkGeocode as BG
 
-from dfcleanser.common.common_utils import (opStatus, get_parms_for_input, run_jscript, display_blank_line, log_debug_dfc)
+from dfcleanser.common.common_utils import (opStatus, get_parms_for_input, run_jscript, display_blank_line)
 
 from dfcleanser.sw_utilities.DisplayUtils import (get_exception_html, display_status_note, display_notes, displayParms)
 
@@ -53,7 +53,7 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
     """
 
     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        log_debug_dfc(-1,"[process_bulk_geocoding_run_cmd] " + str(cmd))
+        cfg.add_debug_to_log("process_bulk_geocoding_run_cmd",,str(cmd))
     
     opstat  =   opStatus()
     
@@ -65,7 +65,7 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
             send_run_report_error(cmd, opstat.get_errorMsg())
     
         if(GEOCODE_TRACE_GET_GEOCODE)  :
-            log_debug_dfc(-1,"[process_bulk_geocoding_run_cmd][BULK_START_GEOCODER] status : " + str(opstat.get_status()))  
+            cfg.add_debug_to_log("process_bulk_geocoding_run_cmd[BULK_START_GEOCODER]"," status : " + str(opstat.get_status()))  
             
     elif(cmd == BGM.BULK_STOP_GEOCODER) :
         BGM.stop_geocode_runner(None)
@@ -129,7 +129,7 @@ def send_run_report_error(cmd, err_msg) :
     
     report_error_js     =   "report_geocode_run_error(" + str(cmd) + ",'" + err_msg + "');"
     if(BGM.DEBUG_GEOCODE_BULK_UTILS)  :   
-        log_debug_dfc(-1,"send_run_report_error " + str(cmd) + " " + str(err_msg))
+        cfg.add_debug_to_log("send_run_report_error ",str(cmd) + " " + str(err_msg))
     
     from dfcleanser.common.common_utils import run_jscript
     run_jscript(report_error_js,"fail report run error : "+ str(cmd) + err_msg)
@@ -159,7 +159,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
     """
     
     if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-        log_debug_dfc(-1,"[get_bulk_coords] " + str(geocid) + " " + str(refresh))
+        cfg.add_debug_to_log("get_bulk_coords",str(geocid) + " " + str(refresh))
     
     opstat  =   opStatus()
     parms   =   None 
@@ -172,7 +172,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             cfg.set_config_value(BG.bulk_google_query_input_id+"Parms",fparms)
     
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(-1,"[get_bulk_coords][cfg.set_config_value] " + str(BG.bulk_google_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_query_input_id+"Parms")))
+                cfg.add_debug_to_log("get_bulk_coords][cfg.set_config_value]", str(BG.bulk_google_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_query_input_id+"Parms")))
 
             parms   =   inputs
         
@@ -182,7 +182,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             cfg.set_config_value(BG.bulk_bing_query_input_id+"Parms",fparms)
             
             if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-                log_debug_dfc(-1,"[get_bulk_coords][cfg.set_config_value] " + str(BG.bulk_bing_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_query_input_id+"Parms")))
+                cfg.add_debug_to_log("get_bulk_coords][cfg.set_config_value",str(BG.bulk_bing_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_query_input_id+"Parms")))
 
             parms   =   inputs
         
@@ -215,7 +215,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             elif(geocid == GM.BingId) :
 
                 if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-                    log_debug_dfc(-1,"[get_bulk_coords][runParms] \n        " + str(runParms))
+                    cfg.add_debug_to_log("get_bulk_coords][runParms]"," \n        " + str(runParms))
 
                 df_title    =  runParms.get("dataframe_to_geocode")
                 columns     =  runParms.get("dataframe_address_columns")  
@@ -252,8 +252,8 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
     """
     
     if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-        log_debug_dfc(-1,"[get_bulk_addresses] " + str(geocid) + " " + str(refresh))
-        log_debug_dfc(-1,"[get_bulk_addresses] inputs \n              " + str(inputs))
+        cfg.add_debug_to_log("get_bulk_addresses",str(geocid) + " " + str(refresh))
+        cfg.add_debug_to_log("get_bulk_addresses"," inputs \n              " + str(inputs))
     
     opstat  =   opStatus()
     parms   =   None
@@ -266,7 +266,7 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
             cfg.set_config_value(BG.bulk_google_reverse_input_id+"Parms",fparms)
 
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(-1,"[get_bulk_coords][cfg.set_config_value] " + str(BG.bulk_google_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_reverse_input_id+"Parms")))
+                cfg.add_debug_to_log("get_bulk_coords[cfg.set_config_value]",str(BG.bulk_google_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_reverse_input_id+"Parms")))
 
             parms   =   inputs
         elif(geocid == GM.BingId) :
@@ -274,7 +274,7 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
             cfg.set_config_value(BG.bulk_bing_reverse_input_id+"Parms",fparms)
 
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(-1,"[get_bulk_coords][cfg.set_config_value] " + str(BG.bulk_bing_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_reverse_input_id+"Parms")))
+                cfg.add_debug_to_log("get_bulk_coords[cfg.set_config_value]",str(BG.bulk_bing_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_reverse_input_id+"Parms")))
 
             parms   =   inputs
         
@@ -343,8 +343,8 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     """
 
     if(BGM.GEOCODE_TRACE_PROCESS_ERRORS) :
-        log_debug_dfc(rowid,"[process_bulk_geocoding_errors]  : " + str(inputParms))
-        log_debug_dfc(rowid,"[process_bulk_geocoding_errors] error msg : " + str(error_msg) + " : " + str(note))
+        cfg.add_debug_to_log("process_bulk_geocoding_errors","  : " + str(inputParms))
+        cfg.add_debug_to_log("process_bulk_geocoding_errors"," error msg : " + str(error_msg) + " : " + str(note))
 
     error_limit         =   BGM.get_geocode_runner_error_log().get_error_limit() * 0.01
     total_errors        =   BGM.get_geocode_runner_error_log().get_error_count()
@@ -355,7 +355,7 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     dfc_error_log       =  BGM.get_geocode_runner_error_log() 
 
     if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  :   
-        log_debug_dfc(rowid,"[process_bulk_geocoding_errors] : " + str(geotype) + " state : " + str(BGM.get_geocode_runner_state()) + " error_count : " + str(BGM.get_geocode_runner_error_log().get_error_count()) + " error_limit : " + str(error_limit) + " current_error_rate : " + str(current_error_rate))
+        cfg.add_debug_to_log("process_bulk_geocoding_errors"," : " + str(geotype) + " state : " + str(BGM.get_geocode_runner_state()) + " error_count : " + str(BGM.get_geocode_runner_error_log().get_error_count()) + " error_limit : " + str(error_limit) + " current_error_rate : " + str(current_error_rate))
 
     opstat  =   opStatus()
     
@@ -369,7 +369,7 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
         BGM.set_progress_bar_value(geocid,geotype,BGM.ERROR_BAR,total_errors,int(current_error_rate))
     
         if(BGM.GEOCODE_TRACE_PROCESS_ERRORS) :
-            log_debug_dfc(rowid,"[process_bulk_geocoding_errors] : current_error_rate : error_limit : " + str(inputParms) + str(current_error_rate) + " : " + str(error_limit))
+            cfg.add_debug_to_log("process_bulk_geocoding_errors"," : current_error_rate : error_limit : " + str(inputParms) + str(current_error_rate) + " : " + str(error_limit))
 
         if(current_error_rate > error_limit) :
             
@@ -390,11 +390,11 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
                 BGM.control_bulk_keys([BGM.DISABLE,BGM.DISABLE,BGM.DISABLE,BGM.DISABLE,BGM.ENABLE,BGM.ENABLE,BGM.ENABLE],"F")
             
             if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  :   
-                log_debug_dfc(rowid,"[process_bulk_geocoding_errors] : error limit exceeded : error_limit : " + str(error_limit) + " total_results : " + str(total_results) + " total_errors : " + str(total_errors))
+                cfg.add_debug_to_log("process_bulk_geocoding_errors"," : error limit exceeded : error_limit : " + str(error_limit) + " total_results : " + str(total_results) + " total_errors : " + str(total_errors))
             
     except :
         if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  : 
-            log_debug_dfc(rowid,"[process_bulk_geocoding_errors] Exception : " + str(geocid) + " " + str(geotype) + " " + str(rowid) + " " + str(sys.exc_info()[0].__name__))
+            cfg.add_debug_to_log("process_bulk_geocoding_errors"," Exception : " + str(geocid) + " " + str(geotype) + " " + str(rowid) + " " + str(sys.exc_info()[0].__name__))
 
 
 def set_error_limit_shutoff() :
@@ -402,7 +402,7 @@ def set_error_limit_shutoff() :
     BGM.set_geocode_runner_state(BGM.ERROR_LIMIT) 
     
     if(GEOCODE_TRACE_GET_GEOCODE)  : 
-        log_debug_dfc(-1,"[set_error_limit_shutoff] : geocoder state : " + str(BGM.get_geocode_runner_state()))
+        cfg.add_debug_to_log("set_error_limit_shutoff"," : geocoder state : " + str(BGM.get_geocode_runner_state()))
 
     
 
@@ -486,7 +486,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
     """
     
     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        log_debug_dfc(rowid," [get_google_query_results] : " + address)
+        cfg.add_debug_to_log("get_google_query_results"," : " + address)
         
     geocode_results =   None
     gmaps           =   BGM.get_geocode_connector() 
@@ -495,7 +495,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
         cparms  =   cfg.get_config_value(BG.google_bulk_geocoder_id+"Parms")
 
         if(GEOCODE_TRACE_GET_GEOCODE)  :   
-            log_debug_dfc(rowid,"[got_google_connection] : " + str(cparms))
+            cfg.add_debug_to_log("got_google_connection"," : " + str(cparms))
 
         gmaps   =   BG.get_bulk_google_geocoder_connection(cparms[0],cparms[1],cparms[2],opstat)        
         BGM.set_geocode_connector(gmaps)
@@ -504,19 +504,6 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
 
         if(not (queryParms == None)) :
             
-            """
-            bounds_parm          =   queryParms.get("bounds")
-            if(bounds_parm == "None") :
-                bounds_parm    =   None
-
-            regionParm      =   queryParms.get("region")
-            colon_char      =   regionParm.find(":")
-
-            regionParm      =   regionParm[(colon_char + 1) :]
-
-            languageParm    =   queryParms.get("language")
-            """
-
             from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import dfc_Geocode_Runner
             api_parms   = dfc_Geocode_Runner.get_api_parms()
 
@@ -545,7 +532,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
                 except Exception as e :
 
                     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                        log_debug_dfc(rowid,"[unable to get  geocode_results] : ")
+                        cfg.add_debug_to_log("dfcleanser exception","unable to get  geocode_results] : ")
 
 
                     opstat.set_status(False)
@@ -580,12 +567,12 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
         except Exception as e:
             opstat.set_status(False)
             opstat.store_exception("Unable to get geocode results ",e)
-            log_debug_dfc(-1, "[gmaps.geocode]  error : "+ str(sys.exc_info()[0].__name__) + " : " + str(sys.exc_info()[1])) 
+            cfg.add_debug_to_log("gmaps.geocode","  error : "+ str(sys.exc_info()[0].__name__) + " : " + str(sys.exc_info()[1])) 
 
     if(opstat.get_status()) :  
 
         if(GEOCODE_TRACE_GET_GEOCODE)  :
-            log_debug_dfc(-1,"[get_google_query_results] ok location : " + str(address) + " : " + str(len(geocode_results)))
+            cfg.add_debug_to_log("get_google_query_results"," ok location : " + str(address) + " : " + str(len(geocode_results)))
         
         try :
     
@@ -602,7 +589,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
     else :
         
         if(GEOCODE_TRACE_GET_GEOCODE)  :
-            log_debug_dfc(-1,"[get_google_query_results] exception : " + opstat.getErrorMsg())
+            cfg.add_debug_to_log("get_google_query_results"," exception : " + opstat.getErrorMsg())
 
 
     return(current_geocode_results)
@@ -628,12 +615,12 @@ def process_google_query_results(rowid,inputParms,runParms,geocode_results,opsta
     results_df          =   BGM.get_geocode_runner_results_log()
 
     if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-        log_debug_dfc(rowid,"[process_google_query_results]  : " + str(inputParms) ) 
+        cfg.add_debug_to_log("process_google_query_results","  : " + str(inputParms) ) 
     
     if(not(error_rowid is None)):
         
         if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-            log_debug_dfc(-1,"[add_nan_result for None]")        
+            cfg.add_debug_to_log("add_nan_result for None","")        
 
         results_df.add_nan_result(error_rowid,inputParms,geocode_results,opstat)
         
@@ -655,8 +642,8 @@ def process_google_query_results(rowid,inputParms,runParms,geocode_results,opsta
                 save_full_address   =   False
      
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_query_results]  : lat_long_merged " + str(lat_long_merged) ) 
-                log_debug_dfc(rowid,"[process_google_query_results]  : save_full_address " + str(save_full_address) ) 
+                cfg.add_debug_to_log("process_google_query_results","  : lat_long_merged " + str(lat_long_merged) ) 
+                cfg.add_debug_to_log("process_google_query_results","  : save_full_address " + str(save_full_address) ) 
 
             georunParms     =   [GM.QUERY,GM.GoogleId,inputParms,lat_long_merged,save_full_address]
             results_df.add_result(rowid,georunParms,geocode_results,opstat)
@@ -700,25 +687,25 @@ def find_best_google_reverse_result(rowid,reverse_results,reverseParms) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "ROOFTOP") :
                     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                        log_debug_dfc(rowid,"[find_best_google_reverse_result][ROOFTOP] " + str(i))
+                        cfg.add_debug_to_log("find_best_google_reverse_result][ROOFTOP]",str(i))
                     return(reverse_results[i])
         elif("GEOMETRIC_CENTER" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "GEOMETRIC_CENTER") :
                     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                        log_debug_dfc(rowid,"[find_best_google_reverse_result][GEOMETRIC_CENTER] " + str(i))
+                        cfg.add_debug_to_log("find_best_google_reverse_result][GEOMETRIC_CENTER]",str(i))
                     return(reverse_results[i])
         elif("RANGE_INTERPOLATED" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "RANGE_INTERPOLATED") :
                     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                        log_debug_dfc(rowid,"[find_best_google_reverse_result][RANGE_INTERPOLATED] " + str(i))
+                        cfg.add_debug_to_log("find_best_google_reverse_result][RANGE_INTERPOLATED]",str(i))
                     return(reverse_results[i])
         elif("APPROXIMATE" in location_types) :
             return(reverse_results[0])
         else :
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(rowid,"[find_best_google_reverse_result][NOT FOUND] " + str(i))
+                cfg.add_debug_to_log("find_best_google_reverse_result][NOT FOUND]",str(i))
 
             return(None)
             
@@ -742,7 +729,7 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
     * --------------------------------------------------------
     """
     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        log_debug_dfc(rowid,"[get_google_reverse_results] : lat_lng " + str(lat_long))
+        cfg.add_debug_to_log("get_google_reverse_results"," : lat_lng " + str(lat_long))
     
     reverse_results =   None
     
@@ -805,7 +792,7 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
             import sys
             opstat.set_errorMsg("get_google_reverse_results exception : " + str(sys.exc_info()[0].__name__))
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(rowid,"[get_google_reverse_results] exception : " + str(sys.exc_info()[0].__name__))
+                cfg.add_debug_to_log("get_google_reverse_results"," exception : " + str(sys.exc_info()[0].__name__))
 
             
         if(opstat.get_status()) :
@@ -819,14 +806,14 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
                 opstat.set_status(False)
                 opstat.set_errorMsg("get_google_reverse_results assign results exception : ")
                 if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                    log_debug_dfc(rowid,"[find_best_google_reverse_result] exception : " + str(sys.exc_info()[0].__name__))
+                    cfg.add_debug_to_log("find_best_google_reverse_result"," exception : " + str(sys.exc_info()[0].__name__))
 
     
     if(GEOCODE_TRACE_GET_GEOCODE)  :
         if(current_reverse_results is None) :
-            log_debug_dfc(rowid,"[get_google_reverse_results None] : ")
+            cfg.add_debug_to_log("get_google_reverse_results None] : ","")
         else :
-            log_debug_dfc(rowid,"[get_google_reverse_results]  : " + " lat " + str(current_reverse_results.get_lat()) + " lng " + str(current_reverse_results.get_lng()) + " \n                  addr " +  str(current_reverse_results.get_formatted_address()))
+            cfg.add_debug_to_log("get_google_reverse_results","  : " + " lat " + str(current_reverse_results.get_lat()) + " lng " + str(current_reverse_results.get_lng()) + " \n                  addr " +  str(current_reverse_results.get_formatted_address()))
     
     return(current_reverse_results)
 
@@ -846,14 +833,14 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
     * --------------------------------------------------------
     """
     if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-        log_debug_dfc(rowid,"[process_google_reverse_results] inparms : " + str(inputParms))
+        cfg.add_debug_to_log("process_google_reverse_results"," inparms : " + str(inputParms))
     
     results_df          =   BGM.get_geocode_runner_results_log()
     
     if(not(error_rowid is None)):
         
         if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-            log_debug_dfc(rowid,"[process_google_reverse_results] add_nan_result for None")        
+            cfg.add_debug_to_log("process_google_reverse_results"," add_nan_result for None")        
 
         parmsDict   =   None
         results_df.add_nan_result(error_rowid,inputParms,parmsDict,opstat)
@@ -867,7 +854,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             user_addr_comps         =   GM.get_google_address_components(requested_addr_comps)
 
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_reverse_results] user_addr_comps : \n      " + str(user_addr_comps))
+                cfg.add_debug_to_log("process_google_reverse_results"," user_addr_comps : \n      " + str(user_addr_comps))
             
             addr_length             =   runParms.get("address_components_length_flag")
             if(addr_length == "short") :
@@ -891,7 +878,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
                         addr_comps.append(addr_comp)
                 
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_reverse_results] retrieved addr_comps : \n     " + str(addr_comps))
+                cfg.add_debug_to_log("process_google_reverse_results"," retrieved addr_comps : \n     " + str(addr_comps))
                     
             row_reverse_results     =   []
             row_reverse_results.append(reverse_results.get_row_Id())
@@ -904,13 +891,13 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             row_reverse_results.append(reverse_results.get_location_type())
             
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_reverse_results] row_reverse_results : \n    " + str(row_reverse_results))
+                cfg.add_debug_to_log("process_google_reverse_results"," row_reverse_results : \n    " + str(row_reverse_results))
 
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import REVERSE,GoogleId
             georunParms  =   [REVERSE,GoogleId,inputParms,runParms]
 
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_reverse_results] georunParms : " + str(georunParms))
+                cfg.add_debug_to_log("process_google_reverse_results"," georunParms : " + str(georunParms))
 
             #results_df          =   BGM.get_geocode_runner_results_log()
             results_df.add_result(rowid,georunParms,row_reverse_results,opstat)
@@ -920,7 +907,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             import sys
             opstat.set_errorMsg("process_google_reverse_results exception " + str(sys.exc_info()[0].__name__))
             if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_google_reverse_results] exception : " + str(inputParms))
+                cfg.add_debug_to_log("process_google_reverse_results"," exception : " + str(inputParms))
 
 
 """
@@ -950,8 +937,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
     bulk_geocodes_sent_out.append(rowid)
 
     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : address " + str(geocid) + " " + str(geotype) + " " + str(geoparm))  
-        #log_debug_dfc(rowid,"[get_geopy_geocoder_results] : queryParms " + str(queryParms) )  
+        cfg.add_debug_to_log("get_geopy_geocoder_results"," : address " + str(geocid) + " " + str(geotype) + " " + str(geoparm))  
 
     if(geotype == GM.QUERY) :
 
@@ -969,11 +955,11 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
 
 
             if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : query : " + geoparm)
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : user_location_parm : " + str(user_location_parm) + str(type(user_location_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : include_neighborhood_parm : " + str(include_neighborhood_parm) + str(type(include_neighborhood_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : query : " + geoparm)
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : user_location_parm : " + str(user_location_parm) + str(type(user_location_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," culture_parm : " + str(culture_parm) + str(type(culture_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_neighborhood_parm : " + str(include_neighborhood_parm) + str(type(include_neighborhood_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
 
 
             try :
@@ -991,11 +977,11 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
                 from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                 display_exception(title,status_msg,e)
 
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : query : " + geoparm)
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : user_location_parm : " + str(user_location_parm) + str(type(user_location_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : include_neighborhood_parm : " + str(include_neighborhood_parm) + str(type(include_neighborhood_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : query : " + geoparm)
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : user_location_parm : " + str(user_location_parm) + str(type(user_location_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_neighborhood_parm : " + str(include_neighborhood_parm) + str(type(include_neighborhood_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
 
                 location    =   None
  
@@ -1008,7 +994,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
         if(geocid == GM.BingId) :
             
             if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
-                log_debug_dfc(rowid,"[get_geopy_geocoder_results] : bing reverse : " + str(geoparm))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : bing reverse : " + str(geoparm))
 
             lat_lng                     =   geoparm.replace("[","")
             lat_lng                     =   lat_lng.replace("]","")
@@ -1020,7 +1006,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             geo_lat_lng                 =   [lat,lng]
             
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : geo_lat_lng : " + str(geo_lat_lng) )
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : geo_lat_lng : " + str(geo_lat_lng) )
             
             import geopy.point    
             qpoint  =   geopy.point.Point(geo_lat_lng[0],geo_lat_lng[1],0)
@@ -1032,9 +1018,9 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             include_country_code_parm   =   api_parms.get_api_parm("include_country_code_parm")
 
             if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : query : " + geoparm)
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
-                log_debug_dfc(rowid,"  [get_geopy_geocoder_results] : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : query : " + geoparm)
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
+                cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
 
             location     =   geolocator.reverse(query=qpoint,
                                                culture=culture_parm,
@@ -1063,14 +1049,14 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
     current_geocode_results =   None
 
     if(0):#GEOCODE_TRACE_GET_GEOCODE) :
-        log_debug_dfc(rowid,"    [get_geopy_geocode_results] address : " + str(address))
+        cfg.add_debug_to_log("get_geopy_geocode_results"," address : " + str(address))
 
     geolocator = GC.get_geocoder_engine(geocid,opstat)
     
     if(not(opstat.get_status())) :
         opstat.set_errorMsg(GC.GeopyGeocoderConnectionErrorMessage)
         if(GEOCODE_TRACE_GET_GEOCODE) :
-            log_debug_dfc(rowid,"\n    [get_geopy_geocode_results] [get_geocoder_engine-failure] : " + str(opstat.get_status()) )  
+            cfg.add_debug_to_log("get_geopy_geocode_results"," [get_geocoder_engine-failure] : " + str(opstat.get_status()) )  
 
     if(opstat.get_status()) :   
 
@@ -1079,7 +1065,7 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
             geocode_results    =   get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,address,queryParms) 
 
             if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                log_debug_dfc(rowid,"  [get_geopy_geocode_results] : location : " + str(geocode_results))
+                cfg.add_debug_to_log("get_geopy_geocode_results"," : location : " + str(geocode_results))
 
         except geopy.exc.GeopyError :
             opstat.set_status(False)
@@ -1117,7 +1103,7 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
         except Exception as e:
             opstat.set_status(False)
             opstat.store_exception("[Unable to get geocode results] ",e)
-            log_debug_dfc(-1, "[Bing query]  error : "+ str(sys.exc_info()[0].__name__) + " : " + str(sys.exc_info()[1])) 
+            cfg.add_debug_to_log("Bing query","  error : "+ str(sys.exc_info()[0].__name__) + " : " + str(sys.exc_info()[1])) 
 
         if(opstat.get_status()) :  
             
@@ -1129,7 +1115,7 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
                     longitude       =   geocode_results.longitude
                     
                     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-                        log_debug_dfc(rowid,"  [get_geopy_geocode_results] : " + str(latitude) + " : " + str(longitude))
+                        cfg.add_debug_to_log("get_geopy_geocode_results"," : " + str(latitude) + " : " + str(longitude))
             
                     try :
                         current_geocode_results    =  GM.geopy_geocode_results(rowid,full_address,latitude,longitude,opstat)
@@ -1142,13 +1128,13 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
                 if( not (geocode_results is None)) :
 
                     if(GEOCODE_TRACE_GET_GEOCODE) :
-                        log_debug_dfc(rowid,"   [get_geopy_geocode_results] got geocode results : " + str(type(geocode_results)))
+                        cfg.add_debug_to_log("get_geopy_geocode_results"," got geocode results : " + str(type(geocode_results)))
 
 
                     full_address    =   geocode_results.get_location()#
 
                     if(GEOCODE_TRACE_GET_GEOCODE) :
-                        log_debug_dfc(rowid,"    [get_geopy_geocode_results] full_address : " + str(type(full_address)))
+                        cfg.add_debug_to_log("get_geopy_geocode_results"," full_address : " + str(type(full_address)))
 
                     try :
                         current_geocode_results    =  geocode_results
@@ -1186,7 +1172,7 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
     """
 
     if(GEOCODE_TRACE_PROCESS_RESULTS) :
-        log_debug_dfc(rowid,"[process_geopy_geocode_results] : " + str(inputParms) + " error : " + str(error_rowid))
+        cfg.add_debug_to_log("process_geopy_geocode_results"," : " + str(inputParms) + " error : " + str(error_rowid))
     
     results_df          =   BGM.get_geocode_runner_results_log()
     
@@ -1208,9 +1194,6 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
 
                     separate_lat_lng    =   False
 
-                    #if(GEOCODE_TRACE_PROCESS_RESULTS) :
-                    #    log_debug_dfc(rowid,"[process_geopy_geocode_results] lat_long_colname : " + str(lat_long_colname) + " full_addr_col_name : " + str(full_addr_col_name))
-
                     if( (lat_long_colname.find("]") > -1) and (lat_long_colname.find("[") > -1) ) :
                         separate_lat_lng    =   True 
                     else :
@@ -1219,9 +1202,6 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
                     
                     save_full_address   =   True
 
-                    #if(GEOCODE_TRACE_PROCESS_RESULTS) :
-                    #    log_debug_dfc(rowid,"[process_geopy_geocode_results] separate_lat_lng : " + str(separate_lat_lng) + " save_full_address : " + str(save_full_address))
-        
                     georunParms     =   [GM.QUERY,GM.BingId,inputParms,separate_lat_lng,save_full_address]
                     results_df.add_result(rowid,georunParms,geopy_results,opstat)
 
@@ -1232,7 +1212,7 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
                         addrcompsflag   =   runParms.get("address_components_to_retrieve")
                             
                         if(GEOCODE_TRACE_PROCESS_RESULTS) :
-                            log_debug_dfc(rowid,"[process_geopy_geocode_results] addrcompsflag : " + str(addrcompsflag))
+                            cfg.add_debug_to_log("process_geopy_geocode_results"," addrcompsflag : " + str(addrcompsflag))
 
                         if( (addrcompsflag is None) or (addrcompsflag == "Full Address Only") ) : 
                             georunParms     =   [GM.REVERSE,GM.BingId,inputParms,addrcompsflag]
@@ -1259,13 +1239,13 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
             opstat.set_errorMsg("Error getting geopy " + str(geocid) + " results : " + str(sys.exc_info()[0].__name__))
             
             if(BGM.GEOCODE_TRACE_PROCESS_RESULTS)  :   
-                log_debug_dfc(rowid,"[process_geopy_geocode_results][Error getting geopy] " + str(sys.exc_info()[0].__name__))        
+                cfg.add_debug_to_log("process_geopy_geocode_results","[Error getting geopy] " + str(sys.exc_info()[0].__name__))        
 
     
     else : # error row
         
         if(BGM.GEOCODE_TRACE_PROCESS_RESULTS)  :   
-            log_debug_dfc(rowid,"[add_nan_result] for None")        
+            cfg.add_debug_to_log("add_nan_result"," for None")        
 
         results_df.add_nan_result(error_rowid,inputParms,None,opstat)
 
@@ -1945,7 +1925,7 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
     if(opstat.get_status()) :  
 
         if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-            log_debug_dfc(-1,"[validate_bing_bulk_parms] \n    " + str(bulk_geocode_kwargs))
+            cfg.add_debug_to_log("validate_bing_bulk_parms"," \n    " + str(bulk_geocode_kwargs))
 
         return(bulk_geocode_kwargs)
     else :
@@ -1965,7 +1945,7 @@ def refresh_bulk_geocode_console() :
     geotype  =   BGM.get_geocode_runner_type() 
     
     if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
-        log_debug_dfc(-1,"[refresh_bulk_geocode_console] " + str(geocid) + " " + str(geotype))
+        cfg.add_debug_to_log("refresh_bulk_geocode_console",str(geocid) + " " + str(geotype))
     
     if(geotype == BGM.QUERY) :
         get_bulk_coords(geocid,None,True)
@@ -2290,14 +2270,9 @@ def merge_bulk_results(geocode_id,geocode_type,parms) :
     * --------------------------------------------------------
     """
     if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        log_debug_dfc(-1,"[merge_bulk_results] : " + str(geocode_id) + " " + str(geocode_type))
-        log_debug_dfc(-1,"[merge_bulk_results] : " + str(parms))
+        cfg.add_debug_to_log("merge_bulk_results"," : " + str(geocode_id) + " " + str(geocode_type))
+        cfg.add_debug_to_log("merge_bulk_results"," : " + str(parms))
 
-    if(DEBUG_MERGE) :
-        print("merge_bulk_results : geocode_id ",geocode_id)
-        print("merge_bulk_results : geocode_type ",geocode_type)
-        print("merge_bulk_results : parms ",parms)
-    
     runParms    =   BGM.dfc_Geocode_Runner.get_runParms()
     if(geocode_id == GM.GoogleId) :
         user_df_title   =   runParms.get("dataframe_to_geocode_from")
@@ -2984,7 +2959,7 @@ def set_merge_bar_value(countvalue,barvalue) :
 
         #TODOD
         
-        log_debug_dfc(-1,"set_merge_bar_value exception ") 
+        cfg.add_debug_to_log("set_merge_bar_value exception ","") 
     
 
 """

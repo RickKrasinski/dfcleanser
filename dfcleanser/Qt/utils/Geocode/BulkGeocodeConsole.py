@@ -15,7 +15,7 @@ GEOCODE_TRACE_DETAILS   =   False
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.common.cfg as cfg
 
-from dfcleanser.common.common_utils import  (display_generic_grid, run_jscript, log_debug_dfc, display_blank_line,  get_image_url)
+from dfcleanser.common.common_utils import  (display_generic_grid, run_jscript, display_blank_line,  get_image_url)
 
 import dfcleanser.Qt.utils.Geocode.BulkGeocodeModel as BGM
 import dfcleanser.Qt.utils.Geocode.GeocodeModel as GM
@@ -279,40 +279,6 @@ def get_bulk_geocode_console_html(geocodeid,geotype,runparms,progressbarList,sta
     #from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import get_bulk_parms_table
     bulk_parms_html =   display_bulk_geocode_run_parms(geocodeid,geotype,runparms,280,90)
 
-    """
-    labels      =   list(runparms.keys())
-    values      =   []
-    for i in range(len(labels)) :
-        if(labels[i] == "failure_limit_percent") :
-            values.append(str(runparms.get(labels[i])))
-        else :
-            if(labels[i] == "checkpoint_interval") :
-                values.append(str(runparms.get(labels[i])))
-            else :
-                values.append(runparms.get(labels[i]))
-
-    from dfcleanser.Qt.utils.Geocode.GeocodeModel import BingId, GoogleId, QUERY
-    from dfcleanser.Qt.utils.Geocode.BulkGeocode import  (bulk_google_query_input_id, bulk_google_reverse_input_id, 
-                                                          bulk_bing_query_input_id, bulk_bing_reverse_input_id)
-    if(geocodeid == BingId) :
-        if(geotype == QUERY) :
-            cfg_key     =  bulk_bing_query_input_id+"Parms"
-        else :
-            cfg_key     =  bulk_bing_reverse_input_id+"Parms"
-    else :
-        if(geotype == QUERY) :
-            cfg_key     =  bulk_google_query_input_id+"Parms"
-        else :
-            cfg_key     =  bulk_google_reverse_input_id+"Parms" 
-
-    cfg.set_config_value(cfg_key,values)
-
-    if(BGM.GEOCODE_TRACE_GET_GEOCODE) :
-        log_debug_dfc(-1,"[get_bulk_geocode_console_html] cfg_key : " + str(cfg_key))        
-        log_debug_dfc(-1,"[get_bulk_geocode_console_html] cfg_parms : \n        " + str(values))    
-        log_debug_dfc(-1,"[get_bulk_geocode_console_html] cfg_parms : \n        " + str(cfg.get_config_value(cfg_key)))        
-
-    """
 
     console_html = (console_html + bulk_parms_html)
     console_html = (console_html + bulk_console_commands)

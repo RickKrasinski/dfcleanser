@@ -25,7 +25,7 @@ from dfcleanser.common.common_utils import (get_parms_for_input, display_generic
 
 from dfcleanser.Qt.utils.Geocode.GeocodeModel import (BingId, GoogleId, BaiduId, BULK, QUERY, REVERSE, BULK_TUNING, ArcGISId)  
 
-from dfcleanser.common.common_utils import log_debug_dfc
+from dfcleanser.common.cfg import add_debug_to_log
 
 from dfcleanser.sw_utilities.DFCDataStores import get_Dict
 
@@ -797,10 +797,9 @@ def display_bulk_query_geocoding(geocodeid) :
     """
 
     if(BGM.GEOCODE_TRACE_DISPLAY_FORM) :
-
-        log_debug_dfc(-1,"[display_bulk_reverse_geocoding] geocodeid " + str(geocodeid))
-        log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_bing_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_query_input_id+"Parms")))        
-        log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_google_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_query_input_id+"Parms")))        
+        add_debug_to_log("display_bulk_reverse_geocoding", " geocodeid " + str(geocodeid))
+        add_debug_to_log("display_bulk_reverse_geocoding", bulk_bing_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_query_input_id+"Parms")))        
+        add_debug_to_log("display_bulk_reverse_geocoding", bulk_google_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_query_input_id+"Parms")))        
 
     from dfcleanser.common.common_utils import displayHTML
     
@@ -829,7 +828,7 @@ def display_bulk_query_geocoding(geocodeid) :
         column_name_table   =   get_column_names_table(GoogleId,QUERY,df) 
         
         if(BGM.GEOCODE_TRACE_DISPLAY_FORM) :
-            log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_google_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_query_input_id+"Parms")))        
+            add_debug_to_log("display_bulk_reverse_geocoding",bulk_google_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_query_input_id+"Parms")))        
 
         # build the input form
         from dfcleanser.common.html_widgets import InputForm
@@ -889,8 +888,7 @@ def display_bulk_query_geocoding(geocodeid) :
         column_name_table   =   get_column_names_table(BingId,QUERY,df) 
 
         if(BGM.GEOCODE_TRACE_DISPLAY_FORM) :
-            log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_bing_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_query_input_id+"Parms")))        
-
+            add_debug_to_log("display_bulk_reverse_geocoding",bulk_bing_query_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_query_input_id+"Parms")))        
 
         # build the input form
         from dfcleanser.common.html_widgets import InputForm
@@ -1016,7 +1014,7 @@ def display_bulk_reverse_geocoding(geocodeid,tableid=None) :
         column_name_table   =   get_column_names_table(GoogleId,REVERSE,df) 
         
         if(BGM.GEOCODE_TRACE_DISPLAY_FORM) :
-            log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_google_reverse_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_reverse_input_id+"Parms")))        
+            add_debug_to_log("display_bulk_reverse_geocoding",bulk_google_reverse_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_google_reverse_input_id+"Parms")))        
 
         # build the input form
         from dfcleanser.common.html_widgets import InputForm
@@ -1085,7 +1083,7 @@ def display_bulk_reverse_geocoding(geocodeid,tableid=None) :
         column_name_table   =   get_column_names_table(BingId,REVERSE,df) 
 
         if(BGM.GEOCODE_TRACE_DISPLAY_FORM) :
-            log_debug_dfc(-1,"[display_bulk_reverse_geocoding] " + bulk_bing_reverse_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_reverse_input_id+"Parms")))        
+            add_debug_to_log("display_bulk_reverse_geocoding",bulk_bing_reverse_input_id+"Parms" + " cfg_parms : \n        " + str(cfg.get_config_value(bulk_bing_reverse_input_id+"Parms")))        
 
         # build the input form
         from dfcleanser.common.html_widgets import InputForm
@@ -1207,7 +1205,7 @@ def process_bulk_reverse_geocoding(geocodeid,runparms) :
 def test_bulk_geocoder_connection(geocodeid, parms) :
 
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[BulkGeocode][test_bulk_geocoder_connection] : geocodeid : parms :" + str(geocodeid) + "\n   " + str(parms)) 
+        add_debug_to_log("BulkGeocode[test_bulk_geocoder_connection] : "," geocodeid : parms :" + str(geocodeid) + "\n   " + str(parms)) 
 
     if(geocodeid == BingId):
         ids = bing_bulk_geocoder_idList
@@ -1217,7 +1215,7 @@ def test_bulk_geocoder_connection(geocodeid, parms) :
     inputs = get_parms_for_input(parms, ids)
 
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[BulkGeocode][test_bulk_geocoder_connection] : inputs "  + str(inputs)) 
+        add_debug_to_log("BulkGeocode[test_bulk_geocoder_connection] : "," inputs "  + str(inputs)) 
 
     opstat = opStatus()
 
@@ -1226,7 +1224,7 @@ def test_bulk_geocoder_connection(geocodeid, parms) :
     elif(geocodeid == BingId) :
 
         if(DEBUG_GEOCODE_BULK) :
-            log_debug_dfc(-1,"[BulkGeocode][test_bulk_geocoder_connection] : calling test_geocoder :") 
+            add_debug_to_log("BulkGeocode][test_bulk_geocoder_connection] : ","calling test_geocoder :") 
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import test_geocoder
         opstat  =   test_geocoder(BingId,inputs,BULK)
@@ -1273,7 +1271,7 @@ def get_bulk_google_geocoder_connection(apikey,cid,csecret,opstat) :
     """
 
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[get_bulk_google_geocoder_connection] apikey : cid : csecret  " + str(apikey) + str(cid) + str(csecret) )
+        add_debug_to_log("get_bulk_google_geocoder_connection] "," apikey : cid : csecret  " + str(apikey) + str(cid) + str(csecret) )
 
     api_key     =   None
     gmaps       =   None
@@ -1298,7 +1296,7 @@ def get_bulk_google_geocoder_connection(apikey,cid,csecret,opstat) :
         opstat.set_errorMsg("NotImplementedError")
 
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[get_bulk_google_geocoder_connection] opstat  " + str(opstat.get_status()) )
+        add_debug_to_log("get_bulk_google_geocoder_connection"," opstat  " + str(opstat.get_status()) )
         
     return(gmaps)
 
@@ -1315,7 +1313,7 @@ def test_google_bulk_connector(connectParms) :
     """
     
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[test_google_bulk_connector] connectParms : \n    " + str(connectParms)) 
+        add_debug_to_log("test_google_bulk_connector"," connectParms : \n    " + str(connectParms)) 
    
     test_address    =   "1111 Euclid Ave, Cleveland OH "
 
@@ -1323,7 +1321,7 @@ def test_google_bulk_connector(connectParms) :
     validate_bulk_google_geocoder_parms(connectParms,opstat) 
 
     if(DEBUG_GEOCODE_BULK) :
-        log_debug_dfc(-1,"[test_google_bulk_connector] validate parms : " + opstat.get_status()) 
+        add_debug_to_log("test_google_bulk_connector"," validate parms : " + opstat.get_status()) 
     
     if(opstat.get_status()) :
     

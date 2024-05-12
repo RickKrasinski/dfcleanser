@@ -610,12 +610,11 @@ class google_address_components:
         self.address_components = addr_comps
 
         from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import GEOCODE_TRACE_GET_GEOCODE_DETAILS
-        from dfcleanser.common.common_utils import log_debug_dfc 
+        from dfcleanser.common.cfg import add_debug_to_log 
         if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
-            #log_debug_dfc(-1,"[google_address_components] addr_comps : " + str(addr_comps))
-            log_debug_dfc(-1,"[google_address_components] addr_comps : " + str(type(addr_comps)) + " : " + str(len(addr_comps)))
+            add_debug_to_log("google_address_components"," addr_comps : " + str(type(addr_comps)) + " : " + str(len(addr_comps)))
             for i in range(len(addr_comps)) :
-                log_debug_dfc(-1,"[google_address_components] addr_comps : " + str(addr_comps[i]))
+                add_debug_to_log("google_address_components"," addr_comps : " + str(addr_comps[i]))
                
 
     def get_address_component(self,address_component_id,shortName=True) :
