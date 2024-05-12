@@ -2615,42 +2615,6 @@ def make_dir(path) :
         return(True)
     except :
         return(False)
- 
-    
-def get_and_save_zipfile(zip_file_name,out_file_name,out_path,opstat) :
-    """
-    * -------------------------------------------------------------------------- 
-    * function : unzip a zip file and save to a location
-    * 
-    * parms :
-    *   zip_file_name   -   name and path of the zip file
-    *   out_file_name   -   output file name
-    *   out_path        -   location to store unzipped file
-    *
-    * returns : 
-    *  offset 
-    * --------------------------------------------------------
-    """
-    
-    if(0):#swcm.DEBUG_CENSUS) :
-
-        print("get_and_save_zipfile",zip_file_name)
-        print("get_and_save_zipfile",out_file_name)
-        print("get_and_save_zipfile",out_path)
-    
-    
-    from zipfile import ZipFile
-    
-    try :
-        
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extract(out_file_name,out_path)  
-            
-    except Exception as e:
-        opstat.store_exception("zip and save ",e)
-
-
-
         
 """
 #------------------------------------------------------------------
@@ -2694,45 +2658,11 @@ def handle_confirm(parms) :
     
 
 
-"""
-#--------------------------------------------------------------------------
-#   static dfcleanser debug log
-#--------------------------------------------------------------------------
-"""
 
 
-def log_debug_dfc(rowid,text) :
-    dfc_debug_log.append([rowid,text])  
-    
-def clear_dfc_debug_log() :
-    if(len(dfc_debug_log) > 0) :
-        for i in range(len(dfc_debug_log)) :
-            dfc_debug_log.pop()    
-    
-def dump_dfc_debug_log(index=None,text=None) :
-    for i in range(len(dfc_debug_log)) :
-        if(index == None) :
-            if(text == None) :
-                print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])
-            else :
-                if(dfc_debug_log[i][1].find(text) > -1) :
-                    print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
-                
-        else :
-            if(dfc_debug_log[i][0] == index) :
-                if(text == None) :
-                    print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])
-                else :
-                    if(dfc_debug_log[i][1].find(text) > -1) :
-                        print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
-            else :
-                if(not (text == None) ) :
-                    if(dfc_debug_log[i][1].find(text) > -1) :
-                        print("rowid : ",dfc_debug_log[i][0],"  ",dfc_debug_log[i][1])    
-                
-    
-    
-dfc_debug_log  =   []
+
+
+
 
 
 

@@ -1800,7 +1800,6 @@ class DataframeCleanserErrorLogger :
         self.save_errorlog_file()   
   
     def get_error_log(self) :
-        
         return(self.error_log) 
 
     def clear_log(self) :
@@ -1809,6 +1808,134 @@ class DataframeCleanserErrorLogger :
 
     
 dfc_erorr_log   =   DataframeCleanserErrorLogger()  
+
+
+
+
+"""
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+#   generic dfcleanser debug logger
+#------------------------------------------------------------------
+#------------------------------------------------------------------
+"""  
+
+
+def add_debug_to_log(module,msg) :
+    
+    debug_msg   =   "["+module+"] : " +msg
+    dfc_debug_log.add_debug_to_dfc_log(debug_msg)
+
+def dump_debug_log() :
+    elog    =   dfc_erorr_log.get_error_log() 
+    
+    if(len(elog) > 0) :
+        for i in range(len(elog)) :
+            print("[",str(i),"] : ",str(elog[i]))
+   
+def clear_debug_log() :
+    dfc_erorr_log.clear_log() 
+
+
+class DataframeCleanserDebugLogger :
+    
+    # instance variables
+    
+    # error log
+    debug_log               =   []
+    debug_log_loaded        =   False
+    
+    # full constructor
+    def __init__(self) :
+        
+        self.debug_log               =   []
+        self.debug_log_loaded        =   False
+ 
+        self.init_debuglog_file() 
+        
+    def get_debuglog_dir_name(self) :
+        
+        from dfcleanser.common.cfg import get_notebookPath, get_notebookName
+        nbdir   =   get_notebookPath()
+        nbname  =   get_notebookName()
+        
+        if((nbdir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(nbdir,nbname + "_files"))
+   
+    def get_debuglog_file_name(self) :
+        
+        from dfcleanser.common.cfg import get_notebookName
+        eldir   =   self.get_errorlog_dir_name()
+        nbname  =   get_notebookName()
+        
+        if((eldir is None)or(nbname is None)) :
+            return(None)
+        else :
+            return(os.path.join(eldir,nbname + "_debuglog.json"))    
+    
+    def init_debuglog_file(self) :
+        
+        debuglog_dirname   =   self.get_debuglog_dir_name()
+        if(not (debuglog_dirname is None)) :
+            
+            if(not (does_dir_exist(debuglog_dirname))) :
+                make_dir(debuglog_dirname)
+        
+            debuglog_filename   =   self.get_debuglog_file_name()
+        
+            if(not (does_file_exist(debuglog_filename))) :
+
+                with open(debuglog_filename, 'w') as debug_file :
+                    json.dump(self.debug_log,debug_file)
+                    debug_file.close()
+            else :
+                
+                try :
+
+                    with open(debuglog_filename, 'r') as debuglog_file :
+                        self.debuglog = json.load(debuglog_file)
+                        debuglog_file.close()
+                        
+                    self.debug_log_loaded = True
+                    
+                except json.JSONDecodeError :
+                    print("Error Log File Corrupted")
+                except :
+                    print("[Load Error Log Error] "  + str(sys.exc_info()[0].__name__))
+        
+    def save_debuglog_file(self) :
+        
+        if(1) :#self.error_log_loaded) :
+    
+            try :
+                with open(self.get_debuglog_file_name(), 'w') as debuglog_file :
+                    json.dump(self.debug_log,debuglog_file)
+                    debuglog_file.close()
+            
+            except :
+                print("[Save Error Log Error] "  + str(sys.exc_info()[0].__name__))    
+   
+    def add_debug_to_dfc_log(self,msg) :
+        
+        import datetime
+        date = datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
+        
+        self.debug_log.append("[" + date + "]" + msg) 
+        self.save_debuglog_file()   
+  
+    def get_debug_log(self) :
+        return(self.debug_log) 
+
+    def clear_log(self) :
+        self.debug_log               =   []
+        
+
+    
+dfc_debug_log   =   DataframeCleanserDebugLogger()  
+
+
 
 
 
@@ -2010,16 +2137,6 @@ def set_chapters_loaded(cellsList) :
     
     set_config_value(DFC_CHAPTERS_LOADED_KEY, cellsList,True)
    
-
-#def get_loaded_cells() :
-
-#    run_javascript("window.getdfcChaptersLoaded();",
-#                   "Unable to get cells loaded")
-    
-#    from dfcleanser.common.common_utils import log_debug_dfc
-#    log_debug_dfc(-1,"get_loaded_cells")
-
-
 def check_if_dc_init() :
     
     if( not(DataframeCleanserCfgData.get_notebookname() == None) ) :
@@ -2027,16 +2144,13 @@ def check_if_dc_init() :
             return(True)
     else :
         return(False)
-
         
 def save_current_notebook() :
 
     run_javascript("window.saveCurrentNotebook();",
                    "Unable to save notebook")
     
-    from dfcleanser.common.common_utils import log_debug_dfc
-    log_debug_dfc(-1,"save current notebook")
-
+    add_debug_to_log("save_current_notebook","Unable to save notebook")
 
 
 """
