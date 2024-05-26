@@ -24,10 +24,10 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-
-DEBUG_TRANSFORM_COLUMN            =   False
-DEBUG_TRANSFORM_COLUMN_DETAILS    =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataTransform_ID
 
 
 # -----------------------------------------------------------------#
@@ -51,33 +51,33 @@ class DataTransform_transform_columns_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_transform_columns_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_transform_columns_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget] end"))
 
     def reload_banner(self) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][reload_data] "))
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][init_form]"))
 
         self.init_command_bar()
 
@@ -97,14 +97,14 @@ class DataTransform_transform_columns_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][init_form] end"))
 
 
     def init_command_bar(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][init_command_bar]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -145,8 +145,8 @@ class DataTransform_transform_columns_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataTransformCmdbarLayout)
         self.parent.form.DataTransformCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][init_command_bar] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][init_command_bar] end"))
 
 
     # -----------------------------------------------------------------#
@@ -155,87 +155,78 @@ class DataTransform_transform_columns_Widget(QtWidgets.QWidget):
 
     def rename_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][rename_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][rename_column]"))
 
         self.parent.display_rename_column_form()
    
     def drop_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][drop_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][drop_column]"))
 
         self.parent.display_drop_column()
     
     def reorder_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][reorder_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][reorder_column]"))
 
         self.parent.display_reorder_column()
 
     def save_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][save_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][save_column]"))
 
         self.parent.display_save_columns()        
  
     def copy_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][copy_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][copy_column]"))
         
         self.parent.display_copy_column()        
 
     def apply_fn_to_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][apply_fn_to_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][apply_fn_to_column]"))
 
         self.parent.display_apply_fn_column()
 
-    """
-    def add_column(self) :
-
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][add_column]")
-
-        self.parent.display_add_column()
-    """
-
     def map_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][map_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][map_column]"))
         
         self.parent.display_map_column()
 
     def dummies_for_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][dummies_for_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][dummies_for_column]"))
 
         self.parent.display_dummies_column()
 
     def make_cat_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][make_cat_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][make_cat_column]"))
 
         self.parent.display_category_column()
 
     def datatype_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][datatype_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][datatype_column]"))
 
         self.parent.display_change_column_datatype(None)
     
     def help_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][return_from_cleanse_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][return_from_cleanse_column]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ID
@@ -244,8 +235,8 @@ class DataTransform_transform_columns_Widget(QtWidgets.QWidget):
 
     def return_from_cleanse_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_transform_columns_Widget][return_from_cleanse_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_transform_columns_Widget][return_from_cleanse_column]"))
 
         self.parent.init_stacked_index()
 
@@ -272,26 +263,26 @@ class DataTransform_rename_column_form_Widget(QtWidgets.QWidget):
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_rename_columns_Widget][init] dftitle : ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][init] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_rename_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_columns_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
 
@@ -340,13 +331,13 @@ class DataTransform_rename_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformRenameFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][init_form] end"))
 
     def select_column_to_rename(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_columns_Widget][select_column_to_rename]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][select_column_to_rename]"))
 
         row_number      =   None
         column_number   =   None
@@ -355,15 +346,15 @@ class DataTransform_rename_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_columns_Widget][select_column_to_rename] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][select_column_to_rename] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_rename_columns_Widget][select_column_to_rename] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][select_column_to_rename] : colname [",cell,"]"))
 
         self.rename_form.set_form_input_value_by_index(0,cell)
 
@@ -372,8 +363,8 @@ class DataTransform_rename_column_form_Widget(QtWidgets.QWidget):
         old_name    =   self.rename_form.get_form_input_value_by_index(0)
         new_name    =   self.rename_form.get_form_input_value_by_index(1)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][rename_column_name] : old name : new_name ",old_name,new_name)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][rename_column_name] : old name : new_name ",old_name,new_name))
 
         from dfcleanser.Qt.data_transform.DataTransformColumnsControl import process_rename_column
         process_rename_column(self.dftitle,old_name,new_name)
@@ -382,15 +373,15 @@ class DataTransform_rename_column_form_Widget(QtWidgets.QWidget):
 
     def universal_column_names(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][universal_column_names] : ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][universal_column_names] : "))
 
         self.parent.display_universal_rename_column_form() 
 
     def return_from_rename_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][return_from_rename_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][return_from_rename_column] "))
 
         self.parent.display_transform_columns()
 
@@ -408,26 +399,26 @@ class DataTransform_universal_column_form_Widget(QtWidgets.QWidget):
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_universal_column_form_Widget][init] dftitle : ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][init] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_universal_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            padd_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
 
@@ -492,13 +483,13 @@ class DataTransform_universal_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformRenameFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][init_form] end"))
 
     def select_column_to_rename(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][select_column_to_rename]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][select_column_to_rename]"))
 
         row_number      =   None
         column_number   =   None
@@ -507,15 +498,15 @@ class DataTransform_universal_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][select_column_to_rename] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][select_column_to_rename] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_universal_column_form_Widget][select_column_to_rename] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][select_column_to_rename] : colname [",cell,"]"))
 
         self.rename_form.set_form_input_value_by_index(0,cell)
 
@@ -524,8 +515,8 @@ class DataTransform_universal_column_form_Widget(QtWidgets.QWidget):
         old_name    =   self.rename_form.get_form_input_value_by_index(0)
         new_name    =   self.rename_form.get_form_input_value_by_index(1)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][check_universal_names] : old name : new_name ",old_name,new_name)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][check_universal_names] : old name : new_name ",old_name,new_name))
 
         from dfcleanser.Qt.data_transform.DataTransformColumnsControl import process_rename_column
         process_rename_column(self.dftitle,old_name,new_name)
@@ -534,15 +525,15 @@ class DataTransform_universal_column_form_Widget(QtWidgets.QWidget):
 
     def make_universal_names(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][make_universal_names] : ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][make_universal_names] : "))
 
         #self.parent.display_universal_column_names() 
 
     def return_from_universal_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_universal_column_form_Widget][return_from_universal_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_universal_column_form_Widget][return_from_universal_column] "))
 
         self.parent.display_transform_columns()
 
@@ -556,8 +547,8 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_drop_column_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_column_Widget][init] "))
 
         super().__init__()
 
@@ -566,13 +557,13 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_drop_column_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_column_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_column_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_column_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -580,8 +571,8 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_column_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_column_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
@@ -614,8 +605,8 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformDropLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_columns_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][init_form] end"))
 
 
     # -----------------------------------------------------------------#
@@ -624,8 +615,8 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
 
     def select_column_to_drop(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_columns_Widget][select_column_to_drop]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_drop]"))
    
         row_number      =   None
         column_number   =   None
@@ -634,15 +625,15 @@ class DataTransform_drop_column_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_columns_Widget][select_column_to_drop] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_drop] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_drop_columns_Widget][select_column_to_drop] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_drop] : colname [",cell,"]"))
 
         from dfcleanser.Qt.data_transform.DataTransformColumnsControl import process_drop_column
         process_drop_column(self.dftitle,cell)
@@ -673,18 +664,18 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   None  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_add_columns_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_columns_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_add_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_columns_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_columns_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -692,8 +683,8 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_use]
@@ -746,13 +737,13 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformAddFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget][init_form] end"))
 
     def select_column_to_use(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_columns_Widget][select_column_to_use]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_use]"))
    
         row_number      =   None
         column_number   =   None
@@ -761,15 +752,15 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_drop_columns_Widget][select_column_to_drop] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_drop] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_drop_columns_Widget][select_column_to_drop] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_drop_columns_Widget][select_column_to_drop] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -786,8 +777,8 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
 
     def get_column_values_from_fns(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_form_Widget][get_column_values_from_fns] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget][get_column_values_from_fns] ")
 
         self.new_colname    =   self.add_form.get_form_input_value_by_index(1)
 
@@ -804,8 +795,8 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
 
     def get_column_values_from_code(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_form_Widget][get_column_values_from_code] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget][get_column_values_from_code] "))
 
         self.new_colname    =   self.add_form.get_form_input_value_by_index(1)
 
@@ -822,15 +813,15 @@ class DataTransform_add_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_add_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][return_from_add_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][return_from_add_column] "))
 
         self.parent.display_add_column()
 
     def help_for_add_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_rename_column_form_Widget][help_for_add_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_rename_column_form_Widget][help_for_add_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ADD_FILE_ID
@@ -851,18 +842,18 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.new_colname    =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_add_column_from_fns_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_add_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,new_colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -870,8 +861,8 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -921,18 +912,18 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformAddFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][init_form] end"))
 
     def select_add_dfc_fn(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][select_add_dfc_fn] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][select_add_dfc_fn] "))
 
         self.dfc_fn     =   self.add_form.get_form_input_value_by_index(1) 
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] : self.dfc_fn ",self.dfc_fn)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] : self.dfc_fn ",self.dfc_fn))
 
         from dfcleanser.sw_utilities.GenericFunctionsModel import genfns, genfns_with_parms
         if(self.dfc_fn in genfns)   :
@@ -942,12 +933,7 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
             open_paren      =     self.dfc_fn.find("(") 
             close_paren     =     self.dfc_fn.find(")") 
 
-            print("self.dfc_fn",self.dfc_fn)
-            print("open_paren",open_paren)
-            print("close_paren ",close_paren)
-
             parms_list      =   self.dfc_fn[(open_paren+1):(close_paren)]
-            print("parms_list ",type(parms_list),parms_list)
 
             parms           =   []
 
@@ -955,8 +941,6 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
                 parms   =   parms_list.split(",")
             else :
                 parms.append(parms_list)
-
-            print("parms",parms)
 
             parms_dict  =   "{ "
             for i in range(len(parms)) :
@@ -973,8 +957,8 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
 
     def add_column_from_fns(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][add_column_from_fns] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][add_column_from_fns] "))
 
         self.new_colname    =   self.add_form.get_form_input_value_by_index(0)
         self.dfc_fn         =   self.add_form.get_form_input_value_by_index(1)
@@ -986,15 +970,15 @@ class DataTransform_add_column_from_fns_form_Widget(QtWidgets.QWidget):
        
     def return_from_add_column_from_fns(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][return_from_add_column_from_fns] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][return_from_add_column_from_fns] "))
 
         self.parent.display_add_column()
 
     def help_for_add_column_from_fns(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_fns_form_Widget][help_for_add_column_from_fns] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_fns_form_Widget][help_for_add_column_from_fns] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ADD_FILE_ID
@@ -1016,18 +1000,18 @@ class DataTransform_add_column_from_user_code_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_add_column_from_user_code_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_add_column_from_user_code_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,new_colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_user_code_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1046,8 +1030,8 @@ class DataTransform_add_column_from_user_code_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_user_code_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -1091,13 +1075,13 @@ class DataTransform_add_column_from_user_code_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformAddFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_user_code_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][init_form] end"))
 
     def add_column_from_user_code(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_user_code_form_Widget][add_column_from_user_code] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][add_column_from_user_code] "))
 
         new_colname     =   self.add_form.get_form_input_value_by_index(0)      
         user_code       =   self.add_form.get_form_input_value_by_index(1)
@@ -1107,15 +1091,15 @@ class DataTransform_add_column_from_user_code_form_Widget(QtWidgets.QWidget):
 
     def return_from_add_column_from_user_code(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_user_code_form_Widget][return_from_add_column_from_user_code] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_user_code_form_Widget][return_from_add_column_from_user_code] "))
 
         self.parent.display_add_column()
 
     def help_for_add_column_from_user_code(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_user_code_fns_form_Widget][help_for_add_column_from_user_code] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_user_code_fns_form_Widget][help_for_add_column_from_user_code] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ADD_USER_ID
@@ -1136,18 +1120,18 @@ class DataTransform_add_column_from_merge_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         #self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_add_column_from_merge_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_add_column_from_merge_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1155,8 +1139,8 @@ class DataTransform_add_column_from_merge_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -1272,45 +1256,45 @@ class DataTransform_add_column_from_merge_form_Widget(QtWidgets.QWidget):
 
             self.setLayout(self.DataTransformAddFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][init_form] end"))
 
     def add_col_merge_change_df(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][add_col_df_change_df] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][add_col_df_change_df] "))
 
     def add_col_merge_change_col(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][add_col_df_change_col] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][add_col_df_change_col] "))
 
     def add_col_merge_change_copy(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][add_col_change_copy] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][add_col_change_copy] "))
 
     def add_column_from_merge(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][add_column_from_merge] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][add_column_from_merge] "))
 
     def clear_from_add_column_from_merge(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][clear_from_add_column_from_merge] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][clear_from_add_column_from_merge] "))
        
     def return_from_add_column_from_merge(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_merge_form_Widget][return_from_add_column_from_merge] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_merge_form_Widget][return_from_add_column_from_merge] "))
 
         self.parent.display_add_column()
 
     def help_for_add_column_from_merge(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_merge_form_Widget][help_for_add_column_from_merge] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_merge_form_Widget][help_for_add_column_from_merge] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ADD_DF_ID
@@ -1331,18 +1315,18 @@ class DataTransform_add_column_from_join_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         #self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_add_column_from_join_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_add_column_from_join_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1350,8 +1334,8 @@ class DataTransform_add_column_from_join_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -1427,45 +1411,45 @@ class DataTransform_add_column_from_join_form_Widget(QtWidgets.QWidget):
 
             self.setLayout(self.DataTransformAddFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][init_form] end"))
 
     def add_col_df_change_df(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][add_col_df_change_df] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][add_col_df_change_df] "))
 
     def add_col_df_change_col(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][add_col_df_change_col] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][add_col_df_change_col] "))
 
     def add_col_change_copy(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][add_col_df_add_col_change_copy] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][add_col_df_add_col_change_copy] "))
 
     def add_column_from_join(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][add_column_from_join] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][add_column_from_join] "))
 
     def clear_from_add_column_from_join(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][clear_from_add_column_from_join] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][clear_from_add_column_from_join] ")
        
     def return_from_add_column_from_join(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_from_join_form_Widget][return_from_add_column_from_join] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_from_join_form_Widget][return_from_add_column_from_join] "))
 
         self.parent.display_add_column()
 
     def help_for_add_column_from_join(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_add_column_join_form_Widget][help_for_add_column_from_join] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_add_column_join_form_Widget][help_for_add_column_from_join] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_ADD_DF_ID
@@ -1486,29 +1470,29 @@ class DataTransform_reorder_column_Widget(QtWidgets.QWidget):
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_reorder_column_Widget][init] dftitle : ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][init] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_reorder_column_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][reload_data]",self.cols_to_reorder_List.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][reload_data]",self.cols_to_reorder_List.count()))
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
@@ -1572,8 +1556,8 @@ class DataTransform_reorder_column_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformReorderLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][init_form] end"))
 
     def load_columns_order(self) :
 
@@ -1584,19 +1568,19 @@ class DataTransform_reorder_column_Widget(QtWidgets.QWidget):
         
         from PyQt5.QtWidgets import  QListWidgetItem
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][load_columns_order]",self.cols_to_reorder_List.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][load_columns_order]",self.cols_to_reorder_List.count()))
 
         for i in range(len(columns)) :
             QListWidgetItem(columns[i],self.cols_to_reorder_List)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][load_columns_order]",self.cols_to_reorder_List.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][load_columns_order]",self.cols_to_reorder_List.count()))
             
     def reorder_columns(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][reorder_columns]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][reorder_columns]")
 
         total_cols  =   self.cols_to_reorder_List.count()
 
@@ -1611,15 +1595,15 @@ class DataTransform_reorder_column_Widget(QtWidgets.QWidget):
 
     def return_from_reorder_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][return_from_reorder_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][return_from_reorder_column]"))
 
         self.parent.display_transform_columns()
 
     def help_for_reorder_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_reorder_column_Widget][help_for_reorder_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_reorder_column_Widget][help_for_reorder_column]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_REORDER_ID
@@ -1642,18 +1626,18 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         #self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_save_column_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_save_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1661,8 +1645,8 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_save]
@@ -1714,14 +1698,14 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformSaveFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][init_form] end"))
 
     
     def browse_to_fle_path(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][browse_to_fle_path] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][browse_to_fle_path] "))
 
 
         from PyQt5.QtWidgets import QFileDialog
@@ -1730,8 +1714,8 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
 
     def select_column_to_save(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][select_column_to_save]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][select_column_to_save]"))
 
         row_number      =   None
         column_number   =   None
@@ -1744,8 +1728,8 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_save_column_form_Widget][select_column_to_save] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][select_column_to_save] : colname [",cell,"]"))
 
         current_save_list   =   self.save_form.get_form_input_value_by_index(0)
 
@@ -1766,8 +1750,8 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
 
     def save_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][save_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][save_column] "))
 
         cols_to_save    =   self.save_form.get_form_input_value_by_index(0)
         file_name       =   self.save_form.get_form_input_value_by_index(1)
@@ -1778,15 +1762,15 @@ class DataTransform_save_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_save_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][return_from_save_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][return_from_save_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_save_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_save_column_form_Widget][help_for_save_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_save_column_form_Widget][help_for_save_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_SAVE_ID
@@ -1808,18 +1792,18 @@ class DataTransform_copy_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         #self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_copy_column_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_copy_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1827,8 +1811,8 @@ class DataTransform_copy_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_copy]
@@ -1877,13 +1861,13 @@ class DataTransform_copy_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformCopyFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][init_form] end"))
 
     def select_column_to_copy(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][select_column_to_copy]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][select_column_to_copy]"))
 
         row_number      =   None
         column_number   =   None
@@ -1892,22 +1876,22 @@ class DataTransform_copy_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][select_column_to_copy] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][select_column_to_copy] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_copy_column_form_Widget][select_column_to_copy] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][select_column_to_copy] : colname [",cell,"]"))
 
         self.copy_form.set_form_input_value_by_index(0,cell)
  
     def copy_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][copy_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][copy_column] "))
 
         existing_col    =   self.copy_form.get_form_input_value_by_index(0)
         new_col         =   self.copy_form.get_form_input_value_by_index(1)
@@ -1918,15 +1902,15 @@ class DataTransform_copy_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_copy_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][return_from_copy_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][return_from_copy_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_copy_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_copy_column_form_Widget][help_for_copy_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_copy_column_form_Widget][help_for_copy_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_COPY_ID
@@ -1954,18 +1938,18 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   None 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_apply_fn_select_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_apply_fn_select_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+           add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1973,8 +1957,8 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.DataTrnasformapplyfnLayout     =   QVBoxLayout()
@@ -2029,13 +2013,13 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTrnasformapplyfnLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][init_form] end"))
 
     def select_column_to_apply_fn_to(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataCleansing_cleanse_columns_Widget][select_column_to_apply_fn_to")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataCleansing_cleanse_columns_Widget][select_column_to_apply_fn_to"))
 
         row_number      =   None
         column_number   =   None
@@ -2044,15 +2028,15 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][select_column_to_cleanse] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][select_column_to_cleanse] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_apply_fn_select_Widget][select_column_to_cleanse] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][select_column_to_cleanse] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -2060,8 +2044,8 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
 
     def display_dfc_fn_form(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][display_dfc_fn_form] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][display_dfc_fn_form] "))
 
         if(not (self.colname is None)) :
         
@@ -2077,8 +2061,8 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
     
     def display_user_fn_form(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][display_user_fn_form] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][display_user_fn_form] "))
         
         if(not (self.colname is None)) :
         
@@ -2093,15 +2077,15 @@ class DataTransform_apply_fn_select_Widget(QtWidgets.QWidget):
 
     def return_from_apply_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][return_from_apply_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][return_from_apply_fn_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_apply_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_fn_select_Widget][help_for_apply_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_fn_select_Widget][help_for_apply_fn_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_APPLY_FN_ID
@@ -2124,18 +2108,18 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2] 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_apply_dfc_fn_form_Widget][init] : colname ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][init] : colname ",self.colname))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_apply_dfc_fn_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2143,8 +2127,8 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -2191,19 +2175,19 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformApplyFnFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][init_form] end"))
 
 
     def select_dfc_fn(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] "))
 
         self.dfc_fn     =   self.apply_dfc_fn_form.get_form_input_value_by_index(0) 
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] : self.dfc_fn ",self.dfc_fn)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][select_dfc_fn] : self.dfc_fn ",self.dfc_fn))
 
         from dfcleanser.sw_utilities.GenericFunctionsModel import genfns, genfns_with_parms
         if(self.dfc_fn in genfns)   :
@@ -2213,12 +2197,7 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
             open_paren      =     self.dfc_fn.find("(") 
             close_paren     =     self.dfc_fn.find(")") 
 
-            print("self.dfc_fn",self.dfc_fn)
-            print("open_paren",open_paren)
-            print("close_paren ",close_paren)
-
             parms_list      =   self.dfc_fn[(open_paren+1):(close_paren)]
-            print("parms_list ",type(parms_list),parms_list)
 
             parms           =   []
 
@@ -2226,8 +2205,6 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
                 parms   =   parms_list.split(",")
             else :
                 parms.append(parms_list)
-
-            print("parms",parms)
 
             parms_dict  =   "{ "
             for i in range(len(parms)) :
@@ -2245,8 +2222,8 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
 
     def apply_fn_to_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  DataTransform_apply_dfc_fn_form_Widget][apply_fn_to_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("DataTransform_apply_dfc_fn_form_Widget][apply_fn_to_column] "))
 
         self.dfc_fn     =   self.apply_dfc_fn_form.get_form_input_value_by_index(0)
         self.fn_parms   =   self.apply_dfc_fn_form.get_form_input_value_by_index(1)
@@ -2257,15 +2234,15 @@ class DataTransform_apply_dfc_fn_form_Widget(QtWidgets.QWidget):
 
     def return_from_apply_dfc_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][return_from_apply_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][return_from_apply_fn_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_apply_dfc_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_dfc_fn_form_Widget][help_for_apply_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_dfc_fn_form_Widget][help_for_apply_fn_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_APPLY_USER_FN_ID
@@ -2287,18 +2264,18 @@ class DataTransform_apply_user_fn_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2] 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_apply_user_fn_form_Widget][init] : colname ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][init] : colname ",self.colname))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_apply_user_fn_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_user_fn_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2321,8 +2298,8 @@ class DataTransform_apply_user_fn_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_user_fn_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_fn]
@@ -2369,13 +2346,13 @@ class DataTransform_apply_user_fn_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformApplyFnFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_user_fn_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][init_form] end"))
     
     def select_column_to_fn(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map]"))
 
         row_number      =   None
         column_number   =   None
@@ -2384,23 +2361,23 @@ class DataTransform_apply_user_fn_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
         
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map] : colname [",cell,"]"))
 
         self.map_form.set_form_input_value_by_index(0,cell)
         self.colname    =   cell
 
     def apply_user_fn_to_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  DataTransform_apply_user_fn_form_Widget][apply_user_fn_to_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("DataTransform_apply_user_fn_form_Widget][apply_user_fn_to_column] "))
 
         user_code   =   self.apply_user_fn_form.get_form_input_value_by_index(0)
 
@@ -2421,15 +2398,15 @@ class DataTransform_apply_user_fn_form_Widget(QtWidgets.QWidget):
 
     def return_from_apply_user_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_user_fn_form_Widget][return_from_apply_user_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][return_from_apply_user_fn_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_apply_user_fn_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_apply_user_fn_form_Widget][help_for_apply_user_fn_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_apply_user_fn_form_Widget][help_for_apply_user_fn_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_APPLY_USER_FN_ID
@@ -2453,18 +2430,18 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.column_to_map  =   "Undefined"
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_map_column_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_map_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][reload_data] "))
 
         self.parent             =   parent
         self.dftitle            =   dftitle
@@ -2489,8 +2466,8 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_map]
@@ -2540,13 +2517,13 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformMapFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][init_form] end"))
     
     def select_column_to_map(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map]"))
 
         row_number      =   None
         column_number   =   None
@@ -2555,15 +2532,15 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
         
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_map_column_form_Widget][select_column_to_map] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][select_column_to_map] : colname [",cell,"]"))
 
         self.map_form.set_form_input_value_by_index(0,cell)
         self.colname    =   cell
@@ -2572,8 +2549,8 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
 
     def map_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][map_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][map_column] "))
 
         map_function    =  self.map_form.get_form_input_value_by_index(1) 
 
@@ -2594,15 +2571,15 @@ class DataTransform_map_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_map_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][return_from_map_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][return_from_map_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_map_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_map_column_form_Widget][help_for_map_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_map_column_form_Widget][help_for_map_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_MAP_ID
@@ -2625,18 +2602,18 @@ class DataTransform_dummies_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         #self.colname        =   dfparms[2]  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_dummies_column_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_dummies_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2646,8 +2623,8 @@ class DataTransform_dummies_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_dummy]
@@ -2698,13 +2675,13 @@ class DataTransform_dummies_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformDummiesFormLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][init_form] end"))
 
     def select_column_to_dummy(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][select_column_to_dummy]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][select_column_to_dummy]"))
 
         row_number      =   None
         column_number   =   None
@@ -2713,21 +2690,21 @@ class DataTransform_dummies_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][select_column_to_dummy] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][select_column_to_dummy] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_dummies_column_form_Widget][select_column_to_dummy] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            padd_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][select_column_to_dummy] : colname [",cell,"]"))
 
         self.dummies_form.set_form_input_value_by_index(0,cell)
 
     def make_dummies_for_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][make_dummies_for_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][make_dummies_for_column] "))
 
         dummy_col   =   self.dummies_form.get_form_input_value_by_index(0)
         remove_col  =   self.dummies_form.get_form_input_value_by_index(1)
@@ -2743,15 +2720,15 @@ class DataTransform_dummies_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_dummies_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][return_from_dummies_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][return_from_dummies_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_dummies_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_dummies_column_form_Widget][help_for_dummies_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_dummies_column_form_Widget][help_for_dummies_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_DUMMY_ID
@@ -2790,7 +2767,7 @@ class ColumnUniquesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -2841,23 +2818,23 @@ class ColumnUniquesTable(QtWidgets.QTableView):
         self.colname            =   colparms[1]
         self.callback           =   colparms[2]
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[ColumnUniquesTable] : init")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable] : init"))
 
         self.init_tableview()
 
         self.doubleClicked.connect(self.callback) 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[ColumnUniquesTable] : end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self,dftitle,colname):
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [ColumnUniquesTable][reload_data] : dftile : colname : ",dftitle,colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable][reload_data] : dftile : colname : ",dftitle,colname))
 
         self.dftitle    =   dftitle
         self.colname    =   colname
@@ -2880,23 +2857,23 @@ class ColumnUniquesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [ColumnUniquesTable][init_tableview]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statsdata     =   self.load_columns_info_data()
         
-        if(DEBUG_TRANSFORM_COLUMN_DETAILS) :
-           print("  [ColumnUniquesTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN_DETAILS")) :
+           add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = ColumnUniquesModel(statsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-           print("  [ColumnUniquesTable][init_tableview] : model loaded")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+           add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statsdata)
         
@@ -2939,8 +2916,8 @@ class ColumnUniquesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_info_data(self):
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [ColumnUniquesTable][load_columns_info_data]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable][load_columns_info_data]"))
 
         data    =   []
 
@@ -2960,10 +2937,10 @@ class ColumnUniquesTable(QtWidgets.QTableView):
                 data_row.append(str(uniques[i]))
                 data.append(data_row)
 
-            if(DEBUG_TRANSFORM_COLUMN_DETAILS) :
-                print("  [ColumnUniquesTable] : data")
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN_DETAILS")) :
+                add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[ColumnUniquesTable] : data"))
                 for j in range(len(data)) :
-                    print("  [",j,"] : ",data[j])
+                    add_debug_to_log("DataTransformColumnsWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         else :
 
@@ -2990,18 +2967,18 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   None 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_category_column_form_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][init] "))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("[DataTransform_category_column_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -3012,8 +2989,8 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_category_column]
@@ -3089,13 +3066,13 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformCategoryLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][init_form] end"))
 
     def select_unique_value(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][select_unique_value] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][select_unique_value] "))
 
         unique_option   =   self.category_form.get_form_input_value_by_index(2)
 
@@ -3108,20 +3085,20 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
                 row_number = int(idx.row())
                 column_number = int(idx.column())
 
-            if(DEBUG_TRANSFORM_COLUMN) :
-                print("  [DataTransform_category_column_form_Widget][select_unique_value] ",row_number,column_number)
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+                add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][select_unique_value] ",row_number,column_number))
 
             model   =   self.uniques.model
             tdata   =   model.get_data()
             cell    =   tdata[row_number][0]
 
-            if(DEBUG_TRANSFORM_COLUMN) :    
-                print("  [DataTransform_category_column_form_Widget][select_unique_value] : colname [",cell,"]")
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+                add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][select_unique_value] : colname [",cell,"]"))
 
             uniques_list   =   self.category_form.get_form_input_value_by_index(3)
             
-            if(DEBUG_TRANSFORM_COLUMN) :    
-                print("  [DataTransform_category_column_form_Widget][uniques_list] ",uniques_list)
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+                add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][uniques_list] ",uniques_list))
 
             if( (uniques_list is None) or (len(uniques_list) == 0) ) :
                 new_uniques_list    =   "[" + str(cell) + "]"
@@ -3133,8 +3110,8 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
 
     def select_category_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][select_category_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][select_category_column] "))
         
         row_number      =   None
         column_number   =   None
@@ -3143,8 +3120,8 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][select_category_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][select_category_column] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
@@ -3157,8 +3134,8 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
 
     def make_category_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][make_category_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][make_category_column] "))
 
         colname         =   self.category_form.get_form_input_value_by_index(0) 
         order_flag      =   self.category_form.get_form_input_value_by_index(1) 
@@ -3172,15 +3149,15 @@ class DataTransform_category_column_form_Widget(QtWidgets.QWidget):
 
     def return_from_category_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][return_from_copy_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][return_from_copy_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_category_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_category_column_form_Widget][help_for_copy_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_category_column_form_Widget][help_for_copy_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_CAT_ID
@@ -3203,18 +3180,18 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("\n[DataTransform_change_datatype_form_Widget][init] : colname ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][init] : colname ",self.colname))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][reload_data] ",dftitle,colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][reload_data] ",dftitle,colname))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -3230,8 +3207,8 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms              =    [self.dftitle,15,self.select_column_to_change_datatype]
@@ -3252,8 +3229,8 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
         else :    
             self.total_nans     =   df[self.colname].isnull().sum()
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][after colstats]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][after colstats]"))
 
         import dfcleanser.Qt.data_transform.DataTransformColumnsModel as DTCM
 
@@ -3282,8 +3259,8 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
                 dtypes          =   {"default":datatypes_list[0],"list":get_datatypes_list(False)}
             selectDicts.append(dtypes)
         
-            if(DEBUG_TRANSFORM_COLUMN) :
-                print("  [DataTransform_change_datatype_form_Widget][after selectDicts]")
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+                add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][after selectDicts]"))
 
         else :
 
@@ -3335,8 +3312,8 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
 
         self.change_datatype_form.set_form_input_value_by_index(0,self.colname)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][after colstats]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            padd_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][after colstats]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
 
@@ -3347,14 +3324,14 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataTransformchange_datatypeLayout)
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][init_form] end"))
 
 
     def select_column_to_change_datatype(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][select_column_to_change_datatype]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][select_column_to_change_datatype]"))
 
         row_number      =   None
         column_number   =   None
@@ -3363,15 +3340,15 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][select_column_to_change_datatype] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][select_column_to_change_datatype] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_COLUMN) :    
-            print("  [DataTransform_change_datatype_form_Widget][select_column_to_change_datatype] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :    
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][select_column_to_change_datatype] : colname [",cell,"]"))
 
         self.parent.display_change_column_datatype(cell)
 
@@ -3382,8 +3359,8 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
         opstat  =   opStatus()
 
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][change_datatype_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][change_datatype_column] "))
 
         if(self.total_nans > 0) :
 
@@ -3422,15 +3399,15 @@ class DataTransform_change_datatype_form_Widget(QtWidgets.QWidget):
 
     def return_from_change_datatype_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][return_from_change_datatype_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][return_from_change_datatype_column] "))
 
         self.parent.display_transform_columns()
 
     def help_for_change_datatype_column(self) :
 
-        if(DEBUG_TRANSFORM_COLUMN) :
-            print("  [DataTransform_change_datatype_form_Widget][help_for_change_datatype_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")) :
+            add_debug_to_log("DataTransformColumnsWidgets",print_to_string("[DataTransform_change_datatype_form_Widget][help_for_change_datatype_column] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_COLS_DTYPE_ID

@@ -21,9 +21,11 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5 import uic
 
 
-#import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_TRABSFORM_COLUMN           =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataTransform_ID
+
 
 
 
@@ -77,8 +79,8 @@ def process_rename_column(dftitle,oldcolname,newcolname) :
     
     opstat = opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_rename_column]",dftitle,oldcolname,newcolname)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransformColumns",print_to_string("[process_rename_column]",dftitle,oldcolname,newcolname))
     
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
     df      =   get_dfc_dataframe_df(dftitle)
@@ -149,8 +151,8 @@ def process_drop_column(dftitle,colname) :
     
     opstat = opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_drop_column]",dftitle,colname)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_drop_column]",dftitle,colname))
     
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
     df      =   get_dfc_dataframe_df(dftitle)
@@ -229,8 +231,8 @@ def process_reorder_columns(dftitle,newcolorder) :
     
     opstat  =    opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_reorder_columns]",dftitle,"\n",newcolorder)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_reorder_columns]",dftitle,"\n",newcolorder))
      
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
     df      =   get_dfc_dataframe_df(dftitle)
@@ -284,9 +286,8 @@ def process_save_column(dftitle,colnames,fname,ftype,withIndex=False) :
     
     opstat = opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_save_column]",dftitle,colnames,fname,ftype,withIndex)
-
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_save_column]",dftitle,colnames,fname,ftype,withIndex))
     
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
     df      =   get_dfc_dataframe_df(dftitle)
@@ -379,9 +380,8 @@ def process_copy_column(dftitle,copyfromcol,copytocol) :
  
     opstat  =   opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_copy_column]",dftitle,copyfromcol,copytocol)
-
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_copy_column]",dftitle,copyfromcol,copytocol))
     
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
     df      =   get_dfc_dataframe_df(dftitle)
@@ -438,8 +438,8 @@ def process_apply_user_fn_to_column(user_code) :
     
     opstat  =   opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_apply_user_fn_to_column]process_apply_user_fn_to_column\n",user_code)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_apply_user_fn_to_column]process_apply_user_fn_to_column\n",user_code))
     
     fn_code         =   user_code
             
@@ -466,11 +466,6 @@ def process_apply_user_fn_to_column(user_code) :
         from dfcleanser.sw_utilities.dfc_qt_model import display_error_msg
         display_error_msg(title,status_msg)
 
-        #from dfcleanser.common.cfg import set_dfc_dataframe_df
-        #set_dfc_dataframe_df(dftitle,df)
-        #TBD
-
-
         opstat.set_status(False)
 
     return(opstat)        
@@ -491,8 +486,8 @@ def process_apply_dfc_fn_to_column(dftitle,colname,dfc_fn,fnparms,add_column_nam
     
     opstat  =   opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_apply_dfc_fn_to_column]",dftitle,colname,dfc_fn,fnparms,add_column_name)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_apply_dfc_fn_to_column]",dftitle,colname,dfc_fn,fnparms,add_column_name))
 
     if( (dftitle is None) or (len(dftitle) == 0) ) :
 
@@ -613,8 +608,8 @@ def get_column_from_dfc_apply_fn(df,dftitle,fntoapply,coltoapply,opstat) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[get_column_from_dfc_apply_fn]",dftitle,fntoapply,coltoapply)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[get_column_from_dfc_apply_fn]",dftitle,fntoapply,coltoapply))
     
     import numpy as np
     
@@ -698,8 +693,8 @@ def get_column_from_dfc_with_parms_apply_fn(df,fntoapply,coltoapply,parms_dict,o
     * -----------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[get_column_from_dfc_with_parms_apply_fn]",fntoapply,coltoapply,parms_dict)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[get_column_from_dfc_with_parms_apply_fn]",fntoapply,coltoapply,parms_dict))
             
     if(fntoapply == "round_float(ndigits)") :
         
@@ -965,8 +960,8 @@ def make_col_categorical_from_dummies(dftitle, colname, removeCol)  :
 
     opstat = opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[make_col_categorical_from_dummies]",dftitle, colname, removeCol)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies]",dftitle, colname, removeCol))
  
     import pandas as pd
 
@@ -990,9 +985,9 @@ def make_col_categorical_from_dummies(dftitle, colname, removeCol)  :
         
             dummies_df = pd.get_dummies(y)
 
-            if(DEBUG_TRABSFORM_COLUMN) :
-                print("[make_col_categorical_from_dummies] got caty : ")
-                print("[make_col_categorical_from_dummies] dummies : ",len(dummies_df.columns))
+            if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+                add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] got caty : "))
+                add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] dummies : ",len(dummies_df.columns)))
 
         except Exception as e:
             
@@ -1025,18 +1020,18 @@ def make_col_categorical_from_dummies(dftitle, colname, removeCol)  :
 
                 try :
 
-                    if(DEBUG_TRABSFORM_COLUMN) :
-                        print("[make_col_categorical_from_dummies] dummies : ",len(df.columns))
-                        print("[make_col_categorical_from_dummies] dummies : ",df.columns.tolist())
+                    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+                        add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] dummies : ",len(df.columns)))
+                        add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] dummies : ",df.columns.tolist()))
 
                     df = pd.concat([df, dummies_df], axis=1)
 
                     from dfcleanser.common.cfg import set_dfc_dataframe_df    
                     set_dfc_dataframe_df(dftitle,df)                             
 
-                    if(DEBUG_TRABSFORM_COLUMN) :
-                        print("[make_col_categorical_from_dummies] dummies : ",len(df.columns))
-                        print("[make_col_categorical_from_dummies] dummies : ",df.columns.tolist())
+                    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+                        add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] dummies : ",len(df.columns)))
+                        add_debug_to_log("DataTransform",print_to_string("[make_col_categorical_from_dummies] dummies : ",df.columns.tolist()))
             
                     title       =   "dfcleanser status : [process_dummies_column]"        
                     status_msg  =   "column dummies created successfully"
@@ -1111,9 +1106,9 @@ def process_category_convert_transform(dftitle,colname,order_flag,unique_option,
     
     opstat          =   opStatus()
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_category_convert_transform]",dftitle,colname,order_flag,unique_option)
-        print("[process_category_convert_transform] \n    ",uniques_list)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_category_convert_transform]",dftitle,colname,order_flag,unique_option))
+        add_debug_to_log("DataTransform",print_to_string("[process_category_convert_transform] \n    ",uniques_list))
 
     
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -1174,8 +1169,8 @@ def process_category_convert_transform(dftitle,colname,order_flag,unique_option,
 
             uniques_to_convert    =   df[colname].unique().tolist()            
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_category_convert_transform] uniques_to_convert : \n    ",uniques_to_convert)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_category_convert_transform] uniques_to_convert : \n    ",uniques_to_convert))
             
     if(opstat.get_status()) :
     
@@ -1206,8 +1201,8 @@ def process_category_convert_transform(dftitle,colname,order_flag,unique_option,
 
             opstat.set_status(False)
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_category_convert_transform] opstat : \n    ",opstat.get_status())
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_category_convert_transform] opstat : \n    ",opstat.get_status()))
 
     return(opstat)
 
@@ -1245,8 +1240,8 @@ def change_col_datatype(df,new_fillna_column,colname,datatype,opstat) :
     from dfcleanser.common.common_utils import get_datatype_from_dtype_str  
     new_datatype    =   get_datatype_from_dtype_str(datatype)
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[change_col_datatype]",colname,datatype,new_datatype)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[change_col_datatype]",colname,datatype,new_datatype))
         
     try :
             
@@ -1257,17 +1252,13 @@ def change_col_datatype(df,new_fillna_column,colname,datatype,opstat) :
             df[colname]    =   pd.to_datetime(df[colname])
 
         elif(datatype == "datetime.time") :
-            print("time")
             df[colname]    =   df[colname] = new_fillna_column.astype("datetime.time",copy=True)
-            print("time1")
             df[colname]    =   df[colname].dt.time
-            print("time2")
             df[colname]    =   pd.to_datetime(df[colname])
 
         elif(new_datatype == type(np.timedelta64)) :
             df[colname]    =   pd.to_timedelta(new_fillna_column,errors='ignore')
         else :
-            print("vanilla")
             df[colname]    =   df[colname] = new_fillna_column.astype(new_datatype,copy=True)
                 
     except Exception as e:
@@ -1296,8 +1287,8 @@ def process_change_column_datatype(dftitle,colname,datatype,nafillvalue,nafillme
     * ----------------------------------------------------
     """ 
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[process_change_column_datatype]",dftitle,colname,datatype,nafillvalue,nafillmethod,nafillthreshold)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[process_change_column_datatype]",dftitle,colname,datatype,nafillvalue,nafillmethod,nafillthreshold))
 
     opstat      =   opStatus()
     
@@ -1571,8 +1562,8 @@ def get_trig_values_for_column(df, dfcolname, trigfunc, opstat) :
     * -------------------------------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[get_trig_values_for_column]",dfcolname, trigfunc)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[get_trig_values_for_column]",dfcolname, trigfunc))
     
     try :
         
@@ -1613,8 +1604,8 @@ def random_int_range(df, randomIntLower, randomIntUpper,opstat) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[random_int_range]",randomIntLower, randomIntUpper)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[random_int_range]",randomIntLower, randomIntUpper))
 
     import random
     
@@ -1651,8 +1642,8 @@ def random_float_range(df, randomFloatLower, randomFloatUpper, opstat) :
     * ------------------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[random_float_range]",randomFloatLower, randomFloatUpper)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[random_float_range]",randomFloatLower, randomFloatUpper))
     
     import numpy as np
     import random
@@ -1690,8 +1681,8 @@ def random_datetime_range(df, randomdatetimeLower, randomdatetimeUpper,opstat) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_TRABSFORM_COLUMN) :
-        print("[random_datetime_range]",randomdatetimeLower, randomdatetimeUpper)
+    if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_COLUMN")N) :
+        add_debug_to_log("DataTransform",print_to_string("[random_datetime_range]",randomdatetimeLower, randomdatetimeUpper))
     
     import numpy as np
     import random

@@ -22,10 +22,12 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_TRANSFORM                 =   False
-DEBUG_TRANSFORM_DATAFRAMES      =   False
-DEBUG_TRANSFORM_DATETIME        =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataTransform_ID
+
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -214,21 +216,6 @@ class DataTransformGui(QtWidgets.QMainWindow):
         from dfcleanser.common.cfg import DataTransform_add_df_signal
         DataTransform_add_df_signal.connectSignal(self.add_new_df)
 
-        #set the window size for dfcleanser
-        #geometry = QtWidgets.QApplication.desktop().availableGeometry()
-
-        #print("geometry",geometry)
-        
-        #titleBarHeight = self.style().pixelMetric(
-        #    CustomizeWindowHint flag needs to be set first before the WindowCloseButtonHintQtGui.QStyle.PM_TitleBarHeight,
-        #    QtGui.QStyleOptionTitleBar(),
-        #    self
-        #)
-        #geometry.setHeight(geometry.height() - (titleBarHeight*2))
-        #geometry.setWidth(1109)
-        #self.setGeometry(geometry)
-
-
 
     def update(self):   
         self.update()
@@ -301,8 +288,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_transform_buttons(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][init_data_transform_buttons]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][init_data_transform_buttons]  "))
 
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
@@ -337,8 +324,9 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_transform_splash_screen(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][init_data_transform_splash_screen]  ")
+        from dfcleanser.common.cfg import DataTransform_ID
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][init_data_transform_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataTransform_ID
@@ -349,8 +337,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -362,8 +350,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_TRANSFORM) :
-            print("self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("self.df_select",type(self.df_select),self.df_select.count()))
 
         self.init_stacked_index()
 
@@ -372,8 +360,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_dfs_to_transform(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][init_dfs_to_transform]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][init_dfs_to_transform]  "))
         
         from dfcleanser.sw_utilities.dfc_qt_model import build_select_dfs_layout
         dfc_dfs_objects     =   build_select_dfs_layout("* dataframes_to_transform")
@@ -409,16 +397,16 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_transform_form(self):
         
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][init_data_transform_form]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][init_data_transform_form]  "))
 
         self.init_data_transform_buttons()
         self.init_data_transform_splash_screen()
         self.init_dfs_to_transform()
         self.init_stacked_index()
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][init_data_transform_form] end \n",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][init_data_transform_form] end \n",self.DataTransformWidgets_stack_dict,"\n"))
 
     # -----------------------------------------------------------------#
     # -              Main Gui Data Transform Methods                  -#
@@ -431,8 +419,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.form.TransformdataframeButton.toggle()
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][data_transform_dataframes]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][data_transform_dataframes]"))
 
         self.display_transform_dataframes()
 
@@ -443,8 +431,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.form.TransformrowsButton.toggle()
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][data_transform_rows]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][data_transform_rows]"))
 
     # -----------------------------------------------------------------#
     # -                       transform cols                          -#
@@ -453,8 +441,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.form.TransformcolumnsButton.toggle()
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][data_transform_columns]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][data_transform_columns]"))
 
         self.display_transform_columns()
 
@@ -465,8 +453,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.form.TransformdatetimeButton.toggle()
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][data_transform_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][data_transform_datetime]"))
 
         self.display_transform_datetime(DTDM.DATETIME_MAIN)
 
@@ -477,8 +465,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         #self.form.TransformhelpButton.toggle()
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][data_transform_help]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][data_transform_help]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_MAIN_TASKBAR_ID
@@ -492,8 +480,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_columns(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_transform_columns]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_columns]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -514,8 +502,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataCleansingGui][display_transform_columns]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_columns]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_COLUMN)
         
@@ -550,8 +538,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_transform_columns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_columns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,400)
 
@@ -561,8 +549,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_rename_column_form(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_rename_column_form]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_rename_column_form]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -603,8 +591,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_rename_column_form] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_rename_column_form] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,900)
     
@@ -613,8 +601,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_universal_rename_column_form(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_universal_rename_column_form]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_universal_rename_column_form]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -654,8 +642,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_universal_rename_column_form] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_universal_rename_column_form] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,900)
     
@@ -665,8 +653,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_drop_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_drop_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_drop_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -705,8 +693,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_drop_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_drop_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,700)
 
@@ -722,8 +710,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_add_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_add_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -762,15 +750,15 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_add_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,900)
 
     def display_add_colum_from_fns(self, new_colname):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_add_colum_from_fns]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_fns]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -824,15 +812,15 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_add_colum_from_fns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_fns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,650)
 
     def display_add_colum_from_user_code(self,newcolname):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_add_colum_from_user_code]  ",newcolname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_user_code]  ",newcolname))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -886,15 +874,15 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_add_colum_from_user_code] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_user_code] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,800)
 
     def display_add_colum_from_merge(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_add_colum_from_merge]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_merge]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -953,14 +941,14 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,800)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_add_colum_from_merge] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+           add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_merge] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     def display_add_colum_from_join(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_add_colum_from_join]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_join]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1020,8 +1008,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,1000)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_add_colum_from_join] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_add_colum_from_join] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         
     # -----------------------------------------------------------------#
@@ -1036,8 +1024,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_reorder_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_reorder_colum]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_reorder_colum]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1097,16 +1085,16 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,700)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_reorder_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_reorder_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
     # -----------------------------------------------------------------#
     # -                  display dummies column                       -#
     # -----------------------------------------------------------------#
     def display_dummies_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_dummies_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_dummies_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1166,8 +1154,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,800)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_dummies_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_dummies_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     
@@ -1177,8 +1165,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_save_columns(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_save_columns]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_save_columns]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1238,8 +1226,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,950)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_save_columns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_save_columns] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     # -----------------------------------------------------------------#
@@ -1247,8 +1235,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_copy_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_copy_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_copy_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1308,8 +1296,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,800)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_copy_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_copy_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     
@@ -1324,8 +1312,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_apply_fn_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_apply_fn_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_fn_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1385,8 +1373,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,900)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_apply_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     # -----------------------------------------------------------------#
@@ -1396,8 +1384,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.colname    =   colname
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_apply_fn_column]  ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_fn_column]  ",self.colname))
 
         dftitle     =   self.df_select.currentText()
         self.dftitle     =   dftitle
@@ -1444,8 +1432,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,600)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_apply_dfc_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_dfc_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
     # -----------------------------------------------------------------#
     # -                 display apply user fn columns                 -#
@@ -1454,8 +1442,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.colname    =   colname
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_apply_user_fn_column]  ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_user_fn_column]  ",self.colname))
 
         dftitle     =   self.df_select.currentText()
         self.dftitle     =   dftitle
@@ -1502,77 +1490,17 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,900)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_apply_user_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
-
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_apply_user_fn_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     # -----------------------------------------------------------------#
-    # -                      display select a column                  -#
-    # -----------------------------------------------------------------#
-    """
-    def display_select_column(self,select_column_for):
-
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_select_column] select_column_for ",select_column_for)
-
-        dftitle             =   self.df_select.currentText()
-        self.dftitle        =   dftitle
-        self.select_for     =   select_column_for
-        
-        from dfcleanser.common.common_utils import opStatus
-        opstat      =   opStatus()
-
-        data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_CHANGE_DATATYPE_SELECT_COLUMN)
-
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_select_column] data_transform_index ",data_transform_index)
-
-        
-        if(data_transform_index is None) :
-
-            try :
-
-                from dfcleanser.Qt.data_transform.DataTransformColumnsWidgets import DataTransform_select_column_form_Widget
-                parms               =   [self,self.dftitle,self.select_for]
-                self.select_form    =   DataTransform_select_column_form_Widget(parms)
-                
-            except Exception as e:
-
-                opstat.set_status(False)
-            
-                title       =   "dfcleanser exception"       
-                status_msg  =   "[display_select_column] error "
-                from dfcleanser.sw_utilities.dfc_qt_model import display_exception
-                display_exception(title,status_msg,e)
-
-            if(opstat.get_status()) :
-
-                current_index   =  len(self.DataTransformWidgets_stack_dict)
-                self.DataTransformWidgets_stack_dict.update({DISPLAY_CHANGE_DATATYPE_SELECT_COLUMN : current_index})
-                self.stackedLayout.addWidget(self.select_form)
-
-        else :
-
-            self.select_form.reload_data(self,self.dftitle,self.select_for)
-            current_index   =   data_transform_index
-
-        if(opstat.get_status()) :
-
-            self.stackedLayout.setCurrentIndex(current_index)
-            self.resize(1070,900)
-
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_select_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
-    """
-
-# -----------------------------------------------------------------#
     # -                    display map column                         -#
     # -----------------------------------------------------------------#
     def display_map_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_map_column]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            pradd_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_map_column]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1634,8 +1562,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,950)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_map_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_map_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
 
@@ -1644,8 +1572,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_category_column(self):
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_category_column] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_category_column] "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1706,8 +1634,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,950)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_category_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_category_column] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
 
@@ -1718,8 +1646,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         self.colname    =   colname
 
-        if(DEBUG_TRANSFORM) :
-            print("\n[DataTransformGui][display_change_column_datatype]  ",self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_change_column_datatype]  ",self.colname))
 
         dftitle         =   self.df_select.currentText()
         self.dftitle    =   dftitle
@@ -1789,8 +1717,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             else :
                 self.resize(1070,950)
 
-        if(DEBUG_TRANSFORM) :
-            print("[DataTransformGui][display_change_column_datatype] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_change_column_datatype] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
@@ -1805,8 +1733,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_transform_dataframes(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_columns]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_columns]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1827,8 +1755,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_dataframe]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_dataframe]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME)
         
@@ -1863,8 +1791,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_dataframe] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_dataframe] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,400)
 
@@ -1876,8 +1804,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_dataframe_column_names(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_dataframe_column_names]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_dataframe_column_names]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1898,8 +1826,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_dataframe_column_names]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_dataframe_column_names]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME_COL_NAMES_ROW)
         
@@ -1935,15 +1863,15 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_dataframe_column_names] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_dataframe_column_names] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,400)
 
     def display_transform_col_names_row(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_col_names_row]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_col_names_row]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1964,8 +1892,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_col_names_row]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_col_names_row]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME_COL_NAMES)
         
@@ -2000,8 +1928,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         #self.stackedLayout
 
@@ -2009,8 +1937,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_save_col_names_row(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_save_col_names_row]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_save_col_names_row]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -2031,8 +1959,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_save_col_names_row]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_save_col_names_row]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME_SAVE_ROW)
         
@@ -2067,8 +1995,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_save_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_save_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         #self.stackedLayout
 
@@ -2076,8 +2004,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_add_col_names_row(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_add_col_names_row]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_add_col_names_row]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -2098,8 +2026,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_add_col_names_row]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_add_col_names_row]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME_ADD_ROW)
         
@@ -2134,8 +2062,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_add_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_add_col_names_row] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,800)
   
@@ -2147,8 +2075,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_dataframe_index(self,index_option):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_dataframe_index]  option : ",index_option)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_dataframe_index]  option : ",index_option))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -2169,8 +2097,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_dataframe_index]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_dataframe_index]  : dftitlle : ",dftitle))
 
         if(index_option == DTDM.DF_INDEX_MAIN) :
             data_transform_index_id  =   DISPLAY_TRANSFORM_DATAFRAME_INDEX
@@ -2301,8 +2229,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,form_height)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_dataframe_index] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_dataframe_index] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
 
     # -----------------------------------------------------------------#
@@ -2313,8 +2241,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_sort_df(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("\n[DataTransformGui][display_transform_sort_df]  ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_sort_df]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -2335,8 +2263,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataCleansingGui][display_transform_sort_df]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_sort_df]  : dftitlle : ",dftitle))
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(DISPLAY_TRANSFORM_DATAFRAME_SORT_DF)
         
@@ -2371,8 +2299,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_TRANSFORM_DATAFRAMES) :
-            print("[DataTransformGui][display_transform_sort_df] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_sort_df] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         self.resize(1070,800)
 
@@ -2385,8 +2313,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
     def display_transform_datetime(self,datetime_option,colname=None):
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("\n[DataTransformGui][display_transform_datetime]  option : ",datetime_option,colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_datetime]  option : ",datetime_option,colname))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -2407,8 +2335,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
         
         self.dftitle     =   dftitle
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataCleansingGui][display_transform_datetime]  dftitle : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_datetime]  dftitle : ",dftitle))
 
         if(datetime_option == DTDM.DATETIME_MAIN) :
             data_transform_index_id  =   DISPLAY_TRANSFORM_DATETIME
@@ -2434,8 +2362,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
 
         data_transform_index  =   self.DataTransformWidgets_stack_dict.get(data_transform_index_id)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataCleansingGui][display_transform_datetime]  data_transform_index : ",data_transform_index)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataCleansingGui][display_transform_datetime]  data_transform_index : ",data_transform_index))
 
         
         if(data_transform_index is None) :
@@ -2536,8 +2464,8 @@ class DataTransformGui(QtWidgets.QMainWindow):
             self.stackedLayout.setCurrentIndex(current_index)
             self.resize(1070,form_height)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransformGui][display_transform_datetime] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransform",print_to_string("[DataTransformGui][display_transform_datetime] end : stack \n  ",self.DataTransformWidgets_stack_dict,"\n"))
 
         
 

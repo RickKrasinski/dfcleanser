@@ -23,13 +23,13 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataTransform_ID
 
 import dfcleanser.Qt.data_transform.DataTransformDataframeModel as DTDM
 
-
-DEBUG_TRANSFORM_DATAFRAME         =   False
-DEBUG_TRANSFORM_COLUMN_DETAILS    =   False
-DEBUG_TRANSFORM_DATETIME          =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -52,29 +52,29 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_dataframe_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
         from dfcleanser.common.cfg import DataTransform_add_df_signal
         DataTransform_add_df_signal.connectSignal(self.add_new_df)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget] end"))
 
     def reload_banner(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][reload_data] "))
 
         self.init_command_bar()
         
@@ -95,8 +95,8 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransformGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformGui][add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -108,16 +108,16 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("self.df_select",type(self.df_select),self.df_select.count()))
 
         #self.init_stacked_index()
 
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][init_form]"))
 
         self.init_command_bar()
 
@@ -137,13 +137,13 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][init_form] end"))
 
     def init_command_bar(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][init_command_bar]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -172,8 +172,8 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataTransformCmdbarLayout)
         self.parent.form.DataTransformCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][init_command_bar] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][init_command_bar] end"))
 
 
     # -----------------------------------------------------------------#
@@ -182,29 +182,29 @@ class DataTransform_transform_dataframe_Widget(QtWidgets.QWidget):
 
     def transform_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][transform_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][transform_names_row]"))
 
         self.parent.display_transform_dataframe_column_names()
 
     def transform_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_columns_Widget][transform_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_columns_Widget][transform_df_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_INDEX_MAIN)
 
     def transform_sort_df(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_Widget][transform_sort_df]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][transform_sort_df]"))
 
         self.parent.display_transform_sort_df()
 
     def return_from_transform_dataframe(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][return_from_transform_dataframe]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][return_from_transform_dataframe]"))
 
         self.parent.init_stacked_index()
 
@@ -217,29 +217,29 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_dataframe_col_names_row_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
         from dfcleanser.common.cfg import DataTransform_add_df_signal
         DataTransform_add_df_signal.connectSignal(self.add_new_df)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_col_names_row_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -261,8 +261,8 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransformGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformGui][add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -274,13 +274,13 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            padd_debug_to_log("DataTransformDataframeWidgets",print_to_string("self.df_select",type(self.df_select),self.df_select.count()))
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][init_form]"))
 
         self.init_command_bar()
 
@@ -300,14 +300,14 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][init_form] end"))
 
 
     def init_command_bar(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget][init_command_bar]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -337,34 +337,34 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataTransformCmdbarLayout)
         self.parent.form.DataTransformCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_col_names_row_Widget][init_command_bar] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_col_names_row_Widget][init_command_bar] end"))
 
     def show_col_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][show_col_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][show_col_names_row]"))
         
         self.parent.display_transform_col_names_row()
 
     def save_col_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_columns_Widget][save_col_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_columns_Widget][save_col_names_row]"))
         
         self.parent.display_transform_save_col_names_row()
 
     def add_col_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][add_col_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][add_col_names_row]"))
 
         self.parent.display_transform_add_col_names_row() 
 
     def drop_col_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][drop_col_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][drop_col_names_row]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -414,8 +414,8 @@ class DataTransform_transform_dataframe_col_names_row_Widget(QtWidgets.QWidget):
 
     def return_from_transform_col_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_Widget][return_from_transform_col_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_Widget][return_from_transform_col_names_row]"))
 
         self.parent.display_transform_dataframes()
 
@@ -450,7 +450,7 @@ class DataTransformColumnsListModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -496,21 +496,21 @@ class DataTransformColumnsListTable(QtWidgets.QTableView):
 
         self.dftitle            =   colparms[0]
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransformColumnsListTable] : init")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            padd_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransformColumnsListTable] : end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self,dftitle):
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransformColumnsListTable][reload_data] : dftile : colname : ",dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable][reload_data] : dftile : colname : ",dftitle))
 
         self.dftitle    =   dftitle
         
@@ -532,23 +532,23 @@ class DataTransformColumnsListTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransformColumnsListTable][init_tableview]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statsdata     =   self.load_columns_info_data()
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-           print("  [DataTransformColumnsListTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+           add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = DataTransformColumnsListModel(statsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-           print("  [DataTransformColumnsListTable][init_tableview] : model loaded")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+           add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statsdata)
         
@@ -591,8 +591,8 @@ class DataTransformColumnsListTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_info_data(self):
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransformColumnsListTable][load_columns_info_data]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable][load_columns_info_data]"))
 
         data    =   []
 
@@ -608,10 +608,10 @@ class DataTransformColumnsListTable(QtWidgets.QTableView):
             data_row.append(colnames[i])
             data.append(data_row)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransformColumnsListTable] : data")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformColumnsListTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("DataTransformDataframeWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Column Name"]
         self.column_widths      =   [560]
@@ -623,33 +623,33 @@ class DataTransform_transform_column_names_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_column_names_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_column_names_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_column_names_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget] end"))
 
     def reload_data(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_column_names_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget][reload_data] "))
 
         self.colslist.reload_data(self.dftitle)
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_column_names_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QLabel
         cols_title_label   =   QLabel()
@@ -672,8 +672,8 @@ class DataTransform_transform_column_names_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_column_names_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_column_names_Widget][init_form] end"))
 
 # -----------------------------------------------------------------# 
 # -      Data Transform Dataframes Save Column Names Row          -#
@@ -683,33 +683,33 @@ class DataTransform_transform_dataframe_save_col_names_row_Widget(QtWidgets.QWid
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_dataframe_save_col_names_row_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_save_col_names_row_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget] end"))
 
     def reload_data(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][reload_data] "))
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformDataframeModel as DTDM
 
@@ -762,14 +762,14 @@ class DataTransform_transform_dataframe_save_col_names_row_Widget(QtWidgets.QWid
 
         self.setLayout(self.transform_save_row_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][init_form] end"))
 
 
     def select_json_file(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][select_json_file]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][select_json_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -777,8 +777,8 @@ class DataTransform_transform_dataframe_save_col_names_row_Widget(QtWidgets.QWid
 
     def save_column_nanes_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][save_column_nanes_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][save_column_nanes_row]"))
 
         filename    =   self.save_row_form.get_form_input_value_by_index(0)
 
@@ -789,15 +789,15 @@ class DataTransform_transform_dataframe_save_col_names_row_Widget(QtWidgets.QWid
 
     def return_from_save_column_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][return_from_save_column_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][return_from_save_column_names_row]"))
 
         self.parent.display_transform_dataframes()
 
     def help_for_save_column_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_save_col_names_row_Widget][help_for_save_column_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_save_col_names_row_Widget][help_for_save_column_names_row]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_SAVE_COL_NAME_ID
@@ -808,33 +808,33 @@ class DataTransform_transform_dataframe_add_col_names_row_Widget(QtWidgets.QWidg
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_dataframe_add_col_names_row_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_add_col_names_row_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget] end"))
 
     def reload_data(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][reload_data] "))
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformDataframeModel as DTDM
 
@@ -896,13 +896,13 @@ class DataTransform_transform_dataframe_add_col_names_row_Widget(QtWidgets.QWidg
 
         self.setLayout(self.transform_add_row_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][init_form] end"))
 
     def select_json_file(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][select_json_file]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][select_json_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -910,22 +910,22 @@ class DataTransform_transform_dataframe_add_col_names_row_Widget(QtWidgets.QWidg
 
     def add_column_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][add_column_nanes_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][add_column_nanes_row]"))
         
         self.parent.display_transform_col_names_row()
 
     def return_from_add_column_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][return_from_save_column_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][return_from_save_column_names_row]"))
 
         self.parent.display_transform_dataframes()
 
     def help_for_add_column_names_row(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_add_col_names_row_Widget][help_for_save_column_names_row]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_add_col_names_row_Widget][help_for_save_column_names_row]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_SET_COL_NAME_ID
@@ -948,16 +948,16 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_dataframe_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
@@ -965,13 +965,13 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
         DataTransform_add_df_signal.connectSignal(self.add_new_df)
 
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_dataframe_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget] end"))
 
     def reload_data(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][reload_data] "))
 
         self.init_command_bar()
 
@@ -993,8 +993,8 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransformGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransformGui][add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -1006,14 +1006,14 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("self.df_select",type(self.df_select),self.df_select.count()))
 
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][init_form]"))
 
         self.init_command_bar()
 
@@ -1033,14 +1033,14 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][init_form] end"))
         
 
     def init_command_bar(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][init_command_bar]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -1072,55 +1072,55 @@ class DataTransform_transform_dataframe_index_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataTransformCmdbarLayout)
         self.parent.form.DataTransformCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][init_command_bar] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][init_command_bar] end"))
 
     def show_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][show_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][show_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_SHOW_INDEX)
 
     def set_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][set_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][set_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_SET_INDEX)
 
     def reset_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][reset_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][reset_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_RESET_INDEX)
     
     def append_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][append_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][append_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_APPEND_INDEX)
     
     def sort_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][sort_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][sort_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_SORT_INDEX)
 
     def return_from_transform_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][return_from_transform_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][return_from_transform_index]"))
 
         self.parent.display_transform_dataframes()
 
     def help_for_transform_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_dataframe_index_Widget][help_for_transform_index]]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dataframe_index_Widget][help_for_transform_index]]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_INDEX_TASKBAR_ID
@@ -1131,33 +1131,33 @@ class DataTransform_transform_df_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_df_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_df_index_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_df_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget] end"))
 
     def reload_data(self) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_df_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget][reload_data] "))
 
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_df_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QLabel
         colsindex_title_label   =   QLabel()
@@ -1180,41 +1180,41 @@ class DataTransform_transform_df_index_Widget(QtWidgets.QWidget):
   
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_df_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_df_index_Widget][init_form] end"))
 
 class DataTransform_transform_dataframe_set_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_set_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget] dftitle : ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_set_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,10,self.select_column]
@@ -1267,13 +1267,13 @@ class DataTransform_transform_dataframe_set_index_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.set_index_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -1282,15 +1282,15 @@ class DataTransform_transform_dataframe_set_index_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :    
-            print("  [DataTransform_transform_set_index_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -1308,8 +1308,8 @@ class DataTransform_transform_dataframe_set_index_Widget(QtWidgets.QWidget):
     
     def set_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][set_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][set_df_index]"))
 
         index_columns   =   self.set_index_form.get_form_input_value_by_index(0)
         dropflag        =   self.set_index_form.get_form_input_value_by_index(1)
@@ -1329,15 +1329,15 @@ class DataTransform_transform_dataframe_set_index_Widget(QtWidgets.QWidget):
 
     def return_from_set_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][set_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][set_df_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_INDEX_MAIN)
 
     def help_for_set_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][set_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][set_df_index]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_SET_INDEX
@@ -1348,34 +1348,34 @@ class DataTransform_transform_dataframe_reset_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_reset_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_reset_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_set_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_set_index_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,10,self.select_column]
@@ -1439,13 +1439,13 @@ class DataTransform_transform_dataframe_reset_index_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.reset_index_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -1454,15 +1454,15 @@ class DataTransform_transform_dataframe_reset_index_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][select_column_to_cleanse] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][select_column_to_cleanse] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :    
-            print("  [DataTransform_transform_reset_index_Widget][select_column_to_cleanse] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][select_column_to_cleanse] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -1480,8 +1480,8 @@ class DataTransform_transform_dataframe_reset_index_Widget(QtWidgets.QWidget):
     
     def reset_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][reset_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][reset_df_index]"))
         
         drop_columns    =   self.set_index_form.get_form_input_value_by_index(0)
         index_levels    =   self.set_index_form.get_form_input_value_by_index(1)
@@ -1501,15 +1501,15 @@ class DataTransform_transform_dataframe_reset_index_Widget(QtWidgets.QWidget):
 
     def return_from_reset_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][return_from_reset_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][return_from_reset_df_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_INDEX_MAIN)
 
     def help_for_reset_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_reset_index_Widget][help_for_reset_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_reset_index_Widget][help_for_reset_df_index]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_RESET_INDEX
@@ -1519,34 +1519,34 @@ class DataTransform_transform_dataframe_append_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_append_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_append_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,10,self.select_column]
@@ -1601,13 +1601,13 @@ class DataTransform_transform_dataframe_append_index_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.append_index_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -1616,15 +1616,15 @@ class DataTransform_transform_dataframe_append_index_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :    
-            print("  [DataTransform_transform_append_index_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -1643,8 +1643,8 @@ class DataTransform_transform_dataframe_append_index_Widget(QtWidgets.QWidget):
     
     def append_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][append_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][append_df_index]"))
         
         append_columns  =   self.set_index_form.get_form_input_value_by_index(0)
         drop_flag       =   self.set_index_form.get_form_input_value_by_index(1)
@@ -1664,15 +1664,15 @@ class DataTransform_transform_dataframe_append_index_Widget(QtWidgets.QWidget):
 
     def return_from_append_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][return_from_append_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][return_from_append_df_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_INDEX_MAIN)
 
     def help_for_append_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_append_index_Widget][help_for_append_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_append_index_Widget][help_for_append_df_index]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_APPEND_INDEX
@@ -1682,34 +1682,34 @@ class DataTransform_transform_dataframe_sort_index_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_sort_index_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_sort_index_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+           add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][init_form]"))
 
         import dfcleanser.Qt.data_transform.DataTransformDataframeModel as DTDM
 
@@ -1751,13 +1751,13 @@ class DataTransform_transform_dataframe_sort_index_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.sort_index_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][init_form] end"))
 
     def sort_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][sort_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][sort_df_index]"))
         
         ascending_flag  =   self.set_index_form.get_form_input_value_by_index(0)
         sort_kind       =   self.set_index_form.get_form_input_value_by_index(1)
@@ -1778,15 +1778,15 @@ class DataTransform_transform_dataframe_sort_index_Widget(QtWidgets.QWidget):
 
     def return_from_sort_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][return_from_sort_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][return_from_sort_df_index]"))
 
         self.parent.display_transform_dataframe_index(DTDM.DF_INDEX_MAIN)
 
     def help_for_sort_df_index(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_index_Widget][help_for_sort_df_index]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_index_Widget][help_for_sort_df_index]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_SORT_INDEX
@@ -1807,34 +1807,34 @@ class DataTransform_transform_dataframe_sort_df_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("\n[DataTransform_transform_sort_df_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            padd_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("[DataTransform_transform_sort_df_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,10,self.select_column]
@@ -1896,13 +1896,13 @@ class DataTransform_transform_dataframe_sort_df_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.sort_df_Layout)
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -1911,15 +1911,15 @@ class DataTransform_transform_dataframe_sort_df_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :    
-            print("  [DataTransform_transform_sort_df_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -1928,8 +1928,8 @@ class DataTransform_transform_dataframe_sort_df_Widget(QtWidgets.QWidget):
     
     def sort_df(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][sort_df]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][sort_df]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -1954,15 +1954,15 @@ class DataTransform_transform_dataframe_sort_df_Widget(QtWidgets.QWidget):
 
     def return_from_sort_df(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][return_from_sort_df]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][return_from_sort_df]"))
 
         self.parent.display_transform_dataframes()
 
     def help_for_sort_df(self) :
 
-        if(DEBUG_TRANSFORM_DATAFRAME) :
-            print("  [DataTransform_transform_sort_df_Widget][help_for_sort_df]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATAFRAMES")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_sort_df_Widget][help_for_sort_df]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DF_SORT_BY_COL_ID
@@ -1984,33 +1984,33 @@ class DataTransform_transform_datetime_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("\n[DataTransform_transform_datetime_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_datetime_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget] end"))
 
     def reload_banner(self) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][reload_data] "))
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][init_form]"))
 
         self.init_command_bar()
 
@@ -2030,13 +2030,13 @@ class DataTransform_transform_datetime_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][init_form] end"))
 
     def init_command_bar(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][init_command_bar]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -2070,65 +2070,56 @@ class DataTransform_transform_datetime_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataTransformCmdbarLayout)
         self.parent.form.DataTransformCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][init_command_bar] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][init_command_bar] end"))
 
 
     def convert_to_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][convert_to_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][convert_to_datetime]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_CONVERT)
 
     def convert_to_timedelta(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][convert_to_timedelta]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][convert_to_timedelta]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_CONVERT_TIMEDELTA)
 
     def calculate_timedelta(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][calculate_timedelta]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][calculate_timedelta]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_CALCULATE_TIMEDELTA)
 
-    """
-    def split_datetime(self) :
-
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][split_datetime]")
-
-        self.parent.display_transform_datetime(DTDM.DATETIME_SPLIT)
-    """
-
     def merge_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][merge_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][merge_datetime]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MERGE)
 
     def datetime_components(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][datetime_components]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][datetime_components]"))
         
         self.parent.display_transform_datetime(DTDM.DATETIME_COMPONENTS)
 
     def return_from_transform_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][return_from_transform_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][return_from_transform_datetime]"))
 
         self.parent.init_stacked_index()
 
     def help_for_transform_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_Widget][help_for_transform_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_Widget][help_for_transform_datetime]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_TASKBAR_ID
@@ -2139,34 +2130,34 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_datatime_convert_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
@@ -2218,13 +2209,13 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.convert_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -2233,15 +2224,15 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_datatime_convert_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
         self.convert_form.set_form_input_value_by_index(0,cell) 
@@ -2249,13 +2240,13 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
 
     def select_format_string(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][select_format_string]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][select_format_string]"))
     
     def datetime_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][datetime_format]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -2283,8 +2274,8 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
     
     def datetime_time_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][datetime_time_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][datetime_time_format]"))
         
         from dfcleanser.common.common_utils import opStatus, is_numeric_col
         opstat = opStatus()
@@ -2320,15 +2311,15 @@ class DataTransform_transform_datatime_convert_Widget(QtWidgets.QWidget):
 
     def return_from_datetime_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][return_from_datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][return_from_datetime_format]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_datetime_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][help_for_datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][help_for_datetime_format]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_FORMAT_ID
@@ -2339,8 +2330,8 @@ class DataTransform_transform_datatime_time_convert_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][init] "))
 
         super().__init__()
 
@@ -2348,26 +2339,26 @@ class DataTransform_transform_datatime_time_convert_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]    
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget] dftitle ; ",self.dftitle, self.colname)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget] dftitle ; ",self.dftitle, self.colname))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_datatime_time_convert_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_time_column]
@@ -2404,8 +2395,8 @@ class DataTransform_transform_datatime_time_convert_Widget(QtWidgets.QWidget):
 
         self.convert_form.set_form_input_value_by_index(0,self.colname)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][init_form] form built")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][init_form] form built"))
 
 
         from PyQt5.QtWidgets import QVBoxLayout
@@ -2417,20 +2408,20 @@ class DataTransform_transform_datatime_time_convert_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.convert_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][init_form] end"))
 
     def select_time_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_time_convert_Widget][select_time_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_time_convert_Widget][select_time_column]"))
 
         return()
     
     def datetime_time_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][datetime_format]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -2475,15 +2466,15 @@ class DataTransform_transform_datatime_time_convert_Widget(QtWidgets.QWidget):
 
     def return_from_datetime_time_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][return_from_datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][return_from_datetime_format]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_datetime_time_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datatime_convert_Widget][help_for_datetime_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datatime_convert_Widget][help_for_datetime_format]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_FORMAT_ID
@@ -2495,8 +2486,8 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][init] "))
 
         super().__init__()
 
@@ -2504,26 +2495,26 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.select_option  =   "select for datetime_column_name1"
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_calculate_timedelta_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
@@ -2570,13 +2561,13 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.calculate_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -2585,15 +2576,15 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_calculate_timedelta_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -2604,18 +2595,18 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
 
     def select_column_to_name(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][select_column_to_name]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][select_column_to_name]"))
         
         self.select_option  =   self.calculate_form.get_form_input_value_by_index(2) 
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][select_column_to_name]",self.select_option)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][select_column_to_name]",self.select_option))
  
     def calculate_timedelta(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][calculate_timedelta]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][calculate_timedelta]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -2641,15 +2632,15 @@ class DataTransform_transform_calculate_timedelta_Widget(QtWidgets.QWidget):
         
     def return_from_calculate_timedelta(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][return_from_calculate_timedelta]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][return_from_calculate_timedelta]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_calculate_timedelta(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_calculate_timedelta_Widget][help_for_calculate_timedelta]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_calculate_timedelta_Widget][help_for_calculate_timedelta]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_DELTA_ID
@@ -2659,34 +2650,34 @@ class DataTransform_transform_timedelta_convert_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_dtimedelta_convert_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_dtimedelta_convert_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
@@ -2730,13 +2721,13 @@ class DataTransform_transform_timedelta_convert_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.convert_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -2745,23 +2736,23 @@ class DataTransform_transform_timedelta_convert_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_timedelta_convert_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
         self.convert_form.set_form_input_value_by_index(0,cell) 
     
     def timedelta_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][timedelta_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][timedelta_format]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -2786,15 +2777,15 @@ class DataTransform_transform_timedelta_convert_Widget(QtWidgets.QWidget):
 
     def return_from_timedelta_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][return_from_timedelta_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][return_from_timedelta_format]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_timedelta_format(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_timedelta_convert_Widget][help_for_timedelta_format]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_timedelta_convert_Widget][help_for_timedelta_format]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_DELTA_COL_ID
@@ -2804,34 +2795,34 @@ class DataTransform_transform_split_datetime_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_split_datetime_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
@@ -2858,8 +2849,8 @@ class DataTransform_transform_split_datetime_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.split_form     =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][form built]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][form built]"))
         
         from PyQt5.QtWidgets import QVBoxLayout
         self.split_Layout     =   QVBoxLayout()
@@ -2869,13 +2860,13 @@ class DataTransform_transform_split_datetime_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.split_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -2884,23 +2875,23 @@ class DataTransform_transform_split_datetime_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_split_datetime_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
         self.split_form.set_form_input_value_by_index(0,cell) 
    
     def datetime_split(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][datetime_split]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][datetime_split]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -2925,15 +2916,15 @@ class DataTransform_transform_split_datetime_Widget(QtWidgets.QWidget):
 
     def return_from_datetime_split(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][return_from_datetime_split]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][return_from_datetime_split]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_datetime_split(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_split_datetime_Widget][help_for_datetime_split]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_split_datetime_Widget][help_for_datetime_split]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_SPLIT_ID
@@ -2944,8 +2935,8 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][init] "))
 
         super().__init__()
 
@@ -2953,26 +2944,26 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.select_option  =   "select for date_column_name"
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_merge_datetime_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][init_form]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][init_form]"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
@@ -3019,13 +3010,13 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.merge_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -3034,15 +3025,15 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_merge_datetime_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
 
@@ -3053,15 +3044,15 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
     
     def select_column_to_name(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][select_column_to_name]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][select_column_to_name]"))
         
         self.select_option  =   self.merge_form.get_form_input_value_by_index(2) 
  
     def merge_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][merge_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][merge_datetime]"))
         
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -3092,15 +3083,15 @@ class DataTransform_transform_merge_datetime_Widget(QtWidgets.QWidget):
 
     def return_from_merge_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][return_from_merge_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][return_from_merge_datetime]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_merge_datetime(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_merge_datetime_Widget][help_for_merge_datetime]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            padd_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_merge_datetime_Widget][help_for_merge_datetime]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_MERGE_ID
@@ -3111,35 +3102,35 @@ class DataTransform_transform_datetime_components_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("\n[DataTransform_transform_datetime_components_Widget][init] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][init] "))
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget] dftitle ; ",self.dftitle)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget] dftitle ; ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("[DataTransform_transform_datetime_components_Widget] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][reload_data] ")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][reload_data] "))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
 
     def init_form(self):  
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][init_form]")
-
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+           add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][init_form]"))
+           
         from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsStatsTable
         parms               =   [self.dftitle,8,self.select_column]
         self.cols_table     =   DataInspectionColumnsStatsTable(parms) 
@@ -3179,13 +3170,13 @@ class DataTransform_transform_datetime_components_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.comps_Layout)
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][init_form] end")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][init_form] end"))
 
     def select_column(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][select_column]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][select_column]"))
 
         row_number      =   None
         column_number   =   None
@@ -3194,23 +3185,23 @@ class DataTransform_transform_datetime_components_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][select_column] ",row_number,column_number)
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][select_column] ",row_number,column_number))
 
         model   =   self.cols_table.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_TRANSFORM_DATETIME) :    
-            print("  [DataTransform_transform_datetime_components_Widget][select_column] : colname [",cell,"]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :    
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][select_column] : colname [",cell,"]"))
 
         self.colname    =   cell
         self.comps_form.set_form_input_value_by_index(0,cell) 
 
     def get_datetime_components(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][get_datetime_components]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][get_datetime_components]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -3237,15 +3228,15 @@ class DataTransform_transform_datetime_components_Widget(QtWidgets.QWidget):
 
     def return_from_datetime_components(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][return_from_datetime_components]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][return_from_datetime_components]"))
 
         self.parent.display_transform_datetime(DTDM.DATETIME_MAIN)
 
     def help_for_datetime_components(self) :
 
-        if(DEBUG_TRANSFORM_DATETIME) :
-            print("  [DataTransform_transform_datetime_components_Widget][help_for_datetime_components]")
+        if(is_debug_on(DataTransform_ID,"DEBUG_TRANSFORM_DATETIME")) :
+            add_debug_to_log("DataTransformDataframeWidgets",print_to_string("[DataTransform_transform_datetime_components_Widget][help_for_datetime_components]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import TRANSFORM_DATETIME_COMP_ID
