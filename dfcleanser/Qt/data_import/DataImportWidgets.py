@@ -25,15 +25,9 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_IMPORT_FILE_TYPES        =   False
-DEBUG_DATA_IMPORT_HISTORY           =   False
-DEBUG_DATA_EXPORT_HISTORY           =   False
-DEBUG_DATA_IMPORT_PARMS             =   False
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log, DataImport_ID 
+from dfcleanser.Qt.system.SystemModel import is_debug_on
 
-
-DEBUG_DATA_IMPORT_DFS_HISTORY       =   False
-DEBUG_DATA_IMPORT                   =   False
-DEBUG_DATA_IMPORT_DETAILS           =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -85,7 +79,7 @@ class DataImportHistoryImportsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -143,19 +137,19 @@ class DataImportHistoryImportsTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   None
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("\n[DataImportHistoryImportsTable] : init")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("[DataImportHistoryImportsTable] : end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : end"))
 
 
     def reload_data(self):
         
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryImportsTable] : reload_data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : reload_data"))
 
         import_history_data     =   self.load_import_history_data()
         self.model.reload_data(import_history_data)
@@ -166,23 +160,23 @@ class DataImportHistoryImportsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryImportsTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         importsHistorydata     =   self.load_import_history_data()
         
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-           print("  [DataImportHistoryImportsTable] :headers",self.column_headers)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = DataImportHistoryImportsModel(importsHistorydata ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-           print("  [DataImportHistoryImportsTable] : model loaded")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : model loaded"))
 
         self.num_rows   =   len(importsHistorydata)
         
@@ -232,8 +226,8 @@ class DataImportHistoryImportsTable(QtWidgets.QTableView):
         import_file_ids     =   [0,1,2,3,4,5,6,7,8]
        
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryImportsTable] : load_import_history_data ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : load_import_history_data "))
 
         file_type_totals    =   []
 
@@ -247,8 +241,8 @@ class DataImportHistoryImportsTable(QtWidgets.QTableView):
             else :
                 file_type_totals.append(0)
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryImportsTable] : load_import_history_data  : file_type_totals  ",file_type_totals)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : load_import_history_data  : file_type_totals  ",file_type_totals))
 
         data    =   []
 
@@ -260,10 +254,10 @@ class DataImportHistoryImportsTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryImportsTable] : data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryImportsTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("DataImportWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Import Type","Import Count"]
         self.column_widths      =   [360,100]
@@ -305,7 +299,7 @@ class DataImportHistoryExportsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -357,22 +351,22 @@ class DataImportHistoryExportsTable(QtWidgets.QTableView):
 
         super().__init__()
         
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("\n[DataImportHistoryExportsTable] ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] "))
 
         self.mainLayout         =   None
         self.model              =   None
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("[DataImportHistoryExportsTable] : end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : end"))
 
 
     def reload_data(self):
         
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryExportsTable] : reload_data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : reload_data"))
 
         export_history_data     =   self.load_exportHistory_data()
         self.model.reload_data(export_history_data)
@@ -383,8 +377,8 @@ class DataImportHistoryExportsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryExportsTable] : init_tableview")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -395,8 +389,8 @@ class DataImportHistoryExportsTable(QtWidgets.QTableView):
             self.model = DataImportHistoryExportsModel(historydata, self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-           print("  [DataImportHistoryExportsTable] : model loaded")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : model loaded"))
 
         self.num_rows   =   len(historydata )
 
@@ -440,8 +434,8 @@ class DataImportHistoryExportsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_exportHistory_data(self):
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryExportsTable] : load_exportHistory_data ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : load_exportHistory_data "))
 
         export_file_types    =   ["Pandas CSV Exports","Pandas EXCEL Exports","Pandas JSON Exports",
                                   "Pandas HTML Exports","Pandas SQL TABLE Exports","Custom Exports","Pandas XML Exports"]
@@ -470,10 +464,10 @@ class DataImportHistoryExportsTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryExportsTable] : data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"]",data[j])
+                add_debug_to_log("DataImportWidgets",print_to_string("  [",j,"]",data[j]))
 
         self.column_headers     =   ["Export Type","Export Count"]
         self.column_widths      =   [360,98]
@@ -515,7 +509,7 @@ class DataImportTypesHistorysModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
 
@@ -582,26 +576,26 @@ class DataImportTypesHistorysTable(QtWidgets.QTableView):
 
         super().__init__()
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("\n[DataImportTypesHistorysTable] : dfparms",dfparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : dfparms",dfparms))
 
         self.mainLayout         =   None
         self.model              =   None
 
         self.file_type          =   dfparms[0]
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("\n[DataImportTypesHistorysTable] : init",self.file_type)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : init",self.file_type))
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataImportTypesHistorysTable] : init_tableview done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : init_tableview done"))
     
     def reload_data(self):
         
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("  [DataImportHistoryExportsTable] : reload_data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHistoryExportsTable] : reload_data"))
 
         import_file_type_history_data     =   self.load_import_type_history_data()
         self.model.reload_data(import_file_type_history_data)
@@ -612,24 +606,24 @@ class DataImportTypesHistorysTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataImportTypesHistorysTable] : init_tableview",self.file_type)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : init_tableview",self.file_type))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         importsHistorydata     =   self.load_import_type_history_data()
         
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-           print("[DataImportTypesHistorysTable] : importsHistorydata : ",self.column_headers)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : importsHistorydata : ",self.column_headers))
 
 
         if(self.model is None) :
             self.model = DataImportTypesHistorysModel(importsHistorydata ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-           print("[DataImportTypesHistorysTable] : model loaded : \n",importsHistorydata )
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : model loaded : \n",importsHistorydata ))
 
         self.num_rows   =   len(importsHistorydata)
         
@@ -672,8 +666,8 @@ class DataImportTypesHistorysTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_import_type_history_data(self):
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataImportTypesHistorysTable] : load_import_type_history_data ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : load_import_type_history_data "))
 
 
         from dfcleanser.Qt.data_import.DataImportModel import ImportHistory
@@ -694,8 +688,8 @@ class DataImportTypesHistorysTable(QtWidgets.QTableView):
                 else :
                     df_file_names.append(str(history_entry.get_full_parms()[0])) 
 
-            if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-                print("DataImportTypesHistorysTable] : load_import_type_history_data  : fdf_file_names  ",df_file_names)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("DataImportTypesHistorysTable] : load_import_type_history_data  : fdf_file_names  ",df_file_names))
 
             data    =   []
 
@@ -708,8 +702,8 @@ class DataImportTypesHistorysTable(QtWidgets.QTableView):
 
                 data.append(data_row)
 
-            if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-                print("[DataImportTypesHistorysTable] : data\n ",data)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("[DataImportTypesHistorysTable] : data\n ",data))
 
             from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT, SQLQUERY_IMPORT
             if(self.file_type == SQLTABLE_IMPORT) :
@@ -773,7 +767,6 @@ class DataExportTypesHistorysModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -831,18 +824,18 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
         self.file_type          =   dfparms[0]
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("\n[DataExportTypesHistorysTable] : init",self.file_type)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : init",self.file_type))
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : done"))
 
     def reload_data(self):
         
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("  [DataExportHistoryExportsTable] : reload_data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportHistoryExportsTable] : reload_data"))
 
         export_file_type_history_data     =   self.load_export_type_history_data()
         self.model.reload_data(export_file_type_history_data)
@@ -853,8 +846,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : init_tableview",self.file_type)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : init_tableview",self.file_type))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -865,8 +858,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
             self.model = DataImportTypesHistorysModel(exportsHistorydata ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-           print("[DataExportTypesHistorysTable] : model loaded : headers : ",self.column_headers)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : model loaded : headers : ",self.column_headers))
 
         self.num_rows   =   len(exportsHistorydata)
         
@@ -910,8 +903,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_export_type_history_data(self):
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : load_export_type_history_data ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : load_export_type_history_data "))
 
         from dfcleanser.Qt.data_import.DataImportModel import ExportHistory
         df_titles   =   ExportHistory.get_df_titles_for_file_type(self.file_type)
@@ -927,8 +920,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
                 df_file_names.append(str(history_entry.get_full_parms()[0])) 
 
-            if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-                print("[DataExportTypesHistorysTable] : load_export_type_history_data  : df_file_names  \n  ",df_file_names)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : load_export_type_history_data  : df_file_names  \n  ",df_file_names))
 
             data    =   []
 
@@ -941,10 +934,10 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
                 data.append(data_row)
 
-            if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-                print("[DataExportTypesHistorysTable] : data",len(data))
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("[DataExportTypesHistorysTable] : data",len(data)))
                 for j in range(len(data)) :
-                    print("    [",j,"] : ",data[j])
+                    add_debug_to_log("DataImportWidgets",print_to_string("    [",j,"] : ",data[j]))
 
         else :
 
@@ -1004,7 +997,7 @@ class DataImportDetailsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1054,8 +1047,8 @@ class DataImportDetailsTable(QtWidgets.QTableView):
 
         super().__init__()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("    [DataImportDetailsTable][init] : \n      ",dfparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][init] : ",dfparms))
 
         self.mainLayout         =   None
         self.model              =   None
@@ -1066,8 +1059,8 @@ class DataImportDetailsTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [DataImportDetailsTable][init] : tableview done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][init] : tableview done"))
 
     def reload_data(self,reloadparms) :
         
@@ -1075,8 +1068,8 @@ class DataImportDetailsTable(QtWidgets.QTableView):
         self.dftitle            =   reloadparms[1]
         self.table_parms        =   reloadparms[2] 
 
-        if(DEBUG_DATA_IMPORT) :
-            print("   [DataImportDetailsTable][reload_data] : filetype : dftitle : ",self.file_type,self.dftitle,"\n   table_parms : \n    ",self.table_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][reload_data] : filetype : dftitle : ",self.file_type,self.dftitle,"\n   table_parms : \n    ",self.table_parms))
 
         importdetailsdata       =   self.load_import_details_data()
         self.num_rows           =   len(importdetailsdata)
@@ -1097,25 +1090,25 @@ class DataImportDetailsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [DataImportDetailsTable] : init_tableview")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         importdetailsdata     =   self.load_import_details_data()
         
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-           print("    [DataImportDetailsTable][init_tableview] : importdetailsdata \n      ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][init_tableview] : importdetailsdata "))
            for k in range(len(importdetailsdata)) :
-               print("      [",k,"] :",importdetailsdata[k])
+               add_debug_to_log("DataImportWidgets",print_to_string("      [",k,"] :",importdetailsdata[k]))
 
         if(self.model is None) :
             self.model = DataImportDetailsModel(importdetailsdata  ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-           print("    [DataImportDetailsTable] : model loaded")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable] : model loaded"))
 
         self.num_rows   =   len(importdetailsdata)
         
@@ -1160,9 +1153,9 @@ class DataImportDetailsTable(QtWidgets.QTableView):
 
         dftitleParms    =   [self.file_type,self.dftitle]
         
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [DataImportDetailsTable][load_import_details_data] dftitleParms : ",dftitleParms)
-            print("    [DataImportDetailsTable][load_import_details_data] self.table_parms : \n    ",self.table_parms)  
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][load_import_details_data] dftitleParms : ",dftitleParms))
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportDetailsTable][load_import_details_data] self.table_parms : \n    ",self.table_parms))
 
         if(self.table_parms is None) :
             from dfcleanser.Qt.data_import.DataImportModel import get_import_details_values
@@ -1227,7 +1220,7 @@ class DataExportDetailsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1277,8 +1270,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
         super().__init__()
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("\n[DataExportDetailsTable] : init",dfparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : init",dfparms))
 
 
         self.mainLayout         =   None
@@ -1289,16 +1282,16 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : init_tableview end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : init_tableview end"))
 
     def reload_data(self,reloadparms) :
         
         self.filetype          =   reloadparms[0]
         self.filename          =   reloadparms[1]
         
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : reload_data : filetype : dftitle : ",self.filetype,self.filename)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : reload_data : filetype : dftitle : ",self.filetype,self.filename))
 
         exportdetailsdata       =   self.load_export_details_data()
         self.num_rows           =   len(exportdetailsdata)
@@ -1312,8 +1305,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : reload_data : end : ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : reload_data : end : "))
 
     
     # -----------------------------------------------------------------#
@@ -1322,23 +1315,23 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : init_tableview",self.filetype,self.filename)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : init_tableview",self.filetype,self.filename))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         exportdetailsdata     =   self.load_export_details_data()
         
-        if(DEBUG_DATA_IMPORT_PARMS) :
-           print("[DataExportDetailsTable] : column headers : ",self.column_headers)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : column headers : ",self.column_headers))
 
         if(self.model is None) :
             self.model = DataExportDetailsModel(exportdetailsdata  ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-           print("[DataExportDetailsTable] : model loaded ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : model loaded "))
 
         self.num_rows   =   len(exportdetailsdata)
         
@@ -1381,8 +1374,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_export_details_data(self):
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : load_export_details_data ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : load_export_details_data "))
 
         dftitleParms    =   [self.filetype,self.filename]
 
@@ -1392,8 +1385,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         ptitles     =   exportValues[0]
         pvals       =   exportValues[1]
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataExportDetailsTable] : \n  ptitles : ",ptitles,"\n  pvals : ",pvals)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : \n  ptitles : ",ptitles,"\n  pvals : ",pvals))
 
         if( (len(ptitles) > 0) and (len(pvals) > 0) and (len(ptitles) == len(pvals))) :
 
@@ -1407,10 +1400,10 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
                 data.append(data_row)
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataExportDetailsTable] : data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataExportDetailsTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("DataImportWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Parameter Name","Parameter Value"]
         self.column_widths      =   [300,700]
@@ -1452,8 +1445,8 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("[Data_Import_Histories_Widget] end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_Histories_Widget] end"))
 
     def reload_data(self) :
 
@@ -1462,8 +1455,8 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("[Data_Import_Histories_Widget]  init_form")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_Histories_Widget]  init_form"))
 
         from PyQt5.QtWidgets import QLabel
         imports_title_label   =   QLabel()
@@ -1546,8 +1539,8 @@ class Data_Import_Histories_Widget(QtWidgets.QWidget):
         self.setLayout(self.finalhistoriesLayout)
 
 
-        if(DEBUG_DATA_IMPORT_HISTORY) :
-            print("[Data_Import_Histories_Widget] init from end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_Histories_Widget] init from end"))
 
 
 # -----------------------------------------------------------------#
@@ -1570,13 +1563,13 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.delete_import_callback     =   histparms[3]
         self.return_import_callback     =   histparms[4]
         
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("\n[Data_Import_File_Type_Histories_Widget]\n",self.filetype)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_File_Type_Histories_Widget]\n",self.filetype))
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Import_File_Type_Histories_Widget] end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("Data_Import_File_Type_Histories_Widget] end"))
     
     def reload_data(self) :
 
@@ -1584,8 +1577,8 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Import_File_Type_Histories_Widget] : init_form",self.filetype)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_File_Type_Histories_Widget] : init_form",self.filetype))
 
         if(self.filetype == 0) : filetitle  =   "CSV"
         elif(self.filetype == 1) : filetitle  =   "FWF"
@@ -1617,8 +1610,8 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.importfiletypehistory.setMinimumHeight(new_height)
         self.importfiletypehistory.setMaximumHeight(new_height)
                 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Import_File_Type_Histories_Widget] : self.importfiletypehistory built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_File_Type_Histories_Widget] : self.importfiletypehistory built"))
 
         from PyQt5.QtWidgets import QLabel
         import_file_type_notes_label   =   QLabel()
@@ -1647,8 +1640,8 @@ class Data_Import_File_Type_Histories_Widget(QtWidgets.QWidget):
         ftypesbutonsLayout.addWidget(ftypes_button1)
         ftypesbutonsLayout.setAlignment(Qt.AlignHCenter)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Import_File_Type_Histories_Widget] : ftypesbutonsLayout built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Import_File_Type_Histories_Widget] : ftypesbutonsLayout built"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.filetypesLayout     =   QVBoxLayout()
@@ -1680,13 +1673,13 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.delete_export_callback     =   histparms[3]
         self.return_export_callback     =   histparms[4]
         
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("\n[Data_Export_File_Type_Histories_Widget]",self.filetype)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget]",self.filetype))
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_ExIport_File_Type_Histories_Widget] : end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_ExIport_File_Type_Histories_Widget] : end"))
     
     def reload_data(self) :
 
@@ -1694,8 +1687,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form"))
 
         if(self.filetype == 0) : filetitle  =   "CSV"
         elif(self.filetype == 1) : filetitle  =   "Excel"
@@ -1723,8 +1716,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.exportfiletypehistory.setMinimumHeight(new_height)
         self.exportfiletypehistory.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form : table built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form : table built"))
 
         from PyQt5.QtWidgets import QLabel
         export_file_type_notes_label   =   QLabel()
@@ -1763,8 +1756,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.exportfiletypesLayout)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form : end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form : end"))
 
 
 # -----------------------------------------------------------------#
@@ -1787,8 +1780,8 @@ class Import_Parms_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("    [Import_Parms_Widget] : importparms : ",importparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Parms_Widget] : importparms : ",importparms))
 
         self.filetype       =   importparms[0]
         self.dftitle        =   importparms[1]
@@ -1796,8 +1789,8 @@ class Import_Parms_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_Parms_Widget] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Parms_Widget] : done"))
 
     def reload_parms_data(self,parms) :
 
@@ -1805,8 +1798,8 @@ class Import_Parms_Widget(QtWidgets.QWidget):
         self.dftitle        =   parms[1]
         self.parmsdata      =   parms[2]  
 
-        if(DEBUG_DATA_IMPORT) :
-            print("    [Import_Parms_Widget][reload_parms_data] : filetype : dftitle : ",self.filetype,self.dftitle,"\n     parmsdata : \n      ",self.parmsdata)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Parms_Widget][reload_parms_data] : filetype : dftitle : ",self.filetype,self.dftitle,"\n     parmsdata : \n      ",self.parmsdata))
 
         self.parms_title_label.setText("\n" + str(self.dftitle) + " Import Parms\n")
         reload_parms    =   [self.filetype,self.dftitle,self.parmsdata]
@@ -1822,8 +1815,8 @@ class Import_Parms_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [Import_Parms_Widget][init_form] filetype : dftitle : ",self.filetype,self.dftitle,"\n      parmsdata : \n      ",self.parmsdata)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Parms_Widget][init_form] filetype : dftitle : ",self.filetype,self.dftitle))
         
         try :
 
@@ -1862,8 +1855,8 @@ class Import_Parms_Widget(QtWidgets.QWidget):
             from dfcleanser.sw_utilities.dfc_qt_model import display_exception
             display_exception(title,status_msg,e)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_Parms_Widget] :init_form : end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Parms_Widget] : init_form : end"))
 
 # -----------------------------------------------------------------#
 # -                 end Import Parms Table Widget                 -#
@@ -1887,8 +1880,8 @@ class Import_With_Parms_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Parms_Widget] ",importparms[0],importparms[1])
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] ",importparms[0],importparms[1]))
 
         self.filetype           =   importparms[0]
         self.dftitle            =   importparms[1]
@@ -1897,28 +1890,28 @@ class Import_With_Parms_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_With_Parms_Widget] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[Import_With_Parms_Widget] reload_table_data : reloadparms : ",reloadparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] reload_table_data : reloadparms : ",reloadparms))
 
         self.filetype   =   reloadparms[0]
         self.dftitle    =   reloadparms[1]
         self.parmsdata  =   reloadparms[2]
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[Import_With_Parms_Widget] : filetype : dftitle : ",self.filetype,self.dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : filetype : dftitle : ",self.filetype,self.dftitle))
 
         reload_parms    =  [self.filetype,self.dftitle,self.parmsdata]
         self.importparmsTable.reload_parms_data(reload_parms)
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_With_Parms_Widget] : init_form")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : init_form"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.importwithparmsLayout      =   QVBoxLayout()
@@ -1926,8 +1919,8 @@ class Import_With_Parms_Widget(QtWidgets.QWidget):
         importparms                     =   [self.filetype,self.dftitle,None] 
         self.importparmsTable           =   Import_Parms_Widget(importparms)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_With_Parms_Widget] : parms table",type(self.importparmsTable))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : parms table",type(self.importparmsTable)))
 
         self.importwithparmsLayout.addWidget(self.importparmsTable)
 
@@ -1945,8 +1938,8 @@ class Import_With_Parms_Widget(QtWidgets.QWidget):
         parms_button1.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         parms_button1.clicked.connect(self.return_action) 
         
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [Import_With_Parms_Widget] : buttons built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         parmsbutonsLayout  =   QHBoxLayout()
@@ -2002,8 +1995,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Export_Parms_Widget] ",importparms[0],importparms[1])
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget] ",importparms[0],importparms[1]))
 
         self.filetype           =   importparms[0]
         self.dftitle            =   importparms[1]
@@ -2011,25 +2004,25 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
         self.import_action      =   importparms[3]
         self.return_action      =   importparms[4]
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("  [Import_With_Export_Parms_Widget] : \n  ",self.import_action,"\n  ",self.return_action)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget] : \n  ",self.import_action,"\n  ",self.return_action))
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Export_Parms_Widget] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Export_Parms_Widget][reload_table_data] : reloadparms : \n    ",reloadparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][reload_table_data] : reloadparms : \n    ",reloadparms))
 
         self.filetype   =   reloadparms[0]
         self.dftitle    =   reloadparms[1]
         self.filename   =   reloadparms[2]
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("  [Import_With_Parms_Widget] : filetype : dftitle : ",self.filetype,self.dftitle,self.filename)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : filetype : dftitle : ",self.filetype,self.dftitle,self.filename))
 
         self.import_with_export_values  =   self.map_export_parms_to_import_parms()
         
@@ -2038,8 +2031,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("  [Import_With_Export_Parms_Widget][init_form]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.importwithexportparmsLayout        =   QVBoxLayout()
@@ -2049,8 +2042,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
         importparms                             =   [self.filetype,self.dftitle,self.import_with_export_values] 
         self.importwithexportparmsTable         =   Import_Parms_Widget(importparms)
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("  [Import_With_Export_Parms_Widget][init_form] : parms table",type(self.importwithexportparmsTable))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][init_form] : parms table",type(self.importwithexportparmsTable)))
 
         self.importwithexportparmsLayout.addWidget(self.importwithexportparmsTable)
 
@@ -2068,8 +2061,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
         parms_button1.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         parms_button1.clicked.connect(self.return_action) 
         
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("  [Import_With_Parms_Widget] : buttons built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         parmsbutonsLayout  =   QHBoxLayout()
@@ -2086,8 +2079,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
 
         export_parms    =   [self.filetype,self.filename]
         
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] export_parms : \n    ",export_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] export_parms : \n    ",export_parms))
 
         from dfcleanser.Qt.data_import.DataImportModel import get_export_details_values
         exportValues    =  get_export_details_values(export_parms) 
@@ -2095,8 +2088,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
         ptitles     =   exportValues[0]
         pvals       =   exportValues[1]
         
-        if(DEBUG_DATA_IMPORT) :
-            print("  [Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] exportValues : \n    ",ptitles,"\n    ",pvals)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] exportValues : \n    ",ptitles,"\n    ",pvals))
 
         export_to_import_map    =   []
 
@@ -2148,8 +2141,8 @@ class Import_With_Export_Parms_Widget(QtWidgets.QWidget):
 
 
             export_to_import_map    =   [import_with_export_titles,import_with_export_values]
-            if(DEBUG_DATA_IMPORT) :
-                print("  [Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] export_to_import_map: \n  ",export_to_import_map)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Export_Parms_Widget][map_export_parms_to_import_parms] export_to_import_map: \n  ",export_to_import_map))
 
         else :
 
@@ -2174,8 +2167,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("\n    [Import_Status_Widget] ",importparms[0],importparms[1])
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] ",importparms[0],importparms[1]))
 
         self.filetype           =   importparms[0]
         self.dftitle            =   importparms[1]
@@ -2183,19 +2176,19 @@ class Import_Status_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [Import_Status_Widget] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("\n[Import_Status_Widget] reload_table_data : reloadparms : ",reloadparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] reload_table_data : reloadparms : ",reloadparms))
 
         self.filetype   =   reloadparms[0]
         self.dftitle    =   reloadparms[1]
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("\n[Import_Status_Widget] : filetype : dftitle : ",self.filetype,self.dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : filetype : dftitle : ",self.filetype,self.dftitle))
 
         reload_parms    =   [self.filetype,self.dftitle,None]
         self.importparmsTable.reload_parms_data(reload_parms)
@@ -2209,8 +2202,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [Import_Status_Widget] : init_form")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : init_form"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.importstatusLayout      =   QVBoxLayout()
@@ -2218,8 +2211,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         df  =   get_dfc_dataframe_df(self.dftitle)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("    [Import_Status_Widget] : df",self.dftitle,df)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : ",self.dftitle))
 
         from PyQt5.QtWidgets import QLabel
         self.num_rows_label    =   QLabel()
@@ -2234,8 +2227,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
         self.num_cols_label.resize(960,50)
         self.num_cols_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
        
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[Import_Status_Widget] : labels")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : labels"))
 
         self.importstatusLayout.addWidget(self.num_rows_label)
         self.importstatusLayout.addWidget(self.num_cols_label)
@@ -2244,8 +2237,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
         self.importparmsTable           =   Import_Parms_Widget(importparms)
         self.importstatusLayout.addWidget(self.importparmsTable)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[Import_Status_Widget] : parms table",type(self.importparmsTable))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_Status_Widget] : parms table",type(self.importparmsTable)))
 
         # buttons for dissplay import status
         from PyQt5.QtWidgets import QPushButton
@@ -2256,8 +2249,8 @@ class Import_Status_Widget(QtWidgets.QWidget):
         parms_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         parms_button.clicked.connect(self.return_action) 
         
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[Import_With_Parms_Widget] : buttons built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[Import_With_Parms_Widget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         parmsbutonsLayout  =   QHBoxLayout()
@@ -2312,7 +2305,7 @@ class DataImportHTMLdfsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -2365,8 +2358,8 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
 
         super().__init__()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[DataImportHTMLdfsTable] : init")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : init"))
 
 
         self.mainLayout         =   None
@@ -2376,8 +2369,8 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_IMPORT_PARMS) :
-            print("[DataImportHTMLdfsTable] : init_tableview end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_PARMS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : init_tableview end"))
 
     def reload_data(self,dfslist) :
         
@@ -2385,10 +2378,10 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
 
         return()
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsTable] : reload_data : self.dfslist : ",type(self.dfslist),len(self.dfslist))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : reload_data : self.dfslist : ",type(self.dfslist),len(self.dfslist)))
             for i in range(len(self.dfslist)) :
-                print("[DataImportHTMLdfsTable] : reload_data : self.dfslist : ",type(self.dfslist[i]))    
+                add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : reload_data : self.dfslist : ",type(self.dfslist[i])))    
 
         jsondfsdata             =   self.load_html_dfs_data()
         self.num_rows           =   len(jsondfsdata)
@@ -2402,8 +2395,8 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsTable] : reload_data : end : ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : reload_data : end : "))
 
     
     # -----------------------------------------------------------------#
@@ -2412,23 +2405,23 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsTable] : init_tableview")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         html_dfs_data     =   self.load_html_dfs_data()
         
-        if(DEBUG_DATA_IMPORT) :
-           print("[DataImportHTMLdfsTable] : column headers : ",self.column_headers)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : column headers : ",self.column_headers))
 
         if(self.model is None) :
             self.model = DataExportDetailsModel(html_dfs_data  ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_IMPORT) :
-           print("[DataImportHTMLdfsTable] : model loaded ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+           add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : model loaded "))
 
         self.num_rows   =   len(html_dfs_data)
         
@@ -2471,15 +2464,15 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_html_dfs_data(self):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsTable] : load_html_dfs_data ",len(self.dfslist))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : load_html_dfs_data ",len(self.dfslist)))
 
         data    =   []
 
         for i in range(len(self.dfslist)) :
 
-            if(DEBUG_DATA_IMPORT) :
-                print("[DataImportHTMLdfsTable] : load_html_dfs_data ",type(self.dfslist[i]))
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : load_html_dfs_data ",type(self.dfslist[i])))
 
 
             data_row    =   []
@@ -2501,10 +2494,10 @@ class DataImportHTMLdfsTable(QtWidgets.QTableView):
 
             data.append(data_row) 
     
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsTable] : data")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("DataImportWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Table","Rows","Columns","Columns List"]
         self.column_widths      =   [100,140,140,620]
@@ -2521,26 +2514,26 @@ class DataImportHTMLdfsWidget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] "))
 
         self.dfslist                =   importparms[0]
         self.select_table_action    =   importparms[1]
         self.return_action          =   importparms[2]
         self.help_action            =   importparms[3]
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [self.dfslist] \n    ",self.dfslist)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[self.dfslist] \n    ",self.dfslist))
 
         self.init_form()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] : done")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[DataImportHTMLdfsWidget] reload_table_data : reloadparms : ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] reload_table_data : reloadparms : "))
 
         self.dfslist   =   reloadparms
  
@@ -2548,8 +2541,8 @@ class DataImportHTMLdfsWidget(QtWidgets.QWidget):
  
     def init_form(self):  
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] : init_form")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] : init_form"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.importhtmldfsLayout      =   QVBoxLayout()
@@ -2561,8 +2554,8 @@ class DataImportHTMLdfsWidget(QtWidgets.QWidget):
         self.title_label.resize(960,50)
         self.title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] : labels")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] : labels"))
 
         self.importhtmldfsLayout.addWidget(self.title_label)
 
@@ -2572,8 +2565,8 @@ class DataImportHTMLdfsWidget(QtWidgets.QWidget):
 
         self.importhtmldfsLayout.addWidget(self.importhtmldfsTable)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] : dfs table")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] : dfs table"))
 
         from PyQt5.QtWidgets import QLabel
         self.note_label    =   QLabel()
@@ -2599,8 +2592,8 @@ class DataImportHTMLdfsWidget(QtWidgets.QWidget):
         help_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         help_button.clicked.connect(self.help_action) 
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfsWidget] : buttons built")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfsWidget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         parmsbutonsLayout  =   QHBoxLayout()
@@ -2632,26 +2625,27 @@ class DataImportHTMLdfSaveWidget(QtWidgets.QWidget) :
         self.return_action                  =   dfparms[1]
         self.help_action                    =   dfparms[2]       
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfSaveWidget]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget]"))
         
         self.init_content()
 
     def reset_form_df(self,reload_parms) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfSaveWidget][]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][]"))
 
         self.df     =   reload_parms[0]
 
     def init_content(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[DataImportHTMLdfSaveWidget][init_content]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][init_content]"))
 
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
+        from dfcleanser.Qt.data_import.DataImportModel import (pandas_import_html_json_id, pandas_import_html_json_idList, pandas_import_html_json_labelList,
+                                                               pandas_import_html_json_typeList, pandas_import_html_json_reqList)
 
-        formParms           =   [DIM.pandas_import_html_json_id,DIM.pandas_import_html_json_idList,DIM.pandas_import_html_json_labelList,DIM.pandas_import_html_json_typeList,DIM.pandas_import_html_json_placeholderList,DIM.pandas_import_html_json_reqList] 
+        formParms           =   [pandas_import_html_json_id,pandas_import_html_json_idList,pandas_import_html_json_labelList,pandas_import_html_json_typeList,pandas_import_html_json_placeholderList,pandas_import_html_json_reqList] 
         comboMethods        =   []
         comboList           =   []
         cfg_parms           =   []
@@ -2669,8 +2663,8 @@ class DataImportHTMLdfSaveWidget(QtWidgets.QWidget) :
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.save_json_df_form     =   dfcleanser_input_form_Widget(formParms)
         
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][init_content] form built : ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][init_content] form built : "))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.save_json_df_formWidgetLayout     =   QVBoxLayout()
@@ -2679,13 +2673,13 @@ class DataImportHTMLdfSaveWidget(QtWidgets.QWidget) :
 
         self.setLayout(self.save_json_df_formWidgetLayout)
 
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][init_content] end")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][init_content] end"))
 
     def select_json_file(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [DataImportHTMLdfSaveWidget][select_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][select_json_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -2696,8 +2690,8 @@ class DataImportHTMLdfSaveWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def add_df_to_dfcleanser(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][add_df_to_dfcleanser]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][add_df_to_dfcleanser]"))
 
         df_title    =   self.save_json_df_form.get_form_input_value_by_index(0)
 
@@ -2715,8 +2709,8 @@ class DataImportHTMLdfSaveWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def save_as_json_file(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][save_as_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportWidgets",print_to_string("[DataImportHTMLdfSaveWidget][save_as_json_file]"))
 
         try :
 

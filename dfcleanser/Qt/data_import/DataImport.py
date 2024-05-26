@@ -17,29 +17,32 @@ import inspect
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QStackedWidget
 
+from dfcleanser.common.cfg import add_debug_to_log, print_to_string, DataImport_ID
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+
 from PyQt5.QtCore import QSize, Qt
 from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DATA_IMPORT               =   False
-DEBUG_DATA_IMPORT_HISTORIES     =   False
-DEBUG_DATA_IMPORT_FILE_TYPE     =   False
-DEBUG_DATA_IMPORT_DETAILS       =   False
-DEBUG_DATA_IMPORT_FORMS         =   False
-DEBUG_DATA_IMPORT_COMMECTORS    =   False
+from dfcleanser.Qt.data_import.DataImportControl import process_import_form
 
-DEBUG_DATA_IMPORT_CSV           =   False
-DEBUG_DATA_IMPORT_FWF           =   False
-DEBUG_DATA_IMPORT_EXCEL         =   False
-DEBUG_DATA_IMPORT_JSON          =   False
-DEBUG_DATA_IMPORT_XML           =   False
-DEBUG_DATA_IMPORT_PDF           =   False
-DEBUG_DATA_IMPORT_HTML          =   False
-DEBUG_DATA_IMPORT_SQLTABLE      =   False
-DEBUG_DATA_IMPORT_SQLQUERY      =   False
-DEBUG_DATA_IMPORT_CUSTOM        =   False
+from dfcleanser.Qt.data_import.DataImportModel import (CSV_IMPORT,EXCEL_IMPORT,JSON_IMPORT,HTML_IMPORT,FWF_IMPORT,CUSTOM_IMPORT,
+                                                       XML_IMPORT,PDF_IMPORT,SQLTABLE_IMPORT,SQLQUERY_IMPORT,IMPORT_MORE, PROCESS_CUSTOM_IMPORT,
+                                                       CLEAR_CUSTOM_IMPORT, IMPORT_CUSTOM_ONLY)
+
+from dfcleanser.Qt.data_import.DataImportModel import (pandas_import_csv_labelList,pandas_import_excel_labelList,pandas_import_json_labelList,
+                                                       pandas_import_html_labelList, pandas_import_sqltable_common_labelList, custom_import_labelList)
+
+from dfcleanser.Qt.data_import.DataImportModel import (pandas_import_csv_id,pandas_import_csv_idList,pandas_import_csv_labelList,pandas_import_csv_typeList,pandas_import_csv_placeholderList,pandas_import_csv_reqList,
+                                                       pandas_import_fwf_id,pandas_import_fwf_idList,pandas_import_fwf_labelList,pandas_import_fwf_typeList,pandas_import_fwf_placeholderList,pandas_import_fwf_reqList,
+                                                       pandas_import_excel_id,pandas_import_excel_idList,pandas_import_excel_labelList,pandas_import_excel_typeList,pandas_import_excel_placeholderList,pandas_import_excel_reqList,
+                                                       pandas_import_json_id,pandas_import_json_idList,pandas_import_json_labelList,pandas_import_json_typeList,pandas_import_json_placeholderList,pandas_import_json_reqList,
+                                                       pandas_import_xml_id,pandas_import_xml_idList,pandas_import_xml_labelList,pandas_import_xml_typeList,pandas_import_xml_placeholderList,pandas_import_xml_reqList,
+                                                       pandas_import_pdf_id,pandas_import_pdf_idList,pandas_import_pdf_labelList,pandas_import_pdf_typeList,pandas_import_pdf_placeholderList,pandas_import_pdf_reqList,
+                                                       pandas_import_html_id,pandas_import_html_idList,pandas_import_html_labelList,pandas_import_html_typeList,pandas_import_html_placeholderList,pandas_import_html_df_reqList,
+                                                       custom_import_id,custom_import_idList,custom_import_labelList,custom_import_typeList,custom_import_placeholderList,custom_import_reqList)
 
 
 # -----------------------------------------------------------------#
@@ -265,8 +268,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_import_buttons(self):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[init_data_inspect_buttons]  ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[init_data_import_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -282,10 +285,6 @@ class DataImportGui(QtWidgets.QMainWindow):
         Import_Button_Style    =   "background-color:#0c4ca7; color:white; font : Arial; font-weight : bold; font-size : 13px;"
         init_dfc_buttons(buttons,Import_Button_Style)
 
-        # set button styles
-        
-        #set_dfc_buttons_style(buttons,Import_Button_Style)
-        
         # adding action to a button
         for i in range(len(buttons)) :
             buttons[i].clicked.connect(callbacks[i])
@@ -296,23 +295,21 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_import_splash_screen(self):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[init_data_import_splash_screen]  ")
+        from dfcleanser.common.cfg import DataImport_ID
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[init_data_import_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataImport_ID
         build_chapter_splash_screen(DataImport_ID, self.form.DataImportsplash)
-
-        if(DEBUG_DATA_IMPORT) :
-            print("[end init_data_import_splash_screen]  ")
 
     # -----------------------------------------------------------------#
     # -            Initialize the chapter splah image                 -#
     # -----------------------------------------------------------------#
     def init_data_import_clock(self):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[init_data_import_clock]  ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[init_data_import_clock]  "))
 
         from dfcleanser.common.common_utils import RunningClock
         self.Import_Clock        =   RunningClock(self.form.ClockLabel)
@@ -330,13 +327,15 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_import_form(self):
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[init_data_import_form]  ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[init_data_import_form]  "))
 
         self.init_data_import_buttons()
         self.init_data_import_splash_screen()
-        #self.init_data_import_clock()
         self.display_import_histories(self)
+        
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[init_data_import_form][end]  "))
 
         self.resize(1070,600)
 
@@ -354,8 +353,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.CSVbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportCSVFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportCSVFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import CSV_IMPORT, pandas_import_csv_id
         from dfcleanser.common.cfg import get_config_value
@@ -376,8 +375,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.FWFbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportFWFFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFWFFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import FWF_IMPORT, pandas_import_fwf_id
         from dfcleanser.common.cfg import get_config_value
@@ -398,8 +397,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.Excelbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportExcelFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportExcelFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import EXCEL_IMPORT, pandas_import_excel_id
         from dfcleanser.common.cfg import get_config_value
@@ -420,8 +419,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.JSONbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportFWFFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFWFFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import JSON_IMPORT, pandas_import_json_id
         from dfcleanser.common.cfg import get_config_value
@@ -442,8 +441,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.XMLbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportXMLFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportXMLFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import XML_IMPORT, pandas_import_xml_id
         from dfcleanser.common.cfg import get_config_value
@@ -463,8 +462,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.HTMLbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportExcelFile]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportExcelFile]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import HTML_IMPORT, pandas_import_html_id
         from dfcleanser.common.cfg import get_config_value
@@ -485,8 +484,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.SQLTablebutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportSQLTable]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportSQLTable]"))
        
         from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT, pandas_import_sqltable_common_id
         self.import_with_filetype       =   SQLTABLE_IMPORT
@@ -494,8 +493,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         from dfcleanser.common.cfg import get_config_value
         import_file_form_cfg_parms     =   get_config_value(pandas_import_sqltable_common_id+"Parms")
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportSQLTable] cfg parms : ",import_file_form_cfg_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportSQLTable] cfg parms : ",import_file_form_cfg_parms))
 
         if(import_file_form_cfg_parms is None) :
 
@@ -521,8 +520,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.SQLQuerybutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportSQLQuery]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportSQLQuery]"))
 
 
         from dfcleanser.Qt.data_import.DataImportModel import SQLQUERY_IMPORT, pandas_import_sqlquery_id
@@ -531,8 +530,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         from dfcleanser.common.cfg import get_config_value
         import_file_form_cfg_parms     =   get_config_value(pandas_import_sqlquery_id+"Parms")
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportSQLQuery] cfg parms : ",import_file_form_cfg_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportSQLQuery] cfg parms : ",import_file_form_cfg_parms))
 
         if(import_file_form_cfg_parms is None) :
 
@@ -557,8 +556,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.Custombutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ImportCustom]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportCustom]"))
 
         from dfcleanser.Qt.data_import.DataImportModel import CUSTOM_IMPORT, custom_import_id
         from dfcleanser.common.cfg import get_config_value
@@ -579,8 +578,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         
         self.form.ImportResetbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("ResetDataImport")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("ResetDataImport"))
 
         self.display_import_histories(self)
         
@@ -592,8 +591,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.form.ImportHelpbutton.toggle()
 
-        if(DEBUG_DATA_IMPORT) :
-            print("HelpDataImport")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("HelpDataImport"))
 
         from dfcleanser.common.common_utils import display_url
         display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-data-import.html")
@@ -619,8 +618,9 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_import_histories(self,parent):
 
-        if(DEBUG_DATA_IMPORT_HISTORIES) :
-            print("\n[display_import_histories]  ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("\n",print_to_string(""))
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_histories]  "))
 
         self.parent     =   parent
 
@@ -632,6 +632,7 @@ class DataImportGui(QtWidgets.QMainWindow):
             self.import_histories   =   Data_Import_Histories_Widget([self.select_import_type_history,self.select_export_type_history])
 
             current_index   =  len(self.DataImportWidgets_stack_dict)
+
             self.DataImportWidgets_stack_dict.update({IMPORT_TYPE_HISTORIES : current_index})
             self.stackedLayout.addWidget(self.import_histories)
 
@@ -642,8 +643,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT_HISTORIES) :
-            print("[display_import_histories] end : stack \n  ",self.DataImportWidgets_stack_dict_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_histories] end : stack \n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -665,8 +666,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             row_number = idx.row()
             column_number = idx.column()
 
-        if(DEBUG_DATA_IMPORT_HISTORIES) :
-            print("[display_import_histories][select_import_type_history]",row_number,column_number)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_histories][select_import_type_history]",row_number,column_number))
 
         model   =   self.import_histories.importHistory.model
         tdata   =   model.get_data()
@@ -690,8 +691,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             row_number = idx.row()
             column_number = idx.column()
 
-        if(DEBUG_DATA_IMPORT_HISTORIES) :
-            print("[display_import_histories] select_export_type_history",row_number,column_number)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_HISTORY")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_histories] select_export_type_history",row_number,column_number))
 
         model   =   self.import_histories.exportHistory.model
         tdata   =   model.get_data()
@@ -715,32 +716,31 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_import_file_type_histories(self, parent, filetype):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_import_file_type_histories]", filetype)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_file_type_histories]", filetype))
 
         self.parent             =   parent
         self.import_file_type   =   filetype
 
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
-        if(self.import_file_type == DIM.CSV_IMPORT) :
+        if(self.import_file_type == CSV_IMPORT) :
             layout_index    =   IMPORT_CVS_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.FWF_IMPORT) :
+        elif(self.import_file_type == FWF_IMPORT) :
             layout_index    =   IMPORT_FWF_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.EXCEL_IMPORT) :
+        elif(self.import_file_type == EXCEL_IMPORT) :
             layout_index    =   IMPORT_EXCEL_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.JSON_IMPORT) :
+        elif(self.import_file_type == JSON_IMPORT) :
             layout_index    =   IMPORT_JSON_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.XML_IMPORT) :
+        elif(self.import_file_type == XML_IMPORT) :
             layout_index    =   IMPORT_XML_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.PDF_IMPORT) :
+        elif(self.import_file_type == PDF_IMPORT) :
             layout_index    =   IMPORT_PDF_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.HTML_IMPORT) :
+        elif(self.import_file_type == HTML_IMPORT) :
             layout_index    =   IMPORT_HTML_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.SQLTABLE_IMPORT) :
+        elif(self.import_file_type == SQLTABLE_IMPORT) :
             layout_index    =   IMPORT_SQLTABLE_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.SQLQUERY_IMPORT) :
+        elif(self.import_file_type == SQLQUERY_IMPORT) :
             layout_index    =   IMPORT_SQLQUERY_FILE_TYPE_HISTORIES
-        elif(self.import_file_type == DIM.CUSTOM_IMPORT) :
+        elif(self.import_file_type == CUSTOM_IMPORT) :
             layout_index    =   IMPORT_CUSTOM_FILE_TYPE_HISTORIES
 
         file_types_index  =   self.DataImportWidgets_stack_dict.get(layout_index)
@@ -750,91 +750,91 @@ class DataImportGui(QtWidgets.QMainWindow):
             filetypehistoriesParms  =   [parent,self.import_file_type,self.select_import_df_title,self.delete_import_histories,self.return_from_file_types] 
             from dfcleanser.Qt.data_import.DataImportWidgets import Data_Import_File_Type_Histories_Widget
 
-            if(self.import_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_type == CSV_IMPORT) :
                 self.data_import_csv_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_csv_file_type_history
-            elif(self.import_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_type == FWF_IMPORT) :
                 self.data_import_fwf_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_fwf_file_type_history
-            elif(self.import_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_type == EXCEL_IMPORT) :
                 self.data_import_excel_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_excel_file_type_history
-            elif(self.import_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_type == JSON_IMPORT) :
                 self.data_import_json_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_json_file_type_history
-            elif(self.import_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_type == XML_IMPORT) :
                 self.data_import_xml_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_xml_file_type_history
-            elif(self.import_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_type == PDF_IMPORT) :
                 self.data_import_pdf_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_pdf_file_type_history
-            elif(self.import_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_type == HTML_IMPORT) :
                 self.data_import_html_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_html_file_type_history
-            elif(self.import_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_type == SQLTABLE_IMPORT) :
                 self.data_import_sqltable_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_sqltable_file_type_history
-            elif(self.import_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_type == SQLQUERY_IMPORT) :
                 self.data_import_sqlquery_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_sqlquery_file_type_history
-            elif(self.import_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_type == CUSTOM_IMPORT) :
                 self.data_import_custom_file_type_history  =   Data_Import_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_import_file_type_history      =   self.data_import_custom_file_type_history
 
             current_index   =  len(self.DataImportWidgets_stack_dict)
             self.DataImportWidgets_stack_dict.update({layout_index : current_index})
 
-            if(self.import_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_type == CSV_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_csv_file_type_history)
-            elif(self.import_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_type == FWF_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_fwf_file_type_history)
-            elif(self.import_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_type == EXCEL_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_excel_file_type_history)
-            elif(self.import_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_type == JSON_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_json_file_type_history)
-            elif(self.import_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_type == XML_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_xml_file_type_history)
-            elif(self.import_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_type == PDF_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_pdf_file_type_history)
-            elif(self.import_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_type == HTML_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_html_file_type_history)
-            elif(self.import_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_type == SQLTABLE_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_sqltable_file_type_history)
-            elif(self.import_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_type == SQLQUERY_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_sqlquery_file_type_history)
-            elif(self.import_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_type == CUSTOM_IMPORT) :
                 self.stackedLayout.addWidget(self.data_import_custom_file_type_history)
 
         else :
 
-            if(self.import_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_type == CSV_IMPORT) :
                 self.data_import_csv_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_csv_file_type_history
-            elif(self.import_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_type == FWF_IMPORT) :
                 self.data_import_fwf_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_fwf_file_type_history
-            elif(self.import_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_type == EXCEL_IMPORT) :
                 self.data_import_excel_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_excel_file_type_history
-            elif(self.import_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_type == JSON_IMPORT) :
                 self.data_import_json_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_json_file_type_history
-            elif(self.import_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_type == XML_IMPORT) :
                 self.data_import_xml_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_xml_file_type_history
-            elif(self.import_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_type == PDF_IMPORT) :
                 self.data_import_pdf_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_pdf_file_type_history
-            elif(self.import_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_type == HTML_IMPORT) :
                 self.data_import_html_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_html_file_type_history
-            elif(self.import_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_type == SQLTABLE_IMPORT) :
                 self.data_import_sqltable_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_sqltable_file_type_history
-            elif(self.import_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_type == SQLQUERY_IMPORT) :
                 self.data_import_sqlquery_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_sqlquery_file_type_history
-            elif(self.import_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_type == CUSTOM_IMPORT) :
                 self.data_import_custom_file_type_history.reload_data()
                 self.data_import_file_type_history      =   self.data_import_custom_file_type_history
 
@@ -842,8 +842,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ImportFileTypeHistory] end",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] end",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -862,15 +862,15 @@ class DataImportGui(QtWidgets.QMainWindow):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ImportFileTypeHistory] select_import_df_title",row_number,column_number)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] select_import_df_title",row_number,column_number))
 
         model   =   self.data_import_file_type_history.importfiletypehistory.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :    
-            print("[ImportFileTypeHistory] select_import_df_title : cell value [",cell,"]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :    
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] select_import_df_title : cell value [",cell,"]"))
 
         if(column_number == 0) :
             if(cell == " ") :
@@ -893,8 +893,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ImportFileTypeHistory] return_from_file_types")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] return_from_file_types"))
 
         self.display_import_histories(self.parent)
 
@@ -906,8 +906,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ImportFileTypeHistory] delete_import_histories")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] delete_import_histories"))
 
         model   =   self.data_import_file_type_history.importfiletypehistory.model
         tdata   =   model.get_data()
@@ -919,8 +919,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             if(not (check_value == " ")) :
                 delete_list.append(tdata[i][1])
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ImportFileTypeHistory] delete_list",delete_list)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ImportFileTypeHistory] delete_list",delete_list))
         
         if(len(delete_list) > 0) :
 
@@ -973,8 +973,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_export_file_type_histories(self, parent, filetype):
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("\n[display_export_file_type_histories] : filetype", filetype)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_export_file_type_histories] : filetype", filetype))
 
         self.parent             =   parent
         self.export_file_type   =   filetype
@@ -997,8 +997,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         file_types_index  =   self.DataImportWidgets_stack_dict.get(layout_index)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[display_export_file_type_histories] : layout_index : file_types_index",layout_index,file_types_index)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_export_file_type_histories] : layout_index : file_types_index",layout_index,file_types_index))
 
         if(file_types_index is None) :
 
@@ -1027,8 +1027,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                 self.data_export_xml_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_xml_file_type_history
 
-            if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-                print("[display_export_file_type_histories] : current_index",len(self.DataImportWidgets_stack_dict))
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_export_file_type_histories] : current_index",len(self.DataImportWidgets_stack_dict)))
 
             current_index   =  len(self.DataImportWidgets_stack_dict)
             self.DataImportWidgets_stack_dict.update({layout_index : current_index})
@@ -1062,8 +1062,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[display_export_file_type_histories] end : stack :\n  ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_export_file_type_histories] end : stack :\n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -1078,22 +1078,22 @@ class DataImportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
         
-        if(DEBUG_DATA_IMPORT) :    
-            print("[ExportFileTypeHistory][select_export_df_title]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :    
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory][select_export_df_title]"))
 
         for idx in self.data_export_file_type_history.exportfiletypehistory.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DATA_IMPORT) :
-            print("[ExportFileTypeHistory][select_iexport_df_title] : row col : ",row_number,column_number)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory][select_iexport_df_title] : row col : ",row_number,column_number))
 
         model   =   self.data_export_file_type_history.exportfiletypehistory.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DATA_IMPORT) :    
-            print("[ExportFileTypeHistory][select_export_df_title] : cell value [",cell,"]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :    
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory][select_export_df_title] : cell value [",cell,"]"))
 
         if(column_number == 0) :
             if(cell == " ") :
@@ -1115,8 +1115,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] return_from_export_file_types")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory] return_from_export_file_types"))
 
         self.display_import_histories(self)
 
@@ -1127,8 +1127,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] delete_export_histories")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory] delete_export_histories"))
 
         model   =   self.data_export_file_type_history.exportfiletypehistory.model
         tdata   =   model.get_data()
@@ -1140,8 +1140,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             if(not (check_value == " ")) :
                 delete_list.append(tdata[i][1])
 
-        if(DEBUG_DATA_IMPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] delete_list",delete_list)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FILE_TYPES")) :
+            add_debug_to_log("DataImportGui",print_to_string("[ExportFileTypeHistory] delete_list",delete_list))
         
         if(len(delete_list) > 0) :
 
@@ -1175,7 +1175,7 @@ class DataImportGui(QtWidgets.QMainWindow):
             dlgc.setWindowTitle("Delete Export File history Status")
             dlgc.setText("No historie(s) selected to delete.")
             dlgc.setStandardButtons(QMessageBox.Ok)
-            dlgc.setStyleSheet("QLabel{min-width: 300px;}");
+            dlgc.setStyleSheet("QLabel{min-width: 300px;}")
             button = dlgc.exec()
 
 
@@ -1192,8 +1192,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_import_with_parms(self, filetype, dftitle):
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_import_with_parms] : filetype : dftitle : ",filetype, dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms] : filetype : dftitle : ",filetype, dftitle))
 
         try :
 
@@ -1202,8 +1202,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                  
             parms_index  =   self.DataImportWidgets_stack_dict.get(IMPORT_WITH_PARMS)
          
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("[display_import_with_parms] : parms_index : ",parms_index)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms] : parms_index : ",parms_index))
        
             if(parms_index is None) :
 
@@ -1219,8 +1219,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             
                 reload_parms    =   [self.import_with_filetype,self.import_with_dftitle,None] 
                 
-                if(DEBUG_DATA_IMPORT) :
-                    print("[display_import_with_parms] : reload option : ",reload_parms)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms] : reload option : ",reload_parms))
 
                 self.importwithParms_Widget.reload_table_data(reload_parms)
                 current_index   =   parms_index
@@ -1235,8 +1235,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             display_exception(title,status_msg,e)
 
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_import_with_parms] end\n  stack : ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms] end\n  stack : ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -1246,15 +1246,15 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def import_with_parms(self) :
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("\n[display_import_with_parms][import_with_parms] :  filetype : dftitle : ",self.import_with_filetype,self.import_with_dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] :  filetype : dftitle : ",self.import_with_filetype,self.import_with_dftitle))
         
         from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT, SQLQUERY_IMPORT, FWF_IMPORT
 
         IMPORT_FLAG     =   0
  
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("\n[display_import_with_parms][import_with_parms] :  IMPORT_FLAG : ",IMPORT_FLAG)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] :  IMPORT_FLAG : ",IMPORT_FLAG))
 
         if((self.import_with_filetype == SQLTABLE_IMPORT) or (self.import_with_filetype == SQLQUERY_IMPORT)) :
 
@@ -1263,25 +1263,21 @@ class DataImportGui(QtWidgets.QMainWindow):
             
         else :
 
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("\n[display_import_with_parms][import_with_parms] getting Import_Details : ")
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] getting Import_Details : "))
 
             from dfcleanser.Qt.data_import.DataImportModel import ImportHistory
             Import_Details  =   ImportHistory.get_df_title_entry(self.import_with_filetype,self.import_with_dftitle)
 
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("[display_import_with_parms][import_with_parms] Import Details Dump : ")
-                Import_Details.dump()
-    
             full_parms      =   Import_Details.get_full_parms()
             addl_parms      =   Import_Details.get_addl_parms()
 
             if(self.import_with_filetype == FWF_IMPORT) :
                 addl_parms  =   None
 
-            if(DEBUG_DATA_IMPORT) :
-                print("[display_import_with_parms][import_with_parms] full_parms : \n  ",full_parms)
-                print("[display_import_with_parms][import_with_parms] addl_parms : \n  ",addl_parms)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] full_parms : \n  ",full_parms))
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] addl_parms : \n  ",addl_parms))
 
             cfg_parms   =   [self.import_with_dftitle,self.import_with_dftitle]
 
@@ -1292,8 +1288,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                 else :
                     cfg_parms.append("")
         
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("\n[display_import_with_parms][import_with_parms] cfg_parms - after full \n: ",cfg_parms)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] cfg_parms - after full \n: ",cfg_parms))
 
             if(not (addl_parms is None)) :
 
@@ -1312,8 +1308,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
             self.cfg_parms  =   cfg_parms
 
-            if(DEBUG_DATA_IMPORT) :
-                print("\n[display_import_with_parms][import_with_parms] \n  cfg_parms : ",self.cfg_parms)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_parms] \n  cfg_parms : ",self.cfg_parms))
 
             importParms     =   [self,self.import_with_filetype,self.import_with_dftitle,self.cfg_parms]
             self.display_import_form(importParms)
@@ -1321,8 +1317,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_parms(self) :
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_import_with_parms][return_from_parms]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][return_from_parms]"))
 
         self.display_import_histories(self)
 
@@ -1332,14 +1328,14 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def import_with_db_connector(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_with_parms][import_with_db_connector] ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] "))
         
         from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table, IMPORT_FLAG
         current_selected_connector  =   dfc_dbconnectors_table.get_current_dbconnector(IMPORT_FLAG)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_with_parms][import_with_db_connector] current_selected_connector : \n  ",current_selected_connector)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] current_selected_connector : \n  ",current_selected_connector))
 
         self.statusBar().clearMessage() 
 
@@ -1381,21 +1377,21 @@ class DataImportGui(QtWidgets.QMainWindow):
 
                 try :
 
-                    if(DEBUG_DATA_IMPORT) :
-                        print("  [display_import_with_parms][import_with_db_connector] self.import_with_filetype : ",self.import_with_filetype)
+                    if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] self.import_with_filetype : ",self.import_with_filetype))
 
                     from dfcleanser.Qt.data_import.DataImportModel import ImportHistory
                     Import_Details  =   ImportHistory.get_df_title_entry(self.import_with_filetype,self.import_with_dftitle)
                 
-                    if(DEBUG_DATA_IMPORT) :
-                        print("  [display_import_with_parms][import_with_db_connector] Import Details : \n  ",self.import_with_dftitle)
+                    if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] Import Details : \n  ",self.import_with_dftitle))
     
                     if(not (Import_Details is None)) :
                     
                         full_parms      =   Import_Details.get_full_parms().copy()
 
-                        if(DEBUG_DATA_IMPORT) :
-                            print("  [display_import_with_parms][import_with_db_connector] full_parms : \n  ",full_parms)
+                        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] full_parms : \n  ",full_parms))
 
                     
                         from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT, SQLQUERY_IMPORT
@@ -1406,8 +1402,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                     else :
                         full_parms      =   []
 
-                    if(DEBUG_DATA_IMPORT) :
-                        print("  [display_import_with_parms][import_with_db_connector] full_parms : \n  ",full_parms)
+                    if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] full_parms : \n  ",full_parms))
 
                     if(not (self.import_with_filetype == SQLQUERY_IMPORT)) :
                         cfg_parms   =   [self.import_with_dftitle,self.import_with_dftitle]
@@ -1421,8 +1417,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                         else :
                             cfg_parms.append("")
 
-                    if(DEBUG_DATA_IMPORT) :
-                        print("  [display_import_with_parms][import_with_db_connector] cfg_parms : \n: ",cfg_parms)
+                    if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[display_import_with_parms][import_with_db_connector] cfg_parms : \n: ",cfg_parms))
  
                     importParms     =   [self,self.import_with_filetype,self.import_with_dftitle,cfg_parms]
                     self.display_import_form(importParms)
@@ -1454,8 +1450,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_import_status(self, parent, filetype, dftitle):
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [display_import_status] : filetype : dftitle : ",filetype, dftitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_status] : filetype : dftitle : ",filetype, dftitle))
 
         try :
 
@@ -1466,8 +1462,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         
             parms_index  =   self.DataImportWidgets_stack_dict.get(IMPORT_STATUS)
          
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("  [display_import_status] : parms_index : ",parms_index)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_status] : parms_index : ",parms_index))
        
             if(parms_index is None) :
 
@@ -1483,15 +1479,14 @@ class DataImportGui(QtWidgets.QMainWindow):
             
                 reload_parms                    =   [self.import_with_filetype,self.import_with_dftitle] 
 
-                if(DEBUG_DATA_IMPORT_DETAILS) :
-                    print("  [display_import_status] : reload option : ",reload_parms)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[display_import_status] : reload option : ",reload_parms))
 
                 self.importstatus_Widget.reload_table_data(reload_parms)
                 current_index   =   parms_index
 
-            if(DEBUG_DATA_IMPORT_DETAILS) :
-                print("  [display_import_status] : current_index : ",current_index)
-
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_status] : current_index : ",current_index))
 
             self.stackedLayout.setCurrentIndex(current_index)
 
@@ -1503,8 +1498,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             display_exception(title,status_msg,e)
 
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("  [display_import_status] end\n    ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_status] end\n    ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -1516,8 +1511,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_status(self) :
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_import_status][return_from_status]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_status][return_from_status]"))
 
         self.display_import_histories(self.parent)
 
@@ -1537,8 +1532,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_import_with_export_parms(self,filetype,dftitle,filename):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_import_with_export_parms] ",filetype,dftitle,filename)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms] ",filetype,dftitle,filename))
 
         self.export_with_filetype       =   filetype
         self.export_with_dftitle        =   dftitle
@@ -1548,8 +1543,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         parms_index  =   self.DataImportWidgets_stack_dict.get(EXPORT_WITH_PARMS)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_with_export_parms] : parms_index : ",parms_index)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms] : parms_index : ",parms_index))
 
         if(parms_index is None) :
 
@@ -1567,8 +1562,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_with_export_parms] end : stack \n  ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms] end : stack \n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -1577,8 +1572,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def export_with_parms(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n  [display_import_with_export_parms][export_with_parms]",self.export_with_filetype,self.export_with_filename)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms]",self.export_with_filetype,self.export_with_filename))
 
         dftitleParms    =   [self.export_with_filetype,self.export_with_filename]
 
@@ -1587,42 +1582,41 @@ class DataImportGui(QtWidgets.QMainWindow):
         ptitles         =   exportValues[0]
         pvals           =   exportValues[1]
        
-        if(DEBUG_DATA_IMPORT) :
-            print("  [display_import_with_export_parms][export_with_parms][ptitles] : \n    ",ptitles)
-            print("  [display_import_with_export_parms][export_with_parms][pvalues] : \n    ",pvals)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms][ptitles] : \n    ",ptitles))
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms][pvalues] : \n    ",pvals))
 
         import_with_export_parms    =   self.exportwithParms_Widget.import_with_export_values
         export_with_titles          =   import_with_export_parms[0]
         export_with_values          =   import_with_export_parms[1]
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [display_import_with_export_parms][export_with_parms][export_with_titles] : \n    ",export_with_titles)
-            print("  [display_import_with_export_parms][export_with_parms][export_with_values] : \n    ",export_with_values)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms][export_with_titles] : \n    ",export_with_titles))
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms][export_with_values] : \n    ",export_with_values))
 
         import dfcleanser.Qt.data_export.DataExportModel as dem
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
 
         if(self.export_with_filetype== dem.CSV_EXPORT) :
-            import_labels   =   DIM.pandas_import_csv_labelList[:8]
-            out_file_type   =   DIM.CSV_IMPORT
+            import_labels   =   pandas_import_csv_labelList[:8]
+            out_file_type   =   CSV_IMPORT
         elif(self.export_with_filetype == dem.EXCEL_EXPORT) :
-            import_labels   =   DIM.pandas_import_excel_labelList[:9]
-            out_file_type   =   DIM.EXCEL_IMPORT
+            import_labels   =   pandas_import_excel_labelList[:9]
+            out_file_type   =   EXCEL_IMPORT
         elif(self.export_with_filetype == dem.JSON_EXPORT) :
-            import_labels   =   DIM.pandas_import_json_labelList[:7]
-            out_file_type   =   DIM.JSON_IMPORT
+            import_labels   =   pandas_import_json_labelList[:7]
+            out_file_type   =   JSON_IMPORT
         elif(self.export_with_filetype == dem.HTML_EXPORT) :
-            import_labels   =   DIM.pandas_import_html_labelList[:6]
-            out_file_type   =   DIM.HTML_IMPORT
+            import_labels   =   pandas_import_html_labelList[:6]
+            out_file_type   =   HTML_IMPORT
         elif(self.export_with_filetype == dem.SQLTABLE_EXPORT) :
-            import_labels   =   DIM.pandas_import_sqltable_common_labelList[:9]
-            out_file_type   =   DIM.SQLTABLE_IMPORT
+            import_labels   =   pandas_import_sqltable_common_labelList[:9]
+            out_file_type   =   SQLTABLE_IMPORT
         elif(self.export_with_filetype == dem.CUSTOM_EXPORT) :
-            import_labels   =   DIM.custom_import_labelList[:3]
-            out_file_type   =   DIM.CUSTOM_IMPORT
+            import_labels   =   custom_import_labelList[:3]
+            out_file_type   =   CUSTOM_IMPORT
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [display_import_with_export_parms][export_with_parms][import_labels] : \n    ",import_labels)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_with_export_parms][export_with_parms][import_labels] : \n    ",import_labels))
 
         import_cfg_parms            =   []
 
@@ -1632,7 +1626,6 @@ class DataImportGui(QtWidgets.QMainWindow):
             if(parm_to_match in export_with_titles) :
 
                 match_index     =   export_with_titles.index(parm_to_match)
-                print("match_index",match_index)
                 if(match_index > -1) :
                     import_cfg_parms.append(export_with_values[match_index])
 
@@ -1643,16 +1636,16 @@ class DataImportGui(QtWidgets.QMainWindow):
                 else :
                     import_cfg_parms.append("")
 
-        if(DEBUG_DATA_IMPORT) :
-            print("  [export_with_parms]  cfg_parms :\n    ",import_cfg_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[export_with_parms]  cfg_parms :\n    ",import_cfg_parms))
 
         importParms             =   [self,out_file_type , import_cfg_parms[0], import_cfg_parms]
         self.display_import_form(importParms)
 
     def return_from_export_parms(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[return_from_export_parms]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[return_from_export_parms]"))
 
         self.display_import_histories()
 
@@ -1677,101 +1670,99 @@ class DataImportGui(QtWidgets.QMainWindow):
         self.import_file_form_dftitle       =   importParms[2]
         self.import_file_form_cfg_parms     =   importParms[3]
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_import_form] filetype : dftitle  : ",self.import_file_form_file_type,self.import_file_form_dftitle,"\n cfgparms : \n  ",self.import_file_form_cfg_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_form] filetype : dftitle  : ",self.import_file_form_file_type,self.import_file_form_dftitle,"\n cfgparms : \n  ",self.import_file_form_cfg_parms))
 
-
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
-        if(self.import_file_form_file_type == DIM.CSV_IMPORT) :
+        if(self.import_file_form_file_type == CSV_IMPORT) :
             layout_index    =   IMPORT_CSV_FORM
             height          =   850
-        elif(self.import_file_form_file_type == DIM.FWF_IMPORT) :
+        elif(self.import_file_form_file_type == FWF_IMPORT) :
             layout_index    =   IMPORT_FWF_FORM
             height          =   800
-        elif(self.import_file_form_file_type == DIM.EXCEL_IMPORT) :
+        elif(self.import_file_form_file_type == EXCEL_IMPORT) :
             layout_index    =   IMPORT_EXCEL_FORM
             height          =   850
-        elif(self.import_file_form_file_type == DIM.JSON_IMPORT) :
+        elif(self.import_file_form_file_type == JSON_IMPORT) :
             layout_index    =   IMPORT_JSON_FORM
             height          =   850
-        elif(self.import_file_form_file_type == DIM.XML_IMPORT) :
+        elif(self.import_file_form_file_type == XML_IMPORT) :
             layout_index    =   IMPORT_XML_FORM
             height          =   1000
-        elif(self.import_file_form_file_type == DIM.PDF_IMPORT) :
+        elif(self.import_file_form_file_type == PDF_IMPORT) :
             layout_index    =   IMPORT_PDF_FORM
             height          =   700
-        elif(self.import_file_form_file_type == DIM.HTML_IMPORT) :
+        elif(self.import_file_form_file_type == HTML_IMPORT) :
             layout_index    =   IMPORT_HTML_FORM
             height          =   800
-        elif(self.import_file_form_file_type == DIM.SQLTABLE_IMPORT) :
+        elif(self.import_file_form_file_type == SQLTABLE_IMPORT) :
             layout_index    =   IMPORT_SQLTABLE_FORM
             height          =   1000
-        elif(self.import_file_form_file_type == DIM.SQLQUERY_IMPORT) :
+        elif(self.import_file_form_file_type == SQLQUERY_IMPORT) :
             layout_index    =   IMPORT_SQLQUERY_FORM
             height          =   1000
-        elif(self.import_file_form_file_type == DIM.CUSTOM_IMPORT) :
+        elif(self.import_file_form_file_type == CUSTOM_IMPORT) :
             layout_index    =   IMPORT_CUSTOM_FORM
             height          =   700
         
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_form] layout_index : ",layout_index)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("display_import_form] layout_index : ",layout_index))
 
         file_form_types_index  =   self.DataImportWidgets_stack_dict.get(layout_index)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_form] file_form_types_index : ",file_form_types_index)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_form] file_form_types_index : ",file_form_types_index))
 
         if(file_form_types_index is None) :
 
             filetypeformParms   =   [self.import_file_form_file_type,self.import_file_form_dftitle,self.import_file_form_cfg_parms] 
 
-            if(DEBUG_DATA_IMPORT) :
-                print("[display_import_form] filetypeformParms : \n  ",filetypeformParms)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_form] filetypeformParms : \n  ",filetypeformParms))
 
-            if(self.import_file_form_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_form_file_type == CSV_IMPORT) :
                 self.data_import_csv_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_form_file_type == FWF_IMPORT) :
                 self.data_import_fwf_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_form_file_type == EXCEL_IMPORT) :
                 self.data_import_excel_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_form_file_type == JSON_IMPORT) :
                 self.data_import_json_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_form_file_type == XML_IMPORT) :
                 self.data_import_xml_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_form_file_type == PDF_IMPORT) :
                 self.data_import_pdf_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_form_file_type == HTML_IMPORT) :
                 self.data_import_html_form  =   self.build_import_form(filetypeformParms)
             
-            elif(self.import_file_form_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_form_file_type == SQLTABLE_IMPORT) :
                 self.data_import_sqltable_form  =   self.build_import_form(filetypeformParms)
-            elif(self.import_file_form_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_form_file_type == SQLQUERY_IMPORT) :
                 self.data_import_sqlquery_form  =   self.build_import_form(filetypeformParms)
             
-            elif(self.import_file_form_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_form_file_type == CUSTOM_IMPORT) :
                 self.data_import_custom_form  =   self.build_import_form(filetypeformParms)
         
             good_form   =   True
 
-            if(self.import_file_form_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_form_file_type == CSV_IMPORT) :
                 if(self.data_import_csv_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_form_file_type == FWF_IMPORT) :
                 if(self.data_import_fwf_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_form_file_type == EXCEL_IMPORT) :
                 if(self.data_import_excel_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_form_file_type == JSON_IMPORT) :
                 if(self.data_import_json_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_form_file_type == XML_IMPORT) :
                 if(self.data_import_xml_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_form_file_type == PDF_IMPORT) :
                 if(self.data_import_pdf_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_form_file_type == HTML_IMPORT) :
                 if(self.data_import_html_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_form_file_type == SQLTABLE_IMPORT) :
                 if(self.data_import_sqltable_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_form_file_type == SQLQUERY_IMPORT) :
                 if(self.data_import_sqlquery_form is None) : good_form = False
-            elif(self.import_file_form_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_form_file_type == CUSTOM_IMPORT) :
                 if(self.data_import_custom_form is None) : good_form = False
  
             if(good_form) :
@@ -1779,10 +1770,10 @@ class DataImportGui(QtWidgets.QMainWindow):
                 current_index   =  len(self.DataImportWidgets_stack_dict)
                 self.DataImportWidgets_stack_dict.update({layout_index : current_index})
 
-                if(DEBUG_DATA_IMPORT) :
-                    print("[display_import_form] file_form_types_index : ",file_form_types_index)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[display_import_form] file_form_types_index : ",file_form_types_index))
 
-                if(self.import_file_form_file_type == DIM.CSV_IMPORT) :
+                if(self.import_file_form_file_type == CSV_IMPORT) :
 
                     from PyQt5.QtWidgets import QScrollArea
                     self.csv_scroll     =   QScrollArea()
@@ -1798,10 +1789,10 @@ class DataImportGui(QtWidgets.QMainWindow):
 
                     self.stackedLayout.addWidget(self.csv_scroll)#self.data_import_csv_form)
 
-                elif(self.import_file_form_file_type == DIM.FWF_IMPORT) :
+                elif(self.import_file_form_file_type == FWF_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_fwf_form)
 
-                elif(self.import_file_form_file_type == DIM.EXCEL_IMPORT) :
+                elif(self.import_file_form_file_type == EXCEL_IMPORT) :
 
                     from PyQt5.QtWidgets import QScrollArea
                     self.excel_scroll     =   QScrollArea()
@@ -1817,60 +1808,60 @@ class DataImportGui(QtWidgets.QMainWindow):
 
                     self.stackedLayout.addWidget(self.excel_scroll)#self.data_import_excel_form)
 
-                elif(self.import_file_form_file_type == DIM.JSON_IMPORT) :
+                elif(self.import_file_form_file_type == JSON_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_json_form)
-                elif(self.import_file_form_file_type == DIM.XML_IMPORT) :
+                elif(self.import_file_form_file_type == XML_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_xml_form)
-                elif(self.import_file_form_file_type == DIM.PDF_IMPORT) :
+                elif(self.import_file_form_file_type == PDF_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_pdf_form)
-                elif(self.import_file_form_file_type == DIM.HTML_IMPORT) :
+                elif(self.import_file_form_file_type == HTML_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_html_form)
-                elif(self.import_file_form_file_type == DIM.SQLTABLE_IMPORT) :
+                elif(self.import_file_form_file_type == SQLTABLE_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_sqltable_form)
-                elif(self.import_file_form_file_type == DIM.SQLQUERY_IMPORT) :
+                elif(self.import_file_form_file_type == SQLQUERY_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_sqlquery_form)
-                elif(self.import_file_form_file_type == DIM.CUSTOM_IMPORT) :
+                elif(self.import_file_form_file_type == CUSTOM_IMPORT) :
                     self.stackedLayout.addWidget(self.data_import_custom_form)
 
         else :
 
-            if(DEBUG_DATA_IMPORT_FORMS) :
-                print("[display_import_form] file_form_types_index : ",file_form_types_index)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_import_form] file_form_types_index : ",file_form_types_index))
 
-            if(self.import_file_form_file_type == DIM.CSV_IMPORT) :
+            if(self.import_file_form_file_type == CSV_IMPORT) :
                 self.data_import_csv_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.FWF_IMPORT) :
+            elif(self.import_file_form_file_type == FWF_IMPORT) :
                 self.data_import_fwf_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.EXCEL_IMPORT) :
+            elif(self.import_file_form_file_type == EXCEL_IMPORT) :
                 self.data_import_excel_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.JSON_IMPORT) :
+            elif(self.import_file_form_file_type == JSON_IMPORT) :
                 self.data_import_json_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.XML_IMPORT) :
+            elif(self.import_file_form_file_type == XML_IMPORT) :
                 self.data_import_xml_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.PDF_IMPORT) :
+            elif(self.import_file_form_file_type == PDF_IMPORT) :
                 self.data_import_pdf_form.load_form_values(self.import_file_form_cfg_parms)
-            elif(self.import_file_form_file_type == DIM.HTML_IMPORT) :
+            elif(self.import_file_form_file_type == HTML_IMPORT) :
                 self.data_import_html_form.load_form_values(self.import_file_form_cfg_parms)
             
-            elif(self.import_file_form_file_type == DIM.SQLTABLE_IMPORT) :
+            elif(self.import_file_form_file_type == SQLTABLE_IMPORT) :
 
                 load_vals   =   [self,self.import_file_form_file_type,self.import_file_form_cfg_parms]
                 self.data_import_sqltable_form.reload_sql_import_form_values(load_vals)
 
-            elif(self.import_file_form_file_type == DIM.SQLQUERY_IMPORT) :
+            elif(self.import_file_form_file_type == SQLQUERY_IMPORT) :
 
                 load_vals   =   [self,self.import_file_form_file_type]
                 self.data_import_sqlquery_form.load_form_values(load_vals)
 
-            elif(self.import_file_type == DIM.CUSTOM_IMPORT) :
+            elif(self.import_file_type == CUSTOM_IMPORT) :
                 self.data_import_custom_form.load_form_values(self.import_file_form_cfg_parms)
 
             current_index   =   file_form_types_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_form][end] : current_index ",current_index,"\n  ",self.DataImportWidgets_stack_dict,"\n")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_form][end] : current_index ",current_index,"\n  ",self.DataImportWidgets_stack_dict,"\n"))
 
         self.resize(1070,height)
 
@@ -1886,10 +1877,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         * ---------------------------------------------------
         """
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n  [build_import_form] buildparms : ",buildparms)
-
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form] buildparms : ",buildparms))
 
         self.build_filetype     =   buildparms[0]
         self.build_dftitle      =   buildparms[1]
@@ -1900,7 +1889,7 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         try :
 
-            if( (self.build_filetype==DIM.SQLTABLE_IMPORT)  or (self.build_filetype==DIM.SQLQUERY_IMPORT) ):
+            if( (self.build_filetype==SQLTABLE_IMPORT)  or (self.build_filetype==SQLQUERY_IMPORT) ):
 
                 from dfcleanser.sw_utilities.DBUtilsWidgets import DBUtils_SQLImportInputFormWidget  
  
@@ -1909,11 +1898,13 @@ class DataImportGui(QtWidgets.QMainWindow):
  
             else :
 
-                import_df_titles    =   DIM.get_dftitles_list(DIM.IMPORT_HISTORY,self.build_filetype)
+                from dfcleanser.Qt.data_import.DataImportModel import (get_dftitles_list,get_last_dftitle,IMPORT_HISTORY)
+
+                import_df_titles    =   get_dftitles_list(IMPORT_HISTORY,self.build_filetype)
 
                 if(self.build_dftitle is None) :
                     if(not(import_df_titles is None)) :
-                        last_df_title   =   DIM.get_last_dftitle(self.build_filetype,import_df_titles)
+                        last_df_title   =   get_last_dftitle(self.build_filetype,import_df_titles)
                     else :
                         last_df_title   =   ""
                 else :
@@ -1926,17 +1917,17 @@ class DataImportGui(QtWidgets.QMainWindow):
                 else :
                     df_titles    =   {"default":"","list":[""]}
                 
-                if(DEBUG_DATA_IMPORT) :
-                    print("  [build_import_form] df_titles : ",df_titles)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[build_import_form] df_titles : ",df_titles))
 
                 selectDicts.append(df_titles)
 
-                if(DEBUG_DATA_IMPORT) :
-                    print("  [build_import_form] : selectDicts",selectDicts)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[build_import_form] : selectDicts",selectDicts))
 
-                if(self.build_filetype == DIM.CSV_IMPORT) :
+                if(self.build_filetype == CSV_IMPORT) :
 
-                    form_parms      =   [DIM.pandas_import_csv_id,DIM.pandas_import_csv_idList,DIM.pandas_import_csv_labelList,DIM.pandas_import_csv_typeList,DIM.pandas_import_csv_placeholderList,DIM.pandas_import_csv_reqList]
+                    form_parms      =   [pandas_import_csv_id,pandas_import_csv_idList,pandas_import_csv_labelList,pandas_import_csv_typeList,pandas_import_csv_placeholderList,pandas_import_csv_reqList]
                     comboMethods    =   [self.update_csv_df]
                     file_methods    =   [self.update_csv_file]
                     button_methods  =   [self.import_csv_file,self.clear_csv_file,self.return_from_csv_file,self.help_csv_file]
@@ -1944,9 +1935,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     form_title      =   "\n\nImport CSV File\n"
                     form_width      =   900
 
-                elif(self.build_filetype == DIM.FWF_IMPORT) :
+                elif(self.build_filetype == FWF_IMPORT) :
 
-                    form_parms     =   [DIM.pandas_import_fwf_id,DIM.pandas_import_fwf_idList,DIM.pandas_import_fwf_labelList,DIM.pandas_import_fwf_typeList,DIM.pandas_import_fwf_placeholderList,DIM.pandas_import_fwf_reqList]
+                    form_parms     =   [pandas_import_fwf_id,pandas_import_fwf_idList,pandas_import_fwf_labelList,pandas_import_fwf_typeList,pandas_import_fwf_placeholderList,pandas_import_fwf_reqList]
                     comboMethods    =   [self.update_fwf_df]
                     file_methods    =   [self.update_fwf_file]
                     button_methods  =   [self.import_fwf_file,self.clear_fwf_file,self.return_from_fwf_file,self.help_fwf_file]
@@ -1954,9 +1945,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     form_title      =   "\n\nImport FWF File\n"
                     form_width      =   900
              
-                elif(self.build_filetype == DIM.EXCEL_IMPORT) :
+                elif(self.build_filetype == EXCEL_IMPORT) :
 
-                    form_parms     =    [DIM.pandas_import_excel_id,DIM.pandas_import_excel_idList,DIM.pandas_import_excel_labelList,DIM.pandas_import_excel_typeList,DIM.pandas_import_excel_placeholderList,DIM.pandas_import_excel_reqList]
+                    form_parms     =    [pandas_import_excel_id,pandas_import_excel_idList,pandas_import_excel_labelList,pandas_import_excel_typeList,pandas_import_excel_placeholderList,pandas_import_excel_reqList]
                     comboMethods    =   [self.update_excel_df]
                     file_methods    =   [self.update_excel_file]
                     button_methods  =   [self.import_excel_file,self.clear_excel_file,self.return_from_excel_file,self.help_excel_file]
@@ -1964,9 +1955,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     form_title      =   "\n\nImport Excel File\n"
                     form_width      =   900
             
-                elif(self.build_filetype == DIM.JSON_IMPORT) :
+                elif(self.build_filetype == JSON_IMPORT) :
 
-                    form_parms     =   [DIM.pandas_import_json_id,DIM.pandas_import_json_idList,DIM.pandas_import_json_labelList,DIM.pandas_import_json_typeList,DIM.pandas_import_json_placeholderList,DIM.pandas_import_json_reqList]
+                    form_parms     =   [pandas_import_json_id,pandas_import_json_idList,pandas_import_json_labelList,pandas_import_json_typeList,pandas_import_json_placeholderList,pandas_import_json_reqList]
                     comboMethods    =   [self.update_json_df,None,None]
                     file_methods    =   [self.update_json_file]
                     button_methods  =   [self.import_json_file,self.clear_json_file,self.return_from_json_file,self.help_json_file]
@@ -1980,9 +1971,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     typ_sel         =   {"default":"frame","list":["frame","series"]}
                     selectDicts.append(typ_sel)
 
-                elif(self.build_filetype == DIM.XML_IMPORT) :
+                elif(self.build_filetype == XML_IMPORT) :
 
-                    form_parms     =   [DIM.pandas_import_xml_id,DIM.pandas_import_xml_idList,DIM.pandas_import_xml_labelList,DIM.pandas_import_xml_typeList,DIM.pandas_import_xml_placeholderList,DIM.pandas_import_xml_reqList]
+                    form_parms     =   [pandas_import_xml_id,pandas_import_xml_idList,pandas_import_xml_labelList,pandas_import_xml_typeList,pandas_import_xml_placeholderList,pandas_import_xml_reqList]
                     comboMethods    =   [self.update_xml_df,None,None]
                     file_methods    =   [self.update_xml_file]
                     button_methods  =   [self.import_xml_file,self.clear_xml_file,self.return_from_xml_file,self.help_xml_file]
@@ -1996,9 +1987,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     attrs_sel      =   {"default":"False","list":["True","False"]}
                     selectDicts.append(attrs_sel)
                 
-                elif(self.build_filetype == DIM.PDF_IMPORT) :
+                elif(self.build_filetype == PDF_IMPORT) :
 
-                    form_parms     =   [DIM.pandas_import_pdf_id,DIM.pandas_import_pdf_idList,DIM.pandas_import_pdf_labelList,DIM.pandas_import_pdf_typeList,DIM.pandas_import_pdf_placeholderList,DIM.pandas_import_pdf_reqList]
+                    form_parms     =   [pandas_import_pdf_id,pandas_import_pdf_idList,pandas_import_pdf_labelList,pandas_import_pdf_typeList,pandas_import_pdf_placeholderList,pandas_import_pdf_reqList]
                     comboMethods    =   [self.update_pdf_df,None,None]
                     file_methods    =   [self.update_pdf_file]
                     button_methods  =   [self.import_pdf_file,self.clear_pdf_file,self.return_from_pdf_file,self.help_pdf_file]
@@ -2006,9 +1997,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     form_title      =   "\n\nImport PDF File\n"
                     form_width      =   900
                     
-                elif(self.build_filetype == DIM.HTML_IMPORT) :
+                elif(self.build_filetype == HTML_IMPORT) :
 
-                    form_parms      =   [DIM.pandas_import_html_id,DIM.pandas_import_html_idList,DIM.pandas_import_html_labelList,DIM.pandas_import_html_typeList,DIM.pandas_import_html_placeholderList,DIM.pandas_import_html_df_reqList]
+                    form_parms      =   [pandas_import_html_id,pandas_import_html_idList,pandas_import_html_labelList,pandas_import_html_typeList,pandas_import_html_placeholderList,pandas_import_html_df_reqList]
                     comboMethods    =   [self.update_html_df]
                     file_methods    =   [self.update_html_file]
                     button_methods  =   [self.import_html_file,self.clear_html_file,self.return_from_html_file,self.help_html_file]
@@ -2016,9 +2007,9 @@ class DataImportGui(QtWidgets.QMainWindow):
                     form_title      =   "\n\nImport HTML File\n"
                     form_width      =   1000
             
-                elif(self.build_filetype == DIM.CUSTOM_IMPORT) :
+                elif(self.build_filetype == CUSTOM_IMPORT) :
 
-                    form_parms      =   [DIM.custom_import_id,DIM.custom_import_idList,DIM.custom_import_labelList,DIM.custom_import_typeList,DIM.custom_import_placeholderList,DIM.custom_import_reqList]
+                    form_parms      =   [custom_import_id,custom_import_idList,custom_import_labelList,custom_import_typeList,custom_import_placeholderList,custom_import_reqList]
                     comboMethods    =   [self.update_custom_df]
                     file_methods    =   None
                     button_methods  =   [self.import_custom_file,self.clear_custom_file,self.return_from_custom_file,self.help_custom_file]
@@ -2036,22 +2027,22 @@ class DataImportGui(QtWidgets.QMainWindow):
                 form_parms.append(form_width)            
 
                 from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget, SMALL
-                if( (self.build_filetype == DIM.CSV_IMPORT) or (self.build_filetype == DIM.EXCEL_IMPORT) ) :
+                if( (self.build_filetype == CSV_IMPORT) or (self.build_filetype == EXCEL_IMPORT) ) :
                     import_form     =   dfcleanser_input_form_Widget(form_parms)#,size=SMALL)
                 else:
                     import_form     =   dfcleanser_input_form_Widget(form_parms)
 
 
-            if(self.build_filetype == DIM.CSV_IMPORT)           :   self.csv_import_form        =   import_form
-            elif(self.build_filetype == DIM.FWF_IMPORT)         :   self.fwf_import_form        =   import_form
-            elif(self.build_filetype == DIM.EXCEL_IMPORT)       :   self.excel_import_form      =   import_form
-            elif(self.build_filetype == DIM.JSON_IMPORT)        :   self.json_import_form       =   import_form
-            elif(self.build_filetype == DIM.XML_IMPORT)         :   self.xml_import_form        =   import_form
-            elif(self.build_filetype == DIM.PDF_IMPORT)         :   self.pdf_import_form        =   import_form
-            elif(self.build_filetype == DIM.HTML_IMPORT)        :   self.html_import_form       =   import_form
-            elif(self.build_filetype == DIM.SQLTABLE_IMPORT)    :   self.html_import_form       =   import_form
-            elif(self.build_filetype == DIM.SQLQUERY_IMPORT)    :   self.html_import_form       =   import_form
-            elif(self.build_filetype == DIM.CUSTOM_IMPORT)      :   self.custom_import_form     =   import_form
+            if(self.build_filetype == CSV_IMPORT)           :   self.csv_import_form        =   import_form
+            elif(self.build_filetype == FWF_IMPORT)         :   self.fwf_import_form        =   import_form
+            elif(self.build_filetype == EXCEL_IMPORT)       :   self.excel_import_form      =   import_form
+            elif(self.build_filetype == JSON_IMPORT)        :   self.json_import_form       =   import_form
+            elif(self.build_filetype == XML_IMPORT)         :   self.xml_import_form        =   import_form
+            elif(self.build_filetype == PDF_IMPORT)         :   self.pdf_import_form        =   import_form
+            elif(self.build_filetype == HTML_IMPORT)        :   self.html_import_form       =   import_form
+            elif(self.build_filetype == SQLTABLE_IMPORT)    :   self.html_import_form       =   import_form
+            elif(self.build_filetype == SQLQUERY_IMPORT)    :   self.html_import_form       =   import_form
+            elif(self.build_filetype == CUSTOM_IMPORT)      :   self.custom_import_form     =   import_form
         
         except Exception as e:
 
@@ -2074,16 +2065,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_csv_df(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_csv_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_csv_df]"))
 
         dftitle =  self.csv_import_form.get_form_input_value_by_index(1) 
         self.csv_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_csv_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_csv_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_csv_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"csv files (*.csv)")
@@ -2091,8 +2082,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def import_csv_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_csv_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_csv_file]"))
 
         num_form_values     =   self.csv_import_form.get_form_fields_count()
         form_parms          =   []
@@ -2100,20 +2091,17 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_csv_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_csv_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_csv_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_import.DataImportControl import process_import_form
-        from dfcleanser.Qt.data_import.DataImportModel import CSV_IMPORT
-
         process_import_form(CSV_IMPORT, form_parms, self)
 
     def clear_csv_file(self) :
         
         form_field_count    =   self.csv_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_csv_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_csv_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2121,15 +2109,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_csv_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_csv_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_csv_file]"))
 
         self.display_import_histories(self)
 
     def help_csv_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_csv_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_csv_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CSV_IMPORT_URL
@@ -2142,16 +2130,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_fwf_df(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_fwf_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_fwf_df]"))
 
         dftitle =  self.fwf_import_form.get_form_input_value_by_index(1) 
         self.fwf_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_fwf_file(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_fwf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_fwf_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"fwf files (*.fwf)")
@@ -2165,8 +2153,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_fwf_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_fwf_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_fwf_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import FWF_IMPORT
@@ -2181,8 +2169,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         
         form_field_count    =   self.fwf_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_fwf_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_fwf_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2190,15 +2178,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_fwf_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_fwf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_fwf_file]"))
 
         self.display_import_histories(self)
 
     def help_fwf_file(self) :
                 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_fwf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_fwf_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import FWF_IMPORT_URL
@@ -2212,16 +2200,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_excel_df(self) :
     
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_excel_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_excel_df]"))
 
         dftitle =  self.excel_import_form.get_form_input_value_by_index(1) 
         self.excel_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_excel_file(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_excel_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_excel_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"excel files (*.xls)")
@@ -2235,8 +2223,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_excel_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_excel_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_excel_file] form_parms : \n  ",form_parms))
  
         self.Import_Clock.start()
 
@@ -2254,8 +2242,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.excel_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_excel_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_excel_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2263,15 +2251,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_excel_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_excel_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_excel_file]"))
 
         self.display_import_histories(self)
 
     def help_excel_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_excel_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_excel_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import EXCEL_IMPORT_URL
@@ -2285,16 +2273,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_json_df(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_jsonl_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_jsonl_df]"))
 
         dftitle =  self.json_import_form.get_form_input_value_by_index(1) 
         self.json_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_json_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_json_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -2302,8 +2290,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def import_json_file(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_json_file]"))
 
         num_form_values     =   7
         form_parms          =   []
@@ -2311,8 +2299,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_json_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_json_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_json_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import JSON_IMPORT
@@ -2322,8 +2310,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.json_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_json_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_json_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2331,15 +2319,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_json_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_json_file]"))
 
         self.display_import_histories(self)
 
     def help_json_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_json_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_json_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import JSON_IMPORT_URL
@@ -2352,16 +2340,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_xml_df(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_xml_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_xml_df]"))
 
         dftitle =  self.xml_import_form.get_form_input_value_by_index(1) 
         self.xml_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_xml_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_xml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_xml_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"xml files (*.xml)")
@@ -2369,8 +2357,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def import_xml_file(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_xml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_xml_file]"))
 
         num_form_values     =   self.xml_import_form.get_form_fields_count()
         form_parms          =   []
@@ -2378,8 +2366,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_xml_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][impoxmlrt_json_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][impoxmlrt_json_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import XML_IMPORT
@@ -2389,8 +2377,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.xml_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_xml_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_xml_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2398,15 +2386,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_xml_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_xml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_xml_file]"))
 
         self.display_import_histories(self)
 
     def help_xml_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_xml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_xml_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import JSON_IMPORT_URL
@@ -2421,16 +2409,16 @@ class DataImportGui(QtWidgets.QMainWindow):
     """
     def update_pdf_df(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_pdf_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_pdf_df]"))
 
         dftitle =  self.pdf_import_form.get_form_input_value_by_index(1) 
         self.pdf_import_form.set_form_input_value_by_index(0,dftitle)
 
     def update_pdf_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][update_pdf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][update_pdf_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"pdf files (*.pdf)")
@@ -2438,8 +2426,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def import_pdf_file(self) :
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_pdf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_pdf_file]"))
 
         num_form_values     =   self.pdf_import_form.get_form_fields_count()
         form_parms          =   []
@@ -2447,8 +2435,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_pdf_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][impoxmlrt_pdf_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][impoxmlrt_pdf_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import PDF_IMPORT
@@ -2458,8 +2446,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.pdf_import_form.get_form_fields_count()
         
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][clear_pdf_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][clear_pdf_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -2467,15 +2455,15 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def return_from_pdf_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_pdf_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_pdf_file]"))
 
         self.display_import_histories(self)
 
     def help_pdf_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_xml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_xml_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import JSON_IMPORT_URL
@@ -2488,10 +2476,10 @@ class DataImportGui(QtWidgets.QMainWindow):
     * -------------------------------------------------------------------------- 
     """
     def update_html_df(self) :
-        print("[update_html_df]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_html_df]"))
 
     def update_html_file(self) :
-        print("[update_html_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_html_file]"))
 
     def import_html_file(self) :
 
@@ -2501,8 +2489,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_import_html_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][import_html_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][import_html_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import HTML_IMPORT
@@ -2510,18 +2498,18 @@ class DataImportGui(QtWidgets.QMainWindow):
 
 
     def clear_html_file(self) :
-        print("[clear_html_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[clear_html_file]"))
 
     def return_from_html_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_html_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_html_file]"))
         self.display_import_histories(self)
 
     def help_html_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_jhtml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_jhtml_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import HTML_IMPORT_URL
@@ -2533,27 +2521,27 @@ class DataImportGui(QtWidgets.QMainWindow):
     * -------------------------------------------------------------------------- 
     """
     def update_sqltable_df(self) :
-        print("[update_sqltable_df]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_sqltable_df]"))
 
     def update_sqltable_file(self) :
-        print("[update_sqltable_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_sqltable_file]"))
 
     def import_sqltable_file(self) :
-        print("[import_sqltable_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[import_sqltable_file]"))
 
     def clear_sqltable_file(self) :
-        print("[clear_sqltable_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[clear_sqltable_file]"))
 
     def return_from_sqltable_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_sqltable_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_sqltable_file]"))
         self.display_import_histories(self)
 
     def help_sqltable_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_sqltable_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_sqltable_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SQLTABLE_IMPORT_URL
@@ -2565,27 +2553,28 @@ class DataImportGui(QtWidgets.QMainWindow):
     * -------------------------------------------------------------------------- 
     """
     def update_sqlquery_df(self) :
-        print("[update_sqlquery_df]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_sqlquery_df]"))
 
     def update_sqlquery_file(self) :
-        print("[update_sqlquery_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_sqlquery_file]"))
 
     def import_sqlquery_file(self) :
-        print("[import_sqlquery_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[import_sqlquery_file]"))
 
     def clear_ssqlquery_file(self) :
-        print("[clear_sqlquery_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[clear_sqlquery_file]"))
 
     def return_from_sqlquery_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_sqlquery_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_sqlquery_file]"))
+
         self.display_import_histories(self)
 
     def help_sqlquery_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_sqlquery_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_sqlquery_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SQLQUERY_IMPORT_URL
@@ -2598,27 +2587,28 @@ class DataImportGui(QtWidgets.QMainWindow):
     * -------------------------------------------------------------------------- 
     """
     def update_custom_df(self) :
-        print("[update_custom_df]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_custom_df]"))
 
     def update_custom_file(self) :
-        print("[update_custom_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[update_custom_file]"))
 
     def import_custom_file(self) :
-        print("[import_custom_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[import_custom_file]"))
 
     def clear_custom_file(self) :
-        print("[clear_custom_file]")
+        add_debug_to_log("DataImportGui",print_to_string("[clear_custom_file]"))
 
     def return_from_custom_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][return_from_custom_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][return_from_custom_file]"))
+
         self.display_import_histories(self)
 
     def help_custom_file(self) :
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[build_import_form][help_jhtml_file]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[build_import_form][help_jhtml_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import IMPORT_CUSTOM_ID
@@ -2642,8 +2632,8 @@ class DataImportGui(QtWidgets.QMainWindow):
         self.dbconnector_import_type    =   dbtparms[0]  
         self.import_action              =   dbtparms[1] 
         
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_dbconnector_table] : import_type ",self.dbconnector_import_type,type(self.dbconnector_import_type),self.import_action,type(self.import_action))
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_table] : import_type ",self.dbconnector_import_type,type(self.dbconnector_import_type),self.import_action,type(self.import_action)))
 
         try :
 
@@ -2653,8 +2643,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             else :
                 dbconnectors_index  =   self.DataImportWidgets_stack_dict.get(EXPORT_DBCONNECTORS_TABLE)                
 
-            if(DEBUG_DATA_IMPORT_COMMECTORS) :
-                print("[display_dbconnector_table] dbconnectors_index : ",dbconnectors_index)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_CONNECTORS")) :
+                add_debug_to_log("DataImportGui",print_to_string("display_dbconnector_table] dbconnectors_index : ",dbconnectors_index))
 
             if(dbconnectors_index is None) :
             
@@ -2669,8 +2659,8 @@ class DataImportGui(QtWidgets.QMainWindow):
                 else :
                     self.DataImportWidgets_stack_dict.update({EXPORT_DBCONNECTORS_TABLE : current_index})    
 
-                if(DEBUG_DATA_IMPORT_COMMECTORS) :
-                    print("[display_dbconnector_tanle] current_index : ",current_index)
+                if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_CONNECTORS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_tanle] current_index : ",current_index))
 
             else :
 
@@ -2687,8 +2677,8 @@ class DataImportGui(QtWidgets.QMainWindow):
             display_exception(title,status_msg,e)
 
 
-        if(DEBUG_DATA_IMPORT_COMMECTORS) :
-            print("[display_dbconnector_table] end\n  ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_CONNECTORS")) :
+            add_debug_to_log("DataImportGui",print_to_string("display_dbconnector_table] end\n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -2706,8 +2696,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_dbconnector_form(self,dbcon_form_parms):
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("\n[display_dbconnector_form] ")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form] "))
 
         self.forCreate      =   dbcon_form_parms[0] 
         self.import_type    =   dbcon_form_parms[1] 
@@ -2716,9 +2706,9 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_IMPORT_FORMS) :
-            print("[display_dbconnector_form] self.forCreate  self.import_type :  ",self.forCreate,self.import_type)
-            print("[display_dbconnector_form] self.dbconparms :  \n  ",self.dbconparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form] self.forCreate  self.import_type :  ",self.forCreate,self.import_type))
+            add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form] self.dbconparms :  \n  ",self.dbconparms))
 
         if(self.forCreate) :
             dbconnectors_index  =   self.DataImportWidgets_stack_dict.get(IMPORT_DBCONNECTORS_CREATE_FORM)
@@ -2745,13 +2735,13 @@ class DataImportGui(QtWidgets.QMainWindow):
             else :
                 self.DataImportWidgets_stack_dict.update({IMPORT_DBCONNECTORS_EDIT_FORM : current_index})
 
-            if(DEBUG_DATA_IMPORT_FORMS) :
-                print("[display_dbconnector_form] current_index : ",current_index)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form] current_index : ",current_index))
 
         else :
             
-            if(DEBUG_DATA_IMPORT_FORMS) :
-                print("[display_dbconnector_form][reload_form] : load_form_values ",dbconnectors_index,"\n  ",self.dbconparms)
+            if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_FORMS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form][reload_form] : load_form_values ",dbconnectors_index,"\n  ",self.dbconparms))
 
             if(self.forCreate) :
                 self.dbconnectorCreateForm.load_form_values(self.dbconparms)
@@ -2762,8 +2752,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_dbconnector_form] end\n  ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_dbconnector_form] end\n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -2786,8 +2776,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def display_import_json_dfs(self, dfs):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_import_json_dfs]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs]"))
 
         self.dfslist   =   dfs
  
@@ -2812,8 +2802,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_json_dfs] end",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs] end",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -2828,31 +2818,31 @@ class DataImportGui(QtWidgets.QMainWindow):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_json_dfs][select_itable_id]",row_number,column_number)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs][select_itable_id]",row_number,column_number))
 
         model   =   self.import_json_dfs.importhtmldfsTable.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DATA_IMPORT) :    
-            print("[display_import_json_dfs][select_itable_id] : cell value [",cell,"]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :    
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs][select_itable_id] : cell value [",cell,"]"))
 
         if(column_number == 0) :
             self.display_save_import_json_df(self.dfslist[row_number])
 
     def return_from_json_dfs(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_json_dfs][return_from_json_dfs]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs][return_from_json_dfs]"))
 
         self.display_import_histories(self)
 
 
     def help_for_json_dfs(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_import_json_dfs][help_for_json_dfs]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_import_json_dfs][help_for_json_dfs]"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import HTML_IMPORT_URL
@@ -2865,8 +2855,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
     def display_save_import_json_df(self, df):
 
-        if(DEBUG_DATA_IMPORT) :
-            print("\n[display_save_import_json_df]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_save_import_json_df]"))
 
         self.df  =   df
  
@@ -2891,8 +2881,8 @@ class DataImportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_IMPORT) :
-            print("[display_save_import_json_df] end \n  ",self.DataImportWidgets_stack_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[display_save_import_json_df] end \n  ",self.DataImportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -2901,8 +2891,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def return_from_save_json(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][return_from_save_json]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportGui",print_to_string("[DataImportHTMLdfSaveWidget][return_from_save_json]"))
 
         self.display_import_histories(self)
 
@@ -2911,8 +2901,8 @@ class DataImportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def help_for_save_json(self) :
 
-        if(DEBUG_DATA_IMPORT) :
-             print("  [DataImportHTMLdfSaveWidget][help_for_save_json]")
+        if(is_debug_on(DataImport_ID,"DEBUG_DATA_IMPORT")) :
+             add_debug_to_log("DataImportGui",print_to_string("[DataImportHTMLdfSaveWidget][help_for_save_json]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import HTML_IMPORT_URL
@@ -2961,10 +2951,8 @@ def closeDataImportInstances()  :
             instances[i].get_main_window().close()
 
     from dfcleanser.common.common_utils import clear_screen
-    #from dfcleanser.common.cfg import DATA_IMPORT_TITLE
-    
     clear_screen()
-    #displayHTML(DATA_IMPORT_TITLE)
+ 
     logger.info(" Data Import Instances closed")
 
 def showDataImport()  :
@@ -2973,9 +2961,6 @@ def showDataImport()  :
     from dfcleanser.common.cfg import dfc_qt_chapters, IMPORT_QT_CHAPTER_ID, DATA_IMPORT_TITLE
     
     clear_screen()
-    #displayHTML(DATA_IMPORT_TITLE)
-
-    #logger.info("Loading Data Import Instance")
 
     data_import_gui = DataImportGui()
     data_import_gui.show()
@@ -2985,7 +2970,6 @@ def showDataImport()  :
     total_instances     =   dfc_qt_chapters.get_qt_chapters_count(IMPORT_QT_CHAPTER_ID)
     logger.info(str(total_instances) + " Data Import Instances Loaded")
 
-    #dfc_qt_chapters.dump_dfc_qt_chapters()
 
 def closeDataImportChapter()  :
 

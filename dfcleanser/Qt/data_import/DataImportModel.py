@@ -13,18 +13,9 @@ this = sys.modules[__name__]
 
 from dfcleanser.common.common_utils import (opStatus)
 from dfcleanser.common.cfg import (add_error_to_log, SEVERE_ERROR, set_config_value, get_config_value, CURRENT_IMPORTED_DATA_SOURCE_KEY)
+from dfcleanser.common.cfg import (add_debug_to_log, print_to_string, DataImport_ID)
+from dfcleanser.Qt.system.SystemModel import is_debug_on
 
-DEBUG_IMPORT_HISTORY            =   False
-DEBUG_IMPORT_HISTORY_DETAILS    =   False
-DEBUG_IMPORT_FILE               =   False
-DEBUG_IMPORT_PARMS              =   False
-
-DEBUG_IMPORT                    =   True
-DEBUG_SQL_IMPORT                =   False
-DEBUG_SQL_IMPORT_HTML           =   False
-DEBUG_IMPORT_VALUES             =   False
-
-DEBUG_EXPORT                    =   False
 
 """
 #--------------------------------------------------------------------------
@@ -41,6 +32,11 @@ SQLQUERY_IMPORT                 =   6
 CUSTOM_IMPORT                   =   7
 XML_IMPORT                      =   8
 PDF_IMPORT                      =   9
+
+IMPORT_MORE                     =   10
+PROCESS_CUSTOM_IMPORT           =   11
+CLEAR_CUSTOM_IMPORT             =   12
+IMPORT_CUSTOM_ONLY              =   13
 
 
 def get_text_for_import_type(import_id) :
@@ -1006,8 +1002,8 @@ class DataframeCleanserHistoryParms() :
     # full constructor
     def __init__(self,importtype,filetype,dftitle,fullparms,addlparms) :
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("DataframeCleanserHistoryParms : init",importtype,filetype,dftitle,"\n  ",fullparms,"\n  ",addlparms)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("DataframeCleanserHistoryParms : init",importtype,filetype,dftitle,"\n  ",fullparms,"\n  ",addlparms))
         
         self.import_type        =   importtype
         self.file_type          =   filetype
@@ -1015,8 +1011,8 @@ class DataframeCleanserHistoryParms() :
         self.full_parms         =   fullparms
         self.addl_parms         =   addlparms
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :   
-            print("DataframeCleanserHistoryParms - self",self.import_type ,self.file_type,self.df_title,self.full_parms,self.addl_parms)     
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :   
+            add_debug_to_log("DataImportGui",print_to_string("DataframeCleanserHistoryParms - self",self.import_type ,self.file_type,self.df_title,self.full_parms,self.addl_parms))     
         
     def get_import_type(self) :
         return(self.import_type)
@@ -1090,15 +1086,9 @@ class DataframeCleanserHistory :
         
         import os
         
-        from dfcleanser.common.cfg import DataframeCleansercfg
+        from dfcleanser.common.cfg import cfg
         
-        #nbdir   =   DataframeCleansercfg.get_notebookpath()
-        #nbname  =   DataframeCleansercfg.get_notebookname()
         return(str(cfg.get_dfcleanser_location()+"files"))
-        #if((nbdir is None)or(nbname is None)) :
-        #    return(None)
-        #else :
-        #    return(os.path.join(nbdir,nbname + "_files"))
     
     def get_history_file_name(self,history_type) :
         
@@ -1109,13 +1099,11 @@ class DataframeCleanserHistory :
         cfgdir  =   DataframeCleansercfg.get_cfg_dir_name()
         nbname  =   DataframeCleansercfg.get_notebookname()
         file_loc    =   str(cfg.get_dfcleanser_location()+"files")
-        if(0):#(cfgdir is None)or(nbname is None)) :
-            return(None)
+
+        if(history_type == IMPORT_HISTORY) :
+            return("dfcleanserCommon_import_history.json") 
         else :
-            if(history_type == IMPORT_HISTORY) :
-                return("dfcleanserCommon_import_history.json") 
-            else :
-                return("dfcleanserCommon_export_history.json") 
+            return("dfcleanserCommon_export_history.json") 
 
     def get_history_full_file_name(self,history_type) :
         
@@ -1138,8 +1126,8 @@ class DataframeCleanserHistory :
         
         import json
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n[load_history_file] : self.history_file_loaded  ",self.history_file_loaded )
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[load_history_file] : self.history_file_loaded  ",self.history_file_loaded ))
 
         history_data             =   []
         
@@ -1147,8 +1135,8 @@ class DataframeCleanserHistory :
         history_file_name        =   self.get_history_file_name(self.history_type)
         history_full_file_name   =   self.get_history_full_file_name(self.history_type)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name))
         
         if(not (history_dir_name is None)) :
             
@@ -1157,27 +1145,27 @@ class DataframeCleanserHistory :
                 make_dir(history_dir_name)
             
             from dfcleanser.common.common_utils import does_file_exist
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name))
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name)))
             
             if(not (does_file_exist(history_full_file_name))) :
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("load_history_file - file not found\n",history_full_file_name)
-                    print("load_history_file - file not found : history type",self.history_type)
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("load_history_file - file not found\n",history_full_file_name))
+                    add_debug_to_log("DataImportGui",print_to_string("load_history_file - file not found : history type",self.history_type))
  
                 self.history_file_loaded    =   False    
                 self.notebook_history       =   {}
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("load_history_file - file not found : history length ",len(self.notebook_history))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("load_history_file - file not found : history length ",len(self.notebook_history)))
                     self.dump_history()
             
             # import history file does exist
             else :
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("[load_history_file]  - file found\n  ",history_full_file_name)
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[load_history_file]  - file found\n  ",history_full_file_name))
                 
                 try :
 
@@ -1186,22 +1174,22 @@ class DataframeCleanserHistory :
                         history_data = json.load(history_file)
                         history_file.close()
 
-                    if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                        print("[load_history_file]  - history_data  ",type(history_data),len(history_data))
+                    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[load_history_file]  - history_data  ",type(history_data),len(history_data)))
                     
                     self._parse_history_file_to_dict(history_data)
                     self.history_file_loaded = True
                     
-                    if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                        print("[load_history_file]  - self.history_file_loaded  ",self.history_file_loaded)
+                    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[load_history_file]  - self.history_file_loaded  ",self.history_file_loaded))
                         
                 except :
                         
                     from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
                     add_error_to_log("[Load history file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
                     
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("[load_history_file] - complete : ",self.history_file_loaded)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[load_history_file] - complete : ",self.history_file_loaded))
 
     def save_history_file(self) :
         
@@ -1218,19 +1206,14 @@ class DataframeCleanserHistory :
             
         history_data     =   self._parse_history_dict_to_list()  
             
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\nhistory_data")
-            for i in range(len(history_data)) :
-                print("history",history_data[i])
-            
         try :
                     
             with open(history_file_name, 'w') as  history_file :
                 json.dump(history_data,history_file)
                 history_file.close()
                     
-            if(DEBUG_IMPORT_HISTORY) :
-                print("import history file saved ok")
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY")) :
+                add_debug_to_log("DataImportGui",print_to_string("import history file saved ok"))
                             
         except :
             from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
@@ -1250,10 +1233,8 @@ class DataframeCleanserHistory :
         
         total_entries    =   len(history_file)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n[parse_history_file_to_dict]  ",self.history_type,type(history_file),total_entries,"\n")
-            for i in range(total_entries) :
-                print("    [",i,"] ",history_file[i])
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[parse_history_file_to_dict]  ",self.history_type,type(history_file),total_entries,"\n"))
         
         try :
        
@@ -1271,15 +1252,13 @@ class DataframeCleanserHistory :
                 
                 history_entry    =   DataframeCleanserHistoryParms(self.history_type,file_type,df_title,parms,addl_parms_dict)
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\n[_parse_history_file_to_dict] - history_entry[",i,"]")
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[_parse_history_file_to_dict] - history_entry[",i,"]"))
                     history_entry.dump()
             
                 self._add_entry_to_history_dict(history_entry)
 
         except Exception as e:
-            from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
-            add_error_to_log("[_parse_history_file_to_dict Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
             
             title       =   "dfcleanser exception"
             status_msg  =   "[parse import/export file] error "
@@ -1308,26 +1287,26 @@ class DataframeCleanserHistory :
         
             if(type_dict is None) :
         
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_entry_to_history_dict - no import_type_dict")
-                    print("add_entry_to_import_history_dict - history_entry.get_df_title()",history_entry.get_df_title())
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("add_entry_to_history_dict - no import_type_dict"))
+                    add_debug_to_log("DataImportGui",print_to_string("add_entry_to_import_history_dict - history_entry.get_df_title()",history_entry.get_df_title()))
                 
                 df_titles_dict  =   {}
                 df_titles_dict.update({ history_entry.get_df_title() : history_entry})
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_entry_to_history_dict - df_titles_dict",len(df_titles_dict))
-                    print(list(df_titles_dict.keys()))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("add_entry_to_history_dict - df_titles_dict",len(df_titles_dict)))
+                    add_debug_to_log("DataImportGui",print_to_string(list(df_titles_dict.keys())))
             
                 self.notebook_history.update({history_entry.get_file_type() : df_titles_dict })
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_entry_to_import_history_dict - notebook_history",len(self.notebook_history))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("add_entry_to_import_history_dict - notebook_history",len(self.notebook_history)))
             
             else :
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_entry_to_history_dict - type_dict",len(type_dict))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("add_entry_to_history_dict - type_dict",len(type_dict)))
                     history_entry.dump()
 
             
@@ -1363,8 +1342,8 @@ class DataframeCleanserHistory :
         
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n\nparse_history_dict_to_list")
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("parse_history_dict_to_list"))
             self.dump_history()
         
         try :
@@ -1374,29 +1353,29 @@ class DataframeCleanserHistory :
             history_types    =   list(self.notebook_history.keys())
             history_types.sort()
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("\nparse_history_dict_to_list - history types",history_types)
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("parse_history_dict_to_list - history types",history_types))
         
             for i in range(len(history_types)) :
                 df_titles_dict  =   self.notebook_history.get(history_types[i])
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nparse_history_dict_to_list - history_type : ",history_types[i])
-                    print("    df_titles_dict",len(df_titles_dict))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("parse_history_dict_to_list - history_type : ",history_types[i]))
+                    add_debug_to_log("DataImportGui",print_to_string("    df_titles_dict",len(df_titles_dict)))
             
             
                 df_titles    =   list(df_titles_dict.keys())
                 df_titles.sort()
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nparse_history_dict_to_list - df_titles",len(df_titles)," : ",df_titles)
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("parse_history_dict_to_list - df_titles",len(df_titles)," : ",df_titles))
 
                 for j in range(len(df_titles)) :
                 
                     history_entry        =   df_titles_dict.get(df_titles[j])
                 
-                    if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                        print("\nparse_history_dict_to_list - import_entry[",j,"]",type(history_entry),history_entry)
+                    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                        add_debug_to_log("DataImportGui",print_to_string("parse_history_dict_to_list - import_entry[",j,"]",type(history_entry),history_entry))
                 
                     history_entry_list   =   []
                 
@@ -1461,24 +1440,24 @@ class DataframeCleanserHistory :
         * --------------------------------------------------------
         """
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n[get_df_titles_for_file_type] : fileType : self.history_file_loaded",fileType,self.history_file_loaded)
-            print("[get_df_titles_for_file_type ]: file name ",self.get_history_full_file_name(self.history_type))
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[get_df_titles_for_file_type] : fileType : self.history_file_loaded",fileType,self.history_file_loaded))
+            add_debug_to_log("DataImportGui",print_to_string("[get_df_titles_for_file_type ]: file name ",self.get_history_full_file_name(self.history_type)))
             
         if(not (self.history_file_loaded)) :
             self.load_history_file()    
         
         df_titles_dict  =   self.notebook_history.get(fileType)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\ndf_titles_dict : ",fileType,"\n",df_titles_dict)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("df_titles_dict : ",fileType,"\n",df_titles_dict))
         
         if(not (df_titles_dict is None)) :
             
             df_titles_list  =   list(df_titles_dict.keys())
             
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("\ndf_titles_list",df_titles_list)
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("df_titles_list",df_titles_list))
                 self.dump_history()
             
             if(not (df_titles_list is None)) :
@@ -1508,43 +1487,43 @@ class DataframeCleanserHistory :
        
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n  [add_to_history] : filetype : dftitle : ",filetype,dfTitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[add_to_history] : filetype : dftitle : ",filetype,dfTitle))
             self.dump_history()    
         
         try :
             
             new_entry    =   DataframeCleanserHistoryParms(self.history_type,filetype,dfTitle,fullParms,addlParms)
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("  [add_to_history] : df : ",dfTitle," history type : ",self.history_type," filetype : ",filetype,"\n fullparms : ",fullParms,"\n addlparms : ",addlParms)
-                print("  [add_to_history] - new_entry - dump")
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[add_to_history] : df : ",dfTitle," history type : ",self.history_type," filetype : ",filetype,"\n fullparms : ",fullParms,"\n addlparms : ",addlParms))
+                add_debug_to_log("DataImportGui",print_to_string("[add_to_history] - new_entry - dump"))
                 new_entry.dump()
             
             df_titles_dict  =   self.notebook_history.get(filetype)
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("  [add_to_history] : df_titles_dict\n",df_titles_dict)
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[add_to_history] : df_titles_dict\n",df_titles_dict))
 
             if(df_titles_dict is None) :
             
                 new_type_dict    =   {}
                 new_type_dict.update({dfTitle : new_entry})
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_to_history : new_type_dict",new_type_dict,filetype)
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("add_to_history : new_type_dict",new_type_dict,filetype))
             
                 self.notebook_history.update({filetype : new_type_dict})
             
             else :
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("  [add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict))
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict)))
             
                 df_titles_dict.update({dfTitle : new_entry})    
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("  [add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict),"\n dict : ",df_titles_dict)
+                if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                    add_debug_to_log("DataImportGui",print_to_string("[add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict),"\n dict : ",df_titles_dict))
 
                 self.notebook_history.update({filetype : df_titles_dict})
         
@@ -1562,8 +1541,8 @@ class DataframeCleanserHistory :
             add_error_to_log("[add_to_history] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
 
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("  [add_import_to_history] - new_history : ")
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+            add_debug_to_log("DataImportGui",print_to_string("[add_import_to_history] - new_history : "))
             self.dump_history()
 
     def delete_from_history(self,filetype,dfTitle) :
@@ -1581,8 +1560,8 @@ class DataframeCleanserHistory :
        
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY) :
-            print("\ndelete_from_history\n",filetype,"\n",dfTitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY")) :
+            padd_debug_to_log("DataImportGui",print_to_string("delete_from_history\n",filetype,"\n",dfTitle))
             
         df_titles_dict  =   self.notebook_history.get(filetype)
         
@@ -1618,28 +1597,28 @@ class DataframeCleanserHistory :
         * -------------------------------------------------------------------
         """
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
-            print("    [get_df_title_entry] : filetype : ",fileType," dftitle : ",dfTitle)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")):
+            add_debug_to_log("DataImportGui",print_to_string("[get_df_title_entry] : filetype : ",fileType," dftitle : ",dfTitle))
         
         if(not (self.history_file_loaded)) :
             self.load_history_file()    
         
         df_titles_dict  =   self.notebook_history.get(fileType)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")):
             dict_keys = list(df_titles_dict.keys())
-            print("    [get_df_title_entry] : dftitles dict keys : \n   ",dict_keys)
+            add_debug_to_log("DataImportGui",print_to_string("[get_df_title_entry] : dftitles dict keys : \n   ",dict_keys))
 
         if(df_titles_dict is None) :
             return(None)
         else :
             
-            if( (DEBUG_IMPORT_HISTORY_DETAILS) ):
-                print("    [get_df_title_entry] : dfTitle len : ",len(dfTitle),dfTitle)
+            if( (is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) ):
+                add_debug_to_log("DataImportGui",print_to_string("[get_df_title_entry] : dfTitle len : ",len(dfTitle),dfTitle))
 
             df_title_dict   =   df_titles_dict.get(dfTitle)
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("    [get_df_title_entry] : df_title_dict : ",type(df_title_dict))
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
+                add_debug_to_log("DataImportGui",print_to_string("[get_df_title_entry] : df_title_dict : ",type(df_title_dict)))
                 if(not (df_title_dict is None)) :
                     df_title_dict.dump()
             
@@ -1658,15 +1637,15 @@ class DataframeCleanserHistory :
         
         hkeys   =   list(self.notebook_history.keys())
         
-        print("\nhkeys",hkeys)
+        add_debug_to_log("DataImportGui",print_to_string("hkeys",hkeys))
         
         for i in range(len(hkeys)) :
-            print("\nfile type : ",hkeys[i])
+            add_debug_to_log("DataImportGui",print_to_string("file type : ",hkeys[i]))
             ftdict  =   self.notebook_history.get(hkeys[i])
             ftkeys  =   list(ftdict.keys())
             
             for j in range(len(ftkeys)) :
-                print("\ndftitle : ",ftkeys[j])
+                add_debug_to_log("DataImportGui",print_to_string("dftitle : ",ftkeys[j]))
                 ftdict.get(ftkeys[j]).dump()
 
 
@@ -1708,8 +1687,8 @@ def get_dftitles_list(historytype,detid) :
     
     #opstat  =   opStatus()
 
-    if(DEBUG_IMPORT_FILE) :
-        print("    [get_dftitles_list] : historytype :  detid : ",historytype,detid)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_FILE")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_dftitles_list] : historytype :  detid : ",historytype,detid))
 
     
     if(historytype  ==  IMPORT_HISTORY) :
@@ -1731,14 +1710,14 @@ def get_last_dftitle(detid,df_titles) :
     * ------------------------------------------------------------
     """
     
-    if(DEBUG_IMPORT_FILE) :
-        print("    [get_last_dftitle] :  detid : ",detid,"\n       dftitles : ",df_titles)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_FILE")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_last_dftitle] :  detid : ",detid,"\n       dftitles : ",df_titles))
 
     formid                  =   get_formid_for_import(detid) + "Parms"
     last_history_cfg_data   =   get_config_value(formid)
     
-    if(DEBUG_IMPORT) :
-        print("    [get_last_dftitle] :  last_history_cfg_data : \n    ",last_history_cfg_data)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_last_dftitle] :  last_history_cfg_data : \n    ",last_history_cfg_data))
 
     if(not (last_history_cfg_data is None)) :
 
@@ -1764,8 +1743,8 @@ def get_last_dftitle(detid,df_titles) :
 
 def get_Parms_cfg_value_for_import(importType,import_full_parms,import_input_parms) :
 
-    if(DEBUG_IMPORT_FILE):
-        print("get_Parms_cfg_value_for_import : importType : ",importType,"\n full_parms : ",import_full_parms,"\n input_parms : ",import_input_parms)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_FILE")):
+        add_debug_to_log("DataImportGui",print_to_string("get_Parms_cfg_value_for_import : importType : ",importType,"\n full_parms : ",import_full_parms,"\n input_parms : ",import_input_parms))
     
     import json
     
@@ -2100,8 +2079,8 @@ def get_Parms_cfg_value_for_import(importType,import_full_parms,import_input_par
     
     elif(importType == SQLTABLE_IMPORT) :
 
-        if(DEBUG_IMPORT_FILE) :
-            print("get_Parms_cfg_value_for_import : len : ",len(import_full_parms),"\n import_full_parms : ",import_full_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_FILE")) :
+            add_debug_to_log("DataImportGui",print_to_string("get_Parms_cfg_value_for_import : len : ",len(import_full_parms),"\n import_full_parms : ",import_full_parms))
 
 
         if(len(import_full_parms) == 11) :
@@ -2264,8 +2243,8 @@ def get_Parms_cfg_value_for_import(importType,import_full_parms,import_input_par
         import_input_parms.append(dates_format_list)
         import_input_parms.append(chunksize) 
                 
-    if(DEBUG_IMPORT_FILE):
-        print("get_Parms_cfg_value_for_import : import_input_parms \n",import_input_parms)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_FILE")):
+        add_debug_to_log("DataImportGui",print_to_string("get_Parms_cfg_value_for_import : import_input_parms \n",import_input_parms))
 
     return(import_input_parms)
 
@@ -2273,7 +2252,7 @@ def get_Parms_cfg_value_for_import(importType,import_full_parms,import_input_par
 
 def get_addl_parms_for_cfg(addl_parms) :
     """
-    * -------------------------------------------------------------------------- 
+    * ---------------------------------------------------------
     * function : get string version of addl parmsa dict
     * 
     * parms :
@@ -2322,7 +2301,7 @@ def get_addl_parms_for_cfg(addl_parms) :
 
 def get_import_form_cfg_values_from_defaults(importid,df_title,df_titles) :
     """
-    * -------------------------------------------------------------------------- 
+    * --------------------------------------------------------
     * function : set cfg value for form parms
     * 
     * parms :
@@ -2332,8 +2311,8 @@ def get_import_form_cfg_values_from_defaults(importid,df_title,df_titles) :
     * --------------------------------------------------------
     """
                 
-    if(DEBUG_SQL_IMPORT) :
-        print("\n[get_import_form_cfg_values_from_defaults] : importid : ",importid," dftitle : ",df_title,"\n df_titles : \n",df_titles)
+    if(is_debug_on(DataImport_ID,"DEBUG_SQL_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_form_cfg_values_from_defaults] : importid : ",importid," dftitle : ",df_title,"\n df_titles : \n",df_titles))
 
     cfgparms    =   []
     cfgparms.append(df_title)
@@ -2346,8 +2325,8 @@ def get_import_form_cfg_values_from_defaults(importid,df_title,df_titles) :
     for i in range(len(sqlt_import_parms_defaults)) :
         cfgparms.append(sqlt_import_parms_defaults[i])
     
-    if(DEBUG_SQL_IMPORT) :
-        print("\n[get_import_form_cfg_values_from_defaults] : cfgparms : \n",cfgparms)
+    if(is_debug_on(DataImport_ID,"DEBUG_SQL_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_form_cfg_values_from_defaults] : cfgparms : \n",cfgparms))
 
     return(cfgparms)
 
@@ -2363,8 +2342,8 @@ def set_import_form_cfg_values_from_histroy_entry(detid,conparms=None,history_en
     * --------------------------------------------------------
     """
                 
-    if(DEBUG_IMPORT) :
-        print("\n[set_import_form_cfg_values_from_histroy_entry] : detid : ",detid,"\n conparms : ",conparms,"\n history_entry : ",history_entry)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[set_import_form_cfg_values_from_histroy_entry] : detid : ",detid,"\n conparms : ",conparms,"\n history_entry : ",history_entry))
     
     formid                  =   get_formid_for_import(detid)
     
@@ -2394,8 +2373,8 @@ def set_import_form_cfg_values_from_histroy_entry(detid,conparms=None,history_en
             
         import_input_parms  =   None
     
-    if(DEBUG_IMPORT) :
-        print("\n[set_import_form_cfg_values_from_histroy_entry] : import_input_parms \n",import_input_parms,"\n")
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[set_import_form_cfg_values_from_histroy_entry] : import_input_parms \n",import_input_parms,"\n"))
     
     # ----------------------------------
     # store input parms before display
@@ -2416,8 +2395,8 @@ def set_import_form_cfg_values_from_histroy_entry(detid,conparms=None,history_en
             
     if(not (import_input_parms is None)) : 
         
-        if(DEBUG_IMPORT) :
-            print("\n[set_import_form_cfg_values_from_histroy_entry] : mport_input_parms \n",import_input_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[set_import_form_cfg_values_from_histroy_entry] : mport_input_parms \n",import_input_parms))
 
         import dfcleanser.common.cfg as cfg
         cfg.set_config_value(formid + "Parms",import_input_parms)
@@ -2623,8 +2602,8 @@ class SQLTableImportData :
     @staticmethod
     def get_sqltable_import_history_details(dftitle,titleslist,parmslist,addl_parms) :
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
-            print("  [get_sqltable_import_history_details] : \n   titles\n    ",titleslist,"\n   values\n    ",parmslist)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")):
+            add_debug_to_log("DataImportGui",print_to_string("[get_sqltable_import_history_details] : \n   titles\n    ",titleslist,"\n   values\n    ",parmslist))
 
         pvals           =   []
         ptitles         =   []
@@ -2641,8 +2620,8 @@ class SQLTableImportData :
         intitles        =   titleslist[3:]
         invals          =   parmslist[3:]
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
-            print("  [get_sqltable_import_history_details] : \n   intitles  \n   ",intitles,"\n   invals :\n   ",invals)
+        if(is_debug_on(DataImport_ID,"DEBUG_IMPORT_HISTORY_DETAILS")):
+            add_debug_to_log("DataImportGui",print_to_string("[get_sqltable_import_history_details] : \n   intitles  \n   ",intitles,"\n   invals :\n   ",invals))
     
         for i in range(len(intitles)) :
 
@@ -2662,14 +2641,14 @@ class SQLTableImportData :
 
     def get_import_sqltable_call_parms(self,fparms,opstat) :
         """
-        * -------------------------------------------------------------------------- 
+        * ------------------------------------------------------------------
         * function : get the list of parms necessary to import sql table 
         * 
         * parms :
         *  fparms   -   sql input form parms                      
         *
         * returns : sql cpandas all parms
-        * --------------------------------------------------------
+        * ------------------------------------------------------------------
         """
                 
         if(len(fparms[0]) == 0):
@@ -2723,7 +2702,6 @@ class SQLTableImportData :
                     try :
                             
                         tparse_dates   =   fparms[6]
-                        print("tparse_dates",type(tparse_dates),tparse_dates)
                         tparse_dates   =   tparse_dates.replace("'",'"')
                             
                         tparse_dates   =   json.loads(tparse_dates)    
@@ -2799,7 +2777,7 @@ class SQLTableImportData :
 
     def set_import_sqltable_cfg_values(self,dftitle,importparms,parmid,opstat) :
         """
-        * -------------------------------------------------------------------------- 
+        * ---------------------------------------------------------
         * function : add the sql table import to the config file
         * 
         * parms :
@@ -2838,7 +2816,7 @@ class SQLTableImportData :
 
 def get_import_details_values(importParms) :
     """
-    * -------------------------------------------------------------------------- 
+    * --------------------------------------------------------
     * function : get import parms for dftitle and filetype
     * 
     * parms :
@@ -2849,29 +2827,30 @@ def get_import_details_values(importParms) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_IMPORT) :
-        print("  [get_import_details_values] importParms : ",importParms)    
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] importParms : ",importParms))  
+        add_debug_to_log("DataImportGui",print_to_string("debug log",dfc_debug_log.get_debuglog_file_name()))
 
     fileType        =   int(importParms[0])
     dfTitle         =   importParms[1]
 
-    if(DEBUG_IMPORT) :
-        print("  [get_import_details_values] filetype : dftitle : ",fileType,dfTitle)    
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] filetype : dftitle : ",fileType,dfTitle))    
     
     Import_Details  =   ImportHistory.get_df_title_entry(fileType,dfTitle)
     
-    if(DEBUG_IMPORT) :
-        print("  [get_import_details_values] Import_Details : \n    ",Import_Details)    
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] Import_Details : \n    ",Import_Details))    
     
     file_Type       =   Import_Details.get_file_type()
     df_title        =   Import_Details.get_df_title()
     full_parms      =   Import_Details.get_full_parms()
     addl_parms      =   Import_Details.get_addl_parms()
 
-    if(DEBUG_IMPORT) :
-        print("  [get_import_details_values] filetype : dftitle : ",fileType,dfTitle)
-        print("    full_parms :  ",full_parms)
-        print("    addl_parms :  ",addl_parms)
+    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] filetype : dftitle : ",fileType,dfTitle))
+        add_debug_to_log("DataImportGui",print_to_string("full_parms :  ",full_parms))
+        add_debug_to_log("DataImportGui",print_to_string("addl_parms :  ",addl_parms))
 
     import dfcleanser.Qt.data_import.DataImportModel as DIM
     if( (fileType == file_Type) and (dfTitle == df_title) ) :
@@ -2911,9 +2890,9 @@ def get_import_details_values(importParms) :
                 ptitles.pop(1)
 
     
-            if(DEBUG_IMPORT) :
-                print("  [get_import_details_values] ")
-                print("    ptitles: \n      ",ptitles)
+            if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+                add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] "))
+                add_debug_to_log("DataImportGui",print_to_string("ptitles: \n      ",ptitles))
     
             pvals               =   []
             final_ptitles       =   []
@@ -2946,10 +2925,10 @@ def get_import_details_values(importParms) :
                             final_ptitles.append(addl_parms_keys[i])
                             pvals.append(addl_parms.get(addl_parms_keys[i]))
 
-                    if(DEBUG_IMPORT) :
-                        print("  [get_import_details_values] ")
-                        print("    final_ptitles : \n      ",final_ptitles)
-                        print("    pvals         : \n      ",pvals)
+                    if(is_debug_on(DataImport_ID,"DEBUG_IMPORT")) :
+                        add_debug_to_log("DataImportGui",print_to_string("[get_import_details_values] "))
+                        add_debug_to_log("DataImportGui",print_to_string("final_ptitles : \n      ",final_ptitles))
+                        add_debug_to_log("DataImportGui",print_to_string("pvals         : \n      ",pvals))
 
             except Exception as e:
             
@@ -2982,8 +2961,8 @@ def get_export_details_values(exportParms) :
     fileType        =   int(exportParms[0])
     dfTitle         =   exportParms[1]
 
-    if(DEBUG_EXPORT) :
-        print("   [get_export_details_values]",fileType,dfTitle)
+    if(is_debug_on(DataImport_ID,"DEBUG_EXPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_export_details_values]",fileType,dfTitle))
 
     from dfcleanser.Qt.data_export.DataExportModel import pandas_export_sqltable_labelList, pandas_export_csv_labelList
     from dfcleanser.Qt.data_export.DataExportModel import pandas_export_excel_labelList, pandas_export_json_labelList, pandas_export_html_labelList, custom_export_labelList
@@ -2992,8 +2971,8 @@ def get_export_details_values(exportParms) :
 
     Export_Details  =   ExportHistory.get_df_title_entry(fileType,dfTitle)
     
-    if(DEBUG_EXPORT) :
-        print("   [get_export_details_values] Export_Details : ",Export_Details)
+    if(is_debug_on(DataImport_ID,"DEBUG_EXPORT")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_export_details_values] Export_Details : ",Export_Details))
 
     ptitles     =   []
     pvals       =   []
@@ -3005,9 +2984,9 @@ def get_export_details_values(exportParms) :
         full_parms      =   Export_Details.get_full_parms()
         addl_parms      =   Export_Details.get_addl_parms()
 
-        if(DEBUG_EXPORT) :
-            print("   [get_export_details_values] full_parms : ",full_parms)
-            print("   [get_export_details_values] addl_parms : ",addl_parms)
+        if(is_debug_on(DataImport_ID,"DEBUG_EXPORT")) :
+            add_debug_to_log("DataImportGui",print_to_string("[get_export_details_values] full_parms : ",full_parms))
+            add_debug_to_log("DataImportGui",print_to_string("[get_export_details_values] addl_parms : ",addl_parms))
     
         if( (fileType == file_Type) and (dfTitle == df_title) ) :
         
@@ -3032,8 +3011,8 @@ def get_export_details_values(exportParms) :
             else :
                 ptitles     =   []
 
-            if(DEBUG_EXPORT) :
-                print("   [get_export_details_values] ptitles : ",ptitles)
+            if(is_debug_on(DataImport_ID,"DEBUG_EXPORT")) :
+                add_debug_to_log("DataImportGui",print_to_string("[get_export_details_values] ptitles : ",ptitles))
 
    
             pvals   =   []
