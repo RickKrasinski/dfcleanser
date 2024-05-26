@@ -24,16 +24,10 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-
-DEBUG_CLEANSE_ROWS                  =   False
-DEBUG_CLEANSE_ROWS_FILTER           =   False
-DEBUG_CLEANSE_ROWS_FILTER_DETAILS   =   False
-DEBUG_CLEANSE_COLUMN_DETAILS        =   False
-DEBUG_CLEANSE_COLUMN_SINGLE         =   False
-
-DEBUG_FILTERS_COLUMN_TABLE          = False
-DEBUG_FILTERS_STATS_TABLE           = False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
 
 
 # -----------------------------------------------------------------#
@@ -162,7 +156,7 @@ class DataCleansingdfFiltersColumnModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -221,26 +215,26 @@ class DataCleansingdfFiltersColumnTable(QtWidgets.QTableView):
         self.working_df_to_filter   =   colparms[0]
         self.select_callback        =   colparms[1]
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("    [DataCleansingdfFiltersColumnTable] : init ",self.select_callback)
-        if(DEBUG_CLEANSE_ROWS_FILTER_DETAILS) :    
-            print("    [DataCleansingdfFiltersColumnTable] : init ",self.working_df_to_filter)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable] : init ",self.select_callback))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :    
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable] : init ",self.working_df_to_filter))
 
         if( not(self.select_callback is None)) :
             self.doubleClicked.connect(self.select_callback) 
 
         self.init_tableview()
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("    [DataCleansingdfFiltersColumnTable] : end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self) :
                     
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][reload_data] : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][reload_data] : "))
 
         #self.working_df_to_filter   =   workingdf
         #self.select_callback        =   callback
@@ -250,8 +244,8 @@ class DataCleansingdfFiltersColumnTable(QtWidgets.QTableView):
 
         self.num_rows   =   len(statsdata)
 
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][reload_data] : self.num_rows ",self.num_rows)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][reload_data] : self.num_rows ",self.num_rows))
         
         if(self.num_rows < 12) :
             new_height  =   (35 + (self.num_rows * DEFAULT_ROW_HEIGHT))
@@ -261,31 +255,31 @@ class DataCleansingdfFiltersColumnTable(QtWidgets.QTableView):
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
         
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][reload_data] : end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][reload_data] : end"))
     
     # -----------------------------------------------------------------#
     # -                     init the tableview                        -#
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][init_tableview]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statsdata     =   self.load_columns_info_data()
         
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-           print("    [DataCleansingdfFiltersColumnTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+           add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = DataCleansingdfFiltersColumnModel(statsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-           print("    [DataCleansingdfFiltersColumnTable][init_tableview] : model loaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+           add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statsdata)
         
@@ -328,15 +322,15 @@ class DataCleansingdfFiltersColumnTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_info_data(self):
 
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][load_columns_info_data]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][load_columns_info_data]"))
 
         data    =   []
 
         df_col_names_list   =   self.working_df_to_filter.columns.tolist()
 
-        if(DEBUG_FILTERS_COLUMN_TABLE) :
-            print("    [DataCleansingdfFiltersColumnTable][load_columns_info_data] df_col_names_list ",df_col_names_list)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_COLUMN_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnTable][load_columns_info_data] df_col_names_list ",df_col_names_list))
 
 
         for i in range(len(df_col_names_list)) :
@@ -377,20 +371,20 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
         self.filter_working_df  =   get_dfc_dataframe_df(self.filter_working_df_title)
 
         
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersColumnWidget] : self.filter_working_df_title ",self.filter_working_df_title)
-        if(DEBUG_CLEANSE_ROWS_FILTER_DETAILS) :
-            print("  [DataCleansingdfFiltersColumnWidget] : self.filter_working_df_title ",self.filter_working_df)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget] : self.filter_working_df_title ",self.filter_working_df_title))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget] : self.filter_working_df_title ",self.filter_working_df))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget] end"))
 
     def reload_data(self,parent,working_df_title) :
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][reload_data] "))
 
         self.parent                     =   parent
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -401,8 +395,8 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form]self.filter_working_df_title",self.filter_working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form]self.filter_working_df_title",self.filter_working_df_title))
 
         from PyQt5.QtWidgets import QLabel
         dffilter_title_label   =   QLabel()
@@ -422,8 +416,8 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
         self.dfStats.setMinimumHeight(new_height)
         self.dfStats.setMaximumHeight(new_height)
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded"))
 
         parms               =    [self.filter_working_df,self.select_column_to_drop]
         self.colsdfStats    =    DataCleansingdfFiltersColumnTable(parms)
@@ -464,8 +458,8 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
         help_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         help_button.clicked.connect(self.help_for_df_Filter) 
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][init_form] : buttons built")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][init_form] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         ccbutonsLayout  =   QHBoxLayout()
@@ -479,8 +473,6 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
         self.criteria_container = QWidget(self)
         self.criteria_container.setMaximumSize(550,600)
         self.criteria_container.setMinimumSize(550,600)
-
-        #criteria_container.setFixedWidth(620)
 
         self.dfCriteriaLayout     =   QVBoxLayout(self.criteria_container)
         self.dfCriteriaLayout.addWidget(dffilter_title_label)
@@ -517,15 +509,15 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][select_column_to_drop] ",row_number,column_number)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][select_column_to_drop] ",row_number,column_number))
 
         model   =   self.colsdfStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :    
-            print("  [DataCleansingdfFiltersColumnWidget][select_column_to_drop] : colname [",cell,"]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :    
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][select_column_to_drop] : colname [",cell,"]"))
 
         try :
 
@@ -549,15 +541,15 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
 
     def define_df_Filter(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][define_df_Filter]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][define_df_Filter]"))
 
         self.parent.display_cleanse_rows_criteria(self.filter_working_df_title)
         
     def return_from_df_Filter(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][return_from_cleanse_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][return_from_cleanse_column]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansing import DFS_SELECT
         self.parent.init_stacked_index()
@@ -565,8 +557,8 @@ class DataCleansingdfFiltersColumnWidget(QtWidgets.QWidget):
 
     def help_for_df_Filter(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][help_for_df_Filter]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersColumnWidget][help_for_df_Filter]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SUBSET_CRITERIA
@@ -616,7 +608,7 @@ class DataCleansingdfStatsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -674,21 +666,21 @@ class DataCleansingdfStatsTable(QtWidgets.QTableView):
 
         self.workingdf          =   colparms[0]
 
-        if(DEBUG_FILTERS_STATS_TABLE) :
-            print("\n[DataCleansingdfStatsTable] : init")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_FILTERS_STATS_TABLE) :
-            print("[DataCleansingdfStatsTable] : end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_FILTERS_STATS_TABLE) :
-            print("  [DataCleansingdfStatsTable][reload_data]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable][reload_data]  "))
 
         statsdata       =   self.load_columns_info_data()
         self.model.reload_data(statsdata)
@@ -708,23 +700,23 @@ class DataCleansingdfStatsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_FILTERS_STATS_TABLE) :
-            print("  [DataCleansingdfStatsTable][init_tableview]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statsdata     =   self.load_columns_info_data()
         
-        if(DEBUG_FILTERS_STATS_TABLE) :
-           print("  [DataCleansingdfStatsTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+           add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = DataCleansingdfStatsModel(statsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_FILTERS_STATS_TABLE) :
-           print("  [DataCleansingdfStatsTable][init_tableview] : model loaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+           add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statsdata)
         
@@ -737,7 +729,7 @@ class DataCleansingdfStatsTable(QtWidgets.QTableView):
         tablefont.setBold(False)
         self.setFont(tablefont)
 
-        # set table view headerDEBDEBUG_CLEANSE_ROWS_FILTERUG_CLEANSE_ROWS_FILTER
+        # set table view header
         header = self.horizontalHeader()
         header.setDefaultAlignment(Qt.AlignHCenter)
         header.setFixedHeight(26)
@@ -759,8 +751,8 @@ class DataCleansingdfStatsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_info_data(self):
 
-        if(DEBUG_FILTERS_STATS_TABLE) :
-            print("  [DataCleansingdfStatsTable][load_columns_info_data]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_FILTERS_STATS_TABLE")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfStatsTable][load_columns_info_data]"))
 
         data    =   []
 
@@ -812,18 +804,18 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
         self.parent                     =   dfparms[0]
         self.filter_working_df_title    =   dfparms[1]
          
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget]  :  self.filter_working_df_title ",self.filter_working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget]  :  self.filter_working_df_title ",self.filter_working_df_title))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget] end"))
 
     def reload_data(self,parent,workingdf_title) :
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][reload_data] workingdf_title ",workingdf_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][reload_data] workingdf_title ",workingdf_title))
 
         self.parent                     =   parent
         self.filter_working_df_title    =   workingdf_title
@@ -831,8 +823,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.filter_working_df  =   get_dfc_dataframe_df(self.filter_working_df_title)
         
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][reload_data] filter_working_df_title ",self.filter_working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][reload_data] filter_working_df_title ",self.filter_working_df_title))
 
         self.dfStats.reload_data()#self.filter_working_df)        
         
@@ -858,14 +850,14 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
     
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form]"))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.filter_working_df  =   get_dfc_dataframe_df(self.filter_working_df_title)
         
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] self.filter_working_df_title",self.filter_working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] self.filter_working_df_title",self.filter_working_df_title))
         
         from PyQt5.QtWidgets import QLabel
         df_title_label   =   QLabel()
@@ -895,8 +887,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
         self.dfStats.setMinimumHeight(new_height)
         self.dfStats.setMaximumHeight(new_height)
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded"))
 
         parms               =    [self.filter_working_df,self.select_column_to_drop]
         self.colsdfStats    =    DataCleansingdfFiltersColumnTable(parms)
@@ -912,8 +904,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
         self.colsdfStats.setMinimumHeight(new_height)
         self.colsdfStats.setMaximumHeight(new_height)
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] :colsdfStats loaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] :colsdfStats loaded"))
 
         from PyQt5.QtWidgets import QLabel
         note_label   =   QLabel()
@@ -948,8 +940,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
 
         code    =   cfg.get_config_value(get_subset_criteria_input_id+"Parms")
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] cfg code : ",code[0])
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] cfg code : ",code[0]))
 
         if(not (code is None)) :
 
@@ -1001,8 +993,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
         self.setLayout(self.final_layout)
 
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] end"))
 
     # -----------------------------------------------------------------#
     # -                Cleanse Columns Widget methods                 -#
@@ -1010,8 +1002,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
 
     def select_column_to_drop(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse]",self.filter_working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse]",self.filter_working_df_title))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.filter_working_df  =   get_dfc_dataframe_df(self.filter_working_df_title)
@@ -1023,15 +1015,15 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse] ",row_number,column_number)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse] ",row_number,column_number))
 
         model   =   self.colsdfStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :    
-            print("[DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse] : colname [",cell,"]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :    
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][select_column_to_cleanse] : colname [",cell,"]"))
 
         from PyQt5.QtWidgets import QMessageBox
         dlg = QMessageBox()
@@ -1066,8 +1058,8 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
 
     def get_df_from_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][get_df_from_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][get_df_from_criteria]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1087,15 +1079,15 @@ class DataCleansingdfFiltersCriteriaWidget(QtWidgets.QWidget):
 
     def return_from_df_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][return_from_df_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][return_from_df_criteria]"))
 
         self.parent.display_cleanse_rows()
 
     def help_for_df_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][help_for_df_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][help_for_df_criteria]"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SUBSET_CRITERIA
@@ -1127,18 +1119,18 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
         self.parent                     =   dfparms[0]
         self.filter_working_df_title    =   dfparms[1]
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersProcessdfWidget]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+           add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessdfWidget]  "))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersProcessdfWidget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessdfWidget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersProcessdfWidget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessdfWidget][reload_data] "))
 
         self.parent                     =   parent
         self.filter_working_df_title    =   dftitle
@@ -1147,8 +1139,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersProcessdfWidget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessdfWidget][init_form]"))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.filter_working_df  =   get_dfc_dataframe_df(self.filter_working_df_title)
@@ -1179,8 +1171,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
         self.dfStats.setMinimumHeight(new_height)
         self.dfStats.setMaximumHeight(new_height)
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersCriteriaWidget][init_form] : dfStatsloaded"))
 
         parms               =    [self.filter_working_df,None]
         self.colsdfStats    =    DataCleansingdfFiltersColumnTable(parms)
@@ -1252,8 +1244,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][init_form] end"))
 
     # -----------------------------------------------------------------#
     # -                Cleanse Columns Widget methods                 -#
@@ -1261,8 +1253,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
     def save_df_from_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][save_df_from_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][save_df_from_criteria]"))
 
         new_df_title    =   self.df_process_form.get_form_input_value_by_index(0)
 
@@ -1287,15 +1279,15 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
     def apply_new_filter(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][apply_new_filter]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][apply_new_filter]"))
 
         self.parent.display_cleanse_rows_criteria(self.filter_working_df_title)
 
     def open_in_excel_df_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][open_in_excel_df_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][open_in_excel_df_criteria]"))
 
         from dfcleanser.common.common_utils import run_jscript
         script  =   "browse_df_in_df_browser('Filtered_df');"
@@ -1305,8 +1297,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
     def return_from_df_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][return_from_df_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][return_from_df_criteria]"))
 
         df_titles   =   cfg.get_dfc_dataframes_titles_list()
         if("Filtered_df" in df_titles) :
@@ -1317,8 +1309,8 @@ class DataCleansingdfFiltersProcessdfWidget(QtWidgets.QWidget):
 
     def help_for_df_criteria(self) :
 
-        if(DEBUG_CLEANSE_ROWS_FILTER) :
-            print("  [DataCleansingdfFiltersProcessCriteriaWidget][help_for_df_criteria]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS_FILTER")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[DataCleansingdfFiltersProcessCriteriaWidget][help_for_df_criteria]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SUBSET_CRITERIA

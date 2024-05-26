@@ -12,10 +12,12 @@ import sys
 this = sys.modules[__name__]
 
 from dfcleanser.common.common_utils import (opStatus)
+
 from dfcleanser.common.cfg import (add_error_to_log, SEVERE_ERROR, set_config_value, get_config_value, CURRENT_IMPORTED_DATA_SOURCE_KEY)
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_CLEANSING            =   False
-
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
 
 
 """
@@ -241,21 +243,6 @@ df_drop_dups_transform_input_placeholderList =  ["susbset of columns to use for 
 df_drop_dups_transform_input_reqList        =   [0,1,2]
 
 
-
-
-
-
-DEBUG_USER_FNS      =   True
-
-
-
-
-
-
-
-
-
-
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -269,13 +256,12 @@ class userfnParms() :
     # full constructor
     def __init__(self,fnname,fndesc,fncode) :
         
-        if(DEBUG_USER_FNS) :
-            print("[userfnParms] : init",fnname,fndesc,"\n  ",fncode)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[userfnParms] : init",fnname,fndesc,"\n  ",fncode))
         
         self.fn_name            =   fnname
         self.fn_description     =   fndesc
         self.fn_code            =   fncode
-        
       
     def get_fn_name(self) :
         return(self.fn_name)
@@ -350,8 +336,8 @@ class UserfnsHistory :
         
         import json
 
-        if(DEBUG_USER_FNS) :
-            print("\n[load_history_file] : self.history_file_loaded  ",self.history_file_loaded )
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingdfFilters",print_to_string("[load_history_file] : self.history_file_loaded  ",self.history_file_loaded ))
 
         history_data             =   []
         
@@ -359,8 +345,8 @@ class UserfnsHistory :
         history_file_name        =   self.get_history_file_name(self.history_type)
         history_full_file_name   =   self.get_history_full_file_name(self.history_type)
         
-        if(DEBUG_USER_FNS) :
-            print("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name))
         
         if(not (history_dir_name is None)) :
             
@@ -369,27 +355,27 @@ class UserfnsHistory :
                 make_dir(history_dir_name)
             
             from dfcleanser.common.common_utils import does_file_exist
-            if(DEBUG_USER_FNS) :
-                print("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name))
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingdfFilters",print_to_string("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name)))
             
             if(not (does_file_exist(history_full_file_name))) :
                 
-                if(DEBUG_USER_FNSS) :
-                    print("load_history_file - file not found\n",history_full_file_name)
-                    print("load_history_file - file not found : history type",self.history_type)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("load_history_file - file not found\n",history_full_file_name))
+                    add_debug_to_log("DataCleansingModel",print_to_string("load_history_file - file not found : history type",self.history_type))
  
                 self.history_file_loaded    =   False    
                 self.notebook_history       =   {}
                 
-                if(DEBUG_USER_FNS) :
-                    print("load_history_file - file not found : history length ",len(self.notebook_history))
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("load_history_file - file not found : history length ",len(self.notebook_history)))
                     self.dump_history()
             
             # import history file does exist
             else :
                 
-                if(DEBUG_USER_FNS) :
-                    print("[load_history_file]  - file found\n  ",history_full_file_name)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("[load_history_file]  - file found\n  ",history_full_file_name))
                 
                 try :
 
@@ -398,23 +384,23 @@ class UserfnsHistory :
                         history_data = json.load(history_file)
                         history_file.close()
 
-                    if(DEBUG_USER_FNS) :
-                        print("[load_history_file]  - history_data  ",type(history_data),len(history_data))
+                    if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                        add_debug_to_log("DataCleansingModel",print_to_string("[load_history_file]  - history_data  ",type(history_data),len(history_data)))
                     
                     self._parse_history_file_to_dict(history_data)
                     self.history_file_loaded = True
                     
-                    if(DEBUG_USER_FNS) :
-                        print("[load_history_file]  - self.history_file_loaded  ",self.history_file_loaded)
+                    if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                        add_debug_to_log("DataCleansingModel",print_to_string("[load_history_file]  - self.history_file_loaded  ",self.history_file_loaded))
                         
                 except :
                         
                     from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
                     add_error_to_log("[Load history file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
                     
-        if(DEBUG_USER_FNS) :
-            print("[load_history_file] - complete : ",self.history_file_loaded)
-
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[load_history_file] - complete : ",self.history_file_loaded))
+            
     def save_history_file(self) :
         
         import json
@@ -430,10 +416,10 @@ class UserfnsHistory :
             
         history_data     =   self._parse_history_dict_to_list()  
             
-        if(DEBUG_USER_FNS) :
-            print("\nhistory_data")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("history_data"))
             for i in range(len(history_data)) :
-                print("history",history_data[i])
+                add_debug_to_log("DataCleansingModel",print_to_string("history",history_data[i]))
             
         try :
                     
@@ -441,8 +427,8 @@ class UserfnsHistory :
                 json.dump(history_data,history_file)
                 history_file.close()
                     
-            if(DEBUG_USER_FNS) :
-                print("import history file saved ok")
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("import history file saved ok"))
                             
         except :
             from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
@@ -463,10 +449,10 @@ class UserfnsHistory :
         
         total_entries    =   len(history_file)
         
-        if(DEBUG_USER_FNS) :
-            print("\n[parse_history_file_to_dict]  ",self.history_type,type(history_file),total_entries,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[parse_history_file_to_dict]  ",self.history_type,type(history_file),total_entries,"\n"))
             for i in range(total_entries) :
-                print("    [",i,"] ",history_file[i])
+                add_debug_to_log("DataCleansingModel",print_to_string("    [",i,"] ",history_file[i]))
         
         try :
        
@@ -509,9 +495,9 @@ class UserfnsHistory :
             
             if(self.user_fns_dict is None) :
         
-                if(DEBUG_USER_FNS) :
-                    print("\nadd_entry_to_history_dict - no import_type_dict")
-                    print("add_entry_to_import_history_dict - history_entry.get_df_title()",history_entry.get_fn_name())
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("add_entry_to_history_dict - no import_type_dict"))
+                    add_debug_to_log("DataCleansingModel",print_to_string("add_entry_to_import_history_dict - history_entry.get_df_title()",history_entry.get_fn_name()))
                 
                 self.user_fns_dict  =   {}
                 self.user_fns_dict.update({ history_entry.get_fn_name() : history_entry})
@@ -530,8 +516,6 @@ class UserfnsHistory :
             display_exception(title,status_msg,e)
 
             add_error_to_log("[add_entry_to_history_dict] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
-
-
  
 
     def _parse_history_dict_to_list(self) :
@@ -547,8 +531,8 @@ class UserfnsHistory :
         
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n\nparse_history_dict_to_list")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("parse_history_dict_to_list"))
             self.dump_history()
         
         try :
@@ -558,29 +542,29 @@ class UserfnsHistory :
             history_types    =   list(self.notebook_history.keys())
             history_types.sort()
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("\nparse_history_dict_to_list - history types",history_types)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("parse_history_dict_to_list - history types",history_types))
         
             for i in range(len(history_types)) :
                 df_titles_dict  =   self.notebook_history.get(history_types[i])
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nparse_history_dict_to_list - history_type : ",history_types[i])
-                    print("    df_titles_dict",len(df_titles_dict))
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("parse_history_dict_to_list - history_type : ",history_types[i]))
+                    add_debug_to_log("DataCleansingModel",print_to_string("df_titles_dict",len(df_titles_dict)))
             
             
                 df_titles    =   list(df_titles_dict.keys())
                 df_titles.sort()
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nparse_history_dict_to_list - df_titles",len(df_titles)," : ",df_titles)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("parse_history_dict_to_list - df_titles",len(df_titles)," : ",df_titles))
 
                 for j in range(len(df_titles)) :
                 
                     history_entry        =   df_titles_dict.get(df_titles[j])
                 
-                    if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                        print("\nparse_history_dict_to_list - import_entry[",j,"]",type(history_entry),history_entry)
+                    if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                        add_debug_to_log("DataCleansingModel",print_to_string("parse_history_dict_to_list - import_entry[",j,"]",type(history_entry),history_entry))
                 
                     history_entry_list   =   []
                 
@@ -645,9 +629,9 @@ class UserfnsHistory :
         * --------------------------------------------------------
         """
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n[get_df_titles_for_file_type] : fileType : self.history_file_loaded",fileType,self.history_file_loaded)
-            print("[get_df_titles_for_file_type ]: file name ",self.get_history_full_file_name(self.history_type))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[get_df_titles_for_file_type] : fileType : self.history_file_loaded",fileType,self.history_file_loaded))
+            add_debug_to_log("DataCleansingModel",print_to_string("[get_df_titles_for_file_type ]: file name ",self.get_history_full_file_name(self.history_type)))
             
         if(not (self.history_file_loaded)) :
             self.load_history_file()    
@@ -655,14 +639,14 @@ class UserfnsHistory :
         df_titles_dict  =   self.notebook_history.get(fileType)
         
         if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\ndf_titles_dict : ",fileType,"\n",df_titles_dict)
+            add_debug_to_log("DataCleansingModel",print_to_string("df_titles_dict : ",fileType,"\n",df_titles_dict))
         
         if(not (df_titles_dict is None)) :
             
             df_titles_list  =   list(df_titles_dict.keys())
             
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("\ndf_titles_list",df_titles_list)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("df_titles_list",df_titles_list))
                 self.dump_history()
             
             if(not (df_titles_list is None)) :
@@ -692,43 +676,43 @@ class UserfnsHistory :
        
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n  [add_to_history] : filetype : dftitle : ",filetype,dfTitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] : filetype : dftitle : ",filetype,dfTitle))
             self.dump_history()    
         
         try :
             
             new_entry    =   DataframeCleanserHistoryParms(self.history_type,filetype,dfTitle,fullParms,addlParms)
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("  [add_to_history] : df : ",dfTitle," history type : ",self.history_type," filetype : ",filetype,"\n fullparms : ",fullParms,"\n addlparms : ",addlParms)
-                print("  [add_to_history] - new_entry - dump")
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] : df : ",dfTitle," history type : ",self.history_type," filetype : ",filetype,"\n fullparms : ",fullParms,"\n addlparms : ",addlParms))
+                add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] - new_entry - dump"))
                 new_entry.dump()
             
             df_titles_dict  =   self.notebook_history.get(filetype)
         
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("  [add_to_history] : df_titles_dict\n",df_titles_dict)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] : df_titles_dict\n",df_titles_dict))
 
             if(df_titles_dict is None) :
             
                 new_type_dict    =   {}
                 new_type_dict.update({dfTitle : new_entry})
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("\nadd_to_history : new_type_dict",new_type_dict,filetype)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("add_to_history : new_type_dict",new_type_dict,filetype))
             
                 self.notebook_history.update({filetype : new_type_dict})
             
             else :
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("  [add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict))
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict)))
             
                 df_titles_dict.update({dfTitle : new_entry})    
             
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("  [add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict),"\n dict : ",df_titles_dict)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                    add_debug_to_log("DataCleansingModel",print_to_string("[add_to_history] - df_titles_dict : ",type(df_titles_dict),len(df_titles_dict),"\n dict : ",df_titles_dict))
 
                 self.notebook_history.update({filetype : df_titles_dict})
         
@@ -746,8 +730,8 @@ class UserfnsHistory :
             add_error_to_log("[add_to_history] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
 
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("  [add_import_to_history] - new_history : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[add_import_to_history] - new_history : "))
             self.dump_history()
 
     def delete_from_history(self,filetype,dfTitle) :
@@ -765,8 +749,8 @@ class UserfnsHistory :
        
         opstat  =   opStatus()
         
-        if(DEBUG_IMPORT_HISTORY) :
-            print("\ndelete_from_history\n",filetype,"\n",dfTitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("delete_from_history\n",filetype,"\n",dfTitle))
             
         df_titles_dict  =   self.notebook_history.get(filetype)
         
@@ -802,28 +786,29 @@ class UserfnsHistory :
         * -------------------------------------------------------------------
         """
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
-            print("    [get_df_title_entry] : filetype : ",fileType," dftitle : ",dfTitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("[get_df_title_entry] : filetype : ",fileType," dftitle : ",dfTitle))
         
         if(not (self.history_file_loaded)) :
             self.load_history_file()    
         
         df_titles_dict  =   self.notebook_history.get(fileType)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS):
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
             dict_keys = list(df_titles_dict.keys())
-            print("    [get_df_title_entry] : dftitles dict keys : \n   ",dict_keys)
+            add_debug_to_log("DataCleansingModel",print_to_string("[get_df_title_entry] : dftitles dict keys : \n   ",dict_keys))
 
         if(df_titles_dict is None) :
             return(None)
         else :
             
-            if( (DEBUG_IMPORT_HISTORY_DETAILS) ):
-                print("    [get_df_title_entry] : dfTitle len : ",len(dfTitle),dfTitle)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("[get_df_title_entry] : dfTitle len : ",len(dfTitle),dfTitle))
 
             df_title_dict   =   df_titles_dict.get(dfTitle)
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("    [get_df_title_entry] : df_title_dict : ",type(df_title_dict))
+            
+            if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+                add_debug_to_log("DataCleansingModel",print_to_string("[get_df_title_entry] : df_title_dict : ",type(df_title_dict)))
                 if(not (df_title_dict is None)) :
                     df_title_dict.dump()
             
@@ -841,16 +826,17 @@ class UserfnsHistory :
         """
         
         hkeys   =   list(self.notebook_history.keys())
-        
-        print("\nhkeys",hkeys)
+            
+        if(is_debug_on(DataCleansing_ID,"DEBUG_USER_FNS")) :
+            add_debug_to_log("DataCleansingModel",print_to_string("hkeys",hkeys))
         
         for i in range(len(hkeys)) :
-            print("\nfile type : ",hkeys[i])
+            add_debug_to_log("DataCleansingModel",print_to_string("file type : ",hkeys[i]))
             ftdict  =   self.notebook_history.get(hkeys[i])
             ftkeys  =   list(ftdict.keys())
             
             for j in range(len(ftkeys)) :
-                print("\ndftitle : ",ftkeys[j])
+                add_debug_to_log("DataCleansingModel",print_to_string("dftitle : ",ftkeys[j]))
                 ftdict.get(ftkeys[j]).dump()
 
 

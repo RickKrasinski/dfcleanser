@@ -28,10 +28,10 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_CUNIQUES      =   False
-DEBUG_RANK_COUNTS   =   False
-DEBUG_FIND_UNIQUES  =   False
-DEBUG_MORE_UNIQUES  =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
+
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -126,7 +126,6 @@ class UniquesTableModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -197,13 +196,13 @@ class UniquesGui(QtWidgets.QMainWindow):
         
         self.drop_flag          =   dfparms[3]
 
-        if(DEBUG_CUNIQUES) :
-            print("  [UniquesGui] : self.drop_flag : ",self.drop_flag,type(self.drop_flag))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("UniquesGui",print_to_string("self.drop_flag : ",self.drop_flag,type(self.drop_flag)))
 
-        if(DEBUG_CUNIQUES) :
-            print("  [UniquesGui] : self.dftitle : ",self.dftitle)
-            print("  [UniquesGui] : self.colname : ",self.colname)
-            print("  [UniquesGui] : self.drop_flag : ",self.drop_flag)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("UniquesGui",print_to_string(" self.dftitle : ",self.dftitle))
+            add_debug_to_log("UniquesGui",print_to_string(" self.colname : ",self.colname))
+            add_debug_to_log("UniquesGui",print_to_string(" self.drop_flag : ",self.drop_flag))
 
 
         self.rows_to_display    =   0
@@ -234,19 +233,19 @@ class UniquesGui(QtWidgets.QMainWindow):
 
         # dump the form geometries
         
-        print("UniquesTablelabel : ",self.form.UniquesTablelabel.geometry())
-        print("columnUniquestableView : ",self.form.columnUniquestableView.geometry())
+        add_debug_to_log("dump_geometry",print_to_string(" : ",self.form.UniquesTablelabel.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string(" : ",self.form.columnUniquestableView.geometry()))
 
-        print("UniqueStatslabel : ",self.form.UniqueStatslabel.geometry())
-        print("MoreUniquesbutton : ",self.form.MoreUniquesbutton.geometry())
+        add_debug_to_log("dump_geometry",print_to_string("self : ",self.form.UniqueStatslabel.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("MoreUniquesbutton : ",self.form.MoreUniquesbutton.geometry()))
 
-        print("min_value_label : ",self.form.min_value_label.geometry())
-        print("min_value_input : ",self.form.min_value_input.geometry())
-        print("max_value_label : ",self.form.max_value_label.geometry())
-        print("max_value_input : ",self.form.max_value_input.geometry())
+        add_debug_to_log("dump_geometry",print_to_string("min_value_label : ",self.form.min_value_label.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("min_value_input : ",self.form.min_value_input.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("max_value_label : ",self.form.max_value_label.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("max_value_input : ",self.form.max_value_input.geometry()))
 
-        print("RankCountsbutton : ",self.form.RankCountsbutton.geometry())
-        print("FindUniquesbutton : ",self.form.FindUniquesbutton.geometry())
+        add_debug_to_log("dump_geometry",print_to_string("RankCountsbutton : ",self.form.RankCountsbutton.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("FindUniquesbutton : ",self.form.FindUniquesbutton.geometry()))
 
     
     # -----------------------------------------------------------------#
@@ -325,12 +324,12 @@ class UniquesGui(QtWidgets.QMainWindow):
 
             dead_space  =   UNIQUES_TABLEVIEW_GEOMETRY[3] - new_height
 
-            if(DEBUG_CUNIQUES) :
-               print("  [adjust_table_view] : new_height : ",new_height)
-               print("  [adjust_table_view] : tableview dead_space : ",dead_space)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+               add_debug_to_log("adjust_table_view",print_to_string(" : new_height : ",new_height))
+               add_debug_to_log("adjust_table_view",print_to_string(" : tableview dead_space : ",dead_space))
             
-        if(DEBUG_CUNIQUES) :
-            print("  [adjust_table_view] : dead_space : ",dead_space)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("adjust_table_view",print_to_string(" : dead_space : ",dead_space))
 
         return(dead_space)
 
@@ -402,8 +401,8 @@ class UniquesGui(QtWidgets.QMainWindow):
                 new_geometry[1]     =   (new_geometry[1] - dead_space)
                 self.form.max_value_input.move(new_geometry[0],new_geometry[1])
             
-        if(DEBUG_CUNIQUES) :
-            print("  [adjust_form_widgets] : dead_space : ",dead_space)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("adjust_table_view",print_to_string("  : dead_space : ",dead_space))
 
         if(dead_space > 0) :
 
@@ -419,12 +418,12 @@ class UniquesGui(QtWidgets.QMainWindow):
 
             self.resize(DIALOG_GEOMETRY[2],dialog_height)
             
-            if(DEBUG_CUNIQUES) :
-                print("  [adjust_form_widgets] : resize : ",DIALOG_GEOMETRY[2],dialog_height)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+                add_debug_to_log("adjust_table_view",print_to_string(" resize : ",DIALOG_GEOMETRY[2],dialog_height))
 
-        if(DEBUG_CUNIQUES) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             if(dead_space > 0) :
-                print("[adjust_form_widgets] after adjustments",dead_space)
+                add_debug_to_log("adjust_table_view",print_to_string(" after adjustments",dead_space))
                 self.dump_geometry()
 
 
@@ -442,13 +441,6 @@ class UniquesGui(QtWidgets.QMainWindow):
     # -                 Initialize the gui form                       -#
     # -----------------------------------------------------------------#
     def init_uniques_form(self):
-
-        if(0):#DEBUG_CUNIQUES) :
-            print("\noriginal geometry")
-            self.dump_geometry()
-        
-        if(DEBUG_CUNIQUES) :
-            print("[init_uniques_form]  ")
         
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -463,8 +455,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         self.num_columns                    =   len(self.column_widths)
         self.rows_to_display                =   rows_to_display
         
-        if(DEBUG_CUNIQUES) :
-            print("[init_uniques_form] rows_to_display : num_columns : ",rows_to_display,self.num_columns,"\n  column widths : ",column_widths)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("init_uniques_form",print_to_string(" rows_to_display : num_columns : ",rows_to_display,self.num_columns,"\n  column widths : ",column_widths))
         
         num_uniques     =   len(self.unique_data[0])
 
@@ -489,8 +481,8 @@ class UniquesGui(QtWidgets.QMainWindow):
             if(last_val > len(self.unique_data[0])) :
                 last_val    =   len(self.unique_data[0])
 
-            if(DEBUG_CUNIQUES) :
-                print("[init_uniques_form] start_val : last_val : ",start_val,last_val)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+                add_debug_to_log("init_uniques_form",print_to_string(" start_val : last_val : ",start_val,last_val))
 
             self.set_tableview_footer(start_val,last_val,len(self.unique_data[0]))
 
@@ -512,8 +504,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         last_unique_displayed   =   int(num_data_rows * (len(self.column_widths) / 2))
         cfg.set_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED,last_unique_displayed)
         
-        if(DEBUG_CUNIQUES) :
-            print("\n[init_uniques_form] num_data_rows : last_unique_displayed ",num_data_rows,last_unique_displayed)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("init_uniques_form",print_to_string(" num_data_rows : last_unique_displayed ",num_data_rows,last_unique_displayed))
 
         # adjust the height of the tableview
         dead_space  =   self.adjust_table_view(num_data_rows)
@@ -692,8 +684,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         else :
             rows_to_display     =   int(rows_to_display)
 
-        if(DEBUG_CUNIQUES) :
-            print("  [format_unique_data] : num_uniques : rows_to_display ",num_uniques,rows_to_display,"\n   column_widths : ",column_widths)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("format_unique_data",print_to_string(" : num_uniques : rows_to_display ",num_uniques,rows_to_display,"\n   column_widths : ",column_widths))
 
         return[column_widths,rows_to_display]
 
@@ -715,8 +707,8 @@ class UniquesGui(QtWidgets.QMainWindow):
 
         num_uniques         =   len(data_vals)
 
-        if(DEBUG_CUNIQUES) :
-            print("  [load_model_data] : num_uniques : vals_per_row ",num_uniques,vals_per_row)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("load_model_data",print_to_string(" : num_uniques : vals_per_row ",num_uniques,vals_per_row))
 
         # fill in the data rows
         for i in range(num_uniques) :
@@ -737,8 +729,8 @@ class UniquesGui(QtWidgets.QMainWindow):
             data.append(data_row)
             num_data_rows   =   num_data_rows + 1
 
-        if(DEBUG_CUNIQUES) :
-            print("  [load_model_data] : num_data_rows : ",num_data_rows,"\n    ",data[0],"\n    ",data[num_data_rows-1])
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("load_model_data",print_to_string(" : num_data_rows : ",num_data_rows,"\n    ",data[0],"\n    ",data[num_data_rows-1]))
 
         return(data)
 
@@ -764,8 +756,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         else :
             cfg.set_config_value(cfg.CURRENT_UNIQUES_ORDER_FLAG,cfg.LOW_TO_HIGH_UNIQUES_RANKING)        
         
-        if(DEBUG_RANK_COUNTS) :
-            print("\nrankcounts : current_ranking : ",current_ranking)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("rankcounts",print_to_string(" : current_ranking : ",current_ranking))
 
         self.form.RankCountsbutton.toggle()
 
@@ -784,16 +776,14 @@ class UniquesGui(QtWidgets.QMainWindow):
         data    =   self.load_model_data(uniques_data,len(self.column_widths))
         self.model.reload_data(data)
         
-        if(DEBUG_RANK_COUNTS) :
-            print("rankcounts : model data : ",len(data))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("rankcounts",print_to_string(" : model data : ",len(data)))
     
 
     # -----------------------------------------------------------------#
     # -                     drop rows by value                        -#
     # -----------------------------------------------------------------#
     def dropvalues(self):
-
-        print("drop values")
 
         return()
         current_ranking     =   cfg.get_config_value(cfg.CURRENT_UNIQUES_ORDER_FLAG)
@@ -805,8 +795,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         else :
             cfg.set_config_value(cfg.CURRENT_UNIQUES_ORDER_FLAG,cfg.LOW_TO_HIGH_UNIQUES_RANKING)        
         
-        if(DEBUG_RANK_COUNTS) :
-            print("\nrankcounts : current_ranking : ",current_ranking)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("rankcounts",print_to_string(" : current_ranking : ",current_ranking))
 
         self.form.RankCountsbutton.toggle()
 
@@ -825,16 +815,16 @@ class UniquesGui(QtWidgets.QMainWindow):
         data    =   self.load_model_data(uniques_data,len(self.column_widths))
         self.model.reload_data(data)
         
-        if(DEBUG_RANK_COUNTS) :
-            print("rankcounts : model data : ",len(data))
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("rankcounts",print_to_string(" model data : ",len(data)))
     
     # -----------------------------------------------------------------#
     # -                find unique values in df                       -#
     # -----------------------------------------------------------------#
     def finduniques(self):
 
-        if(DEBUG_FIND_UNIQUES) :
-            print("finduniques : ",self.dftitle,self.colname) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" : ",self.dftitle,self.colname) )
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
         df          =   get_dfc_dataframe_df(self.dftitle)
@@ -842,21 +832,14 @@ class UniquesGui(QtWidgets.QMainWindow):
 
         self.form.FindUniquesbutton.toggle()
 
-        if(DEBUG_FIND_UNIQUES) :
-            print("after toggle: ",len(df)) 
-
-
         from dfcleanser.common.common_utils import is_numeric_col
         if(is_numeric_col(df, self.colname)):
-
-            if(DEBUG_FIND_UNIQUES) :
-                print("is numeric")  
 
             min_parm    =  self.form.min_value_input.toPlainText() 
             max_parm    =  self.form.max_value_input.toPlainText() 
 
-            if(DEBUG_FIND_UNIQUES) :
-                print("finduniques : ",min_parm,max_parm) 
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+                add_debug_to_log("finduniques",print_to_string(" : ",min_parm,max_parm)) 
 
             if(len(min_parm) == 0):
                 find_min = df[self.colname].min()
@@ -876,10 +859,6 @@ class UniquesGui(QtWidgets.QMainWindow):
                 except :
                     find_max    =   None
         
-            if(DEBUG_FIND_UNIQUES) :
-                print("find_min : ",find_min) 
-                print("find_max : ",find_max) 
-
             if(not ((find_min is None) and (find_max is None))):
 
                 criteria = (df[self.colname] >= find_min) & (df[self.colname] <= find_max)
@@ -916,8 +895,8 @@ class UniquesGui(QtWidgets.QMainWindow):
             uniques_data        =   get_df_unique_column_data(df_found, self.colname)
             self.unique_data    =   uniques_data
 
-            if(DEBUG_FIND_UNIQUES) :
-                print("finduniques : uniques_data : ",uniques_data)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+                add_debug_to_log("finduniques",print_to_string(" : uniques_data : ",uniques_data))
 
             data        =   self.load_model_data(uniques_data,len(self.column_widths))
             dead_space  =   self.adjust_table_view(len(data))
@@ -926,13 +905,11 @@ class UniquesGui(QtWidgets.QMainWindow):
 
             self.statusBar().showMessage("Requested Unique Values Displayed")
 
-            if(DEBUG_FIND_UNIQUES) :
-                print("uniques model data : ",data)
-
         else :
 
             # subset of found values is valid
-            print("no values found matching parms")
+	    if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            	add_debug_to_log("finduniques",print_to_string(" : ",print_to_string("no values found matching parms")))
 
 
     # -----------------------------------------------------------------#
@@ -940,8 +917,8 @@ class UniquesGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def moreuniques(self):
 
-        if(DEBUG_MORE_UNIQUES) :
-            print("\n[moreuniques] :",self.dftitle,self.colname) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("moreuniques",print_to_string(" :",self.dftitle,self.colname)) 
 
         self.form.MoreUniquesbutton.toggle()
 
@@ -949,8 +926,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         df          =   get_dfc_dataframe_df(self.dftitle)
         startrow    =   cfg.get_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED) + 1
         
-        if(DEBUG_MORE_UNIQUES) :
-            print("[moreuniques] : startrow",startrow) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" : startrow",startrow)) 
 
         display_type  =   cfg.get_config_value(cfg.CURRENT_UNIQUES_ORDER_FLAG)
 
@@ -968,8 +945,8 @@ class UniquesGui(QtWidgets.QMainWindow):
             cfg.set_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED,0)
             startrow    =   cfg.get_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED)
         
-        if(DEBUG_MORE_UNIQUES) :
-            print("[moreuniques] : startrow : uniques_data ",startrow,len(uniques_data[0]),uniques_data[0][startrow],uniques_data[0][startrow+1]) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" startrow : uniques_data ",startrow,len(uniques_data[0]),uniques_data[0][startrow],uniques_data[0][startrow+1])) 
 
         uniques_vals            =   uniques_data[0]
         uniques_counts_dict     =   uniques_data[1]
@@ -979,8 +956,8 @@ class UniquesGui(QtWidgets.QMainWindow):
 
         max_more_vals   =   int(MAX_ROWS_TO_DISPLAY * ((len(self.column_widths)) / 2))
 
-        if(DEBUG_MORE_UNIQUES) :
-            print("[moreuniques] : max_more_vals ",max_more_vals) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" : max_more_vals ",max_more_vals))
 
         lastrow     =   startrow
 
@@ -997,8 +974,8 @@ class UniquesGui(QtWidgets.QMainWindow):
 
         more_uniques_data   =   [more_uniques_vals,more_uniques_counts_dict,]
 
-        if(DEBUG_MORE_UNIQUES) :
-            print("[moreuniques] : more_uniques_data ",len(more_uniques_data),more_uniques_data[0][0]) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" more_uniques_data ",len(more_uniques_data),more_uniques_data[0][0])) 
 
         data        =   self.load_model_data(more_uniques_data,len(self.column_widths))
         dead_space  =   self.adjust_table_view(len(data))
@@ -1009,8 +986,8 @@ class UniquesGui(QtWidgets.QMainWindow):
         self.set_tableview_footer(startrow,lastrow,len(self.unique_data[0]))
 
 
-        if(DEBUG_MORE_UNIQUES) :
-            print("[moreuniques] : lastrow ",cfg.get_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED)) 
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+            add_debug_to_log("finduniques",print_to_string(" : lastrow ",cfg.get_config_value(cfg.CURRENT_UNIQUES_LAST_ROW_DISPLAYED))) 
 
       
 # -----------------------------------------------------------------#
@@ -1018,8 +995,8 @@ class UniquesGui(QtWidgets.QMainWindow):
 # -----------------------------------------------------------------#
 def showUniques(dftitle,colname,DropFlag=False)  :
 
-    if(DEBUG_CUNIQUES) :
-        print("showUniques : ",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+        add_debug_to_log("showUniques",print_to_string(" : ",dftitle,colname))
 
     logger.info("Opening dfc Uniques GUI")
 
@@ -1052,12 +1029,10 @@ def showUniques(dftitle,colname,DropFlag=False)  :
          
         else :
         
-            print("invalid column name")
             return(None)
     
     else :
     
-        print("no df defined")
         return(None)
 
 # -----------------------------------------------------------------#

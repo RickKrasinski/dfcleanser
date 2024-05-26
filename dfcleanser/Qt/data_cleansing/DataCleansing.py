@@ -23,9 +23,9 @@ from PyQt5 import uic
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_CLEANSING                 =   False
-DEBUG_CLEANSING_ROWS            =   False
-DEBUG_CLEANSING_DETAILS         =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
+
 
 
 # -----------------------------------------------------------------#
@@ -236,8 +236,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_cleansing_buttons(self):
 
-        if(DEBUG_CLEANSING_DETAILS) :
-            print("[DataCleansingGui][init_data_inspect_buttons]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING_DETAILS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[init_data_inspect_buttons]  "))
 
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
@@ -269,23 +269,17 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_cleansing_splash_screen(self):
 
-        if(DEBUG_CLEANSING_DETAILS) :
-            print("[DataCleansingGui][init_data_cleansing_splash_screen]  ")
-
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataCleansing_ID
         build_chapter_splash_screen(DataCleansing_ID, self.form.DataCleansingsplash)
-
-        if(DEBUG_CLEANSING_DETAILS) :
-            print("[DataCleansingGui][init_data_cleansing_splash_screen] end  ")
 
     # -----------------------------------------------------------------#
     # -            Add a new dataframe to the df combobox             -#
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -297,9 +291,9 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][add_new_df]",cfg.get_dfc_dataframes_titles_list())
-            print("[DataCleansingGui] self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[add_new_df]",cfg.get_dfc_dataframes_titles_list()))
+            add_debug_to_log("DataCleansingGui",print_to_string(" self.df_select",type(self.df_select),self.df_select.count()))
 
         self.init_stacked_index()
     
@@ -308,8 +302,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_dfs_to_cleanse(self):
 
-        if(DEBUG_CLEANSING_DETAILS) :
-            print("[DataCleansingGui][init_dfs_to_cleanse]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING_DETAILS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[init_dfs_to_cleanse]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_select_dfs_layout
         dfc_dfs_objects     =   build_select_dfs_layout("* dataframes_to_cleanse")
@@ -349,8 +343,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_cleansing_form(self):
         
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][init_data_cleansing_form]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[init_data_cleansing_form]  "))
 
         buttons     =   [self.form.CleanseColumnsbutton, self.form.CleanseRowsbutton, self.form.Helpbutton] 
         callbacks   =   [self.data_cleanse_columns, self.data_cleanse_rows, self.data_cleanse_help]
@@ -360,8 +354,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.init_dfs_to_cleanse()
         self.init_stacked_index()
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][init_data_cleansing_form] end\n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[init_data_cleansing_form] end\n  ",self.DataCleansingWidgets_stack_dict))
 
         #self.resize(1070,300)
 
@@ -377,8 +371,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.form.CleanseColumnsbutton.toggle()
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][data_cleanse_columns]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[data_cleanse_columns]"))
 
         self.display_cleanse_columns()
 
@@ -389,8 +383,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.form.CleanseRowsbutton.toggle()
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][data_cleanse_rows]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[data_cleanse_rows]"))
 
         self.display_cleanse_rows()
 
@@ -401,8 +395,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.form.Helpbutton.toggle()
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][data_cleanse_help]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[data_cleanse_help]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_MAIN_TASKBAR_ID
@@ -416,8 +410,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
     def display_cleanse_columns(self):
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_cleanse_columns]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_columns]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -436,8 +430,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
             return()
         
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_cleanse_columns]  : dftitle : ",dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_columns]  : dftitle : ",dftitle))
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_COLUMNS)
         
@@ -471,8 +465,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_cleanse_columns] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_columns] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,800)
 
@@ -509,8 +503,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         else :
             formtype       =   NON_NUMERIC_COLUMN   
 
-        if(DEBUG_CLEANSING) :
-            print("\n[DataCleansingGui][display_cleanse_single_column]  : dftitle : colname : formtype : ",self.dftitle,self.colname,formtype)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_single_column]  : dftitle : colname : formtype : ",self.dftitle,self.colname,formtype))
 
         if(formtype == NUMERIC_COLUMN) :
 
@@ -543,8 +537,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
             data_cleanse_category_index     =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_CATEGORY_COLUMN)                    
             current_index                   =   data_cleanse_category_index                                        
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_cleanse_single_column]  : formtype : current_index : ",formtype,current_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_single_column]  : formtype : current_index : ",formtype,current_index))
         
         if(current_index is None) :
 
@@ -590,8 +584,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
                 current_index   =  len(self.DataCleansingWidgets_stack_dict)
 
-                if(DEBUG_CLEANSING_DETAILS) :
-                    print("[DataCleansingGui][display_cleanse_single_column]  : current_index : ",current_index)
+                if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING_DETAILS")) :
+                    add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_single_column]  : current_index : ",current_index))
                 
                 if(formtype == NUMERIC_COLUMN) :
 
@@ -660,8 +654,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_cleanse_single_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_single_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,800)
     
@@ -676,8 +670,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_round_column]  : selected dftitle : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_round_column]  : selected dftitle : ",self.dftitle,self.colname))
 
         data_round_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_ROUND_COLUMN)
         
@@ -711,8 +705,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_round_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_round_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,500)
 
@@ -728,8 +722,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_whitespace_column]  : selected dftitle : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_whitespace_column]  : selected dftitle : ",self.dftitle,self.colname))
 
         data_whitespace_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_WHITESPACE_COLUMN)
         
@@ -763,8 +757,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_whitespace_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_whitespace_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -780,8 +774,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_fillna_column]  : selected dftitle : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_fillna_column]  : selected dftitle : ",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df, set_dfc_dataframe_df 
         df  =   get_dfc_dataframe_df(self.dftitle)
@@ -854,8 +848,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_fillna_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_fillna_column] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -885,8 +879,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_add_new_category]  : dftitle : colname : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_add_new_category]  : dftitle : colname : ",self.dftitle,self.colname))
 
         add_new_cat_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_ADD_NEW_CATEGORY)
         
@@ -920,8 +914,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_remove_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_remove_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -938,8 +932,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_remove_category]  : dftitle : colname : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_remove_category]  : dftitle : colname : ",self.dftitle,self.colname))
 
         remove_cat_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_REMOVE_CATEGORY)
         
@@ -973,8 +967,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_remove_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_remove_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -990,8 +984,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         self.dftitle    =   dftitle
         self.colname    =   colname
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_reorder_category]  : dftitle : colname : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_reorder_category]  : dftitle : colname : ",self.dftitle,self.colname))
 
         self.reorder_cat_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_REORDER_CATEGORY)
         
@@ -1025,8 +1019,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING) :
-            print("[DataCleansingGui][display_reorder_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_reorder_category] end : stack \n  ",self.DataCleansingWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -1047,8 +1041,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     
     def display_cleanse_rows(self):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_cleanse_rows]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1068,16 +1062,13 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
             return()
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows]  : dftitle : ",dftitle)
-
-        #dfs_index   =   self.DataCleansingWidgets_stack_dict.get(DFS_SELECT)
-        #main_df     =   self.stackedLayout.get(dfs_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows]  : dftitle : ",dftitle))
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_ROWS)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows]  : data_cleanse_index : ",data_cleanse_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows]  : data_cleanse_index : ",data_cleanse_index))
 
         
         if(data_cleanse_index is None) :
@@ -1110,16 +1101,16 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,250)
 
 
     def display_cleanse_rows_filter_df(self):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_cleanse_rows_filter_df]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1144,13 +1135,13 @@ class DataCleansingGui(QtWidgets.QMainWindow):
             df                  =   get_dfc_dataframe_df(dftitle)
             self.working_df     =   df.copy(deep=True)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_filter_df]  : dftitle : ",dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  : dftitle : ",dftitle))
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_ROWS_DF_FILTER )
         
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_filter_df]  : data_cleanse_index : ",data_cleanse_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  : data_cleanse_index : ",data_cleanse_index))
         
         if(data_cleanse_index is None) :
 
@@ -1182,16 +1173,16 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_filter_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,750)
 
 
     def display_cleanse_rows_criteria(self,working_df_title):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_cleanse_rows_criteria] working_df_title  : ",working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_criteria] working_df_title  : ",working_df_title))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1200,8 +1191,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_ROWS_DF_CRITERIA )
         
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_criteria]  : data_cleanse_index ",data_cleanse_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_criteria]  : data_cleanse_index ",data_cleanse_index))
         
         if(data_cleanse_index is None) :
 
@@ -1236,8 +1227,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         if(not (current_index is None)) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_criteria] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_criteria] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,900)
 
@@ -1245,8 +1236,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
     def display_cleanse_rows_filter_df(self):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_cleanse_rows_filter_df]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1271,13 +1262,13 @@ class DataCleansingGui(QtWidgets.QMainWindow):
             df                  =   get_dfc_dataframe_df(dftitle)
             self.working_df     =   df.copy(deep=True)
 
-            if(DEBUG_CLEANSING_ROWS) :
-                print("[DataCleansingGui][display_cleanse_rows_filter_df]  : dftitlle : ",dftitle)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+                add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  : dftitlle : ",dftitle))
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_ROWS_DF_FILTER )
             
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_filter_df]  : data_cleanse_index : ",data_cleanse_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df]  : data_cleanse_index : ",data_cleanse_index))
         
         if(data_cleanse_index is None) :
 
@@ -1309,16 +1300,16 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_filter_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_filter_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,850)
 
 
     def display_cleanse_rows_save_df(self,working_df_title):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_cleanse_rows_save_df]  working_df_title : ",working_df_title)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_save_df]  working_df_title : ",working_df_title))
 
         self.working_df_title   =   working_df_title
 
@@ -1327,8 +1318,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         data_cleanse_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_CLEANSE_ROWS_DF_SAVE)
         
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_save_df]  : data_cleanse_index ",data_cleanse_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_save_df]  : data_cleanse_index ",data_cleanse_index))
         
         if(data_cleanse_index is None) :
 
@@ -1361,29 +1352,29 @@ class DataCleansingGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows_save_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows_save_df] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,900)
 
 
     def display_drop_duplicates(self,dftitle):
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("\n[DataCleansingGui][display_drop_duplicates]  ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_drop_duplicates]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         self.dftitle         =   dftitle
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_cleanse_rows]  : dftitlle : ",dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_cleanse_rows]  : dftitlle : ",dftitle))
 
         drop_duplicates_index  =   self.DataCleansingWidgets_stack_dict.get(DISPLAY_DROP_DUPLICATE_ROWS)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_drop_duplicates]  : data_cleanse_index : ",drop_duplicates_index)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_drop_duplicates]  : data_cleanse_index : ",drop_duplicates_index))
 
         
         if(drop_duplicates_index is None) :
@@ -1416,8 +1407,8 @@ class DataCleansingGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CLEANSING_ROWS) :
-            print("[DataCleansingGui][display_drop_duplicates] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingGui",print_to_string("[display_drop_duplicates] end : stack \n  ",self.DataCleansingWidgets_stack_dict,"\n"))
 
         self.resize(1070,850)
 

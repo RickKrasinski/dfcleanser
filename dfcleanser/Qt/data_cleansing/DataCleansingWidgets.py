@@ -23,13 +23,11 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
 
-DEBUG_CLEANSE_COLUMN            =   False
-DEBUG_CLEANSE_COLUMN_DETAILS    =   False
-DEBUG_CLEANSE_COLUMN_SINGLE     =   False
-
-DEBUG_CLEANSE_ROWS              =   False
 
 
 # -----------------------------------------------------------------#
@@ -67,18 +65,18 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget] dftitle : ",self.dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -87,8 +85,8 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -117,8 +115,8 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
 
         self.DataCleanseLayout.addWidget(self.colsStats)
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][init_form] : colsStatsloaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][init_form] : colsStatsloaded"))
         
         from PyQt5.QtWidgets import QLabel,QPushButton
         note_label   =   QLabel()
@@ -140,8 +138,8 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
         help_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         help_button.clicked.connect(self.help_for_cleanse_column) 
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][init_form] : buttons built")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][init_form] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         ccbutonsLayout  =   QHBoxLayout()
@@ -153,8 +151,8 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
         self.DataCleanseLayout.addStretch()
         self.setLayout(self.DataCleanseLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][init_form] end"))
 
 
     # -----------------------------------------------------------------#
@@ -163,8 +161,8 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
 
     def select_column_to_cleanse(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse]"))
 
         row_number      =   None
         column_number   =   None
@@ -173,30 +171,30 @@ class DataCleansing_select_column_to_cleanse_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse] ",row_number,column_number)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_CLEANSE_COLUMN) :    
-            print("[DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse] : colname [",cell,"]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :    
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][select_column_to_cleanse] : colname [",cell,"]"))
 
         self.parent.display_cleanse_single_column(self.dftitle,cell)
 
     def return_from_cleanse_column(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][return_from_cleanse_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][return_from_cleanse_column]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansing import DFS_SELECT
         self.parent.init_stacked_index()
 
     def help_for_cleanse_column(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_select_column_to_cleanse_Widget][help_for_cleanse_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_select_column_to_cleanse_Widget][help_for_cleanse_column]"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_CHANGE_ID
@@ -242,7 +240,7 @@ class DataCleansingSingleColumnModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -336,29 +334,29 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
         self.dftitle            =   colparms[0]
         self.colname            =   colparms[1]
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("\n[DataCleansingSingleColumnTable] : init")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansingSingleColumnTable] : end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self,dftitle,colname):
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][reload_data] : dftile : colname : ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][reload_data] : dftile : colname : ",dftitle,colname))
 
         self.dftitle    =   dftitle
         self.colname    =   colname
         
         statsdata       =   self.load_columns_info_data()
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][reload_data] : statsdata : ",statsdata)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][reload_data] : statsdata : ",statsdata))
 
         self.model.reload_data(statsdata)
 
@@ -377,23 +375,23 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("  [DataCleansingSingleColumnTable][init_tableview]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statsdata     =   self.load_columns_info_data()
         
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-           print("  [DataCleansingSingleColumnTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+           add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = DataCleansingSingleColumnModel(statsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-           print("  [DataCleansingSingleColumnTable][init_tableview] : model loaded")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+           add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statsdata)
         
@@ -436,8 +434,8 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_info_data(self):
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][load_columns_info_data]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][load_columns_info_data]",self.dftitle,self.colname))
 
         self.data    =   []
 
@@ -450,8 +448,8 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
         coltype     =   infodata[0]
         infovalues  =   infodata[1]
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][load_columns_info_data]",coltype,"     \n        ",infovalues)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][load_columns_info_data]",coltype,"     \n        ",infovalues))
 
         formatted_values    =   []
         formatted_values.append(infovalues[0])
@@ -484,9 +482,9 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
             formatted_values.append(str(infovalues[5]))
             infotitles  =  non_numeric_infotitles  
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][load_columns_info_data] : infotitles :\n      ",infotitles)
-            print("  [DataCleansingSingleColumnTable][load_columns_info_data] : formatted_values:\n      ",formatted_values)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][load_columns_info_data] : infotitles :\n      ",infotitles))
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][load_columns_info_data] : formatted_values:\n      ",formatted_values))
 
         for i in range(len(infotitles)) :
                 
@@ -497,16 +495,16 @@ class DataCleansingSingleColumnTable(QtWidgets.QTableView):
 
             self.data.append(data_row)
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("  [DataCleansingSingleColumnTable] : data")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable] : data"))
             for j in range(len(self.data)) :
-                print("  [",j,"] : ",self.data[j])
+                add_debug_to_log("DataCleansingWidgets",print_to_string("  [",j,"] : ",self.data[j]))
 
         self.column_headers     =   ["Stat Name","Stat Value"]
         self.column_widths      =   [240,240]
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansingSingleColumnTable][load_columns_info_data][end]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingSingleColumnTable][load_columns_info_data][end]"))
 
         return(self.data)
 
@@ -524,8 +522,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
@@ -542,21 +540,21 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget] end"))
 
     def reload_form(self,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_cleanse_single_column_form_Widget][reload_form] :dftitle : colname : ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][reload_form] :dftitle : colname : ",dftitle,colname))
 
         self.dftitle        =   dftitle
         self.colname        =   colname
 
     def build_form(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget][build_form]",self.formtype)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_form]",self.formtype))
 
         import dfcleanser.Qt.data_cleansing.DataCleansingModel as DCM
         from dfcleanser.sw_utilities.dfc_qt_model import NUMERIC_COLUMN, NON_NUMERIC_COLUMN, CATEGORICAL_COLUMN
@@ -576,8 +574,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
         elif(self.formtype == NON_NUMERIC_COLUMN) :
 
-            if(DEBUG_CLEANSE_COLUMN) :
-                print("  [DataCleansing_cleanse_single_column_form_Widget][build_form] NON_NUMERIC_COLUMN")
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+                add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_form] NON_NUMERIC_COLUMN"))
 
             form_parms      =   [DCM.nn_change_values_input_id,DCM.nn_change_values_input_idList,DCM.nn_change_values_input_labelList,DCM.nn_change_values_input_typeList,DCM.nn_change_values_input_placeholderList,DCM.nn_change_values_input_reqList]
             comboList       =   None
@@ -592,8 +590,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
         elif(self.formtype == CATEGORICAL_COLUMN) :
             
-            if(DEBUG_CLEANSE_COLUMN) :
-                print("  [DataCleansing_cleanse_single_column_form_Widget][build_form] CATEGORICAL_COLUMN")
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+                add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_form] CATEGORICAL_COLUMN"))
 
             form_parms      =   [DCM.rename_category_input_id,DCM.rename_category_input_idList,DCM.rename_category_input_labelList,DCM.rename_category_input_typeList,DCM.rename_category_input_placeholderList,DCM.rename_category_input_reqList]
             comboList       =   None
@@ -615,8 +613,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
             catlist     =   {"default":str(cats[0]),"list":strcats}
             selectDicts.append(catlist)
             
-            if(DEBUG_CLEANSE_COLUMN) :
-                print("  [DataCleansing_cleanse_single_column_form_Widget][build_form] catlist \n         ",catlist)
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+                add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_form] catlist \n         ",catlist))
 
         form_parms.append(selectDicts)
         form_parms.append(comboMethods)            
@@ -629,16 +627,16 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         value_form     =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget][build_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_form] end"))
         
         return(value_form)
 
 
     def build_cmd_buttons_layout(self,buttonsLayout) :
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget][build_cmd_buttons_layout] self.formtype : ",self.formtype)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_cmd_buttons_layout] self.formtype : ",self.formtype))
 
         # display function bar
         from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QLabel
@@ -697,14 +695,14 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
         elif(self.formtype == CATEGORICAL_COLUMN) :
             buttonsLayout.addLayout(uniquesLayout)
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("  [DataCleansing_cleanse_single_column_form_Widget][build_cmd_buttons_layout] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][build_cmd_buttons_layout] end"))
 
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QPushButton 
@@ -713,8 +711,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.change_value_form     =   self.build_form()
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][init_form] : form built : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][init_form] : form built : "))
 
         # display function bar
         from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QLabel
@@ -724,8 +722,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
         self.build_cmd_buttons_layout(self.cmd_butonsLayout)
         self.cmd_butonsLayout.setAlignment(Qt.AlignCenter)
         
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][init_form] : cmd buttons built : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][init_form] : cmd buttons built : "))
 
         self.DataCleanseFormLayout.addWidget(self.change_value_form)
         self.DataCleanseFormLayout.addLayout(self.cmd_butonsLayout)
@@ -733,8 +731,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataCleanseFormLayout)
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][init_form] : end : "))
 
     # -----------------------------------------------------------------#
     # -    DataCleansing_cleanse_single_column_form_Widget Methods    -#
@@ -742,8 +740,8 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
     def change_numeric_value(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][change_numeric_value]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][change_numeric_value]"))
 
         oldvalue        =   self.change_value_form.get_form_input_value_by_index(0)
         newvalue        =   self.change_value_form.get_form_input_value_by_index(1)
@@ -754,13 +752,13 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
     def change_non_numeric_value(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][change_non_numeric_value]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][change_non_numeric_value]"))
     
     def rename_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][rename_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][rename_category]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansingControl import  rename_category
         oldcat  =   self.change_value_form.get_form_input_value_by_index(0)
@@ -769,23 +767,23 @@ class DataCleansing_cleanse_single_column_form_Widget(QtWidgets.QWidget):
 
     def rename_category_return(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][rename_category_return]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][rename_category_return]"))
         
         self.parent.display_cleanse_columns()
 
     def get_column_uniques(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][get_column_uniques]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            padd_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][get_column_uniques]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansingControl import display_uniques_for_cleanse_column
         display_uniques_for_cleanse_column(self.dftitle,self.colname)
     
     def get_column_outliers(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_DETAILS) :
-            print("[DataCleansing_cleanse_single_column_form_Widget][get_column_outliers]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_DETAILS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_form_Widget][get_column_outliers]"))
         
         from dfcleanser.Qt.data_cleansing.DataCleansingControl import display_outliers_for_cleanse_column
         display_outliers_for_cleanse_column(self.dftitle,self.colname)
@@ -808,16 +806,16 @@ class DataCleansing_cleanse_single_column_float_nans_taskbar_Widget(QtWidgets.QW
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -828,8 +826,8 @@ class DataCleansing_cleanse_single_column_float_nans_taskbar_Widget(QtWidgets.QW
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -845,8 +843,8 @@ class DataCleansing_cleanse_single_column_float_nans_taskbar_Widget(QtWidgets.QW
         drop_col_button.clicked.connect(self.drop_column) 
         cmdbutonsLayout.addWidget(drop_col_button)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         drop_rows_button        =   QPushButton()     
         drop_rows_button.setText("Drop\nCurrent\nValue Rows")
@@ -864,8 +862,8 @@ class DataCleansing_cleanse_single_column_float_nans_taskbar_Widget(QtWidgets.QW
         round_button.clicked.connect(self.round_column) 
         cmdbutonsLayout.addWidget(round_button)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         drop_nan_rows_button        =   QPushButton()     
         drop_nan_rows_button.setText("Drop\nColumn\nNan Rows")
@@ -899,15 +897,15 @@ class DataCleansing_cleanse_single_column_float_nans_taskbar_Widget(QtWidgets.QW
         help_button.clicked.connect(self.help_fillna) 
         cmdbutonsLayout.addWidget(help_button)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         cmdbutonsLayout.setAlignment(Qt.AlignCenter)
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
 
     def drop_column(self) :
         gen_drop_column(self,self.dftitle,self.colname)
@@ -937,16 +935,16 @@ class DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget(QtWidgets.
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -957,8 +955,8 @@ class DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget(QtWidgets.
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -1012,8 +1010,8 @@ class DataCleansing_cleanse_single_column_float_nonans_taskbar_Widget(QtWidgets.
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_float_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
     
     def drop_column(self) :
         gen_drop_column(self,self.dftitle,self.colname)
@@ -1039,16 +1037,16 @@ class DataCleansing_cleanse_single_column_int_nans_taskbar_Widget(QtWidgets.QWid
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -1059,8 +1057,8 @@ class DataCleansing_cleanse_single_column_int_nans_taskbar_Widget(QtWidgets.QWid
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -1122,8 +1120,8 @@ class DataCleansing_cleanse_single_column_int_nans_taskbar_Widget(QtWidgets.QWid
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_int_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_int_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
 
 
     def drop_column(self) :
@@ -1152,16 +1150,16 @@ class DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget(QtWidgets.QW
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            padd_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -1172,8 +1170,8 @@ class DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget(QtWidgets.QW
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -1219,8 +1217,8 @@ class DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget(QtWidgets.QW
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_int_nonans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
 
     def drop_column(self) :
         gen_drop_column(self,self.dftitle,self.colname)
@@ -1243,16 +1241,16 @@ class DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget(QtWidge
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -1263,8 +1261,8 @@ class DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget(QtWidge
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -1334,8 +1332,8 @@ class DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget(QtWidge
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_nonnumeric_nans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
 
     def drop_column(self) :
         gen_drop_column(self,self.dftitle,self.colname)
@@ -1365,16 +1363,16 @@ class DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget(QtWid
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -1385,8 +1383,8 @@ class DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget(QtWid
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout 
@@ -1440,8 +1438,8 @@ class DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget(QtWid
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [[DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[[DataCleansing_cleanse_single_column_nonnumeric_nonans_taskbar_Widget][init_form  end] : ",self.dftitle,self.colname))
 
     def drop_column(self) :
         gen_drop_column(self,self.dftitle,self.colname)
@@ -1467,16 +1465,16 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget]",self.dftitle,self.colname))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget] end"))
 
 
     def reload_data(self, dfparms) :
@@ -1487,8 +1485,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form] : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form] : ",self.dftitle,self.colname))
 
         # build the overall dtypes layout
         
@@ -1539,8 +1537,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
         reorder_cat_button.clicked.connect(self.reorder_categories) 
         cmdbutonsLayout.addWidget(reorder_cat_button)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form] : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form] : "))
 
         sort_cat_button        =   QPushButton()     
         sort_cat_button.setText("Sort\nCategory\nValues")
@@ -1570,35 +1568,35 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
         self.setLayout(cmdbutonsLayout)
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form][end] : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][init_form][end] : "))
 
 
     def drop_cat_column(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][drop_cat_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][drop_cat_column]"))
 
         gen_drop_column(self,self.dftitle,self.colname)
 
     def add_new_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][add_new_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][add_new_category]"))
 
         self.parent.display_add_new_category(self.dftitle,self.colname)
 
     def remove_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][remove_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][remove_category]"))
 
         self.parent.display_remove_category(self.dftitle,self.colname)
 
     def remove_unused_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][remove_unused_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][remove_unused_category]"))
 
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df, set_dfc_dataframe_df 
@@ -1613,9 +1611,9 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
         counts_dict     =   cats_counts.to_dict()
         cat_counts      =   []
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] cats : \n    ",cats)
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] counts_dict : \n    ",counts_dict)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] cats : \n    ",cats))
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] counts_dict : \n    ",counts_dict))
 
         counts_keys         =   list(counts_dict.keys())
 
@@ -1626,8 +1624,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
             if(current_count == 0) :
                 unused_categories.append(counts_keys[i])
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] unused_categories : \n    ",len(unused_categories),unused_categories )
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][load_categories_data] unused_categories : \n    ",len(unused_categories),unused_categories ))
 
         if(len(unused_categories) == 0) :
 
@@ -1681,15 +1679,15 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
     def reorder_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][reorder_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][reorder_categories]"))
 
         self.parent.display_reorder_category(self.dftitle,self.colname)
 
     def sort_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][sort_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][sort_categories]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansingControl import sort_categories
         opstat  =   sort_categories(self.dftitle,self.colname)
@@ -1712,8 +1710,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
     def toggle_category_order(self) :
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][toggle_category_order]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][toggle_category_order]"))
         
         from dfcleanser.common.cfg import get_dfc_dataframe_df, set_dfc_dataframe_df 
         df  =   get_dfc_dataframe_df(self.dftitle)
@@ -1764,8 +1762,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
     def help_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_single_column_category_taskbar_Widget][help_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_category_taskbar_Widget][help_category]"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_CAT_COL_RENAME_ID
@@ -1777,8 +1775,8 @@ class DataCleansing_cleanse_single_column_category_taskbar_Widget(QtWidgets.QWid
 
 def gen_drop_column(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_column]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_column]"))
 
     from PyQt5.QtWidgets import QMessageBox
     dlg = QMessageBox(parent)
@@ -1809,8 +1807,8 @@ def gen_drop_column(parent,dftitle,colname) :
 
 def gen_drop_values_rows(parent,dftitle,colname) :
         
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_values_rows)]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_values_rows)]"))
             
     from dfcleanser.common.common_utils import opStatus
     opstat = opStatus()
@@ -1849,15 +1847,15 @@ def gen_drop_values_rows(parent,dftitle,colname) :
 
 def gen_round_column(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][round_column]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][round_column]"))
 
     parent.parent.display_round_column(dftitle,colname)
 
 def gen_drop_nan_row(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_nan_row]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][drop_nan_row]"))
 
     from PyQt5.QtWidgets import QMessageBox
     dlg = QMessageBox(parent)
@@ -1884,15 +1882,15 @@ def gen_drop_nan_row(parent,dftitle,colname) :
 
 def gen_display_fill_nan_values(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][display_fill_nan_values]",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][display_fill_nan_values]",dftitle,colname))
 
     parent.parent.display_fillna_column(dftitle,colname)
 
 def fill_nan_values(self) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][fill_nan_values]",self.dftitle,self.colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][fill_nan_values]",self.dftitle,self.colname))
 
     fillvalue       =   "TBD"
     fillnamethod    =   "TBD"
@@ -1920,15 +1918,15 @@ def fill_nan_values(self) :
 
 def gen_return_column(parent) :
 
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][retrun_column]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][retrun_column]"))
 
     parent.parent.display_cleanse_columns()
 
 def gen_remove_white_space(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-        print("[DataCleansing_cleanse_single_column_taskbar_Widget][remove_white_space]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_taskbar_Widget][remove_white_space]"))
 
     parent.parent.display_whitespace_column(dftitle,colname)
 
@@ -1949,18 +1947,18 @@ class DataCleansing_cleanse_single_column_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_single_column_Widget]",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_Widget]",self.dftitle,self.colname))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_single_column_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_single_column_Widget][reload_data] ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+           add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_Widget][reload_data] ",dftitle,colname))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -1974,8 +1972,8 @@ class DataCleansing_cleanse_single_column_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout
@@ -2044,8 +2042,8 @@ class DataCleansing_cleanse_single_column_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.DataCleanseLayout)
 
-        if(DEBUG_CLEANSE_COLUMN_SINGLE) :
-            print("[DataCleansing_cleanse_single_column_Widget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN_SINGLE")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_single_column_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -2067,18 +2065,18 @@ class DataCleansing_cleanse_non_numeric_single_column_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_non_numeric_single_column_Widget] : dftitle : colname : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_non_numeric_single_column_Widget] : dftitle : colname : ",self.dftitle,self.colname))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_non_numeric_single_column_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_non_numeric_single_column_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_non_numeric_single_column_Widget][reload_data] ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_non_numeric_single_column_Widget][reload_data] ",dftitle,colname))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2093,8 +2091,8 @@ class DataCleansing_cleanse_non_numeric_single_column_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_non_numeric_single_column_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_non_numeric_single_column_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2168,8 +2166,8 @@ class DataCleansing_cleanse_non_numeric_single_column_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.DataCleanseLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_non_numeric_single_column_Widget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_non_numeric_single_column_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -2186,18 +2184,18 @@ class DataCleansing_cleanse_category_single_column_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_category_single_column_Widget] : dftitle : colname : ",self.dftitle,self.colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_category_single_column_Widget] : dftitle : colname : ",self.dftitle,self.colname))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_category_single_column_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_category_single_column_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_category_single_column_Widget][reload_data] ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_category_single_column_Widget][reload_data] ",dftitle,colname))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2212,8 +2210,8 @@ class DataCleansing_cleanse_category_single_column_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_category_single_column_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_category_single_column_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2264,8 +2262,8 @@ class DataCleansing_cleanse_category_single_column_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.DataCleanseLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_cleanse_category_single_column_Widget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_category_single_column_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -2280,8 +2278,8 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Round_Column_Form_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget]"))
 
         super().__init__()
 
@@ -2296,13 +2294,13 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget] end"))
     
     def reload_data(self,parent,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][reload_data] ",dftitle,colname)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][reload_data] ",dftitle,colname))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2312,8 +2310,8 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
@@ -2361,8 +2359,8 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.DataCleanseRoundColumnLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][init_form] : end : "))
 
     # -----------------------------------------------------------------#
     # -                Cleanse Single Column Form Methods             -#
@@ -2370,8 +2368,8 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
     def round_column_value(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][round_column_value]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][round_column_value]"))
 
         round_digits    =   self.round_column_form.get_form_input_value_by_index(0)
 
@@ -2383,15 +2381,15 @@ class DataCleansing_Round_Column_Form_Widget(QtWidgets.QWidget):
 
     def round_column_return(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][round_column_return]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][round_column_return]"))
         
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
     def round_column_help(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Round_Column_Form_Widget][round_column_help]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Round_Column_Form_Widget][round_column_help]"))
 
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
@@ -2403,8 +2401,8 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Remove_Whitespace_Form_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget]"))
 
         super().__init__()
 
@@ -2417,8 +2415,8 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
@@ -2434,8 +2432,8 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel 
@@ -2510,8 +2508,8 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
         self.DataCleanseRemoveWhitespaceLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseRemoveWhitespaceLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][init_form] : end : "))
 
     # -----------------------------------------------------------------#
     # -           remove whitespace form widget Form Methods          -#
@@ -2519,8 +2517,8 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
 
     def remove_whitespace_value(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_value]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_value]"))
 
         wschars         =   self.input_entry_value.text()
         leadflag        =   self.remove_whitespace_form.get_form_input_value_by_index(1)
@@ -2550,20 +2548,20 @@ class DataCleansing_Remove_Whitespace_Form_Widget(QtWidgets.QWidget):
         currentwschar   =   self.remove_whitespace_form.get_form_input_value_by_index(0)
         leadflag        =   self.remove_whitespace_form.get_form_input_value_by_index(1)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][build_whitespace_char_list]",wschars,currentwschar,leadflag)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][build_whitespace_char_list]",wschars,currentwschar,leadflag))
  
     def remove_whitespace_return(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_return]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_return]"))
         
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
     def remove_whitespace_help(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_value]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][remove_whitespace_value]"))
 
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
@@ -2575,8 +2573,8 @@ class DataCleansing_Fillna_Form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Fillna_Form_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget]"))
 
         super().__init__()
 
@@ -2587,18 +2585,15 @@ class DataCleansing_Fillna_Form_Widget(QtWidgets.QWidget):
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
-        #from dfcleanser.sw_utilities.dfc_qt_model import NUMERIC_COLUMN, NON_NUMERIC_COLUMN, CATEGORICAL_COLUMN
-
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget][reload_data]",dftitle,colname)
-
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget][reload_data]",dftitle,colname))
         
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -2621,8 +2616,8 @@ class DataCleansing_Fillna_Form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel 
@@ -2663,8 +2658,8 @@ class DataCleansing_Fillna_Form_Widget(QtWidgets.QWidget):
         self.DataCleanseFillnaLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseFillnaLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget][init_form] : end : "))
 
 
     def num_fillna_value(self) :
@@ -2687,8 +2682,8 @@ class DataCleansing_Non_Numeic_Fillna_Form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Fillna_Form_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget]"))
 
         super().__init__()
 
@@ -2701,8 +2696,8 @@ class DataCleansing_Non_Numeic_Fillna_Form_Widget(QtWidgets.QWidget):
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
@@ -2724,8 +2719,8 @@ class DataCleansing_Non_Numeic_Fillna_Form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel 
@@ -2766,8 +2761,8 @@ class DataCleansing_Non_Numeic_Fillna_Form_Widget(QtWidgets.QWidget):
         self.DataCleanseFillnaLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseFillnaLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Fillna_Form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Fillna_Form_Widget][init_form] : end : "))
 
     def nn_fillna_value(self) :
 
@@ -2794,8 +2789,8 @@ class DataCleansing_Non_Numeic_Fillna_Form_Widget(QtWidgets.QWidget):
 
 def fillna_value(parent,fillna_form,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[fillna_value]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[fillna_value]"))
 
     from dfcleanser.common.cfg import get_dfc_dataframe_df, set_dfc_dataframe_df 
     df  =   get_dfc_dataframe_df(dftitle)
@@ -2834,15 +2829,15 @@ def fillna_value(parent,fillna_form,dftitle,colname) :
         
 def fillna_return(parent,dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[fillna_return]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[fillna_return]"))
         
     parent.display_cleanse_single_column(dftitle,colname)
 
 def fillna_help() :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[fillna_help]")
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingWidgets",print_to_string("[fillna_help]"))
 
     from dfcleanser.common.common_utils import display_url
     from dfcleanser.common.help_utils import CLEANSE_FILLNA_COLUMN_ID
@@ -2915,8 +2910,8 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Add_Category_Form_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Add_Category_Form_Widget]"))
 
         super().__init__()
 
@@ -2929,8 +2924,8 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Add_Category_Form_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Add_Category_Form_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
@@ -2945,8 +2940,8 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Add_Category_Form_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Add_Category_Form_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel 
@@ -3002,8 +2997,8 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
         self.DataCleanseAddCategoryLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseAddCategoryLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Add_Category_Form_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Add_Category_Form_Widget][init_form] : end : "))
 
     # -----------------------------------------------------------------#
     # -           radd new category form widget Form Methods          -#
@@ -3011,8 +3006,8 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
 
     def add_new_category(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Add_Category_Form_Widget][add_new_category]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Add_Category_Form_Widget][add_new_category]"))
 
         newcat  =  self.add_category_form.get_form_input_value_by_index(0) 
         from dfcleanser.Qt.data_cleansing.DataCleansingControl import add_category
@@ -3037,15 +3032,15 @@ class DataCleansing_Add_Category_Form_Widget(QtWidgets.QWidget):
         
     def add_new_category_return(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][fillna_return]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][fillna_return]"))
         
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
     
     def add_new_category_help(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Whitespace_Form_Widget][fillna_return]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Whitespace_Form_Widget][fillna_return]"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_CAT_COL_ADD_ID
@@ -3059,8 +3054,8 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Remove_Categories_Widget]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget]"))
 
         super().__init__()
 
@@ -3073,8 +3068,8 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
         
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
@@ -3108,8 +3103,8 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton 
@@ -3184,8 +3179,8 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
         self.DataCleanseRemoveCategoryLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseRemoveCategoryLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget][init_form] : end : ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget][init_form] : end : "))
 
     # -----------------------------------------------------------------#
     # -            remove category form widget Form Methods           -#
@@ -3193,8 +3188,8 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
 
     def remove_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget][remove_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget][remove_categories]"))
 
         categoryList    =   []
         opstat          =   self.remove_categories(self.dftitle,self.colname,categoryList)
@@ -3217,15 +3212,15 @@ class DataCleansing_Remove_Categories_Widget(QtWidgets.QWidget):
         
     def return_remove_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget][return_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget][return_categories]"))
         
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
     def help_remove_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Remove_Categories_Widget][help_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Remove_Categories_Widget][help_categories]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_CAT_COL_REMOVE_ID
@@ -3247,18 +3242,18 @@ class DataCleansing_Reorder_Categories_Widget(QtWidgets.QWidget):
         self.dftitle        =   dfparms[1]
         self.colname        =   dfparms[2]
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("\n[DataCleansing_Reorder_Categories_Widget][init] dftitle : ",self.dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][init] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("[DataCleansing_Reorder_Categories_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget] end"))
 
     def reload_data(self,parent,dftitle,colname) :
         
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -3288,8 +3283,8 @@ class DataCleansing_Reorder_Categories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QPushButton 
@@ -3363,14 +3358,14 @@ class DataCleansing_Reorder_Categories_Widget(QtWidgets.QWidget):
         self.DataCleanseReorderCategoryLayout.setAlignment(Qt.AlignCenter)
         self.setLayout(self.DataCleanseReorderCategoryLayout)
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][init_form] end"))
 
 
     def reorder_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][reorder_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][reorder_categories]"))
 
         try :
 
@@ -3401,15 +3396,15 @@ class DataCleansing_Reorder_Categories_Widget(QtWidgets.QWidget):
 
     def return_from_reorder_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][return_from_reorder_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][return_from_reorder_categories]"))
 
         self.parent.display_cleanse_single_column(self.dftitle,self.colname)
 
     def help_for_reorder_categories(self) :
 
-        if(DEBUG_CLEANSE_COLUMN) :
-            print("  [DataCleansing_Reorder_Categories_Widget][help_for_reorder_categories]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_Reorder_Categories_Widget][help_for_reorder_categories]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_CAT_COL_REORDER_ID
@@ -3442,18 +3437,18 @@ class DataCleansing_cleanse_rows_Widget(QtWidgets.QWidget):
         self.parent         =   dfparms[0]
         self.dftitle        =   dfparms[1]
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget] dftitle : ",self.dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -3462,15 +3457,15 @@ class DataCleansing_cleanse_rows_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][init_form]"))
 
         self.init_command_bar()
 
     def init_command_bar(self):  
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][init_command_bar]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][init_command_bar]"))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
         
@@ -3500,8 +3495,8 @@ class DataCleansing_cleanse_rows_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.DataCleansingCmdbarLayout)
         self.parent.form.DataCleansingCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][init_command_bar] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][init_command_bar] end"))
 
     # -----------------------------------------------------------------#
     # -         DataCleansing_cleanse_rows_Widget methods             -#
@@ -3509,8 +3504,8 @@ class DataCleansing_cleanse_rows_Widget(QtWidgets.QWidget):
 
     def cleanse_rows_in_excel(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][cleanse_rows_in_excel]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][cleanse_rows_in_excel]"))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df, get_dfcleanser_location 
         from dfcleanser.common.common_utils import alert_user 
@@ -3540,29 +3535,29 @@ class DataCleansing_cleanse_rows_Widget(QtWidgets.QWidget):
 
     def filter_df_rows(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][filter_df_rows]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][filter_df_rows]"))
 
         self.parent.display_cleanse_rows_filter_df()
 
     def drop_dup_df_rows(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][drop_dup_df_rows]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][drop_dup_df_rows]"))
 
         self.parent.display_drop_duplicates(self.dftitle)
 
     def return_from_cleanse_rows(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][return_from_cleanse_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][return_from_cleanse_column]"))
 
         self.parent.init_stacked_index()
 
     def help_for_cleanse_rows(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget][help_for_cleanse_column]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget][help_for_cleanse_column]"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_ROW_ID
@@ -3585,18 +3580,18 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         self.df  =   get_dfc_dataframe_df(self.dftitle)
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_drop_duplicate_rows_Widget] dftitle : ",self.dftitle)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget] dftitle : ",self.dftitle))
 
         self.init_form()
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_cleanse_rows_Widget] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_cleanse_rows_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_drop_duplicate_rows_Widget][reload_data] ")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -3605,8 +3600,8 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][init_form]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingdfFiltersColumnWidget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -3680,8 +3675,8 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.dropdupsLayout)
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][init_form] end")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingdfFiltersColumnWidget][init_form] end"))
 
 
     # -----------------------------------------------------------------#
@@ -3697,15 +3692,15 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_drop_duplicate_rows_Widget][add_column_to_subset] ",row_number,column_number)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget][add_column_to_subset] ",row_number,column_number))
 
         model   =   self.colsStats.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][0]
 
-        if(DEBUG_CLEANSE_ROWS) :    
-            print("  [DataCleansing_drop_duplicate_rows_Widget][add_column_to_subset] : colname [",cell,"]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :    
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget][add_column_to_subset] : colname [",cell,"]"))
 
         subset_list     =    self.drop_dups_form.get_form_input_value_by_index(0)
 
@@ -3722,8 +3717,8 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
 
     def drop_duplicates(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_drop_duplicate_rows_Widget][drop_duplicates]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget][drop_duplicates]"))
 
         subset_list         =   self.drop_dups_form.get_form_input_value_by_index(0)
         duplicate_match     =   self.drop_dups_form.get_form_input_value_by_index(1)
@@ -3758,12 +3753,13 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
             keep_duplicates     =   False
         
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansing_drop_duplicate_rows_Widget][drop_duplicates]",subset_list,duplicate_match,keep_duplicates)
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansing_drop_duplicate_rows_Widget][drop_duplicates]",subset_list,duplicate_match,keep_duplicates))
 
         try :
-
-            print("subset",subset,type(subset))
+        
+	    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            	add_debug_to_log("DataCleansingWidgets",print_to_string("subset",subset,type(subset)))
 
             self.df.drop_duplicates(subset,keep=keep_duplicates,inplace=True)
             #self.filter_working_df      =    
@@ -3776,10 +3772,6 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
 
             self.dffilter_title_label.setText("\ndf : '"+self.dftitle+"' :  Number Rows : "+str(len(self.df))+"\n")
 
-
-            #self.dfStats.reload_data()
-            #self.colsdfStats.reload_data()
-
         except Exception as e:                   
             
             title       =   "dfcleanser exception"       
@@ -3787,20 +3779,18 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
             from dfcleanser.sw_utilities.dfc_qt_model import display_exception
             display_exception(title,status_msg,e)
 
-        
-
     def return_from_drop_duplicates(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][return_from_drop_duplicates]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingdfFiltersColumnWidget][return_from_drop_duplicates]"))
 
         from dfcleanser.Qt.data_cleansing.DataCleansing import DFS_SELECT
         self.parent.init_stacked_index()
 
     def help_for_drop_duplicates(self) :
 
-        if(DEBUG_CLEANSE_ROWS) :
-            print("  [DataCleansingdfFiltersColumnWidget][help_for_drop_duplicates]")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+            add_debug_to_log("DataCleansingWidgets",print_to_string("[DataCleansingdfFiltersColumnWidget][help_for_drop_duplicates]"))
    
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CLEANSE_DROP_DUPS_ID

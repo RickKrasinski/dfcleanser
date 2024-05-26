@@ -22,8 +22,10 @@ from PyQt5 import uic
 
 
 #import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_CLEANSE_COLUMN            =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
 
 
 # -----------------------------------------------------------------#
@@ -82,8 +84,8 @@ def display_uniques_for_cleanse_column(dftitle,colname) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][display_uniques_for_cleanse_column]",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[display_uniques_for_cleanse_column]",dftitle,colname))
 
     from dfcleanser.common.common_utils import run_jscript
     script  =   "display_Column_Uniques('" + dftitle + "','" + colname + "');"
@@ -106,8 +108,8 @@ def display_outliers_for_cleanse_column(dftitle,colname) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][display_outliers_for_cleanse_column]",colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[display_outliers_for_cleanse_column]",colname))
 
     from dfcleanser.common.common_utils import run_jscript
     script  =   "display_Column_Outliers('" + dftitle + "','" + colname + "');"
@@ -119,8 +121,8 @@ def display_outliers_for_cleanse_column(dftitle,colname) :
 
 def change_column_values(changeparms) :
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[change_column_values]",changeparms)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[change_column_values]",changeparms))
 
     dftitle     =   changeparms[0]  
     colname     =   changeparms[1]
@@ -249,8 +251,8 @@ def drop_column(dftitle,colname) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][drop_column] : ",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[drop_column] : ",dftitle,colname))
      
     from dfcleanser.common.cfg import get_dfc_dataframe_df, set_dfc_dataframe_df 
     df  =   get_dfc_dataframe_df(dftitle)
@@ -292,8 +294,8 @@ def drop_value_rows(dftitle,colname,value) :
     * --------------------------------------------------------
     """
    
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][drop_value_rows] : ",dftitle,colname,value)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[drop_value_rows] : ",dftitle,colname,value))
 
     opstat      =   opStatus()
     
@@ -356,8 +358,8 @@ def drop_value_rows(dftitle,colname,value) :
 
 def round_column_data(dftitle,colname,numdigits) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][round_column_data] : ",dftitle,colname,numdigits)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[round_column_data] : ",dftitle,colname,numdigits))
     
     opstat      =   opStatus()
     
@@ -388,8 +390,8 @@ def round_column_data(dftitle,colname,numdigits) :
 
 def drop_nan_rows(dftitle,colname) :
 
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][drop_nan_rows] : ",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[drop_nan_rows] : ",dftitle,colname))
 
     opstat      =   opStatus()
     
@@ -417,8 +419,8 @@ def drop_nan_rows(dftitle,colname) :
 
 def fill_nan_values(dftitle,colname,fillvalue,fillnamethod) :
         
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][fill_nan_values] : ",dftitle,colname,fillvalue,fillnamethod)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[fill_nan_values] : ",dftitle,colname,fillvalue,fillnamethod))
 
     opstat      =   opStatus()
     
@@ -500,80 +502,6 @@ def fill_nan_values(dftitle,colname,fillvalue,fillnamethod) :
     return(opstat)
 
 
-#def change_column_data_type(dftitle,colname) :
-    """
-    * --------------------------------------------------------
-    * function : drop a specific row
-    * 
-    * parms :
-    *   datatype        -   dataframe title
-    *   error_type      -   column name
-    *
-    * returns : 
-    *  N/A
-    * --------------------------------------------------------
-    """
-"""   
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][change_column_data_type] : ",dftitle,colname)
-
-    opstat = opStatus()
-
-    #return
-    
-    #df          =   cfg.get_current_chapter_df(cfg.DataCleansing_ID)
-    #df_title    =   cfg.get_current_chapter_dfc_df_title(cfg.DataCleansing_ID)
-    #colname     =   cfg.get_config_value(cfg.CLEANSING_COL_KEY)
-    
-    #fparms      =   get_parms_for_input(parms,dcw.col_datatype_input_idList)
-    
-    cdatatype   =   fparms[0]
-    error_fn    =   fparms[1]
-    
-    current_dtype   =   df[colname].dtype
-    
-    from dfcleanser.common.common_utils import get_dtype_str_for_datatype
-    coldtype    =   get_dtype_str_for_datatype(current_dtype,False)
-    
-    if(coldtype == cdatatype) :
-        
-        opstat.set_status(False)
-        opstat.set_errorMsg("Data Type to convert to is the same as the current data type.")
-        
-    else :
-        
-        if( (cdatatype.find("datetime") > -1) or 
-            (cdatatype.find("datetime64[ns]") > -1) ):
-                
-            opstat.set_status(False)
-            opstat.set_errorMsg("Convert Column to datetime in dfcleanser DataTransform.")
-                
-        elif( (cdatatype.find("timedelta") > -1) or 
-              (cdatatype.find("timedelta[ns]") > -1) ):
-                
-            opstat.set_status(False)
-            opstat.set_errorMsg("Convert Column to timedelta in dfcleanser DataTransform.")
-        
-        elif( (cdatatype.find("category") > -1) ):
-                
-            opstat.set_status(False)
-            opstat.set_errorMsg("Convert Column to category in dfcleanser DataTransform.")
-
-        else :
-            
-            pandas_datatype =   cdatatype
-        
-            try :
-            
-                df = df.astype({colname : pandas_datatype},errors=error_fn)   
-                cfg.set_dfc_dataframe_df(df_title,df)
-            
-            except Exception as e:
-                opstat.store_exception("Unable to change data type  " + colname,e)
-            
-    return(opstat)
-
-"""
 
 whitespace_chars                =   ["\\t","\\n","\\f","\\r","\\b","\\v"]
 whitespace_chars_text           =   ["&nbsp;Horizontal Tab","&nbsp;Linefeed","&nbsp;Formfeed","&nbsp;Cariage Return","&nbsp;Backspace","&nbsp;Vertical Tab"]
@@ -582,8 +510,8 @@ whitespace_chars_ids            =   ["HTab","Lfeed","Ffeed","CReturn","Bspace","
 
 def remove_whitespace(dftitle,colname,wschars,leadflag) :
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][remove_whitespace] : ",dftitle,colname,wschars,leadflag)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[remove_whitespace] : ",dftitle,colname,wschars,leadflag))
     
     opstat      =   opStatus()
     
@@ -637,7 +565,6 @@ def remove_whitespace(dftitle,colname,wschars,leadflag) :
         
                 
     return(opstat)
-
 
 
 # -----------------------------------------------------------------#
@@ -699,8 +626,8 @@ def rename_category(dftitle,colname,oldcat,newcat) :
     * --------------------------------------------------------
     """
      
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][remove_whitespace] : ",dftitle,colname,oldcat,newcat)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[remove_whitespace] : ",dftitle,colname,oldcat,newcat))
    
     opstat      =   opStatus()
     
@@ -745,8 +672,8 @@ def add_category(dftitle,colname,newcat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][add_category] : ",dftitle,colname,newcat)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[add_category] : ",dftitle,colname,newcat))
    
     opstat      =   opStatus()
     
@@ -810,8 +737,8 @@ def remove_category(dftitle,colname,delcat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][remove_category] : ",dftitle,colname,delcat)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[remove_category] : ",dftitle,colname,delcat))
     
     opstat      =   opStatus()
     
@@ -879,8 +806,8 @@ def remove_unused_categories(dftitle,colname) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][remove_unused_categories] : ",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[remove_unused_categories] : ",dftitle,colname))
 
     opstat      =   opStatus()
     
@@ -913,8 +840,8 @@ def reorder_category(dftitle,colname,catsorder) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][reorder_category] : ",dftitle,colname,catsorder)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[reorder_category] : ",dftitle,colname,catsorder))
 
 
     opstat      =   opStatus()
@@ -963,8 +890,8 @@ def toggle_category_order(dftitle,colname,ctaorder) :
     * --------------------------------------------------------
     """
      
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][toggle_category_order] : ",dftitle,colname,ctaorder)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[toggle_category_order] : ",dftitle,colname,ctaorder))
    
     opstat      =   opStatus()
     
@@ -1004,8 +931,8 @@ def sort_categories(dftitle,colname) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][sort_categories] : ",dftitle,colname)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[sort_categories] : ",dftitle,colname))
    
     opstat      =   opStatus()
     
@@ -1025,8 +952,6 @@ def sort_categories(dftitle,colname) :
         display_exception(title,status_msg,e)
 
     return(opstat)
-
-
 
 def drop_duplicate_rows(parms,display=True):
     """
@@ -1084,10 +1009,6 @@ def drop_duplicate_rows(parms,display=True):
 
     return(opstat)
  
-
-
-
-
 def apply_criteria_to_df(df,criteria,opstat) :
     """
     * --------------------------------------------------------
@@ -1098,8 +1019,8 @@ def apply_criteria_to_df(df,criteria,opstat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_CLEANSE_COLUMN) :
-        print("[DataCleansingControl][apply_criteria_to_df] : \n",criteria)
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_COLUMN")) :
+        add_debug_to_log("DataCleansingControl",print_to_string("[apply_criteria_to_df] : \n",criteria))
    
     try :
 
