@@ -22,23 +22,10 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_EXPORT               =   False
-DEBUG_DATA_EXPORT_HISTORIES     =   False
-DEBUG_DATA_EXPORT_FILE_TYPE     =   False
-DEBUG_DATA_EXPORT_DETAILS       =   False
-DEBUG_DATA_EXPORT_FORMS         =   False
-DEBUG_DATA_EXPORT_CONNECTORS    =   False
-
-DEBUG_DATA_EXPORT_CSV           =   False
-DEBUG_DATA_EXPORT_EXCEL         =   False
-DEBUG_DATA_EXPORT_JSON          =   False
-DEBUG_DATA_EXPORT_XML           =   False
-DEBUG_DATA_EXPORT_HTML          =   False
-DEBUG_DATA_EXPORT_SQLTABLE      =   False
-DEBUG_DATA_EXPORT_CUSTOM        =   False
-
-
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataExport_ID
 
 
 # -----------------------------------------------------------------#
@@ -94,17 +81,6 @@ EXPORT_DBCONNECTORS_TABLE               =   "dbconnectors table"
 EXPORT_DBCONNECTORS_CREATE_FORM         =   "dbconnector create"
 EXPORT_DBCONNECTORS_EDIT_FORM           =   "dbconnector edit"
 
-"""
-IMPORT_FILE_FORM                        =   "DataImport import file form"
-
-
-
-IMPORT_DBCONNECTORS_TABLE             =   "DataImport DBConnectors Table"
-IMPORT_DBCONNECTORS_CREATE_FORM       =   "DataImport DBConnectors Create Form"
-IMPORT_DBCONNECTORS_EDIT_FORM         =   "DataImport DBConnectors Edit Form"
-
-EXPORT_DBCONNECTORS_TABLE             =   "DataExport DBConnectors Table"
-"""
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -248,8 +224,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_export_buttons(self):
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[init_data_export_buttons]  ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[init_data_export_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -275,31 +251,32 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_export_splash_screen(self):
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[init_data_export_splash_screen]  ")
+        from dfcleanser.common.cfg import DataExport_ID
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[init_data_export_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataExport_ID
         build_chapter_splash_screen(DataExport_ID, self.form.DataExportsplash)
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[end init_data_export_splash_screen]  ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[end init_data_export_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -            Add a new dataframe to the df combobox             -#
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[DataExportGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[DataExportGui][add_new_df]  df_title",df_title))
 
         self.df_select.addItem(df_title)
         index = self.df_select.findText("no dfs defined")
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[DataExportGui] self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[DataExportGui] self.df_select",type(self.df_select),self.df_select.count()))
 
         self.init_stacked_index()
 
@@ -310,8 +287,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_export_form(self):
         
-        if(DEBUG_DATA_EXPORT) :
-            print("[init_data_export_form]  ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[init_data_export_form]  "))
 
         self.init_data_export_buttons()
         self.init_data_export_splash_screen()
@@ -345,8 +322,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.CSVbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportCSVFile]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportCSVFile]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.CSV_EXPORT 
@@ -355,8 +332,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         from dfcleanser.common.cfg import get_config_value
         cfg_parms   =   cfg.get_config_value(DEM.pandas_export_csv_id + "Parms")
         
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportCSVFile] cfg_parms : ",cfg_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportCSVFile] cfg_parms : ",cfg_parms))
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -370,8 +347,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.Excelbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportExcelFile]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportExcelFile]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.EXCEL_EXPORT 
@@ -391,8 +368,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.JSONbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportJSONFile]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportJSONFile]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.JSON_EXPORT 
@@ -412,8 +389,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.XMLbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportXMLFile]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportXMLFile]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.XML_EXPORT 
@@ -434,8 +411,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.HTMLbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportHTMLFile]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportHTMLFile]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.HTML_EXPORT 
@@ -455,8 +432,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.SQLTablebutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportSQLTable]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportSQLTable]"))
 
         from dfcleanser.common.cfg import get_dfc_dataframes_select_list, DataExport_ID
         dataframes      =   get_dfc_dataframes_select_list(DataExport_ID)
@@ -484,8 +461,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.Custombutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[ExportCustom]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportCustom]"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         file_type   =   DEM.CUSTOM_EXPORT 
@@ -506,8 +483,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         
         self.form.ExportResetbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("ResetDataImport")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("ResetDataImport"))
 
         self.display_export_histories()
         
@@ -519,8 +496,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.form.ExportHelpbutton.toggle()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("HelpDataExport")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("HelpDataExport"))
 
         from dfcleanser.common.common_utils import display_url
         display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-data-export.html")
@@ -542,8 +519,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_export_histories(self):
 
-        if(DEBUG_DATA_EXPORT_HISTORIES) :
-            print("\n[display_export_histories]  ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORIES")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_histories]  "))
 
         export_history_index  =   self.DataExportWidgets_stack_dict.get(EXPORT_TYPE_HISTORIES)
         
@@ -565,8 +542,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_EXPORT_HISTORIES) :
-            print("[display_export_histories] end : stack \n  ",self.DataExportWidgets_stack_dict,"\n")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORIES")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_histories] end : stack \n  ",self.DataExportWidgets_stack_dict,"\n"))
 
         from dfcleanser.common.cfg import get_dfc_dataframes_titles_list
         dataframes     =   get_dfc_dataframes_titles_list()
@@ -587,8 +564,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_export_file_type_histories(self, filetype):
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("\n[display_export_file_type_histories] : filetype", filetype)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_file_type_histories] : filetype", filetype))
 
         self.export_file_type   =   int(filetype)
 
@@ -608,13 +585,13 @@ class DataExportGui(QtWidgets.QMainWindow):
         elif(self.export_file_type == DEM.CUSTOM_EXPORT) :
             layout_index    =   EXPORT_CUSTOM_FILE_TYPE_HISTORIES
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[display_export_file_type_histories] : layout_index ",layout_index)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_file_type_histories] : layout_index ",layout_index))
 
         file_types_index  =   self.DataExportWidgets_stack_dict.get(layout_index)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[display_export_file_type_histories] : file_types_index",file_types_index)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_file_type_histories] : file_types_index",file_types_index))
 
         if(file_types_index is None) :
 
@@ -643,8 +620,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                 self.data_export_custom_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_custom_file_type_history
 
-            if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-                print("[display_export_file_type_histories] : current_index",len(self.DataExportWidgets_stack_dict))
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_file_type_histories] : current_index",len(self.DataExportWidgets_stack_dict)))
 
             current_index   =  len(self.DataExportWidgets_stack_dict)
             self.DataExportWidgets_stack_dict.update({layout_index : current_index})
@@ -678,8 +655,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[display_export_file_type_histories] end : stack :\n  ",self.DataExportWidgets_stack_dict)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_file_type_histories] end : stack :\n  ",self.DataExportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -694,22 +671,22 @@ class DataExportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
         
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :    
-            print("[ExportFileTypeHistory][select_export_df_title]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :    
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory][select_export_df_title]"))
 
         for idx in self.data_export_file_type_history.exportfiletypehistory.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory][select_iexport_df_title] : row col : ",row_number,column_number)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory][select_iexport_df_title] : row col : ",row_number,column_number))
 
         model   =   self.data_export_file_type_history.exportfiletypehistory.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :    
-            print("[ExportFileTypeHistory][select_export_df_title] : cell value [",cell,"]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :    
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory][select_export_df_title] : cell value [",cell,"]"))
 
         if(column_number == 0) :
             if(cell == " ") :
@@ -724,8 +701,8 @@ class DataExportGui(QtWidgets.QMainWindow):
             filename    =   tdata[row_number][2]
             dftitle     =   tdata[row_number][1]
 
-            if(DEBUG_DATA_EXPORT_FILE_TYPE) :    
-                print("[ExportFileTypeHistory][select_export_df_title] : dftitle : filename ",dftitle,filename)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :    
+                add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory][select_export_df_title] : dftitle : filename ",dftitle,filename))
 
             self.display_export_with_parms(self.export_file_type,dftitle,filename)
 
@@ -736,8 +713,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] return_from_export_file_types")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory] return_from_export_file_types"))
 
         self.display_export_histories()
 
@@ -748,8 +725,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] delete_export_histories")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory] delete_export_histories"))
 
         model   =   self.data_export_file_type_history.exportfiletypehistory.model
         tdata   =   model.get_data()
@@ -761,8 +738,8 @@ class DataExportGui(QtWidgets.QMainWindow):
             if(not (check_value == " ")) :
                 delete_list.append(tdata[i][1])
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[ExportFileTypeHistory] delete_list",delete_list)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[ExportFileTypeHistory] delete_list",delete_list))
         
         if(len(delete_list) > 0) :
 
@@ -816,8 +793,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_export_with_parms(self,filetype,dftitle,filename):
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("\n[display_export_with_parms] ",filetype,dftitle,filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_with_parms] ",filetype,dftitle,filename))
 
         self.export_with_filetype       =   filetype
         self.export_with_filename       =   filename
@@ -826,8 +803,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         parms_index  =   self.DataExportWidgets_stack_dict.get(EXPORT_WITH_PARMS)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[display_export_with_parms] : parms_index : ",parms_index)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_with_parms] : parms_index : ",parms_index))
 
         if(parms_index is None) :
 
@@ -845,8 +822,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPE) :
-            print("[display_export_with_parms] end : stack \n  ",self.DataExportWidgets_stack_dict)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_with_parms] end : stack \n  ",self.DataExportWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -873,8 +850,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("\n[display_export_form] filetype : dftitle  : ",self.export_file_form_file_type,self.export_file_form_dftitle,"\n cfgparms : \n  ",self.export_file_form_cfg_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_form] filetype : dftitle  : ",self.export_file_form_file_type,self.export_file_form_dftitle,"\n cfgparms : \n  ",self.export_file_form_cfg_parms))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
@@ -899,20 +876,20 @@ class DataExportGui(QtWidgets.QMainWindow):
             layout_index    =   EXPORT_CUSTOM_FORM
             height          =   700
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[display_export_form] layout_index : ",layout_index)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_form] layout_index : ",layout_index))
 
         file_form_types_index  =   self.DataExportWidgets_stack_dict.get(layout_index)
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[display_export_form] file_form_types_index : ",file_form_types_index)
-
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_form] file_form_types_index : ",file_form_types_index))
+            
         if(file_form_types_index is None) :
 
             self.filetypeformParms   =   [self.export_file_form_file_type,self.export_file_form_dftitle,self.export_file_form_cfg_parms] 
 
-            if(DEBUG_DATA_EXPORT_FORMS) :
-                print("[display_export_form] filetypeformParms : \n  ",self.filetypeformParms)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_form] filetypeformParms : \n  ",self.filetypeformParms))
 
             if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
                 self.data_export_csv_form  =   self.build_export_form(self.filetypeformParms,opstat)
@@ -934,8 +911,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                 current_index   =  len(self.DataExportWidgets_stack_dict)
                 self.DataExportWidgets_stack_dict.update({layout_index : current_index})
 
-                if(DEBUG_DATA_EXPORT_FORMS) :
-                    print("[display_export_form] file_form_types_index : ",file_form_types_index)
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                    add_debug_to_log("DataExport",print_to_string("[display_export_form] file_form_types_index : ",file_form_types_index))
 
                 if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_csv_form)
@@ -960,9 +937,9 @@ class DataExportGui(QtWidgets.QMainWindow):
             
             self.filetypeformParms   =   [self.export_file_form_file_type,self.export_file_form_dftitle,self.export_file_form_cfg_parms] 
 
-            if(DEBUG_DATA_EXPORT) :
-                print("[display_export_form] file_form_types_index : ",file_form_types_index)
-                print("[display_export_form] self.filetypeformParms",self.export_file_form_cfg_parms)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_form] file_form_types_index : ",file_form_types_index))
+                add_debug_to_log("DataExport",print_to_string("[display_export_form] self.filetypeformParms",self.export_file_form_cfg_parms))
 
             if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
                 self.reload_form_values(self.data_export_csv_form,self.export_file_form_cfg_parms) 
@@ -984,8 +961,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(opstat.get_status()) :
             self.stackedLayout.setCurrentIndex(current_index)
 
-            if(DEBUG_DATA_EXPORT) :
-                print("[display_export_form][end] : current_index ",current_index,"\n  ",self.DataExportWidgets_stack_dict,"\n")
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_form][end] : current_index ",current_index,"\n  ",self.DataExportWidgets_stack_dict,"\n"))
 
         else :
             height  =   650
@@ -999,8 +976,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def reload_form_values(self, exportform, values) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("\n[reload_form_values] exportform : values  : ",exportform,values)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[reload_form_values] exportform : values  : ",exportform,values))
 
 
         form_count  =   exportform.get_form_fields_count()
@@ -1031,19 +1008,19 @@ class DataExportGui(QtWidgets.QMainWindow):
         self.build_dftitle      =   buildparms[1]
         self.build_parms        =   buildparms[2]
 
-        if(DEBUG_DATA_EXPORT) :
-            print("  [build_export_form] self.build_filetype :  self.build_dftitle : ",self.build_filetype,self.build_dftitle)
-            print("  [build_export_form] build parms \n     : ",self.build_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form] self.build_filetype :  self.build_dftitle : ",self.build_filetype,self.build_dftitle))
+            add_debug_to_log("DataExport",print_to_string("[build_export_form] build parms \n     : ",self.build_parms))
         
-        if(DEBUG_DATA_EXPORT) :
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             if(not (self.build_parms is None)) :
-                print("  [build_export_form] self.build_parms :  ")
+                add_debug_to_log("DataExport",print_to_string("[build_export_form] self.build_parms :  "))
 
                 for i in range(len(self.build_parms)) :
-                    print("    [build_parms][",i,"] : ",self.build_parms[i])
+                    add_debug_to_log("DataExport",print_to_string("    [build_parms][",i,"] : ",self.build_parms[i]))
 
             else :
-                print("  [build_export_form] self.build_parms :  None ")    
+                add_debug_to_log("DataExport",print_to_string("  [build_export_form] self.build_parms :  None "))    
 
         export_form             =   None
 
@@ -1056,8 +1033,8 @@ class DataExportGui(QtWidgets.QMainWindow):
             else :
                 last_df_title       =   self.build_dftitle
                 
-            if(DEBUG_DATA_EXPORT_FORMS) :
-                print("  [build_export_form] last_df_title : ",last_df_title)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                add_debug_to_log("DataExport",print_to_string("[build_export_form] last_df_title : ",last_df_title))
 
             if(self.build_filetype==DEM.SQLTABLE_EXPORT) :
 
@@ -1186,10 +1163,10 @@ class DataExportGui(QtWidgets.QMainWindow):
                     selectDicts.append(dataframes)
 
                 
-                if(DEBUG_DATA_EXPORT_FORMS) :
-                    print("  [build_export_form] : selectDicts",)
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                    add_debug_to_log("DataExport",print_to_string("[build_export_form] : selectDicts"))
                     for i in range(len(selectDicts)) :
-                        print("     [",str(i),"] : ",selectDicts[i])
+                        add_debug_to_log("DataExport",print_to_string("     [",str(i),"] : ",selectDicts[i]))
 
                 exportcomboList     =   selectDicts
                 form_parms.append(exportcomboList)
@@ -1200,8 +1177,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                 form_parms.append(form_title)
                 form_parms.append(form_width)  
 
-                if(DEBUG_DATA_EXPORT) :
-                    print("  [build_export_form] form_parms :  ")
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+                    add_debug_to_log("DataExport",print_to_string("[build_export_form] form_parms :  "))
 
                 from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
                 export_form     =   dfcleanser_input_form_Widget(form_parms)
@@ -1211,11 +1188,11 @@ class DataExportGui(QtWidgets.QMainWindow):
                     code_preamble   =   code_preamble + "df  =   get_dfc_dataframe_df('" + last_df_title + "')\n"
                     export_form.set_form_input_value_by_index(1,code_preamble)
                 
-                if(DEBUG_DATA_EXPORT) :
-                    print("  [build_export_form] after form_built : ")
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+                    add_debug_to_log("DataExport",print_to_string("[build_export_form] after form_built : "))
 
-            if(DEBUG_DATA_EXPORT) :
-                print("  [build_export_form] : export_form saved")
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+                add_debug_to_log("DataExport",print_to_string("[build_export_form] : export_form saved"))
        
         except Exception as e:
 
@@ -1240,16 +1217,16 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def update_export_csv_df(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_csv_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_csv_df]"))
 
         dftitle =  self.data_export_csv_form.get_form_input_value_by_index(0) 
         self.data_export_csv_form.set_form_input_value_by_index(0,dftitle)
 
     def update_export_csv_file(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_csv_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_csv_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"csv files (*.csv)")
@@ -1257,8 +1234,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     
     def update_export_csv_history(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_csv_history]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_csv_history]"))
 
         csvfile =  self.data_export_csv_form.get_form_input_value_by_index(2) 
         self.data_export_csv_form.set_form_input_value_by_index(1,csvfile)
@@ -1267,16 +1244,16 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         num_form_values     =   self.data_export_csv_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][export_csv_file]",num_form_values)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][export_csv_file]",num_form_values))
 
         form_parms          =   []
 
         for i in range(num_form_values) :
             form_parms.append(self.data_export_csv_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][export_csv_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][export_csv_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import CSV_EXPORT
@@ -1286,8 +1263,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         
         form_field_count    =   self.data_export_csv_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_export_csv_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_export_csv_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -1295,15 +1272,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_csv_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_csv_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_csv_file]"))
 
         self.display_export_histories()
 
     def help_export_csv_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_csv_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_csv_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import CSV_EXPORT_URL
@@ -1315,16 +1292,16 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def update_export_excel_df(self) :
     
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_excel_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_excel_df]"))
 
         dftitle =  self.data_export_excel_form.get_form_input_value_by_index(0) 
         self.data_export_excel_form.set_form_input_value_by_index(0,dftitle)
 
     def update_export_excel_file(self) :
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_excel_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_excel_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"excel files (*.xls)")
@@ -1332,8 +1309,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     
     def update_export_excel_history(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_excel_history]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_excel_history]"))
 
         excelfile =  self.data_export_excel_form.get_form_input_value_by_index(2) 
         self.data_export_excel_form.set_form_input_value_by_index(1,excelfile)
@@ -1346,8 +1323,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_export_excel_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][export_excel_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][export_excel_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import EXCEL_EXPORT
@@ -1357,8 +1334,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.data_export_excel_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_export_excel_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_export_excel_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -1366,15 +1343,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_excel_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_excel_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_excel_file]"))
 
         self.display_export_histories()
 
     def help_export_excel_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_excel_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_excel_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import EXCEL_EXPORT_URL
@@ -1386,16 +1363,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def update_export_json_df(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_jsonl_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_jsonl_df]"))
 
         dftitle =  self.data_export_json_form.get_form_input_value_by_index(0) 
         self.data_export_json_form.set_form_input_value_by_index(0,dftitle)
 
     def update_export_json_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_json_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_json_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -1403,16 +1380,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     
     def update_export_json_history(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_json_history]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_json_history]"))
 
         jsonfile =  self.data_export_json_form.get_form_input_value_by_index(2) 
         self.data_export_json_form.set_form_input_value_by_index(1,jsonfile)
 
     def export_json_file(self) :
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][export_json_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][export_json_file]"))
 
         num_form_values     =   self.data_export_json_form.get_form_fields_count()
         form_parms          =   []
@@ -1420,8 +1397,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_export_json_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][import_json_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][import_json_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import JSON_EXPORT
@@ -1431,8 +1408,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.data_export_json_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_json_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_json_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -1440,15 +1417,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_json_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_json_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_json_file]"))
 
         self.display_export_histories()
 
     def help_export_json_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_json_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_json_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import JSON_EXPORT_URL
@@ -1460,16 +1437,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def update_export_xml_df(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_xml_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_xml_df]"))
 
         dftitle =  self.data_export_xml_form.get_form_input_value_by_index(0) 
         self.data_export_xml_form.set_form_input_value_by_index(0,dftitle)
 
     def update_export_xml_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_xml_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_xml_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"xml files (*.xml)")
@@ -1477,16 +1454,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     
     def update_export_xml_history(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_xml_history]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_xml_history]"))
 
         xmlfile =  self.data_export_xml_form.get_form_input_value_by_index(2) 
         self.data_export_xml_form.set_form_input_value_by_index(1,xmlfile)
 
     def export_xml_file(self) :
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][export_xml_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][export_xml_file]"))
 
         num_form_values     =   self.data_export_xml_form.get_form_fields_count()
         form_parms          =   []
@@ -1494,8 +1471,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_export_xml_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][import_xml_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][import_xml_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import XML_EXPORT
@@ -1505,8 +1482,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.data_export_xml_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_xml_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_xml_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -1514,15 +1491,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_xml_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_xml_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_xml_file]"))
 
         self.display_export_histories()
 
     def help_export_xml_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_xml_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_xml_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import JSON_EXPORT_URL
@@ -1535,16 +1512,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def update_export_html_df(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_html_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_html_df]"))
 
         dftitle =  self.data_export_html_form.get_form_input_value_by_index(0) 
         self.data_export_html_form.set_form_input_value_by_index(0,dftitle)
 
     def update_export_html_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_html_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_html_file]"))
 
         from PyQt5.QtWidgets import QFileDialog
         fname = QFileDialog.getOpenFileName(self, 'Select file','c:\\',"json files (*.json)")
@@ -1552,16 +1529,16 @@ class DataExportGui(QtWidgets.QMainWindow):
     
     def update_export_html_history(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[build_export_form][update_export_html_history]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_html_history]"))
 
         htmlfile =  self.data_export_html_form.get_form_input_value_by_index(2) 
         self.data_export_html_form.set_form_input_value_by_index(1,htmlfile)
 
     def export_html_file(self) :
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][export_jhtml_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][export_jhtml_file]"))
 
         num_form_values     =   self.data_export_html_form.get_form_fields_count()
         form_parms          =   []
@@ -1569,8 +1546,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_export_html_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][import_json_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][import_json_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import HTML_EXPORT
@@ -1580,8 +1557,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         form_field_count    =   self.data_export_html_form.get_form_fields_count()
         
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_html_file] : form_field_count ",form_field_count,type(form_field_count))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_html_file] : form_field_count ",form_field_count,type(form_field_count)))
         
         for i in range(form_field_count) :
             if(not (i==1)):
@@ -1589,15 +1566,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_html_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_html_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_html_file]"))
 
         self.display_export_histories()
 
     def help_export_html_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_html_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_html_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import HTML_EXPORT_URL
@@ -1610,8 +1587,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def update_export_custom_df(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][update_export_custom_df]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][update_export_custom_df]"))
 
         dftitle =  self.data_export_custom_form.get_form_input_value_by_index(0)
         code    =  self.data_export_custom_form.get_form_input_value_by_index(1)
@@ -1629,8 +1606,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def export_custom_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][export_custom_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][export_custom_file]"))
         
         num_form_values     =   self.data_export_custom_form.get_form_fields_count()
         form_parms          =   []
@@ -1638,8 +1615,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         for i in range(num_form_values) :
             form_parms.append(self.data_export_custom_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_import_form][exmport_jcustom_file] form_parms : \n  ",form_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_import_form][exmport_jcustom_file] form_parms : \n  ",form_parms))
  
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import CUSTOM_EXPORT
@@ -1647,8 +1624,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def clear_export_custom_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][clear_export_custom_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][clear_export_custom_file]"))
 
         dftitle =  self.data_export_custom_form.get_form_input_value_by_index(0)
         code    =  self.data_export_custom_form.get_form_input_value_by_index(1)
@@ -1666,15 +1643,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_export_custom_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][return_from_export_custom_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][return_from_export_custom_file]"))
 
         self.display_export_histories()
 
     def help_export_custom_file(self) :
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[build_export_form][help_export_custom_file]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[build_export_form][help_export_custom_file]"))
        
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import EXPORT_CUSTOM_ID
@@ -1702,15 +1679,15 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         #self.export_action              =   self.export_with_db_connector 
         
-        if(DEBUG_DATA_EXPORT) :
-            print("\n[display_export_dbconnector_table]  ",self.dbconnector_export_type,type(self.dbconnector_export_type),self.export_action,type(self.export_action))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_dbconnector_table]  ",self.dbconnector_export_type,type(self.dbconnector_export_type),self.export_action,type(self.export_action)))
 
         try :
 
             dbconnectors_index  =   self.DataExportWidgets_stack_dict.get(EXPORT_DBCONNECTORS_TABLE)                
 
-            if(DEBUG_DATA_EXPORT_CONNECTORS) :
-                print("[display_export_dbconnector_table] dbconnectors_index : ",dbconnectors_index)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_CONNECTORS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_dbconnector_table] dbconnectors_index : ",dbconnectors_index))
 
             if(dbconnectors_index is None) :
 
@@ -1724,8 +1701,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                 current_index   =  len(self.DataExportWidgets_stack_dict)
                 self.DataExportWidgets_stack_dict.update({EXPORT_DBCONNECTORS_TABLE : current_index})    
 
-                if(DEBUG_DATA_EXPORT_CONNECTORS) :
-                    print("[display_export_dbconnector_tanle] current_index : ",current_index)
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_CONNECTORS")) :
+                    add_debug_to_log("DataExport",print_to_string("[display_export_dbconnector_tanle] current_index : ",current_index))
 
             else :
 
@@ -1742,8 +1719,8 @@ class DataExportGui(QtWidgets.QMainWindow):
             display_exception(title,status_msg,e)
 
 
-        if(DEBUG_DATA_EXPORT_CONNECTORS) :
-            print("[display_export_dbconnector_table] end\n  ",self.DataExportWidgets_stack_dict)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_CONNECTORS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_dbconnector_table] end\n  ",self.DataExportWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -1759,14 +1736,14 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def export_with_db_connector(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[display_export_with_parms][export_with_db_connector] ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] "))
         
         from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table, EXPORT_FLAG
         current_selected_connector  =   dfc_dbconnectors_table.get_current_dbconnector(EXPORT_FLAG)
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[display_export_with_parms][export_with_db_connector] current_selected_connector : \n  ",current_selected_connector)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] current_selected_connector : \n  ",current_selected_connector))
 
         self.statusBar().clearMessage() 
                         
@@ -1813,14 +1790,14 @@ class DataExportGui(QtWidgets.QMainWindow):
 
                 try :
 
-                    if(DEBUG_DATA_EXPORT_DETAILS) :
-                        print("  [display_export_with_parms][export_with_db_connector] self.import_with_filetype : ",self.export_with_filetype)
+                    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                        add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] self.import_with_filetype : ",self.export_with_filetype))
 
                     from dfcleanser.Qt.data_import.DataImportModel import ExportHistory
                     Export_Details  =   ExportHistory.get_df_title_entry(self.export_with_filetype,self.export_dftitle)
                 
-                    if(DEBUG_DATA_EXPORT_DETAILS) :
-                        print("  [display_export_with_parms][export_with_db_connector] Import Details : \n  ",self.export_dftitle)
+                    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                        add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] Import Details : \n  ",self.export_dftitle))
     
                     if(not (Export_Details is None)) :
                     
@@ -1833,8 +1810,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                     else :
                         full_parms      =   []
 
-                    if(DEBUG_DATA_EXPORT_DETAILS) :
-                        print("  [display_export_with_parms][export_with_db_connector] full_parms : \n  ",full_parms)
+                    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                        add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] full_parms : \n  ",full_parms))
 
                     cfg_parms   =   [self.export_dftitle,self.export_dftitle]
 
@@ -1845,8 +1822,8 @@ class DataExportGui(QtWidgets.QMainWindow):
                         else :
                             cfg_parms.append("")
 
-                    if(DEBUG_DATA_EXPORT_DETAILS) :
-                        print("  [display_export_with_parms][export_with_db_connector] cfg_parms : \n: ",cfg_parms)
+                    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                        add_debug_to_log("DataExport",print_to_string("[display_export_with_parms][export_with_db_connector] cfg_parms : \n: ",cfg_parms))
  
                     exportParms     =   [self.export_with_filetype,self.export_dftitle,cfg_parms]
                     self.display_export_form(exportParms)
@@ -1871,8 +1848,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_export_status(self, filetype, filename, dftitle):
 
-        if(DEBUG_DATA_EXPORT_DETAILS) :
-            print("  [display_export_status] : filetype : dftitle : ",filetype, filename, dftitle)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_export_status] : filetype : dftitle : ",filetype, filename, dftitle))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1886,8 +1863,8 @@ class DataExportGui(QtWidgets.QMainWindow):
         
             parms_index  =   self.DataExportWidgets_stack_dict.get(EXPORT_STATUS)
          
-            if(DEBUG_DATA_EXPORT_DETAILS) :
-                print("[display_export_status] : parms_index : ",parms_index)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_status] : parms_index : ",parms_index))
        
             if(parms_index is None) :
 
@@ -1903,14 +1880,14 @@ class DataExportGui(QtWidgets.QMainWindow):
             
                 reload_parms   =   [self.export_with_filetype,self.export_with_filename,self.dftitle] 
 
-                if(DEBUG_DATA_EXPORT_DETAILS) :
-                    print("[display_export_status] : reload option : ",reload_parms)
+                if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                    padd_debug_to_log("DataExport",print_to_string("[display_export_status] : reload option : ",reload_parms))
 
                 self.exportstatus_Widget.reload_table_data(reload_parms)
                 current_index   =   parms_index
 
-            if(DEBUG_DATA_EXPORT_DETAILS) :
-                print("[display_export_status] : current_index : ",current_index)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_status] : current_index : ",current_index))
 
             self.stackedLayout.setCurrentIndex(current_index)
 
@@ -1926,59 +1903,14 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         if(opstat.get_status()) :
 
-            if(DEBUG_DATA_EXPORT_DETAILS) :
-                print("  [display_export_status] end\n    ",self.DataExportWidgets_stack_dict)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_export_status] end\n    ",self.DataExportWidgets_stack_dict))
 
             self.resize(1070,800)
 
         else :
 
             self.display_export_histories()       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     # -----------------------------------------------------------------#
@@ -1996,8 +1928,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def return_from_status(self) :
 
-        if(DEBUG_DATA_IMPORT_DETAILS) :
-            print("[display_import_status][return_from_status]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_import_status][return_from_status]"))
 
         self.display_import_histories()
 
@@ -2018,18 +1950,6 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
     # -                display dvconnectors form                     -#
@@ -2037,8 +1957,8 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_dbconnector_form(self,dbcon_form_parms):
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("\n[display_dbconnector_form] ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form] "))
 
         self.forCreate      =   dbcon_form_parms[0] 
         self.import_type    =   dbcon_form_parms[1] 
@@ -2047,9 +1967,9 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_EXPORT_FORMS) :
-            print("[display_dbconnector_form] self.forCreate  self.import_type :  ",self.forCreate,self.import_type)
-            print("[display_dbconnector_form] self.dbconparms :  \n  ",self.dbconparms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form] self.forCreate  self.import_type :  ",self.forCreate,self.import_type))
+            add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form] self.dbconparms :  \n  ",self.dbconparms))
 
         if(self.forCreate) :
             dbconnectors_index  =   self.DataExportWidgets_stack_dict.get(EXPORT_DBCONNECTORS_CREATE_FORM)
@@ -2076,13 +1996,13 @@ class DataExportGui(QtWidgets.QMainWindow):
             else :
                 self.DataExportWidgets_stack_dict.update({EXPORT_DBCONNECTORS_EDIT_FORM : current_index})
 
-            if(DEBUG_DATA_EXPORT_FORMS) :
-                print("[display_dbconnector_form] current_index : ",current_index)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form] current_index : ",current_index))
 
         else :
             
-            if(DEBUG_DATA_EXPORT_FORMS) :
-                print("[display_dbconnector_form][reload_form] : load_form_values ",dbconnectors_index,"\n  ",self.dbconparms)
+            if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
+                add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form][reload_form] : load_form_values ",dbconnectors_index,"\n  ",self.dbconparms))
 
             if(self.forCreate) :
                 self.dbconnectorCreateForm.load_form_values(self.dbconparms)
@@ -2093,8 +2013,8 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_EXPORT_DETAILS) :
-            print("[display_dbconnector_form] end\n  ",self.DataExportWidgets_stack_dict)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExport",print_to_string("[display_dbconnector_form] end\n  ",self.DataExportWidgets_stack_dict))
 
         self.resize(1070,700)
 

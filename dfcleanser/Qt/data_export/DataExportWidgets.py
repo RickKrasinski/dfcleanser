@@ -24,16 +24,11 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_EXPORT                   =   False
-DEBUG_DATA_EXPORT_FILE_TYPES        =   False
-DEBUG_DATA_EXPORT_HISTORY           =   False
-DEBUG_DATA_EXPORT_PARMS             =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataExport_ID
 
-
-DEBUG_DATA_IMPORT_DFS_HISTORY       =   False
-
-DEBUG_DATA_EXPORT_DETAILS           =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -72,15 +67,15 @@ class DataExport_Export_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_EXPORT) :
-            print("  [EDataExport_Export_Widget] ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExport_Export_Widget] "))
 
         self.parent     =   exportparms[0]
 
         self.init_form()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("  [DataExport_Export_Widget] : done")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExport_Export_Widget] : done"))
 
     def reload_data(self) :
 
@@ -88,8 +83,8 @@ class DataExport_Export_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[DataExport_Export_Widget]  init_form")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExport_Export_Widget]  init_form"))
 
         self.export_histories   =   Data_Export_Histories_Widget([self.select_export_type_history])
 
@@ -114,8 +109,8 @@ class DataExport_Export_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.export_layout)
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[DataExport_Export_Widget] init from end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExport_Export_Widget] init from end"))
 
     
     # -----------------------------------------------------------------#
@@ -124,16 +119,16 @@ class DataExport_Export_Widget(QtWidgets.QWidget):
 
     def select_export_type_history(self) :
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[display_export_histories] select_export_type_history")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[display_export_histories] select_export_type_history"))
 
 
         for idx in self.export_histories.exportHistory.selectionModel().selectedIndexes():
             row_number = idx.row()
             column_number = idx.column()
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[display_export_histories] select_export_type_history",row_number,column_number)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[display_export_histories] select_export_type_history",row_number,column_number))
 
         model   =   self.export_histories.exportHistory.model
         tdata   =   model.get_data()
@@ -141,8 +136,6 @@ class DataExport_Export_Widget(QtWidgets.QWidget):
         if(column_number == 0) :
             if(not (tdata[row_number][1] == 0) ) :
                 self.parent.display_export_file_type_histories(row_number)            
-
-
  
 
 # -----------------------------------------------------------------#
@@ -175,7 +168,7 @@ class DataExportsHistoryModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -227,22 +220,22 @@ class DataExportsHistoryTable(QtWidgets.QTableView):
 
         super().__init__()
         
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("\n  [DataExportsHistoryTable] ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] "))
 
         self.mainLayout         =   None
         self.model              =   None
 
         self.init_tableview()
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [DataExportsHistoryTable] : end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : end"))
 
 
     def reload_data(self):
         
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [DataExportsHistoryTable] : reload_data")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : reload_data"))
 
         export_history_data     =   self.load_exportHistory_data()
         self.model.reload_data(export_history_data)
@@ -253,8 +246,8 @@ class DataExportsHistoryTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [DataExportsHistoryTable] : init_tableview")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -265,8 +258,8 @@ class DataExportsHistoryTable(QtWidgets.QTableView):
             self.model = DataExportsHistoryModel(historydata, self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-           print("  [DataExportsHistoryTable] : model loaded")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+           add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : model loaded"))
 
         self.num_rows   =   len(historydata )
 
@@ -310,8 +303,8 @@ class DataExportsHistoryTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_exportHistory_data(self):
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [DataExportsHistoryTable] : load_exportHistory_data ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : load_exportHistory_data "))
 
         export_file_types    =   ["Pandas CSV Exports","Pandas EXCEL Exports","Pandas JSON Exports",
                                   "Pandas HTML Exports","Pandas SQL TABLE Exports","Custom Exports","XML Exports"]
@@ -339,10 +332,10 @@ class DataExportsHistoryTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("    [DataExportsHistoryTable] : data")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportsHistoryTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"]",data[j])
+                add_debug_to_log("DataExportWidgets",print_to_string("  [",j,"]",data[j]))
 
         self.column_headers     =   ["Export Type","Export Count"]
         self.column_widths      =   [675,300]
@@ -368,8 +361,8 @@ class Data_Export_Histories_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[Data_Export_Histories_Widget] end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_Histories_Widget] end"))
 
     def reload_data(self) :
 
@@ -377,8 +370,8 @@ class Data_Export_Histories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[Data_Export_Histories_Widget]  init_form")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_Histories_Widget]  init_form"))
 
 
         from PyQt5.QtWidgets import QLabel
@@ -418,34 +411,8 @@ class Data_Export_Histories_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.finalhistoriesLayout)
 
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("[Data_Export_Histories_Widget] init from end")
-
-    """
-    def select_export_type_callback(self):
-        
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [Data_Export_Histories_Widget] : select_export_type_callback")
-
-        row_number      =   None
-        column_number   =   None
-
-        for idx in self.exportHistory.selectionModel().selectedIndexes():
-            row_number = int(idx.row())
-            column_number = int(idx.column())
-                
-        if(DEBUG_DATA_EXPORT_HISTORY) :
-            print("  [Data_Export_Histories_Widget] : select_export_type_callback ",row_number,column_number)
-
-        model   =   self.colsStats.model
-        tdata   =   model.get_data()
-        cell    =   tdata[row_number][0]
-
-        if(DEBUG_DATA_EXPORT_HISTORY) :    
-            print("  [Data_Export_Histories_Widget] : select_export_type_callback : colname [",cell,"]")
-
-        self.export_type    =   cell
-    """
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORY")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_Histories_Widget] init from end"))
 
 
 # -----------------------------------------------------------------#
@@ -485,7 +452,6 @@ class DataExportTypesHistorysModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -543,18 +509,18 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
         self.file_type          =   dfparms[0]
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("\n[DataExportTypesHistorysTable] : init",self.file_type)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : init",self.file_type))
 
         self.init_tableview()
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : done")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : done"))
 
     def reload_data(self):
         
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("  [DataExportHistoryExportsTable] : reload_data")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportHistoryExportsTable] : reload_data"))
 
         export_file_type_history_data     =   self.load_export_type_history_data()
         self.model.reload_data(export_file_type_history_data)
@@ -565,8 +531,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : init_tableview",self.file_type)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : init_tableview",self.file_type))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -577,8 +543,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
             self.model = DataExportTypesHistorysModel(exportsHistorydata ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-           print("[DataExportTypesHistorysTable] : model loaded : headers : ",self.column_headers)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+           add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : model loaded : headers : ",self.column_headers))
 
         self.num_rows   =   len(exportsHistorydata)
         
@@ -622,8 +588,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_export_type_history_data(self):
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : load_export_type_history_data ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : load_export_type_history_data "))
 
         from dfcleanser.Qt.data_import.DataImportModel import ExportHistory
         df_titles   =   ExportHistory.get_df_titles_for_file_type(self.file_type)
@@ -637,8 +603,8 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
             df_file_names.append(str(history_entry.get_full_parms()[0])) 
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : load_export_type_history_data  : df_file_names  \n  ",df_file_names)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : load_export_type_history_data  : df_file_names  \n  ",df_file_names))
 
         data    =   []
 
@@ -651,10 +617,10 @@ class DataExportTypesHistorysTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[DataExportTypesHistorysTable] : data",len(data))
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportTypesHistorysTable] : data",len(data)))
             for j in range(len(data)) :
-                print("    [",j,"] : ",data[j])
+                add_debug_to_log("DataExportWidgets",print_to_string("    [",j,"] : ",data[j]))
 
         self.column_headers     =   ["DEL","df Title","File Name"]
         self.column_widths      =   [20,300,645]
@@ -677,8 +643,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("\n[Data_Export_File_Type_Histories_Widget]",histparms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget]",histparms))
 
         self.parent                     =   histparms[0]
         self.filetype                   =   histparms[1]
@@ -688,8 +654,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[Data_ExIport_File_Type_Histories_Widget] : end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_ExIport_File_Type_Histories_Widget] : end"))
     
     def reload_data(self) :
 
@@ -697,8 +663,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form"))
 
         import dfcleanser.Qt.data_export.DataExportModel as DEM
 
@@ -724,8 +690,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
         self.exportfiletypehistory.setMinimumHeight(new_height)
         self.exportfiletypehistory.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form : table built")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form : table built"))
 
         from PyQt5.QtWidgets import QLabel
         export_file_type_notes_label   =   QLabel()
@@ -764,8 +730,8 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.exportfiletypesLayout)
 
-        if(DEBUG_DATA_EXPORT_FILE_TYPES) :
-            print("[Data_Export_File_Type_Histories_Widget] : init_form : end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form : end"))
 
 
 # -----------------------------------------------------------------#
@@ -818,7 +784,7 @@ class DataExportDetailsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -868,8 +834,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
         super().__init__()
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("\n    [DataExportDetailsTable] : init",dfparms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : init",dfparms))
 
 
         self.mainLayout         =   None
@@ -880,16 +846,16 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("    [DataExportDetailsTable] : init_tableview end")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : init_tableview end"))
 
     def reload_data(self,reloadparms) :
         
         self.filetype          =   reloadparms[0]
         self.filename          =   reloadparms[1]
         
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("    [DataExportDetailsTable] : reload_data : filetype : dftitle : ",self.filetype,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : reload_data : filetype : dftitle : ",self.filetype,self.filename))
 
         exportdetailsdata       =   self.load_export_details_data()
         self.num_rows           =   len(exportdetailsdata)
@@ -903,8 +869,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("    [DataExportDetailsTable] : reload_data : end : ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : reload_data : end : "))
 
     
     # -----------------------------------------------------------------#
@@ -913,23 +879,23 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("    [DataExportDetailsTable] : init_tableview",self.filetype,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : init_tableview",self.filetype,self.filename))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         exportdetailsdata     =   self.load_export_details_data()
         
-        if(DEBUG_DATA_EXPORT_PARMS) :
-           print("    [DataExportDetailsTable] : column headers : ",self.column_headers)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+           add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : column headers : ",self.column_headers))
 
         if(1):#self.model is None) :
             self.model = DataExportDetailsModel(exportdetailsdata  ,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-           print("    [DataExportDetailsTable] : model loaded ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+           add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : model loaded "))
 
         self.num_rows   =   len(exportdetailsdata)
         
@@ -974,8 +940,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
         dftitleParms    =   [self.filetype,self.filename]
         
-        if(DEBUG_DATA_EXPORT) :
-            print("   [DataExportDetailsTable] : load_export_details_data ",self.filetype,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : load_export_details_data ",self.filetype,self.filename))
 
         try :
 
@@ -995,8 +961,8 @@ class DataExportDetailsTable(QtWidgets.QTableView):
         ptitles     =   exportValues[0]
         pvals       =   exportValues[1]
 
-        if(DEBUG_DATA_EXPORT) :
-            print("    [DataExportDetailsTable] : \n      ptitles : ",ptitles,"\n      pvals : ",pvals)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : \n      ptitles : ",ptitles,"\n      pvals : ",pvals))
 
         if( (len(ptitles) > 0) and (len(pvals) > 0) and (len(ptitles) == len(pvals))) :
 
@@ -1010,10 +976,10 @@ class DataExportDetailsTable(QtWidgets.QTableView):
 
                 data.append(data_row)
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("    [DataExportDetailsTable] : data")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[DataExportDetailsTable] : data"))
             for j in range(len(data)) :
-                print("        [",j,"] : ",data[j])
+                add_debug_to_log("DataExportWidgets",print_to_string("        [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Parameter Name","Parameter Value"]
         self.column_widths      =   [300,675]
@@ -1042,8 +1008,8 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_EXPORT) :
-            print("  [Export_With_Parms_Widget] ",importparms[1],importparms[2])
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget] ",importparms[1],importparms[2]))
 
         self.parent             =   importparms[0]
         self.filetype           =   importparms[1]
@@ -1051,31 +1017,31 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("  [Export_With_Parms_Widget] : done")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("  [Export_With_Parms_Widget][reload_table_data] : reloadparms : \n    ",reloadparms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][reload_table_data] : reloadparms : \n    ",reloadparms))
 
         self.filetype   =   reloadparms[0]
         self.filename   =   reloadparms[1]
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("  [Export_With_Parms_Widget] : filetype : filename : ",self.filetype,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget] : filetype : filename : ",self.filetype,self.filename))
 
         parms   =   [self.filetype,self.filename]
         self.exportdetailsTable.reload_data(parms)
 
-        if(DEBUG_DATA_EXPORT) :
-            print("  [Export_With_Parms_Widget][reload_table_data] : end : ")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][reload_table_data] : end : "))
 
 
     def init_form(self):  
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("  [Export_With_Parms_Widget][init_form]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.exportparmsLayout        =   QVBoxLayout()
@@ -1123,8 +1089,8 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
     # -----------------------------------------------------------------#
     def export_with_parms(self) :
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("\n  [Export_With_Parms_Widget][export_with_parms]",self.filetype,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][export_with_parms]",self.filetype,self.filename))
 
         dftitleParms    =   [self.filetype,self.filename]
 
@@ -1133,8 +1099,8 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
         ptitles         =   exportValues[0]
         pvals           =   exportValues[1]
        
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("  [Export_With_Parms_Widget][export_with_parms]\n    [ptitles] : ",ptitles,"\n    [pvalues] : ",pvals)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][export_with_parms]\n    [ptitles] : ",ptitles,"\n    [pvalues] : ",pvals))
     
         import dfcleanser.Qt.data_export.DataExportModel as DEM
         
@@ -1151,8 +1117,8 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
         elif(self.filetype == DEM.CUSTOM_EXPORT) :
             export_labels   =   DEM.custom_export_labelList[:2]
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("  [Export_With_Parms_Widget][export_with_parms] : export_labels : \n    ",export_labels)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][export_with_parms] : export_labels : \n    ",export_labels))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_cfg_parms_from_history
         if(self.filetype == DEM.SQLTABLE_EXPORT) :
@@ -1163,16 +1129,16 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
             else :     
                 export_cfg_parms    =   build_cfg_parms_from_history(ptitles,pvals,export_labels,ADDL_PARMS=True)
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("  [export_with_parms]  cfg_parms :\n    ",export_cfg_parms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[export_with_parms]  cfg_parms :\n    ",export_cfg_parms))
 
         exportParms             =   [self.filetype , export_cfg_parms[0], export_cfg_parms]
         self.parent.display_export_form(exportParms)
 
     def return_from_export_parms(self) :
 
-        if(DEBUG_DATA_EXPORT_PARMS) :
-            print("[Export_With_Parms_Widget][return_from_export_parms]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][return_from_export_parms]"))
 
         self.parent.display_export_histories()
 
@@ -1193,8 +1159,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
 
         super().__init__()
         
-        if(DEBUG_DATA_EXPORT) :
-            print("  [Export_Status_Widget] ",exportparms[1],exportparms[2],exportparms[3])
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] ",exportparms[1],exportparms[2],exportparms[3]))
 
         self.parent             =   exportparms[0]
         self.filetype           =   exportparms[1]
@@ -1203,20 +1169,20 @@ class Export_Status_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[Export_Status_Widget] : done")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : done"))
     
     def reload_table_data(self,reloadparms) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("\n[Export_Status_Widget] reload_table_data : reloadparms : ",reloadparms)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] reload_table_data : reloadparms : ",reloadparms))
 
         self.filetype   =   reloadparms[0]
         self.filename   =   reloadparms[1]
         self.dftitle    =   reloadparms[2]
 
-        if(DEBUG_DATA_EXPORT) :
-            print("\n[Export_Status_Widget] : filetype : dftitle : filename : ",self.filetype,self.dftitle,self.filename)
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : filetype : dftitle : filename : ",self.filetype,self.dftitle,self.filename))
 
         if(self.filetype == 4) :
             reload_parms    =   [self.filetype,self.filename,None]
@@ -1234,8 +1200,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[Export_Status_Widget] : init_form")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : init_form"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.exportstatusLayout      =   QVBoxLayout()
@@ -1243,8 +1209,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         df  =   get_dfc_dataframe_df(self.dftitle)
 
-        if(DEBUG_DATA_EXPORT_DETAILS) :
-            print("[Export_Status_Widget] : df")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : df"))
 
         from PyQt5.QtWidgets import QLabel
         self.num_rows_label    =   QLabel()
@@ -1259,8 +1225,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
         self.num_cols_label.resize(960,50)
         self.num_cols_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
        
-        if(DEBUG_DATA_EXPORT_DETAILS) :
-            print("[Export_Status_Widget] : labels")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : labels"))
 
         self.exportstatusLayout.addWidget(self.num_rows_label)
         self.exportstatusLayout.addWidget(self.num_cols_label)
@@ -1282,8 +1248,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
         parms_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         parms_button.clicked.connect(self.return_from_export_status) 
         
-        if(DEBUG_DATA_EXPORT_DETAILS) :
-            print("[Export_Status_Widget] : buttons built")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_DETAILS")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         parmsbutonsLayout  =   QHBoxLayout()
@@ -1298,8 +1264,8 @@ class Export_Status_Widget(QtWidgets.QWidget):
 
     def return_from_export_status(self) :
 
-        if(DEBUG_DATA_EXPORT) :
-            print("[Export_Status_Widget][return_from_export_status]")
+        if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
+            add_debug_to_log("DataExportWidgets",print_to_string("[Export_Status_Widget][return_from_export_status]"))
 
         self.parent.display_export_histories()
        
