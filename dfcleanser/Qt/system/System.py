@@ -22,11 +22,12 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log, System_ID
 
-DEBUG_SYSTEM                    =   False
-DEBUG_SYSTEM_DFS                =   False
-DEBUG_SYSTEM_INFO               =   False
-DEBUG_SYSTEM_FILES              =   False
+import dfcleanser.Qt.system.SystemModel as sysm 
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import System_ID
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -74,6 +75,7 @@ DISPLAY_FILE                            =   "System display fils"
 
 DISPLAY_EULA                            =   "System display eula"
 
+DISPLAY_DEBUG                           =   "System display debug"
 
 
 EXPORT_EXCEL_FILE_TYPE_HISTORIES        =   "DataExport excel filetypes Exported"
@@ -215,8 +217,8 @@ class SystemGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_system_buttons(self):
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][init_system_buttons]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][init_system_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -239,27 +241,45 @@ class SystemGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_system_splash_screen(self):
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][init_data_inspect_splash_screen]  ")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][init_data_inspect_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import System_ID
         build_chapter_splash_screen(System_ID, self.form.Systemsplash)
 
-        if(DEBUG_SYSTEM) :
-            print("[end init_data_import_splash_screen]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("Ssytem",print_to_string("[end init_data_import_splash_screen]  "))
 
+    # -----------------------------------------------------------------#
+    # -             Initialize the system debug flags                 -#
+    # -----------------------------------------------------------------#
+    def init_debug_flags(self):
+
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][init_data_inspect_splash_screen]  "))
+
+        from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
+        from dfcleanser.common.cfg import System_ID
+        build_chapter_splash_screen(System_ID, self.form.Systemsplash)
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("Ssytem",print_to_string("[end init_data_import_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -                 Initialize the gui form                       -#
     # -----------------------------------------------------------------#
     def init_data_import_form(self):
         
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][init_data_import_form]  ")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][init_data_import_form]  "))
 
         self.init_system_buttons()
         self.init_system_splash_screen()
+        self.init_debug_flags()
 
         self.resize(1070,300)
 
@@ -277,8 +297,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.dfcdfsbutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_dataframes]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+           add_debug_to_log("System",print_to_string("[SystemGui][dfc_dataframes]"))
 
         self.display_dfcleanser_dfs()
 
@@ -289,8 +310,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.Infobutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][system_info]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][system_info]"))
 
         self.display_dfcleanser_info()
 
@@ -301,8 +323,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.Aboutbutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_about]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][dfc_about]"))
 
         self.display_dfcleanser_about()
 
@@ -313,8 +336,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.SysFilesbutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_sysfiles]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][dfc_sysfiles]"))
 
         self.display_dfcleanser_sys_files()
 
@@ -326,8 +350,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.EULAbutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_Eula]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][dfc_Eula]"))
 
         self.display_dfcleanser_EULA()
 
@@ -338,8 +363,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.ReadMebutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_readme]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][dfc_readme]"))
 
         self.display_dfcleanser_readme()
 
@@ -350,8 +376,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.form.Helpbutton.toggle()
 
-        if(DEBUG_SYSTEM) :
-            print("[SystemGui][dfc_help]")
+        from dfcleanser.common.cfg import System_ID
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][dfc_help]"))
 
         from dfcleanser.common.common_utils import display_url
         display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-system-environment.html")
@@ -364,8 +391,9 @@ class SystemGui(QtWidgets.QMainWindow):
 
     def display_dfcleanser_dfs(self):
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("\n[SystemGui][display_dfcleanser_dfs]  ")
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_dfs]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -401,8 +429,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[SystemGui][display_dfcleanser_dfs] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_dfs] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -423,8 +451,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
     def display_dfcleanser_dfs_histories(self):
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("\n[SystemGui][display_dfcleanser_dfs_histories]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_dfs_histories]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -450,8 +478,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
             if(opstat.get_status()) :
 
-                if(DEBUG_SYSTEM_DFS) :
-                    print("\n[SystemGui][display_dfcleanser_dfs_histories]  add widget",type(self.dfc_dfs_histories))
+                if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+                    add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_dfs_histories]  add widget",type(self.dfc_dfs_histories)))
 
 
                 current_index   =  len(self.SystemWidgets_stack_dict)
@@ -465,8 +493,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[SystemGui][display_dfcleanser_dfs_histories] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_dfs_histories] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -486,8 +514,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
     def display_add_user_df_to_dfc(self):
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("\n[SystemGui][display_add_user_df_to_dfc]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_add_user_df_to_dfc]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -523,8 +551,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[SystemGui][SystemGui][display_add_user_df_to_dfc] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][SystemGui][display_add_user_df_to_dfc] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -545,8 +573,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
     def display_dfcleanser_info(self):
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemGui][display_dfcleanser_info]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_info]  "))
 
         system_info_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_INFO)
         
@@ -555,8 +583,8 @@ class SystemGui(QtWidgets.QMainWindow):
         else :
             current_index   =   system_info_index
         
-        if(DEBUG_SYSTEM_INFO) :
-            print("[display_dfcleanser_info] : current_index ",current_index)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[display_dfcleanser_info] : current_index ",current_index))
 
         if(system_info_index is None) :
 
@@ -581,8 +609,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[SystemGui][display_dfcleanser_info] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_info] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,900)
 
@@ -601,8 +629,8 @@ class SystemGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_dfcleanser_about(self):
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("\n[SystemGui][display_dfcleanser_about]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_about]  "))
 
         about_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_ABOUT)
         
@@ -621,8 +649,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[SystemGui][display_dfcleanser_about] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_about] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,400)
 
@@ -642,16 +670,17 @@ class SystemGui(QtWidgets.QMainWindow):
 
     def display_dfcleanser_sys_files(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[SystemGui][display_dfcleanser_sys_files]  ")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_sys_files]  "))
 
         from dfcleanser.common.common_utils import opStatus
-        opstat      =   opStatus()
+        opstat              =   opStatus()
+        self.dfc_sysfiles   =   None
 
         system_sysfiles_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_SYSFILES)
         
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[SystemGui][display_dfcleanser_sys_files] system_sysfiles_index ",system_sysfiles_index)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_sys_files] system_sysfiles_index ",system_sysfiles_index))
         
         if(system_sysfiles_index is None) :
 
@@ -677,21 +706,20 @@ class SystemGui(QtWidgets.QMainWindow):
 
         else :
 
-            #self.dfc_dfs.reload_data()
             current_index   =   system_sysfiles_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[SystemGui][display_dfcleanser_sys_files] end : stack \n  ",self.SystemWidgets_stack_dict)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_sys_files] end : stack \n  ",self.SystemWidgets_stack_dict))
 
         self.resize(1070,600)
 
 
     def display_dfcleanser_file(self,file_name):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[SystemGui][display_dfcleanser_file]  file_name ",file_name)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_file]  file_name ",file_name))
 
         self.file_name  =   file_name
 
@@ -700,8 +728,8 @@ class SystemGui(QtWidgets.QMainWindow):
 
         system_file_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_FILE)
         
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[SystemGui][display_dfcleanser_file]  system_file_index ",system_file_index)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_file]  system_file_index ",system_file_index))
         
         if(system_file_index is None) :
 
@@ -728,20 +756,22 @@ class SystemGui(QtWidgets.QMainWindow):
         else :
 
             self.dfc_file.reload_data(self.file_name)
-            #from dfcleanser.Qt.system.SystemWidgets import dfc_file_Widget
-            #self.dfc_file   =   dfc_file_Widget([self,self.file_name])
             current_index   =   system_file_index
 
-            if(DEBUG_SYSTEM_FILES) :
-                print("\n[SystemGui][display_dfcleanser_file]  ",current_index)
-
+            if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+                add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_file]  ",current_index))
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[SystemGui][display_dfcleanser_file] end : stack \n  ",self.SystemWidgets_stack_dict)
-
-        self.resize(1070,600)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_file] end : stack \n  ",self.SystemWidgets_stack_dict))
+        
+        from dfcleanser.common.cfg import dfc_debug_log
+        debug_file_name     =   dfc_debug_log.get_debuglog_file_name()
+        if(debug_file_name == self.file_name) :
+            self.resize(1070,900)
+        else :
+            self.resize(1070,700)
 
 
     # -----------------------------------------------------------------#
@@ -762,7 +792,7 @@ class SystemGui(QtWidgets.QMainWindow):
     def display_dfcleanser_EULA(self):
 
         if(DEBUG_SYSTEM) :
-            print("\n[SystemGui][display_dfcleanser_eula]  ")
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_eula]  "))
 
         DFCLEANSER_EULA    =   "https://rickkrasinski.github.io/dfcleanser/dfcleanser_EULA.html"    
 
@@ -785,7 +815,7 @@ class SystemGui(QtWidgets.QMainWindow):
     def display_dfcleanser_readme(self):
 
         if(DEBUG_SYSTEM) :
-            print("\n[display_dfcleanser_readme]  ")
+            add_debug_to_log("System",print_to_string("[display_dfcleanser_readme]  "))
 
         DFCLEANSER_README    =   "https://rickkrasinski.github.io/dfcleanser/"    
 
@@ -798,6 +828,68 @@ class SystemGui(QtWidgets.QMainWindow):
     # -                display dfcleanser readme end                  -#
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
+
+
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+    # -                  display dfcleanser debug                      -#
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+
+    def display_dfcleanser_debug(self,parent,chapterid):
+
+        self.parent     =   parent
+        self.chapterid  =   chapterid
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_debug]  "))
+
+        system_debug_index  =   self.SystemWidgets_stack_dict.get(DISPLAY_DEBUG)
+        
+        if(system_debug_index is None) :
+            current_index   =  len(self.SystemWidgets_stack_dict)
+        else :
+            current_index   =   system_debug_index
+        
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[display_dfcleanser_debug] : current_index ",current_index))
+
+        if(system_debug_index is None) :
+
+            try :
+
+                from dfcleanser.Qt.system.SystemWidgets import System_Debug_Widget
+                parms               =   [self.parent,self.chapterid]
+                self.system_debug   =   System_Debug_Widget(parms)
+
+                self.SystemWidgets_stack_dict.update({DISPLAY_DEBUG : current_index})
+                self.stackedLayout.addWidget(self.system_debug)
+
+            except Exception as e:
+
+                title       =   "dfcleanser exception"       
+                status_msg  =   "[display_dfcleanser_debug] error "
+                from dfcleanser.sw_utilities.dfc_qt_model import display_exception
+                display_exception(title,status_msg,e)
+
+        else :
+
+            current_index   =   system_debug_index
+
+        self.stackedLayout.setCurrentIndex(current_index)
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_debug] end : stack \n  ",self.SystemWidgets_stack_dict))
+
+        self.resize(1070,900)
+
+
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+    # -                 display dfcleanser debug end                  -#
+    # -----------------------------------------------------------------#
+    # -----------------------------------------------------------------#
+
 
 
 # -----------------------------------------------------------------#
@@ -841,10 +933,8 @@ def closeSystemInstances()  :
             instances[i].get_main_window().close()
 
     from dfcleanser.common.common_utils import clear_screen
-    #from dfcleanser.common.cfg import SYSTEM_TITLE
     
     clear_screen()
-    #displayHTML(SYSTEM_TITLE)
     logger.info(" System Instances closed")
 
 
@@ -854,9 +944,8 @@ def showSystem()  :
     from dfcleanser.common.cfg import dfc_qt_chapters, SYSTEM_QT_CHAPTER_ID, SYSTEM_TITLE
     
     clear_screen()
-    #displayHTML(SYSTEM_TITLE)
 
-    #logger.info("Opening showSystem GUI")
+    logger.info("Opening showSystem GUI")
 
     system_gui = SystemGui()
     system_gui.show()
@@ -865,8 +954,6 @@ def showSystem()  :
 
     total_instances     =   dfc_qt_chapters.get_qt_chapters_count(SYSTEM_QT_CHAPTER_ID)
     logger.info(str(total_instances) + " System Instances Loaded")
-
-    #return system_gui  
 
 def closeSystemChapter()  :
 

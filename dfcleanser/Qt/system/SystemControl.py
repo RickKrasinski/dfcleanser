@@ -10,13 +10,14 @@ Created on Tue Jun 13 22:29:22 2017
 @author: Rick
 """
 
-DEBUG_SYSTEM    =   False
-
-
 import sys
 this = sys.modules[__name__]
 
 import dfcleanser.common.cfg as cfg
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log, System_ID
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import System_ID
 
 from dfcleanser.common.common_utils import (run_jscript)
 
@@ -98,18 +99,12 @@ def display_system_environment(funcId,parms=None) :
 
     except :
 
-        #display_system_console()
-        #clear_system_data()  
- 
-        if(DEBUG_SYSTEM) :
-            print("[SystemControl][display_system_environment] Invalid option for  display_system_environment : ",funcId,parms)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
+            from dfcleanser.common.cfg import add_debug_to_log
+            add_debug_to_log("SystemControl","[display_system_environment] Invalid option for  display_system_environment : " + str(funcId) + str(parms))
  
         return
 
-
-    if(DEBUG_SYSTEM) :
-        print("[SystemControl][display_system_environment]",funcId,parms,cfg.check_if_dc_init())
-    
     DISPLAY_DFC_CONSOLE = -1
     if(funcId == DISPLAY_DFC_CONSOLE) :
         display_dfc_console()

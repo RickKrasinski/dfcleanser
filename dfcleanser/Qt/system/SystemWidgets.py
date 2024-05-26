@@ -24,12 +24,13 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import (print_to_string, add_debug_to_log, DC_SYSTEM_ID, DC_DATA_IMPORT_ID, DC_DATA_INSPECTION_ID, 
+                                   DC_DATA_CLEANSING_ID, DC_DATA_TRANSFORM_ID, DC_DATA_EXPORT_ID, DBUtils_ID, SWUtilities_ID, 
+                                   DC_CENSUS_ID, DC_ZIPCODE_UTILITY_ID, DC_GEOCODE_UTILITY_ID)
 
-DEBUG_SYSTEM_DFS            =   False
-DEBUG_SYSTEM_INFO           =   False
-DEBUG_SYSTEM_INFO_DETAILS   =   False
-DEBUG_SYSTEM_FILES          =   False
 
+from dfcleanser.Qt.system.SystemModel import is_debug_on, save_debug_flags
+from dfcleanser.common.cfg import System_ID
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -81,7 +82,7 @@ class SystemActivedfsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -136,21 +137,21 @@ class SystemActivedfsTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("\n[SystemActivedfsTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[SystemActivedfsTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_DFS) :
-            print("  [SystemActivedfsTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable] : reload_data"))
 
         active_dfs_data     =   self.load_active_dfs_data()
         self.model.reload_data(active_dfs_data)
@@ -160,23 +161,23 @@ class SystemActivedfsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("  [SystemActivedfsTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         activedfsdata     =   self.load_active_dfs_data()
         
-        if(DEBUG_SYSTEM_DFS) :
-           print("  [SystemActivedfsTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = SystemActivedfsModel(activedfsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_DFS) :
-           print("  [SystemActivedfsTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(activedfsdata)
         
@@ -220,8 +221,8 @@ class SystemActivedfsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_active_dfs_data(self):
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("  [SystemActivedfsTable][load_active_dfs_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable][load_active_dfs_data]"))
 
         data    =   []
 
@@ -229,8 +230,8 @@ class SystemActivedfsTable(QtWidgets.QTableView):
         
         active_dfs      =   get_dfc_dataframes_titles_list()
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("  [SystemActivedfsTable][load_active_dfs_data] active_dfs : ",active_dfs)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable][load_active_dfs_data] active_dfs : ",active_dfs))
 
         if(not (active_dfs is None)) :
 
@@ -249,10 +250,10 @@ class SystemActivedfsTable(QtWidgets.QTableView):
 
                 data.append(data_row)
 
-            if(DEBUG_SYSTEM_DFS) :
-                print("  [SystemActivedfsTable] : data")
+            if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+                add_debug_to_log("SystemWidgets",print_to_string("[SystemActivedfsTable] : data"))
                 for j in range(len(data)) :
-                    print("  [",j,"] : ",data[j])
+                    add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         else :
 
@@ -286,8 +287,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget]"))
 
         super().__init__()
 
@@ -295,8 +296,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_Info_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Info_Widget] end"))
 
     def reload_data(self) :
 
@@ -304,8 +305,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -325,8 +326,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
         self.SystemdfcdfsLayout.addWidget(self.acive_dfs_data)
         
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][init_form] : active dfs loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][init_form] : active dfs loaded"))
         
         from PyQt5.QtWidgets import QLabel
         blank_title_label   =   QLabel()
@@ -356,8 +357,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
         dfshist_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         dfshist_button.clicked.connect(self.display_df_histories_callback) 
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][init_form] : buttons built")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][init_form] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         dfcdfsbutonsLayout  =   QHBoxLayout()
@@ -370,8 +371,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
         self.SystemdfcdfsLayout.addStretch()
         self.setLayout(self.SystemdfcdfsLayout)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][init_form] end"))
 
 
     # -----------------------------------------------------------------#
@@ -380,22 +381,22 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
     def select_df_to_drop(self) :
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][select_df_to_drop]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][select_df_to_drop]"))
 
         for idx in self.acive_dfs_data.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][select_df_to_drop] ",row_number,column_number)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][select_df_to_drop] ",row_number,column_number))
 
         model   =   self.acive_dfs_data.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_SYSTEM_DFS) :    
-            print("[System_dfc_dfs_Widget][select_df_to_drop] : cell value [",cell,"]",type(cell),len(cell))
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :    
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][select_df_to_drop] : cell value [",cell,"]",type(cell),len(cell)))
 
         if(column_number == 0) :
             if(len(cell) == 0) :
@@ -407,8 +408,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
     def drop_dfs_callback(self) :
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][drop_dfs_callback]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][drop_dfs_callback]"))
 
         model   =   self.acive_dfs_data.model
         tdata   =   model.get_data()
@@ -420,8 +421,8 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
             if(not (len(check_value) == 0)) :
                 delete_list.append(tdata[i][1])
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][drop_dfs_callback] delete_list",delete_list)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][drop_dfs_callback] delete_list",delete_list))
         
         if(len(delete_list) > 0) :
 
@@ -461,15 +462,15 @@ class System_dfc_dfs_Widget(QtWidgets.QWidget):
 
     def add_user_df_callback(self) :
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_Widget][add_user_df_callback]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][add_user_df_callback]"))
 
         self.parent.display_add_user_df_to_dfc()
 
     def display_df_histories_callback(self) :
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_dfc_dfs_Widget][display_df_histories_callback]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_Widget][display_df_histories_callback]"))
 
         self.parent.display_dfcleanser_dfs_histories()
 
@@ -491,8 +492,8 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget]"))
 
         super().__init__()
 
@@ -500,13 +501,13 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -526,8 +527,8 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
         self.dfs_dfs_histories         =   Data_Import_Histories_Widget(callback_parms)
         self.SystemdfcdfshistoryLayout.addWidget(self.dfs_dfs_histories)
         
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][init_form] : histories loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget][init_form] : histories loaded"))
         
         note_text   =   "The above tables define a history of all dfs that were imported or exported.\nTo get details on imports or exports go to Data Import or Data Export Chapters.\n"
         from PyQt5.QtWidgets import QLabel
@@ -546,8 +547,8 @@ class System_dfc_dfs_histories_Widget(QtWidgets.QWidget):
         self.SystemdfcdfshistoryLayout.addStretch()
         self.setLayout(self.SystemdfcdfshistoryLayout)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget][init_form] end"))
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -563,8 +564,8 @@ class System_add_user_df_to_dfc_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_add_user_df_to_dfc_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_add_user_df_to_dfc_Widget]"))
 
         super().__init__()
 
@@ -572,13 +573,13 @@ class System_add_user_df_to_dfc_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_add_user_df_to_dfc_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_add_user_df_to_dfc_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_add_user_df_to_dfc_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_add_user_df_to_dfc_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -664,21 +665,21 @@ class System_add_user_df_to_dfc_Widget(QtWidgets.QWidget):
         self.SystemuserfdtodfcLayout.addStretch()
         self.setLayout(self.SystemuserfdtodfcLayout)
 
-        if(DEBUG_SYSTEM_DFS) :
-            print("[System_add_user_df_to_dfc_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_add_user_df_to_dfc_Widget][init_form] end"))
 
 
     def dfc_dfs_add_user_df_return_callback(self) :
 
-         if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][dfc_dfs_add_user_df_return_callback]")
+         if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget][dfc_dfs_add_user_df_return_callback]"))
 
             self.parent.display_dfcleanser_dfs()
 
     def dfc_dfs_add_user_df_help_callback(self) :
 
-         if(DEBUG_SYSTEM_DFS) :
-            print("[System_dfc_dfs_histories_Widget][dfc_dfs_add_user_df_help_callback)]")
+         if(is_debug_on(System_ID,"DEBUG_SYSTEM_DFS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_dfc_dfs_histories_Widget][dfc_dfs_add_user_df_help_callback)]"))
 
 
 # -----------------------------------------------------------------#
@@ -720,7 +721,7 @@ class SystemPythonInfoModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -775,21 +776,21 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPythonInfoTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPythonInfoTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPythonInfoTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable] : reload_data"))
 
         python_data     =   self.load_python_info_data()
         self.model.reload_data(python_data)
@@ -799,23 +800,23 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPythonInfoTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         pythondata     =   self.load_python_info_data()
         
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemPythonInfoTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = SystemPythonInfoModel(pythondata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemPythonInfoTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(pythondata)
         
@@ -859,8 +860,8 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_python_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPythonInfoTable][load_python_info_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable][load_python_info_data]"))
 
         data    =   []
 
@@ -876,10 +877,10 @@ class SystemPythonInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPythonInfoTable] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPythonInfoTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Stat Name","Stat Value"]
         self.column_widths      =   [250,720]
@@ -941,7 +942,7 @@ class dfcleanserInfoModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -996,21 +997,21 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : reload_data"))
 
         notebook_data     =   self.load_notebook_info_data()
         self.model.reload_data(notebook_data)
@@ -1020,23 +1021,23 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemNotebookInfoTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         dfcleanserInfoTabledata     =   self.load_dfcleanser_info_data()
         
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [dfcleanserInfoTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[dfcleanserInfoTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = dfcleanserInfoModel(dfcleanserInfoTabledata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [dfcleanserInfoTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[dfcleanserInfoTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(dfcleanserInfoTabledata)
         
@@ -1080,8 +1081,8 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dfcleanser_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [dfcleanserInfoTable][load_dfcleanser_info_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleanserInfoTable][load_dfcleanser_info_data]"))
 
         data    =   []
 
@@ -1097,10 +1098,10 @@ class dfcleanserInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [dfcleanserInfoTable] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleanserInfoTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Stat Name","Stat Value"]
         self.column_widths      =   [250,720]
@@ -1143,7 +1144,7 @@ class SystemNotebookInfoModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1198,21 +1199,21 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemNotebookInfoTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : reload_data"))
 
         notebook_data     =   self.load_notebook_info_data()
         self.model.reload_data(notebook_data)
@@ -1222,23 +1223,23 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemNotebookInfoTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         notebookdata     =   self.load_notebook_info_data()
         
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemNotebookInfoTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = SystemNotebookInfoModel(notebookdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemNotebookInfoTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(notebookdata)
         
@@ -1282,8 +1283,8 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_notebook_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemNotebookInfoTable][load_notebook_info_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable][load_notebook_info_data]"))
 
         data    =   []
 
@@ -1299,10 +1300,10 @@ class SystemNotebookInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemNotebookInfoTable] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemNotebookInfoTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Stat Name","Stat Value"]
         self.column_widths      =   [250,720]
@@ -1344,7 +1345,7 @@ class SystemPackageInfoModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1407,21 +1408,21 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPackageInfoTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPackageInfoTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_INFO) :
-            print("  [SystemPackageInfoTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable] : reload_data"))
 
         package_data     =   self.load_package_info_data()
         self.model.reload_data(package_data)
@@ -1431,23 +1432,23 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPackageInfoTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         packagedata     =   self.load_package_info_data()
         
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemPackageInfoTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = SystemPackageInfoModel(packagedata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-           print("  [SystemPackageInfoTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(packagedata)
         
@@ -1491,8 +1492,8 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_package_info_data(self):
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPackageInfoTable][load_package_info_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable][load_package_info_data]"))
 
         data    =   []
 
@@ -1769,10 +1770,10 @@ class SystemPackageInfoTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("  [SystemPackageInfoTable] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO_DETAILS")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[SystemPackageInfoTable] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Package Name","Tested With Version","Installed Version","Status"]
         self.column_widths      =   [300,220,220,220]
@@ -1835,20 +1836,20 @@ class System_Info_Widget(QtWidgets.QWidget):
 
     def __init__(self):  
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("\n[System_Info_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Info_Widget]"))
 
         super().__init__()
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_Info_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Info_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("[System_Info_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Info_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -1902,8 +1903,8 @@ class System_Info_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.SystemInfoLayout)
 
-        if(DEBUG_SYSTEM_INFO_DETAILS) :
-            print("[System_Info_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Info_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -1921,18 +1922,18 @@ class System_About_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_About_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_About_Widget]"))
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_About_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_About_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_About_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_About_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -1966,8 +1967,8 @@ class System_About_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.SystemAboutLayout)
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_About_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_About_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -2011,7 +2012,7 @@ class dfcleansercfgfilesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -2066,21 +2067,21 @@ class dfcleansercfgfilesTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[dfcleansercfgfilesTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_FILES ) :
-            print("[dfcleansercfgfilesTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES") ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [dfcleansercfgfilesTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable] : reload_data"))
 
         cfgfiles_data     =   self.load_cfgfiles_info_data()
         self.model.reload_data(cfgfiles_data)
@@ -2090,23 +2091,23 @@ class dfcleansercfgfilesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [dfcleansercfgfilesTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         dfcleansercfgfilesTabledata     =   self.load_dfcleanser_cfgfiles_data()
         
-        if(DEBUG_SYSTEM_FILES) :
-           print("  [dfcleansercfgfilesTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = dfcleanserInfoModel(dfcleansercfgfilesTabledata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_FILES ) :
-           print("  [dfcleansercfgfilesTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES") ) :
+           add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfilesTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(dfcleansercfgfilesTabledata)
         
@@ -2150,8 +2151,8 @@ class dfcleansercfgfilesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dfcleanser_cfgfiles_data(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [dfcleanserInfoTable][load_dfcleanser_cfgfiles_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleanserInfoTable][load_dfcleanser_cfgfiles_data]"))
 
         data    =   []
 
@@ -2172,10 +2173,10 @@ class dfcleansercfgfilesTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [dfcleansercfgfiles] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfiles] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["File","Location"]
         self.column_widths      =   [250,720]
@@ -2216,7 +2217,7 @@ class notebookcfgfilesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -2271,21 +2272,21 @@ class notebookcfgfilesTable(QtWidgets.QTableView):
         self.mainLayout         =   None
         self.model              =   None
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("\n[notebookcfgfilesTable] : init")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[notebookcfgfilesTable] : end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [notebookcfgfilesTable] : reload_data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable] : reload_data"))
 
         cfgfiles_data     =   self.load_cfgfiles_info_data()
         self.model.reload_data(cfgfiles_data)
@@ -2295,23 +2296,23 @@ class notebookcfgfilesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [notebookcfgfilesTable][init_tableview]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         notebookcfgfilesTabledata     =   self.load_dfcleanser_cfgfiles_data()
         
-        if(DEBUG_SYSTEM_FILES) :
-           print("  [notebookcfgfilesTable][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = dfcleanserInfoModel(notebookcfgfilesTabledata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_SYSTEM_FILES) :
-           print("  [notebookcfgfilesTable][init_tableview] : model loaded")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+           add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable][init_tableview] : model loaded"))
 
         self.num_rows   =   len(notebookcfgfilesTabledata)
         
@@ -2355,8 +2356,8 @@ class notebookcfgfilesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dfcleanser_cfgfiles_data(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [notebookcfgfilesTable][load_dfcleanser_cfgfiles_data]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[notebookcfgfilesTable][load_dfcleanser_cfgfiles_data]"))
 
         data    =   []
 
@@ -2375,10 +2376,10 @@ class notebookcfgfilesTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("  [dfcleansercfgfiles] : data")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfcleansercfgfiles] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("SystemWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["File","Location"]
         self.column_widths      =   [275,700]
@@ -2394,27 +2395,27 @@ class cfg_files_Widget(QtWidgets.QWidget):
 
     def __init__(self,parms):  
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget]")
-        
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget]"))
 
         super().__init__()
 
         self.parent     =   parms[0]
 
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget]"))
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2446,56 +2447,85 @@ class cfg_files_Widget(QtWidgets.QWidget):
 
         self.dfccfgLayout.addWidget(self.notebook_cfg_files_data)
 
+
+        from PyQt5.QtWidgets import QLabel
+        self.dspacer_label   =   QLabel()
+        self.dspacer_label.setText("\n\n\n\n\n\n")
+        self.dspacer_label.setAlignment(Qt.AlignCenter)
+        self.dspacer_label.resize(480,50)
+        self.dspacer_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
+
+        from PyQt5.QtWidgets import QPushButton        
+        self.debug_button       =   QPushButton("Debug")
+        self.debug_button.setFixedSize(200,70)
+        self.debug_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        
+        self.debug_button.clicked.connect(self.display_debug_log)
+
+        self.dfccfgLayout.addWidget(self.dspacer_label)
+
+        from PyQt5.QtWidgets import QHBoxLayout
+        dfcdfsbutonsLayout  =   QHBoxLayout()
+        dfcdfsbutonsLayout.addWidget(self.debug_button)
+        dfcdfsbutonsLayout.setAlignment(Qt.AlignHCenter)
+
+        self.dfccfgLayout.addLayout(dfcdfsbutonsLayout)
         self.dfccfgLayout.addStretch()
 
         self.setLayout(self.dfccfgLayout)
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][init_form] end"))
 
 
     def select_dfc_cfg_file(self) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][select_dfc_cfg_file]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_dfc_cfg_file]"))
 
         for idx in self.dfc_cfg_files_data.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][select_dfc_cfg_file] ",row_number,column_number)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_dfc_cfg_file] ",row_number,column_number))
 
         model   =   self.dfc_cfg_files_data.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_SYSTEM_FILES) :    
-            print("[cfg_files_Widget][select_dfc_cfg_file] : cell value [",cell,"]",type(cell),len(cell))
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :    
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_dfc_cfg_file] : cell value [",cell,"]",type(cell),len(cell)))
 
         self.parent.display_dfcleanser_file(cell)
 
     def select_notebook_cfg_file(self) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][select_notebook_cfg_file]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_notebook_cfg_file]"))
 
         for idx in self.notebook_cfg_files_data.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][select_notebook_cfg_file] ",row_number,column_number)
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_notebook_cfg_file] ",row_number,column_number))
 
         model   =   self.notebook_cfg_files_data.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_SYSTEM_FILES) :    
-            print("[cfg_files_Widget][select_notebook_cfg_file] : cell value [",cell,"]",type(cell),len(cell))
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :    
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][select_notebook_cfg_file] : cell value [",cell,"]",type(cell),len(cell)))
 
         self.parent.display_dfcleanser_file(cell)
 
+    def display_debug_log(self) :
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[display_debug_log]"))
+
+        self.parent.display_dfcleanser_debug(self.parent,0)
 
 # -----------------------------------------------------------------#
 # -                     System files Widget                       -#
@@ -2504,26 +2534,36 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
     def __init__(self,parms):  
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget]")
+        from dfcleanser.common.cfg import dfc_debug_log
+        debug_file  =   dfc_debug_log.get_debuglog_file_name()
+        
+        self.file_name      =   parms[1]
+        
+        self.allow_debug    =   True
+
+        if(debug_file == self.file_name) :
+            self.allow_debug    =   False
+
+
+        if((is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug)) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget]"))
 
         super().__init__()
 
         self.parent     =   parms[0]
-        self.file_name  =   parms[1]
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget]")
+        if((is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug)) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget]"))
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget] end")
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug)) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget] end"))
 
     def reload_data(self,file_name) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][reload_data] file_name",file_name)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][reload_data] file_name",file_name))
 
         self.file_name  =   file_name
         self.dfc_cfg_title_label.setText("\n\n" + self.file_name + "\n")
@@ -2532,8 +2572,8 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][init_form]")
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout
@@ -2544,20 +2584,30 @@ class dfc_file_Widget(QtWidgets.QWidget):
         self.dfc_cfg_title_label   =   QLabel()
         self.dfc_cfg_title_label.setText("\n\n" + self.file_name + "\n")
         self.dfc_cfg_title_label.setAlignment(Qt.AlignCenter)
-        self.dfc_cfg_title_label.resize(480,50)
-        self.dfc_cfg_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
+        self.dfc_cfg_title_label.resize(720,50)
+
+        if(len(self.file_name) > 50) :
+            self.dfc_cfg_title_label.setStyleSheet("font-size: 12px; font-weight: bold; font-family: Arial; ")  
+        else :  
+            self.dfc_cfg_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
         self.dfcfileLayout.addWidget(self.dfc_cfg_title_label)
 
-        from PyQt5.QtWidgets import QTextEdit, QPushButton
+        from PyQt5.QtWidgets import QTextEdit
         self.dfc_file_content    =   QTextEdit()
         self.dfc_file_content.setReadOnly(True)
         self.dfc_file_content.setStyleSheet("font-size: 12px; font-weight: normal; font-family: Tahoma; ")
 
         file_text   =   self.get_dfc_file(self.file_name)
         self.dfc_file_content.setText(file_text)
+        
+        from dfcleanser.common.cfg import dfc_debug_log
+        debug_file_name     =   dfc_debug_log.get_debuglog_file_name()
+        if(debug_file_name == self.file_name) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget] file_text\n",file_text)
+            self.dfc_file_content.setFixedHeight(500)
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget] file_text\n",file_text))
 
         from PyQt5.QtWidgets import QLabel
         self.spacer_label   =   QLabel()
@@ -2566,19 +2616,50 @@ class dfc_file_Widget(QtWidgets.QWidget):
         self.spacer_label.resize(480,50)
         self.spacer_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
         
+        from PyQt5.QtWidgets import QPushButton
 
-        self.backup_button       =   QPushButton("Backup File")
-        self.backup_button.setFixedSize(200,70)
-        self.backup_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        if(not (debug_file_name == self.file_name)) :
 
-        self.restore_button      =   QPushButton("Restore File")
-        self.restore_button.setFixedSize(200,70)
-        self.restore_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
-        
+            self.backup_button       =   QPushButton("Backup File")
+            self.backup_button.setFixedSize(200,70)
+            self.backup_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
+            self.restore_button      =   QPushButton("Restore File")
+            self.restore_button.setFixedSize(200,70)
+            self.restore_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
+            self.return_button      =   QPushButton("Return")
+            self.return_button.setFixedSize(200,70)
+            self.return_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
+        else :
+
+            self.backupd_button       =   QPushButton("Backup Debug\n File")
+            self.backupd_button.setFixedSize(200,70)
+            self.backupd_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
+            self.clear_button      =   QPushButton("Clear Debug\nFile")
+            self.clear_button.setFixedSize(200,70)
+            self.clear_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
+            self.returnd_button      =   QPushButton("Return")
+            self.returnd_button.setFixedSize(200,70)
+            self.returnd_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+
         from PyQt5.QtWidgets import QHBoxLayout
         dfcdfsbutonsLayout  =   QHBoxLayout()
-        dfcdfsbutonsLayout.addWidget(self.backup_button)
-        dfcdfsbutonsLayout.addWidget(self.restore_button)
+
+        if(not (debug_file_name == self.file_name)) :
+
+            dfcdfsbutonsLayout.addWidget(self.backup_button)
+            dfcdfsbutonsLayout.addWidget(self.restore_button)
+            dfcdfsbutonsLayout.addWidget(self.return_button)
+
+        else :
+
+            dfcdfsbutonsLayout.addWidget(self.backupd_button)
+            dfcdfsbutonsLayout.addWidget(self.clear_button)
+            dfcdfsbutonsLayout.addWidget(self.returnd_button)
 
         dfcdfsbutonsLayout.setAlignment(Qt.AlignHCenter)
 
@@ -2589,24 +2670,33 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.dfcfileLayout)
 
-        self.backup_button.clicked.connect(self.backup_file)
-        self.restore_button.clicked.connect(self.restore_file)
+        if(not (debug_file_name == self.file_name)) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[cfg_files_Widget][init_form] end")
+            self.backup_button.clicked.connect(self.backup_file)
+            self.restore_button.clicked.connect(self.restore_file)
+            self.return_button.clicked.connect(self.return_file)
+
+        else :
+
+            self.backupd_button.clicked.connect(self.backup_debug_file)
+            self.clear_button.clicked.connect(self.clear_file)
+            self.returnd_button.clicked.connect(self.return_file)
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[cfg_files_Widget][init_form] end"))
 
 
     def backup_file(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][backup_file]")
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file]"))
 
         file_parms      =   self.get_file_dir_and_name(self.file_name)
         cfg_file_dir    =   file_parms[0]
         cfg_file_name   =   file_parms[1]
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][backup_file] \n",cfg_file_dir,"\n",cfg_file_name)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file] \n",cfg_file_dir,"\n",cfg_file_name))
 
         from dfcleanser.common.common_utils import does_dir_exist, make_dir, copy_a_file, opStatus, does_file_exist
         if(not (does_dir_exist(cfg_file_dir + "Backup"))) :
@@ -2617,13 +2707,13 @@ class dfc_file_Widget(QtWidgets.QWidget):
         from_file   =   cfg_file_name
         to_file     =   cfg_file_dir + "Backup" + "\\" + self.file_name + ".json" 
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][backup_file][copy_a_file] \n",from_file,"\n",to_file)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file][copy_a_file] \n",from_file,"\n",to_file))
 
         copy_a_file(from_file,to_file,opstat)
         
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][backup_file][does_file_exist] ",does_file_exist(to_file))
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file][does_file_exist] ",does_file_exist(to_file)))
 
         if(opstat.get_status()):
 
@@ -2642,15 +2732,15 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
     def restore_file(self):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][restore_file]")
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][restore_file]"))
 
         file_parms      =   self.get_file_dir_and_name(self.file_name)
         cfg_file_dir    =   file_parms[0]
         cfg_file_name   =   file_parms[1]
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][restore_file] \n",cfg_file_dir,"\n",cfg_file_name)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][restore_file] \n",cfg_file_dir,"\n",cfg_file_name))
 
         from dfcleanser.common.common_utils import does_dir_exist, make_dir, copy_a_file, opStatus, does_file_exist
         if(not (does_dir_exist(cfg_file_dir + "Backup"))) :
@@ -2691,12 +2781,73 @@ class dfc_file_Widget(QtWidgets.QWidget):
                     from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                     display_exception(title,status_msg,opstat.get_exception())
 
+    def clear_file(self):
 
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][clear_file]"))
+
+        from dfcleanser.common.cfg import clear_debug_log
+        clear_debug_log()
+
+        from dfcleanser.common.cfg import dfc_debug_log
+        debug_file_name     =   dfc_debug_log.get_debuglog_file_name()
+
+        self.parent.display_dfcleanser_file(debug_file_name)
+
+    def backup_debug_file(self):
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file]"))
+
+        file_parms      =   self.get_file_dir_and_name(self.file_name)
+        cfg_file_dir    =   file_parms[0]
+        cfg_file_name   =   file_parms[1]
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file] \n",cfg_file_dir,"\n",cfg_file_name))
+
+        from dfcleanser.common.common_utils import does_dir_exist, make_dir, copy_a_file, opStatus, does_file_exist
+        if(not (does_dir_exist(cfg_file_dir + "Backup"))) :
+                make_dir(cfg_file_dir + "Backup")
+
+        opstat = opStatus()
+
+        from_file   =   cfg_file_name
+        to_file     =   cfg_file_dir + "Backup" + "\\" + self.file_name + ".json" 
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file][copy_a_file] \n",from_file,"\n",to_file))
+
+        copy_a_file(from_file,to_file,opstat)
+        
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][backup_file][does_file_exist] ",does_file_exist(to_file)))
+
+        if(opstat.get_status()):
+
+            title       =   "dfcleanser system files"       
+            status_msg  =   "[backup_file] file backed up successfully"
+            from dfcleanser.sw_utilities.dfc_qt_model import display_status_msg
+            display_status_msg(title,status_msg)
+
+        else :
+
+            title       =   "dfcleanser exception"
+            status_msg  =   "[backup_file] file not backed up successfully "
+            from dfcleanser.sw_utilities.dfc_qt_model import display_exception
+            display_exception(title,status_msg,opstat.get_exception())
+
+    def return_file(self):
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][return_file]"))
+
+        self.parent.display_dfcleanser_sys_files()
 
     def get_file_dir_and_name(self,file_name) :
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][get_dfc_file]",file_name)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][get_dfc_file]",file_name))
 
         if( (file_name == "dfcleanserCommon_config") or 
             (file_name == "dfcleanserCommon_import_history") or 
@@ -2712,12 +2863,10 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
         return([file_dir,file_to_read])
 
-
-
     def get_dfc_file(self,file_name):
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][get_dfc_file]",file_name)
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][get_dfc_file]",file_name))
 
         if( (file_name == "dfcleanserCommon_config") or 
             (file_name == "dfcleanserCommon_import_history") or 
@@ -2726,10 +2875,16 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
         else :
 
-            file_to_read    =   str(cfg.get_notebookPath()) + "\\" + str(cfg.get_notebookName()) + "_files" + "\\" + file_name + ".json"
+            from dfcleanser.common.cfg import dfc_debug_log
+            debug_log_file  =   dfc_debug_log.get_debuglog_file_name()
 
-        if(DEBUG_SYSTEM_FILES) :
-            print("[dfc_file_Widget][get_dfc_file]",file_to_read)
+            if(debug_log_file == file_name) :
+                file_to_read    =   debug_log_file
+            else :
+                file_to_read    =   str(cfg.get_notebookPath()) + "\\" + str(cfg.get_notebookName()) + "_files" + "\\" + file_name + ".json"
+
+        if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget][get_dfc_file]",file_to_read))
 
         import json
 
@@ -2742,8 +2897,8 @@ class dfc_file_Widget(QtWidgets.QWidget):
                 file_data = json.load(system_file)
                 system_file.close()
 
-                if(DEBUG_SYSTEM_FILES) :
-                    print("[dfc_file_Widget]  - file_data  ",type(file_data),len(file_data))
+                if( (is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) and (self.allow_debug) ) :
+                    add_debug_to_log("SystemWidgets",print_to_string("[dfc_file_Widget]  - file_data  ",type(file_data),len(file_data)))
 
                 if(type(file_data) == list) :
                     
@@ -2758,24 +2913,18 @@ class dfc_file_Widget(QtWidgets.QWidget):
 
                 else :
                     file_text   =   str(file_data)
-
-                    
-                #self._parse_history_file_to_dict(history_data)
                         
         except :
                         
             from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
             add_error_to_log("[get_dfc_file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
-            print("","[get_dfc_file file Error - for json decode error] "  + str(sys.exc_info()[0].__name__))
-
-
 
         return(file_text)
     
         import json
 
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("\n[load_history_file] : self.history_file_loaded  ",self.history_file_loaded )
+        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] : self.history_file_loaded  ",self.history_file_loaded ))
 
         history_data             =   []
         
@@ -2783,8 +2932,8 @@ class dfc_file_Widget(QtWidgets.QWidget):
         history_file_name        =   self.get_history_file_name(self.history_type)
         history_full_file_name   =   self.get_history_full_file_name(self.history_type)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name)
+        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name))
         
         if(not (history_dir_name is None)) :
             
@@ -2793,27 +2942,27 @@ class dfc_file_Widget(QtWidgets.QWidget):
                 make_dir(history_dir_name)
             
             from dfcleanser.common.common_utils import does_file_exist
-            if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                print("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name))
+            if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name)))
             
             if(not (does_file_exist(history_full_file_name))) :
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("load_history_file - file not found\n",history_full_file_name)
-                    print("load_history_file - file not found : history type",self.history_type)
+                if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                    add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found\n",history_full_file_name))
+                    add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found : history type",self.history_type))
  
                 self.history_file_loaded    =   False    
                 self.notebook_history       =   {}
                 
                 if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("load_history_file - file not found : history length ",len(self.notebook_history))
+                    add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found : history length ",len(self.notebook_history)))
                     self.dump_history()
             
             # import history file does exist
             else :
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                    print("[load_history_file]  - file found\n  ",history_full_file_name)
+                if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                    add_debug_to_log("SystemWidgets",print_to_string("[load_history_file]  - file found\n  ",history_full_file_name))
                 
                 try :
 
@@ -2822,8 +2971,8 @@ class dfc_file_Widget(QtWidgets.QWidget):
                         history_data = json.load(history_file)
                         history_file.close()
 
-                    if(DEBUG_IMPORT_HISTORY_DETAILS) :
-                        print("[load_history_file]  - history_data  ",type(history_data),len(history_data))
+                    if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                        add_debug_to_log("SystemWidgets",print_to_string("[load_history_file]  - history_data  ",type(history_data),len(history_data)))
                     
                     self._parse_history_file_to_dict(history_data)
                     self.history_file_loaded = True
@@ -2832,29 +2981,228 @@ class dfc_file_Widget(QtWidgets.QWidget):
                         
                     from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
                     add_error_to_log("[Load history file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
-                    print("","[Load history file Error - for json decode error] "  + str(sys.exc_info()[0].__name__))
                     
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
-            print("[load_history_file] - complete : ",self.history_file_loaded)
+        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+            add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] - complete : ",self.history_file_loaded))
 
 
 
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
+# -                     Debug files Widget                        -#
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
 
 
 
+class System_Debug_Widget(QtWidgets.QWidget):
+
+    def __init__(self,parms):  
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget]"))
+
+        super().__init__()
+
+        self.parent     =   parms[0]
+        self.chapterid  =   parms[1]
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget]"))
+
+        self.init_form()
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget] end"))
+
+    def init_form(self):  
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget][init_form]"))
+
+        # build the overall dtypes layout
+        from PyQt5.QtWidgets import QVBoxLayout, QWidget
+
+        self.systemLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+
+        chparms                 =   get_chapter_parms(DC_SYSTEM_ID)
+        self.systemLayout       =   build_chapter_debug_flags(DC_SYSTEM_ID,chparms)
+
+        self.importLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                 =   get_chapter_parms(DC_DATA_IMPORT_ID)
+        self.importLayout       =   build_chapter_debug_flags(DC_DATA_IMPORT_ID,chparms)
+
+        self.col1Layout         =   QVBoxLayout()
+        self.col1Layout.addLayout(self.systemLayout)
+        self.col1Layout.addLayout(self.importLayout)
+        self.col1Layout.addStretch()
+
+        self.inspectLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_DATA_INSPECTION_ID)
+        self.inspectLayout       =   build_chapter_debug_flags(DC_DATA_INSPECTION_ID,chparms)
+        
+        self.cleanseLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_DATA_CLEANSING_ID)
+        self.cleanseLayout       =   build_chapter_debug_flags(DC_DATA_CLEANSING_ID,chparms)
+
+        self.col2Layout         =   QVBoxLayout()
+        self.col2Layout.addLayout(self.inspectLayout)
+        self.col2Layout.addLayout(self.cleanseLayout)
+        self.col2Layout.addStretch()
+
+        self.transformLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_DATA_TRANSFORM_ID)
+        self.transformLayout       =   build_chapter_debug_flags(DC_DATA_TRANSFORM_ID,chparms)
+        
+        self.exportLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_DATA_EXPORT_ID)
+        self.exportLayout       =   build_chapter_debug_flags(DC_DATA_EXPORT_ID,chparms)
+
+        self.col3Layout         =   QVBoxLayout()
+        self.col3Layout.addLayout(self.transformLayout)
+        self.col3Layout.addLayout(self.exportLayout)
+        self.col3Layout.addStretch()
+
+        self.dbutilsLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DBUtils_ID)
+        self.dbutilsLayout       =   build_chapter_debug_flags(DBUtils_ID,chparms)
+        
+        self.swutilsLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(SWUtilities_ID)
+        self.swutilsLayout       =   build_chapter_debug_flags(SWUtilities_ID,chparms)
+
+        self.censusLayout        =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_CENSUS_ID)
+        self.censusLayout        =   build_chapter_debug_flags(DC_CENSUS_ID,chparms)
+
+        self.zipcodeLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_ZIPCODE_UTILITY_ID)
+        self.zipcodeLayout       =   build_chapter_debug_flags(DC_ZIPCODE_UTILITY_ID,chparms)
+
+        self.col4Layout         =   QVBoxLayout()
+        self.col4Layout.addLayout(self.dbutilsLayout)
+        self.col4Layout.addLayout(self.swutilsLayout)
+        self.col4Layout.addLayout(self.censusLayout)
+        self.col4Layout.addLayout(self.zipcodeLayout)
+        self.col4Layout.addStretch()
+
+        self.geocodeLayout       =   QVBoxLayout()
+        #from dfcleanser.Qt.system.SystemModel import get_chapter_parms, build_chapter_debug_flags
+        from dfcleanser.common.debug_utils import get_chapter_parms, build_chapter_debug_flags
+        chparms                  =   get_chapter_parms(DC_GEOCODE_UTILITY_ID)
+        self.geocodeLayout       =   build_chapter_debug_flags(DC_GEOCODE_UTILITY_ID,chparms)
+
+        self.col5Layout         =   QVBoxLayout()
+        self.col5Layout.addLayout(self.geocodeLayout)
+        self.col5Layout.addStretch()
+
+        # build the overall dtypes layout
+        from PyQt5.QtWidgets import QHBoxLayout, QWidget
+        self.debugLayout       =   QHBoxLayout()
+        self.debugLayout.addLayout(self.col1Layout) 
+        self.debugLayout.addLayout(self.col2Layout)
+        self.debugLayout.addLayout(self.col3Layout)
+        self.debugLayout.addLayout(self.col4Layout)
+        self.debugLayout.addLayout(self.col5Layout)
+
+        # buttons for inspect rows
+        from PyQt5.QtWidgets import QPushButton
+        Clear_button         =   QPushButton()     
+        Clear_button.setText("Clear\nDebug\nFlags")
+        Clear_button.setFixedSize(200,70)
+        Clear_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        Clear_button.clicked.connect(self.clear_flags_callback) 
+        
+        Save_button        =   QPushButton()     
+        Save_button.setText("Save\nDebug\nFlags")
+        Save_button.setFixedSize(200,70)
+        Save_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        Save_button.clicked.connect(self.save_flags_callback) 
+        
+        Display_button        =   QPushButton()     
+        Display_button.setText("Display\nDebug Log")
+        Display_button.setFixedSize(200,70)
+        Display_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        Display_button.clicked.connect(self.display_debug_log_callback) 
+        
+        Return_button        =   QPushButton()     
+        Return_button.setText("Return")
+        Return_button.setFixedSize(200,70)
+        Return_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
+        Return_button.clicked.connect(self.debug_return_callback) 
+
+        from PyQt5.QtWidgets import QHBoxLayout
+        self.dfcdfsbutonsLayout  =   QHBoxLayout()
+        self.dfcdfsbutonsLayout.addWidget(Clear_button)
+        self.dfcdfsbutonsLayout.addWidget(Save_button)
+        self.dfcdfsbutonsLayout.addWidget(Display_button)
+        self.dfcdfsbutonsLayout.addWidget(Return_button)
+        self.dfcdfsbutonsLayout.setAlignment(Qt.AlignHCenter)
+
+        self.finalLayout         =   QVBoxLayout()
+        self.finalLayout.addLayout(self.debugLayout)
+        self.finalLayout.addLayout(self.dfcdfsbutonsLayout)
+        self.finalLayout.addStretch()
+
+        self.setLayout(self.finalLayout)
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget][init_form] end"))
 
 
+    def clear_flags_callback(self) :
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget][clear_flags_callback]"))
 
 
+    def save_flags_callback(self) :
 
+        print("save_flags_callback")
 
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_Debug_Widget][save_flags_callback]"))
 
+        save_debug_flags()
 
+        print("save_flags_callback : file saved")
 
+    def display_debug_log_callback(self) :
 
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[display_debug_log_callback]"))
 
+        from dfcleanser.common.cfg import dfc_debug_log
+        debug_file  =   dfc_debug_log.get_debuglog_file_name()
 
+        self.parent.display_dfcleanser_file(debug_file)
 
+    def debug_return_callback(self) :
+
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_FILES")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[debug_return_callback]"))
+
+        self.parent.display_dfcleanser_sys_files()
 
 # -----------------------------------------------------------------#
 # -                    System About Widget                        -#
@@ -2865,18 +3213,18 @@ class System_EULA_Widget(QtWidgets.QWidget):
 
         super().__init__()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_EULA_Widget]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_EULA_Widget]"))
 
         self.init_form()
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_EULA_Widget] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_EULA_Widget] end"))
 
     def init_form(self):  
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_EULA_Widget][init_form]")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_EULA_Widget][init_form]"))
 
         from dfcleanser.Qt.system.SystemControl import isEULA_read
 
@@ -2901,8 +3249,8 @@ class System_EULA_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.SystemAboutLayout)
 
-        if(DEBUG_SYSTEM_INFO) :
-            print("[System_About_Widget][init_form] end")
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM_INFO")) :
+            add_debug_to_log("SystemWidgets",print_to_string("[System_About_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
