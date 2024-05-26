@@ -15,7 +15,6 @@ DEBUG_INSPECT_DTYPES    =   False
 DEBUG_INSPECT_COLUMNS   =   False
 DEBUG_INSPECT_NANS      =   False
 DEBUG_INSPECT_CATS      =   False
-DEBUG_INSPECT_DATATYPES =   False
 DEBUG_INSPECT_OUTLIERS  =   False
 DEBUG_DISPLAY_TRACE     =   False
 
@@ -733,7 +732,6 @@ def get_df_categories_data(df) :
     nans = []
     for i in range(len(catcandidates)) :
         nans.append(df[catcandidates[i]].isnull().sum())
-    #print("\nnans",nans,"\n")
                     
     whitespace = []
     for i in range(len(catcandidatesuniques)) :

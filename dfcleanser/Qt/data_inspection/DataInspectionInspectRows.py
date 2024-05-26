@@ -27,9 +27,10 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_INSPECT_ROWS              =   False
-DEBUG_INSPECT_ROWS_DETAILS      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
 
 DEFAULT_ROW_HEIGHT  =   30
 
@@ -91,8 +92,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         self.form               =   None
         self.stackedLayout      =   None
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui]  dfparms ",dfparms)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui]  dfparms ",dfparms))
 
         if(not(dfparms is None)) :
             self.dftitle            =   dfparms[0]
@@ -202,8 +203,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_df_rows_buttons(self):
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][init_data_inspect_df_rows_buttons]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_data_inspect_df_rows_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -230,15 +231,15 @@ class InspectRowsGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_df_rows_splash_screen(self):
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][init_data_inspect_df_rows_splash_screen]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_data_inspect_df_rows_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import dfBrowserUtility_ID
         build_chapter_splash_screen(dfBrowserUtility_ID, self.form.dfRowsSplashScreen)
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][init_data_inspect_df_rows_splash_screen]  end")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_data_inspect_df_rows_splash_screen]  end"))
 
 
     # -----------------------------------------------------------------#
@@ -246,8 +247,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_inspect_df_rows_form(self):#, DataInspectionLayout):
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][init_dfs_to_inspect_df_row]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_dfs_to_inspect_df_row]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_select_dfs_layout
         dfc_dfs_objects     =   build_select_dfs_layout("* dataframes_to_inspect")
@@ -278,7 +279,7 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         self.dfc_dfs_layout.addStretch()
 
         if(DEBUG_INSPECT_ROWS_DETAILS) :
-            print("  [InspectRowsGui][init_dfs_to_inspect_df_rows]  ",dfc_dfs_objects)
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_dfs_to_inspect_df_rows]  ",dfc_dfs_objects))
 
         if(not(self.df is None)) :
 
@@ -338,8 +339,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
  
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][init_dfs_to_inspect_df_rows] end",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_dfs_to_inspect_df_rows] end",self.data_inspection_widgets_stack_dict))
 
 
     # -----------------------------------------------------------------#
@@ -347,8 +348,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_df_rows_form(self):
         
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][init_data_inspect_df_rows_form]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_data_inspect_df_rows_form]  "))
 
         self.init_data_inspect_df_rows_buttons()
         self.init_data_inspect_df_rows_splash_screen()
@@ -356,8 +357,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
         self.setFixedSize(1200,950)
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][init_data_inspect_df_rows_form]  end")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_data_inspect_df_rows_form]  end"))
 
         
     # -----------------------------------------------------------------#
@@ -368,8 +369,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
     def change_df(self) :
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][change_df]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][change_df]  "))
 
         self.dftitle    =   self.df_select.currentText()
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -380,8 +381,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
         self.form.dfRowsScrollDownbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][ScrolldfDown]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][ScrolldfDown]  "))
 
         self.start_row  =   self.start_row + 200
         if(self.start_row <= len(self.df)) :
@@ -391,8 +392,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
         self.form.dfRowsBrowsedfbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][Browsedf]  ",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][Browsedf]  ",self.dftitle))
 
         title_text  =   ("\ndf : " + str(self.dftitle) + "    Total Rows : " + str(len(self.df)) + "    Total Columns : " + str(len(self.df.columns.tolist())) + "\n")
         self.title_label.setText(title_text)
@@ -406,8 +407,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
         self.form.dfRowsScrollUpbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][ScrolldfUp]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][ScrolldfUp]  "))
 
         self.start_row  =   self.start_row - 200
         if(self.start_row < 0) : slf.start_row  =   0
@@ -418,8 +419,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         
         self.form.dfRowsTopbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][ScrolldfTop]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][ScrolldfTop]  "))
 
         self.start_row  =   0
         self.df_rows.reload_data(self.df,self.start_row)
@@ -428,8 +429,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         
         self.form.dfRowsFindNextbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][FindNextValue]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][FindNextValue]"))
 
         row_number      =   None
         column_number   =   None
@@ -438,8 +439,8 @@ class InspectRowsGui(QtWidgets.QMainWindow):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_INSPECT_ROWS) :
-            print("  [InspectRowsGui][select_column_to_cleanse] ",row_number," ",column_number)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][select_column_to_cleanse] ",row_number," ",column_number))
 
 
         if(column_number is None) :
@@ -456,21 +457,21 @@ class InspectRowsGui(QtWidgets.QMainWindow):
             if(done1) :
 
                 if(DEBUG_INSPECT_ROWS) :
-                    print("  [InspectRowsGui][select_column_to_cleanse] ",valueToFind)
+                    add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][select_column_to_cleanse] ",valueToFind))
 
     def FilterdfRows(self) :
         
         self.form.FilterdfRowsbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][FilterdfRows]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][FilterdfRows]"))
 
     def dfRowsHelp(self) :
         
         self.form.dfRowsHelpbutton.toggle()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("[InspectRowsGui][dfRowsHelp]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][dfRowsHelp]"))
 
 
 
@@ -497,8 +498,6 @@ class DataInspectiondfRowsModel(QtCore.QAbstractTableModel):
         self._data = statsdata
         self.col_headers = col_headers
 
-        #print("[DataInspectiondfRowsModel] : self.col_headers \n   ",self.col_headers)
-
     def reload_data(self,statsdata) :
         self._data = statsdata
 
@@ -518,7 +517,7 @@ class DataInspectiondfRowsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -577,19 +576,19 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
         self.column_headers     =   []
         self.column_widths      =   []
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable] : init : start_row : ",self.start_row)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : init : start_row : ",self.start_row))
 
         self.init_tableview()
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable] : done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : done"))
 
     
     def reload_data(self,df,start_row) :
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable][reload_data] : start_row : ",start_row)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable][reload_data] : start_row : ",start_row))
 
         self.df                 =   df
         self.start_row          =   start_row
@@ -604,8 +603,8 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable][reload_data] : init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable][reload_data] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -616,8 +615,8 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
             self.model = DataInspectiondfRowsModel(dfdata, self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_INSPECT_ROWS) :
-           print("    [DataInspectiondfRowsTable] : model loaded",len(dfdata))
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : model loaded",len(dfdata)))
 
         self.num_rows   =   len(dfdata)
 
@@ -625,8 +624,8 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
 
         self.setMinimumHeight(600)
 
-        if(DEBUG_INSPECT_ROWS) :
-           print("    [DataInspectiondfRowsTable] : num rows",self.num_rows)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : num rows",self.num_rows))
 
 
         #----------------------------------------------#
@@ -663,13 +662,13 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_df_rows_data(self):
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable] : load_df_rows_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : load_df_rows_data "))
 
         df_cols         =   self.df.columns.tolist()
         
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable] : df_cols ",df_cols)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : df_cols ",df_cols))
 
         header_names    =   ["Row\nId"]
         header_widths   =   [20]
@@ -729,12 +728,12 @@ class DataInspectiondfRowsTable(QtWidgets.QTableView):
 
         self.num_rows           =   len(data)
 
-        if(DEBUG_INSPECT_ROWS_DETAILS) :
-            print("    [DataInspectiondfRowsTable] : header_names\n   ",self.column_headers)
-            print("    [DataInspectiondfRowsTable] : self.column_widths\n   ",self.column_widths)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : header_names\n   ",self.column_headers))
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : self.column_widths\n   ",self.column_widths))
 
-        if(DEBUG_INSPECT_ROWS) :
-            print("    [DataInspectiondfRowsTable] : load_df_rows_data : end")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectiondfRowsTable] : load_df_rows_data : end"))
 
         return(data)
 

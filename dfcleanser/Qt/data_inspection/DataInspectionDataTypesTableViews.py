@@ -24,8 +24,10 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_INSPECT_DTYPES      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
 
 
 # -----------------------------------------------------------------#
@@ -76,7 +78,7 @@ class DataInspectionDataTypesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -135,8 +137,8 @@ class DataTypesTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("\n[DataTypesTable] : init")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataTypesTable] : init"))
 
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -147,19 +149,8 @@ class DataTypesTable(QtWidgets.QTableView):
 
         self.init_tableview()
         
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[DataTypesTable] : init_tableview done")
-
-        #self.doubleClicked.connect(self.handleDataTypedoubleclick)
-
-        #if(DEBUG_DATA_INSPECT_DTYPES) :
-        #    print("[DataTypesTable] : init done")
-
-
-    #def handleDataTypedoubleclic(self, index) :
-
-    #    print("[handleDataTypedoubleclic] : double clicked : row ",index.row)
-    #    print("[handleDataTypedoubleclic] : double clicked : column ",index.column)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataTypesTable] : init_tableview done"))
 
 
 
@@ -169,8 +160,8 @@ class DataTypesTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[DataTypesTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataTypesTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -181,8 +172,8 @@ class DataTypesTable(QtWidgets.QTableView):
             self.model = DataInspectionDataTypesModel(dtypesdata)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-           print("[DataTypesTable] : model loaded",dtypesdata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+           add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataTypesTable] : model loaded",dtypesdata))
 
         self.num_rows   =   len(dtypesdata)
 
@@ -224,8 +215,8 @@ class DataTypesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dtypes_data(self):
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[RowNansTable] : load_nan_rows_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : load_nan_rows_data "))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel import get_df_datatypes_data
         df_data_info = get_df_datatypes_data(self.df)
@@ -235,8 +226,8 @@ class DataTypesTable(QtWidgets.QTableView):
         dtypes_dict             =   df_data_info[2]
 
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[df_data_info] : dtypes_list\n  ",dtypes_list,"\n  dtypes_counts_list : ",dtypes_counts_list,"\n  dtypes_dict \n",dtypes_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[df_data_info] : dtypes_list\n  ",dtypes_list,"\n  dtypes_counts_list : ",dtypes_counts_list,"\n  dtypes_dict \n",dtypes_dict))
 
         data    =   []
 
@@ -249,8 +240,8 @@ class DataTypesTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[load_dtypes_data]  \n",data)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[load_dtypes_data]  \n",data))
 
         return(data)
 

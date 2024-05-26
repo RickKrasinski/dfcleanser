@@ -22,13 +22,13 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_INSPECT              =   False
-DEBUG_DATA_INSPECT_DTYPES       =   False
-DEBUG_DATA_INSPECT_NANS         =   False
-DEBUG_DATA_INSPECT_ROWS         =   False
-DEBUG_DATA_INSPECT_COLUMNS      =   False
-DEBUG_DATA_INSPECT_CATEGORIES   =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
+
+from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsIndexTable
+
 
 
 # -----------------------------------------------------------------#
@@ -223,8 +223,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_buttons(self):
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[init_data_inspect_buttons]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("init_data_inspect_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
 
@@ -252,23 +252,24 @@ class DataInspectionGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_splash_screen(self):
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[init_data_inspect_splash_screen]  ")
+        from dfcleanser.common.cfg import DataInspection_ID
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[init_data_inspect_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import DataInspection_ID
         build_chapter_splash_screen(DataInspection_ID, self.form.DataInspectsplash)
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[end init_data_inspect_splash_screen]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[end init_data_inspect_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -            Add a new dataframe to the df combobox             -#
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[DataInspectionGui][add_new_df]  df_title",df_title)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionGui][add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
         if(index > -1) :
@@ -280,8 +281,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         if(index > -1) :
             self.df_select.removeItem(index)
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[DataInspectionGui] self.df_select",type(self.df_select),self.df_select.count())
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionGui] self.df_select",type(self.df_select),self.df_select.count()))
 
         self.init_stacked_index()
 
@@ -290,8 +291,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_dfs_to_inspect(self):#, DataInspectionLayout):
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[init_dfs_to_inspect]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[init_dfs_to_inspect]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_select_dfs_layout
         dfc_dfs_objects     =   build_select_dfs_layout("* dataframes_to_inspect")
@@ -321,8 +322,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.resize(1070,300)
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[init_dfs_to_inspect] end",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[init_dfs_to_inspect] end",self.data_inspection_widgets_stack_dict))
 
 
     # -----------------------------------------------------------------#
@@ -330,8 +331,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_data_inspect_form(self):
         
-        if(DEBUG_DATA_INSPECT) :
-            print("[init_data_inspect_form]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("\n[init_data_inspect_form]  "))
 
         self.init_data_inspect_buttons()
         self.init_data_inspect_splash_screen()
@@ -368,7 +369,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #self.statusBar().clearMessage()
         
         dftitle     =   self.get_current_inspect_df_title()
-        print("dftitle",dftitle)
+	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("dftitle",dftitle))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
         df          =   get_dfc_dataframe_df(dftitle)
@@ -382,8 +384,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
             return(None)
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("\n[InspectDataTypes]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectDataTypes]"))
         
         from PyQt5.QtWidgets import QLabel
         dtypes_title_label   =   QLabel()
@@ -401,8 +403,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         self.DataTypesStats.setMinimumHeight(new_height)
         self.DataTypesStats.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[InspectDataTypes] DataTypesStats built")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectDataTypes] DataTypesStats built"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -425,8 +427,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[InspectDataTypes] end",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectDataTypes] end",self.data_inspection_widgets_stack_dict))
 
         self.resize(1070,450)
 
@@ -444,16 +446,17 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_DTYPES) :
-            print("[InspectDataTypes] select_datatype")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectDataTypes] select_datatype"))
 
 
         for idx in self.DataTypesStats.selectionModel().selectedIndexes():
             row_number = idx.row()
             column_number = idx.column()
 
-        print("[handleHistorydoubleclick] : double clicked : row ",row_number)
-        print("[handleHistorydoubleclick] : double clicked : column ",column_number)
+	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+            add_debug_to_log("DataInspection",print_to_string("[handleHistorydoubleclick] : double clicked : row ",row_number))
+            add_debug_to_log("DataInspection",print_to_string("[handleHistorydoubleclick] : double clicked : column ",column_number))
 
 
     # -----------------------------------------------------------------#
@@ -484,12 +487,13 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         self.form.Nansbutton.toggle()
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n[InspectNans]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectNans]"))
 
         self.dftitle = self.df_select.currentText()
-
-        print("self.df_select.currentText()",self.df_select.currentText())
+	
+	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("self.df_select.currentText()",self.df_select.currentText()))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
         df          =   get_dfc_dataframe_df(self.dftitle)
@@ -518,11 +522,6 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         nans_title_label.resize(960,50)
         nans_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
  
-        #from dfcleanser.sw_utilities.dfc_qt_model import DataCaptureControl
-        #thread_parms    =   [self.statusbar,"Calculating Nan Data : "]
-        #clock = DataCaptureControl(thread_parms)
-        #clock.startThread()
-
         from dfcleanser.Qt.data_inspection.DataInspectionNansTableViews import RowNansTable, ColumnNansTable
         NanRowStats         =   RowNansTable([self.dftitle])
         NanColumnStats      =   ColumnNansTable([self.dftitle])
@@ -540,9 +539,9 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         NansLayout.addWidget(nans_title_label)
         NansLayout.addLayout(NanStatsLayout)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n\nNanRowStats",NanRowStats)
-            print("NanColumnStats",NanColumnStats)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("NanRowStats",NanRowStats))
+            add_debug_to_log("DataInspection",print_to_string("NanColumnStats",NanColumnStats))
 
         DropNanStatsLayout  =   QHBoxLayout()
 
@@ -553,9 +552,9 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         DropNanStatsLayout.addWidget( self.DropRowStats )
         DropNanStatsLayout.addWidget(self.DropColumnStats)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n\nDropRowStats",self.DropRowStats)
-            print("DropColumnStats",self.DropColumnStats)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("DropRowStats",self.DropRowStats))
+            add_debug_to_log("DataInspection",print_to_string("DropColumnStats",self.DropColumnStats))
 
         NansLayout.addLayout(DropNanStatsLayout)
 
@@ -579,8 +578,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         RowNansFormLayout.addWidget(row_nans_input_label)
         RowNansFormLayout.addWidget(row_nans_input_text)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("RowNansFormLayout",RowNansFormLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("RowNansFormLayout",RowNansFormLayout))
 
         # buttons for row nans
         row_nans_button         =   QPushButton()     
@@ -589,8 +588,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         row_nans_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 12px; font-weight: bold; font-family: Tahoma; ")
         row_nans_button.clicked.connect(self.drop_pct_of_cols) 
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("row_nans_button",row_nans_button)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("row_nans_button",row_nans_button))
 
         row_nans_button1        =   QPushButton()     
         row_nans_button1.setText("Drop Rows\nwith Nan Count\n> Threshold")
@@ -598,8 +597,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         row_nans_button1.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 12px; font-weight: bold; font-family: Tahoma; ")
         row_nans_button1.clicked.connect(self.drop_count_of_cols) 
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("row_nans_button1",row_nans_button1)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("row_nans_button1",row_nans_button1))
 
         row_nans_button2        =   QPushButton()     
         row_nans_button2.setText("\nHelp\n")
@@ -607,24 +606,23 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         row_nans_button2.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 12px; font-weight: bold; font-family: Tahoma; ")
         row_nans_button2.clicked.connect(self.drop_row_nans_help) 
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("row_nans_button2",row_nans_button2)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("row_nans_button2",row_nans_button2))
 
         RowNansbutonsLayout  =   QHBoxLayout()
         RowNansbutonsLayout.addWidget(row_nans_button)
         RowNansbutonsLayout.addWidget(row_nans_button1)
         RowNansbutonsLayout.addWidget(row_nans_button2)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("RowNansbutonsLayout",RowNansbutonsLayout)
-
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("RowNansbutonsLayout",RowNansbutonsLayout))
         
         RowNansLayout  =   QVBoxLayout()
         RowNansLayout.addLayout(RowNansFormLayout)
         RowNansLayout.addLayout(RowNansbutonsLayout)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("RowNansLayout",RowNansLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("RowNansLayout",RowNansLayout))
 
         # -----------------------------------
         #    Col Nans Drop form 
@@ -635,8 +633,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         col_nans_input_label.resize(420,30)
         col_nans_input_label.setStyleSheet("font-size: 12px; font-weight: bold; font-family: Tahoma; ")
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("col_nans_input_label",col_nans_input_label)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("col_nans_input_label",col_nans_input_label))
 
         col_nans_input_text     =   QLineEdit()
         col_nans_input_text.setAlignment(Qt.AlignLeft)
@@ -650,8 +648,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         ColsNansFormLayout.addWidget(col_nans_input_label)
         ColsNansFormLayout.addWidget(col_nans_input_text)
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("ColsNansFormLayout",ColsNansFormLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("ColsNansFormLayout",ColsNansFormLayout))
 
         # buttons for col nans
         col_nans_button         =   QPushButton()     
@@ -677,8 +675,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         ColsNansbutonsLayout.addWidget(col_nans_button1)
         ColsNansbutonsLayout.addWidget(col_nans_button2)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("ColsNansbutonsLayout",ColsNansbutonsLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("ColsNansbutonsLayout",ColsNansbutonsLayout))
         
         ColsNansLayout  =   QVBoxLayout()
         ColsNansLayout.addLayout(ColsNansFormLayout)
@@ -688,8 +686,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         DropNansLayout.addLayout(RowNansLayout)
         DropNansLayout.addLayout(ColsNansLayout)
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("DropNansLayout",DropNansLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("DropNansLayout",DropNansLayout))
 
         # build the overall nans layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -702,8 +700,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.nansLayout.setSpacing(10)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("self.nansLayout",self.nansLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("self.nansLayout",self.nansLayout))
 
         self.nans.setLayout(self.nansLayout)
 
@@ -717,11 +715,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("[InspectNans] end",self.data_inspection_widgets_stack_dict)
-
-        #if(not (clock is None)) :
-        #    clock.stopThread()
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectNans] end",self.data_inspection_widgets_stack_dict))
 
         self.resize(1070,760)
 
@@ -742,8 +737,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         threshold   =   self.row_nans_threshold.text()
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_pct_of_cols : threshold ",type(threshold),threshold)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_pct_of_cols : threshold ",type(threshold),threshold))
 
         from dfcleanser.common.common_utils import  opStatus
         opstat = opStatus()
@@ -761,8 +756,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
             dropcount   =   results[0]
             dflength    =   results[1]
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_pct_of_cols : dropcount ",dropcount,dflength,opstat.get_status())
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_pct_of_cols : dropcount ",dropcount,dflength,opstat.get_status()))
 
         if(opstat.get_status()) :
             self.statusBar().showMessage(str(dropcount) + " Nan Rows dropped from df")
@@ -779,8 +774,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_pct_of_cols")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_pct_of_cols"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel  import  BY_PERCENT
         self.drop_nan_cols(BY_PERCENT)
@@ -801,8 +796,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_count_of_cols")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_count_of_cols"))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel  import  BY_COUNT
         self.drop_nan_cols(BY_COUNT)
@@ -824,14 +819,12 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_row_nans_help")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_row_nans_help"))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import INSPECT_ROW_NANS_ID
         display_url(INSPECT_ROW_NANS_ID)
-
-
 
     def drop_rows(self,ttype) :
         """            
@@ -872,8 +865,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_pct_of_rows")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_pct_of_rows"))
         
         from dfcleanser.Qt.data_inspection.DataInspectionModel  import  BY_PERCENT, BY_COUNT 
         self.drop_rows(BY_PERCENT)
@@ -895,8 +888,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_count_of_rows")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_count_of_rows"))
         
         from dfcleanser.Qt.data_inspection.DataInspectionModel  import  BY_COUNT 
         self.drop_rows(BY_COUNT)
@@ -918,8 +911,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("drop_cols_nans_help")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspection",print_to_string("drop_cols_nans_help"))
                 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import INSPECT_COL_NANS_ID
@@ -943,8 +936,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         self.form.Rowsbutton.toggle()
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("[InspectRows]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectRows]"))
 
         self.dftitle = self.df_select.currentText() 
 
@@ -977,8 +970,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         rows_button.setStyleSheet("background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; ")
         rows_button.clicked.connect(self.inspect_in_df_browser) 
         
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("RowsbutonsLayout",rows_button)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("RowsbutonsLayout",rows_button))
         
         rows_button1        =   QPushButton()     
         rows_button1.setText("Inspect dataframe in Excel")
@@ -997,8 +990,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         RowsbutonsLayout.setAlignment(Qt.AlignVCenter)
         RowsbutonsLayout.addStretch()
         
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("RowsbutonsLayout",RowsbutonsLayout)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("RowsbutonsLayout",RowsbutonsLayout))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QWidget
@@ -1017,8 +1010,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("[InspectRows] end",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectRows] end",self.data_inspection_widgets_stack_dict))
 
         self.resize(1070,440)
 
@@ -1032,8 +1025,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("inspect_in_df_browser")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("inspect_in_df_browser"))
 
         from dfcleanser.common.common_utils import run_jscript
         script  =   "browse_df_in_df_browser('" + str(self.dftitle) + "');"
@@ -1050,8 +1043,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #------------------------------------------------------------------
         """
 
-        if(DEBUG_DATA_INSPECT_ROWS) :
-            print("inspect_in_excel")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
+            add_debug_to_log("DataInspection",print_to_string("inspect_in_excel"))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df, get_dfcleanser_location 
         from dfcleanser.common.common_utils import open_as_excel, alert_user 
@@ -1096,10 +1089,13 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         self.form.Columnsbutton.toggle()
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("\n[InspectColumns]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspection",print_to_string("\n[InspectColumns] : start"))
 
         self.dftitle = self.df_select.currentText()
+        
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectColumns] : dftitle : ",self.dftitle))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
         df          =   get_dfc_dataframe_df(self.dftitle)
@@ -1112,7 +1108,7 @@ class DataInspectionGui(QtWidgets.QMainWindow):
             display_error_msg(title,status_msg)
 
             return(None)
-        
+
         from PyQt5.QtWidgets import QLabel
         colsindex_title_label   =   QLabel()
         colsindex_title_label.setText("\nColumn Index for df '" + self.dftitle + "'\n")
@@ -1120,12 +1116,6 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         colsindex_title_label.resize(960,50)
         colsindex_title_label.setStyleSheet("font-size: 16px; font-weight: bold; font-family: Arial; ")
         
-        #from dfcleanser.sw_utilities.dfc_qt_model import DataCaptureControl
-        #thread_parms    =   [self.statusbar,"Calculating Columns Stats : "]
-        #clock = DataCaptureControl(thread_parms)
-        #clock.startThread()
-
-        from dfcleanser.Qt.data_inspection.DataInspectionColumnsWidgets import DataInspectionColumnsIndexTable
         IndexStats         =   DataInspectionColumnsIndexTable([self.dftitle])
         
         new_height  =   30 + (IndexStats.num_rows * DEFAULT_ROW_HEIGHT)
@@ -1181,12 +1171,9 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
         
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("[InspectColumns] end\n",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectColumns] end\n",self.data_inspection_widgets_stack_dict))
         
-        #if(not (clock is None)) :
-        #    clock.stopThread()
-
         self.resize(1070,900)
         
 
@@ -1214,8 +1201,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         self.form.Categoriesbutton.toggle()
         self.statusBar().clearMessage()
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[InspectCategories]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectCategories]"))
 
         self.dftitle = self.df_select.currentText() 
 
@@ -1267,8 +1254,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
             CatColumns.setMinimumHeight(new_height)
             CatColumns.setMaximumHeight(new_height)
         
-            if(DEBUG_DATA_INSPECT_CATEGORIES) :
-                print("[InspectCategories] : CatColumns height ",new_height)
+            if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+                add_debug_to_log("DataInspection",print_to_string("[InspectCategories] : CatColumns height ",new_height))
 
 
         # build cat candidates table:
@@ -1290,8 +1277,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         CatCandidateColumns.setMinimumHeight(new_height)
         CatCandidateColumns.setMaximumHeight(new_height)
         
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[InspectCategories] : CatCandidateColumns height ",new_height)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectCategories] : CatCandidateColumns height ",new_height))
 
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
         self.categories         =   QWidget()
@@ -1318,8 +1305,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_DATA_INSPECT) :
-            print("[InspectCategories] end",self.data_inspection_widgets_stack_dict)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+            add_debug_to_log("DataInspection",print_to_string("[InspectCategories] end",self.data_inspection_widgets_stack_dict))
 
         self.resize(1048,800)
     
@@ -1346,7 +1333,7 @@ class DataInspectionGui(QtWidgets.QMainWindow):
     def HelpDataInspect(self):
 
         self.form.InspectHelpbutton.toggle()
-        print("HelpDataInspect")
+        add_debug_to_log("DataInspection",print_to_string("HelpDataInspect"))
         
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import INSPECT_MAIN_TASKBAR_ID

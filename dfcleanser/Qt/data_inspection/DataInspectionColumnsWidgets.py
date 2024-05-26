@@ -24,9 +24,11 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_INSPECT_COLUMNS              =   False
-DEBUG_DATA_INSPECT_COLUMNS_DETAILS      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -77,7 +79,7 @@ class DataInspectionColumnsIndexModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -144,8 +146,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("\n  [DataInspectionColumnsIndexTable] : init")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : init : dftitle",self.dftitle))
 
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -156,8 +158,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspectionColumnsIndexTable] : init_tableview done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : init done"))
 
     
     # -----------------------------------------------------------------#
@@ -166,8 +168,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspectionColumnsIndexTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -178,8 +180,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
             self.model = DataInspectionColumnsIndexModel(columnsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-           print("  [DataInspectionColumnsIndexTable] : model loaded",columnsdata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+           add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : model loaded",columnsdata))
 
         if(len(columnsdata) == 6) :
             column_widths   =   [220,278,120,120,120,120]
@@ -192,10 +194,6 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
 
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
-
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-           print("  [DataInspectionColumnsIndexTable] : new_height",new_height)
-
 
         #----------------------------------------------#
         # init the table view header and cell sizes    #
@@ -230,8 +228,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_index_data(self):
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspectionColumnsIndexTable] : load_columns_index_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : load_columns_index_data "))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel import get_df_index_columns_data
         df_data_info = get_df_index_columns_data(self.df)
@@ -239,10 +237,6 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
         colids       =   df_data_info[0]
         coldata      =   df_data_info[1]
         dfvalues     =   df_data_info[2]
-
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspectionColumnsIndexTable] : df_data_info \ncolids : \n          ",colids,"\n    coldata :\n   ",coldata,"\n    dfvalues : \n    ",dfvalues)
-
 
         index_columns   =   self.df.index.names
         index_names     =   []
@@ -285,8 +279,8 @@ class DataInspectionColumnsIndexTable(QtWidgets.QTableView):
                 column_headers.append(colids[i])   
 
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspectionColumnsIndexTable] : data\n ",data)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsIndexTable] : data\n ",data))
 
         self.column_headers     =   column_headers
         self.num_rows           =   len(data)
@@ -341,7 +335,6 @@ class DataInspectionColumnsStatsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -446,8 +439,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
         from dfcleanser.common.cfg import df_Column_Changed_signal
         df_Column_Changed_signal.connectSignal(self.reload_data)
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("    [DataInspectionColumnsStatsTable] : init : dftitle : ",self.dftitle,self.max_num_rows,self.colname)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : init : dftitle : ",self.dftitle,self.max_num_rows,self.colname))
 
         if(1):#self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -463,14 +456,14 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("    [DataInspectionColumnsStatsTable] : done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : done"))
 
     
     def reload_data(self) :
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("    [DataInspectionColumnsStatsTable][reload_data] : dftitle : ",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][reload_data] : dftitle : ",self.dftitle))
 
         reload_data     =   self.load_columns_stats_data()
         self.model.reload_data(reload_data)        
@@ -482,8 +475,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("    [DataInspectionColumnsStatsTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -494,8 +487,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
             self.model = DataInspectionColumnsStatsModel(columnsdata, self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-           print("    [DataInspectionColumnsStatsTable] : model loaded")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+           add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : model loaded"))
 
         self.num_rows   =   len(columnsdata)
 
@@ -512,8 +505,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-           print("    [DataInspectionColumnsStatsTable] : new_height",self.num_rows,new_height)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+           add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : new_height",self.num_rows,new_height))
 
 
         #----------------------------------------------#
@@ -549,8 +542,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_stats_data(self):
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("    [DataInspectionColumnsStatsTable] : load_columns_stats_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable] : load_columns_stats_data "))
 
         df_cols         =   self.df.columns.tolist()
 
@@ -567,11 +560,6 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
         skews       =   df_data_info[7]
         kurtosiss   =   df_data_info[8]
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("[df_data_info] : \n  df_cols\n    ",df_cols,"\n  coldtypes : \n    ",coldtypes,"\n  numuniques \n    ",numuniques)
-            print("[df_data_info] : \n  numnans\n    ",numnans,"\n  means : \n    ",means,"\n  stddev \n    ",stddev)
-            print("[df_data_info] : \n  minvals\n    ",minvals,"\n  maxvals : \n    ",maxvals,"\n  skews \n    ",skews, "\n  kurtosiss \n    ",kurtosiss)
-        
         data            =   []
 
         for i in range(len(df_cols)) :
@@ -590,11 +578,6 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("    [DataInspectionColumnsStatsTable] : data\n ")
-            for i in range(len(data)) :
-                print("  [data row ",i,"] : ",data[i])
-
         self.column_headers     =   ["Column Name","Data Type","Uniques","Total Nans","Mean","Std Dev","Min","Max","Skew","Kurtosis"]
 
         self.num_rows           =   len(data)
@@ -604,8 +587,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
 
     def select_column_to_inspect(self) :
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspectionColumnsStatsTable][select_column_to_inspect]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][select_column_to_inspect]"))
    
         row_number      =   None
         column_number   =   None
@@ -621,8 +604,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
                 row_number = int(idx.row())
                 column_number = int(idx.column())
 
-            if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-                print("  [DataInspectionColumnsStatsTable][select_column_to_inspect] ",row_number,column_number)
+            if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+                add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][select_column_to_inspect] ",row_number,column_number))
 
             model   =   self.model
             tdata   =   model.get_data()
@@ -637,8 +620,8 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
                 self.colname =  cell
                 #self.statusBar().showMessage(cell + ' Column selected to inspect')
             
-                if(DEBUG_DATA_INSPECT_COLUMNS) :    
-                    print("  [DataInspectionColumnsStatsTable][select_column_to_inspect] : self.columnname [",self.colname,"]")
+                if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :    
+                    add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][select_column_to_inspect] : self.columnname [",self.colname,"]"))
 
             else :
 
@@ -647,13 +630,13 @@ class DataInspectionColumnsStatsTable(QtWidgets.QTableView):
                 from dfcleanser.sw_utilities.dfc_qt_model import display_error_msg
                 display_error_msg(title,status_msg)
 
-            if(DEBUG_DATA_INSPECT_COLUMNS) :    
-                print("  [DataInspectionColumnsStatsTable][select_column_to_inspect] : colname [",cell,"]")
+            if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :    
+                add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][select_column_to_inspect] : colname [",cell,"]"))
 
     def get_column_to_inspect(self) :
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :    
-            print("  [DataInspectionColumnsStatsTable][get_column_to_inspect] : self.colname [",self.colname,"]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :    
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspectionColumnsStatsTable][get_column_to_inspect] : self.colname [",self.colname,"]"))
 
         return(self.colname)
 
@@ -681,18 +664,18 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
         self.stats_table        =   dfparms[2]
         self.colname            =   self.stats_table.colname
         
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("\n[DataInspection_Column_Graphs_Widget][init] dftitle : ",self.dftitle,self.colname)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][init] dftitle : ",self.dftitle,self.colname))
 
         self.init_form()
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("[DataInspection_Column_Graphs_Widget] end")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget] end"))
 
     def reload_data(self,parent,dftitle) :
         
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspection_Column_Graphs_Widget][reload_data] ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][reload_data] "))
 
         self.parent         =   parent
         self.dftitle        =   dftitle
@@ -700,8 +683,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_DATA_INSPECT_COLUMNS_DETAILS) :
-            print("  [DataInspection_Column_Graphs_Widget][init_form]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS_DETAILS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][init_form]"))
 
         # display graphs bar
         from PyQt5.QtWidgets import QVBoxLayout, QPushButton, QLabel
@@ -807,8 +790,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
 
     def set_column_name(self,colname) :
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspection_Column_Graphs_Widget][set_column_name]",colname)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][set_column_name]",colname))
 
         self.colname    =   colname
 
@@ -816,8 +799,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
 
         self.colname    =   self.stats_table.colname
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspection_Column_Graphs_Widget][display_heatmap] dftitle : ",self.dftitle,self.colname)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][display_heatmap] dftitle : ",self.dftitle,self.colname))
 
         parms   =   [HEAT_MAP_GRAPH,self.dftitle,self.colname]
         display_inspect_graph(parms)
@@ -826,8 +809,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
 
         self.colname    =   self.stats_table.colname
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspection_Column_Graphs_Widget][display_boxplot]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][display_boxplot]"))
 
         parms   =   [BOXPLOT_GRAPH,self.dftitle,self.colname]
         display_inspect_graph(parms)
@@ -838,8 +821,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
         
         self.colname            =   self.stats_table.get_column_to_inspect()    
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspection_Column_Graphs_Widget][display_histogram]",self.dftitle,self.colname)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][display_histogram]",self.dftitle,self.colname))
         
         parms   =   [HISTOGRAM_GRAPH,self.dftitle,self.colname]
         display_inspect_graph(parms)
@@ -848,8 +831,8 @@ class DataInspection_Column_Graphs_Widget(QtWidgets.QWidget):
 
         self.colname    =   self.stats_table.colname
 
-        if(DEBUG_DATA_INSPECT_COLUMNS) :
-            print("  [DataInspection_Column_Graphs_Widget][display_zscores]")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][display_zscores]"))
         
         parms   =   [ZSCORES_GRAPH,self.dftitle,self.colname]
         display_inspect_graph(parms)
@@ -861,8 +844,8 @@ def display_inspect_graph(parms) :
     dftitle         =   parms[1]
     column_name     =   parms[2]
 
-    if(DEBUG_DATA_INSPECT_COLUMNS) :
-        print("  [display_inspect_graph]",graphid,dftitle,column_name)
+    if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+        add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[display_inspect_graph]",graphid,dftitle,column_name))
 
 
     from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -906,8 +889,8 @@ def display_inspect_graph(parms) :
                 #jscript     =   "display_column_graph(" + str(graphid) + ",'" + str(dftitle) + "','" + str(column_name) + "');"
                 jscript     =   "display_column_graph(" + str(graphid) + ",'" + str(dftitle) + "','" + str(column_name) + "');"
 
-                if(DEBUG_DATA_INSPECT_COLUMNS) :
-                    print("  [DataInspection_Column_Graphs_Widget][display_inspect_graph][jscript]",jscript)
+                if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_COLUMNS")) :
+                    add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[DataInspection_Column_Graphs_Widget][display_inspect_graph][jscript]",jscript))
 
                 run_jscript(jscript,"fail to display graph : ")
 

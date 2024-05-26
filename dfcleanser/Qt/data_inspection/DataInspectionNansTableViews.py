@@ -24,10 +24,12 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_INSPECT_NANS      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
 
-
+ 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -           general Data Inspection Housekeeping                -#
@@ -76,7 +78,7 @@ class DataInspectionRowNansModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -133,22 +135,22 @@ class RowNansTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n[RowNansTable] : init",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : init",self.dftitle))
 
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
         df          =   get_dfc_dataframe_df(self.dftitle)
         self.df     =   df
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n[RowNansTable] : df",type(self.df))
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : df",type(self.df)))
            
 
         self.init_tableview()
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("[RowNansTable] : init_tableview done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : init_tableview done"))
 
     
     # -----------------------------------------------------------------#
@@ -157,8 +159,8 @@ class RowNansTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("[RowNansTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -169,8 +171,8 @@ class RowNansTable(QtWidgets.QTableView):
             self.model = DataInspectionRowNansModel(nandata)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[RowNansTable] : model loaded \n ",nandata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionColumnsWidgets",print_to_string("[RowNansTable] : model loaded \n ",nandata))
 
 
         #----------------------------------------------#
@@ -206,16 +208,13 @@ class RowNansTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_nan_rows_data(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("[RowNansTable] : load_nan_rows_data ",type(self.df))
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[RowNansTable] : load_nan_rows_data ",type(self.df)))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel import get_nan_stats, ROW_STATS  
         stats_data  =   get_nan_stats(self.df,ROW_STATS)
         statrows    =   stats_data[0]
         statvals    =   stats_data[1]
-
-        #if(DEBUG_DATA_INSPECT_NANS) :
-        #    print("[RowNansTable] : load_nan_rows_data  \n",stats_data)
 
         data    =   []
 
@@ -225,9 +224,6 @@ class RowNansTable(QtWidgets.QTableView):
             data_row.append(statrows[i])
             data_row.append(statvals[i])
             data.append(data_row)
-
-        #if(DEBUG_DATA_INSPECT_NANS) :
-        #    print("[load_nan_rows_data]  \n",data)
 
         return(data)
 
@@ -273,7 +269,7 @@ class DataInspectionColumnNansModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -337,8 +333,8 @@ class ColumnNansTable(QtWidgets.QTableView):
         else :
             df  =   self.df
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n\n[ColumnNansTable] ",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[ColumnNansTable] ",self.dftitle))
     
 
         self.init_tableview()
@@ -349,23 +345,23 @@ class ColumnNansTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[ColumnNansTable] : init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[ColumnNansTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         nandata     =   self.load_nan_columns_data()
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[ColumnNansTable] : init_tableview : nandata\n ",nandata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[ColumnNansTable] : init_tableview : nandata\n ",nandata))
 
         if(self.model is None) :
             self.model = DataInspectionColumnNansModel(nandata)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[ColumnNansTable] : init_tableview : model set")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[ColumnNansTable] : init_tableview : model set"))
         
 
         #----------------------------------------------#
@@ -395,8 +391,8 @@ class ColumnNansTable(QtWidgets.QTableView):
         
         self.setWordWrap(True)
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[ColumnNansTable] : end init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[ColumnNansTable] : end init_tableview"))
 
 
     # -----------------------------------------------------------------#
@@ -466,7 +462,7 @@ class DataInspectionDropRowNansModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -525,8 +521,8 @@ class DataInspectionDropRowNansTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n\n[DataInspectionDropRowNansTable] ",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropRowNansTable] ",self.dftitle))
 
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -548,23 +544,23 @@ class DataInspectionDropRowNansTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropRowNansTable] : init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropRowNansTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         nandata     =   self.load_drop_rows_data()
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropRowNansTable] : init_tableview :nandata\n",nandata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropRowNansTable] : init_tableview :nandata\n",nandata))
 
         if(self.model is None) :
             self.model = DataInspectionDropRowNansModel(nandata)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropRowNansTable] : init_tableview : model set")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropRowNansTable] : init_tableview : model set"))
         
 
         #----------------------------------------------#
@@ -593,8 +589,8 @@ class DataInspectionDropRowNansTable(QtWidgets.QTableView):
         
         self.setWordWrap(True)
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropRowNansTable] : end init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropRowNansTable] : end init_tableview"))
 
 
     # -----------------------------------------------------------------#
@@ -669,7 +665,7 @@ class DataInspectionDropColNansModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -728,8 +724,8 @@ class DataInspectionDropColsNansTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\n\n[DataInspectionDropColsNansTable]",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropColsNansTable]",self.dftitle))
 
 
         if(self.df is None) :
@@ -751,23 +747,23 @@ class DataInspectionDropColsNansTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropColsNansTable] : init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropColsNansTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         nandata     =   self.load_drop_cols_data()
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropColsNansTable] : init_tableview :nandata",nandata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropColsNansTable] : init_tableview :nandata",nandata))
 
         if(self.model is None) :
             self.model = DataInspectionDropColNansModel(nandata)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("[DataInspectionDropColsNansTable] : init_tableview : model set")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("[DataInspectionDropColsNansTable] : init_tableview : model set"))
         
 
         #----------------------------------------------#
@@ -797,8 +793,8 @@ class DataInspectionDropColsNansTable(QtWidgets.QTableView):
         
         self.setWordWrap(True)
         
-        if(DEBUG_DATA_INSPECT_NANS) :
-           print("end init_tableview")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+           add_debug_to_log("DataInspectionRows",print_to_string("end init_tableview"))
 
 
     # -----------------------------------------------------------------#
@@ -806,16 +802,16 @@ class DataInspectionDropColsNansTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_drop_cols_data(self):
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("[load_drop_cols_data]  ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("[load_drop_cols_data]  "))
 
         # build column nan percentiles
         from dfcleanser.Qt.data_inspection.DataInspectionModel import get_cols_nans_data
         df_nulls_sorted, df_cols_sorted     =   get_cols_nans_data(self.df)  
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("\ndf_nulls_sorted",df_nulls_sorted)
-            print("df_cols_sorted",df_cols_sorted)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("df_nulls_sorted",df_nulls_sorted))
+            add_debug_to_log("DataInspectionRows",print_to_string("df_cols_sorted",df_cols_sorted))
 
         numrows         =   len(self.df)
         column_pcts     =   []
@@ -829,8 +825,8 @@ class DataInspectionDropColsNansTable(QtWidgets.QTableView):
             data_row    =   [df_cols_sorted[i],df_nulls_sorted[i],column_pcts[i]]
             data.append(data_row)
 
-        if(DEBUG_DATA_INSPECT_NANS) :
-            print("column_pcts",column_pcts)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+            add_debug_to_log("DataInspectionRows",print_to_string("column_pcts",column_pcts))
 
         return(data)
 

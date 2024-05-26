@@ -24,8 +24,10 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_DATA_INSPECT_CATEGORIES      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataInspection_ID
 
 
 # -----------------------------------------------------------------#
@@ -77,7 +79,7 @@ class DataInspectionCategoriesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -135,8 +137,8 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("\n[DataInspectionCategoriesTable] : init")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : init"))
 
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -147,8 +149,8 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoriesTable] : init_tableview done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : init_tableview done"))
 
     
     # -----------------------------------------------------------------#
@@ -157,24 +159,24 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoriesTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         catcolsdata     =   self.load_columns_cats_data()
         
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-           print("[DataInspectionCategoriesTable] : catcolsdata",catcolsdata,"\n",self.column_headers)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+           add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : catcolsdata",catcolsdata,"\n",self.column_headers))
 
 
         if(self.model is None) :
             self.model = DataInspectionCategoriesModel(catcolsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-           print("[DataInspectionCategoriesTable] : model loaded",catcolsdata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+           add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : model loaded",catcolsdata))
 
         column_widths   =   [220,120,600]
 
@@ -221,8 +223,8 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_cats_data(self):
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoriesTable] : load_columns_cats_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : load_columns_cats_data "))
 
         from dfcleanser.Qt.data_inspection.DataInspectionModel import get_df_categories_data
         df_data_info = get_df_categories_data(self.df)
@@ -234,8 +236,8 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
         cat_ordered_list        =   categories_list[1]
         cat_categories_list     =   categories_list[2]
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[df_data_info] : catcols\n  ",catcols,"\n  cat_ordered_list : ",cat_ordered_list,"\n  cat_categories_list \n",cat_categories_list)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[df_data_info] : catcols\n  ",catcols,"\n  cat_ordered_list : ",cat_ordered_list,"\n  cat_categories_list \n",cat_categories_list))
 
         data    =   []
 
@@ -248,8 +250,8 @@ class DataInspectionCategoriesTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoriesTable] : data\n ",data)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoriesTable] : data\n ",data))
 
         self.column_headers     =   ["Column Name","Ordered","Categories"]
 
@@ -299,7 +301,7 @@ class DataInspectionCategoryCandidatesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -357,8 +359,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
         self.df                 =   None
         self.dftitle            =   dfparms[0]
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("\n[DataInspectionCategoryCandidatesTable] : init")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoryCandidatesTable] : init"))
 
         if(self.df is None) :
             from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -369,8 +371,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
 
         self.init_tableview()
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoryCandidatesTable] : init_tableview done")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoryCandidatesTable] : init_tableview done"))
 
     
     # -----------------------------------------------------------------#
@@ -379,8 +381,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoryCandidatesTable] : init_tableview",self.dftitle)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoryCandidatesTable] : init_tableview",self.dftitle))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
@@ -391,8 +393,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
             self.model = DataInspectionCategoryCandidatesModel(columnsdata, self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-           print("[DataInspectionCategoryCandidatesTable] : model loaded",columnsdata)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+           add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoryCandidatesTable] : model loaded",columnsdata))
 
         self.num_rows   =   len(columnsdata)
 
@@ -437,8 +439,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_cat_candidates_data(self):
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[DataInspectionCategoryCandidatesTable] : load_cat_candidates_data ")
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[DataInspectionCategoryCandidatesTable] : load_cat_candidates_data "))
 
         df_cols         =   self.df.columns
 
@@ -454,9 +456,9 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
         catcanduniquescountList =   cat_candidates_list[4]
         catcandidatesuniques    =   cat_candidates_list[5]
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[df_data_info] : \n  catcandidates\n  ",catcandidates,"\n  types : \n    ",catcanddtypesList,"\n  nans \n    ",nans)
-            print("[df_data_info] : \n  whitespace\n    ",whitespace,"\n  uniquescount : \n    ",catcanduniquescountList,"\n uniques  \n    ",catcandidatesuniques)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[df_data_info] : \n  catcandidates\n  ",catcandidates,"\n  types : \n    ",catcanddtypesList,"\n  nans \n    ",nans))
+            add_debug_to_log("DataInspection",print_to_string("[df_data_info] : \n  whitespace\n    ",whitespace,"\n  uniquescount : \n    ",catcanduniquescountList,"\n uniques  \n    ",catcandidatesuniques))
         
         data            =   []
 
@@ -472,8 +474,8 @@ class DataInspectionCategoryCandidatesTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DATA_INSPECT_CATEGORIES) :
-            print("[CatCandidatesTable] : data\n ",data)
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_CATEGORIES")) :
+            add_debug_to_log("DataInspection",print_to_string("[CatCandidatesTable] : data\n ",data))
 
         self.column_headers     =   ["Column Name","Data Type","Total Nans","White Space","Unique Count","Uniques"]
 
