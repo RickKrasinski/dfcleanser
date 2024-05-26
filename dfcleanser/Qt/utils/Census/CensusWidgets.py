@@ -24,9 +24,11 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_CENSUS               =   False
-DEBUG_CENSUS_DETAILS       =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWCensusUtility_ID
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -68,7 +70,7 @@ class Census_datasetsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -124,23 +126,23 @@ class Census_datasets_Table(QtWidgets.QTableView):
 
         self.parent             =   parent
 
-        if(DEBUG_CENSUS) :
-            print("\n  [Census_datasets_Table] : init")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table] : init"))
 
         self.doubleClicked.connect(self.select_census_dataset) 
 
         self.init_tableview()
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table] : end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table][reload_data] ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table][reload_data] "))
 
         tbldata    =   self.load_census_datasets_data()
         self.model.reload_data(tbldata)
@@ -151,23 +153,23 @@ class Census_datasets_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table][init_tableview]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         census_data     =   self.load_census_datasets_data()
 
-        if(DEBUG_CENSUS) :
-           print("  [Census_datasets_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+           add_debug_to_log("Census",print_to_string("[Census_datasets_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = Census_datasetsModel(census_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_CENSUS) :
-           print("  [Census_datasets_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+           add_debug_to_log("Census",print_to_string("[Census_datasets_Table][init_tableview] : model loaded"))
 
         #----------------------------------------------#
         # init the table view header and cell sizes    #
@@ -266,24 +268,24 @@ class Census_datasets_Table(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table] : data")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("Census",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Dataset Name","Dataset Description"]
         self.column_widths      =   [150,750]
 
-        if(DEBUG_CENSUS) :
-            print("[Census_datasets_Table] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table] end"))
 
         return(data)
     
     
     def select_census_dataset(self) :
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table][select_census_dataset]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table][select_census_dataset]"))
    
         row_number      =   None
         column_number   =   None
@@ -292,8 +294,8 @@ class Census_datasets_Table(QtWidgets.QTableView):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Table][select_census_dataset] ",row_number,column_number)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table][select_census_dataset] ",row_number,column_number))
 
         model   =   self.model
         tdata   =   model.get_data()
@@ -301,8 +303,8 @@ class Census_datasets_Table(QtWidgets.QTableView):
 
         self.dataset =  cell
             
-        if(DEBUG_CENSUS) :    
-            print("  [Census_datasets_Table][select_census_dataset] : self.dataset [",self.dataset,"]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :    
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Table][select_census_dataset] : self.dataset [",self.dataset,"]"))
 
         self.parent.display_census_dataset_columns(self.dataset)
 
@@ -310,8 +312,8 @@ class Census_datasets_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Widget]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Widget]"))
 
         super().__init__()
 
@@ -319,8 +321,8 @@ class Census_datasets_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Widget] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -328,8 +330,8 @@ class Census_datasets_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Widget][init_form]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QTableWidget
 
@@ -349,8 +351,8 @@ class Census_datasets_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_datasets_Widget][init_form] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_datasets_Widget][init_form] end"))
 
 
 # -----------------------------------------------------------------#
@@ -381,7 +383,7 @@ class Census_dataset_columnsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -440,21 +442,21 @@ class Census_dataset_columns_Table(QtWidgets.QTableView):
 
         self.num_columns        =   0
 
-        if(DEBUG_CENSUS) :
-            print("\n  [Census_dataset_columns_Table] : init")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table] : init"))
 
         self.init_tableview()
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Table] : end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Table][reload_data] ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table][reload_data] "))
 
         tbldata    =   self.load_census_dataset_columns_data(self.dataset)
         self.model.reload_data(tbldata)
@@ -465,23 +467,23 @@ class Census_dataset_columns_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Table][init_tableview]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         census_data     =   self.load_census_dataset_columns_data(self.dataset)
 
-        if(DEBUG_CENSUS) :
-           print("  [Census_dataset_columns_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+           add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = Census_dataset_columnsModel(census_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_CENSUS) :
-           print("  [Census_dataset_columns_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+           add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table][init_tableview] : model loaded"))
 
         #----------------------------------------------#
         # init the table view header and cell sizes    #
@@ -520,25 +522,24 @@ class Census_dataset_columns_Table(QtWidgets.QTableView):
     def get_column_names_list(self,dataset) :
 
         
-        if(DEBUG_CENSUS) :
-            print("  [load_census_dataset_columns_data] dataset ",dataset)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[load_census_dataset_columns_data] dataset ",dataset))
 
         # set up the ui form from a qtdesigner ui
         cfgdir              =   cfg.DataframeCleanserCfgData.get_dfc_qt_dir_name()
         census_dir_name     =   cfgdir + "\\utils\Census\datasets\\"
 
-        if(DEBUG_CENSUS) :
-            print("  [load_census_dataset_columns_data] census_dir_name ",census_dir_name)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[load_census_dataset_columns_data] census_dir_name ",census_dir_name))
 
         column_file_name    =   census_dir_name + dataset + "_columns.json"
         
-        if(DEBUG_CENSUS) :
-            print("  [load_census_dataset_columns_data] column_file_name ",column_file_name)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[load_census_dataset_columns_data] column_file_name ",column_file_name))
         
         import json
         dataset_columns     =   []
 
-        #file_to_read    =   str(cfg.get_notebookPath()) + "\\" + str(cfg.get_notebookName()) + "_files" + "\\" + "temp" + ".json"
         with open(column_file_name,'r') as  in_file :
                             
                 dataset_columns = json.load(in_file)
@@ -556,8 +557,8 @@ class Census_dataset_columns_Table(QtWidgets.QTableView):
         column_names        =   self.get_column_names_list(dataset)
         self.num_columns    =   len(column_names)
 
-        if(DEBUG_CENSUS) :
-            print("  [load_census_dataset_columns_data] column_names ",type(column_names),len(column_names))
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[load_census_dataset_columns_data] column_names ",type(column_names),len(column_names)))
 
         data    =   []
 
@@ -573,8 +574,8 @@ class Census_dataset_columns_Table(QtWidgets.QTableView):
         self.column_headers     =   ["Column Number","Column Description"]
         self.column_widths      =   [100,850]
 
-        if(DEBUG_CENSUS) :
-            print("[Census_dataset_columns_Table] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Table] end"))
 
         return(data)
     
@@ -582,8 +583,8 @@ class Census_dataset_columns_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Widget]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Widget]"))
 
         super().__init__()
 
@@ -592,8 +593,8 @@ class Census_dataset_columns_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Widget] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -601,8 +602,8 @@ class Census_dataset_columns_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Widget][init_form]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Widget][init_form]"))
 
         from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout
 
@@ -643,14 +644,14 @@ class Census_dataset_columns_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Widget][init_form] end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Widget][init_form] end"))
 
 
     def download_dataset(self) :
 
-        if(DEBUG_CENSUS) :
-            print("  [Census_dataset_columns_Widget][download_dataset]")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[Census_dataset_columns_Widget][download_dataset]"))
         
 
         from dfcleanser.common.common_utils import display_url

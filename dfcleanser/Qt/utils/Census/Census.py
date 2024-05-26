@@ -23,8 +23,10 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_CENSUS                  =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWCensusUtility_ID
 
 
 # -----------------------------------------------------------------#
@@ -158,8 +160,8 @@ class CensusGui(QtWidgets.QMainWindow):
         
     def init_gui(self):
 
-        if(DEBUG_CENSUS) :
-            print("initgui")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("initgui"))
         
         # set up the ui form from a qtdesigner ui
         cfgdir  = cfg.DataframeCleanserCfgData.get_dfc_qt_dir_name()
@@ -216,8 +218,8 @@ class CensusGui(QtWidgets.QMainWindow):
         # init the gui form
         self.init_census_form()
 
-        if(DEBUG_CENSUS) :
-            print("initgui end")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("initgui end"))
            
 
     # -----------------------------------------------------------------#
@@ -225,8 +227,8 @@ class CensusGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_census_buttons(self):
 
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][init_census_buttons]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][init_census_buttons]  "))
 
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
@@ -249,24 +251,25 @@ class CensusGui(QtWidgets.QMainWindow):
     # -            Initialize the chapter splah image                 -#
     # -----------------------------------------------------------------#
     def init_census_splash_screen(self):
-
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][init_census_splash_screen]  ")
+        
+        from dfcleanser.common.cfg import SWCensusUtility_ID
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][init_census_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import SWCensusUtility_ID
         build_chapter_splash_screen(SWCensusUtility_ID, self.form.Censussplash)
 
-        if(DEBUG_CENSUS) :
-            print("[end init_census_splash_screen]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[end init_census_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -             Initialize the dfs select form                    -#
     # -----------------------------------------------------------------#
     def init_census(self):
 
-        if(DEBUG_CENSUS) :
-            print("[GeocodeGui][init_geocode]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][init_geocode]  "))
 
         from PyQt5.QtWidgets import QLabel
         self.blank_label   =   QLabel()
@@ -325,8 +328,8 @@ class CensusGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_census_form(self):
 
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][init_geocode_form]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][init_geocode_form]  "))
 
         self.init_census_buttons()
         self.init_census_splash_screen()
@@ -340,8 +343,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def get_census_datasets(self):
 
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][get_census_datasets]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][get_census_datasets]  "))
 
         self.form.CensusDatasetsbutton.toggle()
 
@@ -349,8 +352,8 @@ class CensusGui(QtWidgets.QMainWindow):
        
     def get_help_census(self) :
 
-         if(DEBUG_CENSUS) :
-            print("[CensusGui][get_help_census]  ")
+         if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][get_help_census]  "))
 
 
     # -----------------------------------------------------------------#
@@ -361,16 +364,16 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_census_datasets(self):
 
-        if(DEBUG_CENSUS) :
-            print("\n[CensusGui][display_census_datasets]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][display_census_datasets]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         census_datasets_index  =   self.CensusWidgets_stack_dict.get(DISPLAY_CENSUS_DATASETS)
 
-        if(DEBUG_CENSUS) :
-            print("\n[CensusGui][display_census_datasets]  census_datasets_index ",census_datasets_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][display_census_datasets]  census_datasets_index ",census_datasets_index))
 
         
         if(census_datasets_index is None) :
@@ -402,8 +405,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][display_census_datasets] end : stack \n  ",self.CensusWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][display_census_datasets] end : stack \n  ",self.CensusWidgets_stack_dict))
 
         self.resize(1070,850)
 
@@ -415,8 +418,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_census_dataset_columns(self,dataset):
 
-        if(DEBUG_CENSUS) :
-            print("\n[CensusGui][display_census_dataset_columns]  ",dataset)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][display_census_dataset_columns]  ",dataset))
 
         self.dataset    =   dataset
 
@@ -454,40 +457,10 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_CENSUS) :
-            print("[CensusGui][display_census_dataset_columns] end : stack \n  ",self.CensusWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][display_census_dataset_columns] end : stack \n  ",self.CensusWidgets_stack_dict))
 
         self.resize(1070,900)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
@@ -497,8 +470,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_select_geocoder(self,bulkflag=False,geocoderid=None):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocode_select_geocoder]  ",bulkflag,geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",bulkflag,geocoderid))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -507,8 +480,8 @@ class CensusGui(QtWidgets.QMainWindow):
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
             geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId, BingId, GoogleId, OpenMapQuestId, NominatimId)
         if(geocoderid == BingId) :
@@ -527,13 +500,13 @@ class CensusGui(QtWidgets.QMainWindow):
            index_id     =   DISPLAY_SELECT_NOMINATUM_GEOCODER
            height       =   800
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid,index_id,height)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid,index_id,height))
 
         select_geocoder_index  =   self.GeocodeWidgets_stack_dict.get(index_id)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_select_geocoder]  index : ",select_geocoder_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_select_geocoder]  index : ",select_geocoder_index))
         
         if(select_geocoder_index is None) :
 
@@ -570,8 +543,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_select_geocoder] reload_data:  ",select_geocoder_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_select_geocoder] reload_data:  ",select_geocoder_index))
 
             if(geocoderid == BingId)                : self.Bing_Geocode_select_geocoder.reload_data(self,bulkflag,geocoderid)
             elif(geocoderid == GoogleId)            : self.Google_Geocode_select_geocoder.reload_data(self,bulkflag,geocoderid)
@@ -583,8 +556,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_select_geocoder] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_select_geocoder] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,height)
 
@@ -597,8 +570,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_interactive_geocoding(self,geocoding_type):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_interactive_geocoding]  ",geocoding_type)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding]  ",geocoding_type))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -606,8 +579,8 @@ class CensusGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding]  ",geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (QUERY, REVERSE)
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId,BingId,GoogleId,OpenMapQuestId, NominatimId, get_geocoder_title)
@@ -666,13 +639,13 @@ class CensusGui(QtWidgets.QMainWindow):
                 index_id     =   DISPLAY_NOMINATUM_REVERSE_GEOCODING
                 height       =   900
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding]  ",index_id,height)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding]  ",index_id,height))
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(index_id)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -729,8 +702,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_interactive_geocoding] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding] reload_data:  ",geocoding_index))
 
             if(geocoding_type == QUERY) :
            
@@ -752,8 +725,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_interactive_geocoding] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,height)
 
@@ -766,8 +739,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_geocoding_data(self,geocoding_type,results):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_data]  ",geocoding_type,"\n  ",results)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_data]  ",geocoding_type,"\n  ",results))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -775,8 +748,8 @@ class CensusGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data]  ",geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_data]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (QUERY)
 
@@ -785,8 +758,8 @@ class CensusGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_REVERSE_RESULTS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_data]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -824,8 +797,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_data] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_data] reload_data:  ",geocoding_index))
 
             if(geocoding_type == QUERY) :
                 self.geocode_query_results.reload_data(self,geocoding_type,results)
@@ -836,8 +809,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_data] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -851,8 +824,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_geocoding_utilities(self):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_utilities]  ")
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_utilities]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -860,13 +833,13 @@ class CensusGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities]  ",geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_utilities]  ",geocoderid))
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_UTILITIES )
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_utilities]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -894,16 +867,16 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_utilities] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_utilities] reload_data:  ",geocoding_index))
 
             self.geocode_utilities.init_command_bar()
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_utilities] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,350)
 
@@ -916,8 +889,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_geocoding_distance_utility(self,gintype):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_distance_utility]",gintype)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_utility]",gintype))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -925,8 +898,8 @@ class CensusGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility]  ",geocoderid)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_utility]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS, LAT_LNG
         if(gintype == ADDRESS) :
@@ -936,8 +909,8 @@ class CensusGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_DATAFRAME_DISTANCE)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_utility]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1005,20 +978,15 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_distance_utility] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_utility] reload_data:  ",geocoding_index))
             
-            #if(gintype == ADDRESS) :
-            #    self.geocode_address_distance_utility.reload_data(self)
-            #else :
-            #    self.geocode_latlng_distance_utility.reload_data(self)
-
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_utility] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,900)
 
@@ -1031,8 +999,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_geocoding_center_point(self,ptsource):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_center_point]",ptsource)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_center_point]",ptsource))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1043,8 +1011,8 @@ class CensusGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_DF_CENTER_POINT)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_center_point]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1099,15 +1067,15 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_center_point] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_center_point] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_center_point] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         if(ptsource == LAT_LNG) :
             self.resize(1070,750)
@@ -1122,8 +1090,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
     def display_geocoding_distance_from_fixed_location(self,fixedpt_type):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_distance_from_fixed_location]",fixedpt_type)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location]",fixedpt_type))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1134,8 +1102,8 @@ class CensusGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_DF_DISTANCE_FROM_CENTER_PT)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_from_fixed_location]  index : ",geocoding_index)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1191,15 +1159,15 @@ class CensusGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_distance_from_fixed_location] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+                add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_from_fixed_location] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         if(fixedpt_type == USER_LOCATION) :
             self.resize(1070,950)
@@ -1241,7 +1209,6 @@ def closeCensusInstances()  :
 
 def showCensus()  :
 
-    print("showCensus")
 
     from dfcleanser.common.common_utils import displayHTML,clear_screen
     from dfcleanser.common.cfg import dfc_qt_chapters, CENSUS_QT_CHAPTER_ID, CENSUS_TITLE
