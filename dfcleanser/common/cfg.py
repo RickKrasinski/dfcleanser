@@ -76,14 +76,11 @@ def get_dfcleanser_location()  :
     import os
     import dfcleanser
     ppath = os.path.abspath(dfcleanser.__file__)
-    #print("dfc path",len(ppath),ppath)   
 
     initpyloc = ppath.find("__init__.py")
     
-   # print("initpyloc",initpyloc)
     if(initpyloc > 0) :
         ppath = ppath[:initpyloc]
-        #print("ppath",ppath)
 
     return(ppath)
 
@@ -491,7 +488,7 @@ def add_df_to_dfc(df_title,df,df_source="",df_notes="")  :
     """
 
     if(DEBUG_DFC_MGR) :
-        print("[add_df_to_dfc] df_title : ",df_title)#,df)
+        add_debug_to_log("DataExport",print_to_string("[add_df_to_dfc] df_title : ",df_title))
     
     #add_df_signal
     dfc_df_history.add_dfc_df(df_title,df,df_source,df_notes)
@@ -502,17 +499,19 @@ def add_df_to_dfc(df_title,df,df_source="",df_notes="")  :
     DataExport_add_df_signal.issue_notice(df_title)
 
     if(DEBUG_DFC_MGR) :
-        print("[add_df_to_dfc] added : ",df_title,dfc_df_history.get_df_titles())
+        add_debug_to_log("DataExport",print_to_string("[add_df_to_dfc] added : ",df_title,dfc_df_history.get_df_titles()))
 
 
 def rename_dfc_dataframe(oldName,newName) :
 
-    print("[rename_dfc_dataframe] oldName,newName",oldName,newName)
-    print("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list())
+    if(DEBUG_DFC_MGR) :
+        add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] oldName,newName",oldName,newName))
+        add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list()))
 
     dfc_df_history.rename_dataframe(oldName,newName)
 
-    print("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list())
+    if(DEBUG_DFC_MGR) :
+        add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list()))
 
 
     DataTransform_add_df_signal.issue_notice(oldName)
@@ -940,7 +939,6 @@ class dfc_qt_chapter_store :
 
     def get_qt_chapters(self,chapter_key)     : 
 
-        print(self.qt_chapters.get(chapter_key))
         return(self.qt_chapters.get(chapter_key))
     
     def get_qt_chapters_count(self,chapter_key)     : 
@@ -952,9 +950,6 @@ class dfc_qt_chapter_store :
 
 
     def add_qt_chapter(self,chapter_key,gui,chapter_id)   : 
-
-        #print("chapter_id",chapter_id)
-        #print("chapter_key",chapter_key)
 
         new_chapter         =   dfc_qt_chapter(chapter_id,gui)
 
@@ -968,8 +963,6 @@ class dfc_qt_chapter_store :
             current_chapters.append(new_chapter)
             self.qt_chapters.update({chapter_key : current_chapters})
 
-        #self.dump_dfc_qt_chapters()    
- 
     def close_qt_chapter(self,chapter_key) :
         chapters     =   self.qt_chapters.get(chapter_key)
 
@@ -995,12 +988,12 @@ class dfc_qt_chapter_store :
 
     def dump_dfc_qt_chapters(self) :
 
-        print("\ndfc_qt_chapters : DUMP")
+        add_debug_to_log("cfg",print_to_string("dfc_qt_chapters : DUMP"))
 
         dfc_qt_chpts_keys   =   list(self.qt_chapters.keys())
-        print("  dfc_qt_chapters keys : ",dfc_qt_chpts_keys)
+        add_debug_to_log("cfg",print_to_string("dfc_qt_chapters keys : ",dfc_qt_chpts_keys))
         for i in range(len(dfc_qt_chpts_keys)) :
-            print(    self.qt_chapters.get(dfc_qt_chpts_keys[i]))
+            add_debug_to_log("cfg",print_to_string(self.qt_chapters.get(dfc_qt_chpts_keys[i])))
 
 """
 * ---------------------------------------------------------
@@ -1657,9 +1650,8 @@ class DataframeCleansercfg :
         DataframeCleansercfg.set_notebookname(nbname)
         get_notebookpath()
         
-        print("sync_js : reset_dfcleanser_chapter")
         init_dfc_console_js  =   "reset_dfcleanser_chapter(0);"
-        #print(set_current_value_js)
+
         from dfcleanser.common.common_utils import run_jscript
         run_jscript(init_dfc_console_js,"fail to change col stats html : ")
 
@@ -1804,11 +1796,14 @@ class DataframeCleanserErrorLogger :
 
     def clear_log(self) :
         self.error_log               =   []
-        
-
     
 dfc_erorr_log   =   DataframeCleanserErrorLogger()  
 
+def print_to_string(*args, **kwargs):
+    newstr = ""
+    for a in args:
+        newstr+=str(a)+' '
+    return newstr
 
 
 
@@ -1834,7 +1829,7 @@ def dump_debug_log() :
             print("[",str(i),"] : ",str(elog[i]))
    
 def clear_debug_log() :
-    dfc_erorr_log.clear_log() 
+    dfc_debug_log.clear_log() 
 
 
 class DataframeCleanserDebugLogger :
@@ -1867,9 +1862,9 @@ class DataframeCleanserDebugLogger :
     def get_debuglog_file_name(self) :
         
         from dfcleanser.common.cfg import get_notebookName
-        eldir   =   self.get_errorlog_dir_name()
+        eldir   =   self.get_debuglog_dir_name()
         nbname  =   get_notebookName()
-        
+
         if((eldir is None)or(nbname is None)) :
             return(None)
         else :
@@ -1906,7 +1901,7 @@ class DataframeCleanserDebugLogger :
                     print("[Load Error Log Error] "  + str(sys.exc_info()[0].__name__))
         
     def save_debuglog_file(self) :
-        
+
         if(1) :#self.error_log_loaded) :
     
             try :
@@ -1918,7 +1913,7 @@ class DataframeCleanserDebugLogger :
                 print("[Save Error Log Error] "  + str(sys.exc_info()[0].__name__))    
    
     def add_debug_to_dfc_log(self,msg) :
-        
+
         import datetime
         date = datetime.datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
         
@@ -1929,8 +1924,9 @@ class DataframeCleanserDebugLogger :
         return(self.debug_log) 
 
     def clear_log(self) :
-        self.debug_log               =   []
-        
+
+        self.debug_log               =   ["Start Debug Log"]
+        self.save_debuglog_file()
 
     
 dfc_debug_log   =   DataframeCleanserDebugLogger()  
@@ -2057,18 +2053,19 @@ class dfc_dataframes :
 
     def rename_dataframe(self,oldName,newName) :
 
-        print("\n[rename_dataframe] oldName,newName",oldName,newName)
-        print("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles(),self.dcdataframes)
-        dfindex     =   self.get_df_index(oldName)
+	if(DEBUG_DFC_MGR) :
+            add_debug_to_log("cfg",print_to_string("[rename_dataframe] oldName,newName",oldName,newName))
+            add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles(),self.dcdataframes))
+        
+	dfindex     =   self.get_df_index(oldName)
 
-        print("[rename_dataframe] dfindex",dfindex)
         if(dfindex > -1) :  
 
             df_info     =   self.dcdataframes[dfindex].get_df()
-            print("\n[rename_dataframe] oldName,newName",oldName,newName)          
             self.dcdataframes[dfindex].set_title(newName)
-
-            print("\n[rename_dataframe] self.dcdataframes",self.get_dataframe_titles())
+	    
+	    if(DEBUG_DFC_MGR) :
+                add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles()))
             
         #    if(oldName == self.current_df) :
         #        self.current_df     =   newName
@@ -2088,7 +2085,6 @@ class dfc_dataframes :
         
         for i in range(len(self.dcdataframes)) :
 
-            print("get_title",self.dcdataframes[i].get_title(),title)
             if(self.dcdataframes[i].get_title() == title) :
                 return(i)
                 

@@ -15,6 +15,7 @@ from dfcleanser.sw_utilities.DisplayUtils import (get_exception_html)
 import sys
 this = sys.modules[__name__]
 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
 """
 #--------------------------------------------------------------------------
@@ -556,7 +557,6 @@ def get_regular_button(buttonGroup, index):
 
     if(buttonGroup.get_customstyle() is None):
         height, width, margin = getbuttonsizing(buttonGroup)
-        #print("get_regular_button",height, width, margin)
 
     else:
         height = buttonGroup.get_customstyle().get("height")
@@ -715,25 +715,23 @@ class ButtonGroupForm:
 
         if((self.get_formid() == "#censusdataload") or (self.get_formid() == "#inspectionoptionstb")):
             self.dump()
-            print(button_group_form_html)
+            add_debug_to_log("DataExport",print_to_string(button_group_form_html))
 
         from dfcleanser.common.common_utils import DUMP_HTML
         if(DUMP_HTML):
-            print(button_group_form_html)
+            add_debug_to_log("html_widgets",print_to_string(button_group_form_html))
 
         return(button_group_form_html)
 
     def dump(self):
 
-        print("\nformid          [0] : ", self.get_formid())
-        print("keyList         [1] : [" + str(len(self.get_keyList())
-                                              ) + "] " + "] " + dump_form_list(self.get_keyList(), 27, 4))
-        print("jsList          [2] : [" + str(len(self.get_jsList())
-                                              ) + "] " + "] " + dump_form_list(self.get_jsList(), 27, 2))
-        print("centered        [3] : ", self.get_centered())
-        print("gridwidth       [7] : ", self.get_gridwidth())
-        print("custombwidth    [8] : ", self.get_custombwidth())
-        print("customstyle     [9] : ", self.get_customstyle())
+        add_debug_to_log("html_widgets",print_to_string("formid          [0] : ", self.get_formid()))
+        add_debug_to_log("html_widgets",print_to_string("keyList         [1] : [" + str(len(self.get_keyList())) + "] " + "] " + dump_form_list(self.get_keyList(), 27, 4)))
+        add_debug_to_log("html_widgets",print_to_string("jsList          [2] : [" + str(len(self.get_jsList())) + "] " + "] " + dump_form_list(self.get_jsList(), 27, 2)))
+        add_debug_to_log("html_widgets",print_to_string("centered        [3] : ", self.get_centered()))
+        add_debug_to_log("html_widgets",print_to_string("gridwidth       [7] : ", self.get_gridwidth()))
+        add_debug_to_log("html_widgets",print_to_string("custombwidth    [8] : ", self.get_custombwidth()))
+        add_debug_to_log("html_widgets",print_to_string("customstyle     [9] : ", self.get_customstyle()))
 
 
 """
@@ -1147,7 +1145,6 @@ class InputForm:
 
         custom_font_size    =   self.fontsizeDict.get(inputid, None)
         if(not (custom_font_size is None)) :
-            #print("custom_font_size",inputid,custom_font_size)
             return(custom_font_size)
         else :
             return(None)
@@ -1800,7 +1797,7 @@ class InputForm:
         if(DUMP_HTML):
             if((not (self.get_formid() == "googlebulkquery")) and
                     (not (self.get_formid() == "bingbulkquery"))):
-                print(input_group_form_html)
+                add_debug_to_log("html_widgets",print_to_string(input_group_form_html))
 
         return(input_group_form_html)
 
@@ -1814,34 +1811,30 @@ class InputForm:
         * --------------------------------------------------------
         """
 
-        print("\nformid          [0] : ", self.get_formid())
-        print("idList          [1] : [" + str(len(self.get_idList())
-                                              ) + "] " + dump_form_list(self.get_idList(), 27, 5))
-        print("labelList       [2] : [" + str(len(self.get_labelList())
-                                              ) + "] " + dump_form_list(self.get_labelList(), 27, 5))
+        add_debug_to_log("html_widgets",print_to_string("formid          [0] : ", self.get_formid()))
+        add_debug_to_log("html_widgets",print_to_string("idList          [1] : [" + str(len(self.get_idList())) + "] " + dump_form_list(self.get_idList(), 27, 5)))
+        add_debug_to_log("html_widgets",print_to_string("labelList       [2] : [" + str(len(self.get_labelList())) + "] " + dump_form_list(self.get_labelList(), 27, 5)))
 
         types = self.get_typeList()
-        print("typeList        [3] : [" + str(len(types)) + "] ", types)
-        print("placeholderList [4] : [" + str(len(self.get_placeholderList())
-                                              ) + "] " + dump_form_list(self.get_placeholderList(), 27, 1))
-        print("jsList          [5] : [" + str(len(self.get_jsList())
-                                              ) + "] " + dump_form_list(self.get_jsList(), 27, 1))
-        print("reqList         [6] : ", self.get_reqList())
-        print("shortform       [7] : ", self.get_shortForm())
-        print("fullparms       [8] : ", self.get_fullparms())
-        print("gridwidth       [9] : ", self.get_gridwidth())
-        print("custombwidth    [10]: ", self.get_custombwidth())
-        print("buttonstyle     [11]: ", self.get_buttonstyle())
+        add_debug_to_log("html_widgets",print_to_string("typeList        [3] : [" + str(len(types)) + "] ", types))
+        add_debug_to_log("html_widgets",print_to_string("placeholderList [4] : [" + str(len(self.get_placeholderList())) + "] " + dump_form_list(self.get_placeholderList(), 27, 1)))
+        add_debug_to_log("html_widgets",print_to_string("jsList          [5] : [" + str(len(self.get_jsList())) + "] " + dump_form_list(self.get_jsList(), 27, 1)))
+        add_debug_to_log("html_widgets",print_to_string("reqList         [6] : ", self.get_reqList()))
+        add_debug_to_log("html_widgets",print_to_string("shortform       [7] : ", self.get_shortForm()))
+        add_debug_to_log("html_widgets",print_to_string("fullparms       [8] : ", self.get_fullparms()))
+        add_debug_to_log("html_widgets",print_to_string("gridwidth       [9] : ", self.get_gridwidth()))
+        add_debug_to_log("html_widgets",print_to_string("custombwidth    [10]: ", self.get_custombwidth()))
+        add_debug_to_log("html_widgets",print_to_string("buttonstyle     [11]: ", self.get_buttonstyle()))
 
         if(len(self.selectDict) > 0):
-            print("\nselect lists    [12]: ", len(self.selectDict))
+            add_debug_to_log("html_widgets",print_to_string("select lists    [12]: ", len(self.selectDict)))
             ids = list(self.selectDict.keys())
             for i in range(len(ids)):
-                print("\n   Id : ", ids[i], "\n")
-                print("     default  : ", self.get_select_default(ids[i]))
-                print("     list     : ", self.get_select_list(ids[i]))
-                print("     callback : ", self.get_select_callback(ids[i]))
-                print("     size     : ", self.get_select_size(ids[i]))
+                add_debug_to_log("html_widgets",print_to_string("   Id : ", ids[i], "\n"))
+                add_debug_to_log("html_widgets",print_to_string("     default  : ", self.get_select_default(ids[i])))
+                add_debug_to_log("html_widgets",print_to_string("     list     : ", self.get_select_list(ids[i])))
+                add_debug_to_log("html_widgets",print_to_string("     callback : ", self.get_select_callback(ids[i])))
+                add_debug_to_log("html_widgets",print_to_string("     size     : ", self.get_select_size(ids[i])))
 
 
 """
@@ -1987,8 +1980,6 @@ class CheckboxGroupForm:
 
         current_cb = 0
 
-        # print("self.get_disabledlist()",self.get_disabledlist())
-
         for j in range(numrows):
 
             checkbox_group_form_html = (
@@ -2045,22 +2036,22 @@ class CheckboxGroupForm:
             checkbox_group_form_html + checkbox_group_form_end)
 
         if((self.get_formid() == "dceulaform") or (self.get_formid() == "dropcolsinput") or (self.get_formid() == "addcolcodeInput")):
-            print(checkbox_group_form_html)
+            add_debug_to_log("html_widgets",print_to_string(checkbox_group_form_html))
 
         from dfcleanser.common.common_utils import DUMP_HTML
         if(DUMP_HTML):
-            print(checkbox_group_form_html)
+            add_debug_to_log("html_widgets",print_to_string(checkbox_group_form_html))
 
         return(checkbox_group_form_html)
 
     def dump(self):
 
-        print("\nformid          [0] : ", self.get_formid())
-        print("idList          [1] : ", self.get_idList())
-        print("labelList       [2] : ", self.get_labelList())
-        print("jsList          [3] : ", self.get_jsList())
-        print("chklist         [4] : ", self.get_chklist())
-        print("disabledlist    [5] : ", self.get_disabledlist())
+        add_debug_to_log("html_widgets",print_to_string("formid          [0] : ", self.get_formid()))
+        add_debug_to_log("html_widgets",print_to_string("idList          [1] : ", self.get_idList()))
+        add_debug_to_log("html_widgets",print_to_string("labelList       [2] : ", self.get_labelList()))
+        add_debug_to_log("html_widgets",print_to_string("jsList          [3] : ", self.get_jsList()))
+        add_debug_to_log("html_widgets",print_to_string("chklist         [4] : ", self.get_chklist()))
+        add_debug_to_log("html_widgets",print_to_string("disabledlist    [5] : ", self.get_disabledlist()))
 
 
 """
@@ -2202,9 +2193,6 @@ class RadioGroupForm:
                 if(index+j == self.get_checked()):
                     radioHTML = (
                         radioHTML + addattribute("checked", "checked"))
-#                if(len(self.get_jslist())>0) :
-#                    radioHTML = (radioHTML + addattribute("onclick",self.get_jslist()[index+j]))
-#
 
                 radioHTML = (radioHTML + addattribute("id",
                              self.get_idList()[index+j]) + ">")
@@ -2222,20 +2210,20 @@ class RadioGroupForm:
         radioHTML = (radioHTML + radio_container_end)
 
         if(self.get_radioid == "dtconvertdatatype"):
-            print(radioHTML)
+            add_debug_to_log("html_widgets",print_to_string(radioHTML))
 
         from dfcleanser.common.common_utils import DUMP_HTML
         if(DUMP_HTML):
-            print(radioHTML)
+            add_debug_to_log("html_widgets",print_to_string(radioHTML))
 
         return(radioHTML)
 
     def dump(self):
 
-        print("\nradioid         [0] : ", self.get_radioid())
-        print("idList          [1] : ", self.get_idList())
-        print("labelList       [2] : ", self.get_labelList())
-        print("jchecked        [3] : ", self.get_checked())
+        add_debug_to_log("html_widgets",print_to_string("radioid         [0] : ", self.get_radioid()))
+        add_debug_to_log("html_widgets",print_to_string("idList          [1] : ", self.get_idList()))
+        add_debug_to_log("html_widgets",print_to_string("labelList       [2] : ", self.get_labelList()))
+        add_debug_to_log("html_widgets",print_to_string("jchecked        [3] : ", self.get_checked()))
 
 
 """

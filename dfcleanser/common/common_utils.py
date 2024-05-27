@@ -9,7 +9,11 @@ Created on Tue Jun 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.common.cfg import (get_dfc_dataframe_df)
+from dfcleanser.common.cfg import (get_dfc_dataframe_df, add_debug_to_log)
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWUtilities_ID
+
 
 import pandas as pd
 import pandas.api.types as pat 
@@ -152,7 +156,9 @@ def display_windows_MessageBox(msg,title) :
         win32api.MessageBox(None,msg,title,1)
         
     except :
-        print(msg,title)    
+
+        from dfcleanser.common.cfg import add_debug_to_log
+        add_debug_to_log("display_windows_MessageBox",msg+title)
     
     
 def get_formatted_time(seconds) :
@@ -352,29 +358,18 @@ class Worker(QObject) :
 
             for clockface in clockfaces : yield clockface
 
-    #def set_clockface_widget(self, clockwidget) :
-     #   self.clockface_widget   =   clockwidget
-    #    #if delay and float(delay): self.delay = delay
-    #    print("set_clockface_widget")
-
-
     def __init__(self) :#, clockwidget, delay=None,parent=None):
 
         super(Worker, self).__init__()
 
         self.clockface_widget   =   clockwidget
 
-        print("_init_ Worker")
-        
-        
     @pyqtSlot()
     def run(self) :
         
         self.busy = True
         self.starttime = time.time()
         self.clock_generator    =   self.spinning_clock()
-
-        print("Worker run")
 
         while self.busy:
 
@@ -431,8 +426,6 @@ class PyQtRunningClock(QThread):
         # Step 6: Start the thread
         self.thread.start()
 
-        print("thrad started")
-
 
     @pyqtSlot()
     def on_thread_finished(self):
@@ -440,7 +433,6 @@ class PyQtRunningClock(QThread):
 
     @pyqtSlot()
     def on_worker_finished(self):
-        print("Worker finished.")
         self.thread.quit()
         self.thread.wait()
     
@@ -838,7 +830,6 @@ def get_datatype_id(dt) :
     #import datetime
     import pandas
 
-    #print("get_datatype_id",dt)
     if(dt ==  numpy.uint8)                      : return(0)
     elif(dt == numpy.uint16)                    : return(1) 
     elif(dt == numpy.uint32)                    : return(2) 
@@ -1092,8 +1083,8 @@ def get_parms_for_input(parms,ids) :
     outparms = []
     
     if(DEBUG_COMMON) :
-        print("\nget_parms_for_input : parms ",type(parms),"\n",parms)
-        print("get_parms_for_input : ids ",type(ids),"\n",ids)
+        add_debug_to_log("get_parms_for_input"," : parms " + type(parms) + "\n" + str(parms))
+        add_debug_to_log("get_parms_for_input"," : ids ",type(ids) + "\n" + str(ids))
     
     try :
         
@@ -1102,8 +1093,8 @@ def get_parms_for_input(parms,ids) :
             return(outparms)
     
         if(DEBUG_COMMON) :
-            print("\n[get_parms_for_input] : parms",len(parms),type(parms),"\n",parms) 
-            print("[get_parms_for_input] : ids  ",len(ids),"\n",ids) 
+            add_debug_to_log("get_parms_for_input"," : parms" + str(len(parms)) + type(parms) + "\n" + str(parms)) 
+            add_debug_to_log("get_parms_for_input"," : ids  " + str(len(ids)) + "\n" + str(ids)) 
         
         if(type(parms) == str) :
             import json
@@ -1119,7 +1110,7 @@ def get_parms_for_input(parms,ids) :
         get_error_msg_html(error_msg,80,90,None,True)
     
     if(DEBUG_COMMON) :
-        print("\n[get_parms_for_input] : inparms  ",inparms) 
+        add_debug_to_log("get_parms_for_input"," : inparms  " + str(inparms)) 
     
     try :
         
@@ -1147,7 +1138,7 @@ def get_parms_for_input(parms,ids) :
         get_error_msg_html(error_msg,80,80,None,True)
     
     if(DEBUG_COMMON) :
-        print("[get_parms_for_input] : outparms  ",outparms) 
+        add_debug_to_log("get_parms_for_input"," : outparms  " + str(outparms)) 
     
 
     return(outparms)
@@ -1169,7 +1160,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     """
 
     if(DEBUG_COMMON) :
-        print("\nget_select_defaults : ",formid,"\n parmids : ",parmids,"\n parmtypes : ",parmtypes,"\n selectids : ",selectDicts)
+        add_debug_to_log("get_select_defaults"," : " + str(formid) + "\n parmids : " + str(parmids) + "\n parmtypes : " + str(parmtypes) + "\n selectids : " + str(selectDicts))
 
     numselects      =   0
 
@@ -1195,7 +1186,7 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     else :
 
         if(DEBUG_COMMON) :
-            print("\nget_select_defaults : bad number of selects : ",selectDicts)
+            add_debug_to_log("get_select_defaults : bad number of selects : ",selectDicts)
 
 
         default_select  =   {"default":"No Entry","list":["No Entry"],"callback":"noop"}
@@ -1262,7 +1253,6 @@ def get_function_parms(pkeys,pvals,ptypes) :
         p1vals = p1vals.strip("]")
         p1vals = p1vals.strip('"')
 
-        print("p1vals",type(p1vals),len(p1vals),p1vals)
         if("," in p1vals) :
         
             import json
@@ -1521,12 +1511,8 @@ def open_as_excel(dfid) :
     if(dfid == DATA_INSPECTION_EXCEL) :
         df          =   cfg.get_current_chapter_df(cfg.DataInspection_ID)
 
-        print(type(df))
-        
         tmp_csv_name    =   os.path.join(cfg.get_dfcleanser_location(),"files")
         tmp_csv_name    =   os.path.join(tmp_csv_name,"dfc_inspection_working.csv")
-
-        print(tmp_csv_name)
 
         try :
             
@@ -1596,7 +1582,6 @@ def get_apply_fn(funcparms) :
     fnid    =   funcparms[1]
     
     change_fncode_js  =   "get_apply_fn_parms('" + cname + "','" + fnid + "')"
-    print("change_fncode_js",change_fncode_js)
 
     run_jscript(change_fncode_js,"fail to set df parms : " + change_fncode_js)
 
@@ -1615,12 +1600,9 @@ def get_add_df_col_change_html(dftitle) :
     * --------------------------------------------------------
     """
      
-    #from dfcleanser.common.cfg import get_dfc_dataframe_df
     current_df      =   get_dfc_dataframe_df(dftitle)
     colnames        =   current_df.columns.tolist()
     
-    #print("get_add_df_col_change_html",colnames)
-
     selhtml         =   ""
 
     for i in range(len(colnames)) :
@@ -1633,8 +1615,6 @@ def get_add_df_col_change_html(dftitle) :
         if(i < len(colnames)) :
             selhtml     =   (selhtml + new_line) 
             
-    #print(selhtml)
-        
     return(selhtml)
 
 
@@ -1653,8 +1633,6 @@ def get_add_df_col_change(adddfparms) :
     
     selectid        =   adddfparms[0]
     dfname          =   adddfparms[1]
-    #print("get_add_df_col_change",selectid,dfname)
-    
     
     change_select_html  =   get_add_df_col_change_html(dfname)
     
@@ -1690,8 +1668,6 @@ def add_col_from_df_change_df(parms)  :
     
     selectid    =   parms[0]
     ftitle      =   parms[1]
-    
-    print("add_col_from_df_change_df",parms,selectid,ftitle)
     
     change_select_html  =   get_add_df_col_change_html(ftitle)
     
@@ -1778,10 +1754,7 @@ def change_add_col_df_source_col(parms)  :
     
     source_col_dtype    =   current_df[colname].dtype
     
-    print("source_col_dtype",source_col_dtype)
-    
     dtype_str           =   get_dtype_str_for_datatype(source_col_dtype)
-    print("dtype_str",dtype_str,type(dtype_str))
     
     reset_source_index_list_js  =   "$('#addcoloutputdftype').val('" + dtype_str + "');"
     run_jscript(reset_source_index_list_js,"fail to change col stats html : ")
@@ -1870,8 +1843,6 @@ def change_user_df_to_insert_into(parms)  :
     
     user_df_title   =   parms[0]
 
-    print("change_user_df_to_insert_into",parms)
-  
 
 """
 #--------------------------------------------------------------------------
@@ -2127,10 +2098,6 @@ def get_help_note_html(msg,width=None,left=None,msgid=None,display=False) :
         notes_html   =   "<br><div id ='" + mid + "' class='dfc-help-note-wrapper'>" + msg + "</div><br>"
     else :
         notes_html   =   "<br><div id ='" + mid + "' style='width:" + str(width) + "%; margin-left:" + str(left) + "px; text-align:center; border: 1px solid #67a1f3; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div><br>"
-    
-    if(DUMP_HTML)  :
-        print(notes_html)
-        
     
     if(display) :
         
@@ -2451,7 +2418,6 @@ def get_common_dfcleanser_loc()  :
     import os
     import dfcleanser
     ppath = os.path.abspath(dfcleanser.__file__)
-    #print("dfc path",dcfpath)   
 
     initpyloc = ppath.find("__init__.py")
     if(initpyloc > 0) :
@@ -2638,8 +2604,6 @@ def confirm_user(text,confirmID) :
     
 def handle_confirm(parms) :
     
-    print("handle_confirm",parms)
-    
     confirmID   =   int(parms[0])
     response    =   int(parms[1])
     
@@ -2690,7 +2654,6 @@ dfc_image_files     =   ["pandas.png","dataCleansing.png","dataImport.png","data
 
 def get_local_image_path(imagename) :
     
-    #print("./PandasDataframeCleanser_files/graphics/" + imagename)
     return("./PandasDataframeCleanser_files/graphics/" + imagename)
     
 
@@ -2863,7 +2826,6 @@ def is_web_connected() :
         urllib.request.urlopen(host) #Python 3.x
         return True
     except:
-        #print("web not connected")
         return False
 
 
