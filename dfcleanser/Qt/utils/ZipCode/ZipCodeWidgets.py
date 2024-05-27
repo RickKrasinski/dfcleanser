@@ -24,9 +24,12 @@ from PyQt5.QtGui import QFont
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_ZIPCODE               =   False
-DEBUG_ZIPCODE_DETAILS       =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWZipcodeUtility_ID
+
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -78,7 +81,7 @@ zipcode_cities_input_idList            =   ["cityname",
 zipcode_cities_input_labelList         =   ["city",
                                             "city list",
                                             "state",
-                                            "Find</br>Closest</br>Cities",
+                                            "Get</br>Names Sharing</br>City Zipcodes",
                                             "Get</br>Zipcodes</br>For City",
                                             "Return","Help"]
 
@@ -193,7 +196,7 @@ class ZipCode_attributesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -246,21 +249,21 @@ class ZipCode_attributes_Table(QtWidgets.QTableView):
 
         self.zipcode_to_get     =   tblparms[0]
 
-        if(DEBUG_ZIPCODE) :
-            print("\n  [ZipCode_attributes_Table] : init",self.zipcode_to_get)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table] : init",self.zipcode_to_get))
 
         self.init_tableview()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table] : end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self, zipcode):
         
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table][reload_data] zipcode : ",zipcode)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][reload_data] zipcode : ",zipcode))
 
         self.zipcode_to_get     =   zipcode
         tbldata    =   self.load_zipcode_attr_data()
@@ -272,23 +275,23 @@ class ZipCode_attributes_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table][init_tableview]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         zipcodeattr_data     =   self.load_zipcode_attr_data()
         
-        if(DEBUG_ZIPCODE) :
-           print("  [ZipCode_attributes_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = ZipCode_attributesModel(zipcodeattr_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_ZIPCODE) :
-           print("  [ZipCode_attributes_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][init_tableview] : model loaded"))
 
         self.num_rows   =   len(zipcodeattr_data)
         
@@ -331,6 +334,9 @@ class ZipCode_attributes_Table(QtWidgets.QTableView):
     # -                     load the table data                       -#
     # -----------------------------------------------------------------#
     def load_zipcode_attr_data(self):
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][load_zipcode_attr_data]"))
 
         attrTitles      =   ["Current Status","Zipcode Type","Primary City(s)","Acceptable City(s)","Not Acceptable City(s)",
                              "County","State","[Latitude, Longitude]","Area Codes"]
@@ -338,13 +344,10 @@ class ZipCode_attributes_Table(QtWidgets.QTableView):
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import get_zipcode_attributes
         attrValuesDict      =   get_zipcode_attributes(self.zipcode_to_get)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table][load_zipcode_attr_data]")
-
         data    =   []
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table][load_zipcode_attr_data] attrValuesDict : \n",attrValuesDict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][load_zipcode_attr_data] attrValuesDict : \n",attrValuesDict))
 
         for i in range(len(attrTitles)) :
                 
@@ -356,16 +359,16 @@ class ZipCode_attributes_Table(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Table] : data")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("ZipCodeWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["Attribute Name","Attribute Value"]
         self.column_widths      =   [150,430]
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Table]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table]"))
 
         return(data)
     
@@ -401,8 +404,8 @@ class ZipCode_attributes_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget]"))
 
         super().__init__()
 
@@ -410,8 +413,8 @@ class ZipCode_attributes_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -419,8 +422,8 @@ class ZipCode_attributes_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -448,38 +451,38 @@ class ZipCode_attributes_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][init_form] end"))
 
     
     def get_zipcode_attrs(self) :
  
         zipcode     =   self.zipcode_attrs_form.get_form_input_value_by_index(0)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][get_zipcode_attrs]",zipcode)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][get_zipcode_attrs]",zipcode))
 
         self.parent.display_zipcode_attributes_data(zipcode)
 
     def return_from_get_attrs(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][return_from_get_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][return_from_get_attrs]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_attrs(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][help_for_get_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][help_for_get_attrs]"))
 
 
 class ZipCode_attributes_with_data_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_with_data_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_with_data_Widget]"))
 
         super().__init__()
 
@@ -488,23 +491,23 @@ class ZipCode_attributes_with_data_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_with_data_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_with_data_Widget] end"))
 
     def reload_data(self,parent,zipcode) :
 
         self.parent     =   parent
         self.zipcode    =   zipcode
         
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_with_data_Widget][reload_d] zipcode : ",self.zipcode)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_with_data_Widget][reload_d] zipcode : ",self.zipcode))
 
         self.zipcode_attrs_data_table.reload_data(self.zipcode)
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_with_data_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_with_data_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -537,29 +540,29 @@ class ZipCode_attributes_with_data_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.finaldata_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_attributes_with_data_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_with_data_Widget][init_form] end"))
     
     def get_zipcode_data_attrs(self) :
  
         zipcode     =   self.zipcode_attrs_data_form.get_form_input_value_by_index(0)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][get_zipcode_data_attrs]",zipcode)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][get_zipcode_data_attrs]",zipcode))
 
         self.parent.display_zipcode_attributes_data(zipcode)
 
     def return_from_get_data_attrs(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][return_from_get_data_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][return_from_get_data_attrs]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_data_attrs(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_attributes_Widget][help_for_get_data_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Widget][help_for_get_data_attrs]"))
 
 
 # -----------------------------------------------------------------#
@@ -579,8 +582,8 @@ class ZipCode_locations_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_locations_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget]"))
 
         super().__init__()
 
@@ -588,8 +591,8 @@ class ZipCode_locations_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_locations_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -597,8 +600,8 @@ class ZipCode_locations_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_locations_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][init_form]"))
 
         # build the overall dtypes layout
 
@@ -661,44 +664,44 @@ class ZipCode_locations_Widget(QtWidgets.QWidget):
     
     def get_zipcodes_for_city(self) :
  
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][get_zipcodes_for_city]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][get_zipcodes_for_city]"))
 
         self.parent.display_city_zipcodes()
 
     def get_counties_for_state(self) :
  
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][get_counties_for_state]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][get_counties_for_state]"))
 
         self.parent.display_state_counties()
 
  
     def get_cities_for_county(self) :
  
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][get_cities_for_county]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][get_cities_for_county]"))
 
         self.parent.display_county_cities()
 
     def get_cities_for_state(self) :
  
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][get_cities_for_state]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][get_cities_for_state]"))
 
         self.parent.display_state_cities()
 
     def return_from_get_location(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][return_from_get_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][return_from_get_attrs]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_location(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_locations_Widget][help_for_get_location")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_locations_Widget][help_for_get_location"))
 
 
 # -----------------------------------------------------------------#
@@ -741,7 +744,7 @@ class ZipCode_Cities_Model(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -784,7 +787,6 @@ class ZipCode_Cities_Model(QtCore.QAbstractTableModel):
 
         return super().headerData(section, orientation, role)
 
-
 class ZipCode_Cities_Table(QtWidgets.QTableView):
 
     def __init__(self,  tblparms, **kwargs):  
@@ -797,21 +799,21 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
         self.city           =   tblparms[0]
         self.state          =   tblparms[1]
 
-        if(DEBUG_ZIPCODE) :
-            print("\n  [ZipCode_Cities_Table] : init",self.city, self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table] : init",self.city, self.state))
 
         self.init_tableview()
 
-        if(DEBUG_ZIPCODE) :
-            print("  ZipCode_Cities_Table] : end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("ZipCode_Cities_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self, city, state):
         
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Table][reload_data] zipcode : ",city,state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table][reload_data] zipcode : ",city,state))
 
         self.city           =   city
         self.state          =   state
@@ -835,23 +837,23 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Table][init_tableview]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         zipcodecities_data     =   self.load_zipcode_cities_data()
         
-        if(DEBUG_ZIPCODE) :
-           print("  [ZipCode_attributes_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_attributes_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = ZipCode_Cities_Model(zipcodecities_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_ZIPCODE) :
-           print("  [ZipCode_Cities_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table][init_tableview] : model loaded"))
 
         self.num_rows   =   len(zipcodecities_data)
         
@@ -897,29 +899,37 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
 
             for i in range(len(zipcodelist)) :
 
-                if( (i % 15) == 0) :
-                
-                    if(i>0) : 
-                        data_row.append(str(zipcodelist[i]))
-                        data.append(data_row)
+                if(i==0) :
 
                     data_row    =   []
+                    data_row.append(str(zipcodelist[i]))
 
                 else :
 
-                    data_row.append(str(zipcodelist[i]))
+                    if( ((i+1) % 15) == 0) :
+
+                        data_row.append(str(zipcodelist[i]))
+                        data.append(data_row)
+                        data_row    =   []
+
+                    else :
+
+                        data_row.append(str(zipcodelist[i]))
+
+                        if(len(data_row) == 15) :
+
+                            data.append(data_row)    
+                            data_row    =   []
+                
 
             if(len(data_row)> 0) :
+
                 num_to_fill     =   15 - len(data_row)
 
                 for j in range(num_to_fill) :
                     data_row.append("")
 
                 data.append(data_row)
-
-        #else :
-
-        #    data.append(["","","","","","","","","","","","","","",""])
 
         return(data)
 
@@ -928,8 +938,8 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_zipcode_cities_data(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Table][load_zipcode_cities_data]",self.state, self.city)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table][load_zipcode_cities_data]",self.state, self.city))
 
         table_state     = self.state[0:2]  
 
@@ -941,38 +951,25 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
         primary_header  =   ["Primary","Zipcodes","","","","","","","","","","","","",""]
         zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_PRIMARY_LIST)
         list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
+
         if(len(list_data)>0) :
             zip_data.append(primary_header) 
-            for i in range(len(list_data)) :
-                zip_data.append(list_data[i])
-
-        secondary_header  =   ["Secondry","Zipcodes","","","","","","","","","","","","",""]
-        zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_SECONDARY_LIST)
-        list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
-        if(len(list_data)>0) :
-            zip_data.append(secondary_header)
             for i in range(len(list_data)) :
                 zip_data.append(list_data[i])
 
         pobox_header  =   ["P.O. Box","Zipcodes","","","","","","","","","","","","",""]
         zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_POBOX_LIST)
         list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
+
         if(len(list_data)>0) :
             zip_data.append(pobox_header)
             for i in range(len(list_data)) :
                 zip_data.append(list_data[i])
         
-        unique_header  =   ["Uniques","Zipcodes","","","","","","","","","","","","",""]
-        zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_UNIQUES_LIST)
-        list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
-        if(len(list_data)>0) :
-            zip_data.append(unique_header)
-            for i in range(len(list_data)) :
-                zip_data.append(list_data[i])
-
-        decom_header  =   ["Decomm","Zipcodes","","","","","","","","","","","","",""]
+        decom_header    =   ["Decomm","Zipcodes","","","","","","","","","","","","",""]
         zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_DECOMMISSIONED_LIST)
         list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
+
         if(len(list_data)>0) :
             zip_data.append(decom_header)
             for i in range(len(list_data)) :
@@ -981,27 +978,27 @@ class ZipCode_Cities_Table(QtWidgets.QTableView):
         dead_header     =   ["Dead","Zipcodes","","","","","","","","","","","","",""]
         zipcode_list    =   get_zipcodes_for_city(table_state, self.city, CITY_ZIPS_UNACCEPTABLE_LIST)
         list_data       =   self.load_zipcode_cities_type_data(zipcode_list)
+
         if(len(list_data)>0) :
             zip_data.append(dead_header)
             for i in range(len(list_data)) :
                 zip_data.append(list_data[i])
 
-
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Table][load_zipcode_cities_data]",zipcode_list)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table][load_zipcode_cities_data]",zipcode_list))
 
         self.column_headers     =   ["","","","","","","","","","","","","","",""]
         self.column_widths      =   [64,64,64,64,64,64,64,64,64,64,64,64,64,64,64]
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Table] end load")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Table] end load"))
 
         return(zip_data)
 
 def get_zipcode_cities_form(find_cities_callback,get_attrs_callback,return_callback,help_callback,update_city,update_city_list) :
 
-    if(DEBUG_ZIPCODE) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form]")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[get_zipcode_cities_form]"))
 
     form_parms      =   [zipcode_cities_input_id,zipcode_cities_input_idList,zipcode_cities_input_labelList,zipcode_cities_input_typeList,zipcode_cities_input_placeholderList,zipcode_cities_input_reqList]
     comboMethods    =   [update_city,update_city_list]
@@ -1017,37 +1014,21 @@ def get_zipcode_cities_form(find_cities_callback,get_attrs_callback,return_callb
     from dfcleanser.sw_utilities.DFCDataStores import get_Dict
     states_dict  =   get_Dict("US_States_and_Territories")
     
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] states_dict : \n",states_dict)
-    
     state_keys  =   list(states_dict.keys())
     state_keys.sort()
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] state_keys : \n",state_keys)
-    
     states_list     =   []
     
     for i in range(len(state_keys)) :
         states_list.append(str(state_keys[i]) + " : " + str(states_dict.get(state_keys[i])))
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] states_list \n",states_list)
-
     state_sel    =   {"default":states_list[0],"list":states_list}
-
-    if(DEBUG_ZIPCODE) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] state_sel built : ")
-
 
     from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
     state_parm      =   states_list[0][0:2] 
     cities_list     =   us_zipcodes.get_cities_for_state(state_parm, ANY_LOCATION_TYPE)
     city_sel        =   {"default":cities_list[0],"list":cities_list}
     
-    if(DEBUG_ZIPCODE) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] city_sel built : ")
-
     selectDicts.append(city_sel)
     selectDicts.append(state_sel)  
 
@@ -1059,25 +1040,20 @@ def get_zipcode_cities_form(find_cities_callback,get_attrs_callback,return_callb
     form_parms.append(form_title)
     form_parms.append(form_width)   
 
-    if(DEBUG_ZIPCODE) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] parms built : ")
-
-
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     zipcode_cities_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_ZIPCODE) :
-        print("    [ZipCode_Cities_Table][get_zipcode_cities_form] zipcode_cities_form built")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[get_zipcode_cities_form] zipcode_cities_form built"))
 
     return(zipcode_cities_form)
-
 
 class ZipCode_Cities_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget]"))
 
         super().__init__()
 
@@ -1085,8 +1061,8 @@ class ZipCode_Cities_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -1094,15 +1070,15 @@ class ZipCode_Cities_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Widgett][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widgett][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
         self.zipcodeattrsLayout     =   QVBoxLayout()
 
-        self.zipcode_cities_form    =   get_zipcode_cities_form(self.find_closest_city,self.get_zipcode_cities,self.return_from_get_cities,self.help_for_get_cities,self.select_city,self.get_new_city_list)
+        self.zipcode_cities_form    =   get_zipcode_cities_form(self.find_shared_city,self.get_zipcode_cities,self.return_from_get_cities,self.help_for_get_cities,self.select_city,self.get_new_city_list)
 
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
@@ -1123,137 +1099,137 @@ class ZipCode_Cities_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][init_form] end"))
 
-    def find_closest_city(self) :
+    def find_shared_city(self) :
 
-        city       =   self.zipcode_cities_form.get_form_input_value_by_index(0)
-        state      =   self.zipcode_cities_form.get_form_input_value_by_index(2)
+        city            =   self.zipcode_cities_form.get_form_input_value_by_index(0)
+        state_input     =   self.zipcode_cities_form.get_form_input_value_by_index(2)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][find_closest_city]",city,state)
-
-        from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
-        state_parm      =   state[0:2]
-        cities_list     =   us_zipcodes.get_cities_for_state(state_parm, ANY_LOCATION_TYPE)
-
-        char_to_match   =   city[0]
-        char_to_match   =   char_to_match.upper()
-
-        combo_index     =   0
-
-        for i in range(len(cities_list)) :
-
-            list_char   =   cities_list[i][0]
-
-            if( (list_char == char_to_match) or (list_char > char_to_match)) :
-                combo_index     =   i
-                break
-
-        self.zipcode_cities_form.set_form_combobox_index(1, combo_index)
-
+        state_delim =   state_input.find(":")
+        state   =   state_input[:(state_delim -1)]
+        state   =   state.replace(" ","")
+        
+        self.parent.display_city_zipcodes_data(city,state,True)
 
     def select_city(self) :
 
         city       =   self.zipcode_cities_form.get_form_input_value_by_index(1)
         
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][select_city]",city)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][select_city]",city))
 
         self.zipcode_cities_form.set_form_input_value_by_index(0,city)
-       
 
     def get_new_city_list(self) :
 
         state       =   self.zipcode_cities_form.get_form_input_value_by_index(2)
-        state_parm  =   state[0:2]
+        state       =   state[0:2]
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][get_new_city_list]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][get_new_city_list]",state))
 
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
-        cities_list     =   us_zipcodes.get_cities_for_state(state_parm, ANY_LOCATION_TYPE)
+        cities_list     =   us_zipcodes.get_cities_for_state(state, ANY_LOCATION_TYPE)
 
         self.zipcode_cities_form.reset_form_combobox_by_index(1, cities_list)
-
 
     def get_zipcode_cities(self) :
  
         city     =   self.zipcode_cities_form.get_form_input_value_by_index(0)
         state    =   self.zipcode_cities_form.get_form_input_value_by_index(2)
 
-
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][get_zipcode_cities]",city,state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][get_zipcode_cities]",city,state))
 
         self.parent.display_city_zipcodes_data(city,state)
 
     def return_from_get_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][return_from_get_cities]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][return_from_get_cities]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][help_for_get_cities]")
-
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Widget][help_for_get_cities]"))
 
 class ZipCode_Cities_with_data_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget]"))
 
         super().__init__()
 
         self.parent     =   dfparms[0]
         self.city       =   dfparms[1]
         self.state      =   dfparms[2]
- 
+        self.related    =   dfparms[3]
+
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget] end"))
 
-    def reload_data(self,parent,city,state) :
+    def reload_data(self,parent,city,state,related) :
 
         self.parent     =   parent
         self.city       =   city
         self.state      =   state
+        self.related    =   related
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][reload_data] ",self.city,self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][reload_data] ",self.city,self.state,self.related))
 
-        self.zipcode_cities_data_table.reload_data(self.city,self.state)
-        
+        if(not (self.related)) :
+            self.zipcode_cities_data_table.reload_data(self.city,self.state)
+        else :
+            self.zipcode_cities_related_data_table.reload_data(self.city,self.state)
+
         display_state   =   self.state[5:]
         self.zipcode_cities_datanote_label.setText("\nZipcodes for " + self.city + " " + display_state + "\n")
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_with_data_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
-        #self.zipcodeattrsdataLayout     =   QVBoxLayout()
-
         self.zipcode_cities_data_form    =   get_zipcode_cities_form(self.find_nearest_city,self.get_zipcode_data_cities,self.return_from_get_data_cities,self.help_for_get_data_cities,self.select_new_city,self.reset_city_list)
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][init_form] form built"))
 
-        tblparms   =   [self.city,self.state]       
-        self.zipcode_cities_data_table   =   ZipCode_Cities_Table(tblparms)
+        if(not (self.related)) :
+
+            tblparms                        =   [self.city,self.state,False]       
+            self.zipcode_cities_data_table  =   ZipCode_Cities_Table(tblparms)
+
+        else :
+
+            tblparms                                =   [self.city,self.state,self.related]       
+            self.zipcode_cities_related_data_table  =   ZipCode_Cities_Related_Table(tblparms)
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][init_form] table built"))
 
         display_state   =   self.state[0:5]
         from PyQt5.QtWidgets import QLabel
         self.zipcode_cities_datanote_label   =   QLabel()
         self.zipcode_cities_datanote_label.setText("\nZipcodes for " + self.city + " " + display_state + "\n")
-        self.zipcode_cities_datanote_label.setAlignment(Qt.AlignLeft)
+        
+        if(not(self.related)) :
+            self.zipcode_cities_datanote_label.setAlignment(Qt.AlignLeft)
+        else :
+            self.zipcode_cities_datanote_label.setAlignment(Qt.AlignCenter)
+
         self.zipcode_cities_datanote_label.resize(600,50)
         self.zipcode_cities_datanote_label.setStyleSheet("font-size: 14px; font-weight: bold; font-family: Arial; ")
 
@@ -1261,62 +1237,62 @@ class ZipCode_Cities_with_data_Widget(QtWidgets.QWidget):
         self.cityzipcodesLayout     =   QVBoxLayout()
         self.cityzipcodesLayout.addWidget(self.zipcode_cities_data_form)
         self.cityzipcodesLayout.addWidget(self.zipcode_cities_datanote_label)
-        self.cityzipcodesLayout.addWidget(self.zipcode_cities_data_table)
+        
+        if(not (self.related)) :
+
+            self.cityzipcodesLayout.addWidget(self.zipcode_cities_data_table)
+
+        else :
+
+            from PyQt5.QtWidgets import QHBoxLayout, QWidget
+            self.cityzipcodesTableLayout     =   QHBoxLayout()
+            self.cityzipcodesTableLayout.addWidget(self.zipcode_cities_related_data_table)
+            self.cityzipcodesTableLayout.setAlignment(QtCore.Qt.AlignCenter) 
+            self.cityzipcodesLayout.addLayout(self.cityzipcodesTableLayout)
+
         self.cityzipcodesLayout.addStretch()
         self.cityzipcodesLayout.setAlignment(QtCore.Qt.AlignCenter)
 
         self.setLayout(self.cityzipcodesLayout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [ZipCode_Cities_with_data_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][init_form] end"))
 
     def find_nearest_city(self) :
 
         city       =   self.zipcode_cities_data_form.get_form_input_value_by_index(0)
         state      =   self.zipcode_cities_data_form.get_form_input_value_by_index(2)
         
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][find_nearest_city]",city)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCode_Cities_Widget][find_nearest_city]",city))
 
-        from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
-        state           =   self.zipcode_cities_form.get_form_input_value_by_index(2)
-        state_parm      =   state[0:2]
-        cities_list     =   us_zipcodes.get_cities_for_state(state_parm, ANY_LOCATION_TYPE)
+        state           =   state[0:2]
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCode_Cities_Widget][find_nearest_city]",state))
 
-        char_to_match   =   city[0]
-        char_to_match   =   char_to_match.upper()
+        self.parent.display_city_zipcodes_data(city,state,True)
 
-        combo_index     =   0
+        return()
 
-        for i in range(len(cities_list)) :
-
-            list_char   =   cities_list[i][0]
-
-            if( (list_char == char_to_match) or (list_char > char_to_match)) :
-                combo_index     =   i
-                break
-
-        self.zipcode_cities_data_form.set_form_combobox_index(1, combo_index)
-    
     def select_new_city(self) :
 
         city       =   self.zipcode_cities_data_form.get_form_input_value_by_index(1)
         
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_Widget][select_city]",city)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCode_Cities_Widget][select_city]",city))
 
         self.zipcode_cities_data_form.set_form_input_value_by_index(0,city)
 
     def reset_city_list(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][reset_city_list]")
-
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][reset_city_list]"))
         state           =   self.zipcode_cities_data_form.get_form_input_value_by_index(2)
         search_state    =   state[0:2]
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][reset_city_list]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][reset_city_list]",state))
 
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
         cities_list     =   us_zipcodes.get_cities_for_state(search_state, ANY_LOCATION_TYPE)
@@ -1325,30 +1301,298 @@ class ZipCode_Cities_with_data_Widget(QtWidgets.QWidget):
     
     def get_zipcode_data_cities(self) :
  
-        city     =   self.zipcode_cities_data_form.get_form_input_value_by_index(0)
-        state    =   self.zipcode_cities_data_form.get_form_input_value_by_index(2)
+        city    =   self.zipcode_cities_data_form.get_form_input_value_by_index(0)
+        state   =   self.zipcode_cities_data_form.get_form_input_value_by_index(2)
+        state   =   state[:2]
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][get_zipcode_data_cities]",city,state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][get_zipcode_data_cities]",city,state))
 
         self.parent.display_city_zipcodes_data(city,state)
 
     def return_from_get_data_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][return_from_get_data_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][return_from_get_data_attrs]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_data_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCode_Cities_with_data_Widget][help_for_get_data_attrs]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeWidgets][ZipCode_Cities_with_data_Widget][help_for_get_data_attrs]"))
 
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -                 ZipCodes for Cities Objects end               -#
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
+
+
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
+# -               ZipCodes for Cities Related Objects             -#
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
+
+
+class ZipCode_Cities_Related_Model(QtCore.QAbstractTableModel):
+    def __init__(self, dfsdata, colheaders):
+
+        super(ZipCode_Cities_Related_Model, self).__init__()
+        self._data          =   dfsdata
+        self.column_names   =   colheaders
+
+    def reload_data(self,dfsdata) :
+        self._data = dfsdata
+
+        self.layoutAboutToBeChanged.emit()
+        self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(self.rowCount(0), self.columnCount(0)))
+        self.layoutChanged.emit()
+ 
+    def get_data(self) :
+        return(self._data)
+
+    def data(self, index, role):
+        
+        row=index.row()
+        column=index.column()
+
+        if role == Qt.DisplayRole:
+            # See below for the nested-list data structure.
+            # .row() indexes into the outer list,
+            # .column() indexes into the sub-list
+
+            try :
+                retval  =  self._data[index.row()][index.column()] 
+            except :
+                retval  =  "Error"
+
+            return retval
+        
+        if role == Qt.TextAlignmentRole: 
+            #odd = (column % 2) 
+            if(column == 0) :
+                return(Qt.AlignLeft)
+            else :
+                return(Qt.AlignLeft)
+
+        if role==Qt.BackgroundColorRole:
+
+            if( (self._data[row][0] == "Acceptable") or (self._data[row][0] == "Not Acceptable") or (self._data[row][0] == "Unique")):
+                bgcolor = QtGui.QBrush(QColor(240, 234, 193))
+            else :
+                bgcolor = QtGui.QBrush(QtCore.Qt.white)
+ 
+            return (bgcolor)               
+                
+    def rowCount(self, index):
+        # The length of the outer list.
+        return len(self._data)
+
+    def columnCount(self, index):
+        # The following takes the first sub-list, and returns
+        # the length (only works if all rows are an equal length)
+        return len(self._data[0])
+
+    def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+
+            if(section <= len(self.column_names)) :
+                return(self.column_names[section])
+            else :
+                return("  ")
+
+        return super().headerData(section, orientation, role)
+
+class ZipCode_Cities_Related_Table(QtWidgets.QTableView):
+
+    def __init__(self,  tblparms, **kwargs):  
+
+        super().__init__()
+
+        self.mainLayout         =   None
+        self.model              =   None
+
+        self.city       =   tblparms[0]
+        self.state      =   tblparms[1][:2]
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table] : init",self.city, self.state))
+
+        self.init_tableview()
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table] : end"))
+
+    # -----------------------------------------------------------------#
+    # -                    reload the table data                      -#
+    # -----------------------------------------------------------------#
+    def reload_data(self, city, state):
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][reload_data] zipcode : ",city,state))
+
+        self.city       =   city
+        self.state      =   state[:2]
+
+        tbldata         =   self.load_zipcode_cities_related_data()
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][reload_data] tbldata : "))
+
+        self.model.reload_data(tbldata)
+
+        num_rows   =   len(tbldata)
+        
+        if(num_rows < 8) :
+            new_height  =   40 + (num_rows * DEFAULT_ROW_HEIGHT)
+        else :
+            new_height  =   40 + (8 * DEFAULT_ROW_HEIGHT)
+
+        self.setMinimumHeight(new_height)
+        self.setMaximumHeight(new_height)
+
+
+    # -----------------------------------------------------------------#
+    # -                     init the tableview                        -#
+    # -----------------------------------------------------------------#
+    def init_tableview(self):
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][init_tableview]"))
+
+        #-----------------------------------------#
+        #   load data into the tableview model    #
+        #-----------------------------------------#
+        zipcodecities_data     =   self.load_zipcode_cities_related_data()
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][init_tableview] :headers",self.column_headers))
+
+        if(self.model is None) :
+            self.model = ZipCode_Cities_Related_Model(zipcodecities_data,self.column_headers)
+            self.setModel(self.model)
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][init_tableview] : model loaded"))
+
+        self.num_rows   =   len(zipcodecities_data)
+        
+        if(self.num_rows < 10) :
+            new_height  =   40 + (self.num_rows * DEFAULT_ROW_HEIGHT)
+        else :
+            new_height  =   40 + (10 * DEFAULT_ROW_HEIGHT)
+
+        self.setMinimumHeight(new_height)
+        self.setMaximumHeight(new_height)
+        
+        self.setMinimumWidth(620)
+        self.setMaximumWidth(620)
+
+        #----------------------------------------------#
+        # init the table view header and cell sizes    #
+        #----------------------------------------------#
+        
+        # set default tableview font
+        tablefont   =  QFont("Times",10) 
+        tablefont.setBold(False)
+        self.setFont(tablefont)
+
+        # set table view header
+        header = self.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignHCenter)
+        header.setFixedHeight(26)
+
+        # set the row heights
+        nrows = len(zipcodecities_data)
+        for row in range(nrows):
+            self.setRowHeight(row, DEFAULT_ROW_HEIGHT) 
+        
+        # set table view columns
+        self.verticalHeader().setVisible(False)
+        for i in range(len(self.column_widths)) :
+           self.setColumnWidth(i, self.column_widths[i])     
+        
+        self.setWordWrap(True)
+
+    # -----------------------------------------------------------------#
+    # -                     load the table data                       -#
+    # -----------------------------------------------------------------#
+    def load_zipcode_cities_related_data(self):
+
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][load_zipcode_cities_related_data]",self.state, self.city))
+
+        from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, CITY_ZIPS_PRIMARY_LIST, CITY_OFFSET, ZIPCODE_OFFSET, LOCATION_TYPE_OFFSET,
+                                                              ACCEPTABLE_LOCATION_TYPE,NOT_ACCEPTABLE_LOCATION_TYPE,UNIQUE_ZIPCODE_TYPE,ZIPCODE_TYPE_OFFSET)
+        
+        city_zips   =   us_zipcodes.get_city_zips_list(self.state, self.city, CITY_ZIPS_PRIMARY_LIST)
+        
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[ZipCode_Cities_Related_Table][load_zipcode_cities_related_data] city_zips ",len(city_zips)))
+
+        acceptable_city_data        =   []
+        not_acceptable_city_data    =   []
+        unique_city_data            =   []
+
+        for i in range(len(city_zips)) :
+
+            city_df     =   us_zipcodes.get_zips_list(city_zips[i])
+
+            if(len(city_df) > 1) :
+
+                for j in range(len(city_df)) :
+
+                    city_record     =   []
+
+                    if( not (city_df.iloc[j,(CITY_OFFSET)] == self.city)) :
+                    
+                        if(city_df.iloc[j,(ZIPCODE_TYPE_OFFSET)] == UNIQUE_ZIPCODE_TYPE) :
+                            city_record     =   [city_df.iloc[j,(ZIPCODE_OFFSET)],city_df.iloc[j,(CITY_OFFSET)],city_df.iloc[j,(LOCATION_TYPE_OFFSET)]]
+                            unique_city_data.append(city_record)
+
+                        elif(city_df.iloc[j,(LOCATION_TYPE_OFFSET)] == ACCEPTABLE_LOCATION_TYPE) :
+                            city_record     =   [city_df.iloc[j,(ZIPCODE_OFFSET)],city_df.iloc[j,(CITY_OFFSET)],city_df.iloc[j,(LOCATION_TYPE_OFFSET)]]
+                            acceptable_city_data.append(city_record)
+
+                        elif(city_df.iloc[j,(LOCATION_TYPE_OFFSET)] == NOT_ACCEPTABLE_LOCATION_TYPE) :
+                            city_record     =   [city_df.iloc[j,(ZIPCODE_OFFSET)],city_df.iloc[j,(CITY_OFFSET)],city_df.iloc[j,(LOCATION_TYPE_OFFSET)]]
+                            not_acceptable_city_data.append(city_record)
+
+        city_data   =   []
+
+        if(len(acceptable_city_data) > 0) :
+
+            aceptable_header     =   ["Acceptable","Alternate City Names For Zipcode",""]
+            city_data.append(aceptable_header)
+            for i in range(len(acceptable_city_data)) :
+                city_data.append(acceptable_city_data[i])
+
+        if(len(not_acceptable_city_data) > 0) :
+
+            not_aceptable_header     =   ["Not Acceptable","Alternate City Names For Zipcode",""]
+            city_data.append(not_aceptable_header)
+            for i in range(len(not_acceptable_city_data)) :
+                city_data.append(not_acceptable_city_data[i])
+        
+        if(len(unique_city_data) > 0) :
+
+            unique_header     =   ["Unique","Alternate City Names For Zipcode",""]
+            city_data.append(unique_header)
+            for i in range(len(unique_city_data)) :
+                city_data.append(unique_city_data[i])
+
+        self.column_headers     =   ["Zipcode","Location Name","Location Type"]
+        self.column_widths      =   [100,350,150]
+
+        return(city_data)
+
+
+# -----------------------------------------------------------------#
+# -----------------------------------------------------------------#
+# -             ZipCodes for Cities Related Objects end           -#
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 
@@ -1386,7 +1630,7 @@ class State_Counties_Model(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1439,21 +1683,21 @@ class State_Counties_Table(QtWidgets.QTableView):
 
         self.state          =   tblparms[0]
 
-        if(DEBUG_ZIPCODE) :
-            print("\n  [State_Counties_Table] : init",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table] : init",self.state))
 
         self.init_tableview()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table] : end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self, state):
         
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table][reload_data] zipcode : ",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][reload_data] zipcode : ",state))
 
         self.state          =   state
  
@@ -1476,23 +1720,23 @@ class State_Counties_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table][init_tableview]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statecounties_data     =   self.load_state_counties_data()
         
-        if(DEBUG_ZIPCODE) :
-           print("  [State_Counties_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = State_Counties_Model(statecounties_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_ZIPCODE) :
-           print("  [State_Counties_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statecounties_data)
         
@@ -1536,16 +1780,16 @@ class State_Counties_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_state_counties_data(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table][load_state_counties_data]",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][load_state_counties_data]",self.state))
 
         table_state     = self.state[0:2]  
 
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes)
         counties_list   =   us_zipcodes.get_state_counties_list(table_state)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table][load_zipcode_cities_data]",counties_list)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][load_zipcode_cities_data]",counties_list))
 
         data    =   []
 
@@ -1577,23 +1821,23 @@ class State_Counties_Table(QtWidgets.QTableView):
 
             data.append(["","","","","","","","",""])
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Table] : data")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("ZipCodeWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["","","","","","","","",""]
         self.column_widths      =   [108,108,108,108,108,108,108,108,108]
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_Table]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table]"))
 
         return(data)
 
 def get_state_counties_form(get_attrs_callback,return_callback,help_callback) :
 
-    if(DEBUG_ZIPCODE) :
-        print("    [State_Counties_Table][get_state_counties_form]")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][get_state_counties_form]"))
 
     form_parms      =   [state_counties_input_id,state_counties_input_idList,state_counties_input_labelList,state_counties_input_typeList,state_counties_input_placeholderList,state_counties_input_reqList]
     comboMethods    =   [None]
@@ -1609,22 +1853,22 @@ def get_state_counties_form(get_attrs_callback,return_callback,help_callback) :
     from dfcleanser.sw_utilities.DFCDataStores import get_Dict
     states_dict  =   get_Dict("US_States_and_Territories")
     
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [State_Counties_Table][get_state_counties_form] states_dict : \n",states_dict)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][get_state_counties_form] states_dict : \n",states_dict))
     
     state_keys  =   list(states_dict.keys())
     state_keys.sort()
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [State_Counties_Table][get_state_counties_form] state_keys : \n",state_keys)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][get_state_counties_form] state_keys : \n",state_keys))
     
     states_list     =   []
     
     for i in range(len(state_keys)) :
         states_list.append(str(state_keys[i]) + " : " + str(states_dict.get(state_keys[i])))
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [State_Counties_Table][get_state_counties_form] states_list \n",states_list)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][get_state_counties_form] states_list \n",states_list))
 
 
     state_sel    =   {"default":states_list[0],"list":states_list}
@@ -1641,8 +1885,8 @@ def get_state_counties_form(get_attrs_callback,return_callback,help_callback) :
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     state_counties_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_ZIPCODE) :
-        print("    [State_Counties_Table][get_state_counties_form] state_counties_form built")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Table][get_state_counties_form] state_counties_form built"))
 
     return(state_counties_form)
 
@@ -1651,8 +1895,8 @@ class State_Counties_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Widget]"))
 
         super().__init__()
 
@@ -1660,8 +1904,8 @@ class State_Counties_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -1669,8 +1913,8 @@ class State_Counties_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -1696,38 +1940,38 @@ class State_Counties_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_Widget][init_form] end"))
 
     
     def get_state_counties(self) :
  
         state    =   self.state_counties_form.get_form_input_value_by_index(0)
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties__Widget][get_state_counties]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties__Widget][get_state_counties]",state))
 
         self.parent.display_state_counties_data(state)
 
     def return_from_get_counties(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_data_Widget][return_from_get_counties]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_data_Widget][return_from_get_counties]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_counties(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget][help_for_get_counties]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][help_for_get_counties]"))
 
 
 class State_Counties_with_data_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget]"))
 
         super().__init__()
 
@@ -1736,16 +1980,16 @@ class State_Counties_with_data_Widget(QtWidgets.QWidget):
  
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget] end"))
 
     def reload_data(self,parent,state) :
 
         self.parent     =   parent
         self.state      =   state
  
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget][reload_data] ",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][reload_data] ",self.state))
 
         self.state_counties_data_table.reload_data(self.state)
 
@@ -1755,8 +1999,8 @@ class State_Counties_with_data_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_with_data_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -1776,9 +2020,6 @@ class State_Counties_with_data_Widget(QtWidgets.QWidget):
 
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
-        #statecounties_container = QWidget(self)
-        #statecounties_container.setFixedWidth(600)       
-
         self.statecountiesLayout     =   QVBoxLayout()
         self.statecountiesLayout.addWidget(self.state_counties_data_form)
         self.statecountiesLayout.addWidget(self.counties_note_label)
@@ -1788,30 +2029,30 @@ class State_Counties_with_data_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.statecountiesLayout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Counties_with_data_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][init_form] end"))
 
     
     def get_state_counties_data(self) :
  
         state    =   self.state_counties_data_form.get_form_input_value_by_index(0)
  
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget][get_zipcode_data_cities]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][get_zipcode_data_cities]",state))
 
         self.parent.display_state_counties_data(state)
 
     def return_from_get_state_counties_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget][return_from_get_state_counties_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][return_from_get_state_counties_data]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_state_counties_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Counties_with_data_Widget][elp_for_get_state_counties_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Counties_with_data_Widget][elp_for_get_state_counties_data]"))
 
 
 # -----------------------------------------------------------------#
@@ -1854,7 +2095,7 @@ class County_Cities_Model(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1908,21 +2149,21 @@ class County_Cities_Table(QtWidgets.QTableView):
         self.state          =   tblparms[0]
         self.county         =   tblparms[1]
 
-        if(DEBUG_ZIPCODE) :
-            print("\n  [County_Cities_Table] : init",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table] : init",self.state))
 
         self.init_tableview()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table] : end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self, state,county):
         
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table][reload_data] zipcode : ",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][reload_data] zipcode : ",state))
 
         self.state          =   state
         self.county         =   county
@@ -1937,7 +2178,6 @@ class County_Cities_Table(QtWidgets.QTableView):
         else :
             new_height  =   40 + (10 * DEFAULT_ROW_HEIGHT)
 
-        print("new_height",new_height)
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
 
@@ -1947,23 +2187,23 @@ class County_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table][init_tableview]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         countycities_data     =   self.load_county_cities_data()
         
-        if(DEBUG_ZIPCODE) :
-           print("  [County_Cities_Table][init_tableview] :headers",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][init_tableview] :headers",self.column_headers))
 
         if(self.model is None) :
             self.model = County_Cities_Model(countycities_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_ZIPCODE) :
-           print("  [County_Cities_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][init_tableview] : model loaded"))
 
         self.num_rows   =   len(countycities_data)
         
@@ -2007,16 +2247,16 @@ class County_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_county_cities_data(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table][load_county_cities_data]",self.state,self.county)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][load_county_cities_data]",self.state,self.county))
 
         table_state     = self.state[0:2]  
 
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
         cities_list     =   us_zipcodes.get_cities_for_county(table_state, self.county, ANY_LOCATION_TYPE)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table][load_county_cities_data][cities_list]",cities_list)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][load_county_cities_data][cities_list]",cities_list))
 
         data                =   []
         data_row            =   []
@@ -2052,23 +2292,23 @@ class County_Cities_Table(QtWidgets.QTableView):
 
             data.append(["","","","","","","","",""])
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Table] : data")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("ZipCodeWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   ["","","","","","","","",""]
         self.column_widths      =   [108,108,108,108,108,108,108,108,108]
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_Table][end]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Table][end]"))
 
         return(data)
 
 def get_county_cities_form(get_attrs_callback,return_callback,help_callback,update_callback) :
 
-    if(DEBUG_ZIPCODE) :
-        print("    [County_Cities_Widget][get_county_cities_form]")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_county_cities_form]"))
 
     form_parms      =   [county_cities_input_id,county_cities_input_idList,county_cities_input_labelList,county_cities_input_typeList,county_cities_input_placeholderList,county_cities_input_reqList]
     comboMethods    =   [update_callback,None]
@@ -2084,22 +2324,22 @@ def get_county_cities_form(get_attrs_callback,return_callback,help_callback,upda
     from dfcleanser.sw_utilities.DFCDataStores import get_Dict
     states_dict  =   get_Dict("US_States_and_Territories")
     
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [County_Cities_Widget][get_state_counties_form] states_dict : \n",states_dict)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_state_counties_form] states_dict : \n",states_dict))
     
     state_keys  =   list(states_dict.keys())
     state_keys.sort()
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [County_Cities_Widget][get_state_counties_form] state_keys : \n",state_keys)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_state_counties_form] state_keys : \n",state_keys))
     
     states_list     =   []
     
     for i in range(len(state_keys)) :
         states_list.append(str(state_keys[i]) + " : " + str(states_dict.get(state_keys[i])))
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("    [County_Cities_Widget][get_county_cities_form] states_list \n",states_list)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_county_cities_form] states_list \n",states_list))
 
 
     state_sel    =   {"default":states_list[0],"list":states_list}
@@ -2121,8 +2361,8 @@ def get_county_cities_form(get_attrs_callback,return_callback,help_callback,upda
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     county_cities_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_ZIPCODE) :
-        print("    [County_Cities_Widget][get_county_cities_form] zipcode_cities_form built")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_county_cities_form] zipcode_cities_form built"))
 
     return(county_cities_form)
 
@@ -2131,8 +2371,8 @@ class County_Cities_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget]"))
 
         super().__init__()
 
@@ -2140,8 +2380,8 @@ class County_Cities_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -2149,13 +2389,11 @@ class County_Cities_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
-
-        #self.statecountiesLayout     =   QVBoxLayout()
 
         self.county_cities_data_form    =   get_county_cities_form(self.get_county_cities,self.return_from_get_county_cities,self.help_for_get_county_cities,self.select_state)
 
@@ -2178,13 +2416,13 @@ class County_Cities_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [County_Cities_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][init_form] end"))
 
     def select_state(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_Widget][select_state]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][select_state]"))
 
         state           =   self.county_cities_data_form.get_form_input_value_by_index(0)
         table_state     =   state[0:2]
@@ -2200,30 +2438,30 @@ class County_Cities_Widget(QtWidgets.QWidget):
         state    =   self.county_cities_data_form.get_form_input_value_by_index(0)
         county   =   self.county_cities_data_form.get_form_input_value_by_index(1)
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_Widget][get_county_citie]",state,county)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][get_county_citie]",state,county))
 
         self.parent.display_county_cities_data(state,county)
 
     def return_from_get_county_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_Widget][return_from_get_county_cities]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][return_from_get_county_cities]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_county_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_Widget][help_for_get_county_cities]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_Widget][help_for_get_county_cities]"))
 
 
 class County_Cities_with_data_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget]"))
 
         super().__init__()
 
@@ -2233,8 +2471,8 @@ class County_Cities_with_data_Widget(QtWidgets.QWidget):
  
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget] end"))
 
     def reload_data(self,parent,state,county) :
 
@@ -2242,8 +2480,8 @@ class County_Cities_with_data_Widget(QtWidgets.QWidget):
         self.state      =   state
         self.county     =   county  
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][reload_data] ",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][reload_data] ",self.state))
 
         self.county_cities_data_table.reload_data(self.state,self.county)
         text    =   "\n" + self.county + " : " + self.state[5:] + " Cities\n"
@@ -2252,8 +2490,8 @@ class County_Cities_with_data_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2282,30 +2520,8 @@ class County_Cities_with_data_Widget(QtWidgets.QWidget):
         self.setLayout(self.countycitiesLayout)
 
 
-        """
-        countycities_container = QWidget(self)
-        countycities_container.setFixedWidth(600)       
-
-        self.countycitiesLayout     =   QVBoxLayout(countycities_container)
-        self.countycitiesLayout.addWidget(self.county_cities_data_form)
-        self.countycitiesLayout.addStretch()
-        self.countycitiesLayout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.finaldata_widget   =   QWidget()
-        self.finaldata_widget.setLayout(self.countycitiesLayout)
-        self.finaldata_widget.setFixedWidth(600)
-
-        self.finaldata_layout   =   QVBoxLayout()
-        self.finaldata_layout.addWidget(self.finaldata_widget)
-        self.finaldata_layout.addWidget(self.county_cities_note_label)
-        self.finaldata_layout.addWidget(self.county_cities_data_table)
-        self.finaldata_layout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.setLayout(self.finaldata_layout)
-        """
-
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][init_form] end"))
 
 
     def change_state(self) :
@@ -2325,22 +2541,22 @@ class County_Cities_with_data_Widget(QtWidgets.QWidget):
         state    =   state[0:2]
         county   =   self.county_cities_data_form.get_form_input_value_by_index(1)
  
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][get_county_cities_data]",state,county)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][get_county_cities_data]",state,county))
 
         self.parent.display_county_cities_data(state,county)
 
     def return_from_get_county_cities_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][return_from_get_county_cities_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][return_from_get_county_cities_data]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_county_cities_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[County_Cities_with_data_Widget][elp_for_get_county_cities_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[County_Cities_with_data_Widget][elp_for_get_county_cities_data]"))
 
 
 
@@ -2367,8 +2583,8 @@ class State_Cities_Model(QtCore.QAbstractTableModel):
 
     def reload_data(self,dfsdata,headers) :
 
-        if(DEBUG_ZIPCODE) :
-            print("  [SState_Cities_Model][reload_data] state : ",headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Model][reload_data] state : ",headers))
 
         self._data          =   dfsdata
         self.column_names   =   headers
@@ -2389,7 +2605,7 @@ class State_Cities_Model(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -2446,28 +2662,28 @@ class State_Cities_Table(QtWidgets.QTableView):
 
         self.state          =   tblparms[0]
 
-        if(DEBUG_ZIPCODE) :
-            print("\n  [State_Cities_Table] : init",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table] : init",self.state))
 
         self.init_tableview()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table] : end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table] : end"))
 
     # -----------------------------------------------------------------#
     # -                    reload the table data                      -#
     # -----------------------------------------------------------------#
     def reload_data(self, state):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table][reload_data] state : ",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][reload_data] state : ",state))
 
         self.state          =   state
  
         tbldata    =   self.load_state_cities_data()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table][reload_data] self.column_headers) : ",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][reload_data] self.column_headers) : ",self.column_headers))
 
         self.model.reload_data(tbldata,self.column_headers)
 
@@ -2487,23 +2703,23 @@ class State_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table][init_tableview]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][init_tableview]"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         statecities_data     =   self.load_state_cities_data()
         
-        if(DEBUG_ZIPCODE) :
-           print("  [State_Cities_Table][init_tableview] : headers",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][init_tableview] : headers",self.column_headers))
 
         if(self.model is None) :
             self.model = State_Cities_Model(statecities_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_ZIPCODE) :
-           print("  [State_Cities_Table][init_tableview] : model loaded")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+           add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][init_tableview] : model loaded"))
 
         self.num_rows   =   len(statecities_data)
         
@@ -2550,8 +2766,8 @@ class State_Cities_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_state_cities_data(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table][load_state_cities_data]",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][load_state_cities_data]",self.state))
 
         table_state     =   self.state[0:2] 
         display_state   =   self.state[5:] 
@@ -2559,8 +2775,8 @@ class State_Cities_Table(QtWidgets.QTableView):
         from dfcleanser.Qt.utils.ZipCode.ZipCodeModel import (us_zipcodes, ANY_LOCATION_TYPE)
         cities_list     =   us_zipcodes.get_cities_for_state(table_state, ANY_LOCATION_TYPE)
 
-        if(DEBUG_ZIPCODE_DETAILS) :
-            print("  [State_Cities_Table][load_state_cities_data][cities_list]",cities_list)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][load_state_cities_data][cities_list]",cities_list))
 
         data                =   []
         data_row            =   []
@@ -2613,23 +2829,23 @@ class State_Cities_Table(QtWidgets.QTableView):
 
             data.append(["","","","","","","","",""])
 
-        if(DEBUG_ZIPCODE_DETAILS) :
-            print("  [State_Cities_Table] : data")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table] : data"))
             for j in range(len(data)) :
-                print("  [",j,"] : ",data[j])
+                add_debug_to_log("ZipCodeWidgets",print_to_string("  [",j,"] : ",data[j]))
 
         self.column_headers     =   [display_state,"Cities","","","","","","",""]
         self.column_widths      =   [108,108,108,108,108,108,108,108,108]
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Table][load_state_cities_data]",self.column_headers)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Table][load_state_cities_data]",self.column_headers))
 
         return(data)
 
 def get_state_cities_form(get_attrs_callback,return_callback,help_callback) :
 
-    if(DEBUG_ZIPCODE) :
-        print("  [State_Cities_Widget][get_state_cities_form]")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_cities_form]"))
 
     form_parms      =   [state_cities_input_id,state_cities_input_idList,state_cities_input_labelList,state_cities_input_typeList,state_cities_input_placeholderList,state_cities_input_reqList]
     comboMethods    =   [None]
@@ -2645,22 +2861,22 @@ def get_state_cities_form(get_attrs_callback,return_callback,help_callback) :
     from dfcleanser.sw_utilities.DFCDataStores import get_Dict
     states_dict  =   get_Dict("US_States_and_Territories")
     
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("  [State_Cities_Widget][get_state_cities_form] states_dict : \n",states_dict)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_cities_form] states_dict : \n",states_dict))
     
     state_keys  =   list(states_dict.keys())
     state_keys.sort()
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("  [State_Cities_Widget][get_state_cities_form] state_keys : \n",state_keys)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_cities_form] state_keys : \n",state_keys))
     
     states_list     =   []
     
     for i in range(len(state_keys)) :
         states_list.append(str(state_keys[i]) + " : " + str(states_dict.get(state_keys[i])))
 
-    if(DEBUG_ZIPCODE_DETAILS) :
-        print("  [State_Cities_Widget][get_state_cities_form] states_list \n",states_list)
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE_DETAILS")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_cities_form] states_list \n",states_list))
 
 
     state_sel    =   {"default":states_list[0],"list":states_list}
@@ -2678,8 +2894,8 @@ def get_state_cities_form(get_attrs_callback,return_callback,help_callback) :
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     state_cities_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_ZIPCODE) :
-        print("  [State_Cities_Widget][get_state_cities_form] state_cities_form built")
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_cities_form] state_cities_form built"))
 
     return(state_cities_form)
 
@@ -2688,8 +2904,8 @@ class State_Cities_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget]"))
 
         super().__init__()
 
@@ -2697,8 +2913,8 @@ class State_Cities_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget] end"))
 
     def reload_data(self,parent) :
 
@@ -2706,8 +2922,8 @@ class State_Cities_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2735,38 +2951,38 @@ class State_Cities_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.final_layout)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][init_form] end"))
 
     
     def get_state_cities(self) :
  
         state    =   self.state_cities_data_form.get_form_input_value_by_index(0)
  
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_Widget][get_state_citie]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][get_state_citie]",state))
 
         self.parent.display_state_cities_data(state)
 
     def return_from_get_state_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_Widget][return_from_get_state_cities]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][return_from_get_state_cities]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_state_cities(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_Widget][help_for_get_state_cities]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_Widget][help_for_get_state_cities]"))
 
 
 class State_Cities_with_data_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget]"))
 
         super().__init__()
 
@@ -2775,23 +2991,23 @@ class State_Cities_with_data_Widget(QtWidgets.QWidget):
  
         self.init_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget] end"))
 
     def reload_data(self,parent,state) :
 
         self.parent     =   parent
         self.state      =   state
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget][reload_data] ",self.state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget][reload_data] ",self.state))
 
         self.state_cities_data_table.reload_data(self.state)
 
     def init_form(self):  
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget][init_form]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget][init_form]"))
 
         # build the overall dtypes layout
         from PyQt5.QtWidgets import QVBoxLayout, QWidget
@@ -2801,8 +3017,8 @@ class State_Cities_with_data_Widget(QtWidgets.QWidget):
         tblparms   =   [self.state]       
         self.state_cities_data_table   =   State_Cities_Table(tblparms)
 
-        if(DEBUG_ZIPCODE) :
-            print("  [State_Cities_wth_date_Widget][init_form] state_cities_table built")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_wth_date_Widget][init_form] state_cities_table built"))
 
 
         from PyQt5.QtWidgets import QLabel
@@ -2821,31 +3037,9 @@ class State_Cities_with_data_Widget(QtWidgets.QWidget):
         self.statecitiesLayout.setAlignment(QtCore.Qt.AlignCenter)
 
         self.setLayout(self.statecitiesLayout)
-
-        """
-        countycities_container = QWidget(self)
-        countycities_container.setFixedWidth(600)       
-
-        self.countycitiesLayout     =   QVBoxLayout(countycities_container)
-        self.countycitiesLayout.addWidget(self.state_cities_data_form)
-        self.countycitiesLayout.addStretch()
-        self.countycitiesLayout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.finaldata_widget   =   QWidget()
-        self.finaldata_widget.setLayout(self.countycitiesLayout)
-        self.finaldata_widget.setFixedWidth(600)
-
-        self.finaldata_layout   =   QVBoxLayout()
-        self.finaldata_layout.addWidget(self.finaldata_widget)
-        #self.finaldata_layout.addWidget(note_label)
-        self.finaldata_layout.addWidget(self.state_cities_data_table)
-        self.finaldata_layout.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.setLayout(self.finaldata_layout)
-        """
         
-        if(DEBUG_ZIPCODE) :
-            print("[tate_Cities_with_data_Widget][init_form] end")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[tate_Cities_with_data_Widget][init_form] end"))
 
 
     def get_state_cities_data(self) :
@@ -2853,22 +3047,22 @@ class State_Cities_with_data_Widget(QtWidgets.QWidget):
         state    =   self.state_cities_data_form.get_form_input_value_by_index(0)
         #state    =   state[0:2]
  
-        if(DEBUG_ZIPCODE) :
-            print("\n[State_Cities_with_data_Widget][get_state_cities_data]",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget][get_state_cities_data]",state))
 
         self.parent.display_state_cities_data(state)
 
     def return_from_get_state_cities_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget][return_from_get_state_cities_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget][return_from_get_state_cities_data]"))
 
         self.parent.init_zipcodes()
 
     def help_for_get_state_cities_data(self) :
 
-        if(DEBUG_ZIPCODE) :
-            print("[State_Cities_with_data_Widget][help_for_get_state_cities_data]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCodeWidgets",print_to_string("[State_Cities_with_data_Widget][help_for_get_state_cities_data]"))
 
 
 
@@ -2878,13 +3072,6 @@ class State_Cities_with_data_Widget(QtWidgets.QWidget):
 # -                   County Cities Objects end                   -#
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
-
-
-
-
-
-
-
 
 
 

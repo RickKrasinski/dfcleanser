@@ -19,8 +19,10 @@ import pandas as pd
 #import json
 import numpy as np
 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_ZIPS      =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWZipcodeUtility_ID
 
 
 
@@ -155,14 +157,14 @@ DPO_text                    =   "Diplomatic Post Office"
 ZIPCODE_OFFSET              =   0
 STATE_OFFSET                =   1
 CITY_OFFSET                 =   2
-NAME_OFFSET                 =   3
-COUNTY_OFFSET               =   4
-LATITUDE_OFFSET             =   5
-LONGITUDE_OFFSET            =   6
-AREA_CODES_OFFSET           =   7
-ZIPCODE_TYPE_OFFSET         =   8
-LOCATION_TYPE_OFFSET        =   9
-ACTIVE_STATUS_OFFSET        =   10
+#NAME_OFFSET                 =   3
+COUNTY_OFFSET               =   3
+LATITUDE_OFFSET             =   4
+LONGITUDE_OFFSET            =   5
+AREA_CODES_OFFSET           =   6
+ZIPCODE_TYPE_OFFSET         =   7
+LOCATION_TYPE_OFFSET        =   8
+ACTIVE_STATUS_OFFSET        =   9
 
 
 """
@@ -187,8 +189,8 @@ STATE_CITIES_TABLE          =   3
 def get_cities_for_zipcode(zipcode,location_type=PRIMARY_LOCATION_TYPE,active_status=ACTIVE_STATUS_TYPE) :
     return(us_zipcodes.get_zip_cities(zipcode,location_type,active_status))
 
-def get_business_name_for_zipcode(zipcode) :
-    return(us_zipcodes.get_zip_business_name(zipcode))
+#def get_business_name_for_zipcode(zipcode) :
+#    return(us_zipcodes.get_zip_business_name(zipcode))
 
 def get_county_for_zipcode(zipcode) :
     return(us_zipcodes.get_zip_county(zipcode))
@@ -275,15 +277,10 @@ class US_Zipcodes :
     # full constructor
     def __init__(self) :
 
-        print("zipcodes_file_name",zipcodes_file_name)
-
         self.zipcodes  =   pd.read_csv(zipcodes_file_name,dtype=uszips_dtypes)
-        
-        #print("zipcodes",len(self.zipcodes))
         
         self.zipcodes["State"]                  =   self.zipcodes["State"].astype(str)
         self.zipcodes["City"]                   =   self.zipcodes["City"].astype(str)
-        self.zipcodes["BusinessName"]           =   self.zipcodes["BusinessName"].astype(str)
         self.zipcodes["County"]                 =   self.zipcodes["County"].astype(str)
         self.zipcodes["AreaCodes"]              =   self.zipcodes["AreaCodes"].astype(str)
         self.zipcodes["ZipcodeType"]            =   self.zipcodes["ZipcodeType"].astype(str)
@@ -368,7 +365,7 @@ class US_Zipcodes :
         except IndexError : 
             return(None)
         except Exception :
-            print("get_zip_cities : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_cities : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
 
@@ -390,37 +387,9 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
-    def get_zip_business_name(self, zipcode) :  
-        
-        try :
-            
-            criteria                =   ( (self.zipcodes["Zipcode"] == zipcode) )
-            zip_business_name_df    =   self.zipcodes[criteria]
-            
-            if(len(zip_business_name_df) > 0) :
-                
-                for i in range(len(zip_business_name_df)) :
-                    if(zip_business_name_df[i,LOCATION_TYPE_OFFSET] == PRIMARY_LOCATION_TYPE) :
-                        business_name   =   zip_business_name_df[i,NAME_OFFSET]
-                        
-                for i in range(len(zip_business_name_df)) :
-                    if(not (zip_business_name_df[i,NAME_OFFSET] == business_name) ) :
-                        return(zip_business_name_df[i,NAME_OFFSET])
-                
-                return(None) 
-            else :
-                return(None)
-            
-        except KeyError :
-            return(None)
-        except IndexError :
-            return(None)
-        except Exception :
-            print("get_zip_business_name Exception : ",sys.exc_info()[0],sys.exc_info()[1])
-            traceback.print_tb(sys.exc_info()[2])
 
     def get_zip_state(self, zipcode) :  
         
@@ -439,7 +408,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
 
@@ -451,7 +420,7 @@ class US_Zipcodes :
             latitude_df   =   self.zipcodes[criteria]
             
             if(len(latitude_df) > 0) :
-                return(latitude_df.iloc[0,LATITUDE_OFFSET]) 
+                return(float(latitude_df.iloc[0,LATITUDE_OFFSET])) 
             else :
                 return(None)
             
@@ -460,7 +429,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
             
     def get_zip_longitude(self, zipcode) :  
@@ -471,7 +440,7 @@ class US_Zipcodes :
             longitude_df  =   self.zipcodes[criteria]
             
             if(len(longitude_df)) :
-                return(longitude_df.iloc[0,LONGITUDE_OFFSET]) 
+                return(float(longitude_df.iloc[0,LONGITUDE_OFFSET])) 
             else :
                 return(None)
             
@@ -480,7 +449,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
     def get_zip_area_codes(self, zipcode) :  
@@ -511,7 +480,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
     def get_zipcode_type(self, zipcode) :  
@@ -548,7 +517,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zipcode_type Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zipcode_type Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
     def get_zip_location_type(self, zipcode) :  
@@ -570,7 +539,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
     def get_zip_active_status(self, zipcode) :  
@@ -590,15 +559,21 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("ZipCode",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
+
+    def get_zips_list(self, zipcode) :
+
+        locs_criteria   =   (self.zipcodes["Zipcode"] == zipcode) 
+        locs_df         =   self.zipcodes[locs_criteria]
+
+        return(locs_df)
 
             
     def get_city_zips_list(self, state, city, zipcode_list_type) :
 
-        if(DEBUG_ZIPS) :        
-            print("get_city_zips_list",state, city, zipcode_list_type)
-            print(self.zipcodes["State"])
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPS")) :        
+            add_debug_to_log("ZipCode",print_to_string("[US_Zipcodes][get_city_zips_list]",state, city, zipcode_list_type))
 
         state   =   state.upper()
         city    =   city.upper()
@@ -609,16 +584,7 @@ class US_Zipcodes :
                 
                 zips_criteria   =   ( (self.zipcodes["State"] == state) & 
                                       (self.zipcodes["City"] == city) & 
-                                      (self.zipcodes["ZipcodeType"] == STANDARD_ZIPCODE_TYPE) & 
                                       (self.zipcodes["LocationType"] == PRIMARY_LOCATION_TYPE) &
-                                      (self.zipcodes["ActiveStatus"] == ACTIVE_STATUS_TYPE) )
-                
-            elif(zipcode_list_type == CITY_ZIPS_SECONDARY_LIST) :
-                
-                zips_criteria   =   ( (self.zipcodes["State"] == state) & 
-                                      (self.zipcodes["City"] == city) & 
-                                      (self.zipcodes["ZipcodeType"] == STANDARD_ZIPCODE_TYPE) & 
-                                      (self.zipcodes["LocationType"] == ACCEPTABLE_LOCATION_TYPE) &
                                       (self.zipcodes["ActiveStatus"] == ACTIVE_STATUS_TYPE) )
                 
             elif(zipcode_list_type == CITY_ZIPS_POBOX_LIST) :
@@ -627,22 +593,7 @@ class US_Zipcodes :
                                       (self.zipcodes["City"] == city) & 
                                       (self.zipcodes["ZipcodeType"] == PO_BOX_ZIPCODE_TYPE) & 
                                       (self.zipcodes["ActiveStatus"] == ACTIVE_STATUS_TYPE) )
-                
-            elif(zipcode_list_type == CITY_ZIPS_UNIQUES_LIST) :
-                
-                zips_criteria   =   ( (self.zipcodes["State"] == state) & 
-                                      (self.zipcodes["City"] == city) & 
-                                      (self.zipcodes["ZipcodeType"] == UNIQUE_ZIPCODE_TYPE) & 
-                                      #(self.zipcodes["LocationType"] != NOT_ACCEPTABLE_CITY_TYPE) &
-                                      (self.zipcodes["ActiveStatus"] == ACTIVE_STATUS_TYPE) )
-                
-            elif(zipcode_list_type == CITY_ZIPS_UNACCEPTABLE_LIST) :
-                
-                zips_criteria   =   ( (self.zipcodes["State"] == state) & 
-                                      (self.zipcodes["City"] == city) & 
-                                      (self.zipcodes["ZipcodeType"] != UNIQUE_ZIPCODE_TYPE) & 
-                                      (self.zipcodes["LocationType"] == NOT_ACCEPTABLE_LOCATION_TYPE) )
-                
+
             elif(zipcode_list_type == CITY_ZIPS_DECOMMISSIONED_LIST) :
                 
                 zips_criteria   =   ( (self.zipcodes["State"] == state) & 
@@ -654,11 +605,18 @@ class US_Zipcodes :
                 return(None)
                 
             zips_df         =   self.zipcodes[zips_criteria]
+        
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPS")) :        
+                add_debug_to_log("ZipCode",print_to_string("[US_Zipcodes][get_city_zips_list] zips(df) : ",len(zips_df)))
             
             if(len(zips_df) > 0) :
                 
                 zips_list   =   list(zips_df["Zipcode"].unique())
                 zips_list.sort()
+            
+                if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPS")) :        
+                    add_debug_to_log("ZipCode",print_to_string("[US_Zipcodes][get_city_zips_list] zips_list : ",zips_list))
+
                 return(zips_list)
                 
             else :
@@ -670,7 +628,7 @@ class US_Zipcodes :
         except IndexError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("Zipcodes",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
             
             
@@ -689,7 +647,7 @@ class US_Zipcodes :
         except KeyError :
             return(None)
         except Exception :
-            print("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("Zipcodes",print_to_string("get_zip_state Exception : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
             
@@ -721,7 +679,7 @@ class US_Zipcodes :
         except KeyError :
             return(None)
         except Exception :
-            print("get_cities_for_county : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("Zipcodes",print_to_string("get_cities_for_county : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
 
@@ -750,7 +708,7 @@ class US_Zipcodes :
         except KeyError :
             return(None)
         except Exception :
-            print("get_cities_for_county : ",sys.exc_info()[0],sys.exc_info()[1])
+            add_debug_to_log("Zipcodes",print_to_string("get_cities_for_county : ",sys.exc_info()[0],sys.exc_info()[1]))
             traceback.print_tb(sys.exc_info()[2])
 
 us_zipcodes    =   US_Zipcodes()
@@ -764,26 +722,22 @@ us_zipcodes    =   US_Zipcodes()
 
 
 
-
-
-"""
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
 #   Zip Code attributes 
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
-"""
+
 def get_zipcode_attributes(zipcode) :
     
-    
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode : ",zipcode))
+
     zip_attrs_dict          =   {}
-    
     
     primary_cities          =   get_cities_for_zipcode(zipcode,location_type=PRIMARY_LOCATION_TYPE)
     acceptable_cities       =   get_cities_for_zipcode(zipcode,location_type=ACCEPTABLE_LOCATION_TYPE)
     not_acceptable_cities   =   get_cities_for_zipcode(zipcode,location_type=NOT_ACCEPTABLE_LOCATION_TYPE)
-    
-    zipcode_business_name   =   get_business_name_for_zipcode(zipcode)
     
     zipcode_county          =   get_county_for_zipcode(zipcode) 
     zipcode_state           =   get_state_for_zipcode(zipcode)
@@ -791,11 +745,17 @@ def get_zipcode_attributes(zipcode) :
     zipcode_latitude        =   get_latitude_for_zipcode(zipcode) 
     zipcode_longitude       =   get_longitude_for_zipcode(zipcode)
     
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode_latitude : ",zipcode_latitude))
+    
     zipcode_areacodes       =   get_areacodes_for_zipcode(zipcode)
     
     zipcode_active_status   =   get_active_status_for_zipcode(zipcode)
     
     zipcode_type            =   get_type_for_zipcode(zipcode)
+    
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode_type : ",zipcode_type))
     
     if(zipcode_type == UNIQUE_ZIPCODE_TYPE) :
         zipcode_type_text   =   UNIQUE_text
@@ -810,7 +770,7 @@ def get_zipcode_attributes(zipcode) :
     elif(zipcode_type == DPO_ZIPCODE_TYPE) :
         zipcode_type_text   =   DPO_text
     else :
-        zipcode_type_text   =   "Unkniwn"
+        zipcode_type_text   =   "Unknown"
         
     if( (not (primary_cities is None)) ) :
         zip_attrs_dict.update({"Primary City(s)":primary_cities})
@@ -827,10 +787,14 @@ def get_zipcode_attributes(zipcode) :
     else :
         zip_attrs_dict.update({"Not Acceptable City(s)": None})
 
-    zip_attrs_dict.update({"Business/Neighborhood Name" : zipcode_business_name})
     zip_attrs_dict.update({"County" : zipcode_county})
     zip_attrs_dict.update({"State" : zipcode_state})
-    
+
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode_state : ",zipcode_state))
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode_latitude : ",type(zipcode_latitude),zipcode_latitude))
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipcode_longitude : ",type(zipcode_longitude),zipcode_longitude))
+
     import numpy
     if( (zipcode_latitude is None) or (zipcode_longitude is None) or 
        (numpy.isnan(zipcode_latitude)) or (numpy.isnan(zipcode_longitude)) ) :
@@ -839,6 +803,13 @@ def get_zipcode_attributes(zipcode) :
         ziplatlong    =   "[" + str(round(zipcode_latitude,7)) + " , " + str(round(zipcode_longitude,7)) + "]"
         
     zip_attrs_dict.update({"[Latitude, Longitude]" : ziplatlong})
+
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] ziplatlong : ",ziplatlong))
+
+
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zip_attrs_dict : ",zip_attrs_dict))
     
     if(not (zipcode_areacodes is None)) :
         
@@ -851,6 +822,9 @@ def get_zipcode_attributes(zipcode) :
         zipareacodes    =   "Unknown"
 
     zip_attrs_dict.update({"Area Codes" : zipareacodes})
+
+    if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+        add_debug_to_log("ZipCode",print_to_string("[get_zipcode_attributes] zipareacodes : ",zipareacodes))
     
     zip_attrs_dict.update({"Current Status" : zipcode_active_status})
     zip_attrs_dict.update({"Zipcode Type" : zipcode_type_text})

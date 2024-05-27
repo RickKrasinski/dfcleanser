@@ -22,8 +22,10 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_ZIPCODE                   =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWZipcodeUtility_ID
 
 
 # -----------------------------------------------------------------#
@@ -63,6 +65,7 @@ DISPLAY_ZIPCODE_ATTRIBUTES_DATA         =   "ZipCode attributes data"
 DISPLAY_ZIPCODE_BY_LOCATION             =   "ZipCode by location"
 DISPLAY_CITY_ZIPCODES                   =   "City Zipcodes"
 DISPLAY_CITY_ZIPCODES_DATA              =   "City Zipcodes data"
+DISPLAY_CITY_ZIPCODES_RELATED_DATA      =   "City Zipcodes Related data"
 
 DISPLAY_STATE_COUNTIES                  =   "State Counties"
 DISPLAY_STATE_COUNTIES_DATA             =   "State Counties data"
@@ -72,27 +75,6 @@ DISPLAY_COUNTY_CITIES_DATA              =   "County Cities data"
 
 DISPLAY_STATE_CITIES                    =   "State Cities"
 DISPLAY_STATE_CITIES_DATA               =   "State Cities data"
-
-
-
-
-"""
-
-DISPLAY_DFC_HISTORIES                   =   "System display dfs histories"
-DISPLAY_ADD_USER_DF                     =   "System display dfs add user df"
-
-DISPLAY_INFO                            =   "System display info"
-DISPLAY_ABOUT                           =   "System display about"
-DISPLAY_EULA                            =   "System display eula"
-
-
-
-EXPORT_EXCEL_FILE_TYPE_HISTORIES        =   "DataExport excel filetypes Exported"
-EXPORT_JSON_FILE_TYPE_HISTORIES         =   "DataExport json filetypes Exported"
-EXPORT_HTML_FILE_TYPE_HISTORIES         =   "DataExport html filetypes Exported"
-EXPORT_SQLTABLE_FILE_TYPE_HISTORIES     =   "DataExport sqltable filetypes Exported"
-EXPORT_CUSTOM_FILE_TYPE_HISTORIES       =   "DataExport custom filetypes Exported"
-"""
 
 
 DEFAULT_ROW_HEIGHT                  =   20
@@ -158,6 +140,7 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def update(self):   
         self.update()
+        
 
     
     # -----------------------------------------------------------------#
@@ -166,8 +149,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
         
     def init_gui(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("initgui")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("initgui"))
         
         # set up the ui form from a qtdesigner ui
         cfgdir  = cfg.DataframeCleanserCfgData.get_dfc_qt_dir_name()
@@ -223,8 +206,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
         # init the gui form
         self.init_zipcode_form()
 
-        if(DEBUG_ZIPCODE) :
-            print("initgui")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("initgui"))
            
 
     # -----------------------------------------------------------------#
@@ -232,12 +215,13 @@ class ZipCodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_zipcode_buttons(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("[SystemGui][init_zipcode_buttons]  ")
+        from dfcleanser.common.cfg import SWZipcodeUtility_ID
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[SystemGui][init_zipcode_buttons]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
         buttons     =   [self.form.ZipCodeAttributesbutton, self.form.ZipCodeListsbutton, self.form.ZipCodeHelpbutton] 
-        callbacks   =   [self.get_zipcode_attributes, self.get_zipcode_by_location, self.get_help_zipcode]
+        callbacks   =   [self.get_zips_attributes, self.get_zipcode_by_location, self.get_help_zipcode]
     
         # init buttons for usage
         ZipCode_Button_Style    =   "background-color:#0c4ca7; color:white; font : Arial; font-weight : bold; font-size : 13px;"
@@ -255,24 +239,25 @@ class ZipCodeGui(QtWidgets.QMainWindow):
     # -            Initialize the chapter splah image                 -#
     # -----------------------------------------------------------------#
     def init_zipcode_splash_screen(self):
-
-        if(DEBUG_ZIPCODE) :
-            print("[SystemGui][init_data_inspect_splash_screen]  ")
+        
+        from dfcleanser.common.cfg import SWZipcodeUtility_ID
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[SystemGui][init_data_inspect_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import SWZipcodeUtility_ID
-        build_chapter_splash_screen(SWZipcodeUtility_ID, self.form.Censussplash)
+        build_chapter_splash_screen(SWZipcodeUtility_ID, self.form.ZipCodesplash)
 
-        if(DEBUG_ZIPCODE) :
-            print("[end init_zipcode_splash_screen]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[end init_zipcode_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -             Initialize the dfs select form                    -#
     # -----------------------------------------------------------------#
     def init_zipcodes(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("[init_zipcodes]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[init_zipcodes]  "))
 
         from PyQt5.QtWidgets import QLabel
         self.blank_label   =   QLabel()
@@ -309,8 +294,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_zipcode_form(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][init_zipcode_form]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][init_zipcode_form]  "))
 
         self.init_zipcode_buttons()
         self.init_zipcode_splash_screen()
@@ -328,12 +313,12 @@ class ZipCodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     # -                      zipcode attributes                       -#
     # -----------------------------------------------------------------#
-    def get_zipcode_attributes(self) :
+    def get_zips_attributes(self) :
 
         self.form.ZipCodeAttributesbutton.toggle()
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][get_zipcode_attributes]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][get_zips_attributes]"))
 
         self.display_zipcode_attributes()
 
@@ -344,8 +329,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.form.ZipCodeListsbutton.toggle()
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][get_zipcode_lists]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][get_zipcode_lists]"))
 
         self.display_zipcode_by_locations()
  
@@ -356,8 +341,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.form.ZipCodeHelpbutton.toggle()
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][get_help_zipcode]")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][get_help_zipcode]"))
 
         from dfcleanser.common.common_utils import display_url
         display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-geocoding.html")
@@ -371,8 +356,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_zipcode_attributes(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_zipcode_attribute]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attribute]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -408,24 +393,24 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_zipcode_attribute] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attribute] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,450)
 
 
     def display_zipcode_attributes_data(self,zipcode):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_zipcode_attributes_data]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attributes_data]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         zipcode_attrs_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_ZIPCODE_ATTRIBUTES_DATA)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_zipcode_attributes_data]  index : ",zipcode_attrs_index)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attributes_data]  index : ",zipcode_attrs_index))
 
         
         if(zipcode_attrs_index is None) :
@@ -453,16 +438,16 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_ZIPCODE) :
-                print("[ZipCodeGui][display_zipcode_attributes_data] reload_data:  ",zipcode_attrs_index,zipcode)
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+                add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attributes_data] reload_data:  ",zipcode_attrs_index,zipcode))
 
             self.ZipCode_attrs_with_data.reload_data(self,zipcode)
             current_index   =   zipcode_attrs_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_zipcode_attributes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_attributes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,750)
 
@@ -482,8 +467,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_zipcode_by_locations(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_zipcode_by_locations]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_by_locations]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -519,8 +504,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_zipcode_by_locations] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_zipcode_by_locations] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,350)
 
@@ -531,8 +516,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_city_zipcodes(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_city_zipcodes]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -568,33 +553,43 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_city_zipcodes] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,600)
 
 
-    def display_city_zipcodes_data(self,city,state):
+    def display_city_zipcodes_data(self,city,state,related=False):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_city_zipcodes_data]  ",city,state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data]  ",city,state,related))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
-        city_zips_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_CITY_ZIPCODES_DATA)
+        if(not (related)) :
+            city_zips_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_CITY_ZIPCODES_DATA)
+        else :
+            city_zips_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_CITY_ZIPCODES_RELATED_DATA)            
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_city_zipcodes_data]  index : ",city_zips_index)
-
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data]  city_zips_index : ",city_zips_index))
         
         if(city_zips_index is None) :
 
             try :
 
-                from dfcleanser.Qt.utils.ZipCode.ZipCodeWidgets import ZipCode_Cities_with_data_Widget
-                parms   =   [self,city,state]
-                self.city_zips_data   =   ZipCode_Cities_with_data_Widget(parms)
+                if(not(related)) :
+                
+                    from dfcleanser.Qt.utils.ZipCode.ZipCodeWidgets import ZipCode_Cities_with_data_Widget
+                    parms                 =   [self,city,state,False]
+                    self.city_zips_data   =   ZipCode_Cities_with_data_Widget(parms)
+
+                else :
+                    
+                    from dfcleanser.Qt.utils.ZipCode.ZipCodeWidgets import ZipCode_Cities_with_data_Widget
+                    parms                           =   [self,city,state,True]
+                    self.city_zips_related_data     =   ZipCode_Cities_with_data_Widget(parms)
 
             except Exception as e:
 
@@ -608,21 +603,33 @@ class ZipCodeGui(QtWidgets.QMainWindow):
             if(opstat.get_status()) :
 
                 current_index   =  len(self.ZipCodeWidgets_stack_dict)
-                self.ZipCodeWidgets_stack_dict.update({DISPLAY_CITY_ZIPCODES_DATA  : current_index})
-                self.stackedLayout.addWidget(self.city_zips_data)
+                
+                if(not(related)) :
+                    
+                    self.ZipCodeWidgets_stack_dict.update({DISPLAY_CITY_ZIPCODES_DATA  : current_index})
+                    self.stackedLayout.addWidget(self.city_zips_data)
+
+                else :
+
+                    self.ZipCodeWidgets_stack_dict.update({DISPLAY_CITY_ZIPCODES_RELATED_DATA  : current_index})
+                    self.stackedLayout.addWidget(self.city_zips_related_data)
 
         else :
 
-            if(DEBUG_ZIPCODE) :
-                print("[ZipCodeGui][display_city_zipcodes_data] reload_data:  ",city,state)
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+                add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data] reload_data:  ",city,state,related))
 
-            self.city_zips_data.reload_data(self,city,state)
+            if(not(related)) :
+                self.city_zips_data.reload_data(self,city,state,False)
+            else :
+                self.city_zips_related_data.reload_data(self,city,state,True)
+                
             current_index   =   city_zips_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_city_zipcodes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,850)
 
@@ -641,8 +648,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_state_counties(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_state_counties]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_counties]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -678,24 +685,24 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_counties] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_counties] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,450)
 
 
     def display_state_counties_data(self,state):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_state_counties_data]  ",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_counties_data]  ",state))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         state_counties_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_STATE_COUNTIES_DATA)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_counties_data]  index : ",state_counties_index)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_counties_data]  index : ",state_counties_index))
 
         
         if(state_counties_index is None) :
@@ -723,16 +730,16 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_ZIPCODE) :
-                print("[ZipCodeGui][display_city_zipcodes_data] reload_data:  ",state)
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+                add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data] reload_data:  ",state))
 
             self.state_counties_data.reload_data(self,state)
             current_index   =   state_counties_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_city_zipcodes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_city_zipcodes_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -752,8 +759,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_county_cities(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_county_cities]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_county_cities]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -789,24 +796,24 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_county_cities] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_county_cities] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,500)
 
 
     def display_county_cities_data(self,state,county):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_county_cities_data]  ",state,county)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_county_cities_data]  ",state,county))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         county_cities_data_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_COUNTY_CITIES_DATA)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_counties_data]  index : ",county_cities_data_index)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_counties_data]  index : ",county_cities_data_index))
 
         
         if(county_cities_data_index is None) :
@@ -834,16 +841,16 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_ZIPCODE) :
-                print("[ZipCodeGui][display_county_cities_data] reload_data:  ",state,county)
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+                add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_county_cities_data] reload_data:  ",state,county))
 
             self.county_cities_data.reload_data(self,state,county)
             current_index   =   county_cities_data_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_county_cities_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_county_cities_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -862,8 +869,8 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
     def display_state_cities(self):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_state_cities]  ")
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -899,24 +906,24 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_cities] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,500)
 
 
     def display_state_cities_data(self,state):
 
-        if(DEBUG_ZIPCODE) :
-            print("\n[ZipCodeGui][display_state_cities_data]  ",state)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities_data]  ",state))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         state_cities_data_index  =   self.ZipCodeWidgets_stack_dict.get(DISPLAY_STATE_CITIES_DATA)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_cities_data]  index : ",state_cities_data_index)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities_data]  index : ",state_cities_data_index))
 
         
         if(state_cities_data_index is None) :
@@ -944,16 +951,16 @@ class ZipCodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_ZIPCODE) :
-                print("[ZipCodeGui][display_state_cities_data] reload_data:  ",state)
+            if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+                add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities_data] reload_data:  ",state))
 
             self.state_cities_data.reload_data(self,state)
             current_index   =   state_cities_data_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_ZIPCODE) :
-            print("[ZipCodeGui][display_state_cities_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict)
+        if(is_debug_on(SWZipcodeUtility_ID,"DEBUG_ZIPCODE")) :
+            add_debug_to_log("ZipCode",print_to_string("[ZipCodeGui][display_state_cities_data] end : stack \n  ",self.ZipCodeWidgets_stack_dict))
 
         self.resize(1070,1000)
 
