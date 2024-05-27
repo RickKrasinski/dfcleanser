@@ -12,16 +12,15 @@ Created on Tue Sept 13 22:29:22 2017
 import sys
 this = sys.modules[__name__]
 
-import sys
-this = sys.modules[__name__]
-
 import pandas as pd
 #import json
 import numpy as np
 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-DEBUG_GEOCODE           =   False
-DEBUG_GEOCODE_UTILITY   =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
+
 
 
 """
@@ -232,44 +231,6 @@ CATEGORIES_TABLE            =   3
 ADDRESS_COMPONENTS_TABLE    =   4
 RESULT_TYPES_TABLE          =   5
 LOCATION_TYPES_TABLE        =   6
-
-
-#DISPLAY_TUNING                  =   49
-#PROCESS_TUNING                  =   50
-
-
-
-
-"""
-#--------------------------------------------------------------------------
-#   bulk geocoder current state
-#--------------------------------------------------------------------------
-"""
-"""
-RUNNING                     =   0
-STOPPED                     =   1
-PAUSED                      =   2
-STARTING                    =   3
-
-PAUSING                     =   5
-#FINISHED                    =   6
-ERROR_LIMIT                 =   7
-"""
-
-#CHECKPOINT_STARTED          =   8
-#CHECKPOINT_COMPLETE         =   9
-
-
-#LOAD                        =   10
-#START                       =   11
-#STOP                        =   12
-#PAUSE                       =   13
-#RESUME                      =   14
-
-
-#GEOCODE_BAR                 =   0
-#ERROR_BAR                   =   1
-
 
 
 
@@ -609,9 +570,8 @@ class google_address_components:
     def __init__(self,addr_comps) :
         self.address_components = addr_comps
 
-        from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import GEOCODE_TRACE_GET_GEOCODE_DETAILS
         from dfcleanser.common.cfg import add_debug_to_log 
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             add_debug_to_log("google_address_components"," addr_comps : " + str(type(addr_comps)) + " : " + str(len(addr_comps)))
             for i in range(len(addr_comps)) :
                 add_debug_to_log("google_address_components"," addr_comps : " + str(addr_comps[i]))
@@ -724,9 +684,7 @@ def split_geocode_address(geo_addr) :
 
             first_comma     =   geo_addr.find(",") 
             if(first_comma > -1) :
-                print("cm1 ",geo_addr[(first_comma+1):])
                 second_comma    =   geo_addr[(first_comma+1):].find(",") 
-                print("second_comma ",second_comma)
                 if(second_comma > -1) :
                     return([geo_addr[:(second_comma+first_comma)+1],geo_addr[((second_comma+first_comma)+2):]]) 
                 else :

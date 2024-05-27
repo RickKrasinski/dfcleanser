@@ -23,8 +23,12 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
-from dfcleanser.Qt.utils.Geocode.GeocodeModel import DEBUG_GEOCODE
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
+
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -173,8 +177,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         
     def init_gui(self):
 
-        if(DEBUG_GEOCODE) :
-            print("initgui")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("initgui"))
         
         # set up the ui form from a qtdesigner ui
         cfgdir  = cfg.DataframeCleanserCfgData.get_dfc_qt_dir_name()
@@ -230,8 +234,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         # init the gui form
         self.init_geocode_form()
 
-        if(DEBUG_GEOCODE) :
-            print("initgui end")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("initgui end"))
            
 
     # -----------------------------------------------------------------#
@@ -239,8 +243,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_geocode_buttons(self):
 
-        if(DEBUG_GEOCODE) :
-            print("[SystemGui][init_geocode_buttons]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[SystemGui][init_geocode_buttons]  "))
 
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 
@@ -278,23 +282,24 @@ class GeocodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_geocode_splash_screen(self):
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][init_geocode_splash_screen]  ")
+        from dfcleanser.common.cfg import SWGeocodeUtility_ID
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][init_geocode_splash_screen]  "))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_chapter_splash_screen
         from dfcleanser.common.cfg import SWGeocodeUtility_ID
         build_chapter_splash_screen(SWGeocodeUtility_ID, self.form.Geocodesplash)
 
-        if(DEBUG_GEOCODE) :
-            print("[end init_geocode_splash_screen]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[end init_geocode_splash_screen]  "))
 
     # -----------------------------------------------------------------#
     # -             Initialize the dfs select form                    -#
     # -----------------------------------------------------------------#
     def init_geocode(self):
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][init_geocode]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][init_geocode]  "))
 
         from PyQt5.QtWidgets import QLabel
         self.blank_label   =   QLabel()
@@ -331,8 +336,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_geocode_form(self):
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][init_geocode_form]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][init_geocode_form]  "))
 
         self.init_geocode_buttons()
         self.init_geocode_splash_screen()
@@ -348,8 +353,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.form.selectgeoocoderbutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][select_geocoder]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+           add_debug_to_log("Geocode",print_to_string("[GeocodeGui][select_geocoder]  "))
 
         self.display_select_geocoder()
 
@@ -357,8 +362,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.form.geocodequerybutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][geocode_query]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][geocode_query]  "))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY
         self.display_interactive_geocoding(QUERY)
@@ -367,8 +372,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.form.geocodereversebutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][geocode_reverse]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][geocode_reverse]  "))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import REVERSE
         self.display_interactive_geocoding(REVERSE)
@@ -377,8 +382,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.form.geocodebulkbutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][geocode_bulk]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][geocode_bulk]  "))
 
         from dfcleanser.common.common_utils import run_jscript
         jscript     =   "add_dfcleanser_chapter(" + str(cfg.DC_GEOCODE_BULK_ID) + ");"
@@ -388,8 +393,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.form.geocodeutilitiesbutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][geocode_utilities]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][geocode_utilities]  "))
 
         self.display_geocoding_utilities()
 
@@ -397,8 +402,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         #self.form.geocodehelpbutton.toggle()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][geocode_help]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][geocode_help]  "))
 
         from dfcleanser.common.common_utils import display_url
         display_url("https://rickkrasinski.github.io/dfcleanser-help/dfcleanser-geocoding.html")
@@ -413,8 +418,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_select_geocoder(self,bulkflag=False,geocoderid=None):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocode_select_geocoder]  ",bulkflag,geocoderid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",bulkflag,geocoderid))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -423,8 +428,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
             geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId, BingId, GoogleId, OpenMapQuestId, NominatimId)
         if(geocoderid == BingId) :
@@ -443,13 +448,13 @@ class GeocodeGui(QtWidgets.QMainWindow):
            index_id     =   DISPLAY_SELECT_NOMINATUM_GEOCODER
            height       =   800
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid,index_id,height)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocode_select_geocoder]  ",geocoderid,index_id,height))
 
         select_geocoder_index  =   self.GeocodeWidgets_stack_dict.get(index_id)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_select_geocoder]  index : ",select_geocoder_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_select_geocoder]  index : ",select_geocoder_index))
         
         if(select_geocoder_index is None) :
 
@@ -486,8 +491,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_select_geocoder] reload_data:  ",select_geocoder_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_select_geocoder] reload_data:  ",select_geocoder_index))
 
             if(geocoderid == BingId)                : self.Bing_Geocode_select_geocoder.reload_data(self,bulkflag,geocoderid)
             elif(geocoderid == GoogleId)            : self.Google_Geocode_select_geocoder.reload_data(self,bulkflag,geocoderid)
@@ -499,8 +504,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_select_geocoder] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_select_geocoder] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,height)
 
@@ -520,8 +525,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_interactive_geocoding]  type : geocodeid : ",geocoding_type,geocoderid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_interactive_geocoding]  type : geocodeid : ",geocoding_type,geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (QUERY, REVERSE)
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId,BingId,GoogleId,OpenMapQuestId, NominatimId, get_geocoder_title)
@@ -569,13 +574,13 @@ class GeocodeGui(QtWidgets.QMainWindow):
                 index_id     =   DISPLAY_NOMINATUM_REVERSE_GEOCODING
                 height       =   900
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding]  ",index_id,height)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_interactive_geocoding]  ",index_id,height))
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(index_id)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_interactive_geocoding]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -632,8 +637,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_interactive_geocoding] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_interactive_geocoding] reload_data:  ",geocoding_index))
 
             if(geocoding_type == QUERY) :
            
@@ -655,8 +660,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_interactive_geocoding] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_interactive_geocoding] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,height)
 
@@ -675,9 +680,9 @@ class GeocodeGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data]  type : geocodid : ",geocoding_type,geocoderid)
-            print("[GeocodeGui][display_geocoding_data]  results : ",results)            
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_data]  type : geocodid : ",geocoding_type,geocoderid))
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_data]  results : ",results))           
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import (QUERY)
 
@@ -686,8 +691,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_REVERSE_RESULTS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_data]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -725,8 +730,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_data] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_data] reload_data:  ",geocoding_index))
 
             if(geocoding_type == QUERY) :
                 self.geocode_query_results.reload_data(self,geocoding_type,results)
@@ -737,8 +742,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_data] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_data] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,800)
 
@@ -754,9 +759,9 @@ class GeocodeGui(QtWidgets.QMainWindow):
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_data]  type : ",geocoding_type,units)
-            print("[GeocodeGui][display_geocoding_distance_data]  results : \n   ",results)            
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_data]  type : ",geocoding_type,units))
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_data]  results : \n   ",results))            
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
 
@@ -765,8 +770,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_LAT_LNG_DISTANCE_RESULTS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_data]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_data]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -804,8 +809,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_distance_data] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_data] reload_data:  ",geocoding_index))
 
             if(geocoding_type == ADDRESS) :
                 self.geocode_address_distance_results.reload_data(self,geocoding_type,units,results)
@@ -816,8 +821,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_data] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_data] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,600)
 
@@ -847,23 +852,23 @@ class GeocodeGui(QtWidgets.QMainWindow):
             self.colname    =   geopoints[1] 
 
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point_data]  type : ",center_point_type)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data]  type : ",center_point_type))
             if(center_point_type == USER_LOCATION) :
-                print("[GeocodeGui][display_geocoding_center_point_data] geopoints :   \n",geopoints)
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data] geopoints :   \n",geopoints))
             else :
-                print("[GeocodeGui][display_geocoding_center_point_data] dftitle :  colname : ",self.dftitle,self.colname)
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data] dftitle :  colname : ",self.dftitle,self.colname))
 
 
-            print("[GeocodeGui][display_geocoding_center_point_data]  center_point :   ",center_point)            
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data]  center_point :   ",center_point) )           
 
         if(center_point_type == USER_LOCATION) :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_CENTER_POINT_RESULTS)
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_DF_CENTER_POINT_RESULTS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point_data]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -901,8 +906,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_center_point_data] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data] reload_data:  ",geocoding_index))
 
             if(center_point_type == USER_LOCATION) :
                 self.geocode_center_point_results.reload_data(self,center_point_type,geopoints,center_point)
@@ -913,8 +918,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point_data] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point_data] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         if(center_point_type == USER_LOCATION) :
             self.resize(1070,600)
@@ -930,8 +935,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_utilities(self):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_utilities]  ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_utilities]  "))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -939,13 +944,13 @@ class GeocodeGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities]  ",geocoderid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_utilities]  ",geocoderid))
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_UTILITIES )
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_utilities]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -973,16 +978,16 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_utilities] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_utilities] reload_data:  ",geocoding_index))
 
             self.geocode_utilities.init_command_bar()
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_utilities] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_utilities] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,350)
 
@@ -995,8 +1000,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_distance_utility(self,gintype):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_distance_utility]",gintype)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_utility]",gintype))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1004,8 +1009,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_current_geocoder_id
         geocoderid  =   get_current_geocoder_id()
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility]  ",geocoderid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_utility]  ",geocoderid))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS, LAT_LNG
         if(gintype == ADDRESS) :
@@ -1015,8 +1020,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_DATAFRAME_DISTANCE)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_utility]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1084,20 +1089,15 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_distance_utility] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_utility] reload_data:  ",geocoding_index))
             
-            #if(gintype == ADDRESS) :
-            #    self.geocode_address_distance_utility.reload_data(self)
-            #else :
-            #    self.geocode_latlng_distance_utility.reload_data(self)
-
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_utility] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_utility] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,900)
 
@@ -1110,8 +1110,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_center_point(self,ptsource):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_center_point]",ptsource)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point]",ptsource))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1122,8 +1122,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_DF_CENTER_POINT)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1178,15 +1178,15 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_center_point] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_center_point] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_center_point] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         if(ptsource == USER_LOCATION) :
             self.resize(1070,750)
@@ -1201,8 +1201,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_distance_from_fixed_location(self,fixedpt_type):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_distance_from_fixed_location]",fixedpt_type)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location]",fixedpt_type))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
@@ -1215,8 +1215,8 @@ class GeocodeGui(QtWidgets.QMainWindow):
         else :
             geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_GEOCODE_LIST_POINT_RESULTS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_from_fixed_location]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1284,15 +1284,15 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_distance_from_fixed_location] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_distance_from_fixed_location] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_distance_from_fixed_location] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         if(fixedpt_type == USER_LOCATION) :
             self.resize(1070,850)
@@ -1308,16 +1308,16 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_split(self):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_split]")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_split]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_SPLIT_COLUMN)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_split]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_split]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1356,15 +1356,15 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_split] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_split] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_split] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_split] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,700)
 
@@ -1374,16 +1374,16 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
     def display_geocoding_join(self):
 
-        if(DEBUG_GEOCODE) :
-            print("\n[GeocodeGui][display_geocoding_join]")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_join]"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat      =   opStatus()
 
         geocoding_index  =   self.GeocodeWidgets_stack_dict.get(DISPLAY_JOIN_COLUMNS)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_join]  index : ",geocoding_index)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_join]  index : ",geocoding_index))
         
         if(geocoding_index is None) :
 
@@ -1422,15 +1422,15 @@ class GeocodeGui(QtWidgets.QMainWindow):
 
         else :
 
-            if(DEBUG_GEOCODE) :
-                print("[GeocodeGui][display_geocoding_join] reload_data:  ",geocoding_index)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+                add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_join] reload_data:  ",geocoding_index))
 
             current_index   =   geocoding_index
 
         self.stackedLayout.setCurrentIndex(current_index)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeGui][display_geocoding_join] end : stack \n  ",self.GeocodeWidgets_stack_dict)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("Geocode",print_to_string("[GeocodeGui][display_geocoding_join] end : stack \n  ",self.GeocodeWidgets_stack_dict))
 
         self.resize(1070,750)
 

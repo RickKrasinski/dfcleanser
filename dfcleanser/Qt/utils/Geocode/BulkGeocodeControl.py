@@ -15,6 +15,10 @@ import sys
 import googlemaps
 
 import dfcleanser.common.cfg as cfg
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
 
 import dfcleanser.Qt.utils.Geocode.BulkGeocodeModel as BGM
 import dfcleanser.Qt.utils.Geocode.GeocodeModel as GM
@@ -25,12 +29,9 @@ from dfcleanser.common.common_utils import (opStatus, get_parms_for_input, run_j
 
 from dfcleanser.sw_utilities.DisplayUtils import (get_exception_html, display_status_note, display_notes, displayParms)
 
-from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import (GEOCODE_TRACE_GET_GEOCODE, GEOCODE_TRACE_GET_GEOCODE_LOAD, 
-                                                          GEOCODE_TRACE_GET_GEOCODE_VALUES, GEOCODE_TRACE_PROCESS_RESULTS)
-
 from math import floor
 
-DEBUG_MERGE     =   False
+
 """
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
@@ -52,8 +53,8 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
     * --------------------------------------------------------
     """
 
-    if(GEOCODE_TRACE_GET_GEOCODE)  :   
-        cfg.add_debug_to_log("process_bulk_geocoding_run_cmd",,str(cmd))
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
+        cfg.add_debug_to_log("process_bulk_geocoding_run_cmd",str(cmd))
     
     opstat  =   opStatus()
     
@@ -64,7 +65,7 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
         if(not (opstat.get_status()) ) :
             send_run_report_error(cmd, opstat.get_errorMsg())
     
-        if(GEOCODE_TRACE_GET_GEOCODE)  :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :
             cfg.add_debug_to_log("process_bulk_geocoding_run_cmd[BULK_START_GEOCODER]"," status : " + str(opstat.get_status()))  
             
     elif(cmd == BGM.BULK_STOP_GEOCODER) :
@@ -128,7 +129,7 @@ def process_bulk_geocoding_run_cmd(cmd, parms=None) :
 def send_run_report_error(cmd, err_msg) :
     
     report_error_js     =   "report_geocode_run_error(" + str(cmd) + ",'" + err_msg + "');"
-    if(BGM.DEBUG_GEOCODE_BULK_UTILS)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_BULK_UTILS"))  :   
         cfg.add_debug_to_log("send_run_report_error ",str(cmd) + " " + str(err_msg))
     
     from dfcleanser.common.common_utils import run_jscript
@@ -158,7 +159,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
     * --------------------------------------------------------------------------
     """
     
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("get_bulk_coords",str(geocid) + " " + str(refresh))
     
     opstat  =   opStatus()
@@ -171,7 +172,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             fparms  =   get_parms_for_input(inputs,BG.bulk_google_query_input_idList)
             cfg.set_config_value(BG.bulk_google_query_input_id+"Parms",fparms)
     
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("get_bulk_coords][cfg.set_config_value]", str(BG.bulk_google_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_query_input_id+"Parms")))
 
             parms   =   inputs
@@ -181,7 +182,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             fparms  =   get_parms_for_input(inputs,BG.bulk_bing_query_input_idList)
             cfg.set_config_value(BG.bulk_bing_query_input_id+"Parms",fparms)
             
-            if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                 cfg.add_debug_to_log("get_bulk_coords][cfg.set_config_value",str(BG.bulk_bing_query_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_query_input_id+"Parms")))
 
             parms   =   inputs
@@ -214,7 +215,7 @@ def get_bulk_coords(geocid,inputs,refresh=False) :
             
             elif(geocid == GM.BingId) :
 
-                if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                     cfg.add_debug_to_log("get_bulk_coords][runParms]"," \n        " + str(runParms))
 
                 df_title    =  runParms.get("dataframe_to_geocode")
@@ -251,7 +252,7 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
     * --------------------------------------------------------
     """
     
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("get_bulk_addresses",str(geocid) + " " + str(refresh))
         cfg.add_debug_to_log("get_bulk_addresses"," inputs \n              " + str(inputs))
     
@@ -265,7 +266,7 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
             fparms  =   get_parms_for_input(inputs,BG.bulk_google_reverse_input_idList)
             cfg.set_config_value(BG.bulk_google_reverse_input_id+"Parms",fparms)
 
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("get_bulk_coords[cfg.set_config_value]",str(BG.bulk_google_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_google_reverse_input_id+"Parms")))
 
             parms   =   inputs
@@ -273,7 +274,7 @@ def get_bulk_addresses(geocid,inputs,refresh=False) :
             fparms  =   get_parms_for_input(inputs,BG.bulk_bing_reverse_input_idList)
             cfg.set_config_value(BG.bulk_bing_reverse_input_id+"Parms",fparms)
 
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("get_bulk_coords[cfg.set_config_value]",str(BG.bulk_bing_reverse_input_id+"Parms") + " " + str(cfg.get_config_value(BG.bulk_bing_reverse_input_id+"Parms")))
 
             parms   =   inputs
@@ -342,7 +343,7 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     * ------------------------------------------------------
     """
 
-    if(BGM.GEOCODE_TRACE_PROCESS_ERRORS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS")) :
         cfg.add_debug_to_log("process_bulk_geocoding_errors","  : " + str(inputParms))
         cfg.add_debug_to_log("process_bulk_geocoding_errors"," error msg : " + str(error_msg) + " : " + str(note))
 
@@ -354,7 +355,7 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     
     dfc_error_log       =  BGM.get_geocode_runner_error_log() 
 
-    if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
         cfg.add_debug_to_log("process_bulk_geocoding_errors"," : " + str(geotype) + " state : " + str(BGM.get_geocode_runner_state()) + " error_count : " + str(BGM.get_geocode_runner_error_log().get_error_count()) + " error_limit : " + str(error_limit) + " current_error_rate : " + str(current_error_rate))
 
     opstat  =   opStatus()
@@ -368,7 +369,7 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
     
         BGM.set_progress_bar_value(geocid,geotype,BGM.ERROR_BAR,total_errors,int(current_error_rate))
     
-        if(BGM.GEOCODE_TRACE_PROCESS_ERRORS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS")) :
             cfg.add_debug_to_log("process_bulk_geocoding_errors"," : current_error_rate : error_limit : " + str(inputParms) + str(current_error_rate) + " : " + str(error_limit))
 
         if(current_error_rate > error_limit) :
@@ -389,11 +390,11 @@ def process_bulk_geocoding_errors(geocid,geotype,rowid,inputParms,error_msg,note
                 
                 BGM.control_bulk_keys([BGM.DISABLE,BGM.DISABLE,BGM.DISABLE,BGM.DISABLE,BGM.ENABLE,BGM.ENABLE,BGM.ENABLE],"F")
             
-            if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
                 cfg.add_debug_to_log("process_bulk_geocoding_errors"," : error limit exceeded : error_limit : " + str(error_limit) + " total_results : " + str(total_results) + " total_errors : " + str(total_errors))
             
     except :
-        if(BGM.GEOCODE_TRACE_PROCESS_ERRORS)  : 
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  : 
             cfg.add_debug_to_log("process_bulk_geocoding_errors"," Exception : " + str(geocid) + " " + str(geotype) + " " + str(rowid) + " " + str(sys.exc_info()[0].__name__))
 
 
@@ -401,7 +402,7 @@ def set_error_limit_shutoff() :
 
     BGM.set_geocode_runner_state(BGM.ERROR_LIMIT) 
     
-    if(GEOCODE_TRACE_GET_GEOCODE)  : 
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  : 
         cfg.add_debug_to_log("set_error_limit_shutoff"," : geocoder state : " + str(BGM.get_geocode_runner_state()))
 
     
@@ -485,7 +486,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
         cfg.add_debug_to_log("get_google_query_results"," : " + address)
         
     geocode_results =   None
@@ -494,7 +495,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
     if(gmaps == None) :
         cparms  =   cfg.get_config_value(BG.google_bulk_geocoder_id+"Parms")
 
-        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
             cfg.add_debug_to_log("got_google_connection"," : " + str(cparms))
 
         gmaps   =   BG.get_bulk_google_geocoder_connection(cparms[0],cparms[1],cparms[2],opstat)        
@@ -531,7 +532,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
                                                   language=languageParm)
                 except Exception as e :
 
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("dfcleanser exception","unable to get  geocode_results] : ")
 
 
@@ -571,7 +572,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
 
     if(opstat.get_status()) :  
 
-        if(GEOCODE_TRACE_GET_GEOCODE)  :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :
             cfg.add_debug_to_log("get_google_query_results"," ok location : " + str(address) + " : " + str(len(geocode_results)))
         
         try :
@@ -588,7 +589,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
 
     else :
         
-        if(GEOCODE_TRACE_GET_GEOCODE)  :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :
             cfg.add_debug_to_log("get_google_query_results"," exception : " + opstat.getErrorMsg())
 
 
@@ -597,7 +598,7 @@ def get_google_query_results(rowid,address,queryParms,opstat) :
 
 def process_google_query_results(rowid,inputParms,runParms,geocode_results,opstat,error_rowid=None) :
     """
-    * -------------------------------------------------------------------------- 
+    * ---------------------------------------------------------
     * function : process google goeocode results
     * 
     * parms :
@@ -614,12 +615,12 @@ def process_google_query_results(rowid,inputParms,runParms,geocode_results,opsta
     
     results_df          =   BGM.get_geocode_runner_results_log()
 
-    if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
         cfg.add_debug_to_log("process_google_query_results","  : " + str(inputParms) ) 
     
     if(not(error_rowid is None)):
         
-        if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
             cfg.add_debug_to_log("add_nan_result for None","")        
 
         results_df.add_nan_result(error_rowid,inputParms,geocode_results,opstat)
@@ -641,7 +642,7 @@ def process_google_query_results(rowid,inputParms,runParms,geocode_results,opsta
             if(full_addr_col_name == "None") :
                 save_full_address   =   False
      
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_query_results","  : lat_long_merged " + str(lat_long_merged) ) 
                 cfg.add_debug_to_log("process_google_query_results","  : save_full_address " + str(save_full_address) ) 
 
@@ -686,25 +687,25 @@ def find_best_google_reverse_result(rowid,reverse_results,reverseParms) :
         if("ROOFTOP" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "ROOFTOP") :
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("find_best_google_reverse_result][ROOFTOP]",str(i))
                     return(reverse_results[i])
         elif("GEOMETRIC_CENTER" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "GEOMETRIC_CENTER") :
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("find_best_google_reverse_result][GEOMETRIC_CENTER]",str(i))
                     return(reverse_results[i])
         elif("RANGE_INTERPOLATED" in location_types) :
             for i in range(len(reverse_results)) :
                 if(reverse_results[i].get("geometry").get("location_type") == "RANGE_INTERPOLATED") :
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("find_best_google_reverse_result][RANGE_INTERPOLATED]",str(i))
                     return(reverse_results[i])
         elif("APPROXIMATE" in location_types) :
             return(reverse_results[0])
         else :
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("find_best_google_reverse_result][NOT FOUND]",str(i))
 
             return(None)
@@ -728,7 +729,7 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
     *    google geocode results
     * --------------------------------------------------------
     """
-    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
         cfg.add_debug_to_log("get_google_reverse_results"," : lat_lng " + str(lat_long))
     
     reverse_results =   None
@@ -791,7 +792,7 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
             opstat.set_status(False)
             import sys
             opstat.set_errorMsg("get_google_reverse_results exception : " + str(sys.exc_info()[0].__name__))
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")"))  :   
                 cfg.add_debug_to_log("get_google_reverse_results"," exception : " + str(sys.exc_info()[0].__name__))
 
             
@@ -805,11 +806,11 @@ def get_google_reverse_results(rowid,lat_long,reverseParms,opstat) :
                 current_reverse_results    =  None
                 opstat.set_status(False)
                 opstat.set_errorMsg("get_google_reverse_results assign results exception : ")
-                if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                     cfg.add_debug_to_log("find_best_google_reverse_result"," exception : " + str(sys.exc_info()[0].__name__))
 
     
-    if(GEOCODE_TRACE_GET_GEOCODE)  :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :
         if(current_reverse_results is None) :
             cfg.add_debug_to_log("get_google_reverse_results None] : ","")
         else :
@@ -832,14 +833,14 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
     *    NA stored in results df
     * --------------------------------------------------------
     """
-    if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
         cfg.add_debug_to_log("process_google_reverse_results"," inparms : " + str(inputParms))
     
     results_df          =   BGM.get_geocode_runner_results_log()
     
     if(not(error_rowid is None)):
         
-        if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
             cfg.add_debug_to_log("process_google_reverse_results"," add_nan_result for None")        
 
         parmsDict   =   None
@@ -853,7 +854,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             requested_addr_comps    =   runParms.get("address_components_list")
             user_addr_comps         =   GM.get_google_address_components(requested_addr_comps)
 
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_reverse_results"," user_addr_comps : \n      " + str(user_addr_comps))
             
             addr_length             =   runParms.get("address_components_length_flag")
@@ -877,7 +878,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
                     else :
                         addr_comps.append(addr_comp)
                 
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_reverse_results"," retrieved addr_comps : \n     " + str(addr_comps))
                     
             row_reverse_results     =   []
@@ -890,13 +891,13 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             
             row_reverse_results.append(reverse_results.get_location_type())
             
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_reverse_results"," row_reverse_results : \n    " + str(row_reverse_results))
 
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import REVERSE,GoogleId
             georunParms  =   [REVERSE,GoogleId,inputParms,runParms]
 
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_reverse_results"," georunParms : " + str(georunParms))
 
             #results_df          =   BGM.get_geocode_runner_results_log()
@@ -906,7 +907,7 @@ def process_google_reverse_results(rowid,inputParms,runParms,reverse_results,ops
             opstat.set_status(False)
             import sys
             opstat.set_errorMsg("process_google_reverse_results exception " + str(sys.exc_info()[0].__name__))
-            if(GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_google_reverse_results"," exception : " + str(inputParms))
 
 
@@ -936,7 +937,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
     from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import bulk_geocodes_sent_out
     bulk_geocodes_sent_out.append(rowid)
 
-    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
         cfg.add_debug_to_log("get_geopy_geocoder_results"," : address " + str(geocid) + " " + str(geotype) + " " + str(geoparm))  
 
     if(geotype == GM.QUERY) :
@@ -954,7 +955,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             include_country_code_parm   =   api_parms.get_api_parm("include_country_code_parm")
 
 
-            if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")_VALUES)  :   
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : query : " + geoparm)
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : user_location_parm : " + str(user_location_parm) + str(type(user_location_parm)))
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," culture_parm : " + str(culture_parm) + str(type(culture_parm)))
@@ -993,7 +994,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
 
         if(geocid == GM.BingId) :
             
-            if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")_DETAILS"))  :   
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : bing reverse : " + str(geoparm))
 
             lat_lng                     =   geoparm.replace("[","")
@@ -1005,7 +1006,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             
             geo_lat_lng                 =   [lat,lng]
             
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : geo_lat_lng : " + str(geo_lat_lng) )
             
             import geopy.point    
@@ -1017,7 +1018,7 @@ def get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,geoparm,queryParm
             culture_parm                =   api_parms.get_api_parm("culture_parm")
             include_country_code_parm   =   api_parms.get_api_parm("include_country_code_parm")
 
-            if(GEOCODE_TRACE_GET_GEOCODE_VALUES)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : query : " + geoparm)
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : culture_parm : " + str(culture_parm) + str(type(culture_parm)))
                 cfg.add_debug_to_log("get_geopy_geocoder_results"," : include_country_code_parm : " + str(include_country_code_parm) + str(type(include_country_code_parm)))
@@ -1048,14 +1049,14 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
     import geopy
     current_geocode_results =   None
 
-    if(0):#GEOCODE_TRACE_GET_GEOCODE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
         cfg.add_debug_to_log("get_geopy_geocode_results"," address : " + str(address))
 
     geolocator = GC.get_geocoder_engine(geocid,opstat)
     
     if(not(opstat.get_status())) :
         opstat.set_errorMsg(GC.GeopyGeocoderConnectionErrorMessage)
-        if(GEOCODE_TRACE_GET_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
             cfg.add_debug_to_log("get_geopy_geocode_results"," [get_geocoder_engine-failure] : " + str(opstat.get_status()) )  
 
     if(opstat.get_status()) :   
@@ -1064,7 +1065,7 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
 
             geocode_results    =   get_geopy_geocoder_results(geocid,geotype,geolocator,rowid,address,queryParms) 
 
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("get_geopy_geocode_results"," : location : " + str(geocode_results))
 
         except geopy.exc.GeopyError :
@@ -1114,7 +1115,7 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
                     latitude        =   geocode_results.latitude
                     longitude       =   geocode_results.longitude
                     
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("get_geopy_geocode_results"," : " + str(latitude) + " : " + str(longitude))
             
                     try :
@@ -1127,13 +1128,13 @@ def get_geopy_geocode_results(geocid,geotype,rowid,address,queryParms,opstat) :
             
                 if( not (geocode_results is None)) :
 
-                    if(GEOCODE_TRACE_GET_GEOCODE) :
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
                         cfg.add_debug_to_log("get_geopy_geocode_results"," got geocode results : " + str(type(geocode_results)))
 
 
                     full_address    =   geocode_results.get_location()#
 
-                    if(GEOCODE_TRACE_GET_GEOCODE) :
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
                         cfg.add_debug_to_log("get_geopy_geocode_results"," full_address : " + str(type(full_address)))
 
                     try :
@@ -1171,7 +1172,7 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
     * --------------------------------------------------------
     """
 
-    if(GEOCODE_TRACE_PROCESS_RESULTS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS")) :
         cfg.add_debug_to_log("process_geopy_geocode_results"," : " + str(inputParms) + " error : " + str(error_rowid))
     
     results_df          =   BGM.get_geocode_runner_results_log()
@@ -1211,7 +1212,7 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
                         
                         addrcompsflag   =   runParms.get("address_components_to_retrieve")
                             
-                        if(GEOCODE_TRACE_PROCESS_RESULTS) :
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS")) :
                             cfg.add_debug_to_log("process_geopy_geocode_results"," addrcompsflag : " + str(addrcompsflag))
 
                         if( (addrcompsflag is None) or (addrcompsflag == "Full Address Only") ) : 
@@ -1238,13 +1239,13 @@ def process_geopy_geocode_results(rowid,geocid,geotype,inputParms,runParms,geopy
             import sys
             opstat.set_errorMsg("Error getting geopy " + str(geocid) + " results : " + str(sys.exc_info()[0].__name__))
             
-            if(BGM.GEOCODE_TRACE_PROCESS_RESULTS)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
                 cfg.add_debug_to_log("process_geopy_geocode_results","[Error getting geopy] " + str(sys.exc_info()[0].__name__))        
 
     
     else : # error row
         
-        if(BGM.GEOCODE_TRACE_PROCESS_RESULTS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_RESULTS"))  :   
             cfg.add_debug_to_log("add_nan_result"," for None")        
 
         results_df.add_nan_result(error_rowid,inputParms,None,opstat)
@@ -1924,7 +1925,7 @@ def validate_bing_bulk_parms(geotype,inputs,opstat) :
                 
     if(opstat.get_status()) :  
 
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("validate_bing_bulk_parms"," \n    " + str(bulk_geocode_kwargs))
 
         return(bulk_geocode_kwargs)
@@ -1944,7 +1945,7 @@ def refresh_bulk_geocode_console() :
     geocid   =   BGM.get_geocode_runner_id() 
     geotype  =   BGM.get_geocode_runner_type() 
     
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("refresh_bulk_geocode_console",str(geocid) + " " + str(geotype))
     
     if(geotype == BGM.QUERY) :
@@ -2269,7 +2270,7 @@ def merge_bulk_results(geocode_id,geocode_type,parms) :
     * returns : N/A
     * --------------------------------------------------------
     """
-    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
         cfg.add_debug_to_log("merge_bulk_results"," : " + str(geocode_id) + " " + str(geocode_type))
         cfg.add_debug_to_log("merge_bulk_results"," : " + str(parms))
 
@@ -2327,16 +2328,16 @@ def process_google_bulk_query_merge(parms,runParms,user_df,results_df,error_df) 
     results_lat_lng_col_name_list   =   get_lat_lng_col_names(results_lat_lng_col_name)
     merge_lat_lng_col_name_list     =   get_lat_lng_col_names(merge_lat_lng_col_name)
 
-    if(DEBUG_MERGE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
 
-        print("results_lat_lng_col_name",results_lat_lng_col_name)
-        print("results_full_address_col_name",results_full_address_col_name)
-        print("merge_lat_lng_col_name",merge_lat_lng_col_name)
-        print("merge_error_value",merge_error_value)
-        print("merge_empty_value",merge_empty_value)
-        print("merge_full_address_col_name",merge_full_address_col_name)
-        print("results_lat_lng_col_name_list",results_lat_lng_col_name_list)
-        print("merge_lat_lng_col_name_list",merge_lat_lng_col_name_list)
+        add_debug_to_log("DataExport",print_to_string("results_lat_lng_col_name",results_lat_lng_col_name))
+        add_debug_to_log("DataExport",print_to_string("results_full_address_col_name",results_full_address_col_name))
+        add_debug_to_log("DataExport",print_to_string("merge_lat_lng_col_name",merge_lat_lng_col_name))
+        add_debug_to_log("DataExport",print_to_string("merge_error_value",merge_error_value))
+        add_debug_to_log("DataExport",print_to_string("merge_empty_value",merge_empty_value))
+        add_debug_to_log("DataExport",print_to_string("merge_full_address_col_name",merge_full_address_col_name))
+        add_debug_to_log("DataExport",print_to_string("results_lat_lng_col_name_list",results_lat_lng_col_name_list))
+        add_debug_to_log("DataExport",print_to_string("merge_lat_lng_col_name_list",merge_lat_lng_col_name_list))
 
     
     user_df_col_names   =   list(user_df.columns)
@@ -2394,14 +2395,14 @@ def process_google_bulk_query_merge(parms,runParms,user_df,results_df,error_df) 
         error_indices.append(lat_index)
         error_indices.append(lng_index)
 
-    if(DEBUG_MERGE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
 
-        print("\n[process_bing_bulk_query_merge][full_address_index]",full_address_index)
+        add_debug_to_log("DataExport",print_to_string("[process_bing_bulk_query_merge][full_address_index]",full_address_index))
         if(len(merge_lat_lng_col_name_list) == 1) :
-            print("\n[process_bing_bulk_query_merge][lat_lng_index]",lat_lng_index)
+            add_debug_to_log("DataExport",print_to_string("[process_bing_bulk_query_merge][lat_lng_index]",lat_lng_index))
         else:
-            print("\n[process_bing_bulk_query_merge][lat_index]",lat_index)
-            print("\n[process_bing_bulk_query_merge][lng_index]",lng_index)
+            add_debug_to_log("DataExport",print_to_string("[process_bing_bulk_query_merge][lat_index]",lat_index))
+            add_debug_to_log("DataExport",print_to_string("[process_bing_bulk_query_merge][lng_index]",lng_index))
 
     # insert values into columns
     for i in range(len(results_df)) :
@@ -2474,14 +2475,14 @@ def process_google_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df
     merge_empty_value               =   fparms[2]
     merge_addr_comps                =   fparms[3]
 
-    if(DEBUG_MERGE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
 
-        print("results_addr_comps",results_addr_comps)
-        print("results_full_address_col_name",results_full_address_col_name)
-        print("merge_addr_comps",type(merge_addr_comps),merge_addr_comps)
-        print("merge_error_value",merge_error_value)
-        print("merge_empty_value",merge_empty_value)
-        print("merge_full_address_col_name",merge_full_address_col_name)
+        add_debug_to_log("Geocode",print_to_string("results_addr_comps",results_addr_comps))
+        add_debug_to_log("Geocode",print_to_string("results_full_address_col_name",results_full_address_col_name))
+        add_debug_to_log("Geocode",print_to_string("merge_addr_comps",type(merge_addr_comps),merge_addr_comps))
+        add_debug_to_log("Geocode",print_to_string("merge_error_value",merge_error_value))
+        add_debug_to_log("Geocode",print_to_string("merge_empty_value",merge_empty_value))
+        add_debug_to_log("Geocode",print_to_string("merge_full_address_col_name",merge_full_address_col_name))
 
 
     # Check if lat lang columns already exist
@@ -2496,9 +2497,9 @@ def process_google_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df
 
     merge_addr_comps    =   get_google_addr_comps(merge_addr_comps)
     
-    if(DEBUG_MERGE) :
-        print("\nmerge_addr_comps",type(merge_addr_comps),merge_addr_comps)
-        print("user_df_col_names\n",user_df_col_names)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("merge_addr_comps",type(merge_addr_comps),merge_addr_comps))
+        add_debug_to_log("Geocode",print_to_string("user_df_col_names\n",user_df_col_names))
 
 
     if( (type(merge_addr_comps) == list)  and (len(merge_addr_comps) > 0) ):
@@ -2515,9 +2516,9 @@ def process_google_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df
     # get indices of new olumn values
     user_df_col_names   =   list(user_df.columns)
 
-    if(DEBUG_MERGE) :
-        print("\nmerge_addr_comps",type(merge_addr_comps),merge_addr_comps)
-        print("user_df_col_names",user_df_col_names)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("merge_addr_comps",type(merge_addr_comps),merge_addr_comps))
+        add_debug_to_log("Geocode",print_to_string("user_df_col_names",user_df_col_names))
 
     error_indices   =   []
 
@@ -2539,11 +2540,11 @@ def process_google_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df
                     merge_addr_comps_indices.append(j)
                     break
    
-    if(DEBUG_MERGE) :
-        print("\ncols list",user_df_col_names)
-        print("[process_google_bulk_query_merge][full_address_index]",full_address_index)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("cols list",user_df_col_names))
+        add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][full_address_index]",full_address_index))
         if(len(merge_addr_comps) > 1) :
-            print("[process_google_bulk_query_merge][merge_addr_comps_indices]",merge_addr_comps_indices)
+            add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][merge_addr_comps_indices]",merge_addr_comps_indices))
 
     # insert values into columns
     for i in range(len(results_df)) :
@@ -2557,8 +2558,8 @@ def process_google_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df
             for j in range(len(merge_addr_comps)) :
                 addr_comp_values.append(results_df.iloc[i,(3+j)])
 
-        if(DEBUG_MERGE) :
-            print("\naddr_comp_values",addr_comp_values)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+            add_debug_to_log("Geocode",print_to_string("addr_comp_values",addr_comp_values))
         
         # add value to the user df
         user_df.iloc[row_id,full_address_index]     =   full_address_value
@@ -2602,11 +2603,11 @@ def process_bing_bulk_query_merge(parms,runParms,user_df,results_df,error_df) :
     results_lat_lng_col_name_list   =   get_lat_lng_col_names(results_lat_lng_col_name)
     merge_lat_lng_col_name_list     =   get_lat_lng_col_names(merge_lat_lng_col_name)
 
-    if(DEBUG_MERGE) :
-        print("[results_lat_lng_col_name]",results_lat_lng_col_name)
-        print("[merge_lat_lng_col_name]",merge_lat_lng_col_name)
-        print("[results_lat_lng_col_name_list]",results_lat_lng_col_name_list)
-        print("[merge_lat_lng_col_name_list]",merge_lat_lng_col_name_list)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("[results_lat_lng_col_name]",results_lat_lng_col_name))
+        add_debug_to_log("Geocode",print_to_string("[merge_lat_lng_col_name]",merge_lat_lng_col_name))
+        add_debug_to_log("Geocode",print_to_string("[results_lat_lng_col_name_list]",results_lat_lng_col_name_list))
+        add_debug_to_log("Geocode",print_to_string("[merge_lat_lng_col_name_list]",merge_lat_lng_col_name_list))
 
     # Check if lat lang columns already exist
     user_df_col_names   =   list(user_df.columns)
@@ -2663,14 +2664,14 @@ def process_bing_bulk_query_merge(parms,runParms,user_df,results_df,error_df) :
         error_indices.append(lat_index)
         error_indices.append(lng_index)
 
-    if(DEBUG_MERGE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
 
-        print("\n[process_bing_bulk_query_merge][full_address_index]",full_address_index)
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][full_address_index]",full_address_index))
         if(len(merge_lat_lng_col_name_list) == 1) :
-            print("\n[process_bing_bulk_query_merge][lat_lng_index]",lat_lng_index)
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][lat_lng_index]",lat_lng_index))
         else:
-            print("\n[process_bing_bulk_query_merge][lat_index]",lat_index)
-            print("\n[process_bing_bulk_query_merge][lng_index]",lng_index)
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][lat_index]",lat_index))
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][lng_index]",lng_index))
 
     # insert values into columns
     for i in range(len(results_df)) :
@@ -2702,14 +2703,14 @@ def process_bing_bulk_query_merge(parms,runParms,user_df,results_df,error_df) :
 
             full_address_value  =   results_df.iloc[i,4]
 
-        if(DEBUG_MERGE):
-            print("\n[process_google_bulk_query_merge][rowid]",type(row_id),row_id)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")):
+            add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][rowid]",type(row_id),row_id))
             if(len(merge_lat_lng_col_name_list) == 1) :
-                print("[process_google_bulk_query_merge][lat_lng_value]",type(lat_lng_value),lat_lng_value)
+                add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][lat_lng_value]",type(lat_lng_value),lat_lng_value))
             else :
-                print("[process_google_bulk_query_merge][lat_value]",type(lat_value),lat_value)
-                print("[process_google_bulk_query_merge][lng_value]",type(lng_value),lng_value)
-            print("[process_google_bulk_query_merge][full_address_value]",type(full_address_value),full_address_value)  
+                add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][lat_value]",type(lat_value),lat_value))
+                add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][lng_value]",type(lng_value),lng_value))
+            add_debug_to_log("Geocode",print_to_string("[process_google_bulk_query_merge][full_address_value]",type(full_address_value),full_address_value))
         
         # add value to the user df
         user_df.iloc[row_id,full_address_index]     =   full_address_value
@@ -2752,13 +2753,13 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
     merge_empty_value               =   fparms[2]
     merge_addr_comps                =   fparms[3]
 
-    if(DEBUG_MERGE) :
-        print("[process_bing_bulk_reverse_merge][results_full_address_col_name]",results_full_address_col_name)
-        print("[process_bing_bulk_reverse_merge][results_addr_comps]",results_addr_comps)
-        print("[process_bing_bulk_reverse_merge][merge_full_address_col_name]",merge_full_address_col_name)
-        print("[process_bing_bulk_reverse_merge][merge_nan_value]",merge_error_value)
-        print("[process_bing_bulk_reverse_merge][merge_empty_value]",merge_empty_value)
-        print("[process_bing_bulk_reverse_merge][merge_addr_comps]",merge_addr_comps)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][results_full_address_col_name]",results_full_address_col_name))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][results_addr_comps]",results_addr_comps))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][merge_full_address_col_name]",merge_full_address_col_name))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][merge_nan_value]",merge_error_value))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][merge_empty_value]",merge_empty_value))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][merge_addr_comps]",merge_addr_comps))
 
     # Check if lat lang columns already exist
     user_df_col_names   =   list(user_df.columns)
@@ -2769,27 +2770,27 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
         for j in range(len(user_df)) :
             new_column_values.append(merge_empty_value)
 
-        if(DEBUG_MERGE) :
-            print("new merge_full_address_col_name",merge_full_address_col_name)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+            add_debug_to_log("Geocode",print_to_string("new merge_full_address_col_name",merge_full_address_col_name))
 
         user_df[merge_full_address_col_name]     =   new_column_values
 
     user_df_col_names   =   list(user_df.columns)
         
-    if(DEBUG_MERGE) :
-        print("\nuser_df_col_names",user_df_col_names)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("user_df_col_names",user_df_col_names))
 
     if(results_addr_comps == "Full Address And Components") :
 
-        if(DEBUG_MERGE) :
-            print("\nmerge_addr_comps",type(merge_addr_comps),merge_addr_comps)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+            add_debug_to_log("Geocode",print_to_string("merge_addr_comps",type(merge_addr_comps),merge_addr_comps))
 
         merge_addr_comps_list    =  get_google_addr_comps(merge_addr_comps) 
         
-        if(DEBUG_MERGE) :
-            print("\nmerge_addr_comps_list",type(merge_addr_comps_list),merge_addr_comps_list)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+            add_debug_to_log("Geocode",print_to_string("merge_addr_comps_list",type(merge_addr_comps_list),merge_addr_comps_list))
             for l in range(len(merge_addr_comps_list)) :
-                print("[merge_addr_comps_list]",type(merge_addr_comps_list[l]),len(merge_addr_comps_list[l]))
+                add_debug_to_log("Geocode",print_to_string("[merge_addr_comps_list]",type(merge_addr_comps_list[l]),len(merge_addr_comps_list[l])))
 
         for j in range(len(merge_addr_comps_list)) :
             if(not(merge_addr_comps_list[j] in user_df_col_names)) :
@@ -2797,8 +2798,8 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
                 for k in range(len(user_df)) :
                     new_column_values.append(merge_empty_value)
 
-                if(DEBUG_MERGE) :
-                    print("new merge_addr_comps_list[j]",merge_addr_comps_list[j])
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+                    add_debug_to_log("Geocode",print_to_string("new merge_addr_comps_list[j]",merge_addr_comps_list[j]))
 
                 user_df[merge_addr_comps_list[j]]     =   new_column_values
 
@@ -2808,8 +2809,8 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
     
     user_df_col_names   =   list(user_df.columns)
 
-    if(DEBUG_MERGE) :
-        print("\ncols list",user_df_col_names)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("cols list",user_df_col_names))
 
     error_indices   =   []
 
@@ -2831,11 +2832,11 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
                     merge_addr_comps_indices.append(j)
                     break
    
-    if(DEBUG_MERGE) :
-        print("\ncols list",user_df_col_names)
-        print("[process_bing_bulk_query_merge][full_address_index]",full_address_index)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+        add_debug_to_log("Geocode",print_to_string("cols list",user_df_col_names))
+        add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][full_address_index]",full_address_index))
         if(len(merge_addr_comps_list) > 0) :
-            print("[process_bing_bulk_query_merge][merge_addr_comps_indices]",merge_addr_comps_indices)
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_query_merge][merge_addr_comps_indices]",merge_addr_comps_indices))
 
     # insert values into columns
     for i in range(len(results_df)) :
@@ -2849,10 +2850,10 @@ def process_bing_bulk_reverse_merge(parms,runParms,user_df,results_df,error_df) 
             for j in range(len(merge_addr_comps_list)) :
                 addr_comp_values.append(results_df.iloc[i,(3+j)])
 
-        if(DEBUG_MERGE) :
-            print("\n[process_bing_bulk_reverse_merge][rowid]",type(row_id),row_id)
-            print("[process_bing_bulk_reverse_merge][full_address_value]",type(full_address_value),full_address_value)    
-            print("[process_bing_bulk_reverse_merge][addr_comp_values]",type(addr_comp_values),addr_comp_values)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_MERGE")) :
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][rowid]",type(row_id),row_id))
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][full_address_value]",type(full_address_value),full_address_value))    
+            add_debug_to_log("Geocode",print_to_string("[process_bing_bulk_reverse_merge][addr_comp_values]",type(addr_comp_values),addr_comp_values))
 
          # add value to the user df
         user_df.iloc[row_id,full_address_index]     =   full_address_value

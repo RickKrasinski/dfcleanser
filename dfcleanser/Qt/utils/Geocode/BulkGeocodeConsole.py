@@ -9,8 +9,6 @@ Created on Tue Sept 13 22:29:22 2017
 @author: Rick
 """
 
-DEBUG_BULK_CONSOLE      =   False
-GEOCODE_TRACE_DETAILS   =   False
 
 import dfcleanser.common.help_utils as dfchelp
 import dfcleanser.common.cfg as cfg
@@ -27,6 +25,10 @@ from dfcleanser.common.html_widgets import   (addattribute, addstyleattribute, n
 
 from dfcleanser.sw_utilities.DisplayUtils import (display_status_note, displayParms)
 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
 
 """
 #--------------------------------------------------------------------------

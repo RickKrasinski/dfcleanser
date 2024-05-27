@@ -9,16 +9,18 @@ Created on Tue Sept 13 22:29:22 2017
 
 @author: Rick
 """
-
-from signal import default_int_handler
-from dfcleanser.common.common_utils import (opStatus, RunningClock, get_parms_for_input, is_column_in_df)
-import dfcleanser.common.cfg as cfg
-
 import sys
 this = sys.modules[__name__]
 
-from dfcleanser.Qt.utils.Geocode.GeocodeModel import DEBUG_GEOCODE, DEBUG_GEOCODE_UTILITY
-DEBUG_GEOCODE_DETAILS       =   False
+from signal import default_int_handler
+from dfcleanser.common.common_utils import (opStatus, RunningClock, get_parms_for_input, is_column_in_df)
+
+import dfcleanser.common.cfg as cfg
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
+
 
 """
 #--------------------------------------------------------------------------
@@ -43,8 +45,8 @@ def validate_arcgis_geocoder_parms(gparms,opstat) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_arcgis_geocoder_parms] gparms : \n  ",gparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_arcgis_geocoder_parms] gparms : \n  ",gparms))
 
     
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (arcgis_geocoder_id, arcgis_geocoder_idList)
@@ -93,8 +95,8 @@ def validate_bing_geocoder_parms(gparms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_GEOCODE_DETAILS) :
-        print("[test_geocoder][validate_bing_geocoder_parms] gparms : \n  ",gparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
+       add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_bing_geocoder_parms] gparms : \n  ",gparms))
    
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (bing_geocoder_id, bing_geocoder_idList)
 
@@ -107,8 +109,8 @@ def validate_bing_geocoder_parms(gparms,opstat) :
 
         fparms  =   gparms
     
-    if(DEBUG_GEOCODE_DETAILS) :
-        print("[test_geocoder][validate_bing_geocoder_parms] fparms : \n  ",fparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_bing_geocoder_parms] fparms : \n  ",fparms))
     
     if(len(fparms) > 0) :
             
@@ -138,8 +140,8 @@ def validate_google_geocoder_parms(gparms,opstat) :
     * --------------------------------------------------------
     """
    
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_google_geocoder_parms] gparms : \n  ",gparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_google_geocoder_parms] gparms : \n  ",gparms))
     
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (google_geocoder_id, google_geocoder_idList)
     
@@ -152,8 +154,8 @@ def validate_google_geocoder_parms(gparms,opstat) :
 
         fparms  =   gparms
      
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_google_geocoder_parms] fparms : \n  ",fparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_google_geocoder_parms] fparms : \n  ",fparms))
    
     if(len(fparms) > 0) :
         if(len(fparms[0]) == 0) :
@@ -179,8 +181,8 @@ def validate_mapquest_geocoder_parms(gparms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_mapquest_geocoder_parms] gparms : \n  ",gparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_mapquest_geocoder_parms] gparms : \n  ",gparms))
     
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (mapquest_geocoder_id,mapquest_geocoder_idList)
     
@@ -193,8 +195,8 @@ def validate_mapquest_geocoder_parms(gparms,opstat) :
 
         fparms  =   gparms
      
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_mapquest_geocoder_parms] fparms : \n  ",fparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_mapquest_geocoder_parms] fparms : \n  ",fparms))
     
     if(len(fparms) > 0) :
             
@@ -223,8 +225,8 @@ def validate_nominatim_geocoder_parms(gparms,opstat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_nominatim_geocoder_parms] gparms : \n  ",gparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_nominatim_geocoder_parms] gparms : \n  ",gparms))
     
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (nomin_geocoder_id, nomin_geocoder_idList)
 
@@ -237,8 +239,8 @@ def validate_nominatim_geocoder_parms(gparms,opstat) :
 
         fparms  =   gparms
      
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_nominatim_geocoder_parms] fparms : \n  ",fparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_nominatim_geocoder_parms] fparms : \n  ",fparms))
     
     if(len(fparms) > 0) :
     
@@ -253,8 +255,8 @@ def validate_nominatim_geocoder_parms(gparms,opstat) :
 
 def validate_geocode_connect_parms(geocid,gcparms) :
 
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_geocode_connect_parms] : ",geocid,"\n  ",gcparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_geocode_connect_parms] : ",geocid,"\n  ",gcparms))
 
 
     from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import  (arcgis_geocoder_id, bing_geocoder_id, google_geocoder_id, mapquest_geocoder_id, nomin_geocoder_id, baidu_geocoder_id)
@@ -282,8 +284,8 @@ def validate_geocode_connect_parms(geocid,gcparms) :
             opstat.set_status(False)
             opstat.set_errorMsg("No geocoder connect parms defined")
 
-    if(DEBUG_GEOCODE) :
-        print("[test_geocoder][validate_geocode_connect_parms][end] : geocid : optat ",geocid,opstat.get_status())
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[test_geocoder][validate_geocode_connect_parms][end] : geocid : optat ",geocid,opstat.get_status()))
         
     return(opstat)
 
@@ -302,8 +304,8 @@ def test_geocoder(geocid, gcparms, gmode=None):
     * --------------------------------------------------------
     """
     
-    if(DEBUG_GEOCODE) :
-        print("[GeocodeControl][test_geocoder] geocid gcparms : ",geocid, gcparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+        add_debug_to_log("DataExport",print_to_string("[GeocodeControl][test_geocoder] geocid gcparms : ",geocid, gcparms))
     
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import INTERACTIVE
     if(gmode is None) :
@@ -343,8 +345,8 @@ def test_geocoder(geocid, gcparms, gmode=None):
 
     else:
     
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeControl][test_geocoder] get geolocator : ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("DataExport",print_to_string("[GeocodeControl][test_geocoder] get geolocator : "))
 
         try:
             geolocator = get_geocoder_engine(geocid, opstat)
@@ -374,8 +376,8 @@ def test_geocoder(geocid, gcparms, gmode=None):
 
     if(opstat.get_status())  :
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeControl] got good geolocator : ")
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("DataExport",print_to_string("[GeocodeControl] got good geolocator : "))
 
 
         from dfcleanser.Qt.utils.Geocode.GeocodeWidgets import (arcgis_geocoder_idList, bing_geocoder_idList, baidu_geocoder_idList, google_geocoder_idList,
@@ -397,13 +399,13 @@ def test_geocoder(geocid, gcparms, gmode=None):
 
         connect_parms   =   get_parms_for_input(gcparms,idlist)
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeControl] connect_parms : ",gcparms)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("DataExport",print_to_string("[GeocodeControl] connect_parms : ",gcparms))
 
         from dfcleanser.common.cfg import set_config_value
 
-        if(DEBUG_GEOCODE) :
-            print("[GeocodeControl] set_config_value : ",form+"Parms",gcparms)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("DataExport",print_to_string("[GeocodeControl] set_config_value : ",form+"Parms",gcparms))
 
 
         set_config_value(form+"Parms",gcparms)
@@ -434,8 +436,8 @@ def get_geocoder_cmd_kwargs(ptype,geocid,geoparms=None) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE_DETAILS) :
-        print("[get_geocoder_cmd_kwargs] ptype : geocid : ",ptype,geocid,"\n  ",geoparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
+        add_debug_to_log("DataExport",print_to_string("[get_geocoder_cmd_kwargs] ptype : geocid : ",ptype,geocid,"\n  ",geoparms))
 
 
     import dfcleanser.Qt.utils.Geocode.GeocodeModel as gcm
@@ -447,8 +449,8 @@ def get_geocoder_cmd_kwargs(ptype,geocid,geoparms=None) :
         elif(ptype == gcm.QUERY)      : geoparms = cfg.get_config_value(gcm.get_form_id(geocid,gcm.QUERY) + "Parms")
         elif(ptype == gcm.REVERSE)    : geoparms = cfg.get_config_value(gcm.get_form_id(geocid,gcm.REVERSE) + "Parms")
     
-    if(DEBUG_GEOCODE_DETAILS) :
-        print("[get_geocoder_cmd_kwargs] ptype : geocid : ",geoparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
+        add_debug_to_log("DataExport",print_to_string("[get_geocoder_cmd_kwargs] ptype : geocid : ",geoparms))
     
     if(ptype == gcm.GEOCODER) :
 
@@ -517,8 +519,8 @@ def get_geocoder_engine(geocid, opstat):
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE_DETAILS):
-        print("[get_geocoder_engine] ",str(geocid))
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+        add_debug_to_log("DataExport",print_to_string("[get_geocoder_engine] ",str(geocid)))
 
     geolocator = None
 
@@ -530,8 +532,8 @@ def get_geocoder_engine(geocid, opstat):
 
         geocinitparms = get_geocoder_cmd_kwargs(gcm.GEOCODER, geocid)
 
-        if(DEBUG_GEOCODE_DETAILS):
-            print("[get_geocoder_engine][get_geocoder_cmd_kwargs] ",geocinitparms )    
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+            add_debug_to_log("DataExport",print_to_string("[get_geocoder_engine][get_geocoder_cmd_kwargs] ",geocinitparms))   
 
         if(geocid == gcm.GoogleId):
             from geopy.geocoders import GoogleV3
@@ -606,8 +608,8 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
     import dfcleanser.Qt.utils.Geocode.GeocodeModel as gcm
     import dfcleanser.Qt.utils.Geocode.GeocodeWidgets as gcw
 
-    if(DEBUG_GEOCODE_DETAILS) :
-        print("  [validate_cmd_parms] gqparms : \n  ",gqparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
+        add_debug_to_log("DataExport",print_to_string("[validate_cmd_parms] gqparms : \n  ",gqparms))
    
     if(ptype == gcm.GEOCODER) :
     
@@ -665,8 +667,8 @@ def validate_cmd_parms(ptype,geocid,gqparms,opstat) :
 
             return()
        
-    if(DEBUG_GEOCODE_DETAILS):
-        print("  [validate_cmd_parms(] : reqList ", reqList)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+        add_debug_to_log("DataExport",print_to_string("[validate_cmd_parms(] : reqList ", reqList))
        
     missingParm     =   False
         
@@ -705,8 +707,8 @@ def run_geocoder_query(geocid, parms):
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE):
-        print("[run_geocoder_query]", geocid,"\n  ", parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[run_geocoder_query]", geocid,"\n  ", parms))
 
     opstat          = opStatus()
     coords          = []
@@ -725,8 +727,8 @@ def run_geocoder_query(geocid, parms):
 
     else:
 
-        if(DEBUG_GEOCODE_DETAILS):
-            print("[run_geocoder_query] parms ok : \n  ",parms)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+            add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] parms ok : \n  ",parms))
 
         queryparms = None
         numresults = 0
@@ -736,15 +738,15 @@ def run_geocoder_query(geocid, parms):
 
         if(opstat.get_status()):
 
-            if(DEBUG_GEOCODE_DETAILS):
-                print("[run_geocoder_query][got geocoder engine]")
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                add_debug_to_log("DataExport",print_to_string("[run_geocoder_query][got geocoder engine]"))
 
             try:
 
                 queryparms = get_geocoder_cmd_kwargs(QUERY, geocid, parms)
             
-                if(DEBUG_GEOCODE_DETAILS):
-                    print("[run_geocoder_query] queryparms : \n          ",queryparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] queryparms : \n          ",queryparms))
 
                 timeout     =   queryparms.get("timeout")
                 if(len(timeout) > 0 ) :
@@ -752,8 +754,8 @@ def run_geocoder_query(geocid, parms):
                 else :  
                     queryparms.update({"timeout" : 1})   
 
-                if(DEBUG_GEOCODE_DETAILS):
-                    print("[run_geocoder_query] : queryparms\n  ", queryparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] : queryparms\n  ", queryparms))
 
                 addresses_to_geocode = []
                 addr_parm = "address(x)"
@@ -768,9 +770,8 @@ def run_geocoder_query(geocid, parms):
                         addresses_to_geocode.append(address)
                         queryparms.pop(addr_key,None)
 
-                if(DEBUG_GEOCODE):
-                    print("[run_geocoder_query][addresses_to_geocode] \n    ",addresses_to_geocode)
-    
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_query][addresses_to_geocode] \n    ",addresses_to_geocode))
 
                 if(geocid == gcm.BingId):
 
@@ -802,8 +803,8 @@ def run_geocoder_query(geocid, parms):
                     else :
                         queryparms.update({"user_location": None})    
                     
-                    if(DEBUG_GEOCODE_DETAILS):
-                        print("[run_geocoder_query] : end bingid \n  ", queryparms)
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                        add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] : end bingid \n  ", queryparms))
 
                 elif(geocid == gcm.GoogleId):
 
@@ -883,8 +884,8 @@ def run_geocoder_query(geocid, parms):
 
                 queryparms.pop("number_of_results",None)
                             
-                if(DEBUG_GEOCODE_DETAILS):
-                    print("[run_geocoder_query] : queryparms \n         ", queryparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] : queryparms \n         ", queryparms))
 
                 # -----------------------------#
                 # for each address geocode it  #
@@ -905,8 +906,8 @@ def run_geocoder_query(geocid, parms):
 
                                 latest_result = [addresses_to_geocode[i],location[k].address,location[k].latitude,location[k].longitude]
                                 
-                                if(DEBUG_GEOCODE):
-                                    print("[run_geocoder_query] latest_result \n        ", latest_result)
+                                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] latest_result \n        ", latest_result))
                                 
                                 latest_results.append(latest_result)
 
@@ -958,8 +959,8 @@ def run_geocoder_query(geocid, parms):
                     latest_results[i][0] = ""
                 drop_user_addr  =   False
             
-            if(DEBUG_GEOCODE_DETAILS):
-                print("[run_geocoder_query] : latest_results \n         ", latest_results)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")):
+                add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] : latest_results \n         ", latest_results))
 
             return(latest_results)
         
@@ -982,8 +983,8 @@ def run_geocoder_reverse(geocid, parms):
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE):
-        print("[run_geocoder_reverse] geocoderid : parms ", geocid, "\n          ", parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] geocoderid : parms ", geocid, "\n          ", parms))
 
     opstat          = opStatus()
     addresses       = []
@@ -1010,8 +1011,8 @@ def run_geocoder_reverse(geocid, parms):
 
                 reverseparms = get_geocoder_cmd_kwargs(gcm.REVERSE, geocid, parms)
 
-                if(DEBUG_GEOCODE):
-                    print("[run_geocoder_reverse] : reverseparms \n            ",reverseparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : reverseparms \n            ",reverseparms))
 
                 timeout     =   reverseparms.get("timeout")
                 if(len(timeout) > 0 ) :
@@ -1032,8 +1033,8 @@ def run_geocoder_reverse(geocid, parms):
 
                 reverseparms.pop("number_of_results",None)
  
-                if(DEBUG_GEOCODE):
-                    print("[run_geocoder_reverse] : final reverseparms \n          ",reverseparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : final reverseparms \n          ",reverseparms))
 
                 coords_to_geocode = []
                 coord_parm = "latitude_longitude(x)"
@@ -1063,8 +1064,8 @@ def run_geocoder_reverse(geocid, parms):
 
                             return(None)
                  
-                if(DEBUG_GEOCODE):
-                    print("\n[run_geocoder_reverse] : coords_to_geocode ",coords_to_geocode)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : coords_to_geocode ",coords_to_geocode))
 
                 # get other oarms per encoder
                 if(geocid == gcm.GoogleId):
@@ -1079,8 +1080,8 @@ def run_geocoder_reverse(geocid, parms):
                         lang = lang_codes.get(reverseparms.get("language"))
                         reverseparms.update({"language": lang})
 
-                if(DEBUG_GEOCODE):
-                    print("[run_geocoder_reverse] : num_results : ",num_results, "\n", reverseparms)
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : num_results : ",num_results, "\n", reverseparms))
 
                 reverse_results = []
 
@@ -1089,8 +1090,8 @@ def run_geocoder_reverse(geocid, parms):
                 # -------------------------------------- #
                 for i in range(len(coords_to_geocode)):
 
-                    if(DEBUG_GEOCODE):
-                        print("\n[run_geocoder_reverse] : coords_to_geocode[", str(i), "]", coords_to_geocode[i])
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                        add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : coords_to_geocode[", str(i), "]", coords_to_geocode[i]))
 
                     try :
 
@@ -1118,8 +1119,8 @@ def run_geocoder_reverse(geocid, parms):
 
                         if(type(location) == list):
 
-                            if(DEBUG_GEOCODE):
-                                print("[run_geocoder_reverse] : coords_to_geocode[", i, "] len :  ", type(location), len(location))
+                            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                                add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] : coords_to_geocode[", i, "] len :  ", type(location), len(location)))
 
                             for k in range(len(location)):
                                 
@@ -1130,13 +1131,11 @@ def run_geocoder_reverse(geocid, parms):
 
                         else:
 
-                            if(DEBUG_GEOCODE):
-                                print("[run_geocoder_query] : location ", type(location), len(location), location)
+                            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                                add_debug_to_log("DataExport",print_to_string("[run_geocoder_query] : location ", type(location), len(location), location))
 
                             new_results     =   [coords_to_geocode[i],location.address,location.latitude,location.longitude]
                             latest_results.append(new_results)
-                           
-
 
             except Exception as e:
 
@@ -1147,10 +1146,10 @@ def run_geocoder_reverse(geocid, parms):
                 from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                 display_exception(title,status_msg,e)
 
-        if(DEBUG_GEOCODE):
-            print("[run_geocoder_reverse] latest_results ", len(latest_results))
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[run_geocoder_reverse] latest_results ", len(latest_results)))
             for p in range(len(latest_results)):
-                print("  latest_results[", p, "] : ", latest_results[p])
+                add_debug_to_log("DataExport",print_to_string("  latest_results[", p, "] : ", latest_results[p]))
 
         # -------------------------------------- #
         # ----- process and format results ----- #
@@ -1180,10 +1179,10 @@ def run_geocoder_reverse(geocid, parms):
                         new_result = ["",latest_results[i][1],latest_results[i][2], str(latest_results[i][3])]
                         final_results.append(new_result)
 
-            if(DEBUG_GEOCODE):
-                print("\nfinal_results ", len(final_results))
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                add_debug_to_log("DataExport",print_to_string("final_results ", len(final_results)))
                 for p in range(len(final_results)):
-                    print("final_results[", p, "] : ", final_results[p])
+                    add_debug_to_log("DataExport",print_to_string("final_results[", p, "] : ", final_results[p]))
 
             return(final_results)
         
@@ -1275,10 +1274,10 @@ def get_geocode_center(geocoords,opstat) :
 
 def process_calculate_center_pt(parms):
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_center_pt] : locations 1 \n ",parms[0])
-        print("[process_calculate_center_pt] : locations 2 \n ",parms[1])
-        print("[process_calculate_center_pt] : locations 3 \n ",parms[2])
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_center_pt] : locations 1 \n ",parms[0]))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_center_pt] : locations 2 \n ",parms[1]))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_center_pt] : locations 3 \n ",parms[2]))
 
     #import json
     points  =   []
@@ -1363,8 +1362,8 @@ def process_calculate_center_pt(parms):
         opstat          =   opStatus()
         center_point    =   get_geocode_center(points,opstat)
 
-        if(DEBUG_GEOCODE):
-            print("center_point",center_point)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("center_point",center_point))
 
     if(opstat.get_status()) :
         return(center_point)
@@ -1378,8 +1377,8 @@ def process_calculate_center_pt(parms):
 
 def get_geocode_points_from_df(df_title,col_name) :
 
-    if(DEBUG_GEOCODE):
-        print("[get_geocode_points_from_df] df_title : col_name : ",df_title,col_name)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[get_geocode_points_from_df] df_title : col_name : ",df_title,col_name))
 
  
     from dfcleanser.common.cfg import get_dfc_dataframe_df
@@ -1427,11 +1426,11 @@ def get_geocode_points_from_df(df_title,col_name) :
 
         return(None)
     
-    if(DEBUG_GEOCODE):
-        print("df_lat_lng_col_name",df_lat_lng_col_name)
-        print("df_latitude_col_name",df_latitude_col_name)
-        print("df_longitude_col_name",df_longitude_col_name)
-        print("separate_lat_lng_columns",df_longitude_col_name)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("df_lat_lng_col_name",df_lat_lng_col_name))
+        add_debug_to_log("DataExport",print_to_string("df_latitude_col_name",df_latitude_col_name))
+        add_debug_to_log("DataExport",print_to_string("df_longitude_col_name",df_longitude_col_name))
+        add_debug_to_log("DataExport",print_to_string("separate_lat_lng_columns",df_longitude_col_name))
 
     geocode_pts             =   []
     total_error_points      =   0
@@ -1472,10 +1471,11 @@ def get_geocode_points_from_df(df_title,col_name) :
             except :
                 total_error_points  =   total_error_points + 1
 
-    print(len(geocode_pts),total_error_points)
-    if(len(geocode_pts) > 0) :
-        for i in range(5) :
-            print(geocode_pts[i])
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("len(geocode_pts),total_error_points))
+        if(len(geocode_pts) > 0) :
+            for i in range(5) :
+                add_debug_to_log("DataExport",print_to_string(geocode_pts[i]))
 
     return([geocode_pts,total_error_points])
 
@@ -1487,8 +1487,8 @@ def get_geocode_points_from_df(df_title,col_name) :
 
 def process_calculate_df_center_pt(parms):
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_center_pt] : parms \n ",parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_center_pt] : parms \n ",parms))
 
     dataframe_title         =   parms[0]
     df_col_names            =   parms[1]
@@ -1500,8 +1500,8 @@ def process_calculate_df_center_pt(parms):
         geocode_points  =   geocode_points_data[0]
         total_errors    =   geocode_points_data[1]
 
-        if(DEBUG_GEOCODE):
-            print("[process_calculate_df_center_pt] : len geocode_points : ",len(geocode_points)," errors : ",total_errors)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_center_pt] : len geocode_points : ",len(geocode_points)," errors : ",total_errors))
 
         if( (len(geocode_points) > 0) and (total_errors < 200) ) :
 
@@ -1511,8 +1511,8 @@ def process_calculate_df_center_pt(parms):
 
             if(opstat.get_status()) :
                 
-                if(DEBUG_GEOCODE):
-                    print("[process_calculate_df_center_pt] center_point : ",center_point,type(center_point))
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                    add_debug_to_log("DataExport",print_to_string("[process_calculate_df_center_pt] center_point : ",center_point,type(center_point)))
                     
                 return(center_point)
             
@@ -1606,7 +1606,7 @@ def get_distance(from_loc, to_loc, distance_units, algorithm, elipsoid, opstat):
 
         opstat.set_status(False)
 
-        print("from loc",from_loc,to_loc)
+        add_debug_to_log("DataExport",print_to_string("from loc",from_loc,to_loc))
             
         title       =   "dfcleanser exception"       
         status_msg  =   "Error calculating distances "
@@ -1636,8 +1636,8 @@ def calculate_geocode_distances(from_locs_list, to_locs_list, distance_units, al
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE):
-        print("[calculate_geocode_distances] : parms  ",len(from_locs_list),len(to_locs_list),distance_units, algorithm, elipsoid)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[calculate_geocode_distances] : parms  ",len(from_locs_list),len(to_locs_list),distance_units, algorithm, elipsoid))
 
     distances = []
 
@@ -1677,11 +1677,11 @@ def calculate_geocode_distances(from_locs_list, to_locs_list, distance_units, al
 
 def process_calculate_distances(point_type,parms) :
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_distances] : point_tyep ",point_type)
-        print("[process_calculate_distances] : from locations \n ",parms[0])
-        print("[process_calculate_distances] : to locations \n ",parms[1])
-        print("[process_calculate_distances] : alg parms \n ",parms[2])
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : point_tyep ",point_type))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : from locations \n ",parms[0]))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : to locations \n ",parms[1]))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : alg parms \n ",parms[2]))
 
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
     if(point_type == ADDRESS) :
@@ -1818,17 +1818,17 @@ def process_calculate_distances(point_type,parms) :
 
                 return(None)
             
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_distances] : from_lat_lngs ",from_lat_lngs)
-        print("[process_calculate_distances] : to_lat_lngs ",to_lat_lngs)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : from_lat_lngs ",from_lat_lngs))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : to_lat_lngs ",to_lat_lngs))
 
     from dfcleanser.common.common_utils import opStatus
     opstat      =   opStatus()
         
     distance_list   =   calculate_geocode_distances(from_lat_lngs, to_lat_lngs, parms[2][0], parms[2][1], parms[2][2], opstat)    
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_distances] : distance list",distance_list,"\n")
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_distances] : distance list",distance_list,"\n"))
 
     return(distance_list)
 
@@ -1840,8 +1840,8 @@ def process_calculate_distances(point_type,parms) :
 
 def process_calculate_df_distances(parms) :
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_distances] : parms \n  ",parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances] : parms \n  ",parms))
 
     df_title                    =   parms[0]
     from_df_col_name            =   parms[1]
@@ -1859,8 +1859,8 @@ def process_calculate_df_distances(parms) :
         from_total_errors    =      from_geocode_points_data[1]
         from_error_rate      =      from_total_errors / len(from_geocode_points)
 
-        if(DEBUG_GEOCODE):
-            print("[process_calculate_df_distances] :from_geocode_points  ",len(from_geocode_points)," error_rate : ",from_error_rate)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances] :from_geocode_points  ",len(from_geocode_points)," error_rate : ",from_error_rate))
 
         if( (len(from_geocode_points) > 0) and (from_error_rate < 0.10) ) :
              
@@ -1877,8 +1877,8 @@ def process_calculate_df_distances(parms) :
 
                 if(opstat.get_status()) :
 
-                    if(DEBUG_GEOCODE):
-                        print("df_col_distances",len(df_col_distances))
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+                        add_debug_to_log("DataExport",print_to_string("df_col_distances",len(df_col_distances)))
 
                     return(df_col_distances)
             
@@ -1926,8 +1926,8 @@ def process_calculate_df_distances(parms) :
 
 def process_calculate_df_distances_from_fixed_location(parms) :
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_distances_from_fixed_location] : parms \n  ",parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_fixed_location] : parms \n  ",parms))
 
     fixed_point         =   parms[0]
     df_title            =   parms[1]
@@ -1993,8 +1993,8 @@ def process_calculate_df_distances_from_fixed_location(parms) :
 
         return(None)
     
-    if(DEBUG_GEOCODE):   
-        print("geocode_distances",geocode_distances)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):   
+        add_debug_to_log("DataExport",print_to_string("geocode_distances",geocode_distances))
 
 
 # ------------------------------------------------------------------------- #
@@ -2003,8 +2003,8 @@ def process_calculate_df_distances_from_fixed_location(parms) :
 
 def process_calculate_df_distances_from_center_point(parms) :
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_distances_from_center_point] : parms \n  ",parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_center_point] : parms \n  ",parms))
 
     df_title                    =   parms[0]
     df_col_name                 =   parms[1]
@@ -2033,20 +2033,16 @@ def process_calculate_df_distances_from_center_point(parms) :
 
     if(opstat.get_status()) :
 
-        if(DEBUG_GEOCODE) :
-            print("center_point",center_point)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
+            add_debug_to_log("DataExport",print_to_string("center_point",center_point))
 
         ptsdf       =   get_dfc_dataframe_df(df_title)
         ptspoints   =   ptsdf[df_col_name].tolist()
-
-        print("ptspoints",type(ptspoints[0]))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_geopoint_from_string
         geopoints   =   []
         for i in range(len(ptspoints)) :
             geopoints.append(get_geopoint_from_string(ptspoints[i]))
-
-        print("geopoints",type(geopoints[0]))
 
         center_pt_distances     =   []
 
@@ -2091,8 +2087,8 @@ def process_calculate_df_distances_from_center_point(parms) :
 
 def process_calculate_df_distances_from_list_points(parms) :
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_distances_from_list_points] : parms ")
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : parms "))
 
     df_title                    =   parms[0]
     df_col_name                 =   parms[1]
@@ -2110,21 +2106,19 @@ def process_calculate_df_distances_from_list_points(parms) :
     distance_alg                =   parms[9]
     elipsoid                    =   parms[10]
 
-    if(DEBUG_GEOCODE):
-        print("[process_calculate_df_distances_from_list_points] : df_title ",df_title)
-        print("[process_calculate_df_distances_from_list_points] : df_col_name ",df_col_name)
-        print("[process_calculate_df_distances_from_list_points] : distance_list_points\n    ",distance_list_pts)
-        print("[process_calculate_df_distances_from_list_points] : distance_list_names\n    ",distance_names_list)
-        print("[process_calculate_df_distances_from_list_points] : distance_values_col_name ",distance_values_col_name)
-        print("[process_calculate_df_distances_from_list_points] : distance_points_col_name ",distance_points_col_name)
-        print("[process_calculate_df_distances_from_list_points] : distance_names_col_name ",distance_names_col_name)
-        print("[process_calculate_df_distances_from_list_points] : distance_type ",distance_type)
-        print("[process_calculate_df_distances_from_list_points] : distance_units ",distance_units)
-        print("[process_calculate_df_distances_from_list_points] : distance_alg ",distance_alg)
-        print("[process_calculate_df_distances_from_list_points] : elipsoid ",elipsoid)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : df_title ",df_title))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : df_col_name ",df_col_name))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_list_points\n    ",distance_list_pts))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_list_names\n    ",distance_names_list))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_values_col_name ",distance_values_col_name))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_points_col_name ",distance_points_col_name))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_names_col_name ",distance_names_col_name))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_type ",distance_type))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_units ",distance_units))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_alg ",distance_alg))
+        add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : elipsoid ",elipsoid))
 
-
-    #return([[],[],[]])
 
     from dfcleanser.common.common_utils import opStatus
     opstat          =   opStatus()
@@ -2145,9 +2139,9 @@ def process_calculate_df_distances_from_list_points(parms) :
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import GeocodePointsList
         list_distance_points    =   GeocodePointsList.get_locations()
         
-        if(DEBUG_GEOCODE):
-            print("[process_calculate_df_distances_from_list_points] : list_distance_points \n    ",list_distance_points)
-            print("[process_calculate_df_distances_from_list_points] : list_distance_points ",type(list_distance_points),type(list_distance_points[0]),type(list_distance_points[0][0]),type(list_distance_points[0][1]))
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : list_distance_points \n    ",list_distance_points))
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : list_distance_points ",type(list_distance_points),type(list_distance_points[0]),type(list_distance_points[0][0]),type(list_distance_points[0][1])))
         
         distance_points     =   []
         if(type(list_distance_points[0]) == list) :
@@ -2155,8 +2149,8 @@ def process_calculate_df_distances_from_list_points(parms) :
                 current_pt  =   (list_distance_points[i][0],list_distance_points[i][1])
                 distance_points.append(current_pt)
 
-        if(DEBUG_GEOCODE):
-            print("[process_calculate_df_distances_from_list_points] : distance_points \n    ",distance_points,type(distance_points[0]))
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_points \n    ",distance_points,type(distance_points[0])))
 
     except Exception as e:
 
@@ -2172,8 +2166,8 @@ def process_calculate_df_distances_from_list_points(parms) :
         exec(distance_names_list)
         list_distance_names    =   GeocodePointsList.get_names()
 
-        if(DEBUG_GEOCODE):
-            print("[process_calculate_df_distances_from_list_points] : list_distance_names \n    ",list_distance_names)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
+            add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : list_distance_names \n    ",list_distance_names))
 
 
     except Exception as e:
@@ -2204,10 +2198,10 @@ def process_calculate_df_distances_from_list_points(parms) :
 
             new_distance = round(get_distance(geopoints[i], distance_points[j], distance_units, distance_alg, elipsoid, opstat),5)
         
-            if(DEBUG_GEOCODE):
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
                 if(i == 0) :
-                    print("[process_calculate_][",j,"] : geopoints[",i,"] : distance_points[",j,"] ",geopoints[i], distance_points[j])
-                    print("[process_calculate_][",j,"] : new_distance : current_distance : current_point_index ",new_distance,current_distance,current_point_index)
+                    add_debug_to_log("DataExport",print_to_string("[process_calculate_][",j,"] : geopoints[",i,"] : distance_points[",j,"] ",geopoints[i], distance_points[j]))
+                    add_debug_to_log("DataExport",print_to_string("[process_calculate_][",j,"] : new_distance : current_distance : current_point_index ",new_distance,current_distance,current_point_index))
 
             if(distance_type == "Closest") :
                 if(new_distance < current_distance) :
@@ -2218,24 +2212,24 @@ def process_calculate_df_distances_from_list_points(parms) :
                     current_distance    =   new_distance
                     current_point_index =   j
 
-            if(DEBUG_GEOCODE):
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
                 if(i == 0) :
-                    print("[process_calculate_][",j,"] : new_distance : current_distance : current_point_index ",new_distance,current_distance,current_point_index)
+                    add_debug_to_log("DataExport",print_to_string("[process_calculate_][",j,"] : new_distance : current_distance : current_point_index ",new_distance,current_distance,current_point_index))
             
 
         distance_range.append(round(current_distance,4))
         distance_range_location.append(distance_points[current_point_index])
         distance_range_name.append(list_distance_names[current_point_index])
 
-        if(DEBUG_GEOCODE):
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
             if(i == 0) :
-                print("\n[process_calculate_df_distances_from_list_points] : distance_range ",distance_range)
-                print("[process_calculate_df_distances_from_list_points] : distance_range_location ",distance_range_location)
-                print("[process_calculate_df_distances_from_list_points] : distance_range_name ",distance_range_name)
+                add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_range ",distance_range))
+                add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_range_location ",distance_range_location))
+                add_debug_to_log("DataExport",print_to_string("[process_calculate_df_distances_from_list_points] : distance_range_name ",distance_range_name))
 
-        if(DEBUG_GEOCODE):
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")):
             if((len(distance_range) % 3000) == 0) :
-                print("[process_calculate_] : len(distance_range) ",len(distance_range))
+                add_debug_to_log("DataExport",print_to_string("[process_calculate_] : len(distance_range) ",len(distance_range)))
 
 
     return([distance_range,distance_range_location,distance_range_name])
@@ -2254,15 +2248,15 @@ def process_df_distance(parms):
     * --------------------------------------------------------
     """
 
-    if(DEBUG_GEOCODE_UTILITY):
-        print("process_df_distance parms \n", parms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+        add_debug_to_log("DataExport",print_to_string("process_df_distance parms \n", parms))
 
     opstat = opStatus()
 
     fparms = get_parms_for_input(parms, sugw.addr_df_dist_utility_input_idList)
 
-    if(DEBUG_GEOCODE_UTILITY):
-        print("\nprocess_df_distance fparms \n", fparms)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+        add_debug_to_log("DataExport",print_to_string("process_df_distance fparms \n", fparms))
 
     # get the from geocode column info
     from_dftitle = fparms[0]
@@ -2316,8 +2310,8 @@ def process_df_distance(parms):
         opstat.set_status(False)
         opstat.set_errorMsg("from_columns are not defined ")
 
-    if(DEBUG_GEOCODE_UTILITY):
-        print("process_df_distance : from_cols_list : ", from_cols_list)
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+        add_debug_to_log("DataExport",print_to_string("process_df_distance : from_cols_list : ", from_cols_list))
 
     # get the to geocode column info
     if(opstat.get_status()):
@@ -2373,8 +2367,8 @@ def process_df_distance(parms):
     # get and validsate the new distance column name
     if(opstat.get_status()):
 
-        if(DEBUG_GEOCODE_UTILITY):
-            print("process_df_distance to_cols_list : ", to_cols_list)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+            add_debug_to_log("DataExport",print_to_string("process_df_distance to_cols_list : ", to_cols_list))
 
         new_col_name = fparms[5]
 
@@ -2389,11 +2383,11 @@ def process_df_distance(parms):
         algorithm = fparms[7]
         elipsoid = fparms[8]
 
-        if(DEBUG_GEOCODE_UTILITY):
-            print("\nprocess_df_distance new_col_name : ", new_col_name)
-            print("process_df_distance distance_units : ", distance_units)
-            print("process_df_distance algorithm  : ", algorithm)
-            print("process_df_distance elipsoid  : ", elipsoid)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+            add_debug_to_log("DataExport",print_to_string("process_df_distance new_col_name : ", new_col_name))
+            add_debug_to_log("DataExport",print_to_string("process_df_distance distance_units : ", distance_units))
+            add_debug_to_log("DataExport",print_to_string("process_df_distance algorithm  : ", algorithm))
+            add_debug_to_log("DataExport",print_to_string("process_df_distance elipsoid  : ", elipsoid))
 
     # build the coord lists
     if(opstat.get_status()):
@@ -2409,8 +2403,8 @@ def process_df_distance(parms):
 
             current_from_lat_lng_coords = from_df[from_cols_list[0]]
 
-            if(DEBUG_GEOCODE_UTILITY):
-                print("process_df_distance : current_from_lat_lng_coords  : \n",current_from_lat_lng_coords)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_from_lat_lng_coords  : \n",current_from_lat_lng_coords))
 
             for i in range(len(from_df)):
 
@@ -2435,9 +2429,9 @@ def process_df_distance(parms):
             current_from_lat_coords = from_df[from_lat_column_name]
             current_from_lng_coords = from_df[from_lng_column_name]
 
-            if(DEBUG_GEOCODE_UTILITY):
-                print("process_df_distance : current_from_lat_coords  : \n",current_from_lat_coords)
-                print("process_df_distance : current_from_lng_coords  : \n",current_from_lng_coords)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_from_lat_coords  : \n",current_from_lat_coords))
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_from_lng_coords  : \n",current_from_lng_coords))
 
             for i in range(len(from_df)):
 
@@ -2453,9 +2447,8 @@ def process_df_distance(parms):
 
             current_to_lat_lng_coords = from_df[to_cols_list[0]]
 
-            if(DEBUG_GEOCODE_UTILITY):
-                print("process_df_distance : current_to_lat_lng_coords  : \n",
-                      current_to_lat_lng_coords)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_to_lat_lng_coords  : \n",current_to_lat_lng_coords))
 
             for i in range(len(from_df)):
 
@@ -2481,11 +2474,9 @@ def process_df_distance(parms):
             current_to_lat_coords = from_df[to_lat_column_name]
             current_to_lng_coords = from_df[to_lng_column_name]
 
-            if(DEBUG_GEOCODE_UTILITY):
-                print("process_df_distance : current_to_lat_coords  : \n",
-                      current_to_lat_coords)
-                print("process_df_distance : current_to_lng_coords  : \n",
-                      current_to_lng_coords)
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_to_lat_coords  : \n",current_to_lat_coords))
+                add_debug_to_log("DataExport",print_to_string("process_df_distance : current_to_lng_coords  : \n",current_to_lng_coords))
 
             for i in range(len(from_df)):
 
@@ -2500,17 +2491,17 @@ def process_df_distance(parms):
     # build the coord lists
     if(opstat.get_status()):
 
-        if(DEBUG_GEOCODE_UTILITY):
-            print("\nprocess_df_distance : from_coords_list : \n", from_coords_list)
-            print("process_df_distance : to_coords_list : \n", to_coords_list)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+            add_debug_to_log("DataExport",print_to_string("process_df_distance : from_coords_list : \n", from_coords_list))
+            add_debug_to_log("DataExport",print_to_string("process_df_distance : to_coords_list : \n", to_coords_list))
 
         distances = calculate_geocode_distances(from_coords_list, to_coords_list, distance_units, algorithm, elipsoid, opstat)
 
     # display the results
     if(opstat.get_status()):
 
-        if(DEBUG_GEOCODE_UTILITY):
-            print("\nprocess_df_distance : distances : \n", distances)
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_UTILITY")):
+            add_debug_to_log("DataExport",print_to_string("process_df_distance : distances : \n", distances))
 
         display_status_note("distances calculated successfully")
 

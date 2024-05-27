@@ -23,12 +23,14 @@ from PyQt5 import uic
 from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 
-
 import dfcleanser.common.cfg as cfg 
 from dfcleanser.sw_utilities.dfc_qt_model import maketextarea
 
-DEBUG_GEOCODE               =   False
-DEBUG_GEOCODE_DETAILS       =   False
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -40,9 +42,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 DEFAULT_ROW_HEIGHT                  =   20
-
-
-
 
 """
 #--------------------------------------------------------------------------
@@ -1560,7 +1559,7 @@ class Geocoders_Table(QtWidgets.QTableView):
         self.parent             =   tblparms[0]
         self.bulk_flag          =   tblparms[1]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocoders_Table] : init",self.bulk_flag)
 
         self.init_tableview()
@@ -1568,7 +1567,7 @@ class Geocoders_Table(QtWidgets.QTableView):
         self.doubleClicked.connect(self.select_geocoder) 
 
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table] : end")
 
     # -----------------------------------------------------------------#
@@ -1576,7 +1575,7 @@ class Geocoders_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table][reload_data] zipcode : ")
 
         tbldata    =   self.load_geocoder_data()
@@ -1588,7 +1587,7 @@ class Geocoders_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocoders_Table][init_tableview]")
 
         #-----------------------------------------#
@@ -1596,14 +1595,14 @@ class Geocoders_Table(QtWidgets.QTableView):
         #-----------------------------------------#
         geocoders_data     =   self.load_geocoder_data()
         
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
            print("  [Geocoders_Table][init_tableview] :headers",self.column_headers)
 
         if(self.model is None) :
             self.model = GeocodersModel(geocoders_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
            print("  [Geocoders_Table][init_tableview] : model loaded")
 
         self.num_rows   =   len(geocoders_data)
@@ -1648,7 +1647,7 @@ class Geocoders_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_geocoder_data(self):
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocoders_Table][load_geocoders_data]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_geocoder_list
@@ -1656,7 +1655,7 @@ class Geocoders_Table(QtWidgets.QTableView):
 
         data    =   []
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocoders_Table][load_geocoders_data] geocoders_list : \n    ",geocoders_list)
 
         for i in range(len(geocoders_list)) :
@@ -1665,7 +1664,7 @@ class Geocoders_Table(QtWidgets.QTableView):
             data_row.append(geocoders_list[i])
             data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocoders_Table][dump] : data")
             for j in range(len(data)) :
                 print("    [",j,"] : ",data[j])
@@ -1673,14 +1672,14 @@ class Geocoders_Table(QtWidgets.QTableView):
         self.column_headers     =   ["Geocoder"]
         self.column_widths      =   [200]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table][end load]")
 
         return(data)
     
     def select_geocoder(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table][select_geocoder]")
 
         row_number      =   None
@@ -1690,14 +1689,14 @@ class Geocoders_Table(QtWidgets.QTableView):
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table][select_geocoder] ",row_number,column_number)
 
         model   =   self.model
         tdata   =   model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocoders_Table][select_geocoder] ",cell)
 
         
@@ -1710,7 +1709,7 @@ class Geocoders_Table(QtWidgets.QTableView):
 
 def get_geocoder_connector_form(geocoder_id,button_methods) :
 
-    if(DEBUG_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
         print("    [get_geocoder_connector_form]",geocoder_id)
    
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId,BingId,GoogleId,OpenMapQuestId, NominatimId, get_geocoder_title)
@@ -1735,7 +1734,7 @@ def get_geocoder_connector_form(geocoder_id,button_methods) :
 
     geocoder_title  =   get_geocoder_title(geocoder_id)  
 
-    if(DEBUG_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
         print("    [get_geocoder_connector_form][geocoder_title]",geocoder_title)
 
     comboMethods    =   None
@@ -1757,7 +1756,7 @@ def get_geocoder_connector_form(geocoder_id,button_methods) :
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     geocode_connector_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
         print("    [get_geocoder_connector_form] form built",geocoder_id)
 
     return(geocode_connector_form)
@@ -1766,7 +1765,7 @@ class Geocode_connector_form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget]")
 
         super().__init__()
@@ -1780,25 +1779,25 @@ class Geocode_connector_form_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget] end")
 
     def reload_data(self,parent,bulkflag,geocid) :
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget][reload_data] ")
 
         self.parent         =   parent
         self.bulk_flag      =   bulkflag
         self.geocoder_id    =   geocid
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget][reload_data][end] ",self.bulk_flag,self.geocoder_id)
         
 
     def build_connector_form(self):  
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_connector_form_Widget][build_connector_form] ",self.bulk_flag,self.geocoder_id)
 
         # build the overall dtypes layout
@@ -1819,14 +1818,14 @@ class Geocode_connector_form_Widget(QtWidgets.QWidget):
         for i in range(parm_count) :
             new_geocoder_connector_form.set_form_input_value_by_index(i,geocoder_parms[i])
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_connector_form_Widget][build_connector_form] geocoder_parms : \n    ",geocoder_parms)
 
         return(new_geocoder_connector_form)
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_connector_form_Widget][init_form] ",self.bulk_flag,self.geocoder_id)
 
         self.geocoder_connector_form    =   self.build_connector_form()
@@ -1841,14 +1840,14 @@ class Geocode_connector_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocodeconnectorLayout)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_connector_form_Widget][init_form] end")
 
 class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget]")
 
         super().__init__()
@@ -1859,7 +1858,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget] end")
 
     def reload_data(self,parent,bulkflag,geocoderid) :
@@ -1868,7 +1867,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
         self.bulk_flag      =   bulkflag
         self.geocoder_id    =   geocoderid
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget][reload_data] ",self.bulk_flag,self.geocoder_id)
 
         self.geocoder_connector_callbacks   =   [self.test_geocoder_connector,self.interactive_geocoding,self.interactive_reverse_geocoding,self.bulk_geoocooding,self.clear_form,self.geocode_connector_return,self.geocoder_connector_help]
@@ -1877,7 +1876,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geoocoder_Connector_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -1931,17 +1930,17 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocoderLayout)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_connector_form_Widget][init_form] end")
     
     def test_geocoder_connector(self) :
  
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("[Geoocoder_Connector_Widget][test_geocoder_connector] \n  ",type(self.geocode_connect_parms_form.geocoder_connector_form))
 
         total_parms             =   self.geocode_connect_parms_form.geocoder_connector_form.get_form_fields_count()
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("[Geoocoder_Connector_Widget][test_geocoder_connector] total_parms  ",total_parms)
 
         geocode_connect_parms   =   []
@@ -1949,7 +1948,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
         for i in range(total_parms) :
             geocode_connect_parms.append(self.geocode_connect_parms_form.geocoder_connector_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget][test_geocoder_connector] gcparms : \n  ",geocode_connect_parms)
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import test_geocoder
@@ -1979,7 +1978,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
     def interactive_geocoding(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget][interactive_geocoding]")
        
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY
@@ -1987,7 +1986,7 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
     def interactive_reverse_geocoding(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_connector_form_Widget][interactive_reverse_geocoding]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import REVERSE
@@ -1995,24 +1994,24 @@ class Geoocoder_Connector_Widget(QtWidgets.QWidget):
 
     def bulk_geoocooding(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget][bulk_geoocooding]")
     
     def clear_form(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_connector_form_Widget]clear_form]")
 
     def geocode_connector_return(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Connector_Widget][geocode_connector_return]")
 
         self.parent.init_geocode()
 
     def geocoder_connector_help(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_connector_form_Widget][geocoder_connector_help]")
 
 
@@ -2109,12 +2108,12 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
         self.parent             =   tblparms[0]
         self.geocoder_id        =   tblparms[1]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Geocoding_Table : init",self.geocoder_id)
 
         self.init_tableview()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Table] : end")
 
     # -----------------------------------------------------------------#
@@ -2122,7 +2121,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def reload_data(self):
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Connector_Table][reload_data] : ")
 
         tbldata    =   self.load_geocode_geocoding_data()
@@ -2134,7 +2133,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Table][init_tableview]")
 
         #-----------------------------------------#
@@ -2142,14 +2141,14 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
         #-----------------------------------------#
         geocode_geocoding_data     =   self.load_geocode_geocoding_data()
         
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
            print("  [Geocode_Geocoding_Table][init_tableview] : headers",self.column_headers)
 
         if(self.model is None) :
             self.model = GeocodeGeocodingModel(geocode_geocoding_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
            print("  [Geocode_Geocoding_Table][init_tableview] : model loaded")
 
         self.num_rows   =   len(geocode_geocoding_data)
@@ -2194,7 +2193,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_geocode_geocoding_data(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Table][load_geocode_geocoding_data]")
 
         import dfcleanser.Qt.utils.Geocode.GeocodeWidgets as gcw  
@@ -2223,7 +2222,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
         connect_parms   =   get_geocoder_parms(self.geocoder_id)
         connect_labels  =   labellist
         
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_Table][load_geocode_geocoding_data] : ",self.geocoder_id," \n  ",connect_parms,"\n  ",connect_labels)
 
         data    =   []
@@ -2238,7 +2237,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
         data_row.append("  " + gtitle)
         data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_Table][lload_geocode_geocoding_data] connect_parms : \n    ",connect_parms)
 
         for i in range(len(connect_parms)) :
@@ -2252,7 +2251,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
                 data_row.append("  " + connect_parms[i])
                 data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_Table][dump] : data")
             for j in range(len(data)) :
                 print("    [",j,"] : ",data[j])
@@ -2260,7 +2259,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
         self.column_headers     =   ["Geocode Connector Parms"]
         self.column_widths      =   [180]
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("[Geocode_Geocoding_Table][end load]")
 
         return(data)
@@ -2268,7 +2267,7 @@ class Geocode_Geocoding_Table(QtWidgets.QTableView):
 
 def get_geocoding_query_form(geocoder_id,button_methods) :
 
-    if(DEBUG_GEOCODE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
         print("    [get_geocoder_query_form]",geocoder_id)
    
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import (ArcGISId,BingId,GoogleId,OpenMapQuestId, NominatimId, get_geocoder_title)
@@ -2359,7 +2358,7 @@ def get_geocoding_query_form(geocoder_id,button_methods) :
 
     geocoder_title  =   get_geocoder_title(geocoder_id)  
 
-    if(DEBUG_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
         print("    [get_geocoder_query_form][geocoder_title]",geocoder_title)
 
     file_methods    =   None
@@ -2384,7 +2383,7 @@ def get_geocoding_query_form(geocoder_id,button_methods) :
     else :
         geocode_query_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
         print("    [get_geocoder_query_form] form built",geocoder_id)
 
     return(geocode_query_form)
@@ -2392,7 +2391,7 @@ def get_geocoding_query_form(geocoder_id,button_methods) :
 
 def get_geocoding_reverse_form(geocoder_id,button_methods) :
 
-    if(DEBUG_GEOCODE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
         print("    [get_geocoder_reverse_form]",geocoder_id)
    
     selectDicts     =   []
@@ -2494,7 +2493,7 @@ def get_geocoding_reverse_form(geocoder_id,button_methods) :
 
     geocoder_title  =   get_geocoder_title(geocoder_id)  
 
-    if(DEBUG_GEOCODE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
         print("    [get_geocoder_reverse_form][geocoder_title]",geocoder_title)
 
     file_methods    =   None
@@ -2514,7 +2513,7 @@ def get_geocoding_reverse_form(geocoder_id,button_methods) :
     from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
     geocode_reverse_form    =   dfcleanser_input_form_Widget(form_parms)
 
-    if(DEBUG_GEOCODE) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
         print("    [get_geocoder_reverse_form] form built",geocoder_id)
 
     return(geocode_reverse_form)
@@ -2524,7 +2523,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_form_Widget]")
 
         super().__init__()
@@ -2538,25 +2537,25 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget] end")
 
     def reload_data(self,parent,geocode_mode,geocid) :
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_connector_form_Widget][reload_data] ")
 
         self.parent         =   parent
         self.geocode_mode   =   geocode_mode
         self.geocoder_id    =   geocid
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_geocoding_form_Widget][reload_data][end] ",self.geocode_mode,self.geocoder_id)
         
 
     def build_form(self):  
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_form_Widget][build_form] ",self.geocode_mode,self.geocoder_id)
 
         # build the overall dtypes layout
@@ -2578,7 +2577,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
             stored_parms    =   get_geocoder_query_parms(self.geocoder_id)
             parm_count      =   new_geocoder_query_form.get_form_fields_count()
             
-            if(DEBUG_GEOCODE_DETAILS) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
                 print("  [Geocode_Geocoding_form_Widget][parm_count] ",parm_count)
 
         else :
@@ -2587,7 +2586,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
             stored_parms    =   get_geocoder_reverse_parms(self.geocoder_id)
             parm_count      =   new_geocoder_reverse_form.get_form_fields_count()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_form_Widget][stored_parms] ",stored_parms)
 
         if(not (stored_parms is None)) :
@@ -2614,7 +2613,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
                     new_geocoder_reverse_form.set_form_input_value_by_index(7,"United States")    
 
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_geocoding_form_Widget][build_form] geocoder_parms : \n    ",stored_parms)
 
         if(self.geocode_mode == QUERY) :
@@ -2625,7 +2624,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_form_Widget][init_form] ",self.geocode_mode,self.geocoder_id)
 
         from PyQt5.QtWidgets import QScrollArea
@@ -2651,7 +2650,7 @@ class Geocode_Geocoding_form_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocodeconnectorLayout)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_form_Widget][init_form] end")
 
 
@@ -2659,7 +2658,7 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget]")
 
         super().__init__()
@@ -2670,7 +2669,7 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget] end")
 
     def reload_data(self,parent,mode,geocoderid) :
@@ -2679,12 +2678,12 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
         self.geocode_mode   =   mode
         self.geocoder_id    =   geocoderid
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reload_data] ",self.geocode_mode,self.geocoder_id)
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Geocoding_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -2745,12 +2744,12 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocoderLayout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Geocoding_Widget][init_form] end")
 
     def query_request(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geoocoder_Geocoding_Widget][query_request] \n  ")
 
         query_parms_count   =   self.geocode_geocoding_parms_form.geocoder_geocoding_form.get_form_fields_count()
@@ -2767,7 +2766,7 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_form_id, QUERY
             cfg_key = get_form_id(self.geocoder_id,QUERY) + "Parms"
 
-            if(DEBUG_GEOCODE) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
                 print(cfg_key,query_parms)
 
             from dfcleanser.common.cfg import set_config_value
@@ -2775,12 +2774,12 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
             self.parent.display_geocoding_data(self.geocode_mode,query_results)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][query_request] \n  ",query_results)
 
     def clear_query_form(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][clear_query_form] \n  ")
 
         query_parms_count   =   self.geocode_geocoding_parms_form.geocoder_geocoding_form.get_form_fields_count()
@@ -2789,19 +2788,19 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
     def query_return(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][query_return] \n  ")
 
         self.parent.init_geocode()
 
     def query_help(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][query_help] \n  ")
 
     def reverse_request(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reverse_request] \n  ")
 
         reverse_parms_count   =   self.geocode_geocoding_parms_form.geocoder_geocoding_form.get_form_fields_count()
@@ -2810,7 +2809,7 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
         for i in range(reverse_parms_count) :
             reverse_parms.append(self.geocode_geocoding_parms_form.geocoder_geocoding_form.get_form_input_value_by_index(i))
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reverse_request]  reverse_parms ",reverse_parms)
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import run_geocoder_reverse
@@ -2818,7 +2817,7 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
         if(not(reverse_results is None)) :
 
-            if(DEBUG_GEOCODE) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
                 print("[Geoocoder_Geocoding_Widget][reverse_request] \n  ",reverse_results)
 
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import get_form_id, REVERSE
@@ -2829,12 +2828,12 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
             self.parent.display_geocoding_data(self.geocode_mode,reverse_results)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reverse_request] \n  ",reverse_results)
 
     def clear_reverse_form(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][clear_reverse_form] \n  ")
 
         query_parms_count   =   self.geocode_geocoding_parms_form.geocoder_geocoding_form.get_form_fields_count()
@@ -2843,14 +2842,14 @@ class Geoocoder_Geocoding_Widget(QtWidgets.QWidget):
 
     def reverse_return(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reverse_return] \n  ")
 
         self.parent.init_geocode()#self.parent.display_select_geocoder(False,geocoderid=self.geocoder_id)
 
     def reverse_help(self) :
  
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Widget][reverse_help] \n  ")
 
 
@@ -2941,15 +2940,15 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
         self.geocoding_results  =   tblparms[2]
 
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Geocoding_Results_Table : init",self.geocoder_type)
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Geocoding_Results_Table : results\n  ",self.geocoding_results)
 
 
         self.init_tableview()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table] : end")
 
     # -----------------------------------------------------------------#
@@ -2957,7 +2956,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def reload_data(self,parent,geocode_type,results):
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][reload_data] : ")
         
         self.parent             =   parent
@@ -2982,7 +2981,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][init_tableview]")
 
         #-----------------------------------------#
@@ -2994,7 +2993,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
             self.model = GeocodeGeocodingModel(geocode_geocoding_results_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
            print("  [Geocode_Geocoding_Results_Table][init_tableview] : model loaded")
 
         self.num_rows   =   len(geocode_geocoding_results_data)
@@ -3040,7 +3039,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_query_data(self,geocoding_results,data):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][load_query_data]")
             print("  [Geocode_Geocoding_Results_Table][load_query_data] results : \n    ",geocoding_results)
 
@@ -3055,7 +3054,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
  
             data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Geocoding_Results_Table][dump] : data")
             for j in range(len(data)) :
                 print("    [",j,"] : ",data[j])
@@ -3063,7 +3062,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
         column_headers     =   ["User Coords","Geocoder Address","Latitude","Longitude"]
         column_widths      =   [250,410,90,90]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Geocoding_Results_Table][end load]")
 
         return([column_headers,column_widths])
@@ -3073,7 +3072,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_reverse_data(self,geocoding_results,data):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][load_reverse_data]")
             print("  [Geocode_Geocoding_Results_Table][load_reverse_data] results : \n    ",geocoding_results)
 
@@ -3088,7 +3087,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
  
             data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][dump] : data")
             for j in range(len(data)) :
                 print("    [",j,"] : ",data[j])
@@ -3096,7 +3095,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
         column_headers     =   ["User Coords","Geocoder Address","Latitude","Longitude"]
         column_widths      =   [195,385,100,100]
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Geocoding_Results_Table][end load]")
 
         return([column_headers,column_widths])
@@ -3108,7 +3107,7 @@ class Geocode_Geocoding_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_geocode_results_data(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Geocoding_Results_Table][load_geocode_results_data]")
             print("  [Geocode_Geocoding_Results_Table][load_geocode_results_data]         \n",self.geocoding_results)
 
@@ -3135,7 +3134,7 @@ class Geoocoder_Geocoding_Results_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Results_Widget]")
 
         super().__init__()
@@ -3146,7 +3145,7 @@ class Geoocoder_Geocoding_Results_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Results_Widget] end")
 
     def reload_data(self,parent,mode,results) :
@@ -3155,7 +3154,7 @@ class Geoocoder_Geocoding_Results_Widget(QtWidgets.QWidget):
         self.geocode_mode       =   mode
         self.geocoding_results  =   results
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Results_Widget][reload_data] ",self.geocode_mode)
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY
@@ -3166,7 +3165,7 @@ class Geoocoder_Geocoding_Results_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Geocoding_Results_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -3225,12 +3224,12 @@ class Geoocoder_Geocoding_Results_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocoding_results_tableLayout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Geocoding_Results_Widget][init_form] end")
 
     def return_from_results(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Geocoding_Results_Widget][return_from_results]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY, REVERSE
@@ -3329,15 +3328,15 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
         self.distance_results   =   tblparms[3]
 
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Distance_Results_Table : init",self.distance_type,self.distance_units)
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Distance_Results_Table : results\n  ",self.distance_results)
 
 
         self.init_tableview()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_Results_Table] : end")
 
     # -----------------------------------------------------------------#
@@ -3345,7 +3344,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def reload_data(self,parent,distance_type,units,results):
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_Results_Table][reload_data] : ")
         
         self.parent             =   parent
@@ -3371,7 +3370,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_Results_Table][init_tableview]")
 
         #-----------------------------------------#
@@ -3383,7 +3382,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
             self.model = GeocodeGeocodingModel(geocode_distance_results_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
            print("  [Geocode_Distance_Results_Table][init_tableview] : model loaded")
 
         self.num_rows   =   len(geocode_distance_results_data)
@@ -3427,7 +3426,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_distance_data(self,distance_type,distance_results):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_Results_Table][load_distance_data]")
             print("  [Geocode_Distance_Results_Table][load_distance_data] results : \n    ",distance_results)
 
@@ -3447,7 +3446,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
  
             data.append(data_row)
 
-        if(DEBUG_GEOCODE_DETAILS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_DETAILS")) :
             print("  [Geocode_Distance_Results_Table][dump] : data")
             for j in range(len(data)) :
                 print("    [",j,"] : ",data[j])
@@ -3472,7 +3471,7 @@ class Geocode_Distance_Results_Table(QtWidgets.QTableView):
             self.column_widths      =   [250,300,300]
 
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Geocoding_Results_Table][end load]")
 
         return(data)
@@ -3481,7 +3480,7 @@ class Geoocoder_Distance_Results_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Distance_Results_Widget]")
             for i in range(len(dfparms)) :
                 print("[Geoocoder_Distance_Results_Widget] dfparm ",dfparms[i])    
@@ -3500,7 +3499,7 @@ class Geoocoder_Distance_Results_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Distance_Results_Widget] end")
 
     def reload_data(self,parent,mode,units,results) :
@@ -3510,7 +3509,7 @@ class Geoocoder_Distance_Results_Widget(QtWidgets.QWidget):
         self.distance_units     =   units
         self.distance_results   =   results
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Distance_Results_Widget][reload_data] ",self.distance_type)
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
@@ -3521,7 +3520,7 @@ class Geoocoder_Distance_Results_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Distance_Results_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -3580,12 +3579,12 @@ class Geoocoder_Distance_Results_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocoding_results_tableLayout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Distance_Results_Widget][init_form] end")
 
     def return_from_results(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Distance_Results_Widget][return_from_results]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
@@ -3602,24 +3601,24 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Utilities_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Utilities_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][init_form]")
 
         self.init_command_bar()
@@ -3640,13 +3639,13 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.transform_col_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][init_form] end")
 
 
     def init_command_bar(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][init_command_bar]")
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_button_bar
@@ -3684,7 +3683,7 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
         clearLayout(self.parent.form.GeocodeCmdbarLayout)
         self.parent.form.GeocodeCmdbarLayout.addLayout(cmdbarLayout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][init_command_bar] end")
 
 
@@ -3694,7 +3693,7 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
 
     def calculate_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
@@ -3703,7 +3702,7 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
    
     def calculate_df_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_df_distance]")
         
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DATAFRAME
@@ -3711,7 +3710,7 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
      
     def calculate_center(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_center]")
         
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -3719,7 +3718,7 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
 
     def calculate_distance_from_loc(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_distance_from_loc]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -3727,14 +3726,14 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
 
     def split_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][split_column]")
 
         self.parent.display_geocoding_split()
 
     def join_columns(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][join_columns]")
 
         self.parent.display_geocoding_join()
@@ -3742,14 +3741,14 @@ class Geocode_Utilities_Widget(QtWidgets.QWidget):
  
     def return_from_geocode_utils(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Utilities_Widget][return_from_geocode_utils]\n")
         
         self.parent.init_geocode_form()      
 
     def help_for_geocode_utils(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][help_for_geocode_utils]")
         
 
@@ -3764,31 +3763,31 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Address_Distance_Utility_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Address_Distance_Utility_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Address_Distance_Utility_Widget] end")
 
     def reload_banner(self) :
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Address_Distance_Utility_Widget][reload_data] ")
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Address_Distance_Utility_Widget][init_form]")
 
         form_parms      =   [from_address_distance_id,from_address_distance_idList,from_address_distance_labelList,from_address_distance_typeList,
@@ -3813,7 +3812,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.distance_addr_from_form    =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Address_Distance_Utility_Widget] distance_addr_from_form built")
 
         form_parms      =   [to_address_distance_id,to_address_distance_idList,to_address_distance_labelList,to_address_distance_typeList,
@@ -3838,7 +3837,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.distance_addr_to_form    =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Address_Distance_Utility_Widget] distance_addr_to_form built")
 
         from PyQt5.QtWidgets import QHBoxLayout,QVBoxLayout
@@ -3879,7 +3878,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.distance_addr_cmd_form    =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Address_Distance_Utility_Widget] distance_addr_cmd_form built")
         
         self.distance_form_layout    =  QVBoxLayout() 
@@ -3893,12 +3892,12 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.addr_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Address_Distance_Utility_Widget][init_form] end")
 
     def calculate_address_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_address_distanc]")
 
         from_addresses  =   []
@@ -3926,7 +3925,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
         parms       =   [from_addresses,to_addresses,distance_parms]
         distances   =   process_calculate_distances(ADDRESS,parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[calculate_address_distance] : distances ",distances)
 
         results     =   []
@@ -3940,7 +3939,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def get_latlng_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_latlng_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import LAT_LNG
@@ -3948,7 +3947,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
      
     def get_df_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_df_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DATAFRAME
@@ -3956,7 +3955,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def clear_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][clear_distance]")
         
         for i in range(5) :
@@ -3965,7 +3964,7 @@ class Geocode_Address_Distance_Utility_Widget(QtWidgets.QWidget):
   
     def return_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_distance]")
         
         self.parent.display_geocoding_utilities()        
@@ -3980,24 +3979,24 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_LatLng_Distance_Utility_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_LatLng_Distance_Utility_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_LatLng_Distance_Utility_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_LatLng_Distance_Utility_Widget][init_form]")
 
         form_parms      =   [from_latlng_distance_id,from_latlng_distance_idList,from_latlng_distance_labelList,from_latlng_distance_typeList,
@@ -4022,7 +4021,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.latlng_addr_from_form    =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_LatLng_Distance_Utility_Widget] dlatlng_addr_from_form built")
 
         form_parms      =   [to_latlng_distance_id,to_latlng_distance_idList,to_latlng_distance_labelList,to_latlng_distance_typeList,
@@ -4047,7 +4046,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.latlng_addr_to_form    =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_LatLng_Distance_Utility_Widget] latlng_addr_to_form built")
 
         from PyQt5.QtWidgets import QHBoxLayout,QVBoxLayout
@@ -4088,7 +4087,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.distance_latlng_cmd_form    =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_LatLng_Distance_Utility_Widget] distance_latlng_cmd_form built")
         
         self.distance_form_layout    =  QVBoxLayout() 
@@ -4102,13 +4101,13 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.latlng_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_LatLng_Distance_Utility_Widget][init_form] end")
 
 
     def calculate_latlng_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_latlng_distanc]")
 
         from_addresses  =   []
@@ -4134,7 +4133,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
         parms   =   [from_addresses,to_addresses,distance_parms]
         distances   =   process_calculate_distances(LAT_LNG,parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[calculate_address_distance] : distances ",distances)
 
         results     =   []
@@ -4147,7 +4146,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
    
     def get_address_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_address_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import ADDRESS
@@ -4155,7 +4154,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
      
     def get_latlng_df_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_df_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DATAFRAME
@@ -4163,7 +4162,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def clear_latlng_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][clear_latlng_distance]")
 
         for i in range(5) :
@@ -4172,7 +4171,7 @@ class Geocode_LatLng_Distance_Utility_Widget(QtWidgets.QWidget):
   
     def return_latlng_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_latlng_distance]")
         
         self.parent.display_geocoding_utilities()        
@@ -4186,24 +4185,24 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_df_Distance_Utility_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_df_Distance_Utility_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -4265,7 +4264,7 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.distance_df_form    =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_df_Distance_Utility_Widget] distance_df_form built")
         
         self.distance_notesLayout  =   QVBoxLayout()
@@ -4289,12 +4288,12 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.df_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget][init_form] end")
 
     def select_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget][select_dfc]")
 
         new_df  =   self.distance_df_form.get_form_input_value_by_index(0)
@@ -4311,7 +4310,7 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def select_from_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget][select_from_column]")
 
         new_from_col  =   self.distance_df_form.get_form_input_value_by_index(2)
@@ -4319,7 +4318,7 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def select_to_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Distance_Utility_Widget][select_to_column]")
 
         new_to_col  =   self.distance_df_form.get_form_input_value_by_index(4)
@@ -4327,7 +4326,7 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def calculate_dataframe_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][calculate_dataframe_distance]")
 
         parms   =   []
@@ -4372,7 +4371,7 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
 
     def clear_dataframe_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][clear_dataframe_distance]")
         
         self.distance_df_form.set_form_input_value_by_index(1,"")
@@ -4381,14 +4380,14 @@ class Geocode_df_Distance_Utility_Widget(QtWidgets.QWidget):
   
     def return_dataframe_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_dataframe_distance]")
 
         self.parent.display_geocoding_utilities()        
 
     def help_dataframe_distance(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][help_dataframe_distance]")
 
         self.parent.display_geocoding_utilities()        
@@ -4402,7 +4401,7 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Center_Point_Widget][init] ")
 
         super().__init__()
@@ -4411,19 +4410,19 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Center_Point_Widget] end")
 
     def reload_banner(self) :
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Widget][reload_data] ")
 
         self.init_command_bar()
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Widget][init_form]")
 
         form_parms      =   [center_pt_input_id,center_pt_input_idList,center_pt_input_labelList,center_pt_input_typeList,
@@ -4448,7 +4447,7 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.center_point_location   =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Center_Point_Widget]center_point_location  built")
 
         form_parms      =   [center_pt_1_input_id,center_pt_input_idList,center_pt_input_labelList,center_pt_input_typeList,
@@ -4473,7 +4472,7 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.center_point1_location   =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Center_Point_Widget]center_point1_location  built")
 
         form_parms      =   [center_pt_2_input_id,center_pt_input_idList,center_pt_input_labelList,center_pt_input_typeList,
@@ -4498,7 +4497,7 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.center_point2_location   =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Center_Point_Widget]center_point2_location  built")
 
 
@@ -4550,13 +4549,13 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.addr_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Widget][init_form] end")
 
 
     def calculate_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Center_Point_Widget][calculate_center_point]")
 
         parms       =   []
@@ -4582,20 +4581,8 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import process_calculate_center_pt
         center_point    =   process_calculate_center_pt(parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Center_Point_Widget][calculate_center_point] center point : ",center_point)
-
-
-
-
-
-
-
-
-
-
-
-
 
         geocode_points  =   []
         for i in range(len(locparms)) :
@@ -4614,7 +4601,7 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
 
     def get_center_pt_for_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_latlng_distance]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DF_CENTER_POINT_LOCATION
@@ -4622,14 +4609,14 @@ class Geocode_Center_Point_Widget(QtWidgets.QWidget):
     
     def return_from_center_pt(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_from_center_pt]")
         
         self.parent.display_geocoding_utilities()        
 
     def help_for_center_pt(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_from_center_pt]")
         
         self.parent.display_geocoding_utilities()        
@@ -4737,12 +4724,12 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
         self.center_point   =   tblparms[3]
 
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Center_Point_Results_Table] : init",self.center_point_type,self.geopoints,self.dftitle,self.colname,self.center_point)
 
         self.init_tableview()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Results_Table] : end\n")
 
     # -----------------------------------------------------------------#
@@ -4750,7 +4737,7 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def reload_data(self,parent,center_point_type,geopoints,center_point):
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Results_Table][reload_data] : ")
         
         self.parent             =   parent
@@ -4790,7 +4777,7 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def init_tableview(self):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Results_Table][init_tableview]")
 
         #-----------------------------------------#
@@ -4802,7 +4789,7 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
             self.model = GeocodeCenterPointResultsModel(geocode_center_point_results_data,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
            print("  [Geocode_Center_Point_Results_Table][init_tableview] : model loaded")
 
         self.num_rows   =   len(geocode_center_point_results_data)
@@ -4846,7 +4833,7 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_center_point_data(self,center_point_type,center_point_data,center_point):
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_Results_Table][load_distance_data]",center_point_type,center_point)
             print("  [Geocode_Distance_Results_Table][load_distance_data] results : \n    ",center_point_data)
 
@@ -4872,13 +4859,13 @@ class Geocode_Center_Point_Results_Table(QtWidgets.QTableView):
             location            =   geolocator.reverse(center_point)
             reverse_address     =   location.address
 
-            if(DEBUG_GEOCODE) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
                 print("  [Geocode_Center_Point_Widget][calculate_df_center_point] reverse_address : ",reverse_address)
 
             from dfcleanser.Qt.utils.Geocode.GeocodeModel import split_geocode_address
             split_geo_addr  =   split_geocode_address(reverse_address)
 
-            if(DEBUG_GEOCODE) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
                 print("  [Geocode_Center_Point_Widget][calculate_df_center_point] split_geo_addr : ",split_geo_addr,type(split_geo_addr))
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -4942,7 +4929,7 @@ class Geoocoder_Center_Point_Results_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Center_Point_Results_Widget]")
             for i in range(len(dfparms)) :
                 print("[Geoocoder_Center_Point_Results_Widget] dfparm ",dfparms[i])    
@@ -4969,7 +4956,7 @@ class Geoocoder_Center_Point_Results_Widget(QtWidgets.QWidget):
         
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Center_Point_Results_Widget] end")
 
     def reload_data(self,parent,center_point_type,geodata,center_point) :
@@ -4993,7 +4980,7 @@ class Geoocoder_Center_Point_Results_Widget(QtWidgets.QWidget):
             self.colname    =   self.geodata[1] 
 
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Center_Point_Results_Widget][reload_data] ",self.center_point_type,self.geodata,self.center_point)
 
         if(self.center_point_type == USER_LOCATION) :
@@ -5003,7 +4990,7 @@ class Geoocoder_Center_Point_Results_Widget(QtWidgets.QWidget):
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geoocoder_Distance_Results_Widget][init_form]")
 
         # build the overall dtypes layout
@@ -5062,12 +5049,12 @@ class Geoocoder_Center_Point_Results_Widget(QtWidgets.QWidget):
 
         self.setLayout(self.geocoding_results_tableLayout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Distance_Results_Widget][init_form] end")
 
     def return_from_results(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geoocoder_Distance_Results_Widget][return_from_results] ",self.center_point_type)
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DF_CENTER_POINT_LOCATION, USER_LOCATION
@@ -5088,7 +5075,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_df_Center_Point_Widget][init] ")
 
         super().__init__()
@@ -5097,12 +5084,12 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_df_Center_Point_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -5158,7 +5145,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.df_center_point_location   =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_df_Center_Point_Widget]center_point_location  built")
 
         self.centerpt_notesLayout  =   QVBoxLayout()
@@ -5183,12 +5170,12 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.df_center_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][init_form] end")
 
     def select_Center_Point_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][select_Center_Point_df]")
         
         dftitle     =   self.df_center_point_location.get_form_input_value_by_index(0)
@@ -5202,7 +5189,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
 
     def select_Center_Point_col(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][select_Center_Point_col]")
 
         dfcol           =   self.df_center_point_location.get_form_input_value_by_index(2)
@@ -5226,7 +5213,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
 
     def calculate_df_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Widget][calculate_df_center_point]")
 
         parms       =   []
@@ -5240,7 +5227,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
                 from dfcleanser.Qt.utils.Geocode.GeocodeControl import process_calculate_df_center_pt
                 center_point    =   process_calculate_df_center_pt(parms)
 
-                if(DEBUG_GEOCODE) :
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
                     print("  [Geocode_Center_Point_Widget][calculate_df_center_point] center_point : ",center_point)
 
                 from dfcleanser.Qt.utils.Geocode.GeocodeModel import DF_CENTER_POINT_LOCATION
@@ -5264,7 +5251,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
    
     def get_list_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_list_center_point]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -5272,7 +5259,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
     
     def return_from_df_center(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_from_df_center]")
         
         self.parent.display_geocoding_utilities()        
@@ -5280,7 +5267,7 @@ class Geocode_df_Center_Point_Widget(QtWidgets.QWidget):
 
     def help_for_df_center(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][elp_for_df_center]")
         
         self.parent.display_geocoding_utilities()        
@@ -5298,7 +5285,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n  [Geocode_Distance_From_User_Loaction_Widget][init] ")
 
         super().__init__()
@@ -5307,12 +5294,12 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_User_Loaction_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_User_Loaction_Widget][init_form]")
         
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -5376,7 +5363,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
         self.df_user_location   =   dfcleanser_input_form_Widget(form_parms)
         self.df_user_location.set_form_input_value_by_index(0,"(Latitude,Longitude)")
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_User_Loaction_Widget] form built")
 
         self.user_distance_notesLayout  =   QVBoxLayout()
@@ -5401,13 +5388,13 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.df_center_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_User_Loaction_Widget][init_form] end")
 
 
     def select_User_Loaction_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][select_User_Loaction_df]")
         
         dftitle     =   self.df_user_location.get_form_input_value_by_index(0)
@@ -5420,7 +5407,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
 
     def select_User_Loaction_col(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_df_Center_Point_Widget][select_User_Loaction_col]")
 
         dfcol     =   self.df_user_location.get_form_input_value_by_index(3)
@@ -5428,7 +5415,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
         
     def calculate_dist_from_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Center_Point_Widget][calculate_dist_from_point]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import process_calculate_df_distances_from_fixed_location
@@ -5472,7 +5459,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
    
     def get_center_point_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_center_point_input]")
         
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DF_CENTER_POINT_LOCATION
@@ -5480,7 +5467,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
     
     def get_closest_center_point_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][get_closest_center_point_input]")
         
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import CENTER_POINT_LIST_LOCATION
@@ -5488,7 +5475,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
    
     def return_from_df_dist_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][return_from_df_dist_point]")
         
         self.parent.display_geocoding_utilities()        
@@ -5496,7 +5483,7 @@ class Geocode_Distance_From_User_Loaction_Widget(QtWidgets.QWidget):
 
     def help_for_df_dist_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Utilities_Widget][help_for_df_dist_point]")
         
         self.parent.display_geocoding_utilities()        
@@ -5513,7 +5500,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Distance_From_Center_Point_Widget][init] ")
 
         super().__init__()
@@ -5522,12 +5509,12 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Distance_From_Center_Point_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -5593,7 +5580,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.df_center_point_location   =   dfcleanser_input_form_Widget(form_parms)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Distance_From_Center_Point_Widget]center_point_location  built")
 
         self.centerpt_distance_notesLayout  =   QVBoxLayout()
@@ -5618,13 +5605,13 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.df_center_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][init_form] end")
 
 
     def select_Distance_From_Center_Point_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  Geocode_Distance_From_Center_Point_Widget][select_Distance_From_Center_Point_df]")
         
         dftitle     =   self.df_center_point_location.get_form_input_value_by_index(0)
@@ -5637,7 +5624,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def select_Distance_From_Center_Point_col(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][select_Distance_From_Center_Point_col]")
 
         dfcol     =   self.df_center_point_location.get_form_input_value_by_index(2)
@@ -5646,7 +5633,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def select_center_pt_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  Geocode_Distance_From_Center_Point_Widget][select_center_pt_df]")
         
         dftitle     =   self.df_center_point_location.get_form_input_value_by_index(3)
@@ -5659,7 +5646,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def select_ctpt_col(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][select_ctpt_col]")
 
         dfctptcol     =   self.df_center_point_location.get_form_input_value_by_index(5)
@@ -5667,7 +5654,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def calculate_dist_from_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][calculate_dist_from_center_point]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import process_calculate_df_distances_from_center_point
@@ -5714,7 +5701,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
    
     def get_point_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][get_point_input]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -5722,7 +5709,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def get_closest_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][get_closest_input]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import CENTER_POINT_LIST_LOCATION
@@ -5730,7 +5717,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
     
     def return_from_df_dist_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][return_from_df_dist_center_point]")
         
         self.parent.display_geocoding_utilities()        
@@ -5738,7 +5725,7 @@ class Geocode_Distance_From_Center_Point_Widget(QtWidgets.QWidget):
 
     def help_for_df_dist_center_point(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][help_for_df_dist_center_point]")
         
         self.parent.display_geocoding_utilities()    
@@ -5754,7 +5741,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Distance_From_Closest_Point_Widget][init] ")
 
         super().__init__()
@@ -5763,12 +5750,12 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Distance_From_Closest_Point_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Closest_Point_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -5849,7 +5836,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
         self.list_scroll.setWidget(self.df_center_point_location)
         self.list_scroll.setFixedHeight(660)
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Distance_From_Center_Point_Widget] list_location built")
 
         self.centerpt_distance_notesLayout  =   QVBoxLayout()
@@ -5876,13 +5863,13 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.df_center_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][init_form] end")
 
 
     def select_Closest_Point_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  Geocode_Distance_From_Center_Point_Widget][select_Closest_Point_df]")
         
         dftitle     =   self.df_center_point_location.get_form_input_value_by_index(0)
@@ -5895,7 +5882,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
     def select_Closest_Point_col(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][select_Closest_Point_col]")
 
         dfcol     =   self.df_center_point_location.get_form_input_value_by_index(2)
@@ -5903,7 +5890,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
     def calculate_dist_from_points_list(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Closest_Point_Widget][calculate_dist_from_points_list]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeControl import process_calculate_df_distances_from_list_points
@@ -5965,7 +5952,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
    
     def get_point_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][get_point_input]")
 
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import USER_LOCATION
@@ -5973,7 +5960,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
     def get_center_input(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][get_center_input]")
         
         from dfcleanser.Qt.utils.Geocode.GeocodeModel import DF_CENTER_POINT_LOCATION
@@ -5981,7 +5968,7 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
     
     def return_from_points_list(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][return_from_points_list]")
         
         self.parent.display_geocoding_utilities()        
@@ -5989,28 +5976,10 @@ class Geocode_Distance_From_Closest_Point_Widget(QtWidgets.QWidget):
 
     def help_for_points_list(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Distance_From_Center_Point_Widget][help_for_points_list]")
         
         self.parent.display_geocoding_utilities()    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # -----------------------------------------------------------------#
@@ -6020,24 +5989,24 @@ class Geocode_Split_Column_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Split_Column_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Split_Column_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -6076,7 +6045,7 @@ class Geocode_Split_Column_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.split_column_form    =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Split_Column_Widget] split_column_form built")
         
         self.split_Layout     =   QVBoxLayout()
@@ -6085,12 +6054,12 @@ class Geocode_Split_Column_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.split_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][init_form] end")
 
     def select_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][select_dfc]")
 
         new_df  =   self.split_column_form.get_form_input_value_by_index(0)
@@ -6104,7 +6073,7 @@ class Geocode_Split_Column_Widget(QtWidgets.QWidget):
 
     def select_split_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][select_from_column]")
 
         new_from_col  =   self.split_column_form.get_form_input_value_by_index(2)
@@ -6112,19 +6081,19 @@ class Geocode_Split_Column_Widget(QtWidgets.QWidget):
 
     def split_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][split_location]")
 
     def return_split_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][return_split_location]")
 
         self.parent.display_geocoding_utilities()        
 
     def help_split_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Split_Column_Widget][help_split_location]")
 
         self.parent.display_geocoding_utilities()        
@@ -6138,24 +6107,24 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
 
     def __init__(self, dfparms):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("\n[Geocode_Join_Columns_Widget][init] ")
 
         super().__init__()
 
         self.parent         =   dfparms[0]
         
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget] dftitle ; ")
 
         self.init_form()
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Join_Columns_Widget] end")
 
     def init_form(self):  
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][init_form]")
 
         from PyQt5.QtWidgets import QLabel,QVBoxLayout,QHBoxLayout
@@ -6195,7 +6164,7 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.join_column_form    =   dfcleanser_input_form_Widget(form_parms)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("[Geocode_Join_Columns_Widget] split_column_form built")
         
         self.join_Layout     =   QVBoxLayout()
@@ -6204,12 +6173,12 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
         
         self.setLayout(self.join_Layout)
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][init_form] end")
 
     def select_df(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][select_dfc]")
 
         new_df  =   self.join_column_form.get_form_input_value_by_index(0)
@@ -6227,7 +6196,7 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
 
     def select_join_lat_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][select_join_lat_column]")
 
         new_from_col  =   self.join_column_form.get_form_input_value_by_index(2)
@@ -6235,7 +6204,7 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
 
     def select_join_lng_column(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][select_join_lng_column]")
 
         new_from_col  =   self.join_column_form.get_form_input_value_by_index(4)
@@ -6244,19 +6213,19 @@ class Geocode_Join_Columns_Widget(QtWidgets.QWidget):
 
     def join_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][join_location]")
 
     def return_join_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][return_join_location]")
 
         self.parent.display_geocoding_utilities()        
 
     def help_join_location(self) :
 
-        if(DEBUG_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE")) :
             print("  [Geocode_Join_Columns_Widget][help_join_location]")
 
         self.parent.display_geocoding_utilities()        

@@ -20,37 +20,22 @@ import googlemaps
 #--------------------------------------------------------------------------
 """
 
-GEOCODE_TRACE_GET_GEOCODE           =   False
-
-GEOCODE_TRACE_GET_GEOCODE_LOAD      =   False
-GEOCODE_TRACE_ADD_RESULT            =   False
-GEOCODE_TRACE_DISPLAY_FORM          =   False
-
-DEBUG_GEOCODE_BULK_UTILS            =   False
-GEOCODE_THREAD_DEBUG                =   False
 
 
-GEOCODE_TRACE_GET_GEOCODE_VALUES    =   False
+DEBUG_GEOCODE_GET_GEOCODE_DETAILS    =   False
 
-GEOCODE_TRACE_GET_GEOCODE_DETAILS   =   False
-GEOCODE_TRACE_GET_RUN_TASK          =   False
-
-
-GEOCODE_TRACE_PROCESS_RESULTS       =   False
-GEOCODE_TRACE_FLUSH_RESULTS         =   False
-GEOCODE_TRACE_PROCESS_ERRORS        =   False
+DEBUG_GEOCODE_GET_GEOCODE_DETAILS   =   False
 
 
 import dfcleanser.common.cfg as cfg
 
 import dfcleanser.Qt.utils.Geocode.GeocodeModel as GM
 
-#import dfcleanser.Qt.utils.Geocode.BulkGeocodeConsole as BGCC
 import dfcleanser.Qt.utils.Geocode.BulkGeocodeControl as BGC
 
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWGeocodeUtility_ID
 
-
-#import dfcleanser.Qt.utils.Geocode.GeocodeControl as GC
 
 from dfcleanser.common.common_utils import (opStatus,
                                             delete_a_file, rename_a_file, does_file_exist,
@@ -290,7 +275,7 @@ class GeocodeThread :
 
         bulk_geocodes_tasks_active.update({self.rowId : self.thread_start_time})
 
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS ) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
             cfg.add_debug_to_log("GeocodeThread","[init]  " + str(inputparms))
 
     def run_geocoder_thread(self) :
@@ -315,7 +300,7 @@ class GeocodeThread :
         retry_count     =   0
         #import geopy
         
-        if(GEOCODE_TRACE_GET_RUN_TASK)  :  
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_RUN_TASK"))  :  
             if(retry_count > 0) :
                 cfg.add_debug_to_log("run_geocode_method"," retry_count : limit ] " + str(retry_count) + " : " + str(GOOGLE_RETRY_LIMIT))        
 
@@ -329,7 +314,7 @@ class GeocodeThread :
                     elif(self.geocoder_type == GM.REVERSE) :
                         self.geocode_results    =   BGC.get_google_reverse_results(self.rowId,self.inputParms,self.runParms,opstat) 
                 except :
-                    if(GEOCODE_TRACE_GET_RUN_TASK)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_RUN_TASK"))  :   
                         cfg.add_debug_to_log("run_geocode_method","  excepton from get : " + str(self.inputParms) + " : " + + str(sys.exc_info()[0].__name__))        
 
                 if(not (self.geocode_results is None) ) :
@@ -374,12 +359,12 @@ class GeocodeThread :
 
             while(retry_count < retry_limit) :
 
-                if(GEOCODE_TRACE_GET_GEOCODE) :
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
                     cfg.add_debug_to_log("run_geocode_method[get_geopy_geocode_results]"," address : " + str(self.inputParms))
 
                 self.geocode_results    =   BGC.get_geopy_geocode_results(self.geocoderId,self.geocoder_type,self.rowId,self.inputParms,self.runParms,self.opstat)
                 
-                if(GEOCODE_TRACE_GET_GEOCODE) :
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
                     if(self.geocode_results is None) :
                         cfg.add_debug_to_log("run_geocode_method][get_geopy_geocode_results"," results : None")
 
@@ -416,10 +401,8 @@ class GeocodeThread :
                                                           opstat.get_errorMsg(),"[run_geocode_method] retry_limt")
                         BGC.process_geopy_geocode_results(self.rowId,self.geocoderId,self.geocoder_type,self.inputParms,self.runParms,self.geocode_results,opstat,self.rowId)
         
-        if(GEOCODE_TRACE_GET_RUN_TASK) :            
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_RUN_TASK")) :            
             cfg.add_debug_to_log("run_geocode_method][complete]"," address : " + str(self.inputParms) + " stored " + str(opstat.get_status()))
-
-
 
         #bulk_geocodes_tasks_active.pop(self.rowid, None)
         try :
@@ -459,7 +442,7 @@ class GeocodeThreadsMonitor:
         self.maxthreads      =   maxthreadsparm
     
     def addthread(self, geocodetask, rowindex):
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("addthread","["+ str(rowindex)+"]")
 
         self.threaddict.update({rowindex:geocodetask})
@@ -469,10 +452,10 @@ class GeocodeThreadsMonitor:
 
         if(not(self.threaddict.get(rowindex,None) is None)) :
             self.threaddict.pop(rowindex,None)
-            if(GEOCODE_THREAD_DEBUG)  :    
+            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :    
                 cfg.add_debug_to_log("dropthread","[" + str(rowindex) + "] : num active threads [" + str(len(self.threaddict))+"]" + str(list(self.threaddict.keys())))
         else :
-            if(GEOCODE_THREAD_DEBUG)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                 cfg.add_debug_to_log("dropthread"," : thread not found")
 
     def more_threads_available(self):
@@ -485,7 +468,7 @@ class GeocodeThreadsMonitor:
     def clear_completed_threads(self) :
         task_keys   =   list(self.threaddict.keys())
 
-        if(0):#GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("clear_completed_threads"," : " + str(task_keys))
         
         for i in range(len(task_keys)) :
@@ -650,7 +633,7 @@ class BulkGeocodeRunner:
         
     def load_run(self,geocoderId,geoType,runParms,addressParms):
         
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
             cfg.add_debug_to_log("load_run","  : geocid : " + str(geocoderId) + " geotype : " + str(geoType)) 
             cfg.add_debug_to_log("load_run","  : runParms : " + str(runParms))
 
@@ -703,7 +686,7 @@ class BulkGeocodeRunner:
         self.geocodingErrorLog  =   bulkstructures[1]
 
         self.api_parms  =   BulkGeocodeRunParms(self.geocid,self.geotype,runParms)
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
             cfg.add_debug_to_log("load_run","  : self.api_parms : " + str(self.api_parms.get_api_parms())) 
 
         control_bulk_keys([ENABLE,DISABLE,DISABLE,DISABLE,DISABLE,DISABLE,DISABLE],"G")
@@ -712,7 +695,7 @@ class BulkGeocodeRunner:
     def start_run(self):
         opstat          =   opStatus()
 
-        if(GEOCODE_THREAD_DEBUG) :
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG")) :
             cfg.add_debug_to_log("start_run","") 
 
         set_status_bar(STARTING)
@@ -755,7 +738,7 @@ class BulkGeocodeRunner:
         import datetime
         self.stop_time          =   datetime.datetime.now()
         
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             if(self.stop_error_msg == None) :
                 cfg.add_debug_to_log("stop_run","")
             else :
@@ -765,7 +748,7 @@ class BulkGeocodeRunner:
         set_status_bar(PAUSING)
         self.set_run_state(PAUSING)
         self.set_halt_flag(True)
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("pause_run"," : halt PAUSE")
 
     def resume_run(self):
@@ -784,14 +767,14 @@ class BulkGeocodeRunner:
     
     def set_run_state(self,runstate):
         
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("set_run_state"," : current state : new state :" + str(self.state) + "  " + str(runstate))
         
         self.state  =   runstate
     
     def start_bulk_geocode_runner(self,rowIndex) :
 
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("start_bulk_geocode_runner"," : " + "geocid : " + str(self.geocid) + " geotype " + str(self.geotype) + " maxrows " + str(self.maxrows) + " rowindex " + str(rowIndex))
 
         self.rowindex   =   rowIndex
@@ -811,7 +794,7 @@ class BulkGeocodeRunner:
         
         if(opstat.get_status()) :
         
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("start_bulk_geocode_runner"," got connection")
             
             self.set_halt_flag(False)
@@ -879,7 +862,7 @@ class BulkGeocodeRunner:
 
                                         next_addr       =   get_geocode_address_string(self.geocid,self.runParms,self.addressParms,self.rowindex)
                                 
-                                        if(GEOCODE_THREAD_DEBUG)  :
+                                        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :
                                             cfg.add_debug_to_log("bulk_geocode_runner_task"," new thread " + str(next_addr) )
                                     
                                         geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_addr,self.runParms)  
@@ -887,7 +870,7 @@ class BulkGeocodeRunner:
 
                                     except  :
                                         import sys
-                                        if(GEOCODE_TRACE_GET_GEOCODE)  : 
+                                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  : 
                                             cfg.add_debug_to_log("add query"," thread exception " + str(sys.exc_info()[0].__name__))
                                     
                                 else :
@@ -896,7 +879,7 @@ class BulkGeocodeRunner:
 
                                         next_lat_lng    =   get_geocode_reverse_lat_lng_string(self.geocid,self.runParms,self.rowindex)
                                 
-                                        if(GEOCODE_THREAD_DEBUG)  :
+                                        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :
                                             cfg.add_debug_to_log("bulk_geocode_runner_task"," next_lat_lng " + str(next_lat_lng) )
 
                                         geocodethread   =   GeocodeThread(self.geocid,self.geotype,self.rowindex,next_lat_lng,self.runParms)  
@@ -904,13 +887,13 @@ class BulkGeocodeRunner:
 
                                     except  :
                                         import sys
-                                        if(GEOCODE_TRACE_GET_GEOCODE)  : 
+                                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  : 
                                             cfg.add_debug_to_log("add reverse"," thread exception " + str(sys.exc_info()[0].__name__))
                                                                                 
                                 self.rowindex   =   self.rowindex + 1
                     
                             else :
-                                if(GEOCODE_TRACE_GET_GEOCODE)  : 
+                                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  : 
                                     cfg.add_debug_to_log("bulk_geocode_runner_task"," halt no threads available")
                                 self.set_halt_flag(True)
                             
@@ -928,7 +911,7 @@ class BulkGeocodeRunner:
                     
                         if( self.rowindex >= (self.maxrows + self.startindex) ) :
                             self.set_halt_flag(True)
-                            if(GEOCODE_THREAD_DEBUG)  :   
+                            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                                 cfg.add_debug_to_log("bulk_geocode_runner_task"," halt max rows : halt - google " + str(self.rowindex) + " " + str(self.maxrows))
 
      
@@ -949,12 +932,12 @@ class BulkGeocodeRunner:
 
 
         if(self.is_geocode_run_complete()) :
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("bulk_geocode_runner_task"," is complete : " + str(self.is_geocode_run_complete()))
         
         if(self.is_geocode_run_complete()) :
             
-            if(GEOCODE_THREAD_DEBUG)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                 cfg.add_debug_to_log("geocode run is complete"," : self.geocoding_in_error " + str(self.geocoding_in_error)) 
                 
             self.update_status_bar(self.rowindex) 
@@ -989,7 +972,7 @@ class BulkGeocodeRunner:
         if(self.geocodeThreadsMonitor.all_threads_completed()) :
             if((self.geocodingErrorLog.get_error_count() + self.geocodingResults.get_results_count()) >= self.maxrows) :
 
-                if(GEOCODE_THREAD_DEBUG)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                     cfg.add_debug_to_log("is_geocode_run_complete"," : state "+ str(self.state) + " threads completed :  " + str(self.geocodeThreadsMonitor.all_threads_completed()) + " results : " + str(self.geocodingResults.get_results_count()) + " errors : " + str(self.geocodingErrorLog.get_error_count()))
 
                 return(True)
@@ -1005,7 +988,7 @@ class BulkGeocodeRunner:
             
             set_progress_bar_value(self.geocid,self.geotype,GEOCODE_BAR,current_count,current_percent)
             
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("update_status_bar"," current_count : current_percent " + str(current_count) + " : " + str(current_percent)) 
             
             self.ResultsLength  =   self.geocodingResults.get_results_count()
@@ -1028,7 +1011,6 @@ class BulkGeocodeRunner:
                 
         elif(self.get_run_state()   ==  STOPPING) :
 
-            print("STOPPING")
             if(all_threads) :
                 set_status_bar(STOPPED)
                 self.set_run_state(STOPPED)
@@ -1051,13 +1033,13 @@ class BulkGeocodeRunner:
                 control_bulk_keys([DISABLE,DISABLE,DISABLE,ENABLE,ENABLE,DISABLE,ENABLE],"K")
                 
                 if(self.checkpoint_on) :
-                    if(GEOCODE_THREAD_DEBUG)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                         cfg.add_debug_to_log("checkpoint_on",str(self.state))        
 
                     self.checkpoint_results()
                     set_status_bar(CHECKPOINT_COMPLETE)
 
-        if(GEOCODE_TRACE_GET_GEOCODE) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE")) :
             if(not (run_state == self.get_run_state())) :
                 cfg.add_debug_to_log("update_state"," : previous state : " + str(run_state) + " new run state : " +  str(self.get_run_state()) + " threads : " + str(threads_running) )
 
@@ -1066,7 +1048,7 @@ class BulkGeocodeRunner:
         
         if((self.rowindex - self.last_checkpoint_rowid) >= self.checkpoint_interval) :
             
-            if(GEOCODE_THREAD_DEBUG)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                 cfg.add_debug_to_log("is_checkpoint_needed"," : True  : rowindex : " + str(self.rowindex) + " interval : " + str(self.checkpoint_interval) + " last_checkpoint_rowid :  " + str(self.last_checkpoint_rowid))
             return(True)
             
@@ -1080,7 +1062,7 @@ class BulkGeocodeRunner:
         control_bulk_keys([DISABLE,DISABLE,DISABLE,DISABLE,ENABLE,DISABLE,DISABLE],"L")
 
         
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("checkpoint_results"," : flush_results_to_dataframe")
         
         self.geocodingResults.flush_results_to_dataframe(opstat)
@@ -1124,7 +1106,7 @@ class BulkGeocodeRunner:
             chckpt_file_name    =   file_name + str(file_number) + ".csv"
             chckpt_file_name    =   os.path.join(chckpt_file_path_name,chckpt_file_name)
             
-            if(GEOCODE_THREAD_DEBUG)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                 cfg.add_debug_to_log("checkpoint_results"," : chckpt_file_name " + str(chckpt_file_name)) 
         
             if(does_file_exist(chckpt_file_name)) :
@@ -1134,7 +1116,7 @@ class BulkGeocodeRunner:
         
             if(opstat.get_status()) :
         
-                if(GEOCODE_THREAD_DEBUG)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                     cfg.add_debug_to_log("checkpoint_results"," : write to csv : " + str( self.last_checkpoint_rowid))
                 
                 try :
@@ -1147,19 +1129,19 @@ class BulkGeocodeRunner:
             
                 except Exception as e: 
                     opstat.store_exception("Unable to export to csv file " + chckpt_file_name,e)
-                    if(GEOCODE_THREAD_DEBUG)  :
+                    if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :
                         cfg.add_debug_to_log("Unable to export to csv file",str(sys.exc_info()[0].__name__))
                     
                     self.last_checkpoint_rowid  =   len(df)                        
                         
             else :
-                if(GEOCODE_THREAD_DEBUG)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
                     cfg.add_debug_to_log("checkpoint_results"," : incomplete] : " + str(opstat.get_errorMsg()))
                 
                 df = self.geocodingResults.get_geocoding_results_df()
                 self.last_checkpoint_rowid  =   len(df)
                     
-        if(GEOCODE_THREAD_DEBUG)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"GEOCODE_THREAD_DEBUG"))  :   
             cfg.add_debug_to_log("checkpoint_results : complete",str( self.last_checkpoint_rowid))
     
         set_status_bar(CHECKPOINT_COMPLETE)
@@ -1180,7 +1162,7 @@ class BulkGeocodeRunner:
     def get_halt_flag(self):
         return(self.halt_all_geocoding)
     def set_halt_flag(self,fstate):
-        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
             cfg.add_debug_to_log("set_halt_flag"," : " + str(fstate) + " " + " " + str(self.maxrows)  )
         self.halt_all_geocoding     =   fstate
     def get_geocode_id(self):
@@ -1527,7 +1509,7 @@ def get_bulk_parms_table(geocodeid,geotype,runparms,opstat) :
     """
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY
 
-    if(DEBUG_GEOCODE_BULK_UTILS)  :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_BULK_UTILS"))  :
         cfg.add_debug_to_log("get_bulk_parms_table",str(geocodeid) + str(geotype) + "\n  " + str(runparms))
 
     table_html  =   ""
@@ -1631,7 +1613,7 @@ def get_bulk_default_parm(geocodeid,geotype,parm_offset) :
 
     from dfcleanser.Qt.utils.Geocode.GeocodeModel import QUERY
 
-    if(DEBUG_GEOCODE_BULK_UTILS)  :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_BULK_UTILS"))  :
         cfg.add_debug_to_log("get_bulk_default_parm",str(geocodeid) + str(geotype) + str(parm_offset))
 
     if(geocodeid == BingId) :
@@ -1658,7 +1640,7 @@ def get_bulk_default_parm(geocodeid,geotype,parm_offset) :
             defaults    =   bulk_google_reverse_defaults
             required    =   bulk_google_reverse_required 
     
-    if(DEBUG_GEOCODE_BULK_UTILS)  :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_BULK_UTILS"))  :
         cfg.add_debug_to_log("get_bulk_default_parm"," defaults : " + str(defaults))
 
     default_value   =   defaults[parm_offset]
@@ -1978,7 +1960,7 @@ def get_address_map(dftitle,address_cols) :
     *  address vector of names and name types
     * --------------------------------------------------------
     """
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("get_address_map"," dftitle : address_cols "  + str(dftitle) + " : " + str(address_cols) )
 
     am_colNames     =   []
@@ -1987,7 +1969,7 @@ def get_address_map(dftitle,address_cols) :
     address_cols        =   address_cols.replace(","," ")
     address_components  =   address_cols.split("+")
 
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
         cfg.add_debug_to_log("get_address_map"," : address_components " + str(address_components))
     
     for i in range(len(address_components)) :
@@ -2008,7 +1990,7 @@ def get_address_map(dftitle,address_cols) :
             am_colNames.append(-1)
             am_colValues.append(address_components[i])
 
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
             cfg.add_debug_to_log("get_address_map"," : colNames " + str(am_colNames))
             cfg.add_debug_to_log("get_address_map"," : colValues " + str(am_colValues))
 
@@ -2046,7 +2028,7 @@ def get_lat_longs_map(geocid,runParms) :
     df          =   cfg.get_dfc_dataframe_df(df_title)    
     colnames    =   df.columns.values.tolist() 
             
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
         cfg.add_debug_to_log("get_lat_longs_map","  : df_name : " + str(df_name) + " lat_lng_cols : " + str(lat_lng_cols) + " : " + str(len(lat_lng_cols))) 
                 
     if(lat_lng_cols.find("+") > -1) :
@@ -2056,7 +2038,7 @@ def get_lat_longs_map(geocid,runParms) :
 
     colnames    =   list(df.columns)
     
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
         cfg.add_debug_to_log("get_lat_longs_map","  : lat_lng_cols_list : " + str(lat_lng_cols_list) + " : " + str(type(lat_lng_cols_list))) 
             
     lat_long_col_indices    =   []
@@ -2066,7 +2048,7 @@ def get_lat_longs_map(geocid,runParms) :
         for i in range(len(lat_lng_cols_list)) :
             for j in range(len(colnames)) :
     
-                if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
                     cfg.add_debug_to_log("get_lat_longs_map","  : colnames : " + str(colnames[j])  + str(len(colnames[j]))) 
 
                 if(lat_lng_cols_list[i] == colnames[j]) :
@@ -2079,7 +2061,7 @@ def get_lat_longs_map(geocid,runParms) :
                     lat_long_col_indices.append(j)
                     break
                 
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :  
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :  
         cfg.add_debug_to_log("get_lat_longs_map","  :  lat_long_col_indices : " + str(lat_long_col_indices)) 
                 
     return(lat_long_col_indices)
@@ -2122,7 +2104,7 @@ def get_geocode_address_string(geocid,runparms,address_map,rowIndex) :
         else :
             geocode_address     =   geocode_address + address_map.get_colValues()[i] + " "
      
-    if(GEOCODE_TRACE_GET_GEOCODE_DETAILS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
         cfg.add_debug_to_log("get_geocode_address_string"," address : " + str(geocode_address))
            
     return(geocode_address)
@@ -2142,7 +2124,7 @@ def get_geocode_reverse_lat_lng_string(geocid,runparms,rowIndex) :
     * --------------------------------------------------------
     """
     
-    if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("get_geocode_reverse_lat_lng_string"," : geocid " + str(geocid) + " rowid " + str(rowIndex))  
         cfg.add_debug_to_log("get_geocode_reverse_lat_lng_string"," : runparms " + str(runparms))
         
@@ -2159,7 +2141,7 @@ def get_geocode_reverse_lat_lng_string(geocid,runparms,rowIndex) :
         from dfcleanser.Qt.utils.Geocode.BulkGeocodeModel import get_geocode_lat_long_map
         lat_lng_cols_list   =   get_geocode_lat_long_map() 
         
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("get_geocode_reverse_lat_lng_string"," : lat_lng_cols_list " + str(lat_lng_cols_list) + " len : " + str(len(lat_lng_cols_list)))  
         
         if(len(lat_lng_cols_list) == 1) :
@@ -2180,7 +2162,7 @@ def get_geocode_reverse_lat_lng_string(geocid,runparms,rowIndex) :
             df_lng              =   df.iloc[rowIndex,lat_lng_cols_list[1]]
             
     except :
-        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
             cfg.add_debug_to_log("get_geocode_reverse_lat_lng_string exception"," : "  + str(sys.exc_info()[0].__name__))
         return(None)         
     
@@ -2220,7 +2202,7 @@ DISABLE_COLOR   =   "#ccddff"
 
 def control_bulk_keys(action_list,trace=None) :
     
-    if(GEOCODE_TRACE_GET_GEOCODE)  :  
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :  
         if(trace is None)  :
             cfg.add_debug_to_log("control_bulk_keys",str(action_list) )
         else :
@@ -2426,7 +2408,7 @@ class BulkGeocodeResults:
     
     def __init__(self,geocid,geotype,maxgeocodes,column_headers,dftitle=None):
         
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("__init__ BulkGeocodeResults"," : " + str(geocid) + " " + str(geotype) + " " + str(maxgeocodes))
             cfg.add_debug_to_log("__init__ BulkGeocodeResults"," : column headers : " + str(column_headers))
         
@@ -2442,7 +2424,7 @@ class BulkGeocodeResults:
         for i in range(len(self.column_headers_list)) :
             self.column_headers_list[i]     =   self.column_headers_list[i].lstrip(" ") 
             self.column_headers_list[i]     =   self.column_headers_list[i].rstrip(" ")
-            if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                 cfg.add_debug_to_log("column_headers_list[i] : ",str(i) + " : " + str(self.column_headers_list[i]))
         
         if(dftitle == None) :
@@ -2497,7 +2479,7 @@ class BulkGeocodeResults:
         * --------------------------------------------------------
         """
         
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :
             cfg.add_debug_to_log("add_result","[start] len(df) : len(result_list) : " + str(len(self.geocode_results_df)) + " : " + str(len(self.geocode_results_list)))
 
         try :
@@ -2552,7 +2534,7 @@ class BulkGeocodeResults:
                             new_row_results.append(geocodeResults.get_full_address())       
                             self.geocode_results_list.append(tuple(new_row_results))
                         
-                    if(GEOCODE_TRACE_ADD_RESULT)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                         cfg.add_debug_to_log("add_result","[end] len(df) : len(result_list) : " + str(len(self.geocode_results_df)) + " : " + str(len(self.geocode_results_list)))
                         self.rows_completed_list.append(rowid)
 
@@ -2560,19 +2542,19 @@ class BulkGeocodeResults:
 
                     if(georunParms[1] == GM.GoogleId) :
 
-                        if(GEOCODE_TRACE_ADD_RESULT)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                             cfg.add_debug_to_log("add_result"," type geocodeResults : " + str(type(geocodeResults)))
                             cfg.add_debug_to_log("add_result"," georunParms: \n            " + str(georunParms))
 
                         self.geocode_results_list.append(tuple(geocodeResults))
 
-                        if(GEOCODE_TRACE_ADD_RESULT)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                             cfg.add_debug_to_log("add_result"," geocode_results_list len() : " + str(len(self.geocode_results_list)))
 
 
                     elif(georunParms[1] == GM.BingId) :  
 
-                        if(GEOCODE_TRACE_ADD_RESULT)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                             cfg.add_debug_to_log("add_result"," type: " + str(type(geocodeResults)))
                             cfg.add_debug_to_log("add_result"," georunParms: " + str(georunParms))
 
@@ -2598,7 +2580,7 @@ class BulkGeocodeResults:
 
                             #new_row_results.append(str(geocodeResults.get_location())) 
 
-                        if(GEOCODE_TRACE_ADD_RESULT)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                             cfg.add_debug_to_log("add_result"," new_row_results : " + str(new_row_results))
 
                         self.geocode_results_list.append(tuple(new_row_results))
@@ -2609,7 +2591,7 @@ class BulkGeocodeResults:
         
             cfg.set_dfc_dataframe_df(GEOCODING_RESULTS_DF_TITLE,self.geocode_results_df)
 
-            if(0):#GEOCODE_TRACE_ADD_RESULT)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :   
                 cfg.add_debug_to_log("add_result"," done: " + str(len(self.geocode_results_list)) + "\n")
             
         except :
@@ -2617,13 +2599,13 @@ class BulkGeocodeResults:
             opstat.set_status(False)
             import sys
             opstat.set_errormsg("[add_result] exception : "  + str(sys.exc_info()[0].__name__))
-            if(GEOCODE_TRACE_ADD_RESULT)  :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_ADD_RESULT"))  :
                 cfg.add_debug_to_log("add_result"," exception : " + str(sys.exc_info()[0].__name__))
 
         
     def flush_results_to_dataframe(self,opstat) :
         
-        if(GEOCODE_TRACE_FLUSH_RESULTS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :   
             cfg.add_debug_to_log("flush_results_to_dataframe"," - df len : " + str(len(self.geocode_results_df)) + " result list len : " + str(len(self.geocode_results_list)))
         
         if(len(self.geocode_results_list) > 0) :
@@ -2639,24 +2621,24 @@ class BulkGeocodeResults:
                 
                 new_column_headers_list     =  self.column_headers_list
 
-                if(GEOCODE_TRACE_FLUSH_RESULTS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :   
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.column_headers_list \n         " + str(new_column_headers_list))
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_list len " + str(len(self.geocode_results_list)))
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_list \n        " + str(self.geocode_results_list))
 
                 new_geocode_results     =   pd.DataFrame(self.geocode_results_list,columns=new_column_headers_list)
 
-                if(GEOCODE_TRACE_FLUSH_RESULTS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :   
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - new_geocode_results : " + " : " + str(len(new_geocode_results)))
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - new_geocode_results " + str(new_geocode_results.columns))
                 
-                if(GEOCODE_TRACE_FLUSH_RESULTS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :   
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_df : " + str(type(self.geocode_results_df)) + " : " + str(len(self.geocode_results_df)))
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_df " + str(self.geocode_results_df.columns))
 
                 self.geocode_results_df =   pd.concat([self.geocode_results_df,new_geocode_results],ignore_index=True)
                     
-                if(GEOCODE_TRACE_FLUSH_RESULTS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :   
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_df : type : " + str(type(self.geocode_results_df)) + " : " + str(len(self.geocode_results_df)))
                     cfg.add_debug_to_log("flush_results_to_dataframe"," - self.geocode_results_df : columns : " + str(self.geocode_results_df.columns))
             
@@ -2667,7 +2649,7 @@ class BulkGeocodeResults:
                 opstat.set_status(False)
                 import sys
                 opstat.set_errorMsg("flush_results_to_dataframe Exception : "  + str(sys.exc_info()[0].__name__))
-                if(GEOCODE_TRACE_FLUSH_RESULTS)  :
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_FLUSH_RESULTS"))  :
                     cfg.add_debug_to_log("flush_results_to_dataframe",opstat.get_errorMsg())
         
         
@@ -2701,7 +2683,7 @@ class BulkGeocodeResults:
 
     def add_nan_result(self,rowid,inputparms,parmsDict,opstat) :
         
-        if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("add_nan_result",str(inputparms))  
 
         try :
@@ -2718,7 +2700,7 @@ class BulkGeocodeResults:
                 else :
                     parmsValue  =   None
             
-                if(GEOCODE_TRACE_GET_GEOCODE_DETAILS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                     cfg.add_debug_to_log("add_nan_result",str(parmsValue))
             
                 if(not (parmsValue is None)) :
@@ -2737,7 +2719,7 @@ class BulkGeocodeResults:
     def finish_results_log(self,opstat) : 
 
         if(self.bulk_results_finished):
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("finish_results_log"," results flushed ")            
             return()
         
@@ -2745,7 +2727,7 @@ class BulkGeocodeResults:
         
         import numpy
         
-        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
             cfg.add_debug_to_log("finish_results_log",str(self.get_results_count()))
         
         try :
@@ -2764,7 +2746,7 @@ class BulkGeocodeResults:
             opstat.set_status(False)
             import sys
             opstat.set_errorMsg("[finish_results_log] : "  + str(sys.exc_info()[0].__name__))
-            if(GEOCODE_TRACE_GET_GEOCODE)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                 cfg.add_debug_to_log("finish_results_log"," excpetion : " + str(sys.exc_info()[0].__name__))            
             
 
@@ -2800,7 +2782,7 @@ class BulkGeocodeErrorLog:
     
     def __init__(self,error_limit):
         
-        if(GEOCODE_TRACE_PROCESS_ERRORS)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
             cfg.add_debug_to_log("__init__  BulkGeocodeErrorLog",str(error_limit))
         
         cfg.drop_dfc_dataframe(GEOCODING_ERROR_LOG_DF_TITLE)
@@ -2813,7 +2795,7 @@ class BulkGeocodeErrorLog:
         self.error_log_list     =   []
         self.error_limit        =   error_limit
         
-        if(GEOCODE_TRACE_PROCESS_ERRORS)  : 
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  : 
             if(self.error_log_df is None) :
                 cfg.add_debug_to_log("__init__  BulkGeocodeErrorLog : error_log_df "," : None" + " error_log_list : " + str(len(self.error_log_list)))
             else :
@@ -2822,7 +2804,7 @@ class BulkGeocodeErrorLog:
 
     def log_error(self,rowindex,inputValue,errorMsg,note,opstat):
                
-        if(GEOCODE_TRACE_PROCESS_ERRORS) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS")) :
             cfg.add_debug_to_log("log_error"," self.load_errors() " +  str(self.load_errors()))
 
         if(self.load_errors()) :
@@ -2838,7 +2820,7 @@ class BulkGeocodeErrorLog:
 
     def flush_errors_to_dataframe(self,opstat) :
 
-        if(GEOCODE_TRACE_PROCESS_ERRORS)  : 
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  : 
             cfg.add_debug_to_log("flush_errors_to_dataframe","[self.error_log_list] : " + str(type(self.error_log_list)) + " error_count : " + str(len(self.error_log_list)))
             cfg.add_debug_to_log("flush_errors_to_dataframe","[self.error_log_df] : " + str(type(self.error_log_df)) + " error_count : " + str(self.get_error_count()))
         
@@ -2848,23 +2830,23 @@ class BulkGeocodeErrorLog:
                 import pandas as pd
                 #self.error_log_df = self.error_log_df.concat(pd.DataFrame(self.error_log_list, columns=GEOCODING_ERROR_LOG_COLUMN_NAME_LIST))
 
-                if(GEOCODE_TRACE_PROCESS_ERRORS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.column_headers_list " + str(GEOCODING_ERROR_LOG_COLUMN_NAME_LIST))
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.column_headers_list " + str(self.error_log_list))
 
                 new_geocode_erors     =   pd.DataFrame(self.error_log_list,columns=GEOCODING_ERROR_LOG_COLUMN_NAME_LIST)
 
-                if(GEOCODE_TRACE_PROCESS_ERRORS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - new_geocode_erors : " + str(type(new_geocode_erors)) + " : " + str(len(new_geocode_erors)))
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - new_geocode_erors " + str(new_geocode_erors.columns))
                 
-                if(GEOCODE_TRACE_PROCESS_ERRORS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.error_log_df : " + str(type(self.error_log_df)) + " : " + str(len(self.error_log_df)))
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.error_log_df " + str(self.error_log_df))
 
                 self.error_log_df =   pd.concat([self.error_log_df,new_geocode_erors],ignore_index=True)
                     
-                if(GEOCODE_TRACE_PROCESS_ERRORS)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS"))  :   
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.error_log_df : type : " + str(type(self.error_log_df)) + " : " + str(len(self.error_log_df)))
                     cfg.add_debug_to_log("flush_errors_to_dataframe"," - self.error_log_df : columns : " + str(self.error_log_df.columns))
 
@@ -2942,7 +2924,7 @@ def get_final_lat_lng_col_names(geocid,runParms) :
     else :
         lat_long_col_name   =   runParms.get("new_dataframe_lat_long_column_name(s)")
 
-    if(GEOCODE_TRACE_PROCESS_ERRORS) :
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_PROCESS_ERRORS")) :
         cfg.add_debug_to_log("get_lat_lng_col_name",str(lat_long_col_name))
 
     if( (lat_long_col_name.find("[") > -1) or (lat_long_col_name.find("]") > -1) ) :
@@ -2981,7 +2963,7 @@ def init_geocoding_data_structures(geocid,geotype,runParms) :
     * --------------------------------------------------------
     """
     
-    if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
         cfg.add_debug_to_log("init_geocoding_data_structures"," : geocid " + str(geocid) + " geotype : " + str(geotype))
         cfg.add_debug_to_log("init_geocoding_data_structures"," : runParms " + str(runParms))
 
@@ -2998,7 +2980,7 @@ def init_geocoding_data_structures(geocid,geotype,runParms) :
             
             lat_long_col_names   =   get_final_lat_lng_col_names(geocid,runParms)
             
-            if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :
                 cfg.add_debug_to_log("init_geocoding_data_structures"," : lat_long_col_names" + str(lat_long_col_names))
             
             if(type(lat_long_col_names) == list) :
@@ -3034,7 +3016,7 @@ def init_geocoding_data_structures(geocid,geotype,runParms) :
 
             addr_comps   =   GM.get_google_address_components(runParms.get("address_components_list"))
 
-            if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
                 cfg.add_debug_to_log("address_components_to_retrieve",runParms.get("address_components_list"))
                 cfg.add_debug_to_log("addr_comps",str(type(addr_comps)) + str(addr_comps))
 
@@ -3053,7 +3035,7 @@ def init_geocoding_data_structures(geocid,geotype,runParms) :
             
             lat_long_col_names   =   get_final_lat_lng_col_names(geocid,runParms)
             
-            if(GEOCODE_TRACE_GET_GEOCODE_LOAD) :
+            if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
                 cfg.add_debug_to_log("lat_long_col_names",str(lat_long_col_names))
              
             if(type(lat_long_col_names) == list) :
@@ -3113,7 +3095,7 @@ def init_geocoding_data_structures(geocid,geotype,runParms) :
         
                 
     else :
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD) :
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS")) :
             cfg.add_debug_to_log("init geocoder data stores"," : bad geocoder")
     
     # init the bulk geocode results data stroe
@@ -3139,7 +3121,7 @@ class BulkGeocodeRunParms:
     
     def __init__(self,geocid,geotype,queryParms):
         
-        if(GEOCODE_TRACE_GET_GEOCODE_LOAD)  :   
+        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE_DETAILS"))  :   
             cfg.add_debug_to_log("__init__ BulkGeocodeRunParms"," : " + str(geocid) + " " + str(geotype))
         
         self.geocoderid             =   geocid 
@@ -3167,7 +3149,7 @@ class BulkGeocodeRunParms:
                         lat     =   float(geocode_coords[0])
                         lng     =   float(geocode_coords[1])
 
-                        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : query : " + str(lat) + str(lng))
 
                         import geopy
@@ -3223,7 +3205,7 @@ class BulkGeocodeRunParms:
                 """
                 bounds_parm          =   queryParms.get("bounds")
 
-                if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                     cfg.add_debug_to_log("BulkGeocodeRunParms"," : bounds_parm : " + str(type(bounds_parm)) + " " + str(bounds_parm))
 
                
@@ -3236,7 +3218,7 @@ class BulkGeocodeRunParms:
                     first_coord         =   bounds_parm[0:first_coord_end]
                     second_coord        =   bounds_parm[(first_coord_end+2):]
 
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("BulkGeocodeRunParms"," : first_coord_pair : " + str(first_coord))
                         cfg.add_debug_to_log("BulkGeocodeRunParms"," : second_coord_pair : " + str(second_coord))
 
@@ -3253,7 +3235,7 @@ class BulkGeocodeRunParms:
                     second_coord        =   second_coord.replace(")","")
                     second_coord_pair   =   second_coord.split(",")
 
-                    if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                    if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                         cfg.add_debug_to_log("BulkGeocodeRunParms"," : first_coord_pair : " + str(first_coord_pair))
                         cfg.add_debug_to_log("[BulkGeocodeRunParms"," : second_coord_pair : " + str(second_coord_pair))
 
@@ -3265,7 +3247,7 @@ class BulkGeocodeRunParms:
                         lat2     =   float(second_coord_pair[0])
                         lng2     =   float(second_coord_pair[1])
 
-                        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : lat1 - lng1 : " + str(lat1) + " " + str(lng1))
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : lat2 - lng2 : " + str(lat2) + " " + str(lng2))
 
@@ -3273,7 +3255,7 @@ class BulkGeocodeRunParms:
                         bounds_pt1   =  (lat1,lng1)#geopy.point.Point(lat1,lng1) 
                         bounds_pt2   =  (lat2,lng2)#geopy.point.Point(lat2,lng2)
                         
-                        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : bounds_pt1 : " + str(type(bounds_pt1)) + " " + str(bounds_pt1))
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : bounds_pt2 : " + str(type(bounds_pt2)) + " " +str(bounds_pt2))
 
@@ -3281,7 +3263,7 @@ class BulkGeocodeRunParms:
 
                         bounds_parm     =   str(bounds_parm)
 
-                        if(GEOCODE_TRACE_GET_GEOCODE)  :   
+                        if(is_debug_on(SWGeocodeUtility_ID,"DEBUG_GEOCODE_GET_GEOCODE"))  :   
                             cfg.add_debug_to_log("BulkGeocodeRunParms"," : bounds_parm : " + str(type(bounds_parm)) + " " + str(bounds_parm))
 
                                         
