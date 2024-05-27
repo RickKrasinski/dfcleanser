@@ -76,8 +76,6 @@ class PlotCanvas(FigureCanvas):
 
     def __init__(self, parent=None, width=5, height=4, dftitle=None, colname=None, graphid=None, dpi=100):
 
-        print("PlotCanvas",dftitle, colname, graphid)
-
         fig = Figure(figsize=(8,6))#(width, height), dpi=dpi)
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
@@ -102,8 +100,6 @@ class PlotCanvas(FigureCanvas):
         self.draw()
     
     def display_histogram_graph(self,dftitle,colname) :
-
-        print("display_histogram_graph",dftitle, colname)
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df
         df  =   get_dfc_dataframe_df(dftitle)
@@ -218,10 +214,7 @@ class PlotCanvas(FigureCanvas):
 # -----------------------------------------------------------------#
 def showdfcGraph(dftitle,colname,graphid)  :
 
-    print("showdfcGraph",dftitle,colname,graphid)
-
     dfcGraph_gui = GraphsGui([dftitle,colname,int(graphid)])
-    print("dfcGraph_gui show",dftitle,colname,graphid)
     dfcGraph_gui.show()
 
     return dfcGraph_gui 
