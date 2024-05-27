@@ -12,10 +12,8 @@ Created on Tue Sept 13 22:29:22 2017
 from PyQt5 import QtWidgets, sip
 from PyQt5.QtCore import Qt
 
-DEBUG_COMMON                    =   False
-DEBUG_INPUT_FORMS               =   False
-DEBUG_INPUT_FORMS_DETAILS       =   False
-DEBUG_COMMON_EXCEPT             =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import SWUtilities_ID
 
 def fix_ipython():
     from IPython import get_ipython
@@ -399,10 +397,10 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
         super().__init__()
         
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : start : len(formparms) : ",len(formparms))
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : start : len(formparms) : ",len(formparms)))
             for i in range(len(formparms)) :
-                print(    "formparms[",i,"] : ",formparms[i])
+                add_debug_to_log("dfc_qt_model",print_to_string("formparms[",i,"] : ",formparms[i]))
 
         self.form_ID                 =   formparms[0]
         self.formIds_List            =   formparms[1] 
@@ -443,8 +441,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
         else :
 
-            if(DEBUG_INPUT_FORMS_DETAILS) :
-                print("  [dfcleanser_input_formWidget] using small sttles")
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] using small sttles"))
 
             self.FORM_TITLE_HEIGHT           =   QT_SMALL_INPUT_FORM_TITLE_HEIGHT
             self.FORM_TITLE_STYLE            =   QT_SMALL_INPUT_FORM_TITLE_STYLE 
@@ -457,8 +455,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
         self.input_fields_list       =   []
 
-        if(DEBUG_INPUT_FORMS) :
-            print("  [dfcleanser_input_formWidget] : start : end ")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : start : end "))
 
         self.init_form()
 
@@ -470,17 +468,13 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
         else :
             self.load_form_values(self.cfgParms)
 
-        #if(not (self.cfgParms is None)) :
-        #    self.load_form_values(self.cfgParms)
-
-
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : end\n")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : end\n"))
 
     def init_form(self) :
 
-        if(DEBUG_INPUT_FORMS) :
-            print("  [dfcleanser_input_formWidget][init_form]")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][init_form]"))
 
         from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QTextEdit
         from PyQt5.QtWidgets import QLabel, QLineEdit, QComboBox, QPushButton
@@ -529,13 +523,13 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
             self.input_form_title.setStyleSheet(self.FORM_TITLE_STYLE)
             self.formInputsLayout.addWidget(self.input_form_title)
 
-            if(DEBUG_INPUT_FORMS_DETAILS) :
-                print("  [dfcleanser_input_formWidget][init_form] : len(self.formIds_List) : ",len(self.formIds_List))
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][init_form] : len(self.formIds_List) : ",len(self.formIds_List)))
                 
             for i in range(len(self.formIds_List)) :
 
-                if(DEBUG_INPUT_FORMS_DETAILS) :
-                    print("  [dfcleanser_input_formWidget][init_form] : form inputs [",i,"] : ",self.formTypes_List[i])
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                    add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][init_form] : form inputs [",i,"] : ",self.formTypes_List[i]))
                         
                 if( not (self.formTypes_List[i] == "button") ) :
 
@@ -570,8 +564,6 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
                     qte_height  =  (QT_INPUT_FORM_ENTRY_TITLE_HEIGHT * numrows)
                     input_entry_value.setMinimumHeight(qte_height)
                     input_entry_value.setMaximumHeight(qte_height)
-
-                    #input_entry_value.setMaximumWidth(self.form_width)
 
                     input_entry_value.setStyleSheet(self.FORM_ENTRY_TEXTEDIT_STYLE)
                     self.input_fields_list.append(input_entry_value)
@@ -614,8 +606,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
                         if(not (self.combomethods[self.current_select_count] is None) ) :
 
-                            if(DEBUG_INPUT_FORMS_DETAILS) :
-                                print("  [dfcleanser_input_formWidget] : combomethod[",self.current_select_count,"] : \n      ",self.combomethods[self.current_select_count])
+                            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : combomethod[",self.current_select_count,"] : \n      ",self.combomethods[self.current_select_count]))
 
                             input_entry_value.currentIndexChanged.connect(self.combomethods[self.current_select_count])
 
@@ -632,8 +624,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
                         self.input_fields_list.append(input_entry_value)
                         self.formInputsLayout.addWidget(input_entry_value)
                         
-                        if(DEBUG_INPUT_FORMS_DETAILS) :
-                            print("  [dfcleanser_input_formWidget] : file LineEdit ",self.file_browse_count)
+                        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : file LineEdit ",self.file_browse_count))
 
                         file_select_button         =   QPushButton()     
                         file_select_button.setText("Browse To File")
@@ -643,8 +635,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
                         self.file_browse_count    =  self.file_browse_count + 1
                         self.formInputsLayout.addWidget(file_select_button)
 
-                        if(DEBUG_INPUT_FORMS_DETAILS) :
-                            print("  [dfcleanser_input_formWidget] : file done ",self.file_browse_count)
+                        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : file done ",self.file_browse_count))
 
                     elif(self.formTypes_List[i] == "button") :
 
@@ -660,8 +652,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
                         self.current_button_count    =  self.current_button_count + 1
                         self.formButtonsLayout.addWidget(input_entry_button)
 
-                        if(DEBUG_INPUT_FORMS_DETAILS) :
-                            print("  [dfcleanser_input_formWidget] : button ",len(button_text),button_text)
+                        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : button ",len(button_text),button_text))
 
 
         except Exception as e:
@@ -670,8 +662,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
             status_msg  =   "[dfcleanser_input_form_Widget][init_form][error] \n [form_type] : " + self.formTypes_List[i] + " : " + str(i)
             display_exception(title,status_msg,e)
                         
-            if(DEBUG_INPUT_FORMS_DETAILS) :
-                print("  [dfcleanser_input_formWidget] : exception thrown ")
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : exception thrown "))
 
 
         self.formButtonsLayout.setAlignment(Qt.AlignHCenter)
@@ -680,8 +672,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
         self.setLayout(self.formInputsLayout)
         
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget][init_form] end\n")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][init_form] end\n"))
 
     """
     * -------------------------------------------------------- 
@@ -690,31 +682,31 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
     """
     def load_form_values(self, formvals) :
         
-        if(DEBUG_INPUT_FORMS) :
-            print("\n\n  [dfcleanser_input_formWidget][load_form_values] : form_vals : \n  ",formvals)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][load_form_values] : form_vals : \n  ",formvals))
 
         if( (not (formvals is None)) and (len(formvals) > 0) ) :
 
-            if(DEBUG_INPUT_FORMS) :
-                print("  [dfcleanser_input_formWidget][load_form_values] : self.input_fields_list :  count : ",len(self.input_fields_list))
-                print("  [dfcleanser_input_formWidget][load_form_values] len(self.input_fields_list) ",len(self.input_fields_list)," len(formvals) ",len(formvals))
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS")) :
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][load_form_values] : self.input_fields_list :  count : ",len(self.input_fields_list)))
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][load_form_values] len(self.input_fields_list) ",len(self.input_fields_list)," len(formvals) ",len(formvals)))
  
             if(len(self.input_fields_list) == len(formvals)) :
 
                 for i in range(len(formvals)) :
 
-                    if(DEBUG_INPUT_FORMS_DETAILS) :
-                        print("    [dfcleanser_input_formWidget][load_form_values] formval[",i,"] : ",formvals[i])
+                    if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                        add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][load_form_values] formval[",i,"] : ",formvals[i]))
 
                     self.set_form_input_value_by_index(i, str(formvals[i]))
 
-        if(DEBUG_INPUT_FORMS) :
-            print("  [dfcleanser_input_formWidget][load_form_values] : end \n")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][load_form_values] : end \n"))
 
     def get_form_fields_count(self) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("[dfcleanser_input_formWidget][get_form_field_counts] ")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][get_form_field_counts] "))
 
         return(len(self.input_fields_list))
         
@@ -726,8 +718,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
     """
     def get_form_input_value(self, inputId) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : get_form_input_value",inputId)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : get_form_input_value",inputId))
 
         input_index    =   -1
 
@@ -744,8 +736,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
     def get_form_input_value_by_index(self, input_index) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : get_form_input_value_by_index",input_index)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : get_form_input_value_by_index",input_index))
 
         if( (input_index > -1) and (input_index < len(self.formIds_List)) ) :
             form_value  =   self.get_form_value(input_index)
@@ -755,10 +747,10 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
     def get_form_value(self, input_index) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : get_form_value",input_index)
-            print("  [dfcleanser_input_formWidget] : self.formTypes_List",self.formTypes_List)
-            print("  [dfcleanser_input_formWidget] : self.input_fields_list",self.input_fields_list)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : get_form_value",input_index))
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : self.formTypes_List",self.formTypes_List))
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : self.input_fields_list",self.input_fields_list))
 
         if(type(self.formTypes_List[input_index]) == list) :
             value = self.input_fields_list[input_index].toPlainText()      
@@ -771,8 +763,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
         else :
             value = None
         
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("  [dfcleanser_input_formWidget] : get_form_value",input_index,value)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : get_form_value",input_index,value))
 
         return(value)
 
@@ -783,8 +775,8 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
     """
     def set_form_input_value(self, inputId, value) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("    [dfcleanser_input_formWidget] : set_form_input_value",inputId,value)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] : set_form_input_value",inputId,value))
 
         input_index    =   -1
 
@@ -798,17 +790,16 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
     def set_form_input_value_by_index(self, input_index, value) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("    [dfcleanser_input_formWidget][set_form_input_value_by_index]",input_index,value)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][set_form_input_value_by_index]",input_index,value))
 
         if( (input_index > -1) and (input_index < len(self.formIds_List)) ) :
             self.set_form_value(input_index,value)
 
     def set_form_value(self, input_index, value) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("      [dfcleanser_input_formWidget][set_form_value][",input_index,"] : ",self.formTypes_List[input_index],value)
-            #print("      [dfcleanser_input_formWidget][set_form_value]",self.formTypes_List[input_index])
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][set_form_value][",input_index,"] : ",self.formTypes_List[input_index],value))
 
         if(type(self.formTypes_List[input_index]) == list) :
             self.input_fields_list[input_index].setPlainText(value)      
@@ -821,13 +812,13 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
             num_items       =  self.input_fields_list[input_index].count() 
             match_found     =   False
 
-            if(DEBUG_INPUT_FORMS_DETAILS) :
-                print("      [dfcleanser_input_formWidget][set_form_value] num_items : ",num_items)
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][set_form_value] num_items : ",num_items))
 
             for i in range(num_items) :
 
-                if(DEBUG_INPUT_FORMS_DETAILS) :
-                    print("      [dfcleanser_input_formWidget][set_form_value] item[",i,"] : ",self.input_fields_list[input_index].itemText(i))
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+                    add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][set_form_value] item[",i,"] : ",self.input_fields_list[input_index].itemText(i)))
 
                 if(self.input_fields_list[input_index].itemText(i) == value) :
                     match_found     =   True
@@ -841,14 +832,14 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
         else :
             self.input_fields_list[input_index].setText(value)
        
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("      [dfcleanser_input_formWidget][set_form_value][ end ")
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][set_form_value][ end "))
 
 
     def reset_form_combobox_by_index(self, input_index, combo_list) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("[dfcleanser_input_formWidget][reset_form_combobox_by_index]",input_index,"\n",combo_list)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][reset_form_combobox_by_index]",input_index,"\n",combo_list))
 
         self.input_fields_list[input_index].clear() 
 
@@ -857,15 +848,15 @@ class dfcleanser_input_form_Widget(QtWidgets.QWidget) :
 
     def set_form_combobox_index(self, input_index, list_index) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("[dfcleanser_input_formWidget][reset_form_combobox_by_index]",input_index,"\n",list_index)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget][reset_form_combobox_by_index]",input_index,"\n",list_index))
 
         self.input_fields_list[input_index].setCurrentIndex(list_index)
 
     def set_form_input_title(self, new_title) :
 
-        if(DEBUG_INPUT_FORMS_DETAILS) :
-            print("[dfcleanser_input_formWidget] :set_form_input_title",new_title)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
+            add_debug_to_log("dfc_qt_model",print_to_string("[dfcleanser_input_formWidget] :set_form_input_title",new_title))
 
         self.form_title     =  new_title 
         self.input_form_title.setText(self.form_title)        
@@ -894,8 +885,8 @@ max_line_len    =   60
 
 def split_up_text(text_line) :
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("[dfc_qt_model][split_up_text] : text_line \n",text_line)
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][split_up_text] : text_line \n",text_line))
 
     split_text_lines    =   []
 
@@ -918,9 +909,9 @@ def split_up_text(text_line) :
                 new_line_text       =   new_line_text + line_text[0:(next_blank_char+1)]
                 line_text           =   line_text[(next_blank_char+1):]
                 
-                if(DEBUG_COMMON_EXCEPT) :
-                    print("new_line_text",len(new_line_text),"\n  ",new_line_text)
-                    print("line_text ",len(line_text),"\n  ",line_text)
+                if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :
+                    add_debug_to_log("dfc_qt_model",print_to_string("new_line_text",len(new_line_text),"\n  ",new_line_text))
+                    add_debug_to_log("dfc_qt_model",print_to_string("line_text ",len(line_text),"\n  ",line_text))
 
             else :
                 
@@ -931,9 +922,9 @@ def split_up_text(text_line) :
                     split_text_lines.append(line_text) 
                     keep_parsing    =   False   
                 
-                if(DEBUG_COMMON_EXCEPT) :
-                    print("**new_line_text",len(new_line_text),"\n  ",new_line_text)
-                    print("**line_text ",len(line_text),"\n  ",line_text)
+                if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :
+                    add_debug_to_log("dfc_qt_model",print_to_string("**new_line_text",len(new_line_text),"\n  ",new_line_text))
+                    add_debug_to_log("dfc_qt_model",print_to_string("**line_text ",len(line_text),"\n  ",line_text))
         
         else :
 
@@ -950,8 +941,8 @@ def split_up_text(text_line) :
 
 def format_QMessageBox_Text(msg_text) :
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("    [dfc_qt_model][format_QMessageBox_Text] : msg_text \n      ",msg_text)
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][format_QMessageBox_Text] : msg_text \n      ",msg_text))
 
     current_text    =   msg_text
     new_text_lines  =   []
@@ -974,10 +965,10 @@ def format_QMessageBox_Text(msg_text) :
 
     final_text  =   ""
     
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("    [new_text_lines]") 
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[new_text_lines]")) 
         for j in range(len(new_text_lines)) :
-            print("     [",j,"] ",len(new_text_lines[j]),new_text_lines[j])
+            add_debug_to_log("dfc_qt_model",print_to_string("     [",j,"] ",len(new_text_lines[j]),new_text_lines[j]))
 
     for i in range(len(new_text_lines)) :
         if(len(new_text_lines[i]) <= max_line_len) :
@@ -992,8 +983,8 @@ def format_QMessageBox_Text(msg_text) :
 
 def display_exception(title,status_msg,e) :
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("\n    [dfc_qt_model][display_exception] : status_msg \n      ",status_msg)
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_exception] : status_msg \n      ",status_msg))
 
     from dfcleanser.common.common_utils import opStatus
     opstat  =   opStatus()
@@ -1020,17 +1011,17 @@ def display_exception(title,status_msg,e) :
             
     button = dlg.exec()
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("    [dfc_qt_model][display_exception] : end \n")
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_exception] : end \n"))
  
     # auto log any exception
     from dfcleanser.common.cfg import dfc_erorr_log, SEVERE_ERROR
-    dfc_erorr_log.add_error_to_dfc_log(SEVERE_ERROR,"["+ title + "] : " + text_msg)
+    dfc_erorr_log.add_error_to_dfc_log("["+ title + "] : " + text_msg)
 
 def display_error_msg(title,status_msg) :
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("\n    [dfc_qt_model][display_error_msg] : status_msg \n      ",status_msg)
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_error_msg] : status_msg \n      ",status_msg))
     
     from PyQt5 import QtCore 
     from PyQt5.QtWidgets import QMessageBox
@@ -1045,8 +1036,8 @@ def display_error_msg(title,status_msg) :
             
     button = dlg.exec()
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("    [dfc_qt_model][display_error_msg] : end \n")
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_error_msg] : end \n"))
 
     # auto log any error
     from dfcleanser.common.cfg import dfc_erorr_log, SEVERE_ERROR
@@ -1055,8 +1046,8 @@ def display_error_msg(title,status_msg) :
  
 def display_status_msg(title,status_msg) :
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("\n    [dfc_qt_model][display_status_msg] : status_msg \n      ",status_msg)
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_status_msg] : status_msg \n      ",status_msg))
 
     from PyQt5 import QtCore
     from PyQt5.QtWidgets import QMessageBox
@@ -1071,8 +1062,8 @@ def display_status_msg(title,status_msg) :
             
     button = dlg.exec()
 
-    if(DEBUG_COMMON_EXCEPT) :    
-        print("    [dfc_qt_model][display_status_msg] : end \n")
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON_EXCEPT")) :    
+        add_debug_to_log("dfc_qt_model",print_to_string("[dfc_qt_model][display_status_msg] : end \n"))
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -1098,17 +1089,11 @@ def clearLayout(layout):
         item = layout.itemAt(i)
 
         if isinstance(item, QWidgetItem):
-            #print "widget" + str(item)
             item.widget().close()
-            # or
-            # item.widget().setParent(None)
         elif isinstance(item, QSpacerItem):
-            #print "spacer " + str(item)
-            # no need to do extra stuff
             spacer = item
         else:
             print( "layout " + str(item))
-            #self.clearLayout(item.layout())
 
         # remove the item from layout
         layout.removeItem(item)  
@@ -1121,9 +1106,6 @@ def clearLayout(layout):
 # -----------------------------------------------------------------#
 def build_button_bar(buttonLayout,button_list,text_list,size_list,tool_tip_list,style_sheet,connect_list):
         
-    #from PyQt5.QtWidgets import QHBoxLayout, QPushButton
-    #cmdbuttonsLayout  =   QHBoxLayout()
-
     for i in range(len(button_list) ) :
 
         button_list[i].setText(text_list[i])
@@ -1142,7 +1124,6 @@ def build_button_bar(buttonLayout,button_list,text_list,size_list,tool_tip_list,
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
-        
 
     cfg_parms   =   []
 
@@ -1169,9 +1150,9 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
             addl_parms  =   "{"
 
             if(DEBUG_BUILD_CFG) :
-                print("addl_parms_index",addl_parms_index)
-                print("num_addl_parms",num_addl_parms)
-                print("start_addl_parms",start_addl_parms)
+                add_debug_to_log("dfc_qt_model",print_to_string("addl_parms_index",addl_parms_index))
+                add_debug_to_log("dfc_qt_model",print_to_string("num_addl_parms",num_addl_parms))
+                add_debug_to_log("dfc_qt_model",print_to_string("start_addl_parms",start_addl_parms))
 
             for j in range(num_addl_parms) :
 
@@ -1179,23 +1160,23 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
                 addl_parms_value    =   str(pvalues[start_addl_parms + j]) 
 
                 if(DEBUG_BUILD_CFG) :
-                    print("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value)
+                    add_debug_to_log("dfc_qt_model",print_to_string("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value))
             
                 addl_parm_title     =   '"' + addl_parm_title + '" : '
                 addl_parms_value    =   '"' + addl_parms_value + '"'
 
                 if(DEBUG_BUILD_CFG) :
-                    print("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value)
+                    add_debug_to_log("dfc_qt_model",print_to_string("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value))
 
                 new_addl_parm       =   addl_parm_title + addl_parms_value
 
                 if(DEBUG_BUILD_CFG) :
-                    print("new_addl_parm  ",new_addl_parm)
+                    add_debug_to_log("dfc_qt_model",print_to_string("new_addl_parm  ",new_addl_parm))
 
                 addl_parms  =   addl_parms + new_addl_parm
 
                 if(DEBUG_BUILD_CFG) :
-                    print("addl_parms",addl_parms)
+                    add_debug_to_log("dfc_qt_model",print_to_string("addl_parms",addl_parms))
 
                 if(not (j==(num_addl_parms-1)) ) :
                     addl_parms  =   addl_parms + '\n'
@@ -1203,21 +1184,21 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
                     addl_parms  =   addl_parms + '}'  
             
             if(DEBUG_BUILD_CFG) :
-                print("addl_parms",addl_parms)
+                add_debug_to_log("dfc_qt_model",print_to_string("addl_parms",addl_parms))
 
     else :
 
         parms_len   =   len(formlabels)
 
     if(DEBUG_BUILD_CFG) :
-        print("parms_len",parms_len)
+        padd_debug_to_log("dfc_qt_model",print_to_string("parms_len",parms_len))
 
     for i in range(parms_len) :
                
         parm_to_match    =   formlabels[i]
         
         if(DEBUG_BUILD_CFG) : 
-            print("parm_to_match",parm_to_match)
+            add_debug_to_log("dfc_qt_model",print_to_string("parm_to_match",parm_to_match))
 
         if(parm_to_match in ptitles) :
 
@@ -1304,8 +1285,6 @@ class UpdateStatusBarThread(QThread):
 
     def update_status_bar(self) :
 
-        print ("update_status_bar")
-
         from datetime import datetime
         now = datetime.now()
 
@@ -1325,9 +1304,6 @@ class UpdateStatusBarThread(QThread):
         
         self.statusbar          =   taskparms[0]
         self.status_message     =   taskparms[1]
-
-        #print("taskparms",taskparms)
-        #self.statusbar.showMessage(self.status_message)
 
         #declaring the timer
         self.statusTimer = PyQt5.QtCore.QTimer()

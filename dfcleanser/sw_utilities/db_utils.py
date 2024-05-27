@@ -12,12 +12,10 @@ Created on Tue Jun 13 22:29:22 2017
 import dfcleanser.common.cfg as cfg
 from dfcleanser.common.common_utils import (opStatus)
 
-DEBUG_DBUTILS                   =   False
-DEBUG_DBUTILS_HTML              =   False
-DEBUG_DBUTILS_CONNECTOR         =   False
-DEBUG_DBUTILS_TEST_CONNECTOR    =   False
-DEBUG_DBUTILS_CONNECTOR_HTML    =   False
-DEBUG_SQL_DBUTILS               =   False
+from dfcleanser.common.cfg import (add_error_to_log, print_to_string)
+
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DBUtils_ID
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -550,17 +548,17 @@ def get_current_dbcondict(importexportflag):#,dbid):#,formparmsList) :
     #------------------------------------------------------------------
     """ 
 
-    if(DEBUG_DBUTILS) :
-        print("    [get_current_dbcondict] : importexportflag : ",importexportflag)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        cfg.add_debug_to_log("get_current_dbcondict"," : importexportflag : " + str(importexportflag))
 
     dbconn      =   dfc_dbconnectors_table.get_current_dbconnector(importexportflag)
     dbcondict   =   {}
     
-    if(DEBUG_DBUTILS) :
-        print("    [get_current_dbcondict] : dbconn : ",dbconn)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        cfg.add_debug_to_log("get_current_dbcondict"," : dbconn : " + str(dbconn))
 
-    if(DEBUG_DBUTILS_CONNECTOR) :
-        print("    [get_current_dbcondict] : current_dbconnector ")
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+        add_debug_to_log("DataImportGui",print_to_string("[get_current_dbcondict] : current_dbconnector "))
         dbconn.dump()
 
     current_dbid    =   int(dbconn.get_db_id())
@@ -569,8 +567,8 @@ def get_current_dbcondict(importexportflag):#,dbid):#,formparmsList) :
     
         labellist =  mysql_connector_labelList
 
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("    [get_current_dbcondict] : labellist ",labellist)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            cfg.add_debug_to_log("get_current_dbcondict"," : labellist " + str(labellist))
 
         dbcondict.update({labellist[0]:str(dbconn.get_db_id())})
         dbcondict.update({labellist[1]:dbconn.get_db_library()})
@@ -579,9 +577,12 @@ def get_current_dbcondict(importexportflag):#,dbid):#,formparmsList) :
         dbcondict.update({labellist[4]:dbconn.get_user()})
         dbcondict.update({labellist[5]:dbconn.get_password()})
     
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("    [get_current_dbcondict] : dbcondict ",dbcondict)
- 
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            cfg.add_debug_to_log("get_current_dbcondict"," : db_id " + str(dbconn.get_db_id()))
+            cfg.add_debug_to_log("get_current_dbcondict"," : db_library " + str(dbconn.get_db_library())) 
+            cfg.add_debug_to_log("get_current_dbcondict"," : server " + str(dbconn.get_server()))
+            cfg.add_debug_to_log("get_current_dbcondict"," : database " + str(dbconn.get_database())) 
+
     elif(current_dbid == MS_SQL_Server)     :   
         
         labellist =  mssql_connector_labelList
@@ -594,16 +595,19 @@ def get_current_dbcondict(importexportflag):#,dbid):#,formparmsList) :
 
     elif(current_dbid == SQLite)           :   
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("    [get_current_dbcondict] : SQLite dbcondict \n  ",dbcondict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            cfg.add_debug_to_log("get_current_dbcondict"," : SQLite dbcondict")
         
         labellist =  sqlite_connector_labelList
         dbcondict.update({labellist[0]:str(dbconn.get_db_id())})
         dbcondict.update({labellist[1]:dbconn.get_db_library()})
         dbcondict.update({labellist[2]:dbconn.get_server()})
 
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("    [get_current_dbcondict] : SQLite dbcondict \n  ",dbcondict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            cfg.add_debug_to_log("get_current_dbcondict"," : db_id " + str(dbconn.get_db_id()))
+            cfg.add_debug_to_log("get_current_dbcondict"," : db_library " + str(dbconn.get_db_library())) 
+            cfg.add_debug_to_log("get_current_dbcondict"," : server " + str(dbconn.get_server()))
+            cfg.add_debug_to_log("get_current_dbcondict"," : database " + str(dbconn.get_database())) 
 
 
     elif(current_dbid == Postgresql)        :   
@@ -631,8 +635,11 @@ def get_current_dbcondict(importexportflag):#,dbid):#,formparmsList) :
         dbcondict.update({labellist[0]:str(dbconn.get_db_id())})
         dbcondict.update({labellist[1]:dbconn.get_db_library()})
     
-    if(DEBUG_DBUTILS_CONNECTOR) :
-        print("    [get_current_dbcondict][end] : dbcondict\n    ",dbcondict)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+        cfg.add_debug_to_log("get_current_dbcondict"," : db_id " + str(dbconn.get_db_id()))
+        cfg.add_debug_to_log("get_current_dbcondict"," : db_library " + str(dbconn.get_db_library())) 
+        cfg.add_debug_to_log("get_current_dbcondict"," : server " + str(dbconn.get_server()))
+        cfg.add_debug_to_log("get_current_dbcondict"," : database " + str(dbconn.get_database())) 
     
     return(dbcondict)
 
@@ -653,8 +660,8 @@ def get_dbcondict_value(dbid,dbcondict,valueId) :
     #
     #------------------------------------------------------------------
     """ 
-    if(DEBUG_DBUTILS_CONNECTOR ) :
-        print("[get_dbcondict_value] : import_history_entry",dbid,valueId,"\n",dbcondict)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS") ) :
+        cfg.add_debug_to_log("get_dbcondict_value"," : dbid valueId" + str(dbid) + str(valueId))
 
     if(dbid == MySql)                   :   
         if(valueId == CON_DICT_SERVER)          :   return(dbcondict.get("hostname"))        
@@ -706,13 +713,13 @@ def check_current_dbcondict(importexportflag,dbid,conparms) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_DBUTILS) :
-        print("  [check_current_dbcondict] importexportflag : ",importexportflag," dbid : ",dbid,"conparms : \n  ",conparms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        cfg.add_debug_to_log("check_current_dbcondict"," importexportflag : " + str(importexportflag) + " dbid : " + str(dbid) + "conparms : \n  " + str(conparms))
     
     dbcondict = get_current_dbcondict(importexportflag)#,dbid)#,dbid,conparms)
 
-    if(DEBUG_DBUTILS) :
-        print("  [check_current_dbcondict] dbcondict : \n  ",dbcondict) 
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        cfg.add_debug_to_log("check_current_dbcondict"," dbcondict : \n  " + str(dbcondict)) 
 
     dbdict_keys     =   list(dbcondict.keys())
     
@@ -735,8 +742,8 @@ def set_dbcon_dict(dbid,parmslist) :
     #------------------------------------------------------------------
     """ 
 
-    if(DEBUG_DBUTILS) :
-        print("set_dbcon_dict",dbid,parmslist,custom_connector_labelList)  
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+       cfg.add_debug_to_log("set_dbcon_dict"," dbid parmslist custom_connector_labelList "+str(dbid) + str(parmslist)))  
           
     dbcondict = {}
 
@@ -771,8 +778,8 @@ def parse_connector_parms(connectparms,dbid,dbparms) :
     #------------------------------------------------------------------
     """    
     
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-        print("    [parse_connector_parms] dbid : ",type(dbid),dbid,"\n     connectparms : \n      ",connectparms,"\n     dbparms : \n      ",dbparms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+        cfg.add_debug_to_log("parse_connector_parms"," dbid : " + type(dbid) + str(dbid) + "\n     connectparms : \n      " + str(connectparms) + "\n     dbparms : \n      " + str(dbparms))
 
     if(not (dbid == Custom)) :
         dbparms.update({"dbid":dbid})
@@ -796,22 +803,22 @@ def parse_connector_parms(connectparms,dbid,dbparms) :
         idlist      =   custom_connector_idList
         labellist   =   custom_connector_labelList
     
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-        print("    [parse_connector_parms] idlist : \n    ",idlist,"\n     labellist : \n      ",labellist)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+        cfg.add_debug_to_log("parse_connector_parms"," idlist : \n    " + str(idlist) + "\n     labellist : \n      " + str(labellist))
     
     if(dbid == Custom) :
         sqllist     =   connectparms[1]
     else :
         sqllist     =   get_parms_for_input(connectparms,idlist)
     
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-        print("    [parse_connector_parms] dbid : ",dbid,"\n     sqllist : \n      ",sqllist,"\n     dbparms : \n      ",dbparms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+        cfg.add_debug_to_log("parse_connector_parms"," dbid : " + str(dbid) + "\n     sqllist : \n      " + str(sqllist) + "\n     dbparms : \n      " + str(dbparms))
     
     for i in range(len(sqllist)) :
         dbparms.update({labellist[i]:sqllist[i]})    
     
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-        print("    [parse_connector_parms] dbid : ",dbid,"\n     sqllist : \n      ",sqllist,"\n     dbparms : \n      ",dbparms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+        add_debug_to_log("parse_connector_parms",print_to_string(" dbid : ",dbid,"\n     sqllist : \n      ",sqllist,"\n     dbparms : \n      ",dbparms))
 
     return(sqllist)
 
@@ -855,10 +862,6 @@ def grab_connection_parms(parmsdict) :
     #
     #------------------------------------------------------------------
     """    
-
-    #if(DEBUG_DBUTILS_CONNECTOR) :
-    #    print("    [grab_connection_parms] : parmsdict :\n    ",parmsdict)
-
     
     dbid = get_dbid_from_lib(parmsdict.get("dblibrary")) 
 
@@ -915,9 +918,9 @@ def grab_connection_parms(parmsdict) :
       
             if(not (parmsdict.get("customdbconnectorstring") == None) )   : dbcondict.update({"customdbconnectorstring":parmsdict.get("customdbconnectorstring")})
     
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("    [grab_connection_parms] : parmsdict :\n    ",parmsdict)
-            print("    [grab_connection_parms] : dbcondict :\n    ",dbcondict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("grab_connection_parms",print_to_string(" : parmsdict :\n    ",parmsdict))
+            add_debug_to_log("grab_connection_parms",print_to_string(" dbcondict :\n    ",dbcondict))
         
         return(dbcondict)
     
@@ -934,8 +937,8 @@ def validate_connection_parms(parmsdict) :
     #------------------------------------------------------------------
     """ 
        
-    if(DEBUG_DBUTILS_CONNECTOR) :
-        print("    [validate_connection_parms] : \n     ",parmsdict)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+        add_debug_to_log("validate_connection_parms",print_to_string(" parmsdict : \n     ",parmsdict))
 
     current_dbid        =   int(parmsdict.get("servertype"))
 
@@ -984,15 +987,15 @@ def test_db_connector(dbid,drivertype,sqlinputparms,sqlid,opstat,display=True) :
     #------------------------------------------------------------------
     """    
 
-    if(DEBUG_DBUTILS) :
-        print("  [test_db_connector] : dbid : ",dbid," drivertype : ",drivertype," sqlid : ",sqlid)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        add_debug_to_log("test_db_connector",print_to_string(" dbid : ",dbid," drivertype : ",drivertype," sqlid : ",sqlid))
     
     connectParms    =   {}
     parmslist       =   parse_connector_parms(sqlinputparms,dbid,connectParms)
     errormsg        =   validate_connection_parms(connectParms)
     
-    if(DEBUG_DBUTILS_CONNECTOR) :
-        print("[test_db_connector] : \n    parmslist : \n    ",parmslist,"\n    connectParms : \n    ",connectParms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+        add_debug_to_log("test_db_connector",print_to_string(": \n    parmslist : \n    ",parmslist,"\n    connectParms : \n    ",connectParms))
     
     if(errormsg is None) :
 
@@ -1011,8 +1014,8 @@ def test_db_connector(dbid,drivertype,sqlinputparms,sqlid,opstat,display=True) :
             dbcon = dbConnector()
             dbcon.connect_to_db(drivertype,opstat,connectParms)
 
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("[test_db_connector] : opstat :  ",opstat.get_status(),"\n    connectParms : \n    ",connectParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("test_db_connector",print_to_string(" opstat :  ",opstat.get_status(),"\n    connectParms : \n    ",connectParms))
 
         if(opstat.get_status()) :
 
@@ -1061,11 +1064,9 @@ def test_db_connector(dbid,drivertype,sqlinputparms,sqlid,opstat,display=True) :
         opstat.set_status(False)
         opstat.set_errorMsg(errormsg)  
          
-    if(DEBUG_DBUTILS) :
-        print("  [test_db_connector][end] : opstat :  ",opstat.get_status())
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+        add_debug_to_log("test_db_connector",print_to_string("[end] : opstat :  ",opstat.get_status()))
         
-
-
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -                    SQLAlchemy Utilitie                        -#
@@ -1110,9 +1111,6 @@ def get_SQLAlchemy_connector_string(parmsdict) :
     #------------------------------------------------------------------
     """    
     
-    #if(DEBUG_DBUTILS_CONNECTOR) :
-    #    print("\n    [get_SQLAlchemy_connector_string] : parmsdict : \n     ",parmsdict)
- 
     dbConnectString = ""
     
     dblibid = parmsdict.get("dblibrary")
@@ -1160,9 +1158,9 @@ def get_SQLAlchemy_connector_string(parmsdict) :
     elif(dblibid == Custom) : 
         dbConnectString =   parmsdict.get("customdbconnectorstring") 
 
-    if(DEBUG_DBUTILS_CONNECTOR) :
-        print("\n    [get_SQLAlchemy_connector_string] : parmsdict : \n     ",parmsdict)
-        print("\n    [get_SQLAlchemy_connector_string] : dbConnectString : \n     ",dbConnectString)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+        add_debug_to_log("get_SQLAlchemy_connector_string",print_to_string(" parmsdict : \n     ",parmsdict))
+        add_debug_to_log("get_SQLAlchemy_connector_string",print_to_string(" dbConnectString : \n     ",dbConnectString))
     
 
     return(dbConnectString)
@@ -1206,8 +1204,8 @@ class dbConnector :
     
     def connect_to_db(self,connectortype,opstat,inparms=None) :
 
-        if(DEBUG_DBUTILS) : 
-            print("    [connect_to_db] connectortype : ",connectortype,"\n     inparms : \n     ",inparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) : 
+            add_debug_to_log("connect_to_db",print_to_string(" connectortype : ",connectortype,"\n     inparms : \n     ",inparms))
     
         if((inparms != None)) :
 
@@ -1215,14 +1213,14 @@ class dbConnector :
             
             errormsg = validate_connection_parms(inparms)
             
-            if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                print("  [connect_to_db] : validate_connection_parms : errors  ",errormsg)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                add_debug_to_log("connect_to_db",print_to_string(" validate_connection_parms : errors  ",errormsg))
             
             if( errormsg == None) :
                 dbcondict = grab_connection_parms(inparms)
 
-                if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                    print("  [connect_to_db] : grab parms  \n",dbcondict)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                    add_debug_to_log("connect_to_db",print_to_string("grab parms  \n",dbcondict))
 
                 if(len(dbcondict) == 0) :
 
@@ -1233,8 +1231,8 @@ class dbConnector :
                 else :
                     self.set_ConnectionParms(dbcondict)
 
-                if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                    print("  [connect_to_db] : dbcondict \n  ",dbcondict)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                    add_debug_to_log("connect_to_db",print_to_string(" dbcondict \n  ",dbcondict))
 
             else :
 
@@ -1251,8 +1249,8 @@ class dbConnector :
              
         self.dbconnectParms.update({"contype":connectortype})
 
-        if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-            print("  [connect_to_db] : self.connectortype : ",self.dbconnectParms.get("contype"),"\n    dbconnectParms \n   ",self.dbconnectParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+            add_debug_to_log("connect_to_db",print_to_string(" self.connectortype : ",self.dbconnectParms.get("contype"),"\n    dbconnectParms \n   ",self.dbconnectParms))
         
         if( self.dbconnectParms.get("contype") == NATIVE) :
             
@@ -1322,8 +1320,8 @@ class dbConnector :
         
         else : # SQLAlchemy connector
 
-            if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                print("  [connect_to_db] : Testing SQLAlchemy : dblibrary : ",self.dbconnectParms.get("dblibrary"))
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                add_debug_to_log("connect_to_db",print_to_string("Testing SQLAlchemy : dblibrary : ",self.dbconnectParms.get("dblibrary")))
             
             try :
                 
@@ -1377,8 +1375,8 @@ class dbConnector :
                     
                         connectString = get_SQLAlchemy_connector_string(self.dbconnectParms)
 
-                    if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                        print("[connect_to_db] : SQLAlchemy connectString ",connectString,"\n",self.dbconnectParms)
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                        add_debug_to_log("connect_to_db",print_to_string("SQLAlchemy connectString ",connectString,"\n",self.dbconnectParms))
                     
                     new_engine = create_engine(connectString, echo=False)
                     if(self.dbconnectParms.get("dblibrary") != None) :
@@ -1386,8 +1384,8 @@ class dbConnector :
                     else :
                         set_SQLAlchemy_engine(Custom,new_engine)
 
-                if(DEBUG_DBUTILS_TEST_CONNECTOR) :
-                    print("[connect_to_db] : SQLAlchemy connectString : ",connectString,"\n",self.dbconnectParms)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :
+                    add_debug_to_log(" connect_to_db",print_to_string("SQLAlchemy connectString : ",connectString,"\n",self.dbconnectParms))
 
                 # go ahead and get a connecton to the engine 
                 if(self.dbconnectParms.get("dblibrary") != None) :   
@@ -1472,8 +1470,8 @@ class DataframeCleanserDBConnectorParms :
         self.user           =   user
         self.password       =   password
         
-        if(DEBUG_DBUTILS_CONNECTOR) :   
-            print("[ataframeCleanserDBConnectorParms] - self",self.db_id ,self.db_library,self.server,self.database,self.user,self.password)     
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :   
+            add_debug_to_log("DataframeCleanserDBConnectorParms",print_to_string(" self",self.db_id ,self.db_library,self.server,self.database,self.user,self.password))     
         
     def get_db_id(self) :
         return(self.db_id)
@@ -1509,12 +1507,12 @@ class DataframeCleanserDBConnectorParms :
             return(False)
     
     def dump(self) :
-        print("\n    db_id       : ",type(self.db_id),self.db_id)
-        print("    db_library  : ",type(self.db_library),self.db_library)
-        print("    server      : ",type(self.server),self.server)
-        print("    database    : ",type(self.database),self.database)
-        print("    user        : ",type(self.user),self.user)
-        print("    password    : ",type(self.password),self.password)
+        add_debug_to_log("db_utils",print_to_string("db_id       : ",type(self.db_id),self.db_id))
+        add_debug_to_log("db_utils",print_to_string("db_library  : ",type(self.db_library),self.db_library))
+        add_debug_to_log("db_utils",print_to_string("server      : ",type(self.server),self.server))
+        add_debug_to_log("db_utils",print_to_string("database    : ",type(self.database),self.database))
+        add_debug_to_log("db_utils",print_to_string("user        : ",type(self.user),self.user))
+        add_debug_to_log("db_utils",print_to_string("password    : ",type(self.password),self.password))
 
 
 
@@ -1588,8 +1586,8 @@ class DataframeCleanserDBConnectors :
         dbconnector_dir_name    =   self.get_dbconnector_dir_name()
         dbconnector_file_name   =   self.get_dbconnector_file_name()
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("[load_dbconnector_file] : dbconnector_file_name : \n",dbconnector_file_name)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[load_dbconnector_file] : dbconnector_file_name : \n",dbconnector_file_name))
         
         if(not (dbconnector_dir_name is None)) :
             
@@ -1600,8 +1598,8 @@ class DataframeCleanserDBConnectors :
             from dfcleanser.common.common_utils import does_file_exist
             if(not (does_file_exist(dbconnector_file_name))) :
                 
-                if(DEBUG_DBUTILS_CONNECTOR) :
-                    print("[load_dbconnector_file] - file not found\n",dbconnector_file_name)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+                    add_debug_to_log("db_utils",print_to_string("[load_dbconnector_file] - file not found\n",dbconnector_file_name))
  
                 self.connectors_file_loaded     =   False    
                 self.connectors_table           =   {}
@@ -1609,8 +1607,8 @@ class DataframeCleanserDBConnectors :
             # import history file does exist
             else :
                 
-                if(DEBUG_DBUTILS_CONNECTOR) :
-                    print("load_dbconnector_file - file found\n",dbconnector_file_name)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+                    add_debug_to_log("db_utils",print_to_string("load_dbconnector_file - file found\n",dbconnector_file_name))
                 
                 try :
 
@@ -1619,8 +1617,8 @@ class DataframeCleanserDBConnectors :
                         dbconnector_data = json.load(dbconnector_file)
                         dbconnector_file.close()
 
-                    if(DEBUG_DBUTILS_CONNECTOR) :
-                        print("load_dbconnector_file - file loaded : ",type(dbconnector_data))
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+                        add_debug_to_log("db_utils",print_to_string("load_dbconnector_file - file loaded : ",type(dbconnector_data)))
                    
                     self._parse_dbconnector_file_to_dict(dbconnector_data)
                     self.history_file_loaded            =   True
@@ -1633,8 +1631,8 @@ class DataframeCleanserDBConnectors :
                     add_error_to_log("[Load dbconnector file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
                     return()
                     
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("\n[load_dbconnector_file] - complete\n\n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[load_dbconnector_file] - complete\n\n"))
 
 
     def save_dbconnector_file(self) :
@@ -1652,10 +1650,10 @@ class DataframeCleanserDBConnectors :
             
         dbconnector_data        =   self._parse_dbconnector_dict_to_list()  
             
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("\n[save_dbconnector_file] : dbconnector_data\n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[save_dbconnector_file] : dbconnector_data\n"))
             for i in range(len(dbconnector_data)) :
-                print("history",dbconnector_data[i])
+                add_debug_to_log("db_utils",print_to_string("history",dbconnector_data[i]))
             
         try :
                     
@@ -1663,8 +1661,8 @@ class DataframeCleanserDBConnectors :
                 json.dump(dbconnector_data,dbconnector_file)
                 dbconnector_file.close()
                     
-            if(DEBUG_DBUTILS_CONNECTOR) :
-                print("[save_dbconnector_file] : dbconnector file saved ok")
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+                add_debug_to_log("db_utils",print_to_string("[save_dbconnector_file] : dbconnector file saved ok"))
 
             self.load_dbconnector_file()
                             
@@ -1687,10 +1685,10 @@ class DataframeCleanserDBConnectors :
         
         total_entries    =   len(dbconnector_file)
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("\n_parse_dbconnector_file_to_dict  ",type(dbconnector_file),total_entries,"\n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("_parse_dbconnector_file_to_dict  ",type(dbconnector_file),total_entries,"\n"))
             for i in range(total_entries) :
-                print("    [",i,"] ",dbconnector_file[i])
+                add_debug_to_log("db_utils",print_to_string("[",i,"] ",dbconnector_file[i]))
         
         for i in range(total_entries) :
             
@@ -1718,8 +1716,8 @@ class DataframeCleanserDBConnectors :
         * --------------------------------------------------------
         """
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("[_add_entry_to_dbconnector_dict] : total dbcons : ",self.get_total_dbconnectors())
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[_add_entry_to_dbconnector_dict] : total dbcons : ",self.get_total_dbconnectors()))
 
         import uuid
         
@@ -1738,8 +1736,8 @@ class DataframeCleanserDBConnectors :
             cfg.add_error_to_log("_add_entry_to_dbconnector_dict : " + opstat.get_exception_details_text(),1)
 
 
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("[_add_entry_to_dbconnector_dict] : total dbcons : ",self.get_total_dbconnectors())
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[_add_entry_to_dbconnector_dict] : total dbcons : ",self.get_total_dbconnectors()))
 
 
     def _parse_dbconnector_dict_to_list(self) :
@@ -1755,8 +1753,8 @@ class DataframeCleanserDBConnectors :
         
         opstat  =   opStatus()
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("\n\n[_parse_dbconnector_dict_to_list]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[_parse_dbconnector_dict_to_list]"))
         
         try :
         
@@ -1778,8 +1776,8 @@ class DataframeCleanserDBConnectors :
 
                 dbconnector_list.append(current_dconnnector_parms)
          
-            if(DEBUG_DBUTILS_CONNECTOR) :
-                print("[_parse_dbconnector_dict_to_list] : dbconnector_list\n",dbconnector_list,"\n")
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+                add_debug_to_log("db_utils",print_to_string("[_parse_dbconnector_dict_to_list] : dbconnector_list\n",dbconnector_list,"\n"))
                 
             return(dbconnector_list)
     
@@ -1797,8 +1795,8 @@ class DataframeCleanserDBConnectors :
 
         dbconnectors_list   =   self._parse_dbconnector_dict_to_list()  
 
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("[get_dbconnectors_entries_list] : dbconnector_list\n",dbconnectors_list,"\n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[get_dbconnectors_entries_list] : dbconnector_list\n",dbconnectors_list,"\n"))
  
         return(dbconnectors_list)   
 
@@ -1849,9 +1847,9 @@ class DataframeCleanserDBConnectors :
         import uuid
         dbconn_key  =   str(uuid.uuid4())
 
-        if(DEBUG_DBUTILS) :
-            print("\n[add_dbconnector] : type : ",type(connectparms))
-            print("[add_dbconnector] : connectparms : \n  ",connectparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[add_dbconnector] : type : ",type(connectparms)))
+            add_debug_to_log("db_utils",print_to_string("[add_dbconnector] : connectparms : \n  ",connectparms))
 
 
         if(not (type(connectparms) == list)) :
@@ -1869,8 +1867,8 @@ class DataframeCleanserDBConnectors :
             cparms  =   []
             sqlservertype   =   int(connectparms[0])
 
-        if(DEBUG_DBUTILS) :
-            print("[add_dbconnector] : connectparms : \n  ",connectparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[add_dbconnector] : connectparms : \n  ",connectparms))
 
         if(sqlservertype == MySql) :
             if(type(connectparms) == list) :
@@ -1911,9 +1909,9 @@ class DataframeCleanserDBConnectors :
         else :
             new_dbconn  =   None
 
-        if(DEBUG_DBUTILS) :
-            print("[add_dbconnector] : cparms : \n",cparms)
-            print("[add_dbconnector] : new_dbconn : \n",new_dbconn)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[add_dbconnector] : cparms : \n",cparms))
+            add_debug_to_log("db_utils",print_to_string("[add_dbconnector] : new_dbconn : \n",new_dbconn))
 
         if(not (new_dbconn is None)) :
 
@@ -1928,8 +1926,8 @@ class DataframeCleanserDBConnectors :
 
     def delete_dbconnector(self,dbconkey) :
 
-        if(DEBUG_DBUTILS) :
-            print("[delete_dbconnector] : dbconkey : ",dbconkey)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[delete_dbconnector] : dbconkey : ",dbconkey))
 
         if(self.is_dbconnector_key_valid(dbconkey)) :
             
@@ -1949,19 +1947,19 @@ class DataframeCleanserDBConnectors :
     
     def update_dbconnector(self,dbconn_key,connectparms) :
             
-        if(DEBUG_DBUTILS) :
-            print("\n[update_dbconnector] : dbconn_key : ",dbconn_key,"\n  connectparms : \n  ",connectparms)
-            print("[update_dbconnector] : total_dbconnectors ",self.get_total_dbconnectors(self))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[update_dbconnector] : dbconn_key : ",dbconn_key,"\n  connectparms : \n  ",connectparms))
+            add_debug_to_log("db_utils",print_to_string("[update_dbconnector] : total_dbconnectors ",self.get_total_dbconnectors(self)))
 
         self.connectors_table.update({dbconn_key : connectparms})
         
-        if(DEBUG_DBUTILS_CONNECTOR) :
-            print("\n[update_dbconnector] : dbconnectors\n  ",self.get_dbconnectors_entries_list(),"\n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("db_utils",print_to_string("[update_dbconnector] : dbconnectors\n  ",self.get_dbconnectors_entries_list(),"\n"))
 
         self.save_dbconnector_file()
         
-        if(DEBUG_DBUTILS) :
-            print("[update_dbconnector] : end : total_dbconnectors ",self.get_total_dbconnectors(self))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("db_utils",print_to_string("[update_dbconnector] : end : total_dbconnectors ",self.get_total_dbconnectors(self)))
 
 
     def is_dbconnector_key_valid(self,dbconkey) :
@@ -2012,8 +2010,8 @@ def fetch_rows(SQL_Server_Type_Id,dbcon,queryString,opstat,colid=0) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_SQL_DBUTILS):
-        print("    [Qt_db_utils][fetch_rows] : SQL_Server_Type_Id : colid : ",SQL_Server_Type_Id,colid,"\n     querystring : \n      ",queryString)
+    if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+        add_debug_to_log("db_utils",print_to_string("[Qt_db_utils][fetch_rows] : SQL_Server_Type_Id : colid : ",SQL_Server_Type_Id,colid,"\n     querystring : \n      ",queryString))
     
     try :
 
@@ -2067,15 +2065,15 @@ def fetch_rows(SQL_Server_Type_Id,dbcon,queryString,opstat,colid=0) :
             number_of_rows = cursor.execute(queryString)
             crows = cursor.fetchall()
     
-        if(DEBUG_SQL_DBUTILS):
-            print("    [Qt_db_utils][fetch_rows] : number_of_rows : ",number_of_rows)
+        if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+            add_debug_to_log("db_utils",print_to_string("[Qt_db_utils][fetch_rows] : number_of_rows : ",number_of_rows))
             
         resultList = []
         for i in range(number_of_rows) :
             resultList.append(crows[i][colid])
 
-        if(DEBUG_SQL_DBUTILS):
-            print("    [Qt_db_utils][fetch_rows] : len(results) :  ",len(resultList))
+        if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+            add_debug_to_log("db_utils",print_to_string("[Qt_db_utils][fetch_rows] : len(results) :  ",len(resultList)))
 
     except Exception as e:
         opstat.store_exception("Unable to get rows ",e)
@@ -2100,8 +2098,8 @@ def get_table_names(dbcondict,opstat) :
     * --------------------------------------------------------
     """
 
-    if(DEBUG_SQL_DBUTILS):
-        print("  [get_table_names] : dbcondict : \n  ",dbcondict)
+    if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+        add_debug_to_log("db_utils",print_to_string("[get_table_names] : dbcondict : \n  ",dbcondict))
     
     dbcon = dbConnector()
     dbcon.connect_to_db(NATIVE,opstat,dbcondict)
@@ -2178,8 +2176,8 @@ def get_table_names(dbcondict,opstat) :
             tableList   =   None
     
         
-    if(DEBUG_SQL_DBUTILS):
-        print("  [get_table_names] : tablelist : \n    ",tableList)
+    if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+        add_debug_to_log("db_utils",print_to_string("[get_table_names] : tablelist : \n    ",tableList))
 
     return(tableList)  
 
@@ -2197,8 +2195,8 @@ def get_column_names(tablename, dbcondict, opstat) :
     * --------------------------------------------------------
     """
     
-    if(DEBUG_SQL_DBUTILS):
-        print("  [get_column_names] tablename : ",tablename)
+    if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+        add_debug_to_log("db_utils",print_to_string("[get_column_names] tablename : ",tablename))
     
     columnList = [] 
     
@@ -2266,8 +2264,8 @@ def get_column_names(tablename, dbcondict, opstat) :
         if(len(tablename) < 1) :
             opstat.set_errorMsg("Invalid Table Name")
          
-    if(DEBUG_SQL_DBUTILS):
-        print("  [get_column_names]: columnList :  \n    ",columnList)
+    if(is_debug_on(DBUtils_ID,"DEBUG_SQL_DBUTILS")):
+        add_debug_to_log("db_utils",print_to_string("[get_column_names]: columnList :  \n    ",columnList))
     
     return(columnList)  
 

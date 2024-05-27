@@ -433,7 +433,8 @@ def get_dist_from_center_df_column(df,dfcolname,units,opstat) :
     * -------------------------------------------------------------------------
     """
 
-    print("get_dist_from_center_df_column")
+    from dfcleanser.common.cfg import add_debug_to_log
+    add_debug_to_log("get_dist_from_center_df_column","")
 
 
 def get_dist_from_point_df_column(df,dfcolname,point,units,opstat) :
@@ -457,9 +458,8 @@ def get_dist_from_point_df_column(df,dfcolname,point,units,opstat) :
     * -------------------------------------------------------------------------
     """
 
-    print("get_dist_from_point_df_column")
-
-
+    from dfcleanser.common.cfg import add_debug_to_log
+    add_debug_to_log("get_dist_from_point_df_column","")
 
 def get_df_geocode_center(dftitle,dfcolname,opstat) :
     """

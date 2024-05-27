@@ -25,17 +25,11 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
-DEBUG_DBUTILS                           =   False
-DEBUG_DBUTILS_DBCONNECTORS              =   False
-DEBUG_DBUTILS_TEST_CONNECTOR            =   False
-DEBUG_DBUTILS_DBCONNECTOR_FORM          =   False
-DEBUG_DBUTILS_DBCON_FORM_DETAILS        =   False
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log 
 
-DEBUG_DBUTILS_SQL_FORM                  =   False
-DEBUG_DBUTILS_SQL_FORM_DETAILS          =   False
-DEBUG_DBUTILS_SQL_FORM_COL_NAMES        =   False
-DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES      =   False
-DEBUG_DBUTILS_IMPORT                    =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DBUtils_ID
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -86,7 +80,7 @@ class DBUtilsDBConnectorsModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -154,15 +148,15 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
         self.import_type    =   dbconparms[1] 
         self.model          =   None
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTable] : init")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log[DBUtilsDBConnectorsTable] : init")
 
         self.init_tableview()
 
         self.doubleClicked.connect(self.select_db_connector)
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTable] : init_tableview done")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable] : init_tableview done"))
 
 
     def reload_data(self) :
@@ -179,23 +173,23 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTable] : init_tableview")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         self.dbconnectorsdata     =   self.load_dbconnectors_data()
         
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-           print("[DBUtilsDBConnectorsTable][init_tableview] :\n",self.column_headers)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][init_tableview] :\n",self.column_headers))
 
         if(self.model is None) :
             self.model = DBUtilsDBConnectorsModel(self.dbconnectorsdata,self.column_headers)
             self.setModel(self.model)
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-           print("[DBUtilsDBConnectorsTable][init_tableview] : num rows ",len(self.dbconnectorsdata))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][init_tableview] : num rows ",len(self.dbconnectorsdata)))
 
         self.size_table()
 
@@ -230,15 +224,15 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_dbconnectors_data(self) :
 
-        if(DEBUG_DBUTILS) :
-           print("     [DBUtilsDBConnectorsTable][load_dbconnectors_data] : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][load_dbconnectors_data] : "))
 
         from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table, get_db_id_title
         dbconnectors_list   =   dfc_dbconnectors_table.get_dbconnectors_entries_list()
         data                =   []
         
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-           print("    [DBUtilsDBConnectorsTable][load_dbconnectors_data] : dbconnectors_list ",dbconnectors_list)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][load_dbconnectors_data] : dbconnectors_list ",dbconnectors_list))
 
         for i in range(len(dbconnectors_list)) :
 
@@ -263,10 +257,10 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
 
             data.append(data_row)
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("  [DBUtilsDBConnectorsTable][load_dbconnectors_data]  self.db_connector_keys \n",self.db_connector_keys)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][load_dbconnectors_data]  self.db_connector_keys \n",self.db_connector_keys))
             for i in range(len(data)) :
-                print("data[",i,"] : ",data[i])
+                add_debug_to_log("DBUtilsWidgets",print_to_string("data[",i,"] : ",data[i]))
 
         self.column_headers     =   ["SEL","SQL Server Type","Library","Server Name","Database","User","Password"]
         self.column_widths      =   [20,150,165,170,160,150,150]
@@ -285,8 +279,8 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
         else :
             new_height  =   25 + (25 * DEFAULT_ROW_HEIGHT)
         
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-           print("[DBUtilsDBConnectorsTable][init_tableview] : new_height ",new_height)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][init_tableview] : new_height ",new_height))
 
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
@@ -299,8 +293,8 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
 
     def select_db_connector(self) :
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("    [DBUtilsDBConnectorsTable][select_db_connector]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector]"))
 
         self.parent.statusBar().clearMessage()
 
@@ -308,21 +302,21 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
             row_number = int(idx.row())
             column_number = int(idx.column())
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("    [DBUtilsDBConnectorsTable][select_db_connector]",row_number,column_number)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector]",row_number,column_number))
 
         tdata   =   self.model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :    
-            print("    [DBUtilsDBConnectorsTable][select_db_connector] cell : [",cell,"]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector] cell : [",cell,"]"))
 
         if(column_number == 0) :
 
             if( not(self.current_selected_dbconnector is None)) :
 
-                if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :    
-                    print("    [DBUtilsDBConnectorsTable][select_db_connector] [self.current_selected_dbconnector]",self.current_selected_dbconnector)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :    
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector] [self.current_selected_dbconnector]",self.current_selected_dbconnector))
 
                 tdata[self.current_selected_dbconnector][0]     =   " "
 
@@ -333,15 +327,15 @@ class DBUtilsDBConnectorsTable(QtWidgets.QTableView):
 
             self.model.reload_data(tdata)
         
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :    
-            print("    [DBUtilsDBConnectorsTable][select_db_connector] self.current_selected_dbconnector : ",self.current_selected_dbconnector)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector] self.current_selected_dbconnector : ",self.current_selected_dbconnector))
         
         from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table
         dfc_dbconnectors_table.set_current_dbconnector_key(self.import_type,self.selected_dbcon_key) 
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :    
-            print("    [DBUtilsDBConnectorsTable][select_db_connector] self.current_selected_dbconnector : ",self.current_selected_dbconnector)
-            print("    [DBUtilsDBConnectorsTable][select_db_connector] dfc_dbconnectors_table.get_current_dbconnector : ",dfc_dbconnectors_table.get_current_dbconnector(0))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector] self.current_selected_dbconnector : ",self.current_selected_dbconnector))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTable][select_db_connector] dfc_dbconnectors_table.get_current_dbconnector : ",dfc_dbconnectors_table.get_current_dbconnector(0)))
 
 
 
@@ -374,33 +368,33 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
 
         super().__init__()
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtilsDBConnectorsTableWidget] : init")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : init"))
         
         self.parent         =   dbconparms[0]
         self.import_type    =   dbconparms[1] 
         self.import_action  =   dbconparms[2]
 
-        if(DEBUG_DBUTILS) :
-            print("\n[DBUtilsDBConnectorsTableWidget] : init",dbconparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : init",dbconparms))
 
         self.init_content()
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtilsDBConnectorsTableWidget] : end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : end "))
 
 
     def reload_data(self) :
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtilsDBConnectorsTableWidget][reload_data]: ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][reload_data]: "))
 
         self.connectorsTable.reload_data()
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget] : init_content")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : init_content"))
 
         from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
         from PyQt5.QtWidgets import QLabel, QPushButton
@@ -413,16 +407,16 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
  
         self.connectorsTable         =   DBUtilsDBConnectorsTable([self.parent,self.import_type])
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget][init_content] : table built \n  ",type(self.connectorsTable))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][init_content] : table built \n  ",type(self.connectorsTable)))
 
         new_height  =   45 + (self.connectorsTable.num_rows * DEFAULT_ROW_HEIGHT)
 
         self.connectorsTable.setMinimumHeight(new_height)
         self.connectorsTable.setMaximumHeight(new_height)
         
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget] : table built")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : table built"))
 
         button_style    =   "background-color:#0c4ca7; color:white; font-size: 14px; font-weight: bold; font-family: Tahoma; "
 
@@ -471,8 +465,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
         connectors_button5.setStyleSheet(button_style)
         connectors_button5.clicked.connect(self.return_from_db_connector) 
         
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget] : buttons built")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : buttons built"))
 
         from PyQt5.QtWidgets import QHBoxLayout
         connectorsbutonsLayout  =   QHBoxLayout()
@@ -494,8 +488,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
 
         self.setLayout(self.connectorsWidgetLayout)
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget] : end init_content")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget] : end init_content"))
 
     # -----------------------------------------------------------------#
     # -                  dbconnectors table  methods                  -#
@@ -512,8 +506,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
         
         self.parent.statusBar().clearMessage()
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :    
-            print("[DBUtilsDBConnectorsTableWidget][test_db_connector] : current_selected_connector ",current_selected_connector)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][test_db_connector] : current_selected_connector ",current_selected_connector))
 
         if(not (current_selected_connector is None)) :
 
@@ -547,8 +541,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
             self.parent.statusBar().showMessage("no current db connector selected to test")
            
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :    
-            print("[DBUtilsDBConnectorsTableWidget][test_db_connector] : end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][test_db_connector] : end "))
     
     # -----------------------------------------------------------------#
     # -                    Create a new DBConnector                   -#
@@ -557,8 +551,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
 
         self.parent.statusBar().clearMessage() 
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :    
-            print("[DBUtilsDBConnectorsTableWidget][create_db_connector] start ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][create_db_connector] start "))
 
         from dfcleanser.sw_utilities.db_utils import get_db_id_title, MySql, pymysql_library
         SQL_Server_Type             =   get_db_id_title(MySql)
@@ -571,8 +565,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
         dbcon_form_parms    =   [True,self.import_type,[SQL_Server_Type,db_library,Server_Name,Database,User,Password],self.connectorsTable]
         self.parent.display_dbconnector_form(dbcon_form_parms)
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget][create_db_connector] end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][create_db_connector] end "))
     
     # -----------------------------------------------------------------#
     # -                      Delete a DBConnector                     -#
@@ -582,8 +576,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
         
         self.parent.statusBar().clearMessage() 
 
-        if(DEBUG_DBUTILS) :    
-            print("[DBUtilsDBConnectorsTableWidget][delete_db_connector] : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][delete_db_connector] : "))
 
         from PyQt5.QtWidgets import QMessageBox
         dlg = QMessageBox(self)
@@ -607,8 +601,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
 
             self.parent.statusBar().showMessage("No dbconnector deleted")
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :    
-            print("[DBUtilsDBConnectorsTableWidget][delete_db_connector] : delete end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][delete_db_connector] : delete end "))
 
     
     # -----------------------------------------------------------------#
@@ -621,8 +615,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
         
         self.parent.statusBar().clearMessage()
 
-        if(DEBUG_DBUTILS) :    
-            print("\n[DBUtilsDBConnectorsTableWidget][edit_db_connector] current_selected_connector : \n  ",current_selected_connector)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][edit_db_connector] current_selected_connector : \n  ",current_selected_connector))
 
         if(not (current_selected_connector is None)) :
 
@@ -642,8 +636,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
            self.parent.statusBar().showMessage("no current db connector selected to edit")
 
 
-        if(DEBUG_DBUTILS_DBCONNECTORS) :
-            print("[DBUtilsDBConnectorsTableWidget][edit_db_connector] end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTORS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][edit_db_connector] end "))
 
  
     # -----------------------------------------------------------------#
@@ -651,8 +645,8 @@ class DBUtilsDBConnectorsTableWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def return_from_db_connector(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtilsDBConnectorsTableWidget][return_from_db_connector] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][return_from_db_connector] "))
 
         from dfcleanser.sw_utilities.db_utils import IMPORT_FLAG 
         if(self.import_type == IMPORT_FLAG) :  
@@ -686,16 +680,16 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
         self.forCreate           =   dbcparms[3]
         self.dbconTable          =   dbcparms[4]
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_DBConnectorFormWidget][init] : self.forCreate : ",self.forCreate,"\n    dbconparms\n     ",self.dbconnectorParms)
-            print("\n  [DBUtils_DBConnectorFormWidget][init] : self.dbconTable : ",type(self.dbconTable))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init] : self.forCreate : ",self.forCreate,"\n    dbconparms\n     ",self.dbconnectorParms))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init] : self.dbconTable : ",type(self.dbconTable)))
         
         self.init_content()
 
     def load_form_values(self,reload_parms) :
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("[DBUtils_DBConnectorFormWidget][load_form_values] \n  ",reload_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][load_form_values] \n  ",reload_parms))
 
         build_parms         =   build_dbcon_form_data(reload_parms)
         formParms           =   build_parms[0]
@@ -707,8 +701,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("[DBUtils_DBConnectorFormWidget][init_content]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content]"))
 
         build_parms         =   build_dbcon_form_data(self.dbconnectorParms)
 
@@ -716,10 +710,10 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
         dblibrary_types     =   build_parms[1]
         cfg_parms           =   build_parms[2]
         
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("  [DBUtils_DBConnectorFormWidget][init_content] : formParms \n  ",formParms)
-            print("  [DBUtils_DBConnectorFormWidget][init_content] : dblibrary_types \n  ",dblibrary_types)
-            print("  [DBUtils_DBConnectorFormWidget][init_content] : cfg_parms \n  ",cfg_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content] : formParms \n  ",formParms))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content] : dblibrary_types \n  ",dblibrary_types))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content] : cfg_parms \n  ",cfg_parms))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
 
@@ -758,16 +752,16 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
         formParms.append(form_title)
         formParms.append(form_width) 
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("    [DBUtils_DBConnectorFormWidget][init_content] formParms :")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content] formParms :"))
             for i in range(len(formParms)) :
-                print("       formParms[",i,"]  ",formParms[i])
+                add_debug_to_log("DBUtilsWidgets",print_to_string("       formParms[",i,"]  ",formParms[i]))
 
         from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
         self.dbconnector_form     =   dfcleanser_input_form_Widget(formParms)
         
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-             print("  [DBUtils_DBConnectorFormWidget][form built]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][form built]"))
 
         from PyQt5.QtWidgets import QVBoxLayout
         self.dbconnector_formWidgetLayout     =   QVBoxLayout()
@@ -776,8 +770,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
         self.setLayout(self.dbconnector_formWidgetLayout)
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_DBConnectorFormWidget][init_content] end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][init_content] end"))
 
 
 
@@ -790,8 +784,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def select_servertype(self) :
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("  [DBUtils_DBConnectorFormWidget][select_servertype] : start ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][select_servertype] : start "))
 
         self.parent.statusBar().clearMessage()
 
@@ -801,8 +795,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
         sqlserver_type_id   =   qdbu.get_db_id_from_dbid_title(sqlserver_type)
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("  [DBUtils_DBConnectorFormWidget][select_servertype]",sqlserver_type,sqlserver_type_id)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][select_servertype]",sqlserver_type,sqlserver_type_id))
 
         if(sqlserver_type_id == qdbu.MySql) : 
             dblibs   =   [qdbu.pymysql_library,qdbu.mysql_connector_library]
@@ -817,36 +811,36 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
         elif(sqlserver_type_id== qdbu.Custom) : 
             dblibs   =   [sqlserver_type]
         
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("  [DBUtils_DBConnectorFormWidget][select_servertype] dblibs : ",dblibs)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][select_servertype] dblibs : ",dblibs))
 
         self.dbconnector_form.reset_form_combobox_by_index(1,dblibs)
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("  [DBUtils_DBConnectorFormWidget][select_servertype] : end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][select_servertype] : end "))
 
     # -----------------------------------------------------------------#
     # -                     Select a SQLServerType                    -#
     # -----------------------------------------------------------------#
     def select_dblibrary(self) :
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("[DBUtils_DBConnectorFormWidget][select_dblibrary]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][select_dblibrary]"))
 
     # -----------------------------------------------------------------#
     # -                     Select a SQLServerType                    -#
     # -----------------------------------------------------------------#
     def get_dbconnectparms_from_form(self) :
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("[DBUtils_DBConnectorFormWidget][get_dbconnectparms_from_form]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][get_dbconnectparms_from_form]"))
 
         from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table
 
         current_selected_connector      =   dfc_dbconnectors_table.get_current_dbconnector(self.import_type)
         
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :
-            print("[DBUtils_DBConnectorFormWidget][get_dbconnectparms_from_form] current_selected_connector \n  ",current_selected_connector)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][get_dbconnectparms_from_form] current_selected_connector \n  ",current_selected_connector))
 
 
         if(not (current_selected_connector is None)) :
@@ -855,9 +849,9 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
         else :
             current_selected_server_type    =   None
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :    
-            print("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : current_selected_connector ",current_selected_connector)
-            print("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : current_selected_server_type ",current_selected_server_type)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : current_selected_connector ",current_selected_connector))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : current_selected_server_type ",current_selected_server_type))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
 
@@ -886,8 +880,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
                 Password                =   self.dbconnector_form.get_form_input_value_by_index(5)
                 dbconnectParms          =   [SQL_Server_Type_Id,db_library,Server_Name,Database,User,Password]
         
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS ) :    
-            print("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : dbconnectParms\n",dbconnectParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS") ) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][get_dbconnectparms_from_form] : dbconnectParms\n",dbconnectParms))
 
         return(dbconnectParms)
 
@@ -917,15 +911,15 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def test_db_connector_form(self) :
         
-        if(DEBUG_DBUTILS) :    
-            print("[DBUtilsDBConnectorsTableWidget][test_db_connector_form] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][test_db_connector_form] "))
 
         self.parent.statusBar().clearMessage()
 
         dbconnectParms  =  self.get_dbconnectparms_from_form() 
 
-        if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-            print("[DBUtilsDBConnectorsTableWidget][test_db_connector_form] : dbconnectParms\n",dbconnectParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][test_db_connector_form] : dbconnectParms\n",dbconnectParms))
         
         status_msg  =   common_test_db_connector(dbconnectParms)
 
@@ -941,26 +935,26 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
         self.parent.statusBar().showMessage(status_msg)
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_DBConnectorFormWidget][test_db_connector] end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][test_db_connector] end"))
     
     # -----------------------------------------------------------------#
     # -                     Save the DBConnector                      -#
     # -----------------------------------------------------------------#
     def save_db_connector_form(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n[DBUtils_DBConnectorFormWidget][save_db_connector_form] self.forCreate ",self.forCreate)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] self.forCreate ",self.forCreate))
 
         dbconnectParms  =   self.get_dbconnectparms_from_form() 
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-            print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconnectParms \n  ",dbconnectParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconnectParms \n  ",dbconnectParms))
 
         status_msg      =   common_test_db_connector(dbconnectParms)
         
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-            print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] status_msg : \n",status_msg)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] status_msg : \n",status_msg))
 
         continue_save   =   True
 
@@ -981,8 +975,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
         if(continue_save) :
 
-            if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-                print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] continue_save : ",continue_save)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] continue_save : ",continue_save))
 
             import dfcleanser.sw_utilities.db_utils as qdbu  
 
@@ -990,22 +984,22 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
 
                 if(self.forCreate) :
 
-                    if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-                        print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] before add : dbconnectParms : \n",dbconnectParms)
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] before add : dbconnectParms : \n",dbconnectParms))
  
                     qdbu.dfc_dbconnectors_table.add_dbconnector(dbconnectParms) 
 
                 else :
 
-                    if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-                        print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] before edit : dbconnectParms : \n",dbconnectParms)
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] before edit : dbconnectParms : \n",dbconnectParms))
 
                     dbconn_key  =   qdbu.dfc_dbconnectors_table.get_current_dbconnector_key(self.import_type)
                     dbconn      =   self.get_dbconnectparms_from_conparms(dbconnectParms)
 
-                    if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-                        print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconn_key : \n",dbconn_key)
-                        print("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconn: \n",dbconn)
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconn_key : \n",dbconn_key))
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] dbconn: \n",dbconn))
 
                     qdbu.dfc_dbconnectors_table.update_dbconnector(dbconn_key,dbconn)
 
@@ -1019,8 +1013,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
                 dlg.setStyleSheet("QLabel{min-width: 350px;}")
                 button = dlg.exec()
 
-                if(DEBUG_DBUTILS) :
-                    print("\n[DBUtils_DBConnectorFormWidget][save_db_connector_form] end ")
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] end "))
 
                 self.dbconTable.reload_data()
 
@@ -1033,8 +1027,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
                 from dfcleanser.sw_utilities.dfc_qt_model import display_exception
                 display_exception(title,status_msg,e)
                 
-                if(DEBUG_DBUTILS) :
-                    print("\n[DBUtils_DBConnectorFormWidget][save_db_connector_form] end ")
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][save_db_connector_form] end "))
 
                 self.return_from_db_connector_form()
     
@@ -1043,8 +1037,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def return_from_db_connector_form(self) :
 
-        if(DEBUG_DBUTILS_DBCON_FORM_DETAILS) :
-            print("[DBUtils_DBConnectorFormWidget][return_from_db_connector_form]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCON_FORM_DETAILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][return_from_db_connector_form]"))
 
         con_parms   =   [self.import_type,self.forCreate]
         self.parent.statusBar().clearMessage()
@@ -1060,8 +1054,8 @@ class DBUtils_DBConnectorFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def help_for_db_connector_form(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_DBConnectorFormWidget][help_for_db_connector_form]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][help_for_db_connector_form]"))
 
         self.parent.statusBar().clearMessage()
        
@@ -1135,8 +1129,8 @@ class DBUtilsTableNamesModel(QtCore.QAbstractTableModel):
         super(DBUtilsTableNamesModel, self).__init__()
 
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsTableNamesModel : init : ",tparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesModel : init : ",tparms))
 
         self._data          =   tparms[0]
         self.table_names    =   tparms[1]
@@ -1161,7 +1155,7 @@ class DBUtilsTableNamesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1215,21 +1209,21 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
         self.model              =   None
         self.table_headers      =   []
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtilsTablenNamesTable][init]",self.filetype,"\n  dbcondict : \n    ",self.dbcondict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][init]",self.filetype,"\n  dbcondict : \n    ",self.dbcondict))
 
         self.init_tableview()
 
         self.doubleClicked.connect(self.select_table_name)
 
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsTablenNamesTable] : init_tableview done")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable] : init_tableview done"))
 
 
     def reload_table_names_data(self) :
         
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsTablenNamesTable][reload_column_names_data]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][reload_column_names_data]"))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict           =   qdbu.get_current_dbcondict(0)
@@ -1237,14 +1231,14 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
         
         tdata   =   self.load_columns_data()
 
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsTablenNamesTable][reload_table_names_data] : tdata",tdata)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][reload_table_names_data] : tdata",tdata))
 
         self.model.reload_data(tdata)
         self.size_table(tdata)
         
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsTablenNamesTable][reload_column_names_data] : end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][reload_column_names_data] : end"))
 
     # -----------------------------------------------------------------#
     # -                 Initialize the tableview                      -#
@@ -1252,29 +1246,29 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-            print("  [DBUtilsTablenNamesTable] : init_tableview")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         self.dbtablesdata     =   self.load_tables_data()
         
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-           print("  [DBUtilsTablenNamesTable][init_tableview] :\n  ",self.dbtablesdata,self.model)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][init_tableview] :\n  ",self.dbtablesdata,self.model))
 
         if(self.model is None) :
             
             cparms  =   [self.dbtablesdata, self.table_headers] 
 
-            if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-                print("  [DBUtilsTablenNamesTable][init_tableview] cparms:\n  ",cparms)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][init_tableview] cparms:\n  ",cparms))
 
             self.model =    DBUtilsTableNamesModel(cparms)
             self.setModel(self.model)
 
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-           print("  [DBUtilsTablenNamesTable][init_tableview] : num rows ",len(self.dbtablesdata))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][init_tableview] : num rows ",len(self.dbtablesdata)))
 
         self.size_table(self.dbtablesdata)
 
@@ -1309,8 +1303,8 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_tables_data(self) :
 
-        if(DEBUG_DBUTILS) :
-           print("    [DBUtilsTablenNamesTable][load_tables_data] :")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTablenNamesTable][load_tables_data] :"))
 
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -1327,10 +1321,10 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
             data_row.append(tableslist[i])
             data.append(data_row)
 
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-            print("  [DBUtilsTableNamesTable][load_tables_data] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][load_tables_data] "))
             for i in range(len(data)) :
-                print("  data[",i,"] : ",data[i])
+                add_debug_to_log("DBUtilsWidgets",print_to_string("  data[",i,"] : ",data[i]))
 
         self.table_headers     =   ["Table Names"]
         self.table_widths      =   [280]
@@ -1343,50 +1337,42 @@ class DBUtilsTableNamesTable(QtWidgets.QTableView):
 
     def select_table_name(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtilsTableNamesTable][select_table_name]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][select_table_name]"))
 
         for idx in self.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-            print("  [DBUtilsTableNamesTable][select_table_name]",row_number,column_number)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][select_table_name]",row_number,column_number))
 
         tdata   =   self.model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :    
-            print("  [DBUtilsTableNamesTable][select_table_name] cell : [",cell,"]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][select_table_name] cell : [",cell,"]"))
 
         self.parent.set_table_name(cell)
 
-    #def set_table_name(self,tablename) :
+     def size_table(self,tabledata) :
 
-    #    if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-    #        print("  [DBUtilsColumnNamesTable][set_table_name]",tablename)
-
-    #    new_col_names   =   [tablename]
-    #    self.model.change_col_names(new_col_names)
-    
-    def size_table(self,tabledata) :
-
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-            print("  [DBUtilsTableNamesTable][size_table]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][size_table]"))
 
         self.num_rows   =   len(tabledata)
         
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :    
-            print("  [DBUtilsTableNamesTable] self.num_rows",self.num_rows)
-            print("  [DBUtilsTableNamesTable] tabledata \n    ",tabledata)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable] self.num_rows",self.num_rows))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable] tabledata \n    ",tabledata))
          
         if(self.num_rows < 10) :
             new_height  =   30 + (self.num_rows * DEFAULT_ROW_HEIGHT)
         else :
             new_height  =   30 + (10 * DEFAULT_ROW_HEIGHT)
         
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-           print("  [DBUtilsTableNamesTable][init_tableview] : new_height ",new_height)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsTableNamesTable][init_tableview] : new_height ",new_height))
 
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
@@ -1409,27 +1395,27 @@ class DBUtils_TableNamesWidget(QtWidgets.QWidget) :
 
         super().__init__()
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_TableNamesWidget][init] : init")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init] : init"))
 
         self.parent         =   dbparms[0]
         self.dbcondict      =   dbparms[1]
         self.filetype       =   dbparms[2]
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_TableNamesWidget][init] : self.dbcondict : \n    ",self.dbcondict)
-            print("  [DBUtils_TableNamesWidget][init] : self.filetype : ",self.filetype)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init] : self.dbcondict : \n    ",self.dbcondict))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init] : self.filetype : ",self.filetype))
 
         self.init_content()
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_TableNamesWidget][init] : end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init] : end"))
 
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("[DBUtils_TableNamesWidget][init_content]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init_content]"))
 
         table_title             =   "\n\nTable Names\n"
         self.table_width        =   280
@@ -1475,14 +1461,14 @@ class DBUtils_TableNamesWidget(QtWidgets.QWidget) :
 
         self.setLayout(self.table_namesWidgetLayout)
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("[DBUtils_TableNamesWidget][init_content] end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][init_content] end"))
 
 
     def reload_tables(self,filetype) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_TableNamesWidget][reload_tables] : ",filetype)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][reload_tables] : ",filetype))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict           =   qdbu.get_current_dbcondict(0)
@@ -1495,8 +1481,8 @@ class DBUtils_TableNamesWidget(QtWidgets.QWidget) :
 
         self.set_dbcon_parms(True)
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_ColumnNamesWidget][reload_columns] : end \n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][reload_columns] : end \n"))
 
 
     def set_dbcon_parms(self,Reset_Names) :
@@ -1506,8 +1492,8 @@ class DBUtils_TableNamesWidget(QtWidgets.QWidget) :
             dbconDict           =   qdbu.get_current_dbcondict(0)
             self.dbcondict      =   dbconDict         
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_TableNamesWidget][set_dbcon_parms] : ",Reset_Names,"\n  ",self.dbcondict)  
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_TableNamesWidget][set_dbcon_parms] : ",Reset_Names,"\n  ",self.dbcondict))  
 
         import dfcleanser.sw_utilities.db_utils as qdbu
 
@@ -1610,8 +1596,8 @@ class DBUtilsColumnNamesModel(QtCore.QAbstractTableModel):
         super(DBUtilsColumnNamesModel, self).__init__()
 
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesModel : init : ",cparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesModel : init : ",cparms))
 
         self._data          =   cparms[0]
         self.column_names   =   cparms[1]
@@ -1643,7 +1629,7 @@ class DBUtilsColumnNamesModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
+
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -1698,39 +1684,39 @@ class DBUtilsColumnNamesTable(QtWidgets.QTableView):
         self.model              =   None
         self.column_headers     =   []
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtilsColumnNamesTable][init]",self.table,self.filetype,"\n  dbcondict : \n    ",self.dbcondict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][init]",self.table,self.filetype,"\n  dbcondict : \n    ",self.dbcondict))
 
         self.init_tableview()
 
         self.doubleClicked.connect(self.select_column_name)
 
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsColumnNamesTable] : init_tableview done")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable] : init_tableview done"))
 
 
     def reload_column_names_data(self) :
         
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsColumnNamesTable][reload_column_names_data]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][reload_column_names_data]"))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict           =   qdbu.get_current_dbcondict(0)
         self.dbcondict      =   dbconDict         
         
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsColumnNamesTable][reload_column_names_data] : table ",self.table)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][reload_column_names_data] : table ",self.table))
 
         tdata   =   self.load_columns_data()
 
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsColumnNamesTable][reload_column_names_data] : tdata",tdata)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][reload_column_names_data] : tdata",tdata))
 
         self.model.reload_data(tdata)
         self.size_table(tdata)
         
-        if(DEBUG_DBUTILS) :
-            print("    [DBUtilsColumnNamesTable][reload_column_names_data] : end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][reload_column_names_data] : end"))
 
     # -----------------------------------------------------------------#
     # -                 Initialize the tableview                      -#
@@ -1738,29 +1724,29 @@ class DBUtilsColumnNamesTable(QtWidgets.QTableView):
         
     def init_tableview(self):
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable] : init_tableview")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable] : init_tableview"))
 
         #-----------------------------------------#
         #   load data into the tableview model    #
         #-----------------------------------------#
         self.dbcolumnsdata     =   self.load_columns_data()
         
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-           print("  [DBUtilsColumnNamesTable][init_tableview] :\n  ",self.dbcolumnsdata,self.model)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][init_tableview] :\n  ",self.dbcolumnsdata,self.model))
 
         if(self.model is None) :
             
             cparms  =   [self.dbcolumnsdata, self.column_headers] 
 
-            if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-                print("  [DBUtilsColumnNamesTable][init_tableview] cparms:\n  ",cparms)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][init_tableview] cparms:\n  ",cparms))
 
             self.model =    DBUtilsColumnNamesModel(cparms)
             self.setModel(self.model)
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-           print("  [DBUtilsColumnNamesTable][init_tableview] : num rows ",len(self.dbcolumnsdata))
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][init_tableview] : num rows ",len(self.dbcolumnsdata)))
 
         self.size_table(self.dbcolumnsdata)
 
@@ -1795,8 +1781,8 @@ class DBUtilsColumnNamesTable(QtWidgets.QTableView):
     # -----------------------------------------------------------------#
     def load_columns_data(self) :
 
-        if(DEBUG_DBUTILS) :
-           print("    [DBUtilsColumnNamesTable][load_columns_data] : table : ",self.table)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][load_columns_data] : table : ",self.table))
 
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
@@ -1813,10 +1799,10 @@ class DBUtilsColumnNamesTable(QtWidgets.QTableView):
             data_row.append(columnslist[i])
             data.append(data_row)
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable][load_columns_data] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][load_columns_data] "))
             for i in range(len(data)) :
-                print("  data[",i,"] : ",data[i])
+                add_debug_to_log("DBUtilsWidgets",print_to_string("  data[",i,"] : ",data[i]))
 
         from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT
         if(self.filetype==SQLTABLE_IMPORT) :
@@ -1834,50 +1820,50 @@ class DBUtilsColumnNamesTable(QtWidgets.QTableView):
 
     def select_column_name(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable][select_column_name]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][select_column_name]"))
 
         for idx in self.selectionModel().selectedIndexes():
             row_number = int(idx.row())
             column_number = int(idx.column())
                 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable][select_column_name]",row_number,column_number)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][select_column_name]",row_number,column_number))
 
         tdata   =   self.model.get_data()
         cell    =   tdata[row_number][column_number]
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :    
-            print("  [DBUtilsColumnNamesTable][select_column_name] cell : [",cell,"]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][select_column_name] cell : [",cell,"]"))
 
         self.parent.add_column_name(cell)
 
     def set_table_name(self,tablename) :
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable][set_table_name]",tablename)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][set_table_name]",tablename))
 
         new_col_names   =   [tablename]
         self.model.change_col_names(new_col_names)
     
     def size_table(self,tabledata) :
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtilsColumnNamesTable][size_table]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][size_table]"))
 
         self.num_rows   =   len(tabledata)
         
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :    
-            print("  [DBUtilsColumnNamesTable] self.num_rows",self.num_rows)
-            print("  [DBUtilsColumnNamesTable] tabledata \n    ",tabledata)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable] self.num_rows",self.num_rows))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable] tabledata \n    ",tabledata))
          
         if(self.num_rows < 10) :
             new_height  =   30 + (self.num_rows * DEFAULT_ROW_HEIGHT)
         else :
             new_height  =   30 + (10 * DEFAULT_ROW_HEIGHT)
         
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-           print("  [DBUtilsColumnNamesTable][init_tableview] : new_height ",new_height)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+           add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsColumnNamesTable][init_tableview] : new_height ",new_height))
 
         self.setMinimumHeight(new_height)
         self.setMaximumHeight(new_height)
@@ -1900,29 +1886,29 @@ class DBUtils_ColumnNamesWidget(QtWidgets.QWidget) :
 
         super().__init__()
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_ColumnNamesWidget][init] : init")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init] : init"))
 
         self.parent         =   dbparms[0]
         self.table          =   dbparms[1]
         self.dbcondict      =   dbparms[2]
         self.filetype       =   dbparms[3]
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_ColumnNamesWidget][init] : self.table : ",self.table)
-            print("  [DBUtils_ColumnNamesWidget][init] : self.dbcondict : \n    ",self.dbcondict)
-            print("  [DBUtils_ColumnNamesWidget][init] : self.filetype : ",self.filetype)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init] : self.table : ",self.table))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init] : self.dbcondict : \n    ",self.dbcondict))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init] : self.filetype : ",self.filetype))
 
         self.init_content()
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_ColumnNamesWidget][init] : end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init] : end"))
 
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("[DBUtils_ColumnNamesWidget][init_content]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init_content]"))
 
         table_title             =   "\n\nTable '" + self.table + "' Column Names\n"
         self.table_width        =   280
@@ -1978,14 +1964,14 @@ class DBUtils_ColumnNamesWidget(QtWidgets.QWidget) :
 
         self.setLayout(self.column_namesWidgetLayout)
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("[DBUtils_ColumnNamesWidget][init_content] end")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][init_content] end"))
 
 
     def reload_columns(self,table_name,filetype) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_ColumnNamesWidget][reload_columns] : ",table_name,filetype)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][reload_columns] : ",table_name,filetype))
 
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict           =   qdbu.get_current_dbcondict(0)
@@ -2001,8 +1987,8 @@ class DBUtils_ColumnNamesWidget(QtWidgets.QWidget) :
 
         self.set_dbcon_parms(True)
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_ColumnNamesWidget][reload_columns] : end \n")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][reload_columns] : end \n"))
 
 
     def set_dbcon_parms(self,Reset_Names) :
@@ -2012,8 +1998,8 @@ class DBUtils_ColumnNamesWidget(QtWidgets.QWidget) :
             dbconDict           =   qdbu.get_current_dbcondict(0)
             self.dbcondict      =   dbconDict         
 
-        if(DEBUG_DBUTILS_SQL_FORM_COL_NAMES) :
-            print("  [DBUtils_ColumnNamesWidget][set_dbcon_parms] : ",Reset_Names,"\n  ",self.dbcondict)  
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_COL_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_ColumnNamesWidget][set_dbcon_parms] : ",Reset_Names,"\n  ",self.dbcondict))  
 
         import dfcleanser.sw_utilities.db_utils as qdbu
 
@@ -2097,16 +2083,6 @@ class DBUtils_ColumnNamesWidget(QtWidgets.QWidget) :
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 
-
-
-
-
-
-
-
-
-
-
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -                 SQL Import Form Widgets                       -#
@@ -2141,22 +2117,22 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
         else :
             self.add_flag           =   ADD_TO_INDEX
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLImportFormWidget][init] : build_filetypes : len(tablenames) : ",self.build_filetype,len(self.tablenames))
-            print("  [DBUtils_SQLImportFormWidget][init] : self.cfg_parms  : \n    ",self.cfg_parms )
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init] : build_filetypes : len(tablenames) : ",self.build_filetype,len(self.tablenames)))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init] : self.cfg_parms  : \n    ",self.cfg_parms ))
         
-        if(DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES) :
-            print("  [DBUtils_SQLImportFormWidget][init] :tablenames : ",self.tablenames)    
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_TABLE_NAMES")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init] :tablenames : ",self.tablenames))    
         
         self.init_content()
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLImportFormWidget] done : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget] done : "))
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("  [DBUtils_SQLImportFormWidget][init_content]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content]"))
 
         selectDicts     =   []
         
@@ -2171,8 +2147,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
                 import_df_titles    =   DIM.get_dftitles_list(DIM.IMPORT_HISTORY,self.build_filetype)
                                 
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLImportFormWidget][init_content] : import_df_titles \n    ",import_df_titles)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : import_df_titles \n    ",import_df_titles))
         
                 if(not (import_df_titles) is None) :
                     last_df_title   =   DIM.get_last_dftitle(DIM.SQLTABLE_IMPORT,import_df_titles)
@@ -2186,8 +2162,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
                 selectDicts.append(df_titles)
             
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLImportFormWidget][init_content] : df_titles \n    ",df_titles)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : df_titles \n    ",df_titles))
 
             if(self.tablenames is None) :
                 table_names     =   {"default":"","list":[""]}
@@ -2213,8 +2189,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
                 selectDicts.append(strftimesel)
 
 
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLImportFormWidget][init_content] : selectDicts ",len(selectDicts))
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : selectDicts ",len(selectDicts)))
 
             if(self.build_filetype==DIM.SQLTABLE_IMPORT) :
 
@@ -2247,8 +2223,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
             form_parms.append(form_title)
             form_parms.append(form_width) 
 
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLImportFormWidget][init_content] : len(form_parms) ",len(form_parms))
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : len(form_parms) ",len(form_parms)))
 
             from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget, SMALL
             if(self.build_filetype==DIM.SQLTABLE_IMPORT) :
@@ -2274,8 +2250,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     
     def load_sql_form_values(self, cfgparms) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("[DBUtils_SQLImportFormWidget][load_form_values] \n    ",cfgparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][load_form_values] \n    ",cfgparms))
         
         self.cfg_parms          =   cfgparms
         self.import_form.load_form_values(self.cfg_parms) 
@@ -2283,8 +2259,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
     def add_column_to_form(self, colname) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("[DBUtils_SQLImportFormWidget][add_column_to_form] : colname : ",colname)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][add_column_to_form] : colname : ",colname))
 
         from dfcleanser.Qt.data_import.DataImportModel import  SQLTABLE_IMPORT
         if(self.build_filetype==SQLTABLE_IMPORT) :
@@ -2300,8 +2276,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
         list_str        =   self.import_form.get_form_input_value_by_index(colid)
         
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("[DBUtils_SQLImportFormWidget][add_column_to_form] : colid : list_str : ",colid,list_str)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][add_column_to_form] : colid : list_str : ",colid,list_str))
 
         if(len(list_str) > 0) :
 
@@ -2313,8 +2289,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
             val_list    =   [colname]
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("[DBUtils_SQLImportFormWidget][add_column_to_form] : val_lis : ",val_list)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][add_column_to_form] : val_lis : ",val_list))
 
         val_list_str    =   "["
         for i in range(len(val_list)) :
@@ -2332,24 +2308,24 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def update_import_sqltable_df(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLImportFormWidget][update_import_sqltable_df] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][update_import_sqltable_df] "))
 
         df_title    =   self.import_form.get_form_input_value_by_index(1)
         self.import_form.set_form_input_value_by_index(0,df_title)
 
     def import_sqltable_get_tables(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("  [DBUtils_SQLImportFormWidget][import_sqltable_get_tables] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqltable_get_tables] "))
 
         table_name    =   self.import_form.get_form_input_value_by_index(2)
         self.parent.columnsWidget.reload_columns(table_name,self.build_filetype)
 
     def import_sqltable_set_date_format(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("  [DBUtils_SQLImportFormWidget][import_sqltable_set_date_format] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqltable_set_date_format] "))
 
         sformat    =   self.import_form.get_form_input_value_by_index(8)
         self.import_form.set_form_input_value_by_index(7,sformat)
@@ -2359,8 +2335,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def import_sqltable(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLImportFormWidget][import_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqltable] "))
 
         num_form_values     =   11
         form_parms          =   []
@@ -2368,8 +2344,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
         for i in range(num_form_values) :
             form_parms.append(self.import_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLImportFormWidget][import_sqltable] form_parms : \n  ",form_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqltable] form_parms : \n  ",form_parms))
 
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import SQLTABLE_IMPORT
@@ -2378,39 +2354,39 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
     def set_sql_table_columns_col(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLImportFormWidget][set_sql_table_columns_col] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][set_sql_table_columns_col] "))
 
         self.add_flag           =   ADD_TO_COLUMNS
         self.parent.update_table_name(self.add_flag)
 
     def set_sql_table_index_col(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLImportFormWidget][set_sql_table_index_col] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][set_sql_table_index_col] "))
 
         self.add_flag           =   ADD_TO_INDEX
         self.parent.update_table_name(self.add_flag)
 
     def set_sql_table_parse_dates(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][set_sql_table_parse_dates] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][set_sql_table_parse_dates] "))
 
         self.add_flag           =   ADD_TO_PARSE_DATES
         self.parent.update_table_name(self.add_flag)
 
     def return_from_import_sqltable(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][return_from_import_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][return_from_import_sqltable] "))
 
         self.parent.display_parent.display_import_histories() 
 
     def help_import_sqltable(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][help_import_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][help_import_sqltable] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SQLTABLE_IMPORT_URL
@@ -2422,16 +2398,16 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def update_import_sqlquery_df(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][update_import_sqlquery_df] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][update_import_sqlquery_df] "))
 
         df_title    =   self.import_form.get_form_input_value_by_index(1)
         self.import_form.set_form_input_value_by_index(0,df_title)
     
     def import_sqlquery_get_tables(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][import_sqlquery_get_tables] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqlquery_get_tables] "))
 
         table_name    =   self.import_form.get_form_input_value_by_index(3)
         self.parent.columnsWidget.reload_columns(table_name,self.build_filetype)
@@ -2439,8 +2415,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     
     def import_sqlquery_set_date_format(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][import_sqlquery_set_date_format] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqlquery_set_date_format] "))
 
         sformat    =   self.import_form.get_form_input_value_by_index(9)
         self.import_form.set_form_input_value_by_index(8,sformat)
@@ -2450,8 +2426,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def import_sqlquery(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLImportFormWidget][import_sqlquery] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqlquery] "))
 
 
         num_form_values     =   self.import_form.get_form_fields_count()
@@ -2460,8 +2436,8 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
         for i in range(num_form_values) :
             form_parms.append(self.import_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLImportFormWidget][import_sqlquery] form_parms : \n  ",form_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][import_sqlquery] form_parms : \n  ",form_parms))
 
         from dfcleanser.Qt.data_import.DataImportControl import process_import_form
         from dfcleanser.Qt.data_import.DataImportModel import SQLQUERY_IMPORT
@@ -2470,31 +2446,31 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
     def set_sql_query_index_col(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][set_sql_query_index_col] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][set_sql_query_index_col] "))
 
         self.add_flag           =   ADD_TO_INDEX
         self.parent.update_table_name(self.add_flag)
 
     def set_sql_query_parse_dates(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][set_sql_query_parse_dates] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][set_sql_query_parse_dates] "))
 
         self.add_flag           =   ADD_TO_PARSE_DATES
         self.parent.update_table_name(self.add_flag)
 
     def return_from_import_sqlquery(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][return_from_import_sqlquery] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][return_from_import_sqlquery] "))
 
         self.parent.display_parent.display_import_histories() 
 
     def help_import_sqlquery(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLImportFormWidget][help_import_sqlquery] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][help_import_sqlquery] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SQLQUERY_IMPORT_URL
@@ -2512,14 +2488,14 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
         self.build_filetype     =   sqlimpparms[1]
         self.formvals           =   sqlimpparms[2]
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLImportInputFormWidget][init] : self.build_filetype : dbid : ",self.build_filetype)
-            print("  [DBUtils_SQLImportInputFormWidget][init] : self.formvals : \n  ",self.formvals)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][init] : self.build_filetype : dbid : ",self.build_filetype))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][init] : self.formvals : \n  ",self.formvals))
 
         self.init_content()
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLImportInputFormWidget][init] : end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][init] : end "))
 
     def init_content(self) :
 
@@ -2533,8 +2509,8 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
             formparms           =   [self,self.build_filetype,self.tableslist,self.formvals]
             self.sqlformWidget  =   DBUtils_SQLImportFormWidget(formparms)
         
-            if(DEBUG_DBUTILS_SQL_FORM_DETAILS) :
-                print("[DBUtils_SQLImportInputFormWidget][init_content] : built widgets : \n  ",self.columnsWidget," \n  ",self.sqlformWidget)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_DETAILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][init_content] : built widgets : \n  ",self.columnsWidget," \n  ",self.sqlformWidget))
 
             from PyQt5.QtWidgets import QHBoxLayout
             self.sqlimportformWidgetLayout     =   QHBoxLayout()
@@ -2545,8 +2521,8 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
             self.setLayout(self.sqlimportformWidgetLayout)
             self.resize(1070,1000)
 
-            if(DEBUG_DBUTILS_SQL_FORM_DETAILS) :
-                print("[DBUtils_SQLImportInputFormWidget][init_content] : self.sqlimportformWidgetLayout geometries : \n  ",self.sqlimportformWidgetLayout.geometry())
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_DETAILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][init_content] : self.sqlimportformWidgetLayout geometries : \n  ",self.sqlimportformWidgetLayout.geometry()))
 
         #else :
 
@@ -2556,8 +2532,8 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict   =   qdbu.get_current_dbcondict(qdbu.IMPORT_FLAG)
         
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : dbconDict : \n  ",dbconDict)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : dbconDict : \n  ",dbconDict))
 
         try :
 
@@ -2566,9 +2542,9 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
         
             if(opstat.get_status()) :
 
-                if(DEBUG_DBUTILS) :
-                    print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : tableslist :  ",len(self.tableslist),self.tableslist[0])
-                    print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : self.formvals[2] :  ",self.formvals[2])
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : tableslist :  ",len(self.tableslist),self.tableslist[0]))
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : self.formvals[2] :  ",self.formvals[2]))
 
                 if(self.tableslist is None) :
                     current_table   =   None
@@ -2588,22 +2564,6 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
 
                     else :
                         
-                        """
-                        warning_msg     =   "form import parm 'table : " + "'" + self.formvals[2] +  "'" + "not found in connected database.<br><br>"
-                        warning_msg1    =   "Verify you are connected to the correct database to find the <br> " + "'" + self.formvals[2] +  "'" + " table.<br><br>"  
-                        warning_msg2    =   "Do you want to continue with the current dbconnector and <br> replace the " + "'" + self.formvals[2] +  "'"+ " table parm?.<br>"                                              
-
-                        from PyQt5.QtWidgets import QMessageBox
-                        dlg = QMessageBox()
-                        dlg.setTextFormat(Qt.RichText)
-                        dlg.setWindowTitle("dfcleanser import warning")
-                        text_msg    =   warning_msg + warning_msg1 + warning_msg2
-                        dlg.setText(text_msg)
-                        dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                        dlg.setStyleSheet("QLabel{min-width: 350px;}")
-            
-                        button = dlg.exec()
-                        """
                         if(1):#button == QMessageBox.Yes) :
 
                             self.formvals[2]    =   self.tableslist[0]
@@ -2614,9 +2574,9 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
                             opstat.set_status(False)
                             return(opstat)
 
-                if(DEBUG_DBUTILS) :
-                    print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : self.formvals[2] :  ",self.formvals[2])
-                    print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : current_table :  ",current_table)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : self.formvals[2] :  ",self.formvals[2]))
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : current_table :  ",current_table))
 
                 if(not (reload_flag)) :
 
@@ -2628,8 +2588,8 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
                     self.columnsWidget.reload_columns(current_table,self.build_filetype)
                     self.columnsWidget.set_dbcon_parms(True)
 
-                    if(DEBUG_DBUTILS) :
-                        print("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : done :  ")
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][set_form_table_col_values] : done :  "))
 
             else :
 
@@ -2662,9 +2622,9 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
         self.build_filetype     =   formvals[1]
         self.formvals           =   formvals[2]
 
-        if(DEBUG_DBUTILS) :
-             print("\n[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : self.build_filetype : ",self.build_filetype)
-             print("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : formvals : \n  ",self.formvals)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : self.build_filetype : ",self.build_filetype))
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : formvals : \n  ",self.formvals))
 
         self.set_form_table_col_values(True,opstat)  
 
@@ -2680,28 +2640,28 @@ class DBUtils_SQLImportInputFormWidget(QtWidgets.QWidget) :
         
             if(opstat.get_status()) :
 
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : new tableslist :  ",len(tableslist),tableslist[0])
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : new tableslist :  ",len(tableslist),tableslist[0]))
 
                 self.tableslist     =   tableslist
                 self.sqlformWidget.import_form.reset_form_combobox_by_index(2,self.tableslist)
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : end : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : end : "))
 
        
     def add_column_name(self, colname) :
 
-        if(DEBUG_DBUTILS) :
-             print("[DBUtils_SQLImportInputFormWidget][add_column_name] : colname : ",colname)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][add_column_name] : colname : ",colname))
 
         self.sqlformWidget.add_column_to_form(colname)
         
 
     def update_table_name(self, addflag) :
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_SQLImportInputFormWidget][update_table_name] : addflag : ",addflag)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][update_table_name] : addflag : ",addflag))
 
         if(self.sqlformWidget.add_flag == ADD_TO_COLUMNS)   : new_table_name  =   "'columns' Columns"
         elif(self.sqlformWidget.add_flag == ADD_TO_INDEX)   : new_table_name  =   "'index_col' Columns"
@@ -2744,19 +2704,19 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
         self.build_filetype     =   sqlimpparms[1]
         self.cfg_parms          =   sqlimpparms[2]
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLExportFormWidget][init] : build_filetype : : ",self.build_filetype)
-            print("  [DBUtils_SQLExortFormWidget][init] : self.cfg_parms  : \n    ",self.cfg_parms )
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init] : build_filetype : : ",self.build_filetype))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExortFormWidget][init] : self.cfg_parms  : \n    ",self.cfg_parms ))
         
         self.init_content()
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLExportFormWidget] done : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget] done : "))
 
     def init_content(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("  [DBUtils_SQLExportFormWidget][init_content]")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content]"))
 
         selectDicts     =   []
         
@@ -2770,8 +2730,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
             from dfcleanser.common.cfg import get_dfc_dataframes_titles_list
             active_dfs      =   get_dfc_dataframes_titles_list()
                                 
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLExportFormWidget][init_content] : active_dfs \n    ",active_dfs)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : active_dfs \n    ",active_dfs))
         
             if(active_dfs is None) :
                 df_titles           =   {"default":"","list":[""]}
@@ -2780,8 +2740,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
 
             selectDicts.append(df_titles)
             
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLExportFormWidget][init_content] : df_titles \n    ",df_titles)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : df_titles \n    ",df_titles))
 
             if_exists   =   {"default":"fail","list":["fail","replace","append"]}
             selectDicts.append(if_exists)
@@ -2792,10 +2752,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
             methods     =   {"default":"None","list":["None","'multi'","'callable'"]}
             selectDicts.append(methods)
 
-
-
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLExportFormWidget][init_content] : selectDicts ",len(selectDicts))
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : selectDicts ",len(selectDicts)))
 
             if(self.build_filetype==DEM.SQLTABLE_EXPORT) :
 
@@ -2818,14 +2776,14 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
             form_parms.append(form_title)
             form_parms.append(form_width) 
 
-            if(DEBUG_DBUTILS) :
-                print("[DBUtils_SQLExportFormWidget][init_content] : len(form_parms) ",len(form_parms))
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : len(form_parms) ",len(form_parms)))
 
             from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget, SMALL
             self.export_form     =   dfcleanser_input_form_Widget(form_parms,SMALL)
 
-            if(DEBUG_DBUTILS) :
-                print("[DBUtils_SQLExportFormWidget][init_content] : form built ")
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : form built "))
 
     
         except Exception as e:
@@ -2845,8 +2803,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
     
     def load_sql_form_values(self, cfgparms) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("[DBUtils_SQLExportFormWidget][load_form_values] \n    ",cfgparms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][load_form_values] \n    ",cfgparms))
         
         self.cfg_parms          =   cfgparms
         self.export_form.load_form_values(self.cfg_parms) 
@@ -2859,8 +2817,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
     
     def update_export_sqltable_df(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLExportFormWidget][update_export_sqltable_df] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][update_export_sqltable_df] "))
 
         df_title    =   self.export_form.get_form_input_value_by_index(0)
         self.export_form.set_form_input_value_by_index(1,df_title)
@@ -2872,8 +2830,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
     # -----------------------------------------------------------------#
     def export_sqltable(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLExportFormWidget][export_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][export_sqltable] "))
 
         num_form_values     =   9
         form_parms          =   []
@@ -2881,8 +2839,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
         for i in range(num_form_values) :
             form_parms.append(self.export_form.get_form_input_value_by_index(i))
 
-        if(DEBUG_DBUTILS) :
-            print("[DBUtils_SQLExportFormWidget][export_sqltable] form_parms : \n  ",form_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][export_sqltable] form_parms : \n  ",form_parms))
 
         from dfcleanser.Qt.data_export.DataExportControl import process_export_form
         from dfcleanser.Qt.data_export.DataExportModel import SQLTABLE_EXPORT
@@ -2890,8 +2848,8 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
 
     def clear_export_sqltable(self) :
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLImportFormWidget][clear_export_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][clear_export_sqltable] "))
 
         total_values    =   self.export_form.get_form_fields_count()
 
@@ -2900,15 +2858,15 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
  
     def return_from_export_sqltable(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLExportFormWidget][return_from_export_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][return_from_export_sqltable] "))
 
         self.parent.display_parent.display_export_histories() 
 
     def help_export_sqltable(self) :
 
-        if(DEBUG_DBUTILS_SQL_FORM) :
-            print("\n  [DBUtils_SQLExportFormWidget][help_export_sqltable] ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][help_export_sqltable] "))
 
         from dfcleanser.common.common_utils import display_url
         from dfcleanser.common.help_utils import SQLTABLE_EXPORT_URL
@@ -2926,21 +2884,19 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
         self.build_filetype     =   sqlimpparms[1]
         self.formvals           =   sqlimpparms[2]
 
-        if(DEBUG_DBUTILS) :
-            print("\n  [DBUtils_SQLExportInputFormWidget][init] : self.build_filetype : ",self.build_filetype)
-            print("  [DBUtils_SQLExportInputFormWidget][init] : self.formvals : \n  ",self.formvals)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][init] : self.build_filetype : ",self.build_filetype))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][init] : self.formvals : \n  ",self.formvals))
 
         self.init_content()
         
-        if(DEBUG_DBUTILS) :
-            print("  [DBUtils_SQLExportInputFormWidget][init] : end ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][init] : end "))
 
     def init_content(self) :
 
         from dfcleanser.common.common_utils import opStatus
         opstat = opStatus()
-
-        #self.set_form_table_values(False,opstat)
 
         import dfcleanser.sw_utilities.db_utils as qdbu
         dbconDict   =   qdbu.get_current_dbcondict(qdbu.EXPORT_FLAG)
@@ -2954,7 +2910,7 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
             formparms           =   [self,self.build_filetype,self.formvals]
             self.sqlformWidget  =   DBUtils_SQLExportFormWidget(formparms)
         
-            if(DEBUG_DBUTILS_SQL_FORM_DETAILS) :
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_DETAILS")) :
                 print("[DBUtils_SQLExportInputFormWidget][init_content] : built widgets : \n  ",self.columnsWidget," \n  ",self.sqlformWidget)
 
             from PyQt5.QtWidgets import QHBoxLayout
@@ -2966,8 +2922,8 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
             self.setLayout(self.sqlexportformWidgetLayout)
             self.resize(1070,1000)
 
-            if(DEBUG_DBUTILS_SQL_FORM_DETAILS) :
-                print("  [DBUtils_SQLExportInputFormWidget][init_content] : self.sqlimportformWidgetLayout geometries : \n  ",self.sqlexportformWidgetLayout.geometry())
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_SQL_FORM_DETAILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][init_content] : self.sqlimportformWidgetLayout geometries : \n  ",self.sqlexportformWidgetLayout.geometry()))
 
         #else :
 
@@ -2979,17 +2935,17 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
             import dfcleanser.sw_utilities.db_utils as qdbu
             dbconDict   =   qdbu.get_current_dbcondict(qdbu.EXPORT_FLAG)
         
-            if(DEBUG_DBUTILS) :
-                print("  [DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : dbconDict : \n  ",dbconDict)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : dbconDict : \n  ",dbconDict))
 
             from dfcleanser.sw_utilities.db_utils import  get_table_names 
             self.tableslist =   get_table_names(dbconDict, opstat)
         
             if(opstat.get_status()) :
 
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : tableslist :  ",len(self.tableslist),self.tableslist[0])
-                    print("  [DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : self.formvals[1] :  ",self.formvals[1])
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : tableslist :  ",len(self.tableslist),self.tableslist[0]))
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_col_values] : self.formvals[1] :  ",self.formvals[1]))
 
                 if(self.tableslist is None) :
                     current_table   =   None
@@ -3013,9 +2969,9 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
                         self.formvals[1]    =   self.tableslist[0]
                         current_table       =   self.tableslist[0] 
 
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLExportInputFormWidget][set_form_table_values] : self.formvals[2] :  ",self.formvals[1])
-                    print("  [DBUtils_SQLExportInputFormWidget][set_form_table_values] : current_table :  ",current_table)
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_values] : self.formvals[2] :  ",self.formvals[1]))
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_values] : current_table :  ",current_table))
 
                 if(not (reload_flag)) :
 
@@ -3027,8 +2983,8 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
                     self.tablesWidget.reload_tables(self.build_filetype)
                     self.tablesWidget.set_dbcon_parms(True)
 
-                    if(DEBUG_DBUTILS) :
-                        print("  [DBUtils_SQLExportInputFormWidget][set_form_table_values] : done :  ")
+                    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_form_table_values] : done :  "))
 
             else :
 
@@ -3061,9 +3017,9 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
         self.build_filetype     =   formvals[1]
         self.formvals           =   formvals[2]
 
-        if(DEBUG_DBUTILS) :
-             print("\n  [DBUtils_SQLExportInputFormWidget][reload_sql_export_form_values] : self.build_filetype : ",self.build_filetype)
-             print("  [DBUtils_SQLExportInputFormWidget][reload_sql_export_form_values] : formvals : \n  ",self.formvals)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][reload_sql_export_form_values] : self.build_filetype : ",self.build_filetype))
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][reload_sql_export_form_values] : formvals : \n  ",self.formvals))
 
         self.set_form_table_col_values(True,opstat)  
 
@@ -3079,28 +3035,28 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
         
             if(opstat.get_status()) :
 
-                if(DEBUG_DBUTILS) :
-                    print("  [DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : new tableslist :  ",len(tableslist),tableslist[0])
+                if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+                    add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : new tableslist :  ",len(tableslist),tableslist[0]))
 
                 self.tableslist     =   tableslist
                 self.sqlformWidget.import_form.reset_form_combobox_by_index(2,self.tableslist)
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : end : ")
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][reload_sql_import_form_values] : end : "))
 
        
     def set_table_name(self, tablename) :
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_SQLExportInputFormWidget][set_table_name] : colname : ",tablename)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportInputFormWidget][set_table_name] : colname : ",tablename))
 
         self.sqlformWidget.export_form.set_form_input_value_by_index(1,tablename)
         
 
     def update_table_name(self, addflag) :
 
-        if(DEBUG_DBUTILS) :
-             print("  [DBUtils_SQLImportInputFormWidget][update_table_name] : addflag : ",addflag)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
+             add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportInputFormWidget][update_table_name] : addflag : ",addflag))
 
         if(self.sqlformWidget.add_flag == ADD_TO_COLUMNS)   : new_table_name  =   "'columns' Columns"
         elif(self.sqlformWidget.add_flag == ADD_TO_INDEX)   : new_table_name  =   "'index_col' Columns"
@@ -3131,8 +3087,8 @@ class DBUtils_SQLExportInputFormWidget(QtWidgets.QWidget) :
 
 def build_dbcon_form_data(dbconnectParms) :
 
-    if(DEBUG_DBUTILS):#_DBCONNECTOR_FORM) :
-        print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] dbconnectParms \n    ",dbconnectParms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")):
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] dbconnectParms \n    ",dbconnectParms))
 
     import dfcleanser.sw_utilities.db_utils as qdbu
 
@@ -3140,8 +3096,8 @@ def build_dbcon_form_data(dbconnectParms) :
     
         servertype          =   dbconnectParms[0]
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype ",type(servertype),servertype)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype ",type(servertype),servertype))
 
         if(type(servertype) == str) :
             servertype_id       =   qdbu.get_db_id_from_dbid_title(servertype)
@@ -3150,9 +3106,9 @@ def build_dbcon_form_data(dbconnectParms) :
             servertype_id       =   servertype#qdbu.get_db_id_from_dbid_title(servertype)
             server_type         =   qdbu.get_db_id_title(servertype_id)
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype  ",type(servertype),servertype)
-            print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype_id  ",type(servertype_id),servertype_id)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype  ",type(servertype),servertype))
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype_id  ",type(servertype_id),servertype_id))
 
         dblibrary           =   dbconnectParms[1]
         servername          =   dbconnectParms[2]
@@ -3174,16 +3130,16 @@ def build_dbcon_form_data(dbconnectParms) :
 
     formParms               =   []
 
-    if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-        print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype : servertype_id ",servertype,servertype_id,type(servertype_id),type(qdbu.MySql))
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] servertype : servertype_id ",servertype,servertype_id,type(servertype_id),type(qdbu.MySql)))
 
     if(servertype_id == qdbu.MySql)               :    
         formParms           =   [qdbu.mysql_connector_id,qdbu.mysql_connector_idList,qdbu.mysql_connector_labelList,qdbu.mysql_connector_typeList,qdbu.mysql_connector_placeholderList,qdbu.mysql_connector_reqList] 
         dblibrary_types     =   {"default":qdbu.pymysql_library,"list":[qdbu.pymysql_library,qdbu.mysql_connector_library]}
         cfg_parms           =   [servertype,dblibrary,servername,database,user,password]
 
-        if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-            print("  [DBUtils_DBConnectorFormWidget][build_dbcon_form_data] formparms ",formParms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] formparms ",formParms))
 
     elif(servertype_id == qdbu.MS_SQL_Server)     :    
         formParms           =   [qdbu.mssql_connector_id,qdbu.mssql_connector_idList,qdbu.mssql_connector_labelList,qdbu.mssql_connector_typeList,qdbu.mssql_connector_placeholderList,qdbu.mssql_connector_reqList] 
@@ -3206,10 +3162,8 @@ def build_dbcon_form_data(dbconnectParms) :
         dblibrary_types     =   None           
         cfg_parms           =   [servertype,dblibrary,"","","",""]
 
-    if(DEBUG_DBUTILS_DBCONNECTOR_FORM) :
-        print("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] formParms : ",len(formParms))
-        #for i in range(len(formParms)) :
-        #    print("  formParms[",i,"] ",formParms[i])
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_DBCONNECTOR_FORM")) :
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_DBConnectorFormWidget][build_dbcon_form_data] formParms : ",len(formParms)))
         
     return([formParms,dblibrary_types,cfg_parms])
     
@@ -3223,8 +3177,8 @@ def build_dbcon_form_data(dbconnectParms) :
 
 def common_test_db_connector(dbconnectParms) :
 
-    if(DEBUG_DBUTILS) :    
-        print("\n[DBUtilsWidgets][common_test_db_connector] :  dbconnectparms :  \n  ",dbconnectParms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :    
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] :  dbconnectparms :  \n  ",dbconnectParms))
 
     import dfcleanser.sw_utilities.db_utils as qdbu
     
@@ -3237,8 +3191,8 @@ def common_test_db_connector(dbconnectParms) :
     User                    =   dbconnectParms[4]
     Password                =   dbconnectParms[5]
     
-    if(DEBUG_DBUTILS):#_TEST_CONNECTOR) :    
-        print("[DBUtilsWidgets][common_test_db_connector] : parms \n  ",SQL_Server_Type,db_library,Server_Name,Database,User,Password)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")):#_TEST_CONNECTOR) :    
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] : parms \n  ",SQL_Server_Type,db_library,Server_Name,Database,User,Password))
 
 
     if(SQL_Server_Type == qdbu.MySql) :
@@ -3268,8 +3222,8 @@ def common_test_db_connector(dbconnectParms) :
     dbconnect_parms     =   [dbcon_labels,dbcon_vals]
     sqlid               =   qdbu.SQL_IMPORT
 
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-        print("[DBUtilsWidgets][common_test_db_connector] : sqlid : ",sqlid,"\n   ",dbconnect_parms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] : sqlid : ",sqlid,"\n   ",dbconnect_parms))
 
     from dfcleanser.common.common_utils import (opStatus)
     opstat              =   opStatus()
@@ -3277,15 +3231,15 @@ def common_test_db_connector(dbconnectParms) :
 
     test_sqlalchemy     =   True
 
-    if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-        print("[DBUtilsWidgets][common_test_db_connector] :test \n ",dbconnect_parms)
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] :test \n ",dbconnect_parms))
 
     if( not (SQL_Server_Type == qdbu.Custom)) :
 
         qdbu.test_db_connector(dbid,qdbu.NATIVE,dbconnect_parms,sqlid,opstat,display=False)
     
-        if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-            print("[DBUtilsWidgets][common_test_db_connector] : dbconnect_parms\n ",dbconnect_parms)
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] : dbconnect_parms\n ",dbconnect_parms))
 
         if(opstat.get_status()) :
 
@@ -3298,8 +3252,8 @@ def common_test_db_connector(dbconnectParms) :
             from dfcleanser.sw_utilities.DisplayUtils import get_exception_details_text
             details_msg     =   get_exception_details_text(opstat)
 
-            if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-                print("\n\n[DBUtilsWidgets][common_test_db_connector] : details_msg ",details_msg)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] : details_msg ",details_msg))
 
             details_msg     =   details_msg.replace("\n","<br>")
             from dfcleanser.sw_utilities.dfc_qt_model import format_QMessageBox_Text
@@ -3325,8 +3279,8 @@ def common_test_db_connector(dbconnectParms) :
 
         qdbu.test_db_connector(dbid,qdbu.SQLALCHEMY,dbconnect_parms,sqlid,opstat,display=False)
         
-        if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-            print("[DBUtilsWidgets][common_test_db_connector] sqlalchemy : opstat.get_status() ",opstat.get_status())
+        if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+            add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] sqlalchemy : opstat.get_status() ",opstat.get_status()))
 
         if(opstat.get_status()) :
 
@@ -3342,8 +3296,8 @@ def common_test_db_connector(dbconnectParms) :
             from dfcleanser.sw_utilities.dfc_qt_model import format_QMessageBox_Text
             final_msg       =   format_QMessageBox_Text(details_msg)
 
-            if(DEBUG_DBUTILS_TEST_CONNECTOR) :    
-                print("[DBUtilsWidgets][common_test_db_connector] : details_msg ",details_msg)
+            if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS_TEST_CONNECTOR")) :    
+                add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsWidgets][common_test_db_connector] : details_msg ",details_msg))
 
             from PyQt5.QtWidgets import QMessageBox
             dlg = QMessageBox()
@@ -3356,8 +3310,8 @@ def common_test_db_connector(dbconnectParms) :
             button = dlg.exec()
         
 
-    if(DEBUG_DBUTILS) :    
-        print("[DBUtilsDBConnectorsTableWidget][common_test_db_connector] : end ")
+    if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :    
+        add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtilsDBConnectorsTableWidget][common_test_db_connector] : end "))
 
     return(status_msg)
 

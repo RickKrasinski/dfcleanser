@@ -107,8 +107,6 @@ def get_column_from_dfc_apply_fn(callerid,df,dftitle,fntoapply,coltoapply,opstat
     * --------------------------------------------------------
     """
     
-    #print("get_column_from_dfc_apply_fn",callerid,dftitle,fntoapply,coltoapply)
-    
     import numpy as np
     
     if( (fntoapply == "uppercase_str()") or (fntoapply == "lowercase_str()") ) :
@@ -248,9 +246,6 @@ def get_column_from_dfc_with_parms_apply_fn(df,fnid,fntoapply,coltoapply,idlist,
             opstat.set_errorMsg("No character_to_strip parm defined")
         else :
             
-            print("stripchar",stripchar)
-            print("stripchar",coltoapply)
-            
             try :
                 if(fnid == PROCESS_STRIP_CHAR_FN) :
                     new_col_array   =   df[coltoapply].map(lambda x: str(x).strip(stripchar))
@@ -354,8 +349,6 @@ def get_column_from_dfc_with_parms_apply_fn(df,fnid,fntoapply,coltoapply,idlist,
         
             if(opstat.get_status()) :
                 try :
-                    print("startind",type(startind),startind)
-                    print("stopind",type(stopind),stopind)
                     new_col_array   =   df[coltoapply].map(lambda x: str(x)[startind:stopind])
                 except Exception as e:
                     opstat.store_exception("Exception running : " + str(fntoapply),e)

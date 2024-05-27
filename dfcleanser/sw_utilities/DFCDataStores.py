@@ -16,10 +16,9 @@ import json
 
 new_line = """
 """
+
 from dfcleanser.common.common_utils import (opStatus)
 from dfcleanser.common.cfg import add_error_to_log
-
-
 
 DICT_ID             =   0
 LIST_ID             =   1
@@ -27,14 +26,11 @@ LIST_ID             =   1
 ReservedDicts       =   ["ArcGIS_Categories","Canadian_Provinces_and_Territories","Country_Codes","Elipsoids","Language_Codes","State_Cities","State_Counties","State_County_Cities","strftime","US_States_and_Territories"]
 ReservedLists       =   ["Google_Address_Components", "Google_Location_Types","US_Zipcodes"]
 
-
 DATA_TYPE           =   0
 FILE_TYPE           =   1
 
-
 ReservedDictsType   =   [DATA_TYPE,DATA_TYPE,DATA_TYPE,DATA_TYPE,DATA_TYPE,FILE_TYPE,FILE_TYPE,FILE_TYPE,DATA_TYPE,DATA_TYPE]
 ReservedListsType   =   [DATA_TYPE,DATA_TYPE]
-
 
 Red                 =   "#FAA78F"
 Green               =   "#8FFAC0"
@@ -206,8 +202,6 @@ class DataframeCleanserDataStructureStore :
     def get_item_from_file(self,itemtype,itemname,creator) :
         
         import os
-        
-        #print("get_item_from_file",itemtype,itemname,creator)
         
         if(creator == DFC_CREATED) :
             

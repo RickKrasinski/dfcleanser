@@ -12,12 +12,12 @@ Created on Tue Sept 13 22:29:22 2017
 from dfcleanser.common.common_utils import  (display_generic_grid, new_line)
 import dfcleanser.common.cfg as cfg
 
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+
 import sys
 
 
 this = sys.modules[__name__]
-
-DEBUG_DROPDOWN = False
 
 
 """            
@@ -86,8 +86,6 @@ def get_status_msg_html(msg, width=None, left=None, msgid=None, display=False):
 
         display_generic_grid(
             "dfc-display-help-note-wrapper", gridclasses, gridhtmls)
-
-        # print(status_html)
 
     else:
 
@@ -224,10 +222,6 @@ def display_status(msg, display=True, width=None, margin=None):
         status_html = display_msgs(
             [msg], "Status :", width, margin, False, False, 11)
 
-        from dfcleanser.common.common_utils import DUMP_HTML
-        if(DUMP_HTML):
-            print(status_html)
-
         gridclasses = ["dfc-top-"]
         gridhtmls = [status_html]
 
@@ -235,7 +229,6 @@ def display_status(msg, display=True, width=None, margin=None):
 
     else:
 
-        #status_html     =   display_msgs([msg],"Status :",width,margin,False,False,11)
         return(display_msgs([msg], "Status :", width, margin, False, False, 11))
 
 
@@ -251,10 +244,6 @@ def display_status_note(msg, full=True):
     """
 
     notes_html = "<div style='text-align:center; border: 0px solid #67a1f3; font-size: 13px; font-color:#67a1f3; background-color:#F8F5E1;'><span style='color:#67a1f3;'>" + msg + "</span></div>"
-
-    from dfcleanser.common.common_utils import DUMP_HTML
-    if(DUMP_HTML):
-        print(notes_html)
 
     gridclasses = ["dfc-top-"]
     gridhtmls = [notes_html]
@@ -376,7 +365,6 @@ def display_df_sizing_info(df):
     #------------------------------------------------------------------
     """
 
-    # print("display_df_sizing_info")
     print("        [NUMBER OF ROWS] :", len(df))
     print("        [NUMBER OF COLS] :", len(df.columns))
 
@@ -491,9 +479,7 @@ def display_msgs(notes, heading, width=None, margin=30, display=True, color=Fals
     notes_html = (notes_html + '    </div>' + new_line)
     notes_html = (notes_html + "</div>")
 
-    from dfcleanser.common.common_utils import DUMP_HTML,  displayHTML
-    if(DUMP_HTML):
-        print(notes_html)
+    from dfcleanser.common.common_utils import displayHTML
 
     if(display):
         displayHTML(notes_html)
@@ -737,53 +723,52 @@ class dfcConsole:
 
     def dump_dfcConsole(self):
 
-        print("\n------------- upper keys --------------------")
+        add_debug_to_log("dump_dfcConsole",print_to_string("\n------------- upper keys --------------------"))
 
         keys_list = self.upper_keys.get_keys_list()
 
         for i in range(len(keys_list)):
 
             if(type(keys_list[i]) == str):
-
-                print("Key : ["+str(i)+"] : type ", keys_list[i])
+                add_debug_to_log("dump_dfcConsole",print_to_string("Key : ["+str(i)+"] : type ", keys_list[i]))
 
             else:
 
-                print("Key : ["+str(i)+"] : type ", type(keys_list[i]))
-                print("height      : ", keys_list[i].get_height())
-                print("width       : ", keys_list[i].get_width())
-                print("lmargin     : ", keys_list[i].get_lmargin())
-                print("callback    : ", keys_list[i].get_callback())
-                print("text        : ", keys_list[i].get_text())
+                add_debug_to_log("dump_dfcConsole",print_to_string("Key : ["+str(i)+"] : type ", type(keys_list[i])))
+                add_debug_to_log("dump_dfcConsole",print_to_string("height      : ", keys_list[i].get_height()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("width       : ", keys_list[i].get_width()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("lmargin     : ", keys_list[i].get_lmargin()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("callback    : ", keys_list[i].get_callback()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("text        : ", keys_list[i].get_text()))
 
-        print("------------- upper keys --------------------\n")
+        add_debug_to_log("dump_dfcConsole",print_to_string("------------- upper keys --------------------\n"))
 
-        print("\n------------- side keys --------------------")
-        print("side keys : ", type(self.side_keys))
-        print("lmargin : ", self.side_keys.get_lmargin())
+        add_debug_to_log("dump_dfcConsole",print_to_string("\n------------- side keys --------------------"))
+        add_debug_to_log("dump_dfcConsole",print_to_string("side keys : ", type(self.side_keys)))
+        add_debug_to_log("dump_dfcConsole",print_to_string("lmargin : ", self.side_keys.get_lmargin()))
         keys_list = self.side_keys.get_keys_list()
-        print("keys_list type", type(keys_list))
-        print("keys_list type", len(keys_list))
+        add_debug_to_log("dump_dfcConsole",print_to_string("keys_list type", type(keys_list)))
+        add_debug_to_log("dump_dfcConsole",print_to_string("keys_list type", len(keys_list)))
         for i in range(len(keys_list)):
             if(type(keys_list[i]) == list):
-                print("keys_list type["+str(i)+"]", type(keys_list[i]))
+                add_debug_to_log("dump_dfcConsole",print_to_string("keys_list type["+str(i)+"]", type(keys_list[i])))
 
             else:
-                print("Key : ["+str(i)+"]")
-                print("height      : ", keys_list[i].get_height())
-                print("width       : ", keys_list[i].get_width())
-                print("lmargin     : ", keys_list[i].get_lmargin())
-                print("callback    : ", keys_list[i].get_callback())
-                print("text        : ", keys_list[i].get_text())
+                add_debug_to_log("dump_dfcConsole",print_to_string("Key : ["+str(i)+"]"))
+                add_debug_to_log("dump_dfcConsole",print_to_string("height      : ", keys_list[i].get_height()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("width       : ", keys_list[i].get_width()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("lmargin     : ", keys_list[i].get_lmargin()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("callback    : ", keys_list[i].get_callback()))
+                add_debug_to_log("dump_dfcConsole",print_to_string("text        : ", keys_list[i].get_text()))
 
-        print("------------- side keys --------------------\n")
+        add_debug_to_log("dump_dfcConsole",print_to_string("------------- side keys --------------------\n"))
 
-        print("\n------------- image --------------------")
-        print("image : type ", type(self.image))
-        print("height        : ", self.image.get_height())
-        print("width         : ", self.image.get_width())
-        print("url           : ", self.image.get_url())
-        print("------------- image --------------------\n")
+        add_debug_to_log("dump_dfcConsole",print_to_string("\n------------- image --------------------"))
+        add_debug_to_log("dump_dfcConsole",print_to_string("image : type ", type(self.image)))
+        add_debug_to_log("dump_dfcConsole",print_to_string("height        : ", self.image.get_height()))
+        add_debug_to_log("dump_dfcConsole",print_to_string("width         : ", self.image.get_width()))
+        add_debug_to_log("dump_dfcConsole",print_to_string("url           : ", self.image.get_url()))
+        add_debug_to_log("dump_dfcConsole",print_to_string("------------- image --------------------\n"))
 
 
 class dfcConsoleKeyList:
