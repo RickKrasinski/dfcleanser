@@ -26,10 +26,11 @@ from PyQt5.QtGui import QFont
 
 import dfcleanser.common.cfg as cfg 
 
+from dfcleanser.Qt.system.SystemModel import is_debug_on
+from dfcleanser.common.cfg import DataCleansing_ID
+
 import logging
 logger = logging.getLogger(__name__)
-
-DEBUG_COUTLIERS     =   False
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -116,7 +117,6 @@ class OutliersTableModel(QtCore.QAbstractTableModel):
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
-            #print("data model Qt.DisplayRole",row,column)
             try :
                 retval  =  self._data[index.row()][index.column()] 
             except :
@@ -213,9 +213,9 @@ class OutliersGui(QtWidgets.QMainWindow):
 
         # dump the form geometries
         
-        print("OutliersTablelabel : ",self.form.OutliersTablelabel.geometry())
-        print("OutliersTableView : ",self.form.OutliersTableView.geometry())
-        print("OutliersStatslabel : ",self.form.StdDevDef.geometry())
+        add_debug_to_log("dump_geometry",print_to_string("OutliersTablelabel : ",self.form.OutliersTablelabel.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("OutliersTableView : ",self.form.OutliersTableView.geometry()))
+        add_debug_to_log("dump_geometry",print_to_string("OutliersStatslabel : ",self.form.StdDevDef.geometry()))
 
     
     # -----------------------------------------------------------------#
@@ -296,9 +296,6 @@ class OutliersGui(QtWidgets.QMainWindow):
 
         dead_space  =   DEFAULT_TABLEVIEW_HEIGHT - new_height
             
-        if(DEBUG_COUTLIERS) :
-            print("dead_space : ",new_height,dead_space)
-
         return(dead_space)
 
 
@@ -318,7 +315,6 @@ class OutliersGui(QtWidgets.QMainWindow):
             self.resize(DIALOG_GEOMETRY[2],dialog_height)
             
         if(DEBUG_COUTLIERS) :
-            print("\nafter adjustments")
             self.dump_geometry()
 
 
@@ -327,8 +323,7 @@ class OutliersGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def init_outliers_form(self):
 
-        if(DEBUG_COUTLIERS) :
-            print("\noriginal geometry")
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING_DETAILS")) : :
             self.dump_geometry()
 
         # init the tableview title
@@ -351,7 +346,7 @@ class OutliersGui(QtWidgets.QMainWindow):
         num_data_rows       =   len(data)
 
         if(DEBUG_COUTLIERS) :
-            print("[init_outliers_form] : num_data_rows : ",num_data_rows)
+            add_debug_to_log("init_outliers_form",print_to_string(" num_data_rows : ",num_data_rows))
 
         # adjust the height of the tableview
         dead_space  =   self.adjust_table_view()
@@ -402,7 +397,7 @@ class OutliersGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def format_outliers_data(self,colname,outliers_data) :
 
-        print('format_outliers_data')
+        add_debug_to_log("format_outliers_data",print_to_string("format_outliers_data",outliers_data))
 
 
     # -----------------------------------------------------------------#
@@ -479,11 +474,7 @@ class OutliersGui(QtWidgets.QMainWindow):
                         outliers_color.append(yellow_bgcolor)
 
         if(DEBUG_COUTLIERS) :
-            print(outliers_stds)
-            print(outliers_count)
-            print(outliers_percent)
-            print(outliers_range)
-            print(outliers_color)
+            add_debug_to_log("format_outliers_data",print_to_string(outliers_stds,outliers_count,outliers_percent,outliers_range,outliers_color))
 
         data_row            =   []
         num_data_rows       =   0
@@ -503,7 +494,7 @@ class OutliersGui(QtWidgets.QMainWindow):
             num_data_rows   =   num_data_rows + 1
 
         if(DEBUG_COUTLIERS) :
-            print("num_data_rows : ",num_data_rows,"\n",data)
+            add_debug_to_log("format_outliers_data",print_to_string(num_data_rows,"\n",data))
 
         return([outliers_color,data])
 
@@ -521,7 +512,7 @@ class OutliersGui(QtWidgets.QMainWindow):
 def showOutliers(dftitle,colname)  :
 
     if(DEBUG_COUTLIERS) :
-        print("showUniques : ",dftitle,colname)
+        add_debug_to_log("showUniques",print_to_string(dftitle,colname))
 
     logger.info("Opening dfc Outliers GUI")
 
@@ -554,12 +545,10 @@ def showOutliers(dftitle,colname)  :
          
         else :
         
-            print("invalid column name")
             return(None)
     
     else :
     
-        print("no df defined")
         return(None)
 
 # -----------------------------------------------------------------#

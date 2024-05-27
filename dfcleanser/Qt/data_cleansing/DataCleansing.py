@@ -237,7 +237,7 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     def init_data_cleansing_buttons(self):
 
         if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING_DETAILS")) :
-            add_debug_to_log("DataCleansingGui",print_to_string("[init_data_inspect_buttons]  "))
+            add_debug_to_log("DataCleansingGui",print_to_string("[init_data_cleansing_buttons]  "))
 
         from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton
 
@@ -278,7 +278,7 @@ class DataCleansingGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def add_new_df(self,df_title):
 
-        if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSING")) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             add_debug_to_log("DataCleansingGui",print_to_string("[add_new_df]  df_title",df_title))
 
         index = self.df_select.findText(df_title)
@@ -1458,7 +1458,6 @@ def closeDataCleansingInstances()  :
     #from dfcleanser.common.cfg import DATA_CLEANSING_TITLE
     
     clear_screen()
-    #displayHTML(DATA_CLEANSING_TITLE)
     logger.info(" Data Cleansing Instances closed")
 
 def showDataCleansing()  :
@@ -1467,9 +1466,6 @@ def showDataCleansing()  :
     from dfcleanser.common.cfg import dfc_qt_chapters, CLEANSE_QT_CHAPTER_ID
     
     clear_screen()
-    #displayHTML(DATA_CLEANSING_TITLE)
-
-    #logger.info("Opening showDataCleansing GUI")
 
     data_cleansing_gui = DataCleansingGui()
     data_cleansing_gui.show()
@@ -1478,8 +1474,6 @@ def showDataCleansing()  :
 
     total_instances     =   dfc_qt_chapters.get_qt_chapters_count(CLEANSE_QT_CHAPTER_ID)
     logger.info(str(total_instances) + " Data Cleansing Instances Loaded")
-
-    #return data_cleansing_gui  
 
 
 def closeDataCleansingChapter()  :
