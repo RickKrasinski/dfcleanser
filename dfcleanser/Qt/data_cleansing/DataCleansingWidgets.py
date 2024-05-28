@@ -3758,12 +3758,10 @@ class DataCleansing_drop_duplicate_rows_Widget(QtWidgets.QWidget):
 
         try :
         
-	    if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
-            	add_debug_to_log("DataCleansingWidgets",print_to_string("subset",subset,type(subset)))
+            if(is_debug_on(DataCleansing_ID,"DEBUG_CLEANSE_ROWS")) :
+                add_debug_to_log("DataCleansingWidgets",print_to_string("subset",subset,type(subset)))
 
             self.df.drop_duplicates(subset,keep=keep_duplicates,inplace=True)
-            #self.filter_working_df      =    
-            #self.filter_working_df.drop(cell, axis=1, inplace=True)
 
             title       =   "dfcleanser mesage"       
             status_msg  =   "[df filter] column duplicates dropped successfully"
