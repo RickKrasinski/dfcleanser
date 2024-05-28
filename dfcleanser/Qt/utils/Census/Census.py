@@ -232,8 +232,8 @@ class CensusGui(QtWidgets.QMainWindow):
 
 
         from dfcleanser.sw_utilities.dfc_qt_model import init_dfc_buttons, set_dfc_buttons_style
-        buttons     =   [self.form.CensusDatasetsbutton, self.form.CensusHelpbutton] 
-        callbacks   =   [self.get_census_datasets, self.get_help_census]
+        buttons     =   [self.form.CensusDatasetsbutton, self.form.CensusReturnbutton, self.form.CensusHelpbutton] 
+        callbacks   =   [self.get_census_datasets, self.get_return_census, self.get_help_census]
     
         # init buttons for usage
         ZipCode_Button_Style    =   "background-color:#0c4ca7; color:white; font : Arial; font-weight : bold; font-size : 13px;"
@@ -349,6 +349,16 @@ class CensusGui(QtWidgets.QMainWindow):
         self.form.CensusDatasetsbutton.toggle()
 
         self.display_census_datasets()
+
+    def get_return_census(self):
+
+        if(is_debug_on(SWCensusUtility_ID,"DEBUG_CENSUS")) :
+            add_debug_to_log("Census",print_to_string("[CensusGui][get_return_census]  "))
+
+        self.form.CensusReturnbutton.toggle()
+
+        self.init_census_form()
+    
        
     def get_help_census(self) :
 

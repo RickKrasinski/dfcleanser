@@ -27,7 +27,7 @@
      <rect>
       <x>50</x>
       <y>10</y>
-      <width>491</width>
+      <width>327</width>
       <height>50</height>
      </rect>
     </property>
@@ -59,9 +59,9 @@
    <widget class="QPushButton" name="CensusHelpbutton">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>696</x>
       <y>10</y>
-      <width>491</width>
+      <width>331</width>
       <height>50</height>
      </rect>
     </property>
@@ -85,6 +85,19 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="CensusLayout"/>
+   </widget>
+   <widget class="QPushButton" name="CensusReturnbutton">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>10</y>
+      <width>329</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Return</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
