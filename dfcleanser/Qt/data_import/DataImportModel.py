@@ -1086,9 +1086,8 @@ class DataframeCleanserHistory :
         
         import os
         
-        from dfcleanser.common.cfg import cfg
-        
-        return(str(cfg.get_dfcleanser_location()+"files"))
+        from dfcleanser.common.cfg import get_dfcleanser_location
+        return(str(get_dfcleanser_location()+"files"))
     
     def get_history_file_name(self,history_type) :
         
@@ -2852,7 +2851,6 @@ def get_import_details_values(importParms) :
         add_debug_to_log("DataImportGui",print_to_string("full_parms :  ",full_parms))
         add_debug_to_log("DataImportGui",print_to_string("addl_parms :  ",addl_parms))
 
-    import dfcleanser.Qt.data_import.DataImportModel as DIM
     if( (fileType == file_Type) and (dfTitle == df_title) ) :
 
         if(fileType == SQLTABLE_IMPORT) :
