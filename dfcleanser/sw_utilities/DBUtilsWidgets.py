@@ -30,6 +30,16 @@ from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 from dfcleanser.Qt.system.SystemModel import is_debug_on
 from dfcleanser.common.cfg import DBUtils_ID
 
+from dfcleanser.Qt.data_export.DataExportModel import (SQLTABLE_EXPORT, pandas_export_sqltable_id, pandas_export_sqltable_idList, 
+                                                       pandas_export_sqltable_labelList, pandas_export_sqltable_typeList, pandas_export_sqltable_placeholderList,
+                                                       pandas_export_sqltable_reqList)
+
+from dfcleanser.Qt.data_import.DataImportModel import (SQLQUERY_IMPORT, get_dftitles_list, IMPORT_HISTORY,  get_last_dftitle, SQLTABLE_IMPORT,
+                                                       pandas_import_sqltable_common_id, pandas_import_sqltable_common_idList, pandas_import_sqltable_common_labelList,
+                                                       pandas_import_sqltable_common_typeList, pandas_import_sqltable_common_reqList, pandas_import_sqlquery_id,
+                                                       pandas_import_sqlquery_idList, pandas_import_sqlquery_labelList, pandas_import_sqlquery_placeholderList,
+                                                       pandas_import_sqlquery_reqList)
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -2136,22 +2146,20 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
 
         selectDicts     =   []
         
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
-
         from dfcleanser.common.common_utils import opStatus
         opstat  =   opStatus()
 
         try :
 
-            if(not (self.build_filetype==DIM.SQLQUERY_IMPORT)) :
+            if(not (self.build_filetype==SQLQUERY_IMPORT)) :
 
-                import_df_titles    =   DIM.get_dftitles_list(DIM.IMPORT_HISTORY,self.build_filetype)
+                import_df_titles    =   get_dftitles_list(IMPORT_HISTORY,self.build_filetype)
                                 
                 if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
                     add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : import_df_titles \n    ",import_df_titles))
         
                 if(not (import_df_titles) is None) :
-                    last_df_title   =   DIM.get_last_dftitle(DIM.SQLTABLE_IMPORT,import_df_titles)
+                    last_df_title   =   get_last_dftitle(SQLTABLE_IMPORT,import_df_titles)
                 else :
                     last_df_title   =    None    
 
@@ -2175,7 +2183,7 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
             flags  =   {"default":"True","list":["True","False"]}
             selectDicts.append(flags)
 
-            if(self.build_filetype==DIM.SQLQUERY_IMPORT) :
+            if(self.build_filetype==SQLQUERY_IMPORT) :
 
                 from dfcleanser.sw_utilities.DFCDataStores import get_Dict
                 strftimedict = get_Dict("strftime")
@@ -2192,9 +2200,9 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
             if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
                 add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : selectDicts ",len(selectDicts)))
 
-            if(self.build_filetype==DIM.SQLTABLE_IMPORT) :
+            if(self.build_filetype==SQLTABLE_IMPORT) :
 
-                form_parms      =   [DIM.pandas_import_sqltable_common_id,DIM.pandas_import_sqltable_common_idList,DIM.pandas_import_sqltable_common_labelList,DIM.pandas_import_sqltable_common_typeList,DIM.pandas_import_sqltable_common_placeholderList,DIM.pandas_import_sqltable_common_reqList]
+                form_parms      =   [pandas_import_sqltable_common_id,pandas_import_sqltable_common_idList,pandas_import_sqltable_common_labelList,pandas_import_sqltable_common_typeList,pandas_import_sqltable_common_placeholderList,pandas_import_sqltable_common_reqList]
                 comboMethods    =   [self.update_import_sqltable_df,self.import_sqltable_get_tables,None,self.import_sqltable_set_date_format]
                 file_methods    =   []
                 button_methods  =   [self.import_sqltable,self.set_sql_table_columns_col,self.set_sql_table_index_col,self.set_sql_table_parse_dates,self.return_from_import_sqltable,self.help_import_sqltable]
@@ -2202,9 +2210,9 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
                 form_title      =   "\nImport SQL Table\n"
                 form_width      =   600
                 
-            elif(self.build_filetype==DIM.SQLQUERY_IMPORT) :
+            elif(self.build_filetype==SQLQUERY_IMPORT) :
 
-                form_parms      =   [DIM.pandas_import_sqlquery_id,DIM.pandas_import_sqlquery_idList,DIM.pandas_import_sqlquery_labelList,DIM.pandas_import_sqlquery_typeList,DIM.pandas_import_sqlquery_placeholderList,DIM.pandas_import_sqlquery_reqList]
+                form_parms      =   [pandas_import_sqlquery_id,pandas_import_sqlquery_idList,pandas_import_sqlquery_labelList,pandas_import_sqlquery_typeList,pandas_import_sqlquery_placeholderList,pandas_import_sqlquery_reqList]
                 comboMethods    =   [self.update_import_sqlquery_df,self.import_sqlquery_get_tables,None,self.import_sqlquery_set_date_format]
                 file_methods    =   []
                 button_methods  =   [self.import_sqlquery,self.set_sql_query_index_col,self.set_sql_query_parse_dates,self.return_from_import_sqlquery,self.help_import_sqlquery]
@@ -2227,7 +2235,7 @@ class DBUtils_SQLImportFormWidget(QtWidgets.QWidget) :
                 add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLImportFormWidget][init_content] : len(form_parms) ",len(form_parms)))
 
             from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget, SMALL
-            if(self.build_filetype==DIM.SQLTABLE_IMPORT) :
+            if(self.build_filetype==SQLTABLE_IMPORT) :
                 self.import_form     =   dfcleanser_input_form_Widget(form_parms,SMALL)
             else :
                 self.import_form     =   dfcleanser_input_form_Widget(form_parms,SMALL)
@@ -2720,8 +2728,6 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
 
         selectDicts     =   []
         
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-
         from dfcleanser.common.common_utils import opStatus
         opstat  =   opStatus()
 
@@ -2755,9 +2761,9 @@ class DBUtils_SQLExportFormWidget(QtWidgets.QWidget) :
             if(is_debug_on(DBUtils_ID,"DEBUG_DBUTILS")) :
                 add_debug_to_log("DBUtilsWidgets",print_to_string("[DBUtils_SQLExportFormWidget][init_content] : selectDicts ",len(selectDicts)))
 
-            if(self.build_filetype==DEM.SQLTABLE_EXPORT) :
+            if(self.build_filetype==SQLTABLE_EXPORT) :
 
-                form_parms      =   [DEM.pandas_export_sqltable_id,DEM.pandas_export_sqltable_idList,DEM.pandas_export_sqltable_labelList,DEM.pandas_export_sqltable_typeList,DEM.pandas_export_sqltable_placeholderList,DEM.pandas_export_sqltable_reqList]
+                form_parms      =   [pandas_export_sqltable_id,pandas_export_sqltable_idList,pandas_export_sqltable_labelList,pandas_export_sqltable_typeList,pandas_export_sqltable_placeholderList,pandas_export_sqltable_reqList]
                 comboMethods    =   [self.update_export_sqltable_df,None,None,None]
                 file_methods    =   []
                 button_methods  =   [self.export_sqltable,self.clear_export_sqltable,self.return_from_export_sqltable,self.help_export_sqltable]
