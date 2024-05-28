@@ -22,11 +22,25 @@ from PyQt5 import uic
 
 
 import dfcleanser.common.cfg as cfg 
-from dfcleanser.common.cfg import print_to_string, add_debug_to_log
+from dfcleanser.common.cfg import (print_to_string, add_debug_to_log, get_config_value, 
+                                   get_dfc_dataframes_titles_list, get_dfc_dataframes_select_list)
 
 from dfcleanser.Qt.system.SystemModel import is_debug_on
 from dfcleanser.common.cfg import DataExport_ID
 
+from dfcleanser.Qt.data_export.DataExportModel import (CSV_EXPORT, EXCEL_EXPORT, JSON_EXPORT, XML_EXPORT, 
+                                                       HTML_EXPORT, SQLTABLE_EXPORT, CUSTOM_EXPORT)
+
+from dfcleanser.Qt.data_export.DataExportModel import (pandas_export_csv_id, pandas_export_csv_idList, pandas_export_csv_labelList, pandas_export_csv_typeList, pandas_export_csv_placeholderList, pandas_export_csv_reqList,
+                                                       pandas_export_excel_id, pandas_export_excel_idList, pandas_export_excel_labelList, pandas_export_excel_typeList,pandas_export_excel_placeholderList, pandas_export_excel_reqList,
+                                                       pandas_export_json_id, pandas_export_json_idList, pandas_export_json_labelList, pandas_export_json_typeList,pandas_export_json_placeholderList, pandas_export_json_reqList,
+                                                       pandas_export_xml_id, pandas_export_xml_idList, pandas_export_xml_labelList, pandas_export_xml_typeList,pandas_export_xml_placeholderList, pandas_export_xml_reqList,
+                                                       pandas_export_html_id, pandas_export_html_idList, pandas_export_html_labelList, pandas_export_html_typeList,pandas_export_html_placeholderList, pandas_export_html_reqList,
+                                                       custom_export_id, custom_export_idList, custom_export_labelList, custom_export_typeList,custom_export_placeholderList, custom_export_reqList)
+
+from dfcleanser.Qt.data_import.DataImportModel import get_dftitles_list, EXPORT_HISTORY, get_last_dftitle
+
+from dfcleanser.Qt.data_export.DataExportControl import process_export_form
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
@@ -302,9 +316,6 @@ class DataExportGui(QtWidgets.QMainWindow):
 
     def export_dfc_dataframe(self,dfc_name) :
 
-        #index = self.df_select.findText(dfc_name)
-        #self.df_select.setCurrentIndex(index) 
-
         self.init_data_export_form()       
             
 
@@ -318,6 +329,7 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     # -                      Export CSV File                          -#
     # -----------------------------------------------------------------#
+        
     def ExportCSVFile(self) :
 
         self.form.CSVbutton.toggle()
@@ -325,12 +337,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportCSVFile]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.CSV_EXPORT 
+        file_type   =   CSV_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.pandas_export_csv_id + "Parms")
+        cfg_parms   =   get_config_value(pandas_export_csv_id + "Parms")
         
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportCSVFile] cfg_parms : ",cfg_parms))
@@ -350,12 +360,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportExcelFile]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.EXCEL_EXPORT 
+        file_type   =   EXCEL_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.pandas_export_excel_id + "Parms")
+        cfg_parms   =   get_config_value(pandas_export_excel_id + "Parms")
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -371,12 +379,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportJSONFile]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.JSON_EXPORT 
+        file_type   =   JSON_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.pandas_export_json_id + "Parms")
+        cfg_parms   =   get_config_value(pandas_export_json_id + "Parms")
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -392,12 +398,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportXMLFile]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.XML_EXPORT 
+        file_type   =   XML_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.pandas_export_xml_id + "Parms")
+        cfg_parms   =   get_config_value(pandas_export_xml_id + "Parms")
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -414,12 +418,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportHTMLFile]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.HTML_EXPORT 
+        file_type   =   HTML_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.pandas_export_html_id + "Parms")
+        cfg_parms   =   get_config_value(pandas_export_html_id + "Parms")
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -435,7 +437,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportSQLTable]"))
 
-        from dfcleanser.common.cfg import get_dfc_dataframes_select_list, DataExport_ID
         dataframes      =   get_dfc_dataframes_select_list(DataExport_ID)
 
         if(dataframes == None) :
@@ -464,12 +465,10 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[ExportCustom]"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        file_type   =   DEM.CUSTOM_EXPORT 
+        file_type   =   CUSTOM_EXPORT 
         dftitle     =   self.export_dftitle
 
-        from dfcleanser.common.cfg import get_config_value
-        cfg_parms   =   cfg.get_config_value(DEM.custom_export_id + "Parms")
+        cfg_parms   =   get_config_value(custom_export_id + "Parms")
 
         export_parms    =   [file_type,dftitle,cfg_parms]
 
@@ -545,7 +544,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_HISTORIES")) :
             add_debug_to_log("DataExport",print_to_string("[display_export_histories] end : stack \n  ",self.DataExportWidgets_stack_dict,"\n"))
 
-        from dfcleanser.common.cfg import get_dfc_dataframes_titles_list
         dataframes     =   get_dfc_dataframes_titles_list()
 
         if(dataframes is None) :
@@ -569,20 +567,19 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.export_file_type   =   int(filetype)
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        if(self.export_file_type == DEM.CSV_EXPORT) :
+        if(self.export_file_type == CSV_EXPORT) :
             layout_index    =   EXPORT_CVS_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.EXCEL_EXPORT) :
+        elif(self.export_file_type == EXCEL_EXPORT) :
             layout_index    =   EXPORT_EXCEL_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.JSON_EXPORT) :
+        elif(self.export_file_type == JSON_EXPORT) :
             layout_index    =   EXPORT_JSON_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.XML_EXPORT) :
+        elif(self.export_file_type == XML_EXPORT) :
             layout_index    =   EXPORT_XML_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.HTML_EXPORT) :
+        elif(self.export_file_type == HTML_EXPORT) :
             layout_index    =   EXPORT_HTML_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.SQLTABLE_EXPORT) :
+        elif(self.export_file_type == SQLTABLE_EXPORT) :
             layout_index    =   EXPORT_SQLTABLE_FILE_TYPE_HISTORIES
-        elif(self.export_file_type == DEM.CUSTOM_EXPORT) :
+        elif(self.export_file_type == CUSTOM_EXPORT) :
             layout_index    =   EXPORT_CUSTOM_FILE_TYPE_HISTORIES
 
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPE")) :
@@ -598,25 +595,25 @@ class DataExportGui(QtWidgets.QMainWindow):
             filetypehistoriesParms  =   [self,self.export_file_type,self.select_export_df_title,self.delete_export_histories,self.return_from_export_file_types] 
             from dfcleanser.Qt.data_export.DataExportWidgets import Data_Export_File_Type_Histories_Widget
 
-            if(self.export_file_type == DEM.CSV_EXPORT) :
+            if(self.export_file_type == CSV_EXPORT) :
                 self.data_export_csv_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_csv_file_type_history
-            elif(self.export_file_type == DEM.EXCEL_EXPORT) :
+            elif(self.export_file_type == EXCEL_EXPORT) :
                 self.data_export_excel_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_excel_file_type_history
-            elif(self.export_file_type == DEM.JSON_EXPORT) :
+            elif(self.export_file_type == JSON_EXPORT) :
                 self.data_export_json_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_json_file_type_history
-            elif(self.export_file_type == DEM.XML_EXPORT) :
+            elif(self.export_file_type == XML_EXPORT) :
                 self.data_export_xml_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_xml_file_type_history
-            elif(self.export_file_type == DEM.HTML_EXPORT) :
+            elif(self.export_file_type == HTML_EXPORT) :
                 self.data_export_html_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_html_file_type_history
-            elif(self.export_file_type == DEM.SQLTABLE_EXPORT) :
+            elif(self.export_file_type == SQLTABLE_EXPORT) :
                 self.data_export_sqltable_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_sqltable_file_type_history
-            elif(self.export_file_type == DEM.CUSTOM_EXPORT) :
+            elif(self.export_file_type == CUSTOM_EXPORT) :
                 self.data_export_custom_file_type_history  =   Data_Export_File_Type_Histories_Widget(filetypehistoriesParms)
                 self.data_export_file_type_history      =   self.data_export_custom_file_type_history
 
@@ -629,25 +626,25 @@ class DataExportGui(QtWidgets.QMainWindow):
             
         else :
 
-            if(self.export_file_type == DEM.CSV_EXPORT) :
+            if(self.export_file_type == CSV_EXPORT) :
                 self.data_export_csv_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_csv_file_type_history
-            elif(self.export_file_type == DEM.EXCEL_EXPORT) :
+            elif(self.export_file_type == EXCEL_EXPORT) :
                 self.data_export_excel_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_excel_file_type_history
-            elif(self.export_file_type == DEM.JSON_EXPORT) :
+            elif(self.export_file_type == JSON_EXPORT) :
                 self.data_export_json_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_json_file_type_history
-            elif(self.export_file_type == DEM.XML_EXPORT) :
+            elif(self.export_file_type == XML_EXPORT) :
                 self.data_export_xml_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_xml_file_type_history
-            elif(self.export_file_type == DEM.HTML_EXPORT) :
+            elif(self.export_file_type == HTML_EXPORT) :
                 self.data_export_html_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_html_file_type_history
-            elif(self.export_file_type == DEM.SQLTABLE_EXPORT) :
+            elif(self.export_file_type == SQLTABLE_EXPORT) :
                 self.data_export_sqltable_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_sqltable_file_type_history
-            elif(self.export_file_type == DEM.CUSTOM_EXPORT) :
+            elif(self.export_file_type == CUSTOM_EXPORT) :
                 self.data_export_custom_file_type_history.reload_data()
                 self.data_export_file_type_history      =   self.data_export_custom_file_type_history
 
@@ -784,8 +781,6 @@ class DataExportGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
 
 
-
-
     # -----------------------------------------------------------------#
     # -----------------------------------------------------------------#
     # -                display_export_with_parms                      -#
@@ -853,26 +848,25 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[display_export_form] filetype : dftitle  : ",self.export_file_form_file_type,self.export_file_form_dftitle,"\n cfgparms : \n  ",self.export_file_form_cfg_parms))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
+        if(self.export_file_form_file_type == CSV_EXPORT) :
             layout_index    =   EXPORT_CSV_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.EXCEL_EXPORT) :
+        elif(self.export_file_form_file_type == EXCEL_EXPORT) :
             layout_index    =   EXPORT_EXCEL_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.JSON_EXPORT) :
+        elif(self.export_file_form_file_type == JSON_EXPORT) :
             layout_index    =   EXPORT_JSON_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.XML_EXPORT) :
+        elif(self.export_file_form_file_type == XML_EXPORT) :
             layout_index    =   EXPORT_XML_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.HTML_EXPORT) :
+        elif(self.export_file_form_file_type == HTML_EXPORT) :
             layout_index    =   EXPORT_HTML_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.SQLTABLE_EXPORT) :
+        elif(self.export_file_form_file_type == SQLTABLE_EXPORT) :
             layout_index    =   EXPORT_SQLTABLE_FORM
             height          =   900
-        elif(self.export_file_form_file_type == DEM.CUSTOM_EXPORT) :
+        elif(self.export_file_form_file_type == CUSTOM_EXPORT) :
             layout_index    =   EXPORT_CUSTOM_FORM
             height          =   700
         
@@ -891,19 +885,19 @@ class DataExportGui(QtWidgets.QMainWindow):
             if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
                 add_debug_to_log("DataExport",print_to_string("[display_export_form] filetypeformParms : \n  ",self.filetypeformParms))
 
-            if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
+            if(self.export_file_form_file_type == CSV_EXPORT) :
                 self.data_export_csv_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.EXCEL_EXPORT) :
+            elif(self.export_file_form_file_type == EXCEL_EXPORT) :
                 self.data_export_excel_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.JSON_EXPORT) :
+            elif(self.export_file_form_file_type == JSON_EXPORT) :
                 self.data_export_json_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.XML_EXPORT) :
+            elif(self.export_file_form_file_type == XML_EXPORT) :
                 self.data_export_xml_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.HTML_EXPORT) :
+            elif(self.export_file_form_file_type == HTML_EXPORT) :
                 self.data_export_html_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.SQLTABLE_EXPORT) :
+            elif(self.export_file_form_file_type == SQLTABLE_EXPORT) :
                 self.data_export_sqltable_form  =   self.build_export_form(self.filetypeformParms,opstat)
-            elif(self.export_file_form_file_type == DEM.CUSTOM_EXPORT) :
+            elif(self.export_file_form_file_type == CUSTOM_EXPORT) :
                 self.data_export_custom_form  =   self.build_export_form(self.filetypeformParms,opstat)
             
             if(opstat.get_status()) :
@@ -914,19 +908,19 @@ class DataExportGui(QtWidgets.QMainWindow):
                 if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
                     add_debug_to_log("DataExport",print_to_string("[display_export_form] file_form_types_index : ",file_form_types_index))
 
-                if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
+                if(self.export_file_form_file_type == CSV_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_csv_form)
-                elif(self.export_file_form_file_type == DEM.EXCEL_EXPORT) :
+                elif(self.export_file_form_file_type == EXCEL_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_excel_form)
-                elif(self.export_file_form_file_type == DEM.JSON_EXPORT) :
+                elif(self.export_file_form_file_type == JSON_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_json_form)
-                elif(self.export_file_form_file_type == DEM.XML_EXPORT) :
+                elif(self.export_file_form_file_type == XML_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_xml_form)
-                elif(self.export_file_form_file_type == DEM.HTML_EXPORT) :
+                elif(self.export_file_form_file_type == HTML_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_html_form)
-                elif(self.export_file_form_file_type == DEM.SQLTABLE_EXPORT) :
+                elif(self.export_file_form_file_type == SQLTABLE_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_sqltable_form)
-                elif(self.export_file_form_file_type == DEM.CUSTOM_EXPORT) :
+                elif(self.export_file_form_file_type == CUSTOM_EXPORT) :
                     self.stackedLayout.addWidget(self.data_export_custom_form)
 
             else :
@@ -941,19 +935,19 @@ class DataExportGui(QtWidgets.QMainWindow):
                 add_debug_to_log("DataExport",print_to_string("[display_export_form] file_form_types_index : ",file_form_types_index))
                 add_debug_to_log("DataExport",print_to_string("[display_export_form] self.filetypeformParms",self.export_file_form_cfg_parms))
 
-            if(self.export_file_form_file_type == DEM.CSV_EXPORT) :
+            if(self.export_file_form_file_type == CSV_EXPORT) :
                 self.reload_form_values(self.data_export_csv_form,self.export_file_form_cfg_parms) 
-            elif(self.export_file_form_file_type == DEM.EXCEL_EXPORT) :
+            elif(self.export_file_form_file_type == EXCEL_EXPORT) :
                 self.reload_form_values(self.data_export_excel_form,self.export_file_form_cfg_parms)
-            elif(self.export_file_form_file_type == DEM.JSON_EXPORT) :
+            elif(self.export_file_form_file_type == JSON_EXPORT) :
                 self.reload_form_values(self.data_export_json_form,self.export_file_form_cfg_parms)
-            elif(self.export_file_form_file_type == DEM.XML_EXPORT) :
+            elif(self.export_file_form_file_type == XML_EXPORT) :
                 self.reload_form_values(self.data_export_xml_form,self.export_file_form_cfg_parms)
-            elif(self.export_file_form_file_type == DEM.HTML_EXPORT) :
+            elif(self.export_file_form_file_type == HTML_EXPORT) :
                 self.reload_form_values(self.data_export_html_form,self.export_file_form_cfg_parms)
-            elif(self.export_file_form_file_type == DEM.SQLTABLE_EXPORT) :
+            elif(self.export_file_form_file_type == SQLTABLE_EXPORT) :
                 self.reload_form_values(self.data_export_sqltable_form.sqlformWidget.export_form,self.export_file_form_cfg_parms)
-            elif(self.export_file_form_file_type == DEM.CUSTOM_EXPORT) :
+            elif(self.export_file_form_file_type == CUSTOM_EXPORT) :
                 self.reload_form_values(self.data_export_custom_form,self.export_file_form_cfg_parms)
 
             current_index   =   file_form_types_index
@@ -992,17 +986,13 @@ class DataExportGui(QtWidgets.QMainWindow):
     def build_export_form(self, buildparms, opstat) :
         """
         * ----------------------------------------------------
-        * function : build the import form
+        * function : build the export form
         * 
         * parms :
         *
-        * returns : import form
+        * returns : export form
         * ---------------------------------------------------
         """
-
-
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        import dfcleanser.Qt.data_import.DataImportModel as DIM
 
         self.build_filetype     =   buildparms[0]
         self.build_dftitle      =   buildparms[1]
@@ -1026,17 +1016,17 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         try :
 
-            export_df_titles    =   DIM.get_dftitles_list(DIM.EXPORT_HISTORY,self.build_filetype)
+            export_df_titles    =   get_dftitles_list(EXPORT_HISTORY,self.build_filetype)
         
             if(self.build_dftitle is None) :
-                last_df_title       =   DIM.get_last_dftitle(self.build_filetype,export_df_titles)
+                last_df_title       =   get_last_dftitle(self.build_filetype,export_df_titles)
             else :
                 last_df_title       =   self.build_dftitle
                 
             if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
                 add_debug_to_log("DataExport",print_to_string("[build_export_form] last_df_title : ",last_df_title))
 
-            if(self.build_filetype==DEM.SQLTABLE_EXPORT) :
+            if(self.build_filetype==SQLTABLE_EXPORT) :
 
                 from dfcleanser.sw_utilities.DBUtilsWidgets import DBUtils_SQLExportInputFormWidget  
  
@@ -1045,7 +1035,6 @@ class DataExportGui(QtWidgets.QMainWindow):
  
             else :
 
-                from dfcleanser.common.cfg import get_dfc_dataframes_select_list, DataExport_ID
                 dataframes      =   get_dfc_dataframes_select_list(DataExport_ID)
 
                 if(dataframes == None) :
@@ -1065,9 +1054,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                 else :
                     df_titles    =   {"default":"","list":[""]}
 
-                if(self.build_filetype == DEM.CSV_EXPORT) :
+                if(self.build_filetype == CSV_EXPORT) :
 
-                    form_parms      =   [DEM.pandas_export_csv_id,DEM.pandas_export_csv_idList,DEM.pandas_export_csv_labelList,DEM.pandas_export_csv_typeList,DEM.pandas_export_csv_placeholderList,DEM.pandas_export_csv_reqList]
+                    form_parms      =   [pandas_export_csv_id,pandas_export_csv_idList,pandas_export_csv_labelList,pandas_export_csv_typeList,pandas_export_csv_placeholderList,pandas_export_csv_reqList]
                     comboMethods    =   [self.update_export_csv_df,self.update_export_csv_history,None,None]
                     file_methods    =   [self.update_export_csv_file]
                     button_methods  =   [self.export_csv_file,self.clear_export_csv_file,self.return_from_export_csv_file,self.help_export_csv_file]
@@ -1082,9 +1071,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                     selectDicts.append(boolFlag)
                     selectDicts.append(boolFlag)
 
-                elif(self.build_filetype == DEM.EXCEL_EXPORT) :
+                elif(self.build_filetype == EXCEL_EXPORT) :
 
-                    form_parms      =   [DEM.pandas_export_excel_id,DEM.pandas_export_excel_idList,DEM.pandas_export_excel_labelList,DEM.pandas_export_excel_typeList,DEM.pandas_export_excel_placeholderList,DEM.pandas_export_excel_reqList]
+                    form_parms      =   [pandas_export_excel_id,pandas_export_excel_idList,pandas_export_excel_labelList,pandas_export_excel_typeList,pandas_export_excel_placeholderList,pandas_export_excel_reqList]
                     comboMethods    =   [self.update_export_excel_df,self.update_export_excel_history,None,None]
                     file_methods    =   [self.update_export_excel_file]
                     button_methods  =   [self.export_excel_file,self.clear_export_excel_file,self.return_from_export_excel_file,self.help_export_excel_file]
@@ -1099,9 +1088,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                     selectDicts.append(boolFlag)
                     selectDicts.append(boolFlag)
             
-                elif(self.build_filetype == DEM.JSON_EXPORT) :
+                elif(self.build_filetype == JSON_EXPORT) :
 
-                    form_parms      =   [DEM.pandas_export_json_id,DEM.pandas_export_json_idList,DEM.pandas_export_json_labelList,DEM.pandas_export_json_typeList,DEM.pandas_export_json_placeholderList,DEM.pandas_export_json_reqList]
+                    form_parms      =   [pandas_export_json_id,pandas_export_json_idList,pandas_export_json_labelList,pandas_export_json_typeList,pandas_export_json_placeholderList,pandas_export_json_reqList]
                     comboMethods    =   [self.update_export_json_df,self.update_export_json_history,None]
                     file_methods    =   [self.update_export_json_file]
                     button_methods  =   [self.export_json_file,self.clear_export_json_file,self.return_from_export_json_file,self.help_export_json_file]
@@ -1117,9 +1106,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                     selectDicts.append(orient)
 
 
-                elif(self.build_filetype == DEM.XML_EXPORT) :
+                elif(self.build_filetype == XML_EXPORT) :
 
-                    form_parms      =   [DEM.pandas_export_xml_id,DEM.pandas_export_xml_idList,DEM.pandas_export_xml_labelList,DEM.pandas_export_xml_typeList,DEM.pandas_export_xml_placeholderList,DEM.pandas_export_xml_reqList]
+                    form_parms      =   [pandas_export_xml_id,pandas_export_xml_idList,pandas_export_xml_labelList,pandas_export_xml_typeList,pandas_export_xml_placeholderList,pandas_export_xml_reqList]
                     comboMethods    =   [self.update_export_xml_df,self.update_export_xml_history,None]
                     file_methods    =   [self.update_export_xml_file]
                     button_methods  =   [self.export_xml_file,self.clear_export_xml_file,self.return_from_export_xml_file,self.help_export_xml_file]
@@ -1133,9 +1122,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                     indexsel       =   {"default":"True","list":["True","False"]}
                     selectDicts.append(indexsel)
 
-                elif(self.build_filetype == DEM.HTML_EXPORT) :
+                elif(self.build_filetype == HTML_EXPORT) :
 
-                    form_parms      =   [DEM.pandas_export_html_id,DEM.pandas_export_html_idList,DEM.pandas_export_html_labelList,DEM.pandas_export_html_typeList,DEM.pandas_export_html_placeholderList,DEM.pandas_export_html_reqList]
+                    form_parms      =   [pandas_export_html_id,pandas_export_html_idList,pandas_export_html_labelList,pandas_export_html_typeList,pandas_export_html_placeholderList,pandas_export_html_reqList]
                     comboMethods    =   [self.update_export_html_df,self.update_export_html_history,None,None]
                     file_methods    =   [self.update_export_html_file]
                     button_methods  =   [self.export_html_file,self.clear_export_html_file,self.return_from_export_html_file,self.help_export_html_file]
@@ -1150,9 +1139,9 @@ class DataExportGui(QtWidgets.QMainWindow):
                     selectDicts.append(boolFlag)
                     selectDicts.append(boolFlag)
             
-                elif(self.build_filetype == DEM.CUSTOM_EXPORT) :
+                elif(self.build_filetype == CUSTOM_EXPORT) :
 
-                    form_parms      =   [DEM.custom_export_id,DEM.custom_export_idList,DEM.custom_export_labelList,DEM.custom_export_typeList,DEM.custom_export_placeholderList,DEM.custom_export_reqList]
+                    form_parms      =   [custom_export_id,custom_export_idList,custom_export_labelList,custom_export_typeList,custom_export_placeholderList,custom_export_reqList]
                     comboMethods    =   [self.update_export_custom_df]
                     file_methods    =   None
                     button_methods  =   [self.export_custom_file,self.clear_export_custom_file,self.return_from_export_custom_file,self.help_export_custom_file]
@@ -1183,7 +1172,7 @@ class DataExportGui(QtWidgets.QMainWindow):
                 from dfcleanser.sw_utilities.dfc_qt_model import dfcleanser_input_form_Widget
                 export_form     =   dfcleanser_input_form_Widget(form_parms)
 
-                if(self.build_filetype == DEM.CUSTOM_EXPORT) :  
+                if(self.build_filetype == CUSTOM_EXPORT) :  
                     code_preamble   =   "from dfcleanser.common.cfg import get_dfc_dataframe_df\n"
                     code_preamble   =   code_preamble + "df  =   get_dfc_dataframe_df('" + last_df_title + "')\n"
                     export_form.set_form_input_value_by_index(1,code_preamble)
@@ -1255,8 +1244,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_export_form][export_csv_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import CSV_EXPORT
         process_export_form(CSV_EXPORT, form_parms, self)
 
     def clear_export_csv_file(self) :
@@ -1326,8 +1313,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_export_form][export_excel_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import EXCEL_EXPORT
         process_export_form(EXCEL_EXPORT, form_parms, self)
 
     def clear_export_excel_file(self) :
@@ -1400,8 +1385,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_import_form][import_json_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import JSON_EXPORT
         process_export_form(JSON_EXPORT, form_parms, self)
 
     def clear_export_json_file(self) :
@@ -1474,8 +1457,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_import_form][import_xml_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import XML_EXPORT
         process_export_form(XML_EXPORT, form_parms, self)
 
     def clear_export_xml_file(self) :
@@ -1549,8 +1530,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_import_form][import_json_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import HTML_EXPORT
         process_export_form(HTML_EXPORT, form_parms, self)
 
     def clear_export_html_file(self) :
@@ -1618,8 +1597,6 @@ class DataExportGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FORMS")) :
             add_debug_to_log("DataExport",print_to_string("[build_import_form][exmport_jcustom_file] form_parms : \n  ",form_parms))
  
-        from dfcleanser.Qt.data_export.DataExportControl import process_export_form
-        from dfcleanser.Qt.data_export.DataExportModel import CUSTOM_EXPORT
         process_export_form(CUSTOM_EXPORT, form_parms, self)
 
     def clear_export_custom_file(self) :
@@ -1675,9 +1652,6 @@ class DataExportGui(QtWidgets.QMainWindow):
 
         self.dbconnector_export_type    =   dbtparms[0]  
         self.export_action              =   dbtparms[1] 
-
-
-        #self.export_action              =   self.export_with_db_connector 
         
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
             add_debug_to_log("DataExport",print_to_string("[display_export_dbconnector_table]  ",self.dbconnector_export_type,type(self.dbconnector_export_type),self.export_action,type(self.export_action)))
@@ -2089,8 +2063,6 @@ def closeDataExportChapter()  :
 
     from dfcleanser.common.cfg import run_javascript
     run_javascript("delete_dfc_cell('DCDataExport')","unable to delete data export : ")    
-
-
 
 def exportDataframe(df_name)  :
 

@@ -20,15 +20,28 @@ from PyQt5.QtWidgets import QStackedWidget
 from PyQt5.QtCore import QSize, Qt
 from PyQt5 import uic
 
-from dfcleanser.common.cfg import print_to_string, add_debug_to_log
-
+from dfcleanser.common.cfg import print_to_string, add_debug_to_log, DataExport_ID
 from dfcleanser.Qt.system.SystemModel import is_debug_on
-from dfcleanser.common.cfg import DataExport_ID
- 
+
+from dfcleanser.Qt.data_export.DataExportModel import (CSV_EXPORT, EXCEL_EXPORT, JSON_EXPORT, HTML_EXPORT, XML_EXPORT, CUSTOM_EXPORT, SQLTABLE_EXPORT)
+
+from dfcleanser.Qt.data_export.DataExportModel import (pandas_export_csv_labelList, pandas_export_excel_labelList, pandas_export_json_labelList,
+                                                       pandas_export_xml_labelList, pandas_export_html_labelList, custom_export_labelList)
+
+from dfcleanser.Qt.data_export.DataExportModel import (pandas_export_csv_id, pandas_export_excel_id, pandas_export_json_id,
+                                                       pandas_export_xml_id, pandas_export_html_id, custom_export_id, pandas_export_sqltable_id)
+
+from dfcleanser.Qt.data_export.DataExportModel import get_export_addl_parm_dtype
+
+from dfcleanser.common.common_utils import opStatus, get_parms_for_input
+
+from dfcleanser.Qt.data_import.DataImportModel import ExportHistory
+
+
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
-# -           general Data Inspection Housekeeping                -#
+# -             general Data Export Housekeeping                  -#
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 
@@ -56,16 +69,12 @@ fix_ipython()
 # -----------------------------------------------------------------#
 
 
-import dfcleanser.Qt.data_export.DataExportModel as DEM
-from dfcleanser.common.common_utils import opStatus, get_parms_for_input
-
 
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
 # -                Data Import processing methods                 -#
 # -----------------------------------------------------------------#
 # -----------------------------------------------------------------#
-
 
 
 # -----------------------------------------------------------------#
@@ -91,60 +100,60 @@ def process_export_form(formid, parms, parent) :
     
     try :
         
-        if( (formid == DEM.CSV_EXPORT)  or (formid == DEM.EXCEL_EXPORT) or 
-            (formid == DEM.JSON_EXPORT) or (formid == DEM.HTML_EXPORT) or 
-            (formid == DEM.XML_EXPORT)  or (formid == DEM.CUSTOM_EXPORT) )  :
+        if( (formid == CSV_EXPORT)  or (formid == EXCEL_EXPORT) or 
+            (formid == JSON_EXPORT) or (formid == HTML_EXPORT) or 
+            (formid == XML_EXPORT)  or (formid == CUSTOM_EXPORT) )  :
     
-            if (formid == DEM.CSV_EXPORT) :
+            if (formid == CSV_EXPORT) :
 
                 parmstitle  =   "Pandas CSV Export Parms"
                 opstat      =   export_pandas_csv(parms)
                 
-                parmslist   =   DEM.pandas_export_csv_labelList[:6]
+                parmslist   =   pandas_export_csv_labelList[:6]
                 parmslist.pop(1)
                 parms.pop(1)
 
-            elif (formid == DEM.EXCEL_EXPORT) :
+            elif (formid == EXCEL_EXPORT) :
                 parmstitle  =   "Pandas Excel Export Parms"
                 opstat      =   export_pandas_excel(parms)
                 
-                parmslist   =   DEM.pandas_export_excel_labelList[:7]
+                parmslist   =   pandas_export_excel_labelList[:7]
                 parmslist.pop(1)
                 parms.pop(1)
         
-            elif (formid == DEM.JSON_EXPORT) : 
+            elif (formid == JSON_EXPORT) : 
                 parmstitle  =   "Pandas JSON Export Parms"
                 opstat      =   export_pandas_json(parms)
                 
-                parmslist   =   DEM.pandas_export_json_labelList[:5]
+                parmslist   =   pandas_export_json_labelList[:5]
                     
-            elif (formid == DEM.XML_EXPORT) : 
+            elif (formid == XML_EXPORT) : 
                 parmstitle  =   "Pandas XML Export Parms"
                 opstat      =   export_pandas_xml(parms)
                 
-                parmslist   =   DEM.pandas_export_xml_labelList[:7]
+                parmslist   =   pandas_export_xml_labelList[:7]
  
-            elif (formid == DEM.HTML_EXPORT) : 
+            elif (formid == HTML_EXPORT) : 
                 parmstitle  =   "Pandas HTML Export Parms"
                 opstat      =   export_pandas_html(parms)
                 
-                parmslist   =   DEM.pandas_export_html_labelList[:6]
+                parmslist   =   pandas_export_html_labelList[:6]
 
-            elif (formid == DEM.CUSTOM_EXPORT) : 
+            elif (formid == CUSTOM_EXPORT) : 
                 parmstitle  =   "Pandas Custom Export Parms"
                 return_data      =   export_pandas_custom(parms)
 
                 opstat              =   return_data[0]
                 custom_file_path    =   return_data[1]
                 
-                parmslist   =   DEM.custom_export_labelList[:1]
+                parmslist   =   custom_export_labelList[:1]
 
 
         # -----------------------------------------------------#
         # -             SQL Import Functions                  -#
         # -----------------------------------------------------#
         
-        elif (formid == DEM.SQLTABLE_EXPORT) : 
+        elif (formid == SQLTABLE_EXPORT) : 
             opstat  =   export_sql_table(parms)
                 
             # check if import was successful        
@@ -171,7 +180,7 @@ def process_export_form(formid, parms, parent) :
     # check if import was successful        
     if(opstat.get_status()) : 
 
-        if (formid == DEM.CUSTOM_EXPORT) : 
+        if (formid == CUSTOM_EXPORT) : 
             parent.display_export_status(formid, custom_file_path, parms[0])
         else :
            parent.display_export_status(formid, parms[1],parms[0])
@@ -241,8 +250,7 @@ def get_export_addl_parms_dict(detid,addl_parms,opstat) :
                 new_dkey    =   dkeys[i].replace("'","")
                 new_dkey    =   dkeys[i].replace('"',"")
                 
-                import  dfcleanser.Qt.data_export.DataExportModel as DEM
-                new_dtype   =   DEM.get_export_addl_parm_dtype(detid,new_dkey)
+                new_dtype   =   get_export_addl_parm_dtype(detid,new_dkey)
                 
                 if(addl_parms_dict.get(dkeys[i]) == "False") :
                     addl_parms_dict.update({new_dkey:False})
@@ -305,8 +313,7 @@ def save_export_data(exportid,df_title,df,fparms,full_parms,addl_parms,methodTit
 
     try :
 
-        import  dfcleanser.Qt.data_import.DataImportModel as DIM
-        DIM.ExportHistory.add_to_history(exportid,file_path,fparms,addl_parms)#full_parms,addl_parms)
+        ExportHistory.add_to_history(exportid,file_path,fparms,addl_parms)#full_parms,addl_parms)
 
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")):
             add_debug_to_log("DataExportControl",print_to_string("[save_export_data][" + methodTitle + "] Export History added : ",opstat.get_status()))
@@ -330,7 +337,7 @@ def save_export_data(exportid,df_title,df,fparms,full_parms,addl_parms,methodTit
             if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")):
                 add_debug_to_log("DataExportControl",print_to_string("[save_export_data][" + methodTitle + "] cfg parms stored : \n  ",cfg.get_config_value(exportFormId + "Parms")))
 
-    if(DEBUG_DATA_EXPORT):
+    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")):
         add_debug_to_log("DataExportControl",print_to_string("[save_export_data][" + methodTitle + "] end "))
 
 
@@ -345,17 +352,18 @@ def save_export_data(exportid,df_title,df,fparms,full_parms,addl_parms,methodTit
 import json
 import pandas as pd
 
+
 # -----------------------------------------------------------------#
 # -                        Export CSV File                        -#
 # -----------------------------------------------------------------#
 
 def export_pandas_csv(fparms) : 
     
-    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")_CSV) :
+    if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_csv]\n",fparms))
     
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_csv_id
+    exportId    =   pandas_export_csv_id
     
     
     if(len(fparms) == 0) :
@@ -410,13 +418,13 @@ def export_pandas_csv(fparms) :
                             csv_index   =   True
 
                     pindex   =   5
-                    csv_addl_parms  =   get_export_addl_parms_dict(DEM.CSV_EXPORT,fparms[5],opstat)
+                    csv_addl_parms  =   get_export_addl_parms_dict(CSV_EXPORT,fparms[5],opstat)
 
                     if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
                         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_csv] csv_addl_parms : ",csv_addl_parms))
                     
                 except Exception as e:
-                    opstat.store_exception("Invalid Import Parm " + DEM.pandas_export_csv_labelList[pindex] + " : " + fparms[pindex],e)
+                    opstat.store_exception("Invalid Import Parm " + pandas_export_csv_labelList[pindex] + " : " + fparms[pindex],e)
 
     if(opstat.get_status()) :
                     
@@ -453,7 +461,7 @@ def export_pandas_csv(fparms) :
         # addl parms tag
         csv_full_parms.append("")
 
-        save_export_data(DEM.CSV_EXPORT,df_title,df,fparms,csv_full_parms,csv_addl_parms,"export_pandas_csv",file_path,exportId,opstat) 
+        save_export_data(CSV_EXPORT,df_title,df,fparms,csv_full_parms,csv_addl_parms,"export_pandas_csv",file_path,exportId,opstat) 
 
 
     return(opstat)
@@ -474,7 +482,7 @@ def export_pandas_excel(fparms) :
     exception_occurred  =   False
    
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_excel_id
+    exportId    =   pandas_export_excel_id
     
     if(len(fparms) == 0) :
         opstat.set_status(False)
@@ -527,13 +535,13 @@ def export_pandas_excel(fparms) :
                         else :
                             excel_index   =   True
 
-                    excel_addl_parms  =   get_export_addl_parms_dict(DEM.EXCEL_EXPORT,fparms[6],opstat)
+                    excel_addl_parms  =   get_export_addl_parms_dict(EXCEL_EXPORT,fparms[6],opstat)
                     
                     if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
                         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_excel] excel_addl_parms : ",excel_addl_parms))
                 
                 except Exception as e:
-                    opstat.store_exception("Invalid Wxport Parm " + DEM.pandas_export_excel_labelList[pindex] + " : " + fparms[pindex],e)
+                    opstat.store_exception("Invalid Wxport Parm " + pandas_export_excel_labelList[pindex] + " : " + fparms[pindex],e)
                     exception_occurred  =   True
 
     if(opstat.get_status()) :
@@ -574,7 +582,7 @@ def export_pandas_excel(fparms) :
             # addl parms tag
             excel_full_parms.append("")
 
-            save_export_data(DEM.EXCEL_EXPORT,df_title,df,fparms,excel_full_parms,excel_addl_parms,"import_pandas_excel",excel_writer,exportId,opstat) 
+            save_export_data(EXCEL_EXPORT,df_title,df,fparms,excel_full_parms,excel_addl_parms,"import_pandas_excel",excel_writer,exportId,opstat) 
 
     if(not (opstat.get_status())) :
 
@@ -597,7 +605,7 @@ def export_pandas_json(fparms) :
         add_debug_to_log("DataExportControl",print_to_string("[import_pandas_json]\n",fparms))
     
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_json_id
+    exportId    =   pandas_export_json_id
     
     if(len(fparms) == 0) :
         opstat.set_status(False)
@@ -633,13 +641,13 @@ def export_pandas_json(fparms) :
                         orient_parm   =   fparms[pindex]
 
  
-                    json_addl_parms  =   get_export_addl_parms_dict(DEM.JSON_EXPORT,fparms[4],opstat)
+                    json_addl_parms  =   get_export_addl_parms_dict(JSON_EXPORT,fparms[4],opstat)
                     
                     if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
                         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_json] json_addl_parms : ",json_addl_parms))
                    
                 except Exception as e:
-                    opstat.store_exception("Invalid Import Parm " + DEM.pandas_export_json_labelList[pindex] + " : " + fparms[pindex],e)
+                    opstat.store_exception("Invalid Import Parm " + pandas_export_json_labelList[pindex] + " : " + fparms[pindex],e)
             
     if(opstat.get_status()) :
         
@@ -668,7 +676,7 @@ def export_pandas_json(fparms) :
         json_full_parms.append(orient_parm)
         json_full_parms.append("")
 
-        save_export_data(DEM.JSON_EXPORT,df_title,df,fparms,json_full_parms,json_addl_parms,"export_pandas_json",file_path,exportId,opstat) 
+        save_export_data(JSON_EXPORT,df_title,df,fparms,json_full_parms,json_addl_parms,"export_pandas_json",file_path,exportId,opstat) 
 
 
     return(opstat)
@@ -683,7 +691,7 @@ def export_pandas_xml(fparms) :
         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_xml]\n",fparms))
     
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_json_id
+    exportId    =   pandas_export_xml_id
     
     if(len(fparms) == 0) :
         opstat.set_status(False)
@@ -739,13 +747,13 @@ def export_pandas_xml(fparms) :
                     else :
                         na_rep      =   fparms[pindex]
 
-                    xml_addl_parms  =   get_export_addl_parms_dict(DEM.JSON_EXPORT,fparms[7],opstat)
+                    xml_addl_parms  =   get_export_addl_parms_dict(JSON_EXPORT,fparms[7],opstat)
                     
                     if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
                         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_xml] xml_addl_parms : ",xml_addl_parms))
                    
                 except Exception as e:
-                    opstat.store_exception("Invalid Import Parm " + DEM.pandas_export_xml_labelList[pindex] + " : " + fparms[pindex],e)
+                    opstat.store_exception("Invalid Import Parm " + pandas_export_xml_labelList[pindex] + " : " + fparms[pindex],e)
             
     if(opstat.get_status()) :
         
@@ -783,7 +791,7 @@ def export_pandas_xml(fparms) :
         xml_full_parms.append(na_rep)
         xml_full_parms.append("")
 
-        save_export_data(DEM.XML_EXPORT,df_title,df,fparms,xml_full_parms,xml_addl_parms,"export_pandas_xml",file_path,exportId,opstat) 
+        save_export_data(XML_EXPORT,df_title,df,fparms,xml_full_parms,xml_addl_parms,"export_pandas_xml",file_path,exportId,opstat) 
 
 
     return(opstat)
@@ -800,7 +808,7 @@ def export_pandas_html(fparms,opstat) :
         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_html] : \n",fparms))   
 
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_json_id
+    exportId    =   pandas_export_html_id
     
     if(len(fparms) == 0) :
         opstat.set_status(False)
@@ -849,13 +857,13 @@ def export_pandas_html(fparms,opstat) :
                         else :
                             html_index   =   True
  
-                    html_addl_parms  =   get_export_addl_parms_dict(DEM.HTML_EXPORT,fparms[5],opstat)
+                    html_addl_parms  =   get_export_addl_parms_dict(HTML_EXPORT,fparms[5],opstat)
                     
                     if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT")) :
                         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_html] json_addl_parms : ",html_addl_parms))
                    
                 except Exception as e:
-                    opstat.store_exception("Invalid Import Parm " + DEM.pandas_export_json_labelList[pindex] + " : " + fparms[pindex],e)
+                    opstat.store_exception("Invalid Import Parm " + pandas_export_json_labelList[pindex] + " : " + fparms[pindex],e)
 
     
     if(opstat.get_status()) : 
@@ -890,7 +898,7 @@ def export_pandas_html(fparms,opstat) :
         # addl parms tag
         html_full_parms.append("")
 
-        save_export_data(DEM.HTML_EXPORT,df_title,df,fparms,html_full_parms,html_addl_parms,"export_pandas_html",io,exportId,opstat) 
+        save_export_data(HTML_EXPORT,df_title,df,fparms,html_full_parms,html_addl_parms,"export_pandas_html",io,exportId,opstat) 
     
     
     return(opstat)
@@ -906,7 +914,7 @@ def export_pandas_custom(fparms) :
         add_debug_to_log("DataExportControl",print_to_string("[export_pandas_custom] : \n",fparms))   
     
     opstat = opStatus() 
-    exportId    =   DEM.custom_export_id 
+    exportId    =   custom_export_id 
 
     if(len(fparms) == 0) :
         opstat.set_status(False)
@@ -953,7 +961,7 @@ def export_pandas_custom(fparms) :
         custom_full_parms.append(code)
 
         from dfcleanser.Qt.data_import.DataImportModel import ExportHistory
-        df_titles   =   ExportHistory.get_df_titles_for_file_type(DEM.CUSTOM_EXPORT)
+        df_titles   =   ExportHistory.get_df_titles_for_file_type(CUSTOM_EXPORT)
 
         if(not (df_titles is None)) :
             file_type_totals    =   len(df_titles)
@@ -962,7 +970,7 @@ def export_pandas_custom(fparms) :
 
         file_path   =   "Custom_file_path_" + str(file_type_totals)
 
-        save_export_data(DEM.CUSTOM_EXPORT,df_title,df,fparms,custom_full_parms,None,"export_pandas_custom",file_path,exportId,opstat) 
+        save_export_data(CUSTOM_EXPORT,df_title,df,fparms,custom_full_parms,None,"export_pandas_custom",file_path,exportId,opstat) 
     
 
     return([opstat,file_path])
@@ -981,7 +989,7 @@ def export_sql_table(fparms) :
         add_debug_to_log("DataExportControl",print_to_string("[export_sql_table] : \n    ",fparms))
     
     opstat      =   opStatus()
-    exportId    =   DEM.pandas_export_sqltable_id 
+    exportId    =   pandas_export_sqltable_id 
 
     from dfcleanser.sw_utilities.db_utils import dfc_dbconnectors_table, EXPORT_FLAG
     current_selected_connector  =   dfc_dbconnectors_table.get_current_dbconnector(EXPORT_FLAG)
@@ -1161,10 +1169,8 @@ def export_sql_table(fparms) :
                         sql_full_parms.append(str(dtype))
                         sql_full_parms.append(str(sqlmethod))
 
-                        # addl parms tag
-                        #sql_full_parms.append("")
 
-                        save_export_data(DEM.SQLTABLE_EXPORT,df_title,df,fparms,sql_full_parms,None,"export_pandas_sqltable",table_name,exportId,opstat) 
+                        save_export_data(SQLTABLE_EXPORT,df_title,df,fparms,sql_full_parms,None,"export_pandas_sqltable",table_name,exportId,opstat) 
     
              
     return(opstat)    

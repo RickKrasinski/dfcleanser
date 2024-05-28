@@ -22,12 +22,15 @@ from PyQt5 import uic
 from PyQt5.QtGui import QColor
 from PyQt5.QtGui import QFont
 
-
 import dfcleanser.common.cfg as cfg 
 from dfcleanser.common.cfg import print_to_string, add_debug_to_log
 
 from dfcleanser.Qt.system.SystemModel import is_debug_on
 from dfcleanser.common.cfg import DataExport_ID
+
+from dfcleanser.Qt.data_export.DataExportModel import (CSV_EXPORT, EXCEL_EXPORT, JSON_EXPORT, HTML_EXPORT, XML_EXPORT, CUSTOM_EXPORT, SQLTABLE_EXPORT)
+from dfcleanser.Qt.data_export.DataExportModel import (pandas_export_csv_labelList, pandas_export_excel_labelList, pandas_export_json_labelList,
+                                                       pandas_export_xml_labelList, pandas_export_html_labelList, custom_export_labelList)
 
 
 # -----------------------------------------------------------------#
@@ -666,13 +669,11 @@ class Data_Export_File_Type_Histories_Widget(QtWidgets.QWidget):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_FILE_TYPES")) :
             add_debug_to_log("DataExportWidgets",print_to_string("[Data_Export_File_Type_Histories_Widget] : init_form"))
 
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-
-        if(self.filetype == DEM.CSV_EXPORT)         : filetitle  =   "CSV"
-        elif(self.filetype == DEM.EXCEL_EXPORT)     : filetitle  =   "Excel"
-        elif(self.filetype == DEM.JSON_EXPORT)      : filetitle  =   "JSON"
-        elif(self.filetype == DEM.HTML_EXPORT)      : filetitle  =   "HTML"
-        elif(self.filetype == DEM.SQLTABLE_EXPORT)  : filetitle  =   "SQLTable"
+        if(self.filetype == CSV_EXPORT)         : filetitle  =   "CSV"
+        elif(self.filetype == EXCEL_EXPORT)     : filetitle  =   "Excel"
+        elif(self.filetype == JSON_EXPORT)      : filetitle  =   "JSON"
+        elif(self.filetype == HTML_EXPORT)      : filetitle  =   "HTML"
+        elif(self.filetype == SQLTABLE_EXPORT)  : filetitle  =   "SQLTable"
         else :                                        filetitle  =   "Custom"
 
         from PyQt5.QtWidgets import QLabel
@@ -1102,29 +1103,27 @@ class Export_With_Parms_Widget(QtWidgets.QWidget):
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
             add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][export_with_parms]\n    [ptitles] : ",ptitles,"\n    [pvalues] : ",pvals))
     
-        import dfcleanser.Qt.data_export.DataExportModel as DEM
-        
-        if(self.filetype == DEM.CSV_EXPORT) :
-            export_labels   =   DEM.pandas_export_csv_labelList[:6]
-        elif(self.filetype == DEM.EXCEL_EXPORT) :
-            export_labels   =   DEM.pandas_export_excel_labelList[:7]
-        elif(self.filetype == DEM.JSON_EXPORT) :
-            export_labels   =   DEM.pandas_export_json_labelList[:5]
-        elif(self.filetype == DEM.HTML_EXPORT) :
-            export_labels   =   DEM.pandas_export_html_labelList[:6]
-        elif(self.filetype == DEM.SQLTABLE_EXPORT) :
-            export_labels   =   DEM.pandas_export_sqltable_labelList[:9]
-        elif(self.filetype == DEM.CUSTOM_EXPORT) :
-            export_labels   =   DEM.custom_export_labelList[:2]
+        if(self.filetype == CSV_EXPORT) :
+            export_labels   =   pandas_export_csv_labelList[:6]
+        elif(self.filetype == EXCEL_EXPORT) :
+            export_labels   =   pandas_export_excel_labelList[:7]
+        elif(self.filetype == JSON_EXPORT) :
+            export_labels   =   pandas_export_json_labelList[:5]
+        elif(self.filetype == HTML_EXPORT) :
+            export_labels   =   pandas_export_html_labelList[:6]
+        elif(self.filetype == SQLTABLE_EXPORT) :
+            export_labels   =   pandas_export_sqltable_labelList[:9]
+        elif(self.filetype == CUSTOM_EXPORT) :
+            export_labels   =   custom_export_labelList[:2]
 
         if(is_debug_on(DataExport_ID,"DEBUG_DATA_EXPORT_PARMS")) :
             add_debug_to_log("DataExportWidgets",print_to_string("[Export_With_Parms_Widget][export_with_parms] : export_labels : \n    ",export_labels))
 
         from dfcleanser.sw_utilities.dfc_qt_model import build_cfg_parms_from_history
-        if(self.filetype == DEM.SQLTABLE_EXPORT) :
+        if(self.filetype == SQLTABLE_EXPORT) :
             export_cfg_parms    =   build_cfg_parms_from_history(ptitles,pvals,export_labels,ADDL_PARMS=False) 
         else : 
-            if(self.filetype == DEM.CUSTOM_EXPORT) :
+            if(self.filetype == CUSTOM_EXPORT) :
                 export_cfg_parms    =   build_cfg_parms_from_history(ptitles,pvals,export_labels,ADDL_PARMS=False) 
             else :     
                 export_cfg_parms    =   build_cfg_parms_from_history(ptitles,pvals,export_labels,ADDL_PARMS=True)
