@@ -369,7 +369,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         #self.statusBar().clearMessage()
         
         dftitle     =   self.get_current_inspect_df_title()
-	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT")) :
+
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECTION")) :
             add_debug_to_log("DataInspection",print_to_string("dftitle",dftitle))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
@@ -449,12 +450,11 @@ class DataInspectionGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
             add_debug_to_log("DataInspection",print_to_string("[InspectDataTypes] select_datatype"))
 
-
         for idx in self.DataTypesStats.selectionModel().selectedIndexes():
             row_number = idx.row()
             column_number = idx.column()
 
-	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_DTYPES")) :
             add_debug_to_log("DataInspection",print_to_string("[handleHistorydoubleclick] : double clicked : row ",row_number))
             add_debug_to_log("DataInspection",print_to_string("[handleHistorydoubleclick] : double clicked : column ",column_number))
 
@@ -491,8 +491,8 @@ class DataInspectionGui(QtWidgets.QMainWindow):
             add_debug_to_log("DataInspection",print_to_string("[InspectNans]"))
 
         self.dftitle = self.df_select.currentText()
-	
-	if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
+        
+        if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_NANS")) :
             add_debug_to_log("DataInspection",print_to_string("self.df_select.currentText()",self.df_select.currentText()))
 
         from dfcleanser.common.cfg import get_dfc_dataframe_df 
