@@ -682,8 +682,6 @@ def build_chapter_debug_flags(chapterid,chparms) :
 
 def set_chapter_debug_flag(chapterid,flagoffset) : 
 
-    print("set_chapter_debug_flag")
-
     current_value   =   get_debug_flag_value(chapterid,flagoffset) 
 
     if(current_value == True) :
@@ -695,18 +693,11 @@ def set_chapter_debug_flag(chapterid,flagoffset) :
 
 def is_debug_set(chapterid,flagvalue) :
 
-    #print("is_debug_set",chapterid,flagvalue)
-
-    #return(True)
-
     chapter         =   dfc_debug_values.get_debug_chapter(chapterid)
     if(chapter is None) :
-        #print("is_debug_set - not found",flagvalue,debug_value)
         return(False)
     else :
         debug_value     =   chapter.get_debug_value(flagvalue) 
-        #if(debug_value == True) :
-        #    print("is_debug_set",flagvalue,debug_value)
         return(debug_value)   
 
 def save_debug_file() :
@@ -791,19 +782,16 @@ class DataframeCleanserChapterDebugValues :
 
 
 def get_debug_flag_value(chapter,debugid) :
+
     value   =   dfc_debug_values.get_debug_value(chapter,debugid)
-    print("get_debug_flag_value",chapter,debugid,value)
     return(value)
 
 def set_debug_flag_value(chapter,debugid,debugvalue) :
 
-    print("set_debug_flag_value",chapter,debugid,debugvalue)
     dfc_debug_values.set_debug_value(chapter,debugid,debugvalue)
-    print("after set_debug_flag_value",chapter,debugid)
-    print(get_debug_flag_value(chapter,debugid))
 
 def get_debug_chapter(chapter) :
-    #print("get_debug_chapter",chapter)
+
     return(dfc_debug_values.get_debug_chapter(chapter))
 
 class DataframeCleanserDebugValues :
@@ -831,7 +819,7 @@ class DataframeCleanserDebugValues :
         from dfcleanser.common.cfg import get_notebookPath, get_notebookName
         nbdir   =   get_notebookPath()
         nbname  =   get_notebookName()
-        #print("construct debug flags \n",nbdir,"\n",nbname)
+
         if((nbdir is None)or(nbname is None)) :
             return(None)
         else :
@@ -871,14 +859,10 @@ class DataframeCleanserDebugValues :
 
             self.debug_values.append(new_chapter)
 
-        #self.dump_debug_values() 
-
         self.save_debug_values_file()
 
     def load_debug_values_from_file(self) :
 
-        #print("construct debug flags load_debug_values_from_file")
-        
         debug_values_dirname   =   self.get_debug_values_dir_name()
 
         if(not (debug_values_dirname is None)) :
@@ -889,7 +873,6 @@ class DataframeCleanserDebugValues :
         
             debug_values_filename   =   self.get_debug_values_file_name()
 
-            #print("debug_values_filename : \n",debug_values_filename)
             from dfcleanser.common.common_utils import does_file_exist
             if(not (does_file_exist(debug_values_filename))) :
 
@@ -905,7 +888,6 @@ class DataframeCleanserDebugValues :
 
                     with open(debug_values_filename, 'r') as debug_values_file :
                         serialized_debug_values =   json.load(debug_values_file)
-                        #print("load_debug_values_from_file",type(serialized_debug_values))
                         self.debug_values       =   self.deserialize_debug_values(serialized_debug_values)
                         debug_values_file.close()
                         
@@ -917,9 +899,6 @@ class DataframeCleanserDebugValues :
                     print("[Load Error Debug Values Error] "  + str(sys.exc_info()[0].__name__))
         
     def save_debug_values_file(self) :
-
-        print("[save_debug_values_file] self.debug_values",type(self.debug_values))
-        #self.dump_debug_values()
 
         try :
 
@@ -936,15 +915,11 @@ class DataframeCleanserDebugValues :
             from dfcleanser.sw_utilities.dfc_qt_model import display_exception
             display_exception(title,status_msg,e)
 
-        #self.dump_debug_values()
-
    
     def is_debug_flags_loaded(self) :
         return(self.debug_values_loaded)
 
     def set_debug_value(self,chapterid,flagid,flagvalue) :
-
-        print("[DataframeCleanserDebugValues] : set_debug_value",chapterid,flagid,flagvalue)
 
         if(not (self.is_debug_flags_loaded())) :
             self.load_debug_values_from_file()
@@ -952,7 +927,7 @@ class DataframeCleanserDebugValues :
         print("[DataframeCleanserDebugValues] : is_debug_flags_loaded",self.is_debug_flags_loaded())
 
         for i in range(len(self.debug_values)) :
-            print("[DataframeCleanserDebugValues] : set_debug_value",self.debug_values[i].get_chapter_id(),chapterid)
+
             if(self.debug_values[i].get_chapter_id() == chapterid) :
                 chapter     =   self.debug_values[i]
                 print("[DataframeCleanserDebugValues] : chapter : ",chapter.get_chapter_values())
@@ -998,12 +973,11 @@ class DataframeCleanserDebugValues :
         return(serial_debug_values)
 
     def deserialize_debug_values(self,serial_values) :
-        #print("deserialize_debug_values",type(serial_values))
+
         deserialized_debug_values     =   []
         
         for i in range(len(serial_values)) :
 
-            #print("deserialize_debug_values",serial_values[i][0],serial_values[i][1],serial_values[i][2])
             new_deserialized_chapter    =   DataframeCleanserChapterDebugValues(serial_values[i][0],serial_values[i][1],serial_values[i][2])
             deserialized_debug_values.append(new_deserialized_chapter)
         

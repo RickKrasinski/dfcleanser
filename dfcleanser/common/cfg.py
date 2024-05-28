@@ -2053,23 +2053,20 @@ class dfc_dataframes :
 
     def rename_dataframe(self,oldName,newName) :
 
-	if(DEBUG_DFC_MGR) :
+        if(DEBUG_DFC_MGR) :
             add_debug_to_log("cfg",print_to_string("[rename_dataframe] oldName,newName",oldName,newName))
             add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles(),self.dcdataframes))
-        
-	dfindex     =   self.get_df_index(oldName)
 
+        dfindex     =   self.get_df_index(oldName)
+        
         if(dfindex > -1) :  
 
             df_info     =   self.dcdataframes[dfindex].get_df()
             self.dcdataframes[dfindex].set_title(newName)
 	    
-	    if(DEBUG_DFC_MGR) :
-                add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles()))
+        if(DEBUG_DFC_MGR) :
+            add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles()))
             
-        #    if(oldName == self.current_df) :
-        #        self.current_df     =   newName
-                
     def get_dataframe_titles(self) :
         
         if(len(self.dcdataframes) > 0) :
