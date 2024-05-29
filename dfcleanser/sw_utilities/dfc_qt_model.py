@@ -1127,8 +1127,6 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
 
     cfg_parms   =   []
 
-    DEBUG_BUILD_CFG     =   False
-
     addl_parms_found    =   False
 
     if(ADDL_PARMS) :
@@ -1149,7 +1147,7 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
 
             addl_parms  =   "{"
 
-            if(DEBUG_BUILD_CFG) :
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                 add_debug_to_log("dfc_qt_model",print_to_string("addl_parms_index",addl_parms_index))
                 add_debug_to_log("dfc_qt_model",print_to_string("num_addl_parms",num_addl_parms))
                 add_debug_to_log("dfc_qt_model",print_to_string("start_addl_parms",start_addl_parms))
@@ -1159,23 +1157,23 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
                 addl_parm_title     =   ptitles[start_addl_parms + j]
                 addl_parms_value    =   str(pvalues[start_addl_parms + j]) 
 
-                if(DEBUG_BUILD_CFG) :
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                     add_debug_to_log("dfc_qt_model",print_to_string("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value))
             
                 addl_parm_title     =   '"' + addl_parm_title + '" : '
                 addl_parms_value    =   '"' + addl_parms_value + '"'
 
-                if(DEBUG_BUILD_CFG) :
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                     add_debug_to_log("dfc_qt_model",print_to_string("addl_parm_title : addl_parms_value ",addl_parm_title,addl_parms_value))
 
                 new_addl_parm       =   addl_parm_title + addl_parms_value
 
-                if(DEBUG_BUILD_CFG) :
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                     add_debug_to_log("dfc_qt_model",print_to_string("new_addl_parm  ",new_addl_parm))
 
                 addl_parms  =   addl_parms + new_addl_parm
 
-                if(DEBUG_BUILD_CFG) :
+                if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                     add_debug_to_log("dfc_qt_model",print_to_string("addl_parms",addl_parms))
 
                 if(not (j==(num_addl_parms-1)) ) :
@@ -1183,21 +1181,21 @@ def build_cfg_parms_from_history(ptitles,pvalues,formlabels,ADDL_PARMS=True):
                 else :
                     addl_parms  =   addl_parms + '}'  
             
-            if(DEBUG_BUILD_CFG) :
+            if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
                 add_debug_to_log("dfc_qt_model",print_to_string("addl_parms",addl_parms))
 
     else :
 
         parms_len   =   len(formlabels)
 
-    if(DEBUG_BUILD_CFG) :
+    if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) :
         padd_debug_to_log("dfc_qt_model",print_to_string("parms_len",parms_len))
 
     for i in range(parms_len) :
                
         parm_to_match    =   formlabels[i]
         
-        if(DEBUG_BUILD_CFG) : 
+        if(is_debug_on(SWUtilities_ID,"DEBUG_INPUT_FORMS_DETAILS")) : 
             add_debug_to_log("dfc_qt_model",print_to_string("parm_to_match",parm_to_match))
 
         if(parm_to_match in ptitles) :
