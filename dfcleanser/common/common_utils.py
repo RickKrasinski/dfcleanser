@@ -53,9 +53,6 @@ redcolor        =   "#F1C4B7"
 greencolor      =   "#ADECC4"
     
 
-DUMP_HTML           =   False
-DEBUG_COMMON        =   False
-
 """
 #--------------------------------------------------------------------------
 #--------------------------------------------------------------------------
@@ -1081,10 +1078,10 @@ def get_parms_for_input(parms,ids) :
     #--------------------------------------------------------------------------
     """
     outparms = []
-    
-    if(DEBUG_COMMON) :
-        add_debug_to_log("get_parms_for_input"," : parms " + type(parms) + "\n" + str(parms))
-        add_debug_to_log("get_parms_for_input"," : ids ",type(ids) + "\n" + str(ids))
+
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+        add_debug_to_log("common_utils",print_to_string("[get_parms_for_input] : parms : ",type(parms),"\n",str(parms)))
+        add_debug_to_log("common_utils",print_to_string("[get_parms_for_input] : ids : ",type(ids),"\n",str(ids)))
     
     try :
         
@@ -1092,9 +1089,9 @@ def get_parms_for_input(parms,ids) :
            ((len(parms) == 0) or (len(ids) == 0)) ) :
             return(outparms)
     
-        if(DEBUG_COMMON) :
-            add_debug_to_log("get_parms_for_input"," : parms" + str(len(parms)) + type(parms) + "\n" + str(parms)) 
-            add_debug_to_log("get_parms_for_input"," : ids  " + str(len(ids)) + "\n" + str(ids)) 
+        if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+            add_debug_to_log("common_utils",print_to_string("get_parms_for_input"," : parms" + str(len(parms)) + type(parms) + "\n" + str(parms))) 
+            add_debug_to_log("common_utils",print_to_string("get_parms_for_input"," : ids  " + str(len(ids)) + "\n" + str(ids))) 
         
         if(type(parms) == str) :
             import json
@@ -1109,8 +1106,8 @@ def get_parms_for_input(parms,ids) :
         from dfcleanser.sw_utilities.DisplayUtils import get_error_msg_html
         get_error_msg_html(error_msg,80,90,None,True)
     
-    if(DEBUG_COMMON) :
-        add_debug_to_log("get_parms_for_input"," : inparms  " + str(inparms)) 
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+        add_debug_to_log("common_utils",print_to_string("get_parms_for_input"," : inparms  " + str(inparms))) 
     
     try :
         
@@ -1137,8 +1134,8 @@ def get_parms_for_input(parms,ids) :
         from dfcleanser.sw_utilities.DisplayUtils import get_error_msg_html
         get_error_msg_html(error_msg,80,80,None,True)
     
-    if(DEBUG_COMMON) :
-        add_debug_to_log("get_parms_for_input"," : outparms  " + str(outparms)) 
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+        add_debug_to_log("common_utils",print_to_string("get_parms_for_input"," : outparms  " + str(outparms))) 
     
 
     return(outparms)
@@ -1159,8 +1156,8 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     #--------------------------------------------------------------------------
     """
 
-    if(DEBUG_COMMON) :
-        add_debug_to_log("get_select_defaults"," : " + str(formid) + "\n parmids : " + str(parmids) + "\n parmtypes : " + str(parmtypes) + "\n selectids : " + str(selectDicts))
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+        add_debug_to_log("common_utils",print_to_string("get_select_defaults"," : " + str(formid) + "\n parmids : " + str(parmids) + "\n parmtypes : " + str(parmtypes) + "\n selectids : " + str(selectDicts)))
 
     numselects      =   0
 
@@ -1185,8 +1182,8 @@ def get_select_defaults(form,formid,parmids,parmtypes,selectDicts) :
     
     else :
 
-        if(DEBUG_COMMON) :
-            add_debug_to_log("get_select_defaults : bad number of selects : ",selectDicts)
+        if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+            add_debug_to_log("common_utils",print_to_string("get_select_defaults : bad number of selects : ",selectDicts))
 
 
         default_select  =   {"default":"No Entry","list":["No Entry"],"callback":"noop"}

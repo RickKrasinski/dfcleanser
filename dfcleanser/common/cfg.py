@@ -14,8 +14,7 @@ this = sys.modules[__name__]
 import json 
 import os
 
-DEBUG_DISPLAY_PARMS     =   False
-DEBUG_DFC_MGR           =   False
+from dfcleanser.Qt.system.SystemModel import is_debug_on
 
 
 """
@@ -487,8 +486,8 @@ def add_df_to_dfc(df_title,df,df_source="",df_notes="")  :
     * --------------------------------------------------------------------
     """
 
-    if(DEBUG_DFC_MGR) :
-        add_debug_to_log("DataExport",print_to_string("[add_df_to_dfc] df_title : ",df_title))
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
+        add_debug_to_log("cfg",print_to_string("[add_df_to_dfc] df_title : ",df_title))
     
     #add_df_signal
     dfc_df_history.add_dfc_df(df_title,df,df_source,df_notes)
@@ -498,19 +497,19 @@ def add_df_to_dfc(df_title,df,df_source="",df_notes="")  :
     DataCleansing_add_df_signal.issue_notice(df_title)
     DataExport_add_df_signal.issue_notice(df_title)
 
-    if(DEBUG_DFC_MGR) :
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
         add_debug_to_log("DataExport",print_to_string("[add_df_to_dfc] added : ",df_title,dfc_df_history.get_df_titles()))
 
 
 def rename_dfc_dataframe(oldName,newName) :
 
-    if(DEBUG_DFC_MGR) :
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
         add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] oldName,newName",oldName,newName))
         add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list()))
 
     dfc_df_history.rename_dataframe(oldName,newName)
 
-    if(DEBUG_DFC_MGR) :
+    if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
         add_debug_to_log("cfg",print_to_string("[rename_dfc_dataframe] get_dfc_dataframes_titles_list()",get_dfc_dataframes_titles_list()))
 
 
@@ -2053,7 +2052,7 @@ class dfc_dataframes :
 
     def rename_dataframe(self,oldName,newName) :
 
-        if(DEBUG_DFC_MGR) :
+        if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
             add_debug_to_log("cfg",print_to_string("[rename_dataframe] oldName,newName",oldName,newName))
             add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles(),self.dcdataframes))
 
@@ -2064,7 +2063,7 @@ class dfc_dataframes :
             df_info     =   self.dcdataframes[dfindex].get_df()
             self.dcdataframes[dfindex].set_title(newName)
 	    
-        if(DEBUG_DFC_MGR) :
+        if(is_debug_on(SWUtilities_ID,"DEBUG_COMMON")) :
             add_debug_to_log("cfg",print_to_string("[rename_dataframe] self.dcdataframes",self.get_dataframe_titles()))
             
     def get_dataframe_titles(self) :
