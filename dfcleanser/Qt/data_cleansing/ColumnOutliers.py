@@ -314,7 +314,7 @@ class OutliersGui(QtWidgets.QMainWindow):
 
             self.resize(DIALOG_GEOMETRY[2],dialog_height)
             
-        if(DEBUG_COUTLIERS) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             self.dump_geometry()
 
 
@@ -345,7 +345,7 @@ class OutliersGui(QtWidgets.QMainWindow):
         [bgcolors,data]     =   self.load_model_data(self.outliers_data)
         num_data_rows       =   len(data)
 
-        if(DEBUG_COUTLIERS) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             add_debug_to_log("init_outliers_form",print_to_string(" num_data_rows : ",num_data_rows))
 
         # adjust the height of the tableview
@@ -473,7 +473,7 @@ class OutliersGui(QtWidgets.QMainWindow):
                     else :
                         outliers_color.append(yellow_bgcolor)
 
-        if(DEBUG_COUTLIERS) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             add_debug_to_log("format_outliers_data",print_to_string(outliers_stds,outliers_count,outliers_percent,outliers_range,outliers_color))
 
         data_row            =   []
@@ -493,7 +493,7 @@ class OutliersGui(QtWidgets.QMainWindow):
  
             num_data_rows   =   num_data_rows + 1
 
-        if(DEBUG_COUTLIERS) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
             add_debug_to_log("format_outliers_data",print_to_string(num_data_rows,"\n",data))
 
         return([outliers_color,data])
@@ -511,8 +511,8 @@ class OutliersGui(QtWidgets.QMainWindow):
 # -----------------------------------------------------------------#
 def showOutliers(dftitle,colname)  :
 
-    if(DEBUG_COUTLIERS) :
-        add_debug_to_log("showUniques",print_to_string(dftitle,colname))
+    if(is_debug_on(DataCleansing_ID,"DEBUG_CUNIQUES")) :
+        add_debug_to_log("showOutliers",print_to_string(dftitle,colname))
 
     logger.info("Opening dfc Outliers GUI")
 

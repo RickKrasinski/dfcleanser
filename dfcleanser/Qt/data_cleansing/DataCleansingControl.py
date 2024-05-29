@@ -58,7 +58,6 @@ fix_ipython()
 # -----------------------------------------------------------------#
 
 
-import dfcleanser.Qt.data_import.DataImportModel as DIM
 from dfcleanser.common.common_utils import opStatus, get_parms_for_input
 
 

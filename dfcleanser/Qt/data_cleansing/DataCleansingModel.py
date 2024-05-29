@@ -638,7 +638,7 @@ class UserfnsHistory :
         
         df_titles_dict  =   self.notebook_history.get(fileType)
         
-        if(DEBUG_IMPORT_HISTORY_DETAILS) :
+        if(is_debug_on(DataCleansing_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
             add_debug_to_log("DataCleansingModel",print_to_string("df_titles_dict : ",fileType,"\n",df_titles_dict))
         
         if(not (df_titles_dict is None)) :
