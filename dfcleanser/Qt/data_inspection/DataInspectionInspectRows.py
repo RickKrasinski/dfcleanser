@@ -278,7 +278,7 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         self.dfc_dfs_layout =   dfc_dfs_layout
         self.dfc_dfs_layout.addStretch()
 
-        if(DEBUG_INSPECT_ROWS_DETAILS) :
+        if(is_debug_on(DataInspection_ID,"DEBUG_INSPECT_ROWS_DETAILS")) :
             add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][init_dfs_to_inspect_df_rows]  ",dfc_dfs_objects))
 
         if(not(self.df is None)) :
@@ -442,7 +442,6 @@ class InspectRowsGui(QtWidgets.QMainWindow):
         if(is_debug_on(DataInspection_ID,"DEBUG_DATA_INSPECT_ROWS")) :
             add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][select_column_to_cleanse] ",row_number," ",column_number))
 
-
         if(column_number is None) :
 
             title       =   "dfcleanser error"       
@@ -456,7 +455,7 @@ class InspectRowsGui(QtWidgets.QMainWindow):
 
             if(done1) :
 
-                if(DEBUG_INSPECT_ROWS) :
+                if(is_debug_on(DataInspection_ID,"DEBUG_INSPECT_ROWS")) :
                     add_debug_to_log("DataInspectionRows",print_to_string("[InspectRowsGui][select_column_to_cleanse] ",valueToFind))
 
     def FilterdfRows(self) :
