@@ -791,7 +791,7 @@ class SystemGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_dfcleanser_EULA(self):
 
-        if(DEBUG_SYSTEM) :
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
             add_debug_to_log("System",print_to_string("[SystemGui][display_dfcleanser_eula]  "))
 
         DFCLEANSER_EULA    =   "https://rickkrasinski.github.io/dfcleanser/dfcleanser_EULA.html"    
@@ -814,7 +814,7 @@ class SystemGui(QtWidgets.QMainWindow):
     # -----------------------------------------------------------------#
     def display_dfcleanser_readme(self):
 
-        if(DEBUG_SYSTEM) :
+        if(is_debug_on(System_ID,"DEBUG_SYSTEM")) :
             add_debug_to_log("System",print_to_string("[display_dfcleanser_readme]  "))
 
         DFCLEANSER_README    =   "https://rickkrasinski.github.io/dfcleanser/"    

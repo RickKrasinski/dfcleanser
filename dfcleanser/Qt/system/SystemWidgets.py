@@ -2923,7 +2923,7 @@ class dfc_file_Widget(QtWidgets.QWidget):
     
         import json
 
-        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+        if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
             add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] : self.history_file_loaded  ",self.history_file_loaded ))
 
         history_data             =   []
@@ -2932,7 +2932,7 @@ class dfc_file_Widget(QtWidgets.QWidget):
         history_file_name        =   self.get_history_file_name(self.history_type)
         history_full_file_name   =   self.get_history_full_file_name(self.history_type)
         
-        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+        if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
             add_debug_to_log("SystemWidgets",print_to_string("load_history_file",history_dir_name,"\n",history_file_name,"\n",history_full_file_name))
         
         if(not (history_dir_name is None)) :
@@ -2942,26 +2942,26 @@ class dfc_file_Widget(QtWidgets.QWidget):
                 make_dir(history_dir_name)
             
             from dfcleanser.common.common_utils import does_file_exist
-            if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+            if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
                 add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] : does_file_exist ",does_file_exist(history_full_file_name)))
             
             if(not (does_file_exist(history_full_file_name))) :
                 
-                if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
                     add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found\n",history_full_file_name))
                     add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found : history type",self.history_type))
  
                 self.history_file_loaded    =   False    
                 self.notebook_history       =   {}
                 
-                if(DEBUG_IMPORT_HISTORY_DETAILS) :
+                if(is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) :
                     add_debug_to_log("SystemWidgets",print_to_string("load_history_file - file not found : history length ",len(self.notebook_history)))
                     self.dump_history()
             
             # import history file does exist
             else :
                 
-                if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
                     add_debug_to_log("SystemWidgets",print_to_string("[load_history_file]  - file found\n  ",history_full_file_name))
                 
                 try :
@@ -2971,7 +2971,7 @@ class dfc_file_Widget(QtWidgets.QWidget):
                         history_data = json.load(history_file)
                         history_file.close()
 
-                    if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+                    if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
                         add_debug_to_log("SystemWidgets",print_to_string("[load_history_file]  - history_data  ",type(history_data),len(history_data)))
                     
                     self._parse_history_file_to_dict(history_data)
@@ -2982,7 +2982,7 @@ class dfc_file_Widget(QtWidgets.QWidget):
                     from dfcleanser.common.cfg import add_error_to_log, SEVERE_ERROR
                     add_error_to_log("[Load history file Error - for json decode error] "  + str(sys.exc_info()[0].__name__),SEVERE_ERROR)
                     
-        if( (DEBUG_IMPORT_HISTORY_DETAILS) and (self.allow_debug) ) :
+        if( (is_debug_on(System_ID,"DEBUG_IMPORT_HISTORY_DETAILS")) and (self.allow_debug) ) :
             add_debug_to_log("SystemWidgets",print_to_string("[load_history_file] - complete : ",self.history_file_loaded))
 
 
